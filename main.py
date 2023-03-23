@@ -6,7 +6,7 @@ from collections import namedtuple
 
 TitlePage = namedtuple("TitlePage", ["id", "title", "created", "updated"])
 
-project = "villagepump"
+project = "nishio"
 dist_stats = f"./{project}/stats/pages.json"
 dist_data = "./data.json"
 
