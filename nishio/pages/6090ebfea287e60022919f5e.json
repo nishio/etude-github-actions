@@ -1,0 +1,3193 @@
+{
+  "id": "6090ebfea287e60022919f5e",
+  "title": "Hatena2009-03-25",
+  "created": 1237906800,
+  "updated": 1237906800,
+  "lines": [
+    {
+      "id": "6090ec22aff09e00003cfbf6",
+      "text": "Hatena2009-03-25",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbf7",
+      "text": "code:hatena",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbf8",
+      "text": " <body>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbf9",
+      "text": " *1237957739*[GAE]連番整数IDを振るのに挫折した",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbfa",
+      "text": " まずこんなデコレータを作って",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbfb",
+      "text": " >|python|",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbfc",
+      "text": " def synchronized(func):",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbfd",
+      "text": "     def synchronized_func(*args, **kw):",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbfe",
+      "text": "         return db.run_in_transaction(func, *args, **kw)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfbff",
+      "text": "     return synchronized_func",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc00",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc01",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc02",
+      "text": " つぎにこんなファクトリーを作った。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc03",
+      "text": " >|python|",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc04",
+      "text": " @synchronized",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc05",
+      "text": " def make_instance(cls, *args, **kw):",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc06",
+      "text": "     instance = cls(*args, **kw)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc07",
+      "text": "     last_one = cls.all().order(\"-added_on\").get()",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc08",
+      "text": "     if last_one:",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc09",
+      "text": "         instance.unique_id = last_one.unique_id + 1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc0a",
+      "text": "     else:",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc0b",
+      "text": "         instance.unique_id = 0",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc0c",
+      "text": "     instance.put()",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc0d",
+      "text": "     return instance",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc0e",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc0f",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc10",
+      "text": " モデルの設計はもれなくadded_onとunique_idを持つ感じ。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc11",
+      "text": " >|python|",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc12",
+      "text": " class Game(db.Model):",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc13",
+      "text": "     added_on = db.DateTimeProperty(auto_now_add=True)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc14",
+      "text": "     unique_id = db.IntegerProperty()",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc15",
+      "text": " ...",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc16",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc17",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc18",
+      "text": " でこういう使い方をすると連番IDが振られる",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc19",
+      "text": " >|python|",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc1a",
+      "text": "     program, rest = logic.deal_cards()",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc1b",
+      "text": "     p = make_instance(Program, program=program, rest=rest)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc1c",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc1d",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc1e",
+      "text": " と思ったら",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc1f",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc20",
+      "text": " Exception Type: BadRequestError",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc21",
+      "text": " Exception Value: Can't query inside a transaction.",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc22",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc23",
+      "text": " がーんorz",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc24",
+      "text": " <hr>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc25",
+      "text": " get_or_insertでwhileするしかないのかなー。ださいなー。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc26",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc27",
+      "text": " *1237964303*家事",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc28",
+      "text": " - ■ 電話",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc29",
+      "text": " - ■ メール",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc2a",
+      "text": " - ■ 一昨日のおじやに納豆を入れて食べてみた(納豆のこり11パック)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc2b",
+      "text": " -- ただの納豆ご飯に比べるとシーフードが入っていて、ただのおじやに比べると納豆が入っている。ハイブリッドご飯。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc2c",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc2d",
+      "text": " *1237987366*包丁発見",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc2e",
+      "text": " f:id:nishiohirokazu:20090325222243j:image",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc2f",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc30",
+      "text": " おかしい。たしか段ボールで刃の部分をくるんだと思うんだがなんで抜き身でこんなところに入っているんだ。しかもこの箱は何度も使って中からお玉とかスプーンとかを取り出したのになんで今まで包丁の存在に気づかなかったんだ。やっぱり小人さんが今まで隠していたに違いない。ネットが袋から飛び出してたので片付けていて発見したんだが、きっと小人さんが包丁で遊ぶときに蹴って散らかしたんだ。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc31",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc32",
+      "text": " *1237987959*Hacker's Cafe Fes 続報",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc33",
+      "text": " http://www.hackers-cafe.net/hacker-s-cafe-fes",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc34",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc35",
+      "text": " <img src=\"http://gyazo.com/32199a06c473ec76aba8ec6b1a8f3957.png\">",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc36",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc37",
+      "text": " 自重はダークサイドなのでみんなも来るといいよ！(ぇ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc38",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc39",
+      "text": " *1237997832*Programmer's Nightmare Online作成中",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc3a",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc3b",
+      "text": " {% block after_body %}",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc3c",
+      "text": " <script type=\"text/javascript\">",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc3d",
+      "text": " (function(){",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc3e",
+      "text": "     var pre = $(\"#with_link_to_desc\")[0];",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc3f",
+      "text": "     var url = \"{% url programmers_nightmare.views.card_desc_index %}\";",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc40",
+      "text": "     var result = pre.innerHTML;",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc41",
+      "text": "     var cards = {{ cards|safe }};",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc42",
+      "text": "     for(var i=0; i<cards.length; i++){",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc43",
+      "text": "         var key = cards[i];",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc44",
+      "text": "         result = result.replace(",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc45",
+      "text": "             key, (\"<a href='\" + url ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc46",
+      "text": "                   + key + \"/' target='_blank'>\" ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc47",
+      "text": "                   + key + \"</a>\"));",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc48",
+      "text": "     }",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc49",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc4a",
+      "text": "     pre.innerHTML = result;",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc4b",
+      "text": " })();",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc4c",
+      "text": " </script>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc4d",
+      "text": " {% endblock after_body %}",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc4e",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc4f",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc50",
+      "text": " <img src=\"http://gyazo.com/c79246b72a8785c97287c899e6ddee4f.png\">",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc51",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc52",
+      "text": " 一人で作っていると他人がメンテできるかどうか気にしなくていいから楽でいいね(ぇ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc53",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc54",
+      "text": " *1238002528*Programmer's Nightmare Onlineを作りました",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc55",
+      "text": " とても手抜き、、いやいや、まだルールに試行錯誤の余地があるのでゲーム進行の自由度が失われないことに重点を置いた設計なのですぞ！",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc56",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc57",
+      "text": " IRCで会話しながらプレイした<a href='http://d.hatena.ne.jp/nishiohirokazu/20090323/1237768121'>Programmer's Nightmare 対人戦</a>, <a href='http://d.hatena.ne.jp/nishiohirokazu/20090323/1237785061'>Programmer's Nightmare 対人戦2回目</a>, Lingrでの対戦<a href=\"http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25\">(ログ)</a>(パスワードは「悪夢」をローマ字で)でわかったが、ゲームの進行自体はチャットでの会話でもあまり実害がない。しかし、盤面の共有がちょっと面倒。チャットに貼るとたくさん流れてしまう。特に張った内容が間違っていて修正を入れる場合に間違ったものを消せないから見にくい。あと、カードのドローは「いかさまをしてないと信じてください」といいながらやるしかなかった。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc58",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc59",
+      "text": " Programmer's Nightmare Onlineでは",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc5a",
+      "text": " - カードのディールと盤面の生成",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc5b",
+      "text": " - 盤面の状況を書き換えて追加or直前の盤面を上書き",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc5c",
+      "text": " - 公正なドロー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc5d",
+      "text": " - 盤面のカードをクリックするとその解説ページへジャンプ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc5e",
+      "text": " などの機能を実装してある。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc5f",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc60",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc61",
+      "text": " とはいえまだいろんなことを試行錯誤している過程なのであんまり固く作りたくなかったので基本的には「今まで手元のテキストエディタでやっていたことをブラウザ上のtextareaでやる」というだけ。ゲームの進行管理は人間がやります。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc62",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc63",
+      "text": " http://nishiotools.appspot.com/programmers_nightmare/",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc64",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc65",
+      "text": " まずはmake new programを押す。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc66",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc67",
+      "text": " <img src=\"http://gyazo.com/cdfc5fe1f01cd3e297303b622b3e2d81.png\">",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc68",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc69",
+      "text": " プログラムが出るので、これでOKならstart new gameを押す。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc6a",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc6b",
+      "text": " <img src=\"http://gyazo.com/1ea7613b131e40b1ef429516e5123f45.png\">",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc6c",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc6d",
+      "text": " で、チャットで話しながら盤面を書き換えてaddを押す、という流れでゲームを進める。直前の書き込みが失敗だったときにはupdateで上書きできる。draw a cardで公平にカードをドローする。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc6e",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc6f",
+      "text": " <img src=\"http://gyazo.com/c24adcc8f061c00d8ef361df716c4d80.png\">",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc70",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc71",
+      "text": " drawするとこうなる。「プログラムかどうか」は、テキストエリアに最初から入っている文字列が「一番最新のプログラム」という判断だけに使われている。上の画像だと「drawn card is...」はプログラムではない設定になっているのでtextareaに入っていない。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc72",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc73",
+      "text": " Lingr: http://www.lingr.com/room/programmers_nightmare にくるともし僕がいればテストがてらにこれを使って対戦をしたりするかもしれません。他の人の対戦も可能ならこれを使って感想とかログとかを貰えるとうれしいです。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc74",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc75",
+      "text": " *1238005083*Programmer's Nightmare 対人戦3回目",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc76",
+      "text": " <a href=\"http://twitter.com/tnzk\">@tnzk</a>との対人戦ログ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc77",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc78",
+      "text": " http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25#msg-63530375",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc79",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc7a",
+      "text": " 01: POWER_SURGE      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc7b",
+      "text": " 02: DECREMENT        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc7c",
+      "text": " 03: BIT_SWAPPER      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc7d",
+      "text": " 04: ACQUIRE          |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc7e",
+      "text": " 05: DEFEND           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc7f",
+      "text": " 06: SWAP_INSTRUCTIONS|",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc80",
+      "text": " 07: ZAP              |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc81",
+      "text": " 08: OVERSIGHT        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc82",
+      "text": " 09: FLOATER          |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc83",
+      "text": " 10: DELETE           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc84",
+      "text": " 11: ZAP              |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc85",
+      "text": " 12: FUTURE           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc86",
+      "text": " 13: BIT_MOVER        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc87",
+      "text": " 14: MULTIPLIER       |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc88",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc89",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc8a",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc8b",
+      "text": " にしお 2回対人戦をしてわかったのは先手がかなり有利なんじゃないかなー、と。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc8c",
+      "text": " Tnzk ほうほう",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc8d",
+      "text": " にしお 先手後手交代して2回プレイした方がいいのかも。同じプログラムで。このプログラムだと、3番目にBIT_SWAPPERがあるからそれを発動されるといい命令を持っていても奪われてしまう。あ、でもDECREMENTがそれよりも先にあるからDECREMENTでBIT_SWAPPERを無効化する手が使えるのかな ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc8e",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc8f",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc90",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc91",
+      "text": " Tnzk じゃあ先手で。BIT_MOVERに置きます",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc92",
+      "text": " にしお BIT_SWAPPERにおく ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc93",
+      "text": " Tnzk となると僕はDECREMENTに置くしかないですね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc94",
+      "text": " にしお 僕はFUTUREで。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc95",
+      "text": " Tnzk じゃあDELETEを",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc96",
+      "text": " にしお POWER_SURGEで。げ、DELETEとERASEを勘違いしていた（ぉ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc97",
+      "text": " Tnzk 名前似てるのに効果全然違いますよね。BIT_DELETEのほうがわかりやすい気がする。ではSWAP_INSTRUCTIONで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc98",
+      "text": " にしお わかりにくい名前を付けては行けないというプログラマへの教訓ですね（ぉ  FLOATERで。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc99",
+      "text": " Tnzk ACQUIREで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc9a",
+      "text": " にしお 11のZAPで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc9b",
+      "text": " Tnzk SWAP_INSTRUCTION全然勘違いしてた。「このカードの前後をスワップ」じゃなくて前2枚か後2枚のスワップなんですね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc9c",
+      "text": " にしお うん",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc9d",
+      "text": " Tnzk そうすると微妙に美味しくないかも……。MULTIPLIERで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc9e",
+      "text": " にしお 7のZAPで。BIT置きフェーズ終了 ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfc9f",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca0",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca1",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca2",
+      "text": "  スワップした場合ビットはどうなります？カードに従属？",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca3",
+      "text": " 従属だと思う ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca4",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca5",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca6",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca7",
+      "text": " 01: POWER_SURGE      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca8",
+      "text": " 02: DECREMENT        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfca9",
+      "text": " 03: BIT_SWAPPER      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcaa",
+      "text": " 04: ACQUIRE          |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcab",
+      "text": " 05: DEFEND           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcac",
+      "text": " 06: SWAP_INSTRUCTIONS|(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcad",
+      "text": " 07: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcae",
+      "text": " 08: OVERSIGHT        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcaf",
+      "text": " 09: FLOATER          |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb0",
+      "text": " 10: DELETE           |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb1",
+      "text": " 11: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb2",
+      "text": " 12: FUTURE           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb3",
+      "text": " 13: BIT_MOVER        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb4",
+      "text": " 14: MULTIPLIER       |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb5",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb6",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb7",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb8",
+      "text": " にしお じゃあRUN。まず僕のPOWER_SURGEで7:9 tnzkのDECREMENT発動しますか(y/n)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcb9",
+      "text": " Tnzk y. BIT_SWAPPERに対して",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcba",
+      "text": " にしお はい。BIT_SWAPPERは「1個のbitを交換」に変わって事実上無意味になります",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcbb",
+      "text": " にしお BIT_SWAPPERを発動しません",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcbc",
+      "text": " Tnzk ACQUIREは発動します 9:9",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcbd",
+      "text": " にしお tnzkのSWAP_INST",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcbe",
+      "text": " Tnzk あんまり発動する意味がなさそうですねー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcbf",
+      "text": " にしお だねー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc0",
+      "text": " Tnzk でも混乱を狙って発動しておきますｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc1",
+      "text": " にしお w",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc2",
+      "text": " Tnzk 7と8をswap",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc3",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc4",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc5",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc6",
+      "text": " 01: POWER_SURGE      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc7",
+      "text": " 02: DECREMENT        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc8",
+      "text": " 03: BIT_SWAPPER      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcc9",
+      "text": " 04: ACQUIRE          |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcca",
+      "text": " 05: DEFEND           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfccb",
+      "text": " 06: SWAP_INSTRUCTIONS|(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfccc",
+      "text": " 07: OVERSIGHT        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfccd",
+      "text": " 08: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcce",
+      "text": " 09: FLOATER          |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfccf",
+      "text": " 10: DELETE           |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd0",
+      "text": " 11: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd1",
+      "text": " 12: FUTURE           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd2",
+      "text": " 13: BIT_MOVER        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd3",
+      "text": " 14: MULTIPLIER       |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd4",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd5",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd6",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd7",
+      "text": " にしお ZAPを発動して6:7",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd8",
+      "text": " Tnzk OverSight発動しないんですか？",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcd9",
+      "text": " にしお あ、発動する。BITが乗っていないときには発動するんだった。いつも忘れるw",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcda",
+      "text": " Tnzk そこからZAPまで考慮して5:6ですね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcdb",
+      "text": " にしお FLOATERを発動してDELETEとZAPの間に移動します。そしてFLOATERがZAPをコピーして発動 4:6 ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcdc",
+      "text": " にしお プログラムカウンタはFLOATERについて移動する",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcdd",
+      "text": " FLOATER; Move this card forward or backward 1 space in the sequence, then copy the next action. That is, it swaps places with a card adjacent to it. The Program Counter moves with it. (2 cards)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcde",
+      "text": " なのでDELETEはスキップされた",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcdf",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce0",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce1",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce2",
+      "text": " 01: POWER_SURGE      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce3",
+      "text": " 02: DECREMENT        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce4",
+      "text": " 03: BIT_SWAPPER      |(N) -1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce5",
+      "text": " 04: ACQUIRE          |(T) ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce6",
+      "text": " 05: DEFEND           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce7",
+      "text": " 06: SWAP_INSTRUCTIONS|(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce8",
+      "text": " 07: OVERSIGHT        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfce9",
+      "text": " 08: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcea",
+      "text": " 09: DELETE           |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfceb",
+      "text": " 10: FLOATER          |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcec",
+      "text": " 11: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfced",
+      "text": " 12: FUTURE           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcee",
+      "text": " 13: BIT_MOVER        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcef",
+      "text": " 14: MULTIPLIER       |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf0",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf1",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf2",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf3",
+      "text": " にしお 11のZAPを発動して3:6",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf4",
+      "text": " Tnzk あ、FLOATERは実体はFLOATERなんですね。発動に際して効果がコピーされるだけで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf5",
+      "text": " にしお ああ、うん。カードゲームだからそこでカードが変わるととてもやりづらいかと",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf6",
+      "text": " にしお　COPYやFUTUREのコピー能力も毎回コピーするだけでカードは変わらない。12のFUTUREを発動してBIT_MOVERとMULTIPLIERを発動",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf7",
+      "text": " にしお BIT_MOVERの上の(T)をMULTIPLIERに移動。MULTIPLIERは発動されたけど僕のビットは乗っていないから(T)が1個増えて全部で3つになるのかな",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf8",
+      "text": " にしお 現在3:6だね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcf9",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcfa",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcfb",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcfc",
+      "text": " 01: POWER_SURGE      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcfd",
+      "text": " 02: DECREMENT        |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcfe",
+      "text": " 03: BIT_SWAPPER      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfcff",
+      "text": " 04: ACQUIRE          |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd00",
+      "text": " 05: DEFEND           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd01",
+      "text": " 06: SWAP_INSTRUCTIONS|(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd02",
+      "text": " 07: OVERSIGHT        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd03",
+      "text": " 08: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd04",
+      "text": " 09: DELETE           |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd05",
+      "text": " 10: FLOATER          |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd06",
+      "text": " 11: ZAP              |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd07",
+      "text": " 12: FUTURE           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd08",
+      "text": " 13: BIT_MOVER        |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd09",
+      "text": " 14: MULTIPLIER       |(T)(T)(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd0a",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd0b",
+      "text": " Score",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd0c",
+      "text": " ------",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd0d",
+      "text": " nishio: 6",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd0e",
+      "text": " tnzk  : 3",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd0f",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd10",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd11",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd12",
+      "text": " Tnzk あ、POWERSURGEで負けだ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd13",
+      "text": " にしお そうだね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd14",
+      "text": " Tnzk 投了します＼(^0^)／ ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd15",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd16",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd17",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd18",
+      "text": " Tnzk あっさりと決着がついてしまった、さすがすぎる",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd19",
+      "text": " にしお 決着はいつもあっさりつくw",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd1a",
+      "text": " にしお というか僕は負けたと思ってたんだけど、実行開始してからFLOATERでDELETEを飛ばせることに気づいた",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd1b",
+      "text": " Tnzk そうなんですよね。僕もそれ把握してなくてこれはｵﾜﾀ的な感じでした。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd1c",
+      "text": " にしお 相手の気づいていない解決方法を先に思いついた方が勝ち",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd1d",
+      "text": " Tnzk そこでFUTURE上のbitを下ろそうと思っていたので。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd1e",
+      "text": " にしお うんうん、そうされると思っていた",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd1f",
+      "text": " > げ、DELETEとERASEを勘違いしていた（ぉ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd20",
+      "text": " この時点で負けたと思ったw",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd21",
+      "text": " Tnzk あ、なるほど、そういうことですかｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd22",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd23",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd24",
+      "text": " *1238006736*Programmer's Nightmare 対人戦4回目",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd25",
+      "text": " @tnzkとの対戦2回目",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd26",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd27",
+      "text": " http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25#msg-63534100",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd28",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd29",
+      "text": " 01: SELF_DESTRUCT  |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd2a",
+      "text": " 02: ZAP            |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd2b",
+      "text": " 03: POWER_SURGE    |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd2c",
+      "text": " 04: REVERSE_PROGRAM|",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd2d",
+      "text": " 05: COPY           |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd2e",
+      "text": " 06: OVERWRITE      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd2f",
+      "text": " 07: ERASE          |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd30",
+      "text": " 08: INCREMENT      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd31",
+      "text": " 09: SUBROUTINE     |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd32",
+      "text": " 10: DECREMENT      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd33",
+      "text": " 11: POWER_SURGE    |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd34",
+      "text": " 12: INCREMENT      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd35",
+      "text": " 13: BIT_SWAPPER    |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd36",
+      "text": " 14: FUTURE         |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd37",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd38",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd39",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd3a",
+      "text": " Tnzk まずはSelfDestructに置きます",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd3b",
+      "text": " にしお Reverseに置きます",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd3c",
+      "text": " Tnzk PowerSurgeで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd3d",
+      "text": " にしお COPY",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd3e",
+      "text": " Tnzk overwriteで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd3f",
+      "text": " にしお FUTUREで。 (編注: 実は計算間違いによりすでに勝ったつもりになっていてこれ以降はちゃんと考えていません)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd40",
+      "text": " Tnzk ERAZEで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd41",
+      "text": " にしお かわいそうなSUBROUTINE",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd42",
+      "text": " にしお 2のZAPで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd43",
+      "text": " Tnzk DECREMENTで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd44",
+      "text": " にしお BIT_SWAPPERで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd45",
+      "text": " Tnzk 11 POWER_SURGEで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd46",
+      "text": " にしお 12 INCREMENTで",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd47",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd48",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd49",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd4a",
+      "text": " 01: SELF_DESTRUCT  |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd4b",
+      "text": " 02: ZAP            |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd4c",
+      "text": " 03: POWER_SURGE    |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd4d",
+      "text": " 04: REVERSE_PROGRAM|(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd4e",
+      "text": " 05: COPY           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd4f",
+      "text": " 06: OVERWRITE      |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd50",
+      "text": " 07: ERASE          |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd51",
+      "text": " 08: INCREMENT      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd52",
+      "text": " 09: SUBROUTINE     |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd53",
+      "text": " 10: DECREMENT      |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd54",
+      "text": " 11: POWER_SURGE    |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd55",
+      "text": " 12: INCREMENT      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd56",
+      "text": " 13: BIT_SWAPPER    |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd57",
+      "text": " 14: FUTURE         |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd58",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd59",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd5a",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd5b",
+      "text": " にしお RUN",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd5c",
+      "text": " Tnzk とりあえずselfdestructします。10:6で、当該カードが消滅",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd5d",
+      "text": " にしお かわいそうにw",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd5e",
+      "text": " にしお 2のZAPで攻撃, 9:6",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd5f",
+      "text": " Tnzk surgeします 8:3",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd60",
+      "text": " Tnzk この場合Reverseの発動は1択ですよね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd61",
+      "text": " にしお ルール上は実行できるけど、実行しないという話ね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd62",
+      "text": " Tnzk 事実上1択という意味で",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd63",
+      "text": " にしお その通りです。実行しません",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd64",
+      "text": " にしお COPYでPOWER_SURGEとREVERSEをコピー。8:6から5:5に。REVERSEで実行の順序が変わりました。ずっと俺のターン（ぉ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd65",
+      "text": " Tnzk ｗｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd66",
+      "text": " にしお 04のREVERSEを発動します。05のCOPYでPOWER_SURGE & REVERSE",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd67",
+      "text": " Tnzk ぶ、これはひどいｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd68",
+      "text": " にしお 上のライフ計算間違えてる？(編注: これが上で書いた計算違い。tnzkのsurgeを計算に入れていなくて、このループを3回繰り返して9:6->6:5->3:4->0:3で勝つつもりだった)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd69",
+      "text": " Tnzk 僕もそんな気が。5:2？",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd6a",
+      "text": " にしお 8:3 -> 5:2 -> 2:1になったところだよね、いま。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd6b",
+      "text": " Tnzk ですね。ここでPowerSurgeすると引き分け？",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd6c",
+      "text": " にしお 相打ちだね。いま2:1になってREVERSEされて上向きに04に来たところだよね。ここでREVERSEを発動しないのでtnzkが相打ちを選択するかどうか",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd6d",
+      "text": " Tnzk surgeすると相打ち、しない場合zapで1:1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd6e",
+      "text": " にしお しっぱいしたなー。自滅しないで相手だけ倒す手段がZAPだけだ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd6f",
+      "text": " Tnzk ｗｗ。えーと相打ちは選択しないのでsurgeしません",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd70",
+      "text": " にしお ZAPで1:1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd71",
+      "text": " にしお FUTUREでBIT_SWAPPERとINCREMENTをコピー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd72",
+      "text": " Tnzk bitswapが2回 コレは怖いｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd73",
+      "text": " にしお OVERWRITEとINCREMENTを交換",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd74",
+      "text": " Tnzk いやー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd75",
+      "text": " にしお BIT_SWAPPERの交換回数をインクリメント、するとどうなるんだろう。ダメかも",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd76",
+      "text": " Tnzk まあ、あまり意味はなさそうですね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd77",
+      "text": " にしお メリットがないね。じゃあOVERWRITEを…",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd78",
+      "text": " Tnzk これはひどいｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd79",
+      "text": " にしお ちょっと現状を確認したい",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd7a",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd7b",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd7c",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd7d",
+      "text": " 02: ZAP            |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd7e",
+      "text": " 03: POWER_SURGE    |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd7f",
+      "text": " 04: REVERSE_PROGRAM|(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd80",
+      "text": " 05: COPY           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd81",
+      "text": " 06: OVERWRITE      |(N)++",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd82",
+      "text": " 07: ERASE          |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd83",
+      "text": " 08: INCREMENT      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd84",
+      "text": " 09: SUBROUTINE     |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd85",
+      "text": " 10: DECREMENT      |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd86",
+      "text": " 11: POWER_SURGE    |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd87",
+      "text": " 12: INCREMENT      |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd88",
+      "text": " 13: BIT_SWAPPER    |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd89",
+      "text": " 14: FUTURE         |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd8a",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd8b",
+      "text": " tnzk:nishio = 1:1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd8c",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd8d",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd8e",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd8f",
+      "text": " Tnzk 12がdecrementならよかったなー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd90",
+      "text": " にしお 12と交換したのは失敗だったなー",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd91",
+      "text": " Tnzk 今pcどこでしたっけ？",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd92",
+      "text": " にしお FUTUREが終わったところだよね",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd93",
+      "text": " Tnzk 13のswapはどう使います？",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd94",
+      "text": " にしお REVERSEとINCREMENTを交換。INCREMENTでOVERWRITEを++",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd95",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd96",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd97",
+      "text": " >||",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd98",
+      "text": " 02: ZAP            |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd99",
+      "text": " 03: POWER_SURGE    |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd9a",
+      "text": " 04: REVERSE_PROGRAM|(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd9b",
+      "text": " 05: COPY           |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd9c",
+      "text": " 06: OVERWRITE      |(N)+=2",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd9d",
+      "text": " 07: ERASE          |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd9e",
+      "text": " 08: INCREMENT      |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfd9f",
+      "text": " 09: SUBROUTINE     |",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda0",
+      "text": " 10: DECREMENT      |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda1",
+      "text": " 11: POWER_SURGE    |(T)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda2",
+      "text": " 12: INCREMENT      |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda3",
+      "text": " 13: BIT_SWAPPER    |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda4",
+      "text": " 14: FUTURE         |(N)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda5",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda6",
+      "text": " tnzk:nishio = 1:1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda7",
+      "text": " ||<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda8",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfda9",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdaa",
+      "text": " Tnzk surgeは使わずに10のdecrementで03のsurgeの「bit乗っているプレイヤへのダメージ」をデクリメントします",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdab",
+      "text": " にしお ERASEでZAPのbitを消される！と思ってたけどERASEが消すのはカードだったわな。いつも勘違いする。ERASE? (y/n)",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdac",
+      "text": " Tnzk インクリメントは役立つかもなので残しておきたいです。従ってn",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdad",
+      "text": " にしお OVERWRITE発動。3個書き換えられるよね。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdae",
+      "text": " 03 POWER_SURGE",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdaf",
+      "text": " 04 REVERSE",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb0",
+      "text": " 11 POWER_SURGE",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb1",
+      "text": " Tnzk 攻撃手段がなくなったｗ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb2",
+      "text": " にしお OVERWRITEは失効したので本来は別のカードをドローして差し替えるけど、もうすぐ終わるからいいよね。COPYしない、REVRESEしない、SURGEする。-2:1",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb3",
+      "text": " Tnzk あーう、参りました",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb4",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb5",
+      "text": " ",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb6",
+      "text": " >>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb7",
+      "text": " にしお まあ、実質的には引き分けだよね。tnzkが負けることを予測していたらsurgeで引き分けに持ち込めた。",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb8",
+      "text": " 引き分けしない紳士ルールだから僕が勝ったけど、ZAPを持っているのが僕って時点でとても不利なので引き分けに持ち込んでも何も悪くなかったと思う",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdb9",
+      "text": " <<",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdba",
+      "text": " </body>",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdbb",
+      "text": "",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec22aff09e00003cfdbc",
+      "text": "[はてなダイアリー 2009-03-25 https://nishiohirokazu.hatenadiary.org/archive/2009/03/25]",
+      "created": 1237906800,
+      "updated": 1237906800,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

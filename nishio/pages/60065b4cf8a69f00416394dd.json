@@ -1,0 +1,498 @@
+{
+  "id": "60065b4cf8a69f00416394dd",
+  "title": "カジノのモンテカルロ法",
+  "created": 1611029463,
+  "updated": 1611035479,
+  "lines": [
+    {
+      "id": "60065b4cf8a69f00416394dd",
+      "text": "カジノのモンテカルロ法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029463,
+      "updated": 1611029464
+    },
+    {
+      "id": "60065bd8aff09e0000f97357",
+      "text": "本来のモンテカルロ法とまったく別の概念が賭博の分野でモンテカルロ法と呼ばれてる話を聞いて、調べてみたらまあまともな戦略ではなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029464,
+      "updated": 1611031626
+    },
+    {
+      "id": "60065c2eaff09e0000f9735a",
+      "text": "\t本来のモンテカルロ法: [モンテカルロ法 - Wikipedia https://ja.wikipedia.org/wiki/%E3%83%A2%E3%83%B3%E3%83%86%E3%82%AB%E3%83%AB%E3%83%AD%E6%B3%95]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029550,
+      "updated": 1611031526
+    },
+    {
+      "id": "600663ddaff09e0000bfc816",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611031517,
+      "updated": 1611031517
+    },
+    {
+      "id": "60065c2eaff09e0000f97359",
+      "text": "カジノのモンテカルロ法(2倍配当の場合)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029550,
+      "updated": 1611031532
+    },
+    {
+      "id": "60065c5baff09e0000f9735b",
+      "text": " 紙に1,2,3と書く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029596,
+      "updated": 1611029607
+    },
+    {
+      "id": "60065c6aaff09e0000f9735c",
+      "text": " A: 両端を足した数xを賭ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029611,
+      "updated": 1611029674
+    },
+    {
+      "id": "60065c79aff09e0000f9735d",
+      "text": " 勝ったら列の両端を消す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029626,
+      "updated": 1611029659
+    },
+    {
+      "id": "60065c95aff09e0000f9735e",
+      "text": " 負けたら右端にxを追加する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029654,
+      "updated": 1611029678
+    },
+    {
+      "id": "60065caeaff09e0000f9735f",
+      "text": " 列の長さが1でないならAに戻る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029678,
+      "updated": 1611029718
+    },
+    {
+      "id": "60065cd8aff09e0000f97360",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029721,
+      "updated": 1611029721
+    },
+    {
+      "id": "60065cd9aff09e0000f97361",
+      "text": "まず、列の長さが最初は3で、勝ったら2短くなり、負けたら1増えるわけで、「負け勝ち勝ち」の順だと列の長さが0になるバグったアルゴリズムなのだが…、0の場合は停止することにしよう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029722,
+      "updated": 1611030114
+    },
+    {
+      "id": "600660c1aff09e0000f97363",
+      "text": "運の悪い時には停止しないまま長く続いてしまうので100回で打ち切ることにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030722,
+      "updated": 1611030782
+    },
+    {
+      "id": "60065bdaaff09e0000f97358",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611029466,
+      "updated": 1611030669
+    },
+    {
+      "id": "6006608daff09e0000bfc7ea",
+      "text": " from collections import Counter",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7eb",
+      "text": " from random import random, seed",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7ec",
+      "text": " seed(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7ed",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7ee",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7ef",
+      "text": " def f():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f0",
+      "text": "     xs = [1, 2, 3]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f1",
+      "text": "     ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f2",
+      "text": "     for i in range(100):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f3",
+      "text": "         if len(xs) < 2:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f4",
+      "text": "             break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f5",
+      "text": "         x = xs[0] + xs[-1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f6",
+      "text": "         ret -= x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f7",
+      "text": "         if random() < 0.5:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f8",
+      "text": "             ret += 2 * x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7f9",
+      "text": "             xs = xs[1:-1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7fa",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7fb",
+      "text": "             xs.append(x)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7fc",
+      "text": "     return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7fd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7fe",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc7ff",
+      "text": " c = Counter(f() for i in range(1000000))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030670
+    },
+    {
+      "id": "6006608eaff09e0000bfc800",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030670,
+      "updated": 1611030674
+    },
+    {
+      "id": "60066102aff09e0000f97364",
+      "text": "100万回実験して、1回のセッションでの利益の頻度を高い順に20個出したのが下記",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030786,
+      "updated": 1611031319
+    },
+    {
+      "id": "6006624aaff09e0000f97369",
+      "text": "　高い確率で少し得をして、低い確率で大きな損をすることがわかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611031115,
+      "updated": 1611031135
+    },
+    {
+      "id": "60066142aff09e0000f97366",
+      "text": "　94%くらいで得をしてセッション終了する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030851,
+      "updated": 1611031191
+    },
+    {
+      "id": "600661cbaff09e0000f97367",
+      "text": "　得をする時の期待値は4.2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030987,
+      "updated": 1611031070
+    },
+    {
+      "id": "6006621eaff09e0000f97368",
+      "text": "　損をするときの期待値は-75.6",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611031070,
+      "updated": 1611031145
+    },
+    {
+      "id": "60066269aff09e0000f9736a",
+      "text": "　最も損をするケースは今回の実験では-829536",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611031145,
+      "updated": 1611031352
+    },
+    {
+      "id": "600660adaff09e0000bfc801",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030702,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc802",
+      "text": " [(4, 499951),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc803",
+      "text": "  (6, 236607),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc804",
+      "text": "  (3, 124839),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc805",
+      "text": "  (2, 38641),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc806",
+      "text": "  (1, 29213),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc807",
+      "text": "  (-1, 12488),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc808",
+      "text": "  (0, 10124),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc809",
+      "text": "  (-2, 6393),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc80a",
+      "text": "  (-3, 5220),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc80b",
+      "text": "  (-4, 4173),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc80c",
+      "text": "  (-5, 3570),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc80d",
+      "text": "  (-7, 2559),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc80e",
+      "text": "  (-6, 2437),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc80f",
+      "text": "  (-8, 2084),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc810",
+      "text": "  (-10, 1535),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc811",
+      "text": "  (-11, 1433),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc812",
+      "text": "  (-9, 1363),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc813",
+      "text": "  (-12, 1042),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc814",
+      "text": "  (-13, 960),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030703
+    },
+    {
+      "id": "600660afaff09e0000bfc815",
+      "text": "  (-14, 857)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030703,
+      "updated": 1611030705
+    },
+    {
+      "id": "6006608aaff09e0000bfc7e9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611030667,
+      "updated": 1611030667
+    },
+    {
+      "id": "60067306aff09e0000bfc819",
+      "text": "83万円損するのはおかしいか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611035398,
+      "updated": 1611035461
+    },
+    {
+      "id": "60067345aff09e0000bfc81a",
+      "text": "\tおかしくない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611035462,
+      "updated": 1611035472
+    },
+    {
+      "id": "60067350aff09e0000bfc81b",
+      "text": "\tいったん負けて終了しないぐらい勝つことを繰り返すと、負けるたびに賭け金が増え、勝っても賭け金は減らず左端が消えることで「負けたときの賭け金の増額」が増え、この「増額の増分」が過去の賭け金なのでやばいサイクルに入る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611035472,
+      "updated": 1611035478
+    },
+    {
+      "id": "60067304aff09e0000bfc817",
+      "text": "\t\thttps://gist.github.com/nishio/877c13738786d35fd7fbfae243e649c5",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611035396,
+      "updated": 1611035479
+    },
+    {
+      "id": "60067305aff09e0000bfc818",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611035397,
+      "updated": 1611035397
+    }
+  ]
+}

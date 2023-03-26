@@ -1,0 +1,561 @@
+{
+  "id": "6090ec01a287e6002291a010",
+  "title": "Hatena2009-09-25",
+  "created": 1253804400,
+  "updated": 1253804400,
+  "lines": [
+    {
+      "id": "6090ec25aff09e00003d3a30",
+      "text": "Hatena2009-09-25",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a31",
+      "text": "code:hatena",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a32",
+      "text": " <body>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a33",
+      "text": " *1253865013*[ObjC]NSTimer使ってNSInvocationのout of boundエラー(NSInvalidArgumentException)",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a34",
+      "text": " 結論から言うとNSTimerは関係なくて、何かのメソッドシグニチャが期待されているものと異なる場合にこういうエラーになることがあるみたい。",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a35",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a36",
+      "text": " NSThreadを使っていたコードをNSTimerを使うように書き換えた時に書き換えていない部分でエラーが出たのでNSTimerが関係しているのかと思ったが違った。NSTimerを使っていない時にはたまたま正しく動いていたが、Invocationが2回行われるようになったことでたまたまあっていた何かがずれるようになったんだろう。まあNSInvocationのエラーが出たらまずはメソッドシグニチャを疑えば良さそうな感じ。",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a37",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a38",
+      "text": " <hr>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a39",
+      "text": " NSTimerを使ったらこういうエラーが出た:",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a3a",
+      "text": " >>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a3b",
+      "text": " 2009-09-25 15:49:22.628 Camera[11838:20b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[NSInvocation setArgument:atIndex:]: index (2) out of bounds [-1, 1]'",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a3c",
+      "text": " <<",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a3d",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a3e",
+      "text": " ざっとググってみると「ハンドラのメソッドシグニチャが間違っているんじゃない？」と書いてあったがハンドラ(convert)のシグニチャは間違ってない。",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a3f",
+      "text": " >|objc|",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a40",
+      "text": " - (void)convert:(NSTimer*)timer;",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a41",
+      "text": " ||<",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a42",
+      "text": " さっぱりわからんなぁ、と思いながらとりあえずどうしようもないのでconvertの中身をごっそりif(0)してみたらちゃんと動くようになってみた。とりあえずconvertの中身が悪いということでコメントアウトの範囲を変えながらどこが悪いか調べてみたら…",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a43",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a44",
+      "text": " >||",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a45",
+      "text": " UIImageWriteToSavedPhotosAlbum(outputImage, self, @selector(finish_save_image), nil);",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a46",
+      "text": " ||<",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a47",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a48",
+      "text": " この1行をコメントアウトするとエラーが起きなくなることが判明。そしてfinish_save_imageのメソッドシグニチャが正しくなかった。",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a49",
+      "text": " ドキュメントの要求するもの(http://developer.apple.com/iPhone/library/documentation/UIKit/Reference/UIKitFunctionReference/Reference/reference.html#//apple_ref/c/func/UIImageWriteToSavedPhotosAlbum)と異なっていた。解決。",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a4a",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a4b",
+      "text": " *1253870660*コードを数値で",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a4c",
+      "text": " >|python|",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a4d",
+      "text": " {",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a4e",
+      "text": " \"\": [4, 7],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a4f",
+      "text": " \"7\": [4, 7, 10],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a50",
+      "text": " \"m\": [3, 7],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a51",
+      "text": " \"m7\": [3, 7, 10],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a52",
+      "text": " \"M7\": [4, 7, 11],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a53",
+      "text": " \"mM7\": [3, 7, 11],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a54",
+      "text": " \"sus4\": [5, 7],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a55",
+      "text": " \"7sus4\": [5, 7, 10],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a56",
+      "text": " \"dim\": [3, 6, 9],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a57",
+      "text": " \"m7-5\": [3, 6, 10],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a58",
+      "text": " \"aug\": [4, 8],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a59",
+      "text": " \"add9\": [2, 7],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a5a",
+      "text": " \"6\": [4, 7, 9],",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a5b",
+      "text": " \"m6\": [3, 7, 9]",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a5c",
+      "text": " }",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a5d",
+      "text": " ||<",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a5e",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a5f",
+      "text": " *1253871552*うーむ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a60",
+      "text": " CGSConvertARGB8888toRGBA8888",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a61",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a62",
+      "text": " *1253901870*ひぐらしの鳴くころに　綿流し編",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a63",
+      "text": " 読んだ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a64",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a65",
+      "text": " こわー",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a66",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a67",
+      "text": " *1253902690*今日のHowitzer",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a68",
+      "text": " 点数が連鎖をするごとに倍々で増えると聞いたのですこし連鎖を頑張ってみた。4分44秒プレイして50895点。Level20, Max Combo12。うーむ。連鎖を組むために考えすぎて回復が追いついていない。",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a69",
+      "text": " ",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a6a",
+      "text": " 前回のはこちら: http://d.hatena.ne.jp/nishiohirokazu/20090924/1253809028",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a6b",
+      "text": " </body>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a6c",
+      "text": " <comments>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a6d",
+      "text": " <comment>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a6e",
+      "text": " <username>inajob</username>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a6f",
+      "text": " <body>ほぼ同じものが手元にあるｗ</body>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a70",
+      "text": " <timestamp>1253883895</timestamp>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a71",
+      "text": " </comment>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a72",
+      "text": " <comment>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a73",
+      "text": " <username>nishiohirokazu</username>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a74",
+      "text": " <body>w</body>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a75",
+      "text": " <timestamp>1253929807</timestamp>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a76",
+      "text": " </comment>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a77",
+      "text": " <comment>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a78",
+      "text": " <username>Sedat</username>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a79",
+      "text": " <body>I don't understand any japanese, <br>but as Aral Balkan said:<br>\"Code is universal\"</body>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a7a",
+      "text": " <timestamp>1311088433</timestamp>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a7b",
+      "text": " </comment>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a7c",
+      "text": " </comments>",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a7d",
+      "text": "",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3a7e",
+      "text": "[はてなダイアリー 2009-09-25 https://nishiohirokazu.hatenadiary.org/archive/2009/09/25]",
+      "created": 1253804400,
+      "updated": 1253804400,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

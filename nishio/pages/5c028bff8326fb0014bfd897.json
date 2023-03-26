@@ -1,0 +1,162 @@
+{
+  "id": "5c028bff8326fb0014bfd897",
+  "title": "巡回セールスマン問題でニューラルネットの可視化",
+  "created": 1543670788,
+  "updated": 1543672465,
+  "lines": [
+    {
+      "id": "5c028bff8326fb0014bfd897",
+      "text": "巡回セールスマン問題でニューラルネットの可視化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670788,
+      "updated": 1543670812
+    },
+    {
+      "id": "5c028c1faff09e0000473380",
+      "text": "[ニューラルネット]の重みの[可視化]を[巡回セールスマン問題]に帰着させて解く話。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670816,
+      "updated": 1543670979
+    },
+    {
+      "id": "5c028c77aff09e0000473386",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670903,
+      "updated": 1543670903
+    },
+    {
+      "id": "5c028c88aff09e0000473389",
+      "text": "これは[多層パーセプトロン]の8次元の入力層から32次元の中間層に対する投射の重みを可視化したもの。なんか構造がありそうに見える。しかしわかりにくい。そもそも横軸は中間層のIDで、中間層のIDは順番に意味がないので、シャッフルされたものを見ているからだ。これを「似たものが隣接するように並び替え」て観察したい。それは巡回セールスマン問題に帰着できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670920,
+      "updated": 1543671103
+    },
+    {
+      "id": "5c028c77aff09e0000473387",
+      "text": "[https://gyazo.com/25d2a25ab29333331cc6e1e9d021cac4]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670903,
+      "updated": 1543670905
+    },
+    {
+      "id": "5c028c78aff09e0000473388",
+      "text": "というわけで並び替えたものがこちら。中間層が半分ずつに分担して、入力の半分だけに注目してることがわかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670905,
+      "updated": 1543671276
+    },
+    {
+      "id": "5c028c38aff09e0000473384",
+      "text": "[https://gyazo.com/34f4742106426e7ad3fdaf0684bfb5d7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670840,
+      "updated": 1543670867
+    },
+    {
+      "id": "5c029291aff09e00000d4a97",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543672465,
+      "updated": 1543672465
+    },
+    {
+      "id": "5c028c1faff09e0000473381",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543670816,
+      "updated": 1543671819
+    },
+    {
+      "id": "5c02900baff09e000047338d",
+      "text": " from matplotlib import pyplot as plt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671819,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e000047338e",
+      "text": " from ortoolpy import tsp",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e000047338f",
+      "text": " M = m.coefs_[0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473390",
+      "text": " N = M.shape[1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473391",
+      "text": " dist = {(i, j): np.linalg.norm(M[:, i] - M[:, j])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473392",
+      "text": "         for i in range(N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473393",
+      "text": "         for j in range(N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473394",
+      "text": "         if i != j}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473395",
+      "text": " _, result = tsp(range(N), dist)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473396",
+      "text": " plt.imshow(M[:,\tresult])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473397",
+      "text": " plt.show()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671820
+    },
+    {
+      "id": "5c02900caff09e0000473398",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671820,
+      "updated": 1543671821
+    },
+    {
+      "id": "5c029008aff09e000047338c",
+      "text": "先日、[数理最適化を使った問題解決のすすめ - Qiita https://qiita.com/SaitoTsutomu/items/8e062cdabd1ab8dab5ce]の著者による講演で、シュレッダーにかけた画像を隣接するものがなるべく似ているように巡回セールスマン問題で並び替えて復元する例が紹介されていたのでこういう応用を思いついた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543671817,
+      "updated": 1543671969
+    }
+  ]
+}

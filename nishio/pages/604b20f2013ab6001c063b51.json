@@ -1,0 +1,372 @@
+{
+  "id": "604b20f2013ab6001c063b51",
+  "title": "ReactNのuseGlobalはgetを監視する",
+  "created": 1615536372,
+  "updated": 1615536898,
+  "lines": [
+    {
+      "id": "604b20f2013ab6001c063b51",
+      "text": "ReactNのuseGlobalはgetを監視する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536372,
+      "updated": 1615536426
+    },
+    {
+      "id": "604b2107aff09e0000472a0c",
+      "text": "ReactNのuseGlobalにおいて、`useGlobal(\"foo\")` とプロパティを明示するのではなく `useGlobal()` と省略して呼び出した場合、ReactNは返したグローバル値に対するgetのアクセスを監視して`addPropertyListener`する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536392,
+      "updated": 1615536838
+    },
+    {
+      "id": "604b22cbaff09e0000472a51",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536844,
+      "updated": 1615536844
+    },
+    {
+      "id": "604b21a7aff09e00009bfa99",
+      "text": "というわけで「`useGlobal()`したらすべての更新で再描画が走っちゃう？」という懸念は不要だった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536551,
+      "updated": 1615536834
+    },
+    {
+      "id": "604b2287aff09e00009bfa9a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536775,
+      "updated": 1615536775
+    },
+    {
+      "id": "604b2215aff09e0000472a2c",
+      "text": "useGlobal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536662,
+      "updated": 1615536663
+    },
+    {
+      "id": "604b21c6aff09e0000472a0e",
+      "text": "code:use-global.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536583,
+      "updated": 1615536588
+    },
+    {
+      "id": "604b21ccaff09e0000472a0f",
+      "text": " export default function _useGlobal<...>(...): UseGlobal<G, Property> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536589,
+      "updated": 1615536613
+    },
+    {
+      "id": "604b21ffaff09e0000472a27",
+      "text": "   ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536639,
+      "updated": 1615536641
+    },
+    {
+      "id": "604b21e7aff09e0000472a17",
+      "text": "   if (typeof property === \"undefined\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536615,
+      "updated": 1615536637
+    },
+    {
+      "id": "604b220aaff09e0000472a28",
+      "text": "     ... ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536651,
+      "updated": 1615536653
+    },
+    {
+      "id": "604b21fdaff09e0000472a24",
+      "text": "     return [globalStateManager.spyState(forceUpdate), globalStateSetter];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536637,
+      "updated": 1615536637
+    },
+    {
+      "id": "604b21fdaff09e0000472a25",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536637,
+      "updated": 1615536637
+    },
+    {
+      "id": "604b21fdaff09e0000472a26",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536637,
+      "updated": 1615536656
+    },
+    {
+      "id": "604b220faff09e0000472a29",
+      "text": "spyState",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536656,
+      "updated": 1615536659
+    },
+    {
+      "id": "604b2213aff09e0000472a2b",
+      "text": "code:global-state-manager.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536659,
+      "updated": 1615536685
+    },
+    {
+      "id": "604b222eaff09e0000472a2d",
+      "text": "   public spyState(propertyListener: PropertyListener): G {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a2e",
+      "text": "     // When this._state is read, execute the listener.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536692
+    },
+    {
+      "id": "604b222faff09e0000472a30",
+      "text": "     return objectGetListener(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a31",
+      "text": "       this._state,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a32",
+      "text": "       (property: keyof G) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a33",
+      "text": "         this.addPropertyListener(property, propertyListener);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a34",
+      "text": "       },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a35",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a36",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536687
+    },
+    {
+      "id": "604b222faff09e0000472a37",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536687,
+      "updated": 1615536693
+    },
+    {
+      "id": "604b2235aff09e0000472a38",
+      "text": "objectGetListener",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536693,
+      "updated": 1615536714
+    },
+    {
+      "id": "604b224aaff09e0000472a3a",
+      "text": "code:object-get-listener.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536715,
+      "updated": 1615536725
+    },
+    {
+      "id": "604b2254aff09e0000472a3b",
+      "text": " // Return an object that executes a read listener.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536725,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a3c",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a3d",
+      "text": " export default function objectGetListener<Shape>(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a3e",
+      "text": "   obj: Shape,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a3f",
+      "text": "   listener: Function,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a40",
+      "text": " ): Shape {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a41",
+      "text": "   return (Object.keys(obj) as (keyof Shape)[]).reduce(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a42",
+      "text": "     (accumulator: Partial<Shape>, key: keyof Shape): Partial<Shape> => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a43",
+      "text": "       Object.defineProperty(accumulator, key, {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a44",
+      "text": "         configurable: false,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a45",
+      "text": "         enumerable: true,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a46",
+      "text": "         get: (): Shape[keyof Shape] => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a47",
+      "text": "           listener(key);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a48",
+      "text": "           return obj[key];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a49",
+      "text": "         }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a4a",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a4b",
+      "text": "       return accumulator;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a4c",
+      "text": "     },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a4d",
+      "text": "     Object.create(null)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a4e",
+      "text": "   );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a4f",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536754
+    },
+    {
+      "id": "604b2271aff09e0000472a50",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536754,
+      "updated": 1615536755
+    },
+    {
+      "id": "604b224aaff09e0000472a39",
+      "text": "[ReactN]の[reactn]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536714,
+      "updated": 1616493757
+    },
+    {
+      "id": "604b22feaff09e0000472a52",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615536895,
+      "updated": 1615536895
+    }
+  ]
+}

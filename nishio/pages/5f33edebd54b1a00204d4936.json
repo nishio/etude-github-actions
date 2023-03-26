@@ -1,0 +1,295 @@
+{
+  "id": "5f33edebd54b1a00204d4936",
+  "title": "時間のかかる原因を二分探索",
+  "created": 1597238786,
+  "updated": 1597239451,
+  "lines": [
+    {
+      "id": "5f33edebd54b1a00204d4936",
+      "text": "時間のかかる原因を二分探索",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597238786,
+      "updated": 1597238801
+    },
+    {
+      "id": "5f33ee11aff09e000072a430",
+      "text": "[Wikipedia]のタグを正規表現で取り除くコードを書いていたのだが、一部のページに関してやたら時間が掛かる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597238801,
+      "updated": 1597239439
+    },
+    {
+      "id": "5f33eec0aff09e000072a432",
+      "text": "一体入力のどの部分が問題なのか？1ページ全体の中から人間がこれを探すのは手間なので自動化したい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597238977,
+      "updated": 1597239018
+    },
+    {
+      "id": "5f33eeeaaff09e000072a433",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239018,
+      "updated": 1597239018
+    },
+    {
+      "id": "5f33eeefaff09e000072a434",
+      "text": "適当なタイムアウト時間を定めて「関数がタイムアウトするかどうか」で[二分探索]をする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239024,
+      "updated": 1597239451
+    },
+    {
+      "id": "5f33ef0daff09e000072a435",
+      "text": "タイムアウトするかどうかの判定には[multiprocessing]を使えば良い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239054,
+      "updated": 1597239448
+    },
+    {
+      "id": "5f33ef24aff09e000072a436",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239077,
+      "updated": 1597239077
+    },
+    {
+      "id": "5f33ef25aff09e000072a437",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239077,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef45aff09e00009f272c",
+      "text": " def binarySearchBadInput(s):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f272d",
+      "text": "     import multiprocessing",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f272e",
+      "text": "     left = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f272f",
+      "text": "     right = len(s)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2730",
+      "text": "     while left + 1 < right:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2731",
+      "text": "         print(left, right)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2732",
+      "text": "         mid = (left + right) // 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2733",
+      "text": "         p = multiprocessing.Process(target=cleanWikiTag, args=(s[mid:], ))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2734",
+      "text": "         p.start()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2735",
+      "text": "         p.join(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2736",
+      "text": "         if p.is_alive():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2737",
+      "text": "             left = mid",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2738",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f2739",
+      "text": "             right = mid",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef46aff09e00009f273a",
+      "text": "     return s[left:]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239110
+    },
+    {
+      "id": "5f33ef53aff09e00009f273c",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239123,
+      "updated": 1597239123
+    },
+    {
+      "id": "5f33ef53aff09e00009f273d",
+      "text": " print(binarySearchBadInput(getOnePage(2764)[\"text\"])[:100])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239124,
+      "updated": 1597239126
+    },
+    {
+      "id": "5f33ef55aff09e00009f273e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239126,
+      "updated": 1597239126
+    },
+    {
+      "id": "5f33ef90aff09e000072a438",
+      "text": "出力例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239184,
+      "updated": 1597239190
+    },
+    {
+      "id": "5f33ef6aaff09e00009f273f",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239146,
+      "updated": 1597239152
+    },
+    {
+      "id": "5f33ef70aff09e00009f2740",
+      "text": " 0 14161",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef71aff09e00009f2741",
+      "text": " 0 7080",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef71aff09e00009f2742",
+      "text": " 0 3540",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef71aff09e00009f2743",
+      "text": " 0 1770",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef71aff09e00009f2744",
+      "text": " 0 885",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef71aff09e00009f2745",
+      "text": " 442 885",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef83aff09e00009f274f",
+      "text": "\t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239171,
+      "updated": 1597239173
+    },
+    {
+      "id": "5f33ef71aff09e00009f2746",
+      "text": " 878 881",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239171
+    },
+    {
+      "id": "5f33ef71aff09e00009f274d",
+      "text": " 879 881",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239153
+    },
+    {
+      "id": "5f33ef71aff09e00009f274e",
+      "text": " <!--- 標高(<ref>) ---> ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239153,
+      "updated": 1597239165
+    },
+    {
+      "id": "5f33ef46aff09e00009f273b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239110,
+      "updated": 1597239111
+    },
+    {
+      "id": "5f33ee16aff09e000072a431",
+      "text": "なるほど…、`<!-- ... -->` を `<ref>...</ref>`より先に処理する必要があるのか…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597238806,
+      "updated": 1597239414
+    },
+    {
+      "id": "5f33ef99aff09e000072a439",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1597239194,
+      "updated": 1597239194
+    }
+  ]
+}

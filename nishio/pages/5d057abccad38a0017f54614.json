@@ -1,0 +1,1548 @@
+{
+  "id": "5d057abccad38a0017f54614",
+  "title": "数学前提知識なしの深層学習",
+  "created": 1560640197,
+  "updated": 1560742793,
+  "lines": [
+    {
+      "id": "5d057abccad38a0017f54614",
+      "text": "数学前提知識なしの深層学習",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640197,
+      "updated": 1560663172
+    },
+    {
+      "id": "5d060704aff09e0000eb74af",
+      "text": "行列の知識を前提としないで深層学習まで最短距離で解説したらどうなるか試しに書いてみた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676100,
+      "updated": 1560709038
+    },
+    {
+      "id": "5d0686f2aff09e0000bfb275",
+      "text": "この記事ではnumpyとscikit-learnを使う。scikit-learnをインストールすると両方入る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560708850,
+      "updated": 1560708888
+    },
+    {
+      "id": "5d068718aff09e0000bfb276",
+      "text": "[Installing scikit-learn — scikit-learn 0.21.2 documentation https://scikit-learn.org/stable/install.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560708888,
+      "updated": 1560708888
+    },
+    {
+      "id": "5d06071daff09e0000eb74b0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676125,
+      "updated": 1560679041
+    },
+    {
+      "id": "5d057aecaff09e0000eb73aa",
+      "text": "[* 行列]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640237,
+      "updated": 1560641156
+    },
+    {
+      "id": "5d061282aff09e0000eb74ca",
+      "text": "Numpyを使って解説する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560679043,
+      "updated": 1560679043
+    },
+    {
+      "id": "5d057ae4aff09e0000eb73a9",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640228,
+      "updated": 1560640233
+    },
+    {
+      "id": "5d057ac8aff09e0000eb73a7",
+      "text": "\t>>> import numpy as np",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640200,
+      "updated": 1560640235
+    },
+    {
+      "id": "5d057ae1aff09e0000eb73a8",
+      "text": "\t>>> np.array([[1, 2, 3], [4, 5, 6]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640225,
+      "updated": 1560640277
+    },
+    {
+      "id": "5d057b15aff09e0000eb73ab",
+      "text": " array([[1, 2, 3],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640277,
+      "updated": 1560640277
+    },
+    {
+      "id": "5d057b15aff09e0000eb73ac",
+      "text": "        [4, 5, 6]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640277,
+      "updated": 1560640277
+    },
+    {
+      "id": "5d057b15aff09e0000eb73ad",
+      "text": " >>> _.shape",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640277,
+      "updated": 1560640277
+    },
+    {
+      "id": "5d057b15aff09e0000eb73ae",
+      "text": " (2, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640277,
+      "updated": 1560640277
+    },
+    {
+      "id": "5d057d0faff09e0000eb73d0",
+      "text": "コード中の`_`は直前の値という意味。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640786,
+      "updated": 1560640791
+    },
+    {
+      "id": "5d057b1baff09e0000eb73af",
+      "text": "行列は数値が長方形に並んだもの。上記のコードでは2行3列の行列を作っている。どっちが行でどっちが列かは絶対混乱するので、この解説では今後「(2, 3)の行列」という表現をする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640284,
+      "updated": 1560640783
+    },
+    {
+      "id": "5d057b20aff09e0000eb73b0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640289,
+      "updated": 1560640289
+    },
+    {
+      "id": "5d057b4baff09e0000eb73b1",
+      "text": "[* ベクトル]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640332,
+      "updated": 1560641152
+    },
+    {
+      "id": "5d057b50aff09e0000eb73b3",
+      "text": "「ベクトル」は数が一列に並んだもの。N個の数が並んでいるものを「N次元のベクトル」と呼ぶ。ベクトルはプログラム上はいくつか表現の形がある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640337,
+      "updated": 1560677399
+    },
+    {
+      "id": "5d057b9baff09e0000eb73b5",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640412,
+      "updated": 1560640414
+    },
+    {
+      "id": "5d057b9daff09e0000eb73b6",
+      "text": " >>> np.array([1, 2, 3])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640414,
+      "updated": 1560640417
+    },
+    {
+      "id": "5d057b9eaff09e0000eb73b7",
+      "text": " array([1, 2, 3])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640417,
+      "updated": 1560640417
+    },
+    {
+      "id": "5d057b9eaff09e0000eb73b8",
+      "text": " >>> _.shape",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640417,
+      "updated": 1560640417
+    },
+    {
+      "id": "5d057b9eaff09e0000eb73b9",
+      "text": " (3,)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640417,
+      "updated": 1560640417
+    },
+    {
+      "id": "5d057bd9aff09e0000eb73bb",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640474,
+      "updated": 1560640474
+    },
+    {
+      "id": "5d057bdaaff09e0000eb73bc",
+      "text": " >>> np.array([[1, 2, 3]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73bd",
+      "text": " array([[1, 2, 3]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73be",
+      "text": " >>> _.shape",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73bf",
+      "text": " (1, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73c0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640478
+    },
+    {
+      "id": "5d057bddaff09e0000eb73c7",
+      "text": " >>> np.array([[1], [2], [3]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640478,
+      "updated": 1560640478
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73c1",
+      "text": " array([[1],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73c2",
+      "text": "        [2],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73c3",
+      "text": "        [3]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73c4",
+      "text": " >>> _.shape",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640476
+    },
+    {
+      "id": "5d057bdbaff09e0000eb73c5",
+      "text": " (3, 1) ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640476,
+      "updated": 1560640480
+    },
+    {
+      "id": "5d057c59aff09e0000eb73cb",
+      "text": "2番目と3番目は(1, 3)の行列と(3, 1)の行列なのだが、あまり区別せずにベクトルと呼ばれているケースが多い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640602,
+      "updated": 1560677475
+    },
+    {
+      "id": "5d057dbcaff09e0000eb73d3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640957,
+      "updated": 1560640957
+    },
+    {
+      "id": "5d057c18aff09e0000eb73c8",
+      "text": "[* 行列の掛け算]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640537,
+      "updated": 1560641163
+    },
+    {
+      "id": "5d057eafaff09e0000eb73e0",
+      "text": "(A, B)の行列と(B, C)の行列は掛け算をすることができて、(A, C)の行列になる。下では",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641200,
+      "updated": 1560641235
+    },
+    {
+      "id": "5d057ed3aff09e0000eb73e3",
+      "text": "\t(1, 3)と(3, 1)を掛けて(1, 1)になる例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641235,
+      "updated": 1560641239
+    },
+    {
+      "id": "5d057ed7aff09e0000eb73e4",
+      "text": "\t(3, 1)と(1, 3)を掛けて(3, 3)になる例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641239,
+      "updated": 1560641252
+    },
+    {
+      "id": "5d057ee5aff09e0000eb73e6",
+      "text": "を紹介している。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641253,
+      "updated": 1560641334
+    },
+    {
+      "id": "5d057f36aff09e0000eb73e7",
+      "text": "行列の掛け算は整数の掛け算と違って、順序を変えると異なる結果になる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641334,
+      "updated": 1560676160
+    },
+    {
+      "id": "5d057c1daff09e0000eb73c9",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640541,
+      "updated": 1560640730
+    },
+    {
+      "id": "5d057cdaaff09e0000eb73cc",
+      "text": " >>> v1 = np.array([[1, 2, 3]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640730,
+      "updated": 1560640730
+    },
+    {
+      "id": "5d057cdaaff09e0000eb73cd",
+      "text": " >>> v2 = np.array([[1], [2], [3]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640730,
+      "updated": 1560640730
+    },
+    {
+      "id": "5d057cdaaff09e0000eb73ce",
+      "text": " >>> v1.dot(v2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640730,
+      "updated": 1560640730
+    },
+    {
+      "id": "5d057cdaaff09e0000eb73cf",
+      "text": " array([[14]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640730,
+      "updated": 1560640730
+    },
+    {
+      "id": "5d057ea6aff09e0000eb73dc",
+      "text": " >>> v2.dot(v1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641191,
+      "updated": 1560641191
+    },
+    {
+      "id": "5d057ea6aff09e0000eb73dd",
+      "text": " array([[1, 2, 3],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641191,
+      "updated": 1560641191
+    },
+    {
+      "id": "5d057ea6aff09e0000eb73de",
+      "text": "        [2, 4, 6],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641191,
+      "updated": 1560641191
+    },
+    {
+      "id": "5d057ea6aff09e0000eb73df",
+      "text": "        [3, 6, 9]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641191,
+      "updated": 1560641191
+    },
+    {
+      "id": "5d057eb2aff09e0000eb73e2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641205,
+      "updated": 1560641205
+    },
+    {
+      "id": "5d057ba1aff09e0000eb73ba",
+      "text": "行列の掛け算をする時には、Bの部分の長さが同じであることが必要である。もしずれていると以下のエラーが出る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560640418,
+      "updated": 1560677493
+    },
+    {
+      "id": "5d060745aff09e0000eb74b1",
+      "text": "下では(1, 3)と(1, 3)を掛けようとして3 != 1だと指摘されている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676165,
+      "updated": 1560676165
+    },
+    {
+      "id": "5d057e73aff09e0000eb73d5",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641140,
+      "updated": 1560641145
+    },
+    {
+      "id": "5d057e75aff09e0000eb73d6",
+      "text": " >>> v1.dot(v1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641145,
+      "updated": 1560641145
+    },
+    {
+      "id": "5d057e75aff09e0000eb73d7",
+      "text": " Traceback (most recent call last):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641145,
+      "updated": 1560641145
+    },
+    {
+      "id": "5d057e75aff09e0000eb73d8",
+      "text": "   File \"<ipython-input-...>\", line 1, in <module>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641145,
+      "updated": 1560677514
+    },
+    {
+      "id": "5d057e75aff09e0000eb73d9",
+      "text": "     v1.dot(v1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641145,
+      "updated": 1560641145
+    },
+    {
+      "id": "5d057e75aff09e0000eb73da",
+      "text": " ValueError: shapes (1,3) and (1,3) not aligned: 3 (dim 1) != 1 (dim 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641145,
+      "updated": 1560641145
+    },
+    {
+      "id": "5d057e55aff09e0000eb73d4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641111,
+      "updated": 1560641111
+    },
+    {
+      "id": "5d05d735aff09e0000eb73f7",
+      "text": "[* 内積]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663861,
+      "updated": 1560663866
+    },
+    {
+      "id": "5d05cfffaff09e0000eb73ec",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560662015,
+      "updated": 1560662017
+    },
+    {
+      "id": "5d057f58aff09e0000eb73e8",
+      "text": " >>> v1.dot(v2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560641369,
+      "updated": 1560662014
+    },
+    {
+      "id": "5d05cffeaff09e0000eb73ea",
+      "text": " array([[14]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560662014,
+      "updated": 1560662014
+    },
+    {
+      "id": "5d05cffeaff09e0000eb73eb",
+      "text": "これは 1 * 1 + 2 * 2 * 3 * 3 である。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560662014,
+      "updated": 1560662045
+    },
+    {
+      "id": "5d05d01daff09e0000eb73ee",
+      "text": "同じ長さの数値の列があって、対応するものをそれぞれ掛けて全部足している。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560662045,
+      "updated": 1560663226
+    },
+    {
+      "id": "5d05d4b9aff09e0000eb73f0",
+      "text": "これを「内積(Dot product)」と呼ぶ。メソッド名のdotはそこから来ている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663226,
+      "updated": 1560677538
+    },
+    {
+      "id": "5d05d72eaff09e0000eb73f5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663855,
+      "updated": 1560663855
+    },
+    {
+      "id": "5d05d742aff09e0000eb73f8",
+      "text": "この「3つの対応するものをそれぞれ掛けて足し合わせる」っていうのを数学の書き方をすると",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663874,
+      "updated": 1560664016
+    },
+    {
+      "id": "5d05d779aff09e0000eb73fa",
+      "text": "\t[$ x_1 y_1 + x_2 y_2 + x_3 y_3]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663930,
+      "updated": 1560664005
+    },
+    {
+      "id": "5d05d7a3aff09e0000eb73fb",
+      "text": "になる。これをシグマ(Σ)を使って",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663971,
+      "updated": 1560709126
+    },
+    {
+      "id": "5d068805aff09e0000bfb278",
+      "text": "\t[$ \\sum_{i=1}^3 x_i y_i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709126,
+      "updated": 1560709126
+    },
+    {
+      "id": "5d05d72eaff09e0000eb73f6",
+      "text": "と書く。略して",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663855,
+      "updated": 1560709156
+    },
+    {
+      "id": "5d05d4e3aff09e0000eb73f1",
+      "text": "\t[$ \\sum_i x_i y_i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663268,
+      "updated": 1560709140
+    },
+    {
+      "id": "5d068826aff09e0000bfb27b",
+      "text": "とか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709158,
+      "updated": 1560709160
+    },
+    {
+      "id": "5d06880eaff09e0000bfb279",
+      "text": "\t[$ \\sum x_i y_i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709134,
+      "updated": 1560709148
+    },
+    {
+      "id": "5d06880faff09e0000bfb27a",
+      "text": "とも書く。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709135,
+      "updated": 1560709173
+    },
+    {
+      "id": "5d068828aff09e0000bfb27c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709161,
+      "updated": 1560709161
+    },
+    {
+      "id": "5d05d4e4aff09e0000eb73f2",
+      "text": "[* 形式ニューロン]: [形式ニューロン - Wikipedia https://ja.wikipedia.org/wiki/%E5%BD%A2%E5%BC%8F%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%AD%E3%83%B3]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663268,
+      "updated": 1560663443
+    },
+    {
+      "id": "5d05d52baff09e0000eb73f3",
+      "text": "1943年に作られた、のちにニューラルネットの基礎になった考え方",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663339,
+      "updated": 1560663375
+    },
+    {
+      "id": "5d05d99eaff09e0000eb7407",
+      "text": "[https://gyazo.com/94dd939f71749fa9a2b5070b242ba11a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664478,
+      "updated": 1560672852
+    },
+    {
+      "id": "5d05fa4daff09e0000d4914f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560672845,
+      "updated": 1560672845
+    },
+    {
+      "id": "5d05d54faff09e0000eb73f4",
+      "text": " 入力[$ x_i]に重み [$ w_i] を掛け合わせて足し合わせる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663375,
+      "updated": 1560672867
+    },
+    {
+      "id": "5d05d499aff09e0000eb73ef",
+      "text": " それが閾値[$ h]を超えていたら1を出力、超えてなければ0を出力",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560663193,
+      "updated": 1560672875
+    },
+    {
+      "id": "5d05d927aff09e0000eb73ff",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664359,
+      "updated": 1560664359
+    },
+    {
+      "id": "5d05d933aff09e0000eb7400",
+      "text": "「入力に重みを掛け合わせて足し合わせる」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664371,
+      "updated": 1560664373
+    },
+    {
+      "id": "5d05d938aff09e0000eb7401",
+      "text": "\tこれはさっきの「内積」だ！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664377,
+      "updated": 1560672899
+    },
+    {
+      "id": "5d05fa84aff09e0000eb740c",
+      "text": "\tつまり[$ \\sum_i x_i w_i > h]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560672900,
+      "updated": 1560672975
+    },
+    {
+      "id": "5d05fb2faff09e0000eb7413",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673071,
+      "updated": 1560673071
+    },
+    {
+      "id": "5d05d96daff09e0000eb7404",
+      "text": "コードで表現するなら",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664430,
+      "updated": 1560672991
+    },
+    {
+      "id": "5d05fadfaff09e0000eb740d",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560672991,
+      "updated": 1560673023
+    },
+    {
+      "id": "5d05fafeaff09e0000eb740e",
+      "text": " >>> if x.dot(w) > h:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673023,
+      "updated": 1560673023
+    },
+    {
+      "id": "5d05faffaff09e0000eb740f",
+      "text": " ...     y = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673023,
+      "updated": 1560673023
+    },
+    {
+      "id": "5d05faffaff09e0000eb7410",
+      "text": " ... else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673023,
+      "updated": 1560673023
+    },
+    {
+      "id": "5d05faffaff09e0000eb7411",
+      "text": " ...     y = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673023,
+      "updated": 1560673023
+    },
+    {
+      "id": "5d05d971aff09e0000eb7406",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664434,
+      "updated": 1560673056
+    },
+    {
+      "id": "5d05fb31aff09e0000eb7414",
+      "text": "[* ロジスティック回帰]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673073,
+      "updated": 1560673080
+    },
+    {
+      "id": "5d05fb31aff09e0000eb7415",
+      "text": "入力[$ x]と出力[$ y]の組み合わせをいくつか与えることで、適当な重み [$ w]を求める方法。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673073,
+      "updated": 1560673529
+    },
+    {
+      "id": "5d05fcf9aff09e0000eb7421",
+      "text": "基本的な機械学習の手法の一つ。下のコードでは例えば「入力が(1, 1, 1, 0)なら出力は0」という8件のデータからscikit-learnを使って学習している。角かっこと丸かっこの違いは見やすさ以外の意味はない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673529,
+      "updated": 1560679086
+    },
+    {
+      "id": "5d05fb39aff09e0000eb7416",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673081,
+      "updated": 1560673457
+    },
+    {
+      "id": "5d05fcb1aff09e0000eb741f",
+      "text": " >>> from sklearn.linear_model import LogisticRegression",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673457,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7422",
+      "text": " >>> X = np.array([",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7423",
+      "text": " ...   (1, 1, 1, 0),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673541
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7425",
+      "text": " ...   (1, 0, 1, 0),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7426",
+      "text": " ...   (1, 1, 0, 0),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7427",
+      "text": " ...   (0, 1, 1, 0),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7428",
+      "text": " ...   (0, 0, 1, 1),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673543
+    },
+    {
+      "id": "5d05fd01aff09e0000eb742a",
+      "text": " ...   (0, 0, 0, 1),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb742b",
+      "text": " ...   (0, 1, 0, 1),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb742c",
+      "text": " ...   (1, 0, 0, 1)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb742d",
+      "text": " >>> Y = np.array([0, 0, 0, 0, 1, 1, 1, 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673852
+    },
+    {
+      "id": "5d05fd01aff09e0000eb742f",
+      "text": " >>> m = LogisticRegression()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673546
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7431",
+      "text": " >>> m.fit(X, Y)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7432",
+      "text": " LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7433",
+      "text": "           intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7434",
+      "text": "           penalty='l2', random_state=None, solver='liblinear', tol=0.0001,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7435",
+      "text": "           verbose=0, warm_start=False)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673538
+    },
+    {
+      "id": "5d05fd01aff09e0000eb7436",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673538,
+      "updated": 1560673548
+    },
+    {
+      "id": "5d05fd8baff09e0000eb743e",
+      "text": "「(1, 1, 1, 0)の場合ってなんだっけ？」って聞くと「0である確率が0.79, 1である確率が0.21」と答える。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673675,
+      "updated": 1560673716
+    },
+    {
+      "id": "5d05fd98aff09e0000eb743f",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673689,
+      "updated": 1560673691
+    },
+    {
+      "id": "5d05fd9baff09e0000eb7441",
+      "text": " >>> m.predict_proba([(1, 1, 1, 0)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673692,
+      "updated": 1560673692
+    },
+    {
+      "id": "5d05fd9caff09e0000eb7442",
+      "text": " array([[0.79460161, 0.20539839]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673692,
+      "updated": 1560673692
+    },
+    {
+      "id": "5d05fd98aff09e0000eb7440",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673689,
+      "updated": 1560673689
+    },
+    {
+      "id": "5d05fdc5aff09e0000eb7443",
+      "text": "学習データに含まれていなかった(1, 1, 1, 1)の場合にどうなるか聞いてみると、0.55の確率で0だと答える。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673734,
+      "updated": 1560709209
+    },
+    {
+      "id": "5d068859aff09e0000bfb27d",
+      "text": "確率が0.5に近いのは、あまり自信がないってこと。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709209,
+      "updated": 1560709221
+    },
+    {
+      "id": "5d05fdd2aff09e0000eb7448",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673747,
+      "updated": 1560673747
+    },
+    {
+      "id": "5d05fdcdaff09e0000eb7446",
+      "text": "\t>>> m.predict_proba([(1, 1, 1, 1)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673741,
+      "updated": 1560673748
+    },
+    {
+      "id": "5d05fdcdaff09e0000eb7447",
+      "text": "\tarray([[0.54564474, 0.45435526]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673741,
+      "updated": 1560673749
+    },
+    {
+      "id": "5d05fdc5aff09e0000eb7444",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673734,
+      "updated": 1560673734
+    },
+    {
+      "id": "5d05fd58aff09e0000eb7437",
+      "text": "wとhに相当する値はこうやって見ることができる:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673624,
+      "updated": 1560676215
+    },
+    {
+      "id": "5d05fd5eaff09e0000eb7438",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673631,
+      "updated": 1560673634
+    },
+    {
+      "id": "5d05fd62aff09e0000eb7439",
+      "text": " >>> m.coef_",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673634,
+      "updated": 1560673634
+    },
+    {
+      "id": "5d05fd62aff09e0000eb743a",
+      "text": " array([[-0.47815958, -0.47815958, -0.47815958,  1.16980067]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673634,
+      "updated": 1560673634
+    },
+    {
+      "id": "5d05fd62aff09e0000eb743b",
+      "text": " >>> m.intercept_",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673634,
+      "updated": 1560673634
+    },
+    {
+      "id": "5d05fd62aff09e0000eb743c",
+      "text": " array([0.08158937])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673634,
+      "updated": 1560673634
+    },
+    {
+      "id": "5d05fe83aff09e0000eb745d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673923,
+      "updated": 1560674301
+    },
+    {
+      "id": "5d060141aff09e0000eb7463",
+      "text": "検算してみよう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674626,
+      "updated": 1560674628
+    },
+    {
+      "id": "5d05fefcaff09e0000eb7460",
+      "text": "説明していなかったが、形式ニューロンとは活性化関数がちょっと違う。[活性化関数 - Wikipedia https://ja.wikipedia.org/wiki/%E6%B4%BB%E6%80%A7%E5%8C%96%E9%96%A2%E6%95%B0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674044,
+      "updated": 1560675256
+    },
+    {
+      "id": "5d05ff2baff09e0000eb7461",
+      "text": "形式ニューロンでは「[$ \\sum_i x_i w_i]が[$ h] を超えていたら1、 超えてなかったら0」という階段型のステップ関数を使ったが、ロジスティック回帰では滑らかなS字型のシグモイド関数を使う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674091,
+      "updated": 1560709289
+    },
+    {
+      "id": "5d05fe83aff09e0000eb745e",
+      "text": "[https://gyazo.com/e984c3bc1bedafd04c8e9bf23b8f4410]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673923,
+      "updated": 1560674297
+    },
+    {
+      "id": "5d0688aeaff09e0000bfb27f",
+      "text": "シグモイド関数は数式で書くとこう:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709294,
+      "updated": 1560709303
+    },
+    {
+      "id": "5d0688b7aff09e0000bfb281",
+      "text": "[$ f(x) = \\frac{1}{1 + e^{-x}}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709303,
+      "updated": 1560709334
+    },
+    {
+      "id": "5d0688aeaff09e0000bfb280",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560709294,
+      "updated": 1560709294
+    },
+    {
+      "id": "5d05fff9aff09e0000d49150",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674297,
+      "updated": 1560674845
+    },
+    {
+      "id": "5d06021eaff09e0000eb7465",
+      "text": " >>> m.coef_.dot((1, 1, 1, 1)) + m.intercept_",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674846,
+      "updated": 1560674846
+    },
+    {
+      "id": "5d06021eaff09e0000eb7466",
+      "text": " array([-0.18308872])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674846,
+      "updated": 1560674846
+    },
+    {
+      "id": "5d06021eaff09e0000eb7467",
+      "text": " >>> 1 / (1 + np.exp(- _[0]))  # シグモイド関数",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674846,
+      "updated": 1560676224
+    },
+    {
+      "id": "5d06021eaff09e0000eb7468",
+      "text": " 0.454355256283273",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674846,
+      "updated": 1560674846
+    },
+    {
+      "id": "5d06021eaff09e0000eb7469",
+      "text": "ここで出てきた0.45は下記の0.45のことだ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674846,
+      "updated": 1560674889
+    },
+    {
+      "id": "5d06023aaff09e0000eb746b",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674875,
+      "updated": 1560674875
+    },
+    {
+      "id": "5d06023aaff09e0000eb746c",
+      "text": "\t>>> m.predict_proba([(1, 1, 1, 1)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674875,
+      "updated": 1560674875
+    },
+    {
+      "id": "5d06023aaff09e0000eb746d",
+      "text": "\tarray([[0.54564474, 0.45435526]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674875,
+      "updated": 1560674875
+    },
+    {
+      "id": "5d060147aff09e0000eb7464",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560674632,
+      "updated": 1560674632
+    },
+    {
+      "id": "5d05d93eaff09e0000eb7403",
+      "text": "[* 多層パーセプトロン]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664382,
+      "updated": 1560675883
+    },
+    {
+      "id": "5d0603beaff09e0000eb746f",
+      "text": "ロジスティック回帰は意外な問題が解けない。下記のコードで「0.5」と答えているということは「全然自信がない」ってこと。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675262,
+      "updated": 1560675338
+    },
+    {
+      "id": "5d0603d0aff09e0000eb7471",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675281,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7472",
+      "text": " >>>  X = np.array([",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7473",
+      "text": " ...   (1, 1),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7474",
+      "text": " ...   (1, 0),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7475",
+      "text": " ...   (0, 1),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7476",
+      "text": " ...   (0, 0)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7477",
+      "text": " ...  Y = np.array([0, 1, 1, 0])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675295
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7479",
+      "text": " ...  m = LogisticRegression()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675296
+    },
+    {
+      "id": "5d0603dbaff09e0000eb747b",
+      "text": " ...  m.fit(X, Y)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb747c",
+      "text": " LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675299
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7483",
+      "text": "           intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7484",
+      "text": "           penalty='l2', random_state=None, solver='liblinear', tol=0.0001,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7485",
+      "text": "           verbose=0, warm_start=False)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675291
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7486",
+      "text": " >>> m.predict_proba([(1, 1)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675307
+    },
+    {
+      "id": "5d0603dbaff09e0000eb7497",
+      "text": " array([[0.5, 0.5]]) ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675291,
+      "updated": 1560675308
+    },
+    {
+      "id": "5d0603beaff09e0000eb7470",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675262,
+      "updated": 1560675262
+    },
+    {
+      "id": "5d05d91aaff09e0000eb73fe",
+      "text": "そこでロジスティック回帰をいくつも積み重ねてみる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664347,
+      "updated": 1560676649
+    },
+    {
+      "id": "5d060923aff09e0000d49152",
+      "text": "[https://gyazo.com/dbe9479365fa1cf7c3f7b65f3e5c0e9c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676643,
+      "updated": 1560676644
+    },
+    {
+      "id": "5d05d9d5aff09e0000eb7409",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560664534,
+      "updated": 1560676655
+    },
+    {
+      "id": "5d0604b1aff09e0000d49151",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675505,
+      "updated": 1560675751
+    },
+    {
+      "id": "5d0605a7aff09e0000eb7499",
+      "text": " >>> from sklearn.neural_network import MLPClassifier",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675751,
+      "updated": 1560675751
+    },
+    {
+      "id": "5d0605a7aff09e0000eb749a",
+      "text": " >>> m = MLPClassifier(hidden_layer_sizes=[3], max_iter=100000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675751,
+      "updated": 1560675760
+    },
+    {
+      "id": "5d0605b0aff09e0000eb749b",
+      "text": " >>> m.fit(X, Y)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675760,
+      "updated": 1560675760
+    },
+    {
+      "id": "5d0605b6aff09e0000eb749c",
+      "text": " MLPClassifier(activation='relu', alpha=0.0001, batch_size='auto', beta_1=0.9,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb749d",
+      "text": "        beta_2=0.999, early_stopping=False, epsilon=1e-08,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb749e",
+      "text": "        hidden_layer_sizes=[3], learning_rate='constant',",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb749f",
+      "text": "        learning_rate_init=0.001, max_iter=100000, momentum=0.9,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb74a0",
+      "text": "        nesterovs_momentum=True, power_t=0.5, random_state=None,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb74a1",
+      "text": "        shuffle=True, solver='adam', tol=0.0001, validation_fraction=0.1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb74a2",
+      "text": "        verbose=False, warm_start=False)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb74a3",
+      "text": " >>> m.predict_proba([(1, 1)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d0605b7aff09e0000eb74a4",
+      "text": " array([[0.92259642, 0.07740358]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675767,
+      "updated": 1560675767
+    },
+    {
+      "id": "5d05fe7eaff09e0000eb744b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560673918,
+      "updated": 1560673918
+    },
+    {
+      "id": "5d0605c9aff09e0000eb74a5",
+      "text": "「(1, 1)の時の正解は確率0.92で0だ！」と答えれるようになった。めでたしめでたし。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675785,
+      "updated": 1560675815
+    },
+    {
+      "id": "5d0605d0aff09e0000eb74a6",
+      "text": "なお、今回はデータが4件とめちゃくちゃ少ないので`max_iter=100000`(最大10万回学習せよ)とめちゃくちゃ繰り返させている。今回は`hidden_layer_sizes=[3]`と小さく薄いネットワークにしているが、ここのパラメータを増やせば広くしたり深くしたりできる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675793,
+      "updated": 1560676048
+    },
+    {
+      "id": "5d0606bbaff09e0000eb74ae",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676027,
+      "updated": 1560676027
+    },
+    {
+      "id": "5d0607dfaff09e0000eb74b2",
+      "text": "この学習済みネットワークの重みを見てみよう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676319,
+      "updated": 1560676327
+    },
+    {
+      "id": "5d0607e6aff09e0000eb74b3",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676327,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74b4",
+      "text": " >>> m.coefs_[0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74b5",
+      "text": " array([[ 1.39650888, -2.16802863, -0.96996648],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74b6",
+      "text": "        [-1.39634665,  2.16818065,  1.11704021]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d06084baff09e0000eb74c0",
+      "text": " >>> _.shape",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676428,
+      "updated": 1560676431
+    },
+    {
+      "id": "5d06084caff09e0000eb74c1",
+      "text": " (2, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676428,
+      "updated": 1560676431
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74b7",
+      "text": " >>> m.coefs_[1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74b8",
+      "text": " array([[ 2.11163102],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74b9",
+      "text": "        [ 3.05600029],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74ba",
+      "text": "        [-1.74200157]])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676329
+    },
+    {
+      "id": "5d060851aff09e0000eb74c2",
+      "text": " >>> _.shape",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676433,
+      "updated": 1560676440
+    },
+    {
+      "id": "5d060858aff09e0000eb74c3",
+      "text": " (3, 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676440,
+      "updated": 1560676440
+    },
+    {
+      "id": "5d0607e9aff09e0000eb74bb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676329,
+      "updated": 1560676331
+    },
+    {
+      "id": "5d06080aaff09e0000eb74bc",
+      "text": "この多層パーセプトロンでは重みが(2, 3)行列と(3, 1)行列の2つになっている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676362,
+      "updated": 1560676672
+    },
+    {
+      "id": "5d060822aff09e0000eb74bf",
+      "text": "図を再掲。まず2次元の入力を3つのニューロンにするところで(2, 3)になって、次の3つのニューロンから1つのニューロンにするところで(3, 1)になっているわけだ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676386,
+      "updated": 1560676739
+    },
+    {
+      "id": "5d060950aff09e0000eb74c4",
+      "text": "[https://gyazo.com/dbe9479365fa1cf7c3f7b65f3e5c0e9c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676689,
+      "updated": 1560676689
+    },
+    {
+      "id": "5d060951aff09e0000eb74c5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560676690,
+      "updated": 1560676690
+    },
+    {
+      "id": "5d060631aff09e0000eb74a9",
+      "text": "次回予定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675889,
+      "updated": 1560675894
+    },
+    {
+      "id": "5d060635aff09e0000eb74ab",
+      "text": "\tRNN",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675894,
+      "updated": 1560675913
+    },
+    {
+      "id": "5d060648aff09e0000eb74ac",
+      "text": "\tLSTM",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675913,
+      "updated": 1560675915
+    },
+    {
+      "id": "5d06065daff09e0000eb74ad",
+      "text": "\tAttention",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675933,
+      "updated": 1560675935
+    },
+    {
+      "id": "5d060632aff09e0000eb74aa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560675891,
+      "updated": 1560675891
+    },
+    {
+      "id": "5d060adbaff09e0000eb74c6",
+      "text": "\thttps://docs.chainer.org/en/stable/examples/rnn.html",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560677083,
+      "updated": 1560742772
+    },
+    {
+      "id": "5d070b73aff09e0000bfb282",
+      "text": "\t\tRNNの説明のところでいきなりLSTMを使っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560742771,
+      "updated": 1560742784
+    },
+    {
+      "id": "5d070b78aff09e0000bfb283",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560742776,
+      "updated": 1560742776
+    }
+  ]
+}

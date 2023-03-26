@@ -1,0 +1,211 @@
+{
+  "id": "617bc0b4fda5e6001d784c5e",
+  "title": "Facebook MessengerをJSONエクスポート",
+  "created": 1635500215,
+  "updated": 1635505365,
+  "lines": [
+    {
+      "id": "617bc0b4fda5e6001d784c5e",
+      "text": "Facebook MessengerをJSONエクスポート",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500215,
+      "updated": 1635500278
+    },
+    {
+      "id": "617bc0f6aff09e00004ae7da",
+      "text": "公式の機能でJSONエクスポートができるようになったので、会話の内容をニーズに合わせて整形するのも簡単になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500278,
+      "updated": 1635500322
+    },
+    {
+      "id": "617bc199aff09e00004ae7dc",
+      "text": "　設定>あなたのFacebook情報>個人データをダウンロード>「フォーマット: JSON」で「ファイルを作成」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500445,
+      "updated": 1635500520
+    },
+    {
+      "id": "617bc108aff09e00004ae7db",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500297,
+      "updated": 1635500297
+    },
+    {
+      "id": "617bc0baaff09e00007d45f2",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500218,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0bdaff09e00007d45f4",
+      "text": " from datetime import datetime",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45f5",
+      "text": " import json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45f6",
+      "text": " data = json.load(open(\"inbox/XXXXXXXX/message_1.json\"))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500237
+    },
+    {
+      "id": "617bc0beaff09e00007d45f7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45f8",
+      "text": " prev_date = \"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45f9",
+      "text": " for m in reversed(data[\"messages\"]):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45fa",
+      "text": "     date = datetime.fromtimestamp(m['timestamp_ms'] // 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45fb",
+      "text": "     str_date = date.strftime(\"%Y-%m-%d\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45fc",
+      "text": "     if str_date != prev_date:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45fd",
+      "text": "         print(str_date)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45fe",
+      "text": "         prev_date = str_date",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d45ff",
+      "text": "     if \"content\" in m:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d4600",
+      "text": "         sender = \"T:\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d4601",
+      "text": "         if m[\"sender_name\"].startswith(\"Nishio\"):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d4602",
+      "text": "             sender = \"N:\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d4603",
+      "text": "         print(sender,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d4604",
+      "text": "               m[\"content\"].encode(\"latin-1\").decode(\"utf-8\"))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500222
+    },
+    {
+      "id": "617bc0beaff09e00007d4605",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500222,
+      "updated": 1635500241
+    },
+    {
+      "id": "617bc2d7aff09e00004ae7dd",
+      "text": "これに使った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500759,
+      "updated": 1635500762
+    },
+    {
+      "id": "617bc2daaff09e00004ae7df",
+      "text": "[キャリブレーション会]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500763,
+      "updated": 1635500765
+    },
+    {
+      "id": "617bc2daaff09e00004ae7de",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635500762,
+      "updated": 1635500762
+    },
+    {
+      "id": "617bd4c9aff09e000030f6e7",
+      "text": "5行くらいCopilotが書いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635505353,
+      "updated": 1635505363
+    },
+    {
+      "id": "617bd4d3aff09e000030f6e9",
+      "text": "https://twitter.com/nishio/status/1453992902279892993?s=21",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635505364,
+      "updated": 1635505365
+    },
+    {
+      "id": "617bd4ccaff09e000030f6e8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1635505357,
+      "updated": 1635505357
+    }
+  ]
+}

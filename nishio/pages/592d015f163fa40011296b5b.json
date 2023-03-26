@@ -1,0 +1,204 @@
+{
+  "id": "592d015f163fa40011296b5b",
+  "title": "Pandasの辞書的使い方",
+  "created": 1496121699,
+  "updated": 1496138314,
+  "lines": [
+    {
+      "id": "592d015f163fa40011296b5b",
+      "text": "Pandasの辞書的使い方",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496121699,
+      "updated": 1496121709
+    },
+    {
+      "id": "592d05f2aff09e0000f189e1",
+      "text": "PandasでNameとValueというカラムのあるCSVを読み込んで、「Nameが特定の値の時のValueを知りたい」という場合。なおNameは一意だとする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122867,
+      "updated": 1496123096
+    },
+    {
+      "id": "592d02bcaff09e0000f189cd",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122044,
+      "updated": 1496122048
+    },
+    {
+      "id": "592d02c5aff09e0000f189ce",
+      "text": " import pandas as pd",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122053,
+      "updated": 1496122057
+    },
+    {
+      "id": "592d02c8aff09e0000f189cf",
+      "text": " data = pd.read_csv(\"t.csv\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122057,
+      "updated": 1496122057
+    },
+    {
+      "id": "592d02c8aff09e0000f189d0",
+      "text": " v = data[data.Name==\"1299c1b7a9e0c2bf41af69c449464a49\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122057,
+      "updated": 1496123147
+    },
+    {
+      "id": "592d0607aff09e0000f189e3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122887,
+      "updated": 1496122887
+    },
+    {
+      "id": "592d0607aff09e0000f189e4",
+      "text": "以下のように一応期待通りには動く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122887,
+      "updated": 1496122937
+    },
+    {
+      "id": "592d02c8aff09e0000f189d1",
+      "text": "code:output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122057,
+      "updated": 1496122103
+    },
+    {
+      "id": "592d02e2aff09e0000f189d5",
+      "text": "                                   Name  Value",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122082,
+      "updated": 1496122084
+    },
+    {
+      "id": "592d02e4aff09e0000f189d6",
+      "text": " 9979  1299c1b7a9e0c2bf41af69c449464a49   9979 ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122084,
+      "updated": 1496122088
+    },
+    {
+      "id": "592d0672aff09e0000f189ea",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122995,
+      "updated": 1496122995
+    },
+    {
+      "id": "592d0328aff09e0000f189d8",
+      "text": "だけどこれは結構重たい。100万行のCSVから1個選ぶのには64msecくらいかかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122153,
+      "updated": 1496123021
+    },
+    {
+      "id": "592d0332aff09e0000f189dc",
+      "text": "code:output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122162,
+      "updated": 1496127937
+    },
+    {
+      "id": "592d0335aff09e0000f189dd",
+      "text": " %timeit data[data.Name==\"1299c1b7a9e0c2bf41af69c449464a49\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122166,
+      "updated": 1496122993
+    },
+    {
+      "id": "592d0670aff09e0000f189e9",
+      "text": " 10 loops, best of 3: 64.1 ms per loop",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122993,
+      "updated": 1496122993
+    },
+    {
+      "id": "592d066eaff09e0000f189e7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122990,
+      "updated": 1496122990
+    },
+    {
+      "id": "592d066eaff09e0000f189e8",
+      "text": "こんな時にindex_colを指定すると、以下のようにアクセスできて",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122990,
+      "updated": 1496123175
+    },
+    {
+      "id": "592d06f7aff09e0000f189eb",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123128,
+      "updated": 1496123132
+    },
+    {
+      "id": "592d06feaff09e0000f189ec",
+      "text": " data = pd.read_csv(\"t.csv\", index_col=\"Name\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123134,
+      "updated": 1496123134
+    },
+    {
+      "id": "592d06feaff09e0000f189ed",
+      "text": " v = data.Value[\"1299c1b7a9e0c2bf41af69c449464a49\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123134,
+      "updated": 1496123163
+    },
+    {
+      "id": "592d0742aff09e0000f189f3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123203,
+      "updated": 1496123203
+    },
+    {
+      "id": "592d0336aff09e0000f189e0",
+      "text": "1000倍以上早くなる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122166,
+      "updated": 1496123209
+    },
+    {
+      "id": "592d0328aff09e0000f189d9",
+      "text": "code:output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496122153,
+      "updated": 1496123190
+    },
+    {
+      "id": "592d0736aff09e0000f189ef",
+      "text": " %timeit data.Value[key]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123191,
+      "updated": 1496123191
+    },
+    {
+      "id": "592d0737aff09e0000f189f0",
+      "text": " 1 loop, best of 3: 17.9 µs per loop ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123191,
+      "updated": 1496123199
+    },
+    {
+      "id": "592d074baff09e0000f189f4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123212,
+      "updated": 1496123212
+    },
+    {
+      "id": "592d0732aff09e0000f189ee",
+      "text": "なお、開くときにindex_colを指定しなかった場合でも、あとから`data.set_index('Name')`することができる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1496123186,
+      "updated": 1496138314
+    }
+  ]
+}

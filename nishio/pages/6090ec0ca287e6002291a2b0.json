@@ -1,0 +1,1583 @@
+{
+  "id": "6090ec0ca287e6002291a2b0",
+  "title": "Hatena2013-05-31",
+  "created": 1369926000,
+  "updated": 1369926000,
+  "lines": [
+    {
+      "id": "6090ec30aff09e00003de61a",
+      "text": "Hatena2013-05-31",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de61b",
+      "text": "code:hatena",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de61c",
+      "text": " <body>",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de61d",
+      "text": " *1370000103*再帰呼び出しを再帰呼び出しなしで実現",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de61e",
+      "text": " 拙著「<a href=\"http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X&linkCode=as2&tag=nishiohirokaz-22\">コーディングを支える技術</a>」の第5章「関数」では、P.50で「再帰呼び出しを使っているプログラムは、再帰呼び出しを使わなくても書くことができる」と説明しました。この件に関してここで補足記事として解説することにしました。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de61f",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de620",
+      "text": " P.53の簡単な再帰呼び出しの例(total関数)をターゲットにします。これは空行とコメントを除くと8行の簡単な例です。このコードから、挙動を変えずに再帰呼び出しを取り除いてみましょう。腕に自身のある人はは続きを読む前に自分で実装してみるとよいでしょう。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de621",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de622",
+      "text": " ** チャレンジする人向けの注意点",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de623",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de624",
+      "text": " 今回の対象では再帰呼び出しをしながら行う処理が「要素の足し算」でした。足し算は順番を入れ替えても結果が同じです。なので、うっかり計算の順番を変えてしまっても、結果からは間違いに気付けません。例えば深さ優先探索を幅優先探索に変えてしまうと、[1, [2, 3], 4]が本来の1, 2, 3, 4という順番ではなく、1, 4, 2, 3という順番で足されるようになります。実は今回のケースでは幅優先探索に変えてしまうコードの方がシンプルになります。しかしこれは題意を満たさないものとします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de625",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de626",
+      "text": " また、今回のケースではresultをすべての関数から読み書きできるところに置いてしまうことができます。これは元のコードでローカル変数であったresultをグローバル変数に変えてしまうことに相当します。これをやると「値をどうやって返すのか」の考察が抜けてしまうので、減点対象ということにします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de627",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de628",
+      "text": " 最後に、元コードはPythonで書かれていたので、筆者も最初Pythonで実装しました。しかしPythonにはgotoがない為、whileで代用するなどトリッキーなコードになってしまいました。これは解説の都合上よろしくないので、gotoのある言語(C++)で書き直しました。読者のみなさんにもgotoのある言語で試すことをオススメします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de629",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de62a",
+      "text": " ** C++への移植",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de62b",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de62c",
+      "text": " まずはP.50のサンプルコードを、なるべく逐語訳でC++11に移植してみました。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de62d",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de62e",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de62f",
+      "text": " int total(const many& xs){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de630",
+      "text": "   int result = 0;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de631",
+      "text": "   for(const boost::any& x : xs){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de632",
+      "text": "     if(is_integer(x)){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de633",
+      "text": "       result += any_cast<int>(x);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de634",
+      "text": "     }else{",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de635",
+      "text": "       result += total(any_cast<many>(x));",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de636",
+      "text": "     }",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de637",
+      "text": "   }",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de638",
+      "text": "   return result;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de639",
+      "text": " }",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de63a",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de63b",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de63c",
+      "text": " is_integerの定義、C++でPythonのリストと同様の「型を気にしないリスト」を作るために使われているboost/any.hppについては今回の記事のスコープではないので割愛します。要望があればまた別途。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de63d",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de63e",
+      "text": " ** foreachの除去",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de63f",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de640",
+      "text": " さて、このコードでは「for x in xs」や「BOOST_FOREACH」というforeach構文が使われています。これは「与えられたリストの各要素についてループする」という構文なので、中断したり再開したりすることが難しいです。そこで、まずはこれを普通のfor文に書き換えました。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de641",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de642",
+      "text": " >|python|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de643",
+      "text": " int total2(const many& xs){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de644",
+      "text": "   int i;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de645",
+      "text": "   boost::any x;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de646",
+      "text": "   int result = 0;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de647",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de648",
+      "text": "   for(i = 0; i < xs.size(); i++){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de649",
+      "text": "     x = xs[i];",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de64a",
+      "text": "     if(is_integer(x)){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de64b",
+      "text": "       result += any_cast<int>(x);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de64c",
+      "text": "     }else{",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de64d",
+      "text": "       result += total2(any_cast<many>(x)); // 次はこれを書き換える",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de64e",
+      "text": "     }",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de64f",
+      "text": "   }",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de650",
+      "text": "   return result;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de651",
+      "text": " }",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de652",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de653",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de654",
+      "text": " この関数のローカル変数は、xs, i, x, resultの4つですね。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de655",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de656",
+      "text": " さて、次はこの関数の中での「自分自身の呼び出し」を無くしていくことにします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de657",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de658",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de659",
+      "text": " ** スタックを作る",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de65a",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de65b",
+      "text": " P.48を読んでみましょう。「あとで元の値に戻せるように保存する」を実現するために、スタックを使うのでした。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de65c",
+      "text": " 本では「戻り先のアドレス」を保存するためにスタックを使っていましたが、ここではローカル変数を保存するために使います。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de65d",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de65e",
+      "text": " ((脚注:実際にx86上のCでの関数呼び出しをした際にどうスタックに積まれているかを表示したりしてコラムにする？呼出規約の話に触れる？))",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de65f",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de660",
+      "text": " 普通にプログラムを買いている時には自分でこの「スタック」を管理することはありません((アセンブリ言語を使う場合はもちろん別))が、今回は本物の関数呼び出しを使わずに「関数呼び出しと同じこと」を実現したいわけなので、自分で管理することにします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de661",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de662",
+      "text": " とはいえ、それほど大げさなことではありません。空のstd::stackを作って、そこにデータを保存していくことにします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de663",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de664",
+      "text": " また、関数からの返り値を入れる変数も作っておきます。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de665",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de666",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de667",
+      "text": " typedef std::tuple<many, int, boost::any, int> frame_t;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de668",
+      "text": " std::stack<frame_t> stack;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de669",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de66a",
+      "text": " int function_result;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de66b",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de66c",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de66d",
+      "text": " *** スタックに保存するべき値は何か",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de66e",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de66f",
+      "text": " スタックに保存する値は、この関数のローカル変数xs, i, x, resultの4つの値です。そこで先程のコードでは「typedef std::tuple<many, int, boost::any, int> frame_t;」と4つの値を入れるための型を作っています。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de670",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de671",
+      "text": " 「xは保存する必要がない」と思った人はいますか？それは正解です。ただし、それは「xは関数呼び出しから戻った後で読み出されることがない」というこの関数特有の事情を使って最適化をしていることになりますね。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de672",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de673",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de674",
+      "text": " ** 「関数の呼び出し」とは何か",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de675",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de676",
+      "text": " さて、次は「関数の呼び出し」とは何をすることか考えてみましょう。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de677",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de678",
+      "text": " - 1: 今のローカル変数をスタックに保存して、後で戻せるようにする",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de679",
+      "text": " - 2: 引数xsを書き換える",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de67a",
+      "text": " - 3: 関数冒頭にジャンプ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de67b",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de67c",
+      "text": " やるべきことはこの3つです。((呼出規約によっては引数xsを書き換えるのは呼び出された側の仕事、という点を補足するべきか))",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de67d",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de67e",
+      "text": " そこでまず、関数冒頭にジャンプのためのラベルを作ります。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de67f",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de680",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de681",
+      "text": " int total3(many& xs){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de682",
+      "text": "  ENTRYPOINT:",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de683",
+      "text": "   int i;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de684",
+      "text": "   boost::any x;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de685",
+      "text": "   int result = 0;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de686",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de687",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de688",
+      "text": " そして関数の呼び出しはこうなります。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de689",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de68a",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de68b",
+      "text": "     if(is_integer(x)){",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de68c",
+      "text": "       result += any_cast<int>(x);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de68d",
+      "text": "     }else{",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de68e",
+      "text": "       // 1: 現在のローカル変数をスタックに保存する",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de68f",
+      "text": "       stack.push(make_tuple(xs, i, x, result));",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de690",
+      "text": "       // 2: 引数xsを書き換える",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de691",
+      "text": "       xs = any_cast<many>(x);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de692",
+      "text": "       // 3: 関数冒頭へジャンプ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de693",
+      "text": "       goto ENTRYPOINT;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de694",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de695",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de696",
+      "text": " ** 値を返す",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de697",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de698",
+      "text": " ループが終わったら何をすればよいでしょうか。元のコードでは return result; していました。これは何でしょうか。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de699",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de69a",
+      "text": " - 4: 返り値を「返り値を置く場所」に置く。(これは人間が呼び出し規約で決めたもので、x86上でC++を書いているならEAXレジスタになる。今回はfunction_resultという変数を作った)",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de69b",
+      "text": " - 5: 関数呼び出しの直後にジャンプ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de69c",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de69d",
+      "text": " やるべきことはこの2つです。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de69e",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de69f",
+      "text": " まずはジャンプのためのラベルを作っておいて…",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a0",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a1",
+      "text": "       goto ENTRYPOINT;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a2",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a3",
+      "text": "     RETURNPOINT: // 6: 呼び出された関数からreturnするとここに戻ってくる",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a4",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a5",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a6",
+      "text": " 関数の最後でそこへジャンプするようにします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a7",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a8",
+      "text": "     // 4: 返り値を決められた場所に保存",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6a9",
+      "text": "     function_result = result;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6aa",
+      "text": "     // 5: 関数呼び出し直後(上記6)に戻る",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ab",
+      "text": "     goto RETURNPOINT;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ac",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ad",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ae",
+      "text": " ** 戻ってきた後に何をするか",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6af",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b0",
+      "text": " 関数呼び出しから戻ってきたあとには何をすればよいでしょうか。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b1",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b2",
+      "text": " - 7: スタックに保存しておいた値を復元する",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b3",
+      "text": " - 8: 関数の返り値を使う",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b4",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b5",
+      "text": " やるべきことはこの2つです。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b6",
+      "text": " 長々と話しているうちに忘れてしまったかもしれないので再掲しますが、 いまやろうとしていることは「result += total(…);」を関数呼び出し無しで実現することでした。関数を呼び出し、その後で返り値をローカル変数のresultに足す必要があります。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b7",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b8",
+      "text": " >|cpp|",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6b9",
+      "text": "     RETURNPOINT: // 6: 呼び出された関数からreturnするとここに戻ってくる",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ba",
+      "text": "       // 7: スタックに保存しておいた値を復元する",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6bb",
+      "text": "       frame_t f = stack.top();",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6bc",
+      "text": "       stack.pop();",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6bd",
+      "text": "       xs = std::get<0>(f);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6be",
+      "text": "       i = std::get<1>(f);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6bf",
+      "text": "       x = std::get<2>(f);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c0",
+      "text": "       result = std::get<3>(f);",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c1",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c2",
+      "text": "       // 8: 関数の返り値を使う",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c3",
+      "text": "       result += function_result;",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c4",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c5",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c6",
+      "text": " ** 全体",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c7",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c8",
+      "text": " 全体のソースコードはこちら。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6c9",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ca",
+      "text": " https://github.com/nishio/learn_language/blob/master/langbook/extra/recursive/recursive.cpp",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6cb",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6cc",
+      "text": " 筆者の環境(Mac OS X 10.7.5)ではこんな感じで実行出来ます。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6cd",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ce",
+      "text": " >||",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6cf",
+      "text": " $ clang++ -std=c++11 -stdlib=libc++ -Wall -DVERBOSE recursive.cpp && ./a.out",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d0",
+      "text": " ||<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d1",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d2",
+      "text": " 一応期待通りには動いていますが、これは筆者にとって初めてのC++11プログラミングなので、なにかおかしなところがあればぜひご指摘下さい。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d3",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d4",
+      "text": " ** Q&A",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d5",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d6",
+      "text": " *** なぜ再帰呼び出しをなくしたいのか ？",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d7",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d8",
+      "text": " 「なぜ再帰呼び出しをなくしたいのか」というご質問がありました。拙著では「普段あたりまえのように使っている構文の裏側がどのように動いているか」を理解するために4章で",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6d9",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6da",
+      "text": " - if文のelse節を使わずに、同じ挙動を実現する(P.32)",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6db",
+      "text": " - while文を使わずに、同じ挙動を実現する(P.36)",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6dc",
+      "text": " - for文を使わずに、同じ挙動を実現する(P.37)",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6dd",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6de",
+      "text": " という説明をしました。これはその続編です。5章で「関数がどう動いているか」の説明をしたので、これも「関数呼び出しを使わずに、同じ挙動を実現する」をやってみました。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6df",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e0",
+      "text": " そういえば昔「クラスを使わずに『インスタンスの作成』『継承』を実現する」をやったことがありました。これも改めて解説すると良いかもしれませんね。 (thanks: id:thujikun)",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e1",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e2",
+      "text": " *** 末尾再帰最適化ではスタックを使わないのでは？",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e3",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e4",
+      "text": " 「末尾呼び出しが最適化されている場合はとかスタックを使わないのでは」というご質問がありました。そうですね。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e5",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e6",
+      "text": " この記事では以下のように書きました。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e7",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e8",
+      "text": " >>",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6e9",
+      "text": " 「xは保存する必要がない」と思った人はいますか？それは正解です。ただし、それは「xは関数呼び出しから戻った後で読み出されることがない」というこの関数特有の事情を使って最適化をしていることになりますね。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ea",
+      "text": " <<",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6eb",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ec",
+      "text": " 今回の対象コードは関数呼び出しの後、いくつかの変数を使います。なので復元できるようにこれらをスタックに積む必要があったわけです。一方、末尾呼び出しは「関数の末尾」に関数呼び出しがあるわけですから、「関数呼び出しの後で使う変数」がありません。なので積むべき変数がないわけです。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ed",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ee",
+      "text": " 今回の対象コードでは「xは使わないから積まなくてもいいよね」という最適化ができるわけですが、これがもっと進んで「何も使わないから何も積まなくていいよね」になったのが末尾呼び出しの最適化というわけです。(thanks: id:bouzuya)",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6ef",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f0",
+      "text": " <hr>",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f1",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f2",
+      "text": " 拙著「<a href=\"http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X&linkCode=as2&tag=nishiohirokaz-22\">コーディングを支える技術</a>」の読者から頂いた質問など対して、こんな感じで補足記事を書いて行きたいと思っています。質問・感想はおきがねなくどうぞ。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f3",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f4",
+      "text": " この解説は拙著の第5章「関数」のP.56あたりに挿入されるのが適切かと思います。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f5",
+      "text": " ",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f6",
+      "text": " 拙著に関する他のエントリーは「<a href='http://nhiro.org/langbook/'>「コーディングを支える技術」著者公式ページ</a>」からたどれるようにします。",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f7",
+      "text": " <iframe src=\"http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X\" style=\"width:120px;height:240px;\" scrolling=\"no\" marginwidth=\"0\" marginheight=\"0\" frameborder=\"0\"></iframe>",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f8",
+      "text": " </body>",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6f9",
+      "text": "",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de6fa",
+      "text": "[はてなダイアリー 2013-05-31 https://nishiohirokazu.hatenadiary.org/archive/2013/05/31]",
+      "created": 1369926000,
+      "updated": 1369926000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

@@ -1,0 +1,750 @@
+{
+  "id": "5cfa7790de2dbe0017db32cb",
+  "title": "リポジトリ間のファイルの共有",
+  "created": 1559918487,
+  "updated": 1559920872,
+  "lines": [
+    {
+      "id": "5cfa7790de2dbe0017db32cb",
+      "text": "リポジトリ間のファイルの共有",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918487,
+      "updated": 1559918487
+    },
+    {
+      "id": "5cfa7796aff09e00005e86ed",
+      "text": "あるgitリポジトリAにxというファイルがあるとする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918487,
+      "updated": 1559919020
+    },
+    {
+      "id": "5cfa77a1aff09e00005e86f0",
+      "text": "別のリポジトリBでもこのxを使いたいとする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918498,
+      "updated": 1559918519
+    },
+    {
+      "id": "5cfa77b6aff09e00005e86f1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918519,
+      "updated": 1559918519
+    },
+    {
+      "id": "5cfa77b6aff09e00005e86f2",
+      "text": "解法1 ハードリンク",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918519,
+      "updated": 1559918526
+    },
+    {
+      "id": "5cfa7a0daff09e00005e870e",
+      "text": "\t$ cd B",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919117,
+      "updated": 1559919120
+    },
+    {
+      "id": "5cfa77beaff09e00005e86f3",
+      "text": "\t$ ln ../A/x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918526,
+      "updated": 1559919116
+    },
+    {
+      "id": "5cfa779aaff09e00005e86ee",
+      "text": "A/xもB/xも同じ実体を指す。片方で編集すればもう片方のリポジトリでもmodifiedと表示される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918491,
+      "updated": 1559918691
+    },
+    {
+      "id": "5cfa7862aff09e00005e86f5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918691,
+      "updated": 1559920202
+    },
+    {
+      "id": "5cfa7863aff09e00005e86f6",
+      "text": "解法2 git submodule",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559918691,
+      "updated": 1559919018
+    },
+    {
+      "id": "5cfa7ba0aff09e00005e872a",
+      "text": "まずリポジトリAからxをサブディレクトリCに移動し、リポジトリAからxを削除する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919520,
+      "updated": 1559919635
+    },
+    {
+      "id": "5cfa79b0aff09e00005e86f7",
+      "text": "\t$ cd A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919024,
+      "updated": 1559919127
+    },
+    {
+      "id": "5cfa7a13aff09e00005e870f",
+      "text": "\t$ mkdir C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919124,
+      "updated": 1559919130
+    },
+    {
+      "id": "5cfa79eaaff09e00005e86f8",
+      "text": "\t$ mv x C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919134
+    },
+    {
+      "id": "5cfa79eaaff09e00005e86f9",
+      "text": "\t$ git status",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919137
+    },
+    {
+      "id": "5cfa79eaaff09e00005e86fa",
+      "text": "\t\tdeleted:    x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919157
+    },
+    {
+      "id": "5cfa79eaaff09e00005e8701",
+      "text": "\t\tUntracked files:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919150
+    },
+    {
+      "id": "5cfa79eaaff09e00005e8702",
+      "text": "\t\t\tC/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919152
+    },
+    {
+      "id": "5cfa79eaaff09e00005e8705",
+      "text": "\t$ git rm x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919162
+    },
+    {
+      "id": "5cfa79eaaff09e00005e8708",
+      "text": "\t\trm 'x'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919164
+    },
+    {
+      "id": "5cfa79eaaff09e00005e8709",
+      "text": "\t$ git commit -m \"rm x\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919171
+    },
+    {
+      "id": "5cfa79eaaff09e00005e870a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919082,
+      "updated": 1559919175
+    },
+    {
+      "id": "5cfa7bd2aff09e00005e872b",
+      "text": "どこかにベアレポジトリbareCを作る(ここではローカルに作っているが、もちろんgithub上でもよい)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919570,
+      "updated": 1559919642
+    },
+    {
+      "id": "5cfa7aacaff09e00005e8711",
+      "text": "$ cd ..",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919276,
+      "updated": 1559919277
+    },
+    {
+      "id": "5cfa7aadaff09e00005e8712",
+      "text": "$ git init --bare bareC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919277,
+      "updated": 1559919285
+    },
+    {
+      "id": "5cfa7bfdaff09e00005e872c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919613,
+      "updated": 1559919613
+    },
+    {
+      "id": "5cfa7bfdaff09e00005e872d",
+      "text": "Cをgitリポジトリにし、bareCにpushする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919614,
+      "updated": 1559919648
+    },
+    {
+      "id": "5cfa7aadaff09e00005e8713",
+      "text": "$ cd A/C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919277,
+      "updated": 1559919293
+    },
+    {
+      "id": "5cfa80e4aff09e000000a22e",
+      "text": "$ git init",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920868,
+      "updated": 1559920872
+    },
+    {
+      "id": "5cfa7aadaff09e00005e8715",
+      "text": "$ git add x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919277,
+      "updated": 1559919309
+    },
+    {
+      "id": "5cfa7accaff09e00005e8717",
+      "text": "$ git commit -m \"add x\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919309,
+      "updated": 1559919316
+    },
+    {
+      "id": "5cfa7a47aff09e00005e8710",
+      "text": "$ git remote add origin ../../bareC/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919175,
+      "updated": 1559919392
+    },
+    {
+      "id": "5cfa7b1faff09e00005e8718",
+      "text": "$ git push --set-upstream origin master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919392,
+      "updated": 1559919400
+    },
+    {
+      "id": "5cfa7b1faff09e00005e871f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919392,
+      "updated": 1559919421
+    },
+    {
+      "id": "5cfa7c22aff09e00005e872e",
+      "text": "Aのxを使いたかったリポジトリBに移動し、bareCをsubmoduleとして追加。これでB/C/xに目当てのファイルがやってくる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919651,
+      "updated": 1559919684
+    },
+    {
+      "id": "5cfa7b52aff09e00005e8727",
+      "text": "$ cd ../../B",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919442,
+      "updated": 1559919446
+    },
+    {
+      "id": "5cfa7b56aff09e00005e8729",
+      "text": "$ git submodule add ../bareC/ C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919446,
+      "updated": 1559919507
+    },
+    {
+      "id": "5cfa7b53aff09e00005e8728",
+      "text": "$ git commit -m \"add submodule\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919444,
+      "updated": 1559919916
+    },
+    {
+      "id": "5cfa7d2caff09e00005e8737",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919916,
+      "updated": 1559919916
+    },
+    {
+      "id": "5cfa7c45aff09e00005e872f",
+      "text": "Aの側も同じようにする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919686,
+      "updated": 1559919692
+    },
+    {
+      "id": "5cfa7c4caff09e00005e8731",
+      "text": "$ cd ../A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919692,
+      "updated": 1559919748
+    },
+    {
+      "id": "5cfa7c84aff09e00005e8732",
+      "text": "$ rm -rf C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919748,
+      "updated": 1559919753
+    },
+    {
+      "id": "5cfa7c84aff09e00005e8733",
+      "text": "$ git submodule add ../bareC/ C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919748,
+      "updated": 1559919759
+    },
+    {
+      "id": "5cfa7c84aff09e00005e8736",
+      "text": "$ git commit -m \"add submodule\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919748,
+      "updated": 1559919918
+    },
+    {
+      "id": "5cfa7c46aff09e00005e8730",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919686,
+      "updated": 1559919686
+    },
+    {
+      "id": "5cfa7d2faff09e00005e8738",
+      "text": "B/xを編集した後git statusするとこうなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919919,
+      "updated": 1559919960
+    },
+    {
+      "id": "5cfa7d61aff09e00005e8744",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919969,
+      "updated": 1559919971
+    },
+    {
+      "id": "5cfa7d58aff09e00005e873a",
+      "text": " $ git status",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919960,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d5daff09e00005e8743",
+      "text": " On branch master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919966,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d58aff09e00005e873c",
+      "text": " Changes not staged for commit:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d58aff09e00005e873d",
+      "text": "   (use \"git add <file>...\" to update what will be committed)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d58aff09e00005e873e",
+      "text": "   (use \"git checkout -- <file>...\" to discard changes in working directory)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d58aff09e00005e873f",
+      "text": "   (commit or discard the untracked or modified content in submodules)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d58aff09e00005e8740",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919975
+    },
+    {
+      "id": "5cfa7d58aff09e00005e8741",
+      "text": " \tmodified:   C (modified content)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919973
+    },
+    {
+      "id": "5cfa7d58aff09e00005e8742",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919961,
+      "updated": 1559919961
+    },
+    {
+      "id": "5cfa7d4eaff09e00005e8739",
+      "text": "Cの中に入るとxが修正されているのがわかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559919951,
+      "updated": 1559920068
+    },
+    {
+      "id": "5cfa7dc3aff09e00005e8746",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920068,
+      "updated": 1559920071
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8747",
+      "text": " $ cd C/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920071,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8748",
+      "text": "\t$ git status",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920079
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e874b",
+      "text": " On branch master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e874c",
+      "text": " Your branch is up to date with 'origin/master'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e874d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e874e",
+      "text": " Changes not staged for commit:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e874f",
+      "text": "   (use \"git add <file>...\" to update what will be committed)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8750",
+      "text": "   (use \"git checkout -- <file>...\" to discard changes in working directory)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8751",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8752",
+      "text": " \tmodified:   x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8753",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8754",
+      "text": " no changes added to commit (use \"git add\" and/or \"git commit -a\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920072
+    },
+    {
+      "id": "5cfa7dc7aff09e00005e8755",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920072,
+      "updated": 1559920086
+    },
+    {
+      "id": "5cfa7e56aff09e00005e875c",
+      "text": "B/C/xをadd, commit, pushする。ここでコミットだけしてpushするのを忘れるとAの側で最新のコミットが得られない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920214,
+      "updated": 1559920456
+    },
+    {
+      "id": "5cfa7ddaaff09e00005e8756",
+      "text": "$ git add x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920091,
+      "updated": 1559920152
+    },
+    {
+      "id": "5cfa7e18aff09e00005e8757",
+      "text": "$ git commit -m \"update x\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920152,
+      "updated": 1559920158
+    },
+    {
+      "id": "5cfa7e18aff09e00005e8758",
+      "text": "$ git push",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920152,
+      "updated": 1559920164
+    },
+    {
+      "id": "5cfa7dbaaff09e00005e8745",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920058,
+      "updated": 1559920058
+    },
+    {
+      "id": "5cfa7f75aff09e00005e876c",
+      "text": "ちなみにBは今こういう状態になっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920501,
+      "updated": 1559920511
+    },
+    {
+      "id": "5cfa7f3faff09e00005e875f",
+      "text": "$ cd ../B",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920448,
+      "updated": 1559920497
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8762",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920481
+    },
+    {
+      "id": "5cfa7f57aff09e00005e876b",
+      "text": " $ git status",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920471,
+      "updated": 1559920477
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8763",
+      "text": " On branch master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920477
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8764",
+      "text": " Changes not staged for commit:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920477
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8765",
+      "text": "   (use \"git add <file>...\" to update what will be committed)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920477
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8766",
+      "text": "   (use \"git checkout -- <file>...\" to discard changes in working directory)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920477
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8767",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920483
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8768",
+      "text": " \tmodified:   C (new commits)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920477
+    },
+    {
+      "id": "5cfa7f4daff09e00005e8769",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920462,
+      "updated": 1559920462
+    },
+    {
+      "id": "5cfa8074aff09e0000d98653",
+      "text": "Aでgit statusしてもCが変更されていることはわからない。submodule updateすると...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920756,
+      "updated": 1559920787
+    },
+    {
+      "id": "5cfa7e9faff09e00005e875d",
+      "text": "$ cd ../A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920287,
+      "updated": 1559920516
+    },
+    {
+      "id": "5cfa7eabaff09e00005e875e",
+      "text": "$ git submodule update",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920300,
+      "updated": 1559920623
+    },
+    {
+      "id": "5cfa7fefaff09e00005e876d",
+      "text": "あれ、A/C/xが更新されてない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920623,
+      "updated": 1559920634
+    },
+    {
+      "id": "5cfa7ffaaff09e00005e876f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920635,
+      "updated": 1559920635
+    },
+    {
+      "id": "5cfa8098aff09e0000d98654",
+      "text": "Cに移動してpullすれば変更差分が降りてきた。あれ？こうやるんだっけ？？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920792,
+      "updated": 1559920808
+    },
+    {
+      "id": "5cfa7ffbaff09e00005e8770",
+      "text": "$ cd C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920636,
+      "updated": 1559920654
+    },
+    {
+      "id": "5cfa8013aff09e00005e877e",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920660,
+      "updated": 1559920662
+    },
+    {
+      "id": "5cfa800eaff09e00005e8771",
+      "text": " $ git pull",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e8772",
+      "text": "\t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920672
+    },
+    {
+      "id": "5cfa801faff09e00005e877f",
+      "text": " From .../bareC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920671,
+      "updated": 1559920677
+    },
+    {
+      "id": "5cfa800eaff09e00005e8777",
+      "text": "    0e8c0b0..751f6b4  master     -> origin/master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e8778",
+      "text": " Updating 0e8c0b0..751f6b4",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e8779",
+      "text": " Fast-forward",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e877a",
+      "text": "  x | 1 +",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e877b",
+      "text": "  1 file changed, 1 insertion(+)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e877c",
+      "text": " Current branch master is up to date.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920665
+    },
+    {
+      "id": "5cfa800eaff09e00005e877d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920654,
+      "updated": 1559920654
+    },
+    {
+      "id": "5cfa7ff5aff09e00005e876e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559920629,
+      "updated": 1559920629
+    }
+  ]
+}

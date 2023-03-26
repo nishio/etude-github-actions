@@ -1,0 +1,1051 @@
+{
+  "id": "6090ec05a287e6002291a0de",
+  "title": "Hatena2010-07-21",
+  "created": 1279638000,
+  "updated": 1279638000,
+  "lines": [
+    {
+      "id": "6090ec29aff09e00003d6925",
+      "text": "Hatena2010-07-21",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6926",
+      "text": "code:hatena",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6927",
+      "text": " <body>",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6928",
+      "text": " *1279687613*Haskellで単にn回7を掛けるだけでもO(n ^ 2.6)の時間がかかる",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6929",
+      "text": " 追記: このタイトルはミスリーディングで、きっちり末尾再帰にすればO(n ^ 2)になります。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d692a",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d692b",
+      "text": " <hr>",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d692c",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d692d",
+      "text": " >>",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d692e",
+      "text": " k.inaba (略) とりあえず多倍長とGCと原因切り分けませんか",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d692f",
+      "text": " <<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6930",
+      "text": " http://shinh.skr.jp/m/?date=20100721#c01",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6931",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6932",
+      "text": " ということでとりあえず多倍長計算だけしてみた。(追記: これじゃ末尾再帰じゃないからスタックが伸びていってしまうじゃん、と指摘された。光成さんの末尾再帰版のコードではO(n^2)になった。下の方に自分で書いた末尾再帰版を追記。)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6933",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6934",
+      "text": " >|haskell|",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6935",
+      "text": " import System",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6936",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6937",
+      "text": " pow :: Integer -> Integer",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6938",
+      "text": " pow 0 = 1",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6939",
+      "text": " pow n = (7 *) $! pow (n - 1)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d693a",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d693b",
+      "text": " main = do",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d693c",
+      "text": "   args <- getArgs",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d693d",
+      "text": "   print $ (0 *) $ pow $ read $ args !! 0",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d693e",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d693f",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6940",
+      "text": " <img src=\"http://gyazo.com/b05002c23736607043a43d3e6c6f3ea5.png\">",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6941",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6942",
+      "text": " ここでf(x) = (x ** a) * b, g(x) = c * x * xで、X軸はコマンドライン引数で与えるn、Y軸は処理にかかった秒数。下記のように作成した。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6943",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6944",
+      "text": " >||",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6945",
+      "text": " gnuplot> f(x) = (x ** a) * b",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6946",
+      "text": " gnuplot> fit f(x) \"result.txt\" via a, b",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6947",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6948",
+      "text": " (..snip..)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6949",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d694a",
+      "text": " Final set of parameters            Asymptotic Standard Error",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d694b",
+      "text": " =======================            ==========================",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d694c",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d694d",
+      "text": " a               = 2.60015          +/- 0.09175      (3.529%)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d694e",
+      "text": " b               = 2.3844e-13       +/- 2.772e-13    (116.3%)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d694f",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6950",
+      "text": " (..snip..)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6951",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6952",
+      "text": " gnuplot> g(x) = x * x * c",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6953",
+      "text": " gnuplot> fit g(x) \"result.txt\" via c",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6954",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6955",
+      "text": " (..snip..)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6956",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6957",
+      "text": " c               = 4.1331e-10       +/- 1.394e-11    (3.373%)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6958",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6959",
+      "text": " (..snip..)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d695a",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d695b",
+      "text": " gnuplot> plot f(x), g(x), \"result.txt\"",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d695c",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d695d",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d695e",
+      "text": " なおGHC 6.10.4を使った。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d695f",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6960",
+      "text": " GCプロファイルとやらもやってみるか。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6961",
+      "text": " >||",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6962",
+      "text": " ./a.out 200000 +RTS -s ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6963",
+      "text": " 0",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6964",
+      "text": "    7,493,614,152 bytes allocated in the heap",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6965",
+      "text": "          644,664 bytes copied during GC",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6966",
+      "text": "        2,084,040 bytes maximum residency (2 sample(s))",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6967",
+      "text": "        1,049,272 bytes maximum slop",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6968",
+      "text": "                5 MB total memory in use (1 MB lost due to fragmentation)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6969",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d696a",
+      "text": "   Generation 0: 13674 collections,     0 parallel,  4.83s,  5.02s elapsed",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d696b",
+      "text": "   Generation 1:     2 collections,     0 parallel,  0.00s,  0.00s elapsed",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d696c",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d696d",
+      "text": "   INIT  time    0.00s  (  0.00s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d696e",
+      "text": "   MUT   time    7.14s  (  7.35s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d696f",
+      "text": "   GC    time    4.83s  (  5.02s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6970",
+      "text": "   EXIT  time    0.00s  (  0.00s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6971",
+      "text": "   Total time   11.97s  ( 12.37s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6972",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6973",
+      "text": "   %GC time      40.4%  (40.6% elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6974",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6975",
+      "text": "   Alloc rate    1,050,088,044 bytes per MUT second",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6976",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6977",
+      "text": "   Productivity  59.6% of total user, 57.7% of total elapsed",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6978",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6979",
+      "text": " GCが処理時間の40%を食っていることはわかった。他の見所がよくわからない。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d697a",
+      "text": " <hr>",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d697b",
+      "text": " こう書き換えてみる。多倍長演算ではあるが、桁数がO(n)で増えていかないようにしたのだ。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d697c",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d697d",
+      "text": " >|haskell|",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d697e",
+      "text": " pow n = (77777777777777777777 +) $! pow (n - 1)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d697f",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6980",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6981",
+      "text": " 実行時間が短くて、イニシャルコストがグラフ上ではっきり見えるくらいあるのはフィッティングとしてどうなのかという気がするが、まあO(n ^ 2.6)じゃなくてO(n ^ 2)だと言っていいだろう。え？O(n ^ 2)？？？",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6982",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6983",
+      "text": " <img src=\"http://gyazo.com/2491f32530d083c58e8b657623d31452.png\">",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6984",
+      "text": " >||",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6985",
+      "text": " a               = 1.99989          +/- 0.114        (5.703%)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6986",
+      "text": " b               = 2.13455e-12      +/- 3.064e-12    (143.5%)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6987",
+      "text": " c               = 2.13161e-12      +/- 4.891e-14    (2.295%)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6988",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6989",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d698a",
+      "text": " GCにはあんまり差がない。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d698b",
+      "text": " >||",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d698c",
+      "text": " ./a.out 200000 +RTS -s ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d698d",
+      "text": " 0",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d698e",
+      "text": "       28,422,680 bytes allocated in the heap",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d698f",
+      "text": "            6,416 bytes copied during GC",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6990",
+      "text": "        2,084,040 bytes maximum residency (2 sample(s))",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6991",
+      "text": "        1,048,824 bytes maximum slop",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6992",
+      "text": "                5 MB total memory in use (1 MB lost due to fragmentation)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6993",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6994",
+      "text": "   Generation 0:    45 collections,     0 parallel,  0.02s,  0.02s elapsed",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6995",
+      "text": "   Generation 1:     2 collections,     0 parallel,  0.01s,  0.01s elapsed",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6996",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6997",
+      "text": "   INIT  time    0.00s  (  0.00s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6998",
+      "text": "   MUT   time    0.05s  (  0.06s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6999",
+      "text": "   GC    time    0.03s  (  0.03s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d699a",
+      "text": "   EXIT  time    0.00s  (  0.00s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d699b",
+      "text": "   Total time    0.08s  (  0.09s elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d699c",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d699d",
+      "text": "   %GC time      35.1%  (33.7% elapsed)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d699e",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d699f",
+      "text": "   Alloc rate    538,644,986 bytes per MUT second",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a0",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a1",
+      "text": "   Productivity  64.0% of total user, 59.0% of total elapsed",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a2",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a3",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a4",
+      "text": " Haskell難しいなぁ。よくわからない。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a5",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a6",
+      "text": " <hr>",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a7",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a8",
+      "text": " 最初のコードは末尾再帰じゃないじゃないかと指摘されたので書きなおしてみたらO(n ^ 2)になりました。",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69a9",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69aa",
+      "text": " >|haskell|",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69ab",
+      "text": " import System",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69ac",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69ad",
+      "text": " pow :: Integer -> Integer -> Integer",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69ae",
+      "text": " pow x 0 = x",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69af",
+      "text": " pow x n = pow (7 * x) (n - 1)",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b0",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b1",
+      "text": " main = do",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b2",
+      "text": "   args <- getArgs",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b3",
+      "text": "   print $ (0 *) $ pow 1 $ read $ args !! 0",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b4",
+      "text": " ||<",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b5",
+      "text": " ",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b6",
+      "text": " <img src=\"http://gyazo.com/745d7da01d245b3dc211fa965db2ad82.png\">",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b7",
+      "text": " </body>",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b8",
+      "text": "",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d69b9",
+      "text": "[はてなダイアリー 2010-07-21 https://nishiohirokazu.hatenadiary.org/archive/2010/07/21]",
+      "created": 1279638000,
+      "updated": 1279638000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "id": "603de9578869bb001c1c0940",
+  "title": "サードパーティライブラリの中の非同期処理をテストする",
+  "created": 1614670168,
+  "updated": 1614670315,
+  "lines": [
+    {
+      "id": "603de9578869bb001c1c0940",
+      "text": "サードパーティライブラリの中の非同期処理をテストする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02ce9",
+      "text": "サードパーティライブラリの中で [requestAnimationFrame https://developer.mozilla.org/ja/docs/Web/API/Window/requestAnimationFrame] を使って非同期な処理をしている。テストコード中でその処理が終わってから値を確認したり別の操作をしたりしたい。どうするか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670178
+    },
+    {
+      "id": "603de957aff09e0000e02cec",
+      "text": "なおこの非同期処理は単なる関数で、返り値は別の目的に使われているので変えられないとする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02ced",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cee",
+      "text": "テストコード中からのリクエストに応じてresolveを露出したプロミスを作る関数を作り、サードパーティ実装の側に「resolveがnullでないなら呼ぶ」というコードを足した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cef",
+      "text": "サードパーティの非同期処理の関数の引数や返り値を変えると修正範囲が広くなって嫌。この方法なら数行の修正ですむ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de97baff09e0000a8f887",
+      "text": "修正はサードパーティのコードを直接書き換えるのではなく、jest.spyOn的な方法で差し替えるのが良い。今回は既に別の目的で差し替えていたのでそれを利用した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670203,
+      "updated": 1614670315
+    },
+    {
+      "id": "603de957aff09e0000e02cf0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf1",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf2",
+      "text": " test(\"foo\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf3",
+      "text": "   let p = getCanvasViewUpdatePromise();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf4",
+      "text": "\t  ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf5",
+      "text": "   await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf6",
+      "text": "   ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf8",
+      "text": "code:target.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cf9",
+      "text": " let _canvasViewUpdatePromise;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cfa",
+      "text": " let _resolve: ((arg: unknown) => void) | null = null;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cfb",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cfc",
+      "text": "\texport const getCanvasViewUpdatePromise = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cfd",
+      "text": "   _canvasViewUpdatePromise = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cfe",
+      "text": "     _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02cff",
+      "text": "   }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d00",
+      "text": "     _resolve = null;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d01",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d02",
+      "text": "   return _canvasViewUpdatePromise;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d03",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d04",
+      "text": "code:target.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d05",
+      "text": "     if (_resolve !== null) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d06",
+      "text": "       _resolve(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d07",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d08",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670168
+    },
+    {
+      "id": "603de957aff09e0000e02d09",
+      "text": "from [Jestメモ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614670168,
+      "updated": 1614670180
+    }
+  ]
+}

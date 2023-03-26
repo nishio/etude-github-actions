@@ -1,0 +1,386 @@
+{
+  "id": "5d15bb5f836bd6001764a804",
+  "title": "TypeScriptで疑似コードに型付け",
+  "created": 1561705314,
+  "updated": 1561771793,
+  "lines": [
+    {
+      "id": "5d15bb5f836bd6001764a804",
+      "text": "TypeScriptで疑似コードに型付け",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705314,
+      "updated": 1561705348
+    },
+    {
+      "id": "5d15bb71aff09e0000f9d3f6",
+      "text": "型の検証は実行を伴わないので、実行するコードがない疑似コードであっても型の整合性があるかどうか検証できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705329,
+      "updated": 1561705375
+    },
+    {
+      "id": "5d15bb9faff09e0000f9d3f8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705375,
+      "updated": 1561705375
+    },
+    {
+      "id": "5d15bbf2aff09e0000f9d3f9",
+      "text": "「とりあえずStateってものがあるんだ」を表現する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705458,
+      "updated": 1561706668
+    },
+    {
+      "id": "5d15bbfbaff09e0000f9d3fa",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705468,
+      "updated": 1561705475
+    },
+    {
+      "id": "5d15bc03aff09e0000f9d3fb",
+      "text": " type State = \"State\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705476,
+      "updated": 1561705476
+    },
+    {
+      "id": "5d15bc04aff09e0000f9d3fc",
+      "text": "Stateを\"State\"というリテラルタイプにしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705476,
+      "updated": 1561705577
+    },
+    {
+      "id": "5d15bc69aff09e0000f9d3fe",
+      "text": "なぜか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705577,
+      "updated": 1561771384
+    },
+    {
+      "id": "5d15bd7eaff09e0000f9d406",
+      "text": "TypeScriptは[構造的型付け]なので適当に空オブジェクトなどにしてしまうと、適切でない代入をしてもエラーにならないため",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705855,
+      "updated": 1561706806
+    },
+    {
+      "id": "5d15bd5baff09e0000f9d3ff",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705819,
+      "updated": 1561705834
+    },
+    {
+      "id": "5d15bd60aff09e0000f9d400",
+      "text": " type State = {};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705824,
+      "updated": 1561705844
+    },
+    {
+      "id": "5d15bd60aff09e0000f9d401",
+      "text": " type Other = {};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705825,
+      "updated": 1561705844
+    },
+    {
+      "id": "5d15bd60aff09e0000f9d402",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705825,
+      "updated": 1561705845
+    },
+    {
+      "id": "5d15bd60aff09e0000f9d403",
+      "text": "  (x: State) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705825,
+      "updated": 1561705952
+    },
+    {
+      "id": "5d15bde0aff09e0000f9d407",
+      "text": "    const y: Other = x;  // エラーにならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705952,
+      "updated": 1561706661
+    },
+    {
+      "id": "5d15bde0aff09e0000f9d408",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705952,
+      "updated": 1561705952
+    },
+    {
+      "id": "5d15bde0aff09e0000f9d409",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705952,
+      "updated": 1561705952
+    },
+    {
+      "id": "5d15bb89aff09e0000f9d3f7",
+      "text": "「MutexはState型の値を持っている」を表現する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561705354,
+      "updated": 1561706929
+    },
+    {
+      "id": "5d15c1b1aff09e0000f9d40d",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706929,
+      "updated": 1561706932
+    },
+    {
+      "id": "5d15c1b5aff09e0000f9d40e",
+      "text": " type Mutex = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706933,
+      "updated": 1561706934
+    },
+    {
+      "id": "5d15c1b5aff09e0000f9d40f",
+      "text": "   state: State,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706934,
+      "updated": 1561706936
+    },
+    {
+      "id": "5d15c1b5aff09e0000f9d413",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706934,
+      "updated": 1561706934
+    },
+    {
+      "id": "5d15c1b5aff09e0000f9d414",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706934,
+      "updated": 1561706939
+    },
+    {
+      "id": "5d15c1bcaff09e0000f9d415",
+      "text": "「Stateまたはnull」を表現する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706940,
+      "updated": 1561706956
+    },
+    {
+      "id": "5d15c1c4aff09e0000f9d416",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706948,
+      "updated": 1561706959
+    },
+    {
+      "id": "5d15c1cfaff09e0000f9d417",
+      "text": " type Mutex = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706959,
+      "updated": 1561706959
+    },
+    {
+      "id": "5d15c1cfaff09e0000f9d418",
+      "text": "   state: State | null,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706959,
+      "updated": 1561706963
+    },
+    {
+      "id": "5d15c1cfaff09e0000f9d419",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706959,
+      "updated": 1561706959
+    },
+    {
+      "id": "5d15c1cfaff09e0000f9d41a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706959,
+      "updated": 1561706959
+    },
+    {
+      "id": "5d15c1edaff09e0000f9d41b",
+      "text": "「Stateを取ってStateを返す関数updateStateがある」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706990,
+      "updated": 1561707066
+    },
+    {
+      "id": "5d15c1fbaff09e0000f9d41d",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561707003,
+      "updated": 1561707053
+    },
+    {
+      "id": "5d15c22daff09e0000f9d41e",
+      "text": " let updateState: (state: State) => State;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561707053,
+      "updated": 1561707057
+    },
+    {
+      "id": "5d15c1f0aff09e0000f9d41c",
+      "text": "ここでは関数の型の宣言だけをして、関数の実装を定義はしていない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561706993,
+      "updated": 1561771580
+    },
+    {
+      "id": "5d15c249aff09e0000f9d420",
+      "text": "letは宣言のタイミングで値を持たなくてもOKなのを利用している。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561707081,
+      "updated": 1561771470
+    },
+    {
+      "id": "5d16be61aff09e0000f9d42a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771617,
+      "updated": 1561771617
+    },
+    {
+      "id": "5d16bdcdaff09e0000f9d427",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771470,
+      "updated": 1561771590
+    },
+    {
+      "id": "5d16be46aff09e0000f9d429",
+      "text": " let foo: (arg: ArgType) => RetType",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771590,
+      "updated": 1561771626
+    },
+    {
+      "id": "5d16bdcdaff09e0000f9d428",
+      "text": "実装をするとこう書き換わる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771470,
+      "updated": 1561771632
+    },
+    {
+      "id": "5d16be70aff09e0000f9d42c",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771632,
+      "updated": 1561771634
+    },
+    {
+      "id": "5d16be72aff09e0000f9d42d",
+      "text": " const foo = (arg: ArgType): RetType => { ... }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771635,
+      "updated": 1561771658
+    },
+    {
+      "id": "5d16be62aff09e0000f9d42b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771618,
+      "updated": 1561771618
+    },
+    {
+      "id": "5d16bf0daff09e0000f9d435",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771790,
+      "updated": 1561771791
+    },
+    {
+      "id": "5d16befcaff09e0000f9d42e",
+      "text": " type Foo = \"Foo\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771773,
+      "updated": 1561771793
+    },
+    {
+      "id": "5d16bf0aaff09e0000f9d430",
+      "text": " const createFoo = (): Foo => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771787,
+      "updated": 1561771793
+    },
+    {
+      "id": "5d16bf0aaff09e0000f9d431",
+      "text": "   // ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771787,
+      "updated": 1561771793
+    },
+    {
+      "id": "5d16bf0aaff09e0000f9d432",
+      "text": "   return \"Foo\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771787,
+      "updated": 1561771793
+    },
+    {
+      "id": "5d16bf0aaff09e0000f9d433",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771787,
+      "updated": 1561771793
+    },
+    {
+      "id": "5d16bf0aaff09e0000f9d434",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771787,
+      "updated": 1561771787
+    },
+    {
+      "id": "5d16befdaff09e0000f9d42f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771773,
+      "updated": 1561771773
+    },
+    {
+      "id": "5d15c26baff09e0000f9d422",
+      "text": "「T型のリストで、最低2個ある」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561707116,
+      "updated": 1561708422
+    },
+    {
+      "id": "5d15c786aff09e0000f9d424",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561708422,
+      "updated": 1561708424
+    },
+    {
+      "id": "5d15c789aff09e0000f9d425",
+      "text": " [T, T, ...T[]]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561708425,
+      "updated": 1561708434
+    },
+    {
+      "id": "5d15c77eaff09e0000f9d423",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561708415,
+      "updated": 1561708415
+    },
+    {
+      "id": "5d16bd29aff09e0000f9d426",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1561771305,
+      "updated": 1561771305
+    }
+  ]
+}

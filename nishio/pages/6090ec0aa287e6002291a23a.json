@@ -1,0 +1,778 @@
+{
+  "id": "6090ec0aa287e6002291a23a",
+  "title": "Hatena2012-06-02",
+  "created": 1338562800,
+  "updated": 1338562800,
+  "lines": [
+    {
+      "id": "6090ec2eaff09e00003dc32f",
+      "text": "Hatena2012-06-02",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc330",
+      "text": "code:hatena",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc331",
+      "text": " <body>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc332",
+      "text": " *1338602090*JSXでjQueryを動かす上での障害",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc333",
+      "text": " 飽きてきたのでやる気が0になる前に気づいた点を公開しておく",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc334",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc335",
+      "text": " - $は識別子に使えない。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc336",
+      "text": " - jQuery.isはisがJSXの予約語なので使えない。is_とかにリネームする？",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc337",
+      "text": " - jQueryがjQuery(...)もjQuery.fooもできる存在なのが厄介。僕も今の実装ではclass jQueryを作ってコンストラクタのnew jQuery(...)とstatic methodのjQuery.fooを使う形になっているけども、見た目をjQueryに似せるのをやめてjQuery(...)的な使い方は全部きちんと名前付きで呼べ(jQuery.find(...), jQuery.ready(...), etc)という方がよい気がする。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc338",
+      "text": " - jQuery.findの返り値は[0]とかができる「Arrayのような何か」だが、これは実はArrayではないのでJSXではArrayへのキャストが出来ない。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc339",
+      "text": " -- jQuery(\"p\") as Array.<variant>がnullになって悩んだ。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc33a",
+      "text": " -- Map.<variant>にキャストして[\"0\"]でアクセスする必要がある。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc33b",
+      "text": " - JSXには「型T1または型T2の値が入る型」(OCamlでいうところのvariant型)を定義する方法がない。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc33c",
+      "text": " -- 例えばjQuery.textは{(string|!jQuery)}を返してくる。JSXでは「variantで受けておいてプログラマがjQueryだと思うならas jQueryでキャストして使え」となって、キャストが挟まるのでメソッドチェーンで書くことができない。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc33d",
+      "text": " -- もしくはjQueryラッパーの中に「stringまたはjQuery型」を表現するためのクラスを用意しておいて、それの.as_string()と.as_jQuery()がキャストを隠蔽するって方法ならメソッドチェーンはできるだろうな。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc33e",
+      "text": " -- 例えばjQuery.textの引数の型は{(string|function(number,string))=}。これはJSXでは表現できないのでvariantにするしかない。結果的にjQuery.textはvariantを取ってvariantを返す関数になる。うーん、型チェックはどこへ…。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc33f",
+      "text": " - 例えばjQuery.textは引数が0個の場合と1個の場合がある。JSXには変数の省略がないのでこれを2個のメソッドのオーバーロードで表現しないといけない。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc340",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc341",
+      "text": " 一言でまとめると「jQueryが酷い」なんだけども、JSXの側をどういじったら一番楽にjQueryを使えるか考えた結果「複文の粒度でsuppress checkType できるようにする」じゃないかと思った。Closure Compilerは関数の粒度でのsuppress checkTypeができて、それをやれば関数内での型エラーが全部握りつぶされる。これは粒度がでかすぎて不便なので言語をいじれるメリットを生かしてもっと小さい粒度でのsuppressを導入すればいいと思う。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc342",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc343",
+      "text": " >||",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc344",
+      "text": " suppress(\"checkType\"){",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc345",
+      "text": "   jQuery(...).foo().bar().baz();",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc346",
+      "text": "   ...;",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc347",
+      "text": " }",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc348",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc349",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc34a",
+      "text": " <hr>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc34b",
+      "text": " 追記、haXeのことは全く知らなかったんだけども、今朝僕が必要だと考えた上の構文はhaXeには既に実装されているそうだ！",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc34c",
+      "text": " >||",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc34d",
+      "text": " untyped {",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc34e",
+      "text": "   ...",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc34f",
+      "text": " }",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc350",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc351",
+      "text": " 自分が「こうあるべきだ」と考えた設計が別の所で採用されているのを発見するのはうれしいことだなぁ。haXeのファンになりそうだ。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc352",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc353",
+      "text": " <hr>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc354",
+      "text": " 追記、なんかたくさん書いてしまったけど、一言でまとめるなら「JSXでjQueryを使うのはしんどい」かな。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc355",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc356",
+      "text": " *1338610649*Sphinxでmaximum recursion depth exceeded",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc357",
+      "text": " >||",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc358",
+      "text": " RuntimeError: maximum recursion depth exceeded in cmp",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc359",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc35a",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc35b",
+      "text": " もしかしてあなたのやりたかったことは、ページ内に目次を作りたかったのでは？そしてindex.rstにおいてあった toctree をページの中に書いてみたのでは？",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc35c",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc35d",
+      "text": " 正解はcontentsを使う方法:",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc35e",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc35f",
+      "text": " <a href='http://sphinx-users.jp/reverse-dict/writing/contents.html'>ページ内の目次を作りたい :: ドキュメンテーションツール スフィンクス Sphinx-users.jp</a>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc360",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc361",
+      "text": " *1338611128*Sphinxでcssをちょっといじりたい",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc362",
+      "text": " 「テーマを作れ」と言われてめんどくさいなぁと放置していたのだが<a href='http://sphinx-users.jp/cookbook/makingwebsite/theme.html'>テーマの変更 :: Sphinx-users.jp</a>から始まる5ページくらいを読んだら簡単に作れた。というわけでやった内容を公開しておく。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc363",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc364",
+      "text": " >||",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc365",
+      "text": " |-- conf.py",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc366",
+      "text": " |-- index.rst",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc367",
+      "text": " `-- mytheme",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc368",
+      "text": "     |-- static",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc369",
+      "text": "     |   |-- default.css",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc36a",
+      "text": "     |   `-- main.css",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc36b",
+      "text": "     `-- theme.conf",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc36c",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc36d",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc36e",
+      "text": " ** theme.conf",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc36f",
+      "text": " >||",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc370",
+      "text": " [theme]",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc371",
+      "text": " inherit = basic",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc372",
+      "text": " stylesheet = main.css",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc373",
+      "text": " pygments_style = sphinx",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc374",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc375",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc376",
+      "text": " ** main.css",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc377",
+      "text": " これが自分で書いたcss。「どれが節でどれが項かわかりにくい！」とか「節の手前で改ページしたい」ってニーズに答えるためにちょこっと書いた。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc378",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc379",
+      "text": " >|css|",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc37a",
+      "text": " @import url('default.css');",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc37b",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc37c",
+      "text": " h2:before {",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc37d",
+      "text": "   content: \"[節]\";",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc37e",
+      "text": "   page-break-before: always;",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc37f",
+      "text": " }",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc380",
+      "text": " h3:before {",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc381",
+      "text": "   content: \"[項]\";",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc382",
+      "text": " }",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc383",
+      "text": " h4:before {",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc384",
+      "text": "   content: \"[小項]\";",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc385",
+      "text": " }",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc386",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc387",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc388",
+      "text": " default.cssはデフォルトのテーマで作った時に使われているcssをそのままstaticフォルダにコピーしておいた。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc389",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc38a",
+      "text": " **  conf.py",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc38b",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc38c",
+      "text": " 後はconf.pyの設定を書き換えて使うテーマを変更するだけ。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc38d",
+      "text": " >|python|",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc38e",
+      "text": " html_theme = 'mytheme'",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc38f",
+      "text": " html_theme_path = ['.']",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc390",
+      "text": " ||<",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc391",
+      "text": " ",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc392",
+      "text": " これで問題なくいけました。めでたしめでたし。",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc393",
+      "text": " </body>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc394",
+      "text": " <comments>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc395",
+      "text": " <comment>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc396",
+      "text": " <username>Youchan</username>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc397",
+      "text": " <body>早いJavaScriptを生成するということでJSXに興味をもって、jQueryとの組み合わせについて調べていたら、ここにたどり着きました。<br>なるほど、しんどそうですね。<br>JSXでコンパイルされたJavaScriptが早いというメリットを考えると、jQueryライクなライブラリをJSXで実装するほうがいいのかなって思いました。</body>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc398",
+      "text": " <timestamp>1349083688</timestamp>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc399",
+      "text": " </comment>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc39a",
+      "text": " </comments>",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc39b",
+      "text": "",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2eaff09e00003dc39c",
+      "text": "[はてなダイアリー 2012-06-02 https://nishiohirokazu.hatenadiary.org/archive/2012/06/02]",
+      "created": 1338562800,
+      "updated": 1338562800,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

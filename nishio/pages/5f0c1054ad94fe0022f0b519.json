@@ -1,0 +1,295 @@
+{
+  "id": "5f0c1054ad94fe0022f0b519",
+  "title": "数列を有理式にする",
+  "created": 1594626264,
+  "updated": 1594887770,
+  "lines": [
+    {
+      "id": "5f0c1054ad94fe0022f0b519",
+      "text": "数列を有理式にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626264,
+      "updated": 1594626264
+    },
+    {
+      "id": "5f0c142eaff09e00002c2415",
+      "text": "\t[数列]と[形式的べき級数]は対応し、それぞれの世界での[畳み込み]と掛け算が対応する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627118,
+      "updated": 1594627890
+    },
+    {
+      "id": "5f0c15a2aff09e00002c2417",
+      "text": "\t数列の畳み込みは簡単に実験できる([np.convolve])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627490,
+      "updated": 1594628487
+    },
+    {
+      "id": "5f0c14bbaff09e00002c2416",
+      "text": "\t適当な畳み込みを繰り返して数列をシンプルな形にできれば、無限の項がある形式的べき級数を、有限の項の有理式にできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627260,
+      "updated": 1594887518
+    },
+    {
+      "id": "5f0c1675aff09e00002c2418",
+      "text": "　有理式のN次の項はO(log N)で求められる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627701,
+      "updated": 1594887627
+    },
+    {
+      "id": "5f100da4aff09e0000999f00",
+      "text": "　\tつまり数列の第N項がO(log N)で求められる see [Two Snuke#5f0afb00aff09e00009b591e]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594887589,
+      "updated": 1594887770
+    },
+    {
+      "id": "5f0c13f4aff09e00008f57af",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627061,
+      "updated": 1594627242
+    },
+    {
+      "id": "5f0c14a9aff09e00008f57b1",
+      "text": "[https://gyazo.com/2060b6bfdb5a263b0096e09cd076395f]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627242,
+      "updated": 1594627246
+    },
+    {
+      "id": "5f0c14adaff09e00008f57b2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627246,
+      "updated": 1594627246
+    },
+    {
+      "id": "5f0c13f5aff09e00008f57b0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594627062,
+      "updated": 1594627062
+    },
+    {
+      "id": "5f0c10d8aff09e00008f577f",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626264,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f578e",
+      "text": " In [43]: xs",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f578f",
+      "text": " Out[43]: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5790",
+      "text": " array([   0,    1,    2,    4,    6,    9,   12,   16,   20,   25,   30,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5791",
+      "text": "          36,   42,   49,   56,   64,   72,   81,   90,  100,  110,  121,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5792",
+      "text": "         132,  144,  156,  169,  182,  196,  210,  225,  240,  256,  272,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5793",
+      "text": "         289,  306,  324,  342,  361,  380,  400,  420,  441,  462,  484,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5794",
+      "text": "         506,  529,  552,  576,  600,  625,  650,  676,  702,  729,  756,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5795",
+      "text": "         784,  812,  841,  870,  900,  930,  961,  992, 1024, 1056, 1089,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5796",
+      "text": "        1122, 1156, 1190, 1225, 1260, 1296, 1332, 1369, 1406, 1444, 1482,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5797",
+      "text": "        1521, 1560, 1600, 1640, 1681, 1722, 1764, 1806, 1849, 1892, 1936,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5798",
+      "text": "        1980, 2025, 2070, 2116, 2162, 2209, 2256, 2304, 2352, 2401, 2450,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10e1aff09e00008f5799",
+      "text": "        2500])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626274,
+      "updated": 1594626274
+    },
+    {
+      "id": "5f0c10d9aff09e00008f5780",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626266,
+      "updated": 1594626266
+    },
+    {
+      "id": "5f0c117daff09e00008f579a",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626430,
+      "updated": 1594626432
+    },
+    {
+      "id": "5f0c117faff09e00008f579c",
+      "text": " In [44]: import numpy as np",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626432,
+      "updated": 1594626432
+    },
+    {
+      "id": "5f0c1180aff09e00008f579e",
+      "text": " In [45]: from functools import reduce",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626432,
+      "updated": 1594626432
+    },
+    {
+      "id": "5f0c1196aff09e00008f57a7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626455,
+      "updated": 1594626455
+    },
+    {
+      "id": "5f0c118eaff09e00008f579f",
+      "text": " In [48]: reduce(np.convolve, [[1, -1]] * 1, xs)[:10]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626447,
+      "updated": 1594626453
+    },
+    {
+      "id": "5f0c118eaff09e00008f57a0",
+      "text": " Out[48]: array([0, 1, 1, 2, 2, 3, 3, 4, 4, 5])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626447,
+      "updated": 1594626447
+    },
+    {
+      "id": "5f0c118eaff09e00008f57a1",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626447,
+      "updated": 1594626447
+    },
+    {
+      "id": "5f0c118eaff09e00008f57a2",
+      "text": " In [49]: reduce(np.convolve, [[1, -1]] * 2, xs)[:10]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626447,
+      "updated": 1594626447
+    },
+    {
+      "id": "5f0c118eaff09e00008f57a3",
+      "text": " Out[49]: array([0, 1, 0, 1, 0, 1, 0, 1, 0, 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626447,
+      "updated": 1594626447
+    },
+    {
+      "id": "5f0c11ddaff09e00008f57a8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626526,
+      "updated": 1594626526
+    },
+    {
+      "id": "5f0c11deaff09e00008f57a9",
+      "text": " In [52]: reduce(np.convolve, [[1, -1]] * 2 + [[1, 0, -1]], xs)[:10]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626526,
+      "updated": 1594626526
+    },
+    {
+      "id": "5f0c11deaff09e00008f57aa",
+      "text": " Out[52]: array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626526,
+      "updated": 1594626526
+    },
+    {
+      "id": "5f0c117daff09e00008f579b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626430,
+      "updated": 1594626430
+    },
+    {
+      "id": "5f0c11fdaff09e00008f57ab",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626557,
+      "updated": 1594626559
+    },
+    {
+      "id": "5f0c11ffaff09e00008f57ad",
+      "text": " In [53]: reduce(np.convolve, [[1, -1]] * 2 + [[1, 0, -1]], [1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626560,
+      "updated": 1594626560
+    },
+    {
+      "id": "5f0c1200aff09e00008f57ae",
+      "text": " Out[53]: array([ 1, -2,  0,  2, -1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626560,
+      "updated": 1594626560
+    },
+    {
+      "id": "5f0c11fdaff09e00008f57ac",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594626558,
+      "updated": 1594626558
+    }
+  ]
+}

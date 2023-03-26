@@ -1,0 +1,561 @@
+{
+  "id": "6090ebfba287e60022919ed1",
+  "title": "Hatena2008-10-18",
+  "created": 1224255600,
+  "updated": 1224255600,
+  "lines": [
+    {
+      "id": "6090ec20aff09e00003ccdd1",
+      "text": "Hatena2008-10-18",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd2",
+      "text": "code:hatena",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd3",
+      "text": " <body>",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd4",
+      "text": " *1224315256*[最中限]運でどれくらい勝てるのか",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd5",
+      "text": " 最近の<a href='http://saichugen-online.appspot.com/'>最中限オンライン</a>のハイスコアによって「最中限がじゃんけんのような運だけのゲームではないことが証明された」と思っていたのだけど、確率論に詳しくない人はピンと来ないんだと気づいたので、60回勝負して36点っていう得点がどれくらい「運ではない」のかを計算してみよう。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd6",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd7",
+      "text": " 最中限の最終的なスコアは、おおざっぱに言うと「勝つと2点、負けると-1点」という仕組みで計算される。実際には引き分けの人がいるときの処理があるけど、それは確率が小さいので今回は話を簡単にするために目をつぶろう。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd8",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdd9",
+      "text": " 1/3の確率で+2点、2/3の確率で-1点、なので得点の平均は2 * 1/3 + (-1) * 2/3 = 0点になる。でも、60回戦って36点を獲得している僕の成績が運なのか実力なのかを知るためには平均が0という情報だけでは足りない。運だけでどれくらい点がばらつくのかがわからないといけない。それを知るためには「分散」の情報が必要だ。分散は「『平均との差の二乗』の平均」なのだけど、今回は平均が0なので単純に「『二乗』の平均」でいい。2 * 2 * 1/3 + (-1 * -1) * 2/3 = 2になる。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdda",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccddb",
+      "text": " 1回の勝負で2の分散があるとき、2回の勝負の合計の分散は2 + 2で4になる。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccddc",
+      "text": " 計算してみよう。両方勝つ確率: 1/9, 両方負ける確率: 4/9, 片方勝つ確率は残りだから4/9。4 * 4 1/9 + (-2 * -2) * 4/9 + 1 * 1 * 4/9 = (16 + 16 + 4) / 9 = 4。ほら4になった。(実例じゃ満足できない人は一般の分布について証明すること)",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccddd",
+      "text": " というわけで分散2のゲームを60回やると、合計点の分散は120になる。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdde",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccddf",
+      "text": " さて、点数の分布が分散120の時、運だけで36点取るのはどれくらい難しいのか？それを計算するために点数の分布を正規分布で近似する。分布が正規分布のときは、標準偏差(分散の平方根)の何倍離れているとどれくらい起こりにくいのかがわかるからね。あと同じ分布をいくつも足し合わせた分布は正規分布に近づくことが知られている。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde0",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde1",
+      "text": " 標準偏差(SD)は120の平方根。10.95。36点をこれで割ると3.29になる。正規分布表(たとえば<a href='http://www.biwako.shiga-u.ac.jp/sensei/mnaka/ut/normdisttab.html'>付表：正規分布表　normal distribution</a>)の3.29の欄を見ると0.9995と書かれている。つまり、運だけで60回プレイしたときに36点以下の点数になる確率が0.9995。逆に言うと運だけで36点より大きくなる確率は0.0005ということ。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde2",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde3",
+      "text": " 正規分布で標準偏差の3倍以上平均から離れるのがだいたい「千に三つ」の確率だと思うといい。8回プレイなら12点がそのライン。32回なら24点がそのラインになる。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde4",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde5",
+      "text": " まとめ：運ではこんなに点数取れないよ！",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde6",
+      "text": " 次回予告：どうすれば点が取れるようになるかの解説を書きたい。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde7",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde8",
+      "text": " *1224354650*[TopCoder]SRM422",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccde9",
+      "text": " 「重さの合計が与えられた上限を超えない部分集合を全部返す」というアルゴリズムをさらっと書けなかったので終わってから頑張った。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdea",
+      "text": " >|cpp|",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdeb",
+      "text": " void find_all_subset(",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdec",
+      "text": "   const vector<size_t> &elems, const vector<int> &weight, ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccded",
+      "text": "   int weightLimit, vector<vector<size_t> > &result,",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdee",
+      "text": "   int start=0, vector<size_t> already_member=vector<size_t>()){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdef",
+      "text": "   for(size_t i=start; i<elems.size(); i++){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf0",
+      "text": "     if(weight[elems[i]] <= weightLimit){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf1",
+      "text": "       result.push_back(already_member); // copy",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf2",
+      "text": "       result.back().push_back(elems[i]);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf3",
+      "text": "       find_all_subset(",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf4",
+      "text": " \telems, weight,",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf5",
+      "text": " \tweightLimit - weight[elems[i]], result,",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf6",
+      "text": " \ti + 1, result.back()); /* result.back() はコピーされる */",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf7",
+      "text": "     }",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf8",
+      "text": "   }",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdf9",
+      "text": "   ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdfa",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdfb",
+      "text": " } ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdfc",
+      "text": " int main(){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdfd",
+      "text": "   vector<int> weight;",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdfe",
+      "text": "   weight.push_back(1);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003ccdff",
+      "text": "   weight.push_back(2);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce00",
+      "text": "   weight.push_back(3);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce01",
+      "text": "   weight.push_back(4);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce02",
+      "text": "   vector<size_t> member;",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce03",
+      "text": "   for(size_t i=0; i<4; i++){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce04",
+      "text": "     member.push_back(i);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce05",
+      "text": "   }",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce06",
+      "text": "   vector<vector<size_t> > result;",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce07",
+      "text": "   find_all_subset(member, weight, 6, result);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce08",
+      "text": " }",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce09",
+      "text": " ||<",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce0a",
+      "text": " 今回のDiv1のNormal問題は「体重の合計が上限を超えず、さらにお互いに信頼している人でチームを作り、ゴールにたどり着いたチームのうちの一人は戻ってこないと行けなくて、もっともかかる時間の少ないもの」というよくあるパズルの複雑バージョンを解く問題だった。船に乗れるのが2人までとか、オオカミと羊は一緒に乗せては行けないとか、ああいうパズル。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce0b",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce0c",
+      "text": " 今回からBoostが使えなくなってとても悲しい。Boostを使えば済む内容を劣化版自作Boostで書くとか不毛すぎる。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce0d",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce0e",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce0f",
+      "text": " とりあえずboost/assign.hppの劣化コピーを作った。",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce10",
+      "text": " >|cpp|",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce11",
+      "text": " template<class T>",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce12",
+      "text": " vector<T>& operator <<(vector<T> &xs, T x){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce13",
+      "text": "   xs.push_back(x);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce14",
+      "text": "   return xs;",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce15",
+      "text": " } ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce16",
+      "text": " ",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce17",
+      "text": " int main(){",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce18",
+      "text": "   vector<int> weight;",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce19",
+      "text": "   weight << 1 << 2 << 3 << 4;",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce1a",
+      "text": "   DP(weight);",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce1b",
+      "text": " }",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce1c",
+      "text": " ||<",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce1d",
+      "text": " </body>",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce1e",
+      "text": "",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cce1f",
+      "text": "[はてなダイアリー 2008-10-18 https://nishiohirokazu.hatenadiary.org/archive/2008/10/18]",
+      "created": 1224255600,
+      "updated": 1224255600,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

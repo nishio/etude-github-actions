@@ -1,0 +1,904 @@
+{
+  "id": "5e3992fb67c5d200177ab95e",
+  "title": "TypeScriptの型で虫食い算を解く",
+  "created": 1580883606,
+  "updated": 1581658688,
+  "lines": [
+    {
+      "id": "5e3992fb67c5d200177ab95e",
+      "text": "TypeScriptの型で虫食い算を解く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883606,
+      "updated": 1580883648
+    },
+    {
+      "id": "5e3a686caff09e00003385aa",
+      "text": "[TypeScriptの型]で虫食い算を解く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580886125,
+      "updated": 1580886130
+    },
+    {
+      "id": "5e3a5ed6aff09e000007cdfe",
+      "text": "1~3の相異なる値で、T1 + T2 = T3を満たすものを見つける、という簡単な問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883670,
+      "updated": 1580885191
+    },
+    {
+      "id": "5e3a631caff09e00003385a2",
+      "text": "　数は二進法表記して加算を1ビットの論理演算で構築",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580884765,
+      "updated": 1580884802
+    },
+    {
+      "id": "5e3a6341aff09e00003385a3",
+      "text": "　　チャーチ数使おうとして[TypeScriptは型を再帰的に定義できない？]の罠にハマった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580884802,
+      "updated": 1580884835
+    },
+    {
+      "id": "5e3a6363aff09e00003385a4",
+      "text": "　条件式の表現はanyかneverを返す形にした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580884835,
+      "updated": 1580884953
+    },
+    {
+      "id": "5e3a6395aff09e00003385a5",
+      "text": "　　条件のand演算が型のインターセクションに対応づく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580884885,
+      "updated": 1580884942
+    },
+    {
+      "id": "5e3a6426aff09e00003385a6",
+      "text": "　　テストコードは結果の型に\"OK\"を代入する、結果がneverなら型エラーになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580885032,
+      "updated": 1580885092
+    },
+    {
+      "id": "5e3a647daff09e00003385a7",
+      "text": "　[解きたかった問題 https://twitter.com/keisei_otsuka/status/1223841916405440512?s=21]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580885118,
+      "updated": 1580885141
+    },
+    {
+      "id": "5e3a64a0aff09e00003385a9",
+      "text": "　 割り算は式変形で消せるので、大きめの数値型と掛け算を実装すればできるはず…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580885152,
+      "updated": 1580885181
+    },
+    {
+      "id": "5e3a5ec0aff09e000007cdc2",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883648,
+      "updated": 1580883663
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdc4",
+      "text": "   type BIN = 0 | 1;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883663,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdc5",
+      "text": "   type XOR<A extends BIN, B extends BIN> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdc6",
+      "text": "     A extends 0 ? B : (B extends 0 ? A : 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdc7",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdc8",
+      "text": "   type AND<A extends BIN, B extends BIN> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdc9",
+      "text": "     A extends 0 ? 0 : B",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdca",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdcb",
+      "text": "   type B2 = [BIN, BIN];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdcc",
+      "text": "   type N1 = [0, 1];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdcd",
+      "text": "   type N2 = [1, 0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdce",
+      "text": "   type N3 = [1, 1];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdcf",
+      "text": "   type ADD2DIGIT<A extends B2, B extends B2> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd0",
+      "text": "     [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd1",
+      "text": "       XOR<XOR<AND<A[1], B[1]>, A[0]>, B[0]>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd2",
+      "text": "       XOR<A[1], B[1]>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd3",
+      "text": "     ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd4",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd5",
+      "text": "   type EQUAL<A extends B2, B extends B2> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd6",
+      "text": "     A extends B ? any : never",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd7",
+      "text": "   );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd8",
+      "text": "   let a1: EQUAL<ADD2DIGIT<N1, N2>, N3> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdd9",
+      "text": "   // let a2: EQUAL<ADD2DIGIT<N1, N1>, N3> = \"OK\";  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdda",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cddb",
+      "text": "   // CONSTRAINT: T1 + T2 = T3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883697
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cddc",
+      "text": "   type CONSTRAINT<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cddd",
+      "text": "     T1 extends B2,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdde",
+      "text": "     T2 extends B2,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cddf",
+      "text": "     T3 extends B2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde0",
+      "text": "     > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde1",
+      "text": "       EQUAL<ADD2DIGIT<T1, T2>, T3>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde2",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde4",
+      "text": "   let b1: CONSTRAINT<N1, N1, N2> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde5",
+      "text": "   // let b2: CONSTRAINT<N1, N1, N3> = \"OK\"; // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde6",
+      "text": "   let b3: CONSTRAINT<N2, N1, N3> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde8",
+      "text": "   type IS_PERMUTATION<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cde9",
+      "text": "     T1 extends B2,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdea",
+      "text": "     T2 extends B2,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdeb",
+      "text": "     T3 extends B2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdec",
+      "text": "     > =",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cded",
+      "text": "     T2 extends T1 ? never : (T3 extends (T1 | T2) ? never : any);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdee",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdef",
+      "text": "   let c1: IS_PERMUTATION<N1, N2, N3> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf0",
+      "text": "   // let c2: IS_PERMUTATION<N2, N3, N2> = \"OK\";  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf1",
+      "text": "   let c3: IS_PERMUTATION<N2, N1, N3> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580884171
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf5",
+      "text": "   type IS_SOLUTION<T1 extends B2, T2 extends B2, T3 extends B2> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf6",
+      "text": "     IS_PERMUTATION<T1, T2, T3> & CONSTRAINT<T1, T2, T3>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf7",
+      "text": "   );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdf9",
+      "text": "   let d1: IS_SOLUTION<N1, N2, N3> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdfa",
+      "text": "   let d2: IS_SOLUTION<N2, N1, N3> = \"OK\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdfb",
+      "text": "   // let d3: IS_SOLUTION<N1, N1, N2> = \"OK\"; // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdfc",
+      "text": "   // let d4: IS_SOLUTION<N2, N1, N2> = \"OK\"; // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883664
+    },
+    {
+      "id": "5e3a5ecfaff09e000007cdfd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883664,
+      "updated": 1580883665
+    },
+    {
+      "id": "5e3a5eccaff09e000007cdc3",
+      "text": "全加算器とリンクリストを作った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580883661,
+      "updated": 1581591257
+    },
+    {
+      "id": "5e452ad8aff09e000018575e",
+      "text": "\tが、型エイリアスが再帰呼び出しできないためN個の型引数をとってN-1個の型引数で呼ぶとかができない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581591257,
+      "updated": 1581591257
+    },
+    {
+      "id": "5e452adbaff09e000018575f",
+      "text": "\tのでADDER3がADDER2を呼ぶみたいな書き方が必要になってあまり嬉しくない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581591260,
+      "updated": 1581591269
+    },
+    {
+      "id": "5e44fdc0aff09e000061268f",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581579713,
+      "updated": 1581579714
+    },
+    {
+      "id": "5e44fdc2aff09e0000612690",
+      "text": " type FULL_ADDER<A extends BIN, B extends BIN, CARRY extends BIN> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581579714,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126f9",
+      "text": "   [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126fa",
+      "text": "     XOR<AND<A, B>, AND<XOR<A, B>, CARRY>>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126fb",
+      "text": "     XOR<XOR<A, B>, CARRY>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126fc",
+      "text": "   ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126fd",
+      "text": " );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126fe",
+      "text": " type BODY<BIN2 extends [BIN, BIN]> = BIN2[1];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e00006126ff",
+      "text": " type CARRY<BIN2 extends [BIN, BIN]> = BIN2[0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612700",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612701",
+      "text": " type LIST = BIN | [BIN, LIST]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612702",
+      "text": " type CAR<X extends LIST> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612703",
+      "text": "   X extends [BIN, LIST] ? X[0] : X",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612704",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612705",
+      "text": " type CDR<X extends LIST> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612706",
+      "text": "   X extends [BIN, LIST] ? X[1] : never",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612707",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612708",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612709",
+      "text": " type CHAIN1<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061270a",
+      "text": "   P extends LIST, A1 extends BIN, B1 extends BIN,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061270b",
+      "text": "   FA1 = FULL_ADDER<A1, B1, CAR<P>>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061270c",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061270d",
+      "text": "     FA1 extends [BIN, BIN] ?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061270e",
+      "text": "     [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061270f",
+      "text": "       CARRY<FA1>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612710",
+      "text": "       [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612711",
+      "text": "         BODY<FA1>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612712",
+      "text": "         CDR<P>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612713",
+      "text": "       ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612714",
+      "text": "     ] : never",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612715",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612716",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612717",
+      "text": " type ADDER2<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612718",
+      "text": "   A1 extends BIN, A2 extends BIN,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612719",
+      "text": "   B1 extends BIN, B2 extends BIN,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061271a",
+      "text": "   P = FULL_ADDER<A2, B2, 0>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061271b",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061271c",
+      "text": "     P extends LIST ?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061271d",
+      "text": "     CHAIN1<P, A1, B1>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061271e",
+      "text": "     : never",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061271f",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612720",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612721",
+      "text": " type ADDER3<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612722",
+      "text": "   A1 extends BIN, A2 extends BIN, A3 extends BIN,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612723",
+      "text": "   B1 extends BIN, B2 extends BIN, B3 extends BIN,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612724",
+      "text": "   P = ADDER2<A2, A3, B2, B3>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612725",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612726",
+      "text": "     P extends LIST ?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612727",
+      "text": "     CHAIN1<P, A1, B1>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612728",
+      "text": "     : never",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612729",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061272a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061272b",
+      "text": " {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061272c",
+      "text": "   const a1: ADDER3<1, 1, 1, 1, 1, 1> = [1, [1, [1, 0]]]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061272d",
+      "text": "   const a2: ADDER3<1, 1, 0, 1, 1, 1> = [1, [1, [0, 1]]]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061272e",
+      "text": "   const a3: ADDER3<1, 1, 0, 0, 1, 1> = [1, [0, [0, 1]]]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e000061272f",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580839
+    },
+    {
+      "id": "5e450227aff09e0000612730",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580839,
+      "updated": 1581580840
+    }
+  ]
+}

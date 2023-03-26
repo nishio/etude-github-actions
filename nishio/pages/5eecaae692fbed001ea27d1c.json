@@ -1,0 +1,680 @@
+{
+  "id": "5eecaae692fbed001ea27d1c",
+  "title": "ダイクストラ法",
+  "created": 1592568563,
+  "updated": 1608797663,
+  "lines": [
+    {
+      "id": "5eecaae692fbed001ea27d1c",
+      "text": "ダイクストラ法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592568563,
+      "updated": 1592568565
+    },
+    {
+      "id": "5fe44dd2aff09e0000e638f3",
+      "text": "　最短経路を求めるアルゴリズム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608797650,
+      "updated": 1608797663
+    },
+    {
+      "id": "5eecaaf6aff09e0000cf60bc",
+      "text": "　次に探索すべき頂点を見つけることを[優先度キュー]を使ってlogオーダーにする。[heapq]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592568567,
+      "updated": 1603713429
+    },
+    {
+      "id": "5eecabb3aff09e000064cbb6",
+      "text": "\t\tO((E+V)log V)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592568756,
+      "updated": 1603704340
+    },
+    {
+      "id": "5fe44dd0aff09e0000e638f2",
+      "text": "\t[蟻本] p.96",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608797649,
+      "updated": 1608797649
+    },
+    {
+      "id": "5f96b968aff09e000095b0ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603713384,
+      "updated": 1603713384
+    },
+    {
+      "id": "5f96b961aff09e000095b0eb",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603713378,
+      "updated": 1603714699
+    },
+    {
+      "id": "5f96be8baff09e000095b0f2",
+      "text": " def shortest_path(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f3",
+      "text": "         start, goal, num_vertexes, edges,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f4",
+      "text": "         INF=9223372036854775807, UNREACHABLE=-1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f5",
+      "text": "     distances = [INF] * num_vertexes",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f6",
+      "text": "     prev = [None] * num_vertexes",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f7",
+      "text": "     distances[start] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f8",
+      "text": "     queue = [(0, start)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0f9",
+      "text": "     while queue:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0fa",
+      "text": "         d, frm = heappop(queue)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0fb",
+      "text": "         if distances[frm] < d:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0fc",
+      "text": "             # already know shorter path",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0fd",
+      "text": "             continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0fe",
+      "text": "         if frm == goal:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b0ff",
+      "text": "             path = [goal]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b100",
+      "text": "             p = goal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b101",
+      "text": "             while p != start:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b102",
+      "text": "                 p = prev[p]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b103",
+      "text": "                 path.append(p)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b104",
+      "text": "             path.reverse()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b105",
+      "text": "             return d, path",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b106",
+      "text": "         for to in edges[frm]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b107",
+      "text": "             new_cost = distances[frm] + edges[frm][to]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b108",
+      "text": "             if distances[to] > new_cost:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b109",
+      "text": "                 # found shorter path",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b10a",
+      "text": "                 distances[to] = new_cost",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b10b",
+      "text": "                 prev[to] = frm",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b10c",
+      "text": "                 heappush(queue, (distances[to], to))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b10d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b10e",
+      "text": "     return UNREACHABLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714700
+    },
+    {
+      "id": "5f96be8caff09e000095b10f",
+      "text": "https://judge.yosupo.jp/submission/28034",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603714700,
+      "updated": 1603714712
+    },
+    {
+      "id": "5f96b962aff09e000095b0ec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603713378,
+      "updated": 1603713378
+    },
+    {
+      "id": "5f96b962aff09e000095b0ed",
+      "text": "old version",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603713378,
+      "updated": 1603713382
+    },
+    {
+      "id": "5f96b997aff09e000095b0ef",
+      "text": "\t[Shortest Path https://judge.yosupo.jp/problem/shortest_path]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603713431,
+      "updated": 1603713431
+    },
+    {
+      "id": "5f96b997aff09e000095b0f0",
+      "text": "\t\t[Submitted https://judge.yosupo.jp/submission/13028]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603713431,
+      "updated": 1603713431
+    },
+    {
+      "id": "5eecf0a0aff09e000064cbc8",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592586401,
+      "updated": 1592586413
+    },
+    {
+      "id": "5eecac0caff09e0000cf60bf",
+      "text": " from collections import defaultdict",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592568845,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f2",
+      "text": " from heapq import *",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f3",
+      "text": " # fast input",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f4",
+      "text": " import sys",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f5",
+      "text": " input = sys.stdin.buffer.readline",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f6",
+      "text": " INF = sys.maxsize",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f8",
+      "text": " num_vertexes, num_edges, start, goal = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60f9",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60fa",
+      "text": " edges = defaultdict(dict)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60fb",
+      "text": " distances = [INF] * num_vertexes",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60fc",
+      "text": " distances[start] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60fd",
+      "text": " shortest_path = defaultdict(list)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60fe",
+      "text": " shortest_path[start] = []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf60ff",
+      "text": " for i in range(num_edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6100",
+      "text": "     a, b, c = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6101",
+      "text": "     edges[a][b] = c",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6102",
+      "text": "     # edges[b][a] = c  # if bidirectional",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6103",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6104",
+      "text": " queue = [(0, start)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6105",
+      "text": " while queue:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6106",
+      "text": "     d, frm = heappop(queue)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6107",
+      "text": "     if distances[frm] < d:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6108",
+      "text": "         # already know shorter path",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6109",
+      "text": "         continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf610a",
+      "text": "     if frm == goal:  # goal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf610b",
+      "text": "         break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf610c",
+      "text": "     for to in edges[frm]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf610d",
+      "text": "         if distances[to] > distances[frm] + edges[frm][to]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf610e",
+      "text": "             # found shorter path",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf610f",
+      "text": "             distances[to] = distances[frm] + edges[frm][to]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6110",
+      "text": "             heappush(queue, (distances[to], to))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6111",
+      "text": "             shortest_path[to] = (frm, to)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6112",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6113",
+      "text": " if distances[goal] == INF:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6114",
+      "text": "     # unreachable",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6115",
+      "text": "     print(-1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6116",
+      "text": " else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6117",
+      "text": "     path = []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6118",
+      "text": "     cur = goal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6119",
+      "text": "     while True:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf611a",
+      "text": "         frm, to = shortest_path[cur]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf611b",
+      "text": "         path.append((frm, to))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf611c",
+      "text": "         cur = frm",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf611d",
+      "text": "         if frm == start:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf611e",
+      "text": "             break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf611f",
+      "text": "     path.reverse()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6120",
+      "text": "     print(distances[goal], len(path))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6121",
+      "text": "     for frm, to in path:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6122",
+      "text": "         print(frm, to)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592569021
+    },
+    {
+      "id": "5eecacbcaff09e0000cf6123",
+      "text": "このコードの修正点",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592569021,
+      "updated": 1592586459
+    },
+    {
+      "id": "5eecf0dbaff09e000064cbca",
+      "text": "　最短パスの表示が必要でない時にどこを捨てればいいかを明確にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592586460,
+      "updated": 1592586484
+    },
+    {
+      "id": "5eecf0f4aff09e000064cbcb",
+      "text": "　パスを構成するエッジの数を出力しているが、エッジコストの和を出したい場合も多い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592586484,
+      "updated": 1592586512
+    },
+    {
+      "id": "5eecf0d8aff09e000064cbc9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592586456,
+      "updated": 1592586456
+    }
+  ]
+}

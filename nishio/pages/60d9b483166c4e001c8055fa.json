@@ -1,0 +1,680 @@
+{
+  "id": "60d9b483166c4e001c8055fa",
+  "title": "✅CypressからsetGlobalするとフックが反応しない",
+  "created": 1624880261,
+  "updated": 1629796315,
+  "lines": [
+    {
+      "id": "60d9b483166c4e001c8055fa",
+      "text": "✅CypressからsetGlobalするとフックが反応しない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624880261,
+      "updated": 1624948296
+    },
+    {
+      "id": "60d9ba2baff09e0000389fec",
+      "text": "[ReactNを露出する]で、コンソールでsetGlobalして、コンポーネントの側のuseGlobalが変更を検知して再描画するところまでできた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624881708,
+      "updated": 1624882717
+    },
+    {
+      "id": "60d9be1eaff09e0000e14b0d",
+      "text": "しかしsetGlobalを[Cypress]のテストコード内から呼び出すと、更新が検知されない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624882719,
+      "updated": 1626421024
+    },
+    {
+      "id": "60f1371faff09e00001f2042",
+      "text": "\t→setTimeoutを挟むことで解決した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626421024,
+      "updated": 1626421047
+    },
+    {
+      "id": "60f13730aff09e00001a3d12",
+      "text": "\t[2021-07-15Movidea開発日記] デフォルトでsetTimeoutしてたらテストケースを書くことがやりにくいケースが出てきたのでデフォルトは同期的に実行し、問題がある時だけ非同期にしようとしたら、全部同期的呼び出しでテストが通ってしまった、なぜだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626421040,
+      "updated": 1629299540
+    },
+    {
+      "id": "60f14bdfaff09e000020f5f9",
+      "text": "\t　「何もしてないのに直った！」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626426336,
+      "updated": 1626426344
+    },
+    {
+      "id": "60f13796aff09e00001a3d13",
+      "text": "\t　問題が再現してから再検討する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626421142,
+      "updated": 1626421171
+    },
+    {
+      "id": "6124b7a7aff09e0000386ca1",
+      "text": "\t2021-08-24　この件、全部同期的呼び出しにしたまま1ヶ月、特に問題が起こってない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1629796263,
+      "updated": 1629796294
+    },
+    {
+      "id": "6124b7c6aff09e0000386ca3",
+      "text": "\t　Cypress側の更新でReactの扱いが改善したとかなのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1629796295,
+      "updated": 1629796315
+    },
+    {
+      "id": "60d9cbfdaff09e0000bfe0b2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886269,
+      "updated": 1624886269
+    },
+    {
+      "id": "60dab9e4aff09e0000798432",
+      "text": "解決編",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947173,
+      "updated": 1624947328
+    },
+    {
+      "id": "60dabc79aff09e0000abef9d",
+      "text": "これはiframeによってコンテキストが分かれてることとは無関係で、非同期周りの挙動だった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947833,
+      "updated": 1624947868
+    },
+    {
+      "id": "60dabc9baff09e0000abef9e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947868,
+      "updated": 1624947868
+    },
+    {
+      "id": "60dabcaeaff09e0000abefa0",
+      "text": "最小限のコードで解説する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947887,
+      "updated": 1624947894
+    },
+    {
+      "id": "60dabc9caff09e0000abef9f",
+      "text": "まずシンプルなコンポーネント、useEffectでsetGlobalする(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947869,
+      "updated": 1624947921
+    },
+    {
+      "id": "60daba80aff09e000079843b",
+      "text": "code:App.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947328,
+      "updated": 1624947637
+    },
+    {
+      "id": "60daba91aff09e000079843c",
+      "text": " function App() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947345
+    },
+    {
+      "id": "60daba91aff09e000079843d",
+      "text": "   const [fusens] = useGlobal(\"fusens\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947345
+    },
+    {
+      "id": "60daba91aff09e000079843e",
+      "text": "   console.log(\"render\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947345
+    },
+    {
+      "id": "60daba91aff09e000079843f",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947345
+    },
+    {
+      "id": "60daba91aff09e0000798440",
+      "text": "     console.log(\"useEffect\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947345
+    },
+    {
+      "id": "60dabaa0aff09e000079845e",
+      "text": "     window.movidea.callSetGlobal(); // (1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947362,
+      "updated": 1624947581
+    },
+    {
+      "id": "60daba91aff09e0000798441",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947362
+    },
+    {
+      "id": "60daba91aff09e0000798451",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947345
+    },
+    {
+      "id": "60daba91aff09e0000798452",
+      "text": "   return (...);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947377
+    },
+    {
+      "id": "60dabaabaff09e000079845f",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947371,
+      "updated": 1624947379
+    },
+    {
+      "id": "60daba91aff09e000079845d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947345,
+      "updated": 1624947380
+    },
+    {
+      "id": "60dabcd3aff09e0000abefa1",
+      "text": "この時、コンポーネントの本体が走った後、useEffectが走り、その中でsetGlobalされ、それを検知して再描画される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947923,
+      "updated": 1624948217
+    },
+    {
+      "id": "60dab9e9aff09e0000798439",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947178,
+      "updated": 1624947514
+    },
+    {
+      "id": "60dabb3aaff09e0000798460",
+      "text": " render",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947515,
+      "updated": 1624947515
+    },
+    {
+      "id": "60dabb3aaff09e0000798461",
+      "text": " useEffect",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947515,
+      "updated": 1624947520
+    },
+    {
+      "id": "60dabb3aaff09e0000798462",
+      "text": " call setGlobal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947515,
+      "updated": 1624947522
+    },
+    {
+      "id": "60dabb3aaff09e0000798463",
+      "text": " render",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947515,
+      "updated": 1624947524
+    },
+    {
+      "id": "60dab9e9aff09e000079843a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947178,
+      "updated": 1624947178
+    },
+    {
+      "id": "60dabd08aff09e0000abefa2",
+      "text": "では(1)をコメントアウトし、テストケースの側でsetGlobalしたらどうなるか(2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947977,
+      "updated": 1624948087
+    },
+    {
+      "id": "60dabba4aff09e0000798464",
+      "text": "code:test.js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947620,
+      "updated": 1624947627
+    },
+    {
+      "id": "60dabbacaff09e0000798465",
+      "text": " describe('adjust font size', () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947629
+    },
+    {
+      "id": "60dabbadaff09e0000798466",
+      "text": "   beforeEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947629
+    },
+    {
+      "id": "60dabbadaff09e0000798467",
+      "text": "     cy.visit('/')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947629
+    },
+    {
+      "id": "60dabbadaff09e0000798468",
+      "text": "     cy.window().its('movidea').then(movidea => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947643
+    },
+    {
+      "id": "60dabbadaff09e0000798477",
+      "text": "       console.log(\"movidea resolved\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947646
+    },
+    {
+      "id": "60dabbadaff09e0000798481",
+      "text": "       movidea.callSetGlobal()  // (2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947659
+    },
+    {
+      "id": "60dabbadaff09e0000798483",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947650
+    },
+    {
+      "id": "60dabbadaff09e0000798488",
+      "text": "   })...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947747
+    },
+    {
+      "id": "60dabbadaff09e000079848a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947629,
+      "updated": 1624947652
+    },
+    {
+      "id": "60dabd2caff09e0000abefa3",
+      "text": "この時、初回の描画の後、useEffectが呼ばれるよりも前にsetGlobalが呼ばれ、この更新が検知されない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624948012,
+      "updated": 1624948433
+    },
+    {
+      "id": "60dab9e4aff09e0000798434",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947173,
+      "updated": 1624947661
+    },
+    {
+      "id": "60dabbcdaff09e000079848b",
+      "text": " render",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947661,
+      "updated": 1624947669
+    },
+    {
+      "id": "60dabbd4aff09e000079848c",
+      "text": " movidea resolved",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947669,
+      "updated": 1624947675
+    },
+    {
+      "id": "60dabbd4aff09e000079848d",
+      "text": " call setGlobal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947669,
+      "updated": 1624947678
+    },
+    {
+      "id": "60dabbd4aff09e000079848e",
+      "text": " useEffect",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947669,
+      "updated": 1624947679
+    },
+    {
+      "id": "60dab9e4aff09e0000798435",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947173,
+      "updated": 1624947173
+    },
+    {
+      "id": "60dabbe2aff09e000079848f",
+      "text": "この(2)の呼び出しにsetTimeoutを挟んで非同期にするとどうなるか(3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947683,
+      "updated": 1624948124
+    },
+    {
+      "id": "60dabbebaff09e0000798490",
+      "text": "code:test.js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798491",
+      "text": " describe('adjust font size', () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798492",
+      "text": "   beforeEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798493",
+      "text": "     cy.visit('/')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798494",
+      "text": "     cy.window().its('movidea').then(movidea => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798495",
+      "text": "       console.log(\"movidea resolved\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798496",
+      "text": "       setTimeout(movidea.callSetGlobal, 0)  // (3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947738
+    },
+    {
+      "id": "60dabbebaff09e0000798497",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947692
+    },
+    {
+      "id": "60dabbebaff09e0000798498",
+      "text": "   })...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947692,
+      "updated": 1624947751
+    },
+    {
+      "id": "60dac076aff09e00007984a3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624948855,
+      "updated": 1624948855
+    },
+    {
+      "id": "60dabbedaff09e0000798499",
+      "text": "この場合はsetGlobalが呼ばれるのがuseEffectの後になり、期待通りに変更が検知され、再描画される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947693,
+      "updated": 1624948449
+    },
+    {
+      "id": "60dabbedaff09e000079849a",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947693,
+      "updated": 1624947754
+    },
+    {
+      "id": "60dabc29aff09e000079849c",
+      "text": " render",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947754,
+      "updated": 1624947761
+    },
+    {
+      "id": "60dabc31aff09e000079849d",
+      "text": " movidea resolved",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947761,
+      "updated": 1624947766
+    },
+    {
+      "id": "60dabc31aff09e000079849e",
+      "text": " useEffect",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947761,
+      "updated": 1624947770
+    },
+    {
+      "id": "60dabc31aff09e000079849f",
+      "text": " call setGlobal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947761,
+      "updated": 1624947772
+    },
+    {
+      "id": "60dabc31aff09e00007984a0",
+      "text": " render",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947761,
+      "updated": 1624947773
+    },
+    {
+      "id": "60dabc3faff09e00007984a2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947776,
+      "updated": 1624947776
+    },
+    {
+      "id": "60dabdffaff09e0000abefa4",
+      "text": "というわけでワークアラウンドとしてはテストケースからの状態更新を非同期にすれば良いということになるが、微妙な解決策だなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624948224,
+      "updated": 1624948289
+    },
+    {
+      "id": "60dabe00aff09e0000abefa5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624948224,
+      "updated": 1624948224
+    },
+    {
+      "id": "60dab9e4aff09e0000798436",
+      "text": "--- log",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624947175,
+      "updated": 1624947176
+    },
+    {
+      "id": "60d9ba2faff09e0000389fef",
+      "text": "[https://www.cypress.io/blog/2018/11/14/testing-redux-store/ Testing Redux Store]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624881711,
+      "updated": 1624881729
+    },
+    {
+      "id": "60d9cc3eaff09e0000bfe0b3",
+      "text": " Cypressのテスト画面からアプリのコンソールに入ってsetGlobalすれば画面は更新される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886335,
+      "updated": 1624886371
+    },
+    {
+      "id": "60d9cc6aaff09e0000bfe0b6",
+      "text": "　しかしCypressのテストコードからこの解の記述のようにinvokeしても画面が更新されない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886379,
+      "updated": 1624886768
+    },
+    {
+      "id": "60d9cc88aff09e0000bfe0b7",
+      "text": "　値の更新はエラーなく行われてgetGlobalしたらちゃんと値が入っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886409,
+      "updated": 1624886449
+    },
+    {
+      "id": "60d9cc88aff09e0000bfe0b8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886409,
+      "updated": 1624886409
+    },
+    {
+      "id": "60d9ba41aff09e0000389ff0",
+      "text": "ReactNでも明示的にストアを作成することに相当するこれをやってみたけど期待通りにいかない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624881729,
+      "updated": 1624929645
+    },
+    {
+      "id": "60d9ba2caff09e0000389fed",
+      "text": "https://github.com/CharlesStover/reactn/blob/master/Provider.md",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624881708,
+      "updated": 1624883840
+    },
+    {
+      "id": "60d9c280aff09e0000389ff2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624883840,
+      "updated": 1624883840
+    },
+    {
+      "id": "60d9c27faff09e0000389ff1",
+      "text": "わかったこと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624883840,
+      "updated": 1624892274
+    },
+    {
+      "id": "60d9ccd0aff09e0000bfe0ba",
+      "text": "　Cypressとテスト対象のアプリはそれぞれiframeで動いている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886480,
+      "updated": 1624892342
+    },
+    {
+      "id": "60d9e49faff09e0000cea546",
+      "text": "　\t[https://gyazo.com/e26319be12d0196b26f9a1590dff7e0e]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624892576,
+      "updated": 1624892578
+    },
+    {
+      "id": "60d9e4a2aff09e0000cea547",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624892578,
+      "updated": 1624893447
+    },
+    {
+      "id": "60d9e805aff09e0000512f49",
+      "text": "わからないこと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893448,
+      "updated": 1624893450
+    },
+    {
+      "id": "60d9e809aff09e0000512f4a",
+      "text": "　Providerを使わなかった場合、それぞれのframeがdefaultGlobalStateManagerを使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893450,
+      "updated": 1624893520
+    },
+    {
+      "id": "60d9e850aff09e0000512f4b",
+      "text": "　　これがframeごとに別れてしまうのかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893520,
+      "updated": 1624926951
+    },
+    {
+      "id": "60d9e979aff09e0000512f4e",
+      "text": "　　シングルトンオブジェクトを作るためにはどこかにグローバルな存在が必要だから、windowに紐づいてそれを区別してるなら別のオブジェクトになりうる？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893817,
+      "updated": 1624926977
+    },
+    {
+      "id": "60d9e889aff09e0000512f4c",
+      "text": "　そういう問題を解決するためにProviderがあるのでは？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893577,
+      "updated": 1624893597
+    },
+    {
+      "id": "60d9e89daff09e0000512f4d",
+      "text": "　　初期化時にGlobalStateManagerを作ってる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893598,
+      "updated": 1624893865
+    },
+    {
+      "id": "60d9e9a9aff09e0000512f4f",
+      "text": "　　他のframeでもそれが渡されるのだからそれを使うのでは？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624893865,
+      "updated": 1624928038
+    },
+    {
+      "id": "60d9cccbaff09e0000bfe0b9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624886476,
+      "updated": 1624886476
+    },
+    {
+      "id": "60d9ebabaff09e0000512f59",
+      "text": "うーむ、テストケースから状態をいじって表示をテストするってのができたらいいなと思ったのだが…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624894380,
+      "updated": 1624894447
+    },
+    {
+      "id": "60d9ebb3aff09e0000512f5a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624894387,
+      "updated": 1624894387
+    }
+  ]
+}

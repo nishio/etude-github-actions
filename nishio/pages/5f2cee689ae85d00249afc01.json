@@ -1,0 +1,183 @@
+{
+  "id": "5f2cee689ae85d00249afc01",
+  "title": "MeCabでトークン間の空白を維持",
+  "created": 1596780138,
+  "updated": 1610527533,
+  "lines": [
+    {
+      "id": "5f2cee689ae85d00249afc01",
+      "text": "MeCabでトークン間の空白を維持",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780138,
+      "updated": 1596780170
+    },
+    {
+      "id": "5f2cee8aaff09e00009f270e",
+      "text": "トークンに刻んだものを再度結合したら元に戻って欲しい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780170,
+      "updated": 1596780222
+    },
+    {
+      "id": "5f2ceeb0aff09e00002b461c",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780208,
+      "updated": 1596780262
+    },
+    {
+      "id": "5f2ceee3aff09e00009f2710",
+      "text": " >>> concat_tokens(tokenize(\"This is a pen\"))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780259,
+      "updated": 1596780273
+    },
+    {
+      "id": "5f2ceeedaff09e00009f2711",
+      "text": " 'This is a pen'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780270,
+      "updated": 1596780273
+    },
+    {
+      "id": "5f2ceec9aff09e00009f270f",
+      "text": "でもMeCabのnode.surfaceは空白を含まないので、よくやる方法では'Thisisapen'になってしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780234,
+      "updated": 1596784159
+    },
+    {
+      "id": "5f2cf2d6aff09e00002b4620",
+      "text": "この問題を解決した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781270,
+      "updated": 1596781276
+    },
+    {
+      "id": "5f2cf2cdaff09e00009f2723",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781262,
+      "updated": 1596781262
+    },
+    {
+      "id": "5f2cf03aaff09e00009f2719",
+      "text": "[MeCab: 出力フォーマット https://taku910.github.io/mecab/format.html]に`%M 形態素の表層文字列, ただし空白文字も含めて出力`があるので、解析後のノードがこれを表示するのに必要な情報を持っているはずと考えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780602,
+      "updated": 1596781257
+    },
+    {
+      "id": "5f2cf207aff09e00009f2721",
+      "text": "\t[code https://github.com/taku910/mecab/blob/3a07c4eefaffb4e7a0690a7f4e5e0263d3ddb8a3/mecab/src/writer.cpp#L280]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781063,
+      "updated": 1596781065
+    },
+    {
+      "id": "5f2cf0a8aff09e00009f271a",
+      "text": " \tcode:cpp",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596780712,
+      "updated": 1596781123
+    },
+    {
+      "id": "5f2cf1e5aff09e00009f271b",
+      "text": "   case 'S': os->write(reinterpret_cast<const char*>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781029,
+      "updated": 1596781068
+    },
+    {
+      "id": "5f2cf1e5aff09e00009f271c",
+      "text": "                       (node->surface -",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781029,
+      "updated": 1596781068
+    },
+    {
+      "id": "5f2cf1e5aff09e00009f271d",
+      "text": "                        node->rlength + node->length),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781029,
+      "updated": 1596781068
+    },
+    {
+      "id": "5f2cf1e5aff09e00009f271e",
+      "text": "                       node->rlength - node->length);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781029,
+      "updated": 1596781068
+    },
+    {
+      "id": "5f2cf1ecaff09e00009f271f",
+      "text": "\tというわけで手前の空白自体を持っているのではなく、node.rlengthが空白も含んだ長さを持っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781037,
+      "updated": 1596781153
+    },
+    {
+      "id": "5f2cf266aff09e00002b461e",
+      "text": "\t元の文字列をみないと実際にトークンの直前にあって無視された文字がどんなものかはわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781159,
+      "updated": 1596781228
+    },
+    {
+      "id": "5ffeb32daff09e0000ea0655",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527533,
+      "updated": 1610527533
+    },
+    {
+      "id": "5f2cf2acaff09e00002b461f",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596781228,
+      "updated": 1610527532
+    },
+    {
+      "id": "5ffeb308aff09e0000ea064e",
+      "text": " word = node.surface",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527497,
+      "updated": 1610527524
+    },
+    {
+      "id": "5ffeb309aff09e0000ea0650",
+      "text": " # keep whitespace before token",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527497,
+      "updated": 1610527524
+    },
+    {
+      "id": "5ffeb309aff09e0000ea0651",
+      "text": " wslength = node.rlength - node.length",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527497,
+      "updated": 1610527524
+    },
+    {
+      "id": "5ffeb309aff09e0000ea0652",
+      "text": " ws = s[start:start+wslength]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527497,
+      "updated": 1610527524
+    },
+    {
+      "id": "5ffeb309aff09e0000ea0653",
+      "text": " word = ws + word",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527497,
+      "updated": 1610527524
+    },
+    {
+      "id": "5ffeb309aff09e0000ea0654",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610527497,
+      "updated": 1610527526
+    }
+  ]
+}

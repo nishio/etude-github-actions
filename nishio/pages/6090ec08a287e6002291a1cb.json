@@ -1,0 +1,351 @@
+{
+  "id": "6090ec08a287e6002291a1cb",
+  "title": "Hatena2011-11-07",
+  "created": 1320591600,
+  "updated": 1320591600,
+  "lines": [
+    {
+      "id": "6090ec2caff09e00003d9d81",
+      "text": "Hatena2011-11-07",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d82",
+      "text": "code:hatena",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d83",
+      "text": " <body>",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d84",
+      "text": " *1320660473*NumPy+Matplotlibで散布図の上に平均と分散を表示する",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d85",
+      "text": " <img src=\"http://gyazo.com/283242a33f687d1392b780d2fdbc1dda.png\">",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d86",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d87",
+      "text": " 先日「<a href='http://d.hatena.ne.jp/nishiohirokazu/20111102/1320221317'>NumPyで散布図を書く</a>」ではscatterを使って散布図を描くところまでをやった。今日はこの上に分散と平均を示す楕円を描き足したい。",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d88",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d89",
+      "text": " PatchCollectionのサンプルを見てみるとpylab.figureでmatplotlib.figure.Figureを作って、fig.add_subplotでmatplotlib.axes.AxesSubplotを作って、そこにPatchCollectionをadd_collectionするという流れになっている。ref. <a href='http://matplotlib.sourceforge.net/examples/api/patch_collection.html'>api example code: patch_collection.py &#8212; Matplotlib v1.1.0 documentation</a>",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d8a",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d8b",
+      "text": " が、しかし、今したいのはscatterで作られた散布図の上に描き足すことであって、pylab.figure()すると新しい図を作ってしまうからダメ。最初からpylab.figure()しておいてそこにscatterを描くのなら行けそうだけど、人間は得てして事前の準備を忘れるもんなので、後から何とかしたい。そこでgcaを使う。",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d8c",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d8d",
+      "text": " >||",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d8e",
+      "text": " ax = gca()",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d8f",
+      "text": " ||<",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d90",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d91",
+      "text": " 「Return the current axis instance.」だそうな。というわけで散布図を描いたあとでaxisインスタンスを取得して、描きたい楕円のインスタンスを作って適当な位置にtransformし、add_collectionしてからsavefigすれば出来上がり。ref. <a href='http://matplotlib.sourceforge.net/devel/transformations.html'>Working with transformations &#8212; Matplotlib v1.1.0 documentation</a>",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d92",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d93",
+      "text": " >||",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d94",
+      "text": " def draw():",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d95",
+      "text": "     clf()",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d96",
+      "text": "     scatter(data[:, 0], data[:, 1], alpha=0.5, marker=\"+\")",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d97",
+      "text": "     ax = gca()",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d98",
+      "text": "     circles = [",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d99",
+      "text": "         Circle(",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d9a",
+      "text": "             (0, 0), radius=3, ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d9b",
+      "text": "             transform=to_transform(mu, sigma)) for mu, sigma in zip(mus, sigmas)]",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d9c",
+      "text": "     ax.add_collection(",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d9d",
+      "text": "         PatchCollection(circles, alpha=0.2))",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d9e",
+      "text": "     matplotlib.pyplot.savefig('test.png')",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9d9f",
+      "text": " ||<",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da0",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da1",
+      "text": " このtransformを作る所に関しては自作のto_transformって関数にまとめておいた。共分散行列をそのまま使ったのでは円の半径が分散に比例してしまうので、そうではなく標準偏差に比例させるために一度固有値分解してから固有値の平方根をとってある。これと、上のCircleの引数radius=3とで「各軸で3標準偏差の点を通る等高線を引く」を実現しているつもり。",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da2",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da3",
+      "text": " >||",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da4",
+      "text": " def to_transform(mu, sigma):",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da5",
+      "text": "     val, vec = eigh(sigma)",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da6",
+      "text": "     trans = diag(sqrt(val)).dot(vec)",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da7",
+      "text": "     return Affine2D.from_values(*trans.flatten(), e=mu[0], f=mu[1])",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da8",
+      "text": " ||<",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9da9",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9daa",
+      "text": " <img src=\"http://gyazo.com/383ff0ac9e42073d40c6c39ec7f0859f.png\">",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9dab",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9dac",
+      "text": " ところでCircleの引数でalpha=0.5とかfill=Falseとか指定できるとドキュメントには書いてあるのに、指定しても反映されないのはなぜなんだろう。本当はPRMLのfig 9.8みたいなのを作りたいんだが。",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9dad",
+      "text": " ",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9dae",
+      "text": " 追記: PatchCollectionのmatch_originalをTrueにしないと色が上書きされてしまうことがわかった http://d.hatena.ne.jp/nishiohirokazu/20111111/1320994184",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9daf",
+      "text": " </body>",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9db0",
+      "text": "",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003d9db1",
+      "text": "[はてなダイアリー 2011-11-07 https://nishiohirokazu.hatenadiary.org/archive/2011/11/07]",
+      "created": 1320591600,
+      "updated": 1320591600,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

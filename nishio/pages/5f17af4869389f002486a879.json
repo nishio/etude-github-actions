@@ -1,0 +1,1331 @@
+{
+  "id": "5f17af4869389f002486a879",
+  "title": "遅延伝搬セグメント木の可視化",
+  "created": 1595387721,
+  "updated": 1595420512,
+  "lines": [
+    {
+      "id": "5f17af4869389f002486a879",
+      "text": "遅延伝搬セグメント木の可視化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129d9",
+      "text": "[セグメント木の可視化]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595416183
+    },
+    {
+      "id": "5f181e72aff09e0000dadb4c",
+      "text": "\t[ソースコードはこちら https://github.com/nishio/atcoder/blob/master/memo/segment_tree/segment_tree_vis.py]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595416179,
+      "updated": 1595416180
+    },
+    {
+      "id": "5f181e73aff09e0000dadb4d",
+      "text": "\t　ここの解説とソースのdocが食い違っている時はソースの方が正しい、doctestで回帰テストしてるから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595416180,
+      "updated": 1595416180
+    },
+    {
+      "id": "5f181e73aff09e0000dadb4e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595416180,
+      "updated": 1595416180
+    },
+    {
+      "id": "5f17af48aff09e00007129da",
+      "text": "[遅延伝搬セグメント木]の可視化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387732
+    },
+    {
+      "id": "5f17af48aff09e00007129dc",
+      "text": "　範囲縮約のできる[セグメント木]と、範囲作用のできる[双対セグメント木]を組み合わせる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387741
+    },
+    {
+      "id": "5f17af48aff09e00007129dd",
+      "text": "　\t範囲作用・範囲縮約の可能な遅延伝搬セグメント木になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129de",
+      "text": "　ここでは「まだ値に適用されてない(遅延された)作用のテーブル」を双対セグメント木で、「値」をセグメント木で別々に管理して可能な限りここまでの実装を使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387893
+    },
+    {
+      "id": "5f17aff4aff09e000070acc8",
+      "text": "　\tこの二つの木がどういう相互作用をするのかを描き出す目的",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387893,
+      "updated": 1595387910
+    },
+    {
+      "id": "5f17b005aff09e0000a9b076",
+      "text": "　\t結果、範囲作用と下への伝搬は分けたテーブルそれぞれの操作では難しいので二つのテーブルを束ねて一つのテーブルとして扱う仕組みを導入した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387910,
+      "updated": 1595388017
+    },
+    {
+      "id": "5f17af83aff09e0000a9b075",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387780,
+      "updated": 1595387805
+    },
+    {
+      "id": "5f17af48aff09e00007129df",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129e0",
+      "text": "\t値のセグメント木を普通に初期化する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129e1",
+      "text": "  code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129e2",
+      "text": "   >>> set_depth(4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070acc9",
+      "text": "   >>> value_table = [\"\"] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070acca",
+      "text": "   >>> set_items(value_table, [chr(i + ord(\"a\")) for i in range(8)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070accb",
+      "text": "   >>> full_up(value_table, lambda x, y: f\"{x}{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070accc",
+      "text": "   >>> debugprint(value_table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070accd",
+      "text": "   |    abcdefgh   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070acce",
+      "text": "   |  abcd |  efgh |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070accf",
+      "text": "   | ab| cd| ef| gh|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17b13caff09e000070acd0",
+      "text": "   |a|b|c|d|e|f|g|h|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388221,
+      "updated": 1595388221
+    },
+    {
+      "id": "5f17af48aff09e00007129eb",
+      "text": "　作用の双対セグメント木を単位作用で初期化する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129ec",
+      "text": " \tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129ed",
+      "text": " \t\t>>> action_unity = PowAction(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17b152aff09e000070acd9",
+      "text": "   >>> action_table = [action_unity] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388242,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17b152aff09e000070acda",
+      "text": "   >>> debugprint(action_table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388242,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17b152aff09e000070acdb",
+      "text": "   |           ^1          |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388242,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17b152aff09e000070acdc",
+      "text": "   |     ^1    |     ^1    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388242,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17b152aff09e000070acdd",
+      "text": "   |  ^1 |  ^1 |  ^1 |  ^1 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388242,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17b152aff09e000070acde",
+      "text": "   |^1|^1|^1|^1|^1|^1|^1|^1|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388242,
+      "updated": 1595388242
+    },
+    {
+      "id": "5f17af48aff09e00007129ee",
+      "text": "\t作用の合成を適切に定義する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595388272
+    },
+    {
+      "id": "5f17af48aff09e00007129ef",
+      "text": "\t　例えば単位元を空リストにしておいて、作用の合成はリストの結合にするとか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e00007129f0",
+      "text": "\t　ここでは作用が冪乗なので`(^n) + (^m) = (^(n*m))`という合成ができる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595388261
+    },
+    {
+      "id": "5f17b166aff09e000070ace0",
+      "text": "\t　code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388262,
+      "updated": 1595388265
+    },
+    {
+      "id": "5f17b169aff09e000070ace1",
+      "text": "\t　 def action_composite(new_action, old_action):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388266,
+      "updated": 1595388266
+    },
+    {
+      "id": "5f17b16aaff09e000070ace2",
+      "text": "       return PowAction(new_action.value * old_action.value)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388266,
+      "updated": 1595388266
+    },
+    {
+      "id": "5f17b16aaff09e000070ace3",
+      "text": "　ここで作用のテーブルに対して範囲更新すれば良い、と勘違いしていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388266,
+      "updated": 1595388619
+    },
+    {
+      "id": "5f17b271aff09e0000a9b077",
+      "text": "　　実際には値テーブルも同時に更新する必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388530,
+      "updated": 1595388562
+    },
+    {
+      "id": "5f17b292aff09e0000a9b078",
+      "text": "　まず作用によって値がどう更新されるかを定義する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388562,
+      "updated": 1595388791
+    },
+    {
+      "id": "5f17b376aff09e0000a9b079",
+      "text": "　　`def action_force(action, value): ...`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388791,
+      "updated": 1595388791
+    },
+    {
+      "id": "5f17b46baff09e0000a9b07b",
+      "text": "　　次に作用と値の対のテーブルに対して、作用の合成と値の更新を同時にやる関数を作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389036,
+      "updated": 1595389130
+    },
+    {
+      "id": "5f17b391aff09e000070ace4",
+      "text": "　　code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388818,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070ace5",
+      "text": "　　 def combined_action(new_action):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070ace6",
+      "text": "       def f(args):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070ace7",
+      "text": "           action, value = args",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070ace8",
+      "text": "           return (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070ace9",
+      "text": "               action_composite(new_action, action),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070acea",
+      "text": "               action_force(new_action, value))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b394aff09e000070aceb",
+      "text": "       return f",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595388820
+    },
+    {
+      "id": "5f17b537aff09e0000a9b07c",
+      "text": "　これで範囲作用ができる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389239,
+      "updated": 1595389254
+    },
+    {
+      "id": "5f17b656aff09e000070acfc",
+      "text": "　\t(先に上からの伝播が必要だが、今は伝播するものがないので飛ばしてる)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389527,
+      "updated": 1595389528
+    },
+    {
+      "id": "5f17b547aff09e0000a9b07d",
+      "text": "　　当初僕は「まず作用のテーブルにだけ書き込み、その後必要に応じて値の更新と作用の子への伝搬が行われる」と勘違いしていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389256,
+      "updated": 1595389509
+    },
+    {
+      "id": "5f17b63caff09e000070acfa",
+      "text": "　　\t[設計の違い]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389501,
+      "updated": 1595389502
+    },
+    {
+      "id": "5f17b59aaff09e0000a9b07e",
+      "text": "　　　木の末端においても値の更新は必要なのに、伝搬させる子供がいないので条件分岐が必要になってしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389338,
+      "updated": 1595389405
+    },
+    {
+      "id": "5f17b394aff09e000070acec",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595388820,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b516aff09e000070acee",
+      "text": "\t >>> range_update(combined_table, L, R, combined_action(PowAction(2)))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acef",
+      "text": "  >>> debugprint(action_table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf0",
+      "text": "  |               ^1              |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf1",
+      "text": "  |       ^2      |       ^1      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf2",
+      "text": "  |   ^1  |   ^1  |   ^2  |   ^1  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf3",
+      "text": "  | ^1| ^1| ^1| ^1| ^1| ^1| ^1| ^1|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf4",
+      "text": "  >>> debugprint(value_table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf5",
+      "text": "  |            abcdefgh           |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf6",
+      "text": "  |    (abcd)^2   |      efgh     |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf7",
+      "text": "  |   ab  |   cd  | (ef)^2|   gh  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17b517aff09e000070acf8",
+      "text": "  | a | b | c | d | e | f | g | h |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389207,
+      "updated": 1595389207
+    },
+    {
+      "id": "5f17af48aff09e00007129f9",
+      "text": " 値の更新はセグメント木的に上に伝搬する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595389449
+    },
+    {
+      "id": "5f17af48aff09e0000712a0b",
+      "text": " 　ここは値のテーブルだけに対する操作、セグメント木部分",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a0c",
+      "text": " \tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a0d",
+      "text": " \t >>> up_propagate(value_table, up(L), lambda x, y: f\"{x}{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595389603
+    },
+    {
+      "id": "5f17b6a3aff09e000070ad05",
+      "text": "\t\t\t>>> up_propagate(value_table, up(R), lambda x, y: f\"{x}{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389603,
+      "updated": 1595389607
+    },
+    {
+      "id": "5f17b6a3aff09e000070ad06",
+      "text": "\t\t\t>>> debugprint(value_table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389603,
+      "updated": 1595389611
+    },
+    {
+      "id": "5f17af48aff09e0000712a0f",
+      "text": "   |        (abcd)^2(ef)^2gh       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595389616
+    },
+    {
+      "id": "5f17b690aff09e000070ad02",
+      "text": "   |    (abcd)^2   |    (ef)^2gh   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389584,
+      "updated": 1595389584
+    },
+    {
+      "id": "5f17b690aff09e000070ad03",
+      "text": "   |   ab  |   cd  | (ef)^2|   gh  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389584,
+      "updated": 1595389584
+    },
+    {
+      "id": "5f17b690aff09e000070ad04",
+      "text": "   | a | b | c | d | e | f | g | h |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389584,
+      "updated": 1595389584
+    },
+    {
+      "id": "5f17b68eaff09e000070ad00",
+      "text": "　　なぜ範囲全体ではなく両端からの伝播でいいかは[maspyさんの記事 https://maspypy.com/segment-tree-%E3%81%AE%E3%81%8A%E5%8B%89%E5%BC%B72]を参照",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595389582,
+      "updated": 1595390633
+    },
+    {
+      "id": "5f17af48aff09e0000712a15",
+      "text": "\t\t\t[下への伝搬の影響範囲]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a16",
+      "text": "\t\t\t[up演算]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17ba1caff09e0000a9b082",
+      "text": "\t\t\tなお下記の実装だと伝搬経路を先に計算して上にも下にも使いまわしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390492,
+      "updated": 1595390550
+    },
+    {
+      "id": "5f17ba56aff09e0000a9b083",
+      "text": "\t\t\t　上方向の伝搬は途中で合流するので、この方法は合流以降が省けてて良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390550,
+      "updated": 1595390601
+    },
+    {
+      "id": "5f17ba15aff09e000070ad1b",
+      "text": "\t\t\t\t[RMQ and RUQ (遅延評価セグメント木) - yaketake08's 実装メモ https://tjkendev.github.io/procon-library/python/range_query/rmq_ruq_segment_tree_lp.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390485,
+      "updated": 1595390606
+    },
+    {
+      "id": "5f17af48aff09e0000712a17",
+      "text": "　次に範囲作用するとき(ここから省略のないフルバージョンの範囲作用)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a18",
+      "text": "　　まず範囲の両端に関して遅延された作用を下に伝播する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a19",
+      "text": "　　　作用が下に降りるタイミングで、下の値も更新する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595390068
+    },
+    {
+      "id": "5f17bb45aff09e0000a9b084",
+      "text": "　　　先に来た作用が先に値の更新に使われることを担保するため",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390789,
+      "updated": 1595390834
+    },
+    {
+      "id": "5f17b966aff09e000070ad09",
+      "text": "\t\tこれを双対セグメント木での下への伝搬で表現できるかなと思ったが、難しかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390310,
+      "updated": 1595390849
+    },
+    {
+      "id": "5f17bb81aff09e0000a9b085",
+      "text": "\t\t　伝搬した後、親が単位作用に戻る実装なのだが「作用と値の対」に対しては適当ではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390849,
+      "updated": 1595390865
+    },
+    {
+      "id": "5f17b9c7aff09e0000a9b080",
+      "text": "\t\t　　作用は単位作用に戻るが、値は更新されないので。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390407,
+      "updated": 1595390872
+    },
+    {
+      "id": "5f17bb9caff09e0000a9b086",
+      "text": "\t\t　そこで専用に書いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390876,
+      "updated": 1595390883
+    },
+    {
+      "id": "5f17b9dbaff09e0000a9b081",
+      "text": "\t\t　code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390427,
+      "updated": 1595390439
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad0a",
+      "text": "\t\t　 def down_propagate_force(table, pos, action_composite, action_force, action_unity):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390439,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad0b",
+      "text": "        max_level = pos.bit_length() - 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad0c",
+      "text": "        for level in range(max_level):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad0d",
+      "text": "            i = pos >> (max_level - level)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad0e",
+      "text": "    ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad0f",
+      "text": "            action, value = table[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad10",
+      "text": "            a, v = table[i * 2]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad11",
+      "text": "            table[i * 2] = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad12",
+      "text": "                action_composite(action, a),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad13",
+      "text": "                action_force(action, v))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad14",
+      "text": "            a, v = table[i * 2 + 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad15",
+      "text": "            table[i * 2 + 1] = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad16",
+      "text": "                action_composite(action, a),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad17",
+      "text": "                action_force(action, v))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17b9e7aff09e000070ad18",
+      "text": "            table[i] = (action_unity, value)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390440,
+      "updated": 1595390440
+    },
+    {
+      "id": "5f17baeaaff09e000070ad1d",
+      "text": "\t下に伝搬してから、範囲作用して、値を上に伝搬する、これでひとかたまり",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595390698,
+      "updated": 1595410421
+    },
+    {
+      "id": "5f1807bdaff09e000070ad49",
+      "text": " \tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410365,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad1e",
+      "text": " \t >>> L = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad1f",
+      "text": "   >>> R = 5",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad20",
+      "text": "   >>> down_propagate_force(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad21",
+      "text": "   ...    combined_table, up(L),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad22",
+      "text": "   ...    action_composite, action_force, action_unity)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad23",
+      "text": "   >>> down_propagate_force(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad24",
+      "text": "   ...    combined_table, up(R),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad25",
+      "text": "   ...    action_composite, action_force, action_unity)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad26",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad27",
+      "text": "   >>> debugprint(action_table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad28",
+      "text": "   |           ^1          |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad29",
+      "text": "   |     ^1    |     ^1    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad2a",
+      "text": "   |  ^1 |  ^2 |  ^1 |  ^1 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad2b",
+      "text": "   |^2|^2|^1|^1|^2|^2|^1|^1|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad2c",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad2d",
+      "text": "   >>> debugprint(value_table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad2e",
+      "text": "   |        (abcd)^2(ef)^2gh       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad2f",
+      "text": "   |    (abcd)^2   |    (ef)^2gh   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad30",
+      "text": "   | (ab)^2| (cd)^2| (ef)^2|   gh  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad31",
+      "text": "   |a^2|b^2| c | d |e^2|f^2| g | h |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad32",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad33",
+      "text": "   >>> range_update(combined_table, L, R, combined_action(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad34",
+      "text": "   ...     PowAction(3), action_composite, action_force))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad35",
+      "text": "   >>> debugprint(action_table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad36",
+      "text": "   |               ^1              |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad37",
+      "text": "   |       ^1      |       ^1      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad38",
+      "text": "   |   ^1  |   ^6  |   ^1  |   ^1  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad39",
+      "text": "   | ^2| ^6| ^1| ^1| ^6| ^2| ^1| ^1|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad3a",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad3b",
+      "text": "   >>> debugprint(value_table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad3c",
+      "text": "   |                        (abcd)^2(ef)^2gh                       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad3d",
+      "text": "   |            (abcd)^2           |            (ef)^2gh           |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad3e",
+      "text": "   |     (ab)^2    |   ((cd)^2)^3  |     (ef)^2    |       gh      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad3f",
+      "text": "   |  a^2  |(b^2)^3|   c   |   d   |(e^2)^3|  f^2  |   g   |   h   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad40",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad41",
+      "text": "   >>> up_propagate(value_table, up(L), lambda x, y: f\"{x}{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad42",
+      "text": "   >>> up_propagate(value_table, up(R), lambda x, y: f\"{x}{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad43",
+      "text": "   >>> debugprint(value_table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad44",
+      "text": "   |                a^2(b^2)^3((cd)^2)^3(e^2)^3f^2gh               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad45",
+      "text": "   |      a^2(b^2)^3((cd)^2)^3     |          (e^2)^3f^2gh         |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad46",
+      "text": "   |   a^2(b^2)^3  |   ((cd)^2)^3  |   (e^2)^3f^2  |       gh      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad47",
+      "text": "   |  a^2  |(b^2)^3|   c   |   d   |(e^2)^3|  f^2  |   g   |   h   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410368
+    },
+    {
+      "id": "5f1807b3aff09e000070ad48",
+      "text": "\t範囲縮約",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410355,
+      "updated": 1595410445
+    },
+    {
+      "id": "5f18085aaff09e0000972a36",
+      "text": "\t　下に伝搬してから値のテーブルに対して普通に範囲縮約する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410523,
+      "updated": 1595410554
+    },
+    {
+      "id": "5f18080daff09e0000972a35",
+      "text": "\t　code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410446,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad4a",
+      "text": "\t　 >>> L = 3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad4b",
+      "text": "   >>> R = 5",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad4c",
+      "text": "   >>> down_propagate_force(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad4d",
+      "text": "   ...     combined_table, up(L),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad4e",
+      "text": "   ...     action_composite, action_force, action_unity)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad4f",
+      "text": "   >>> down_propagate_force(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad50",
+      "text": "   ...     combined_table, up(R),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad51",
+      "text": "   ...     action_composite, action_force, action_unity)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f180842aff09e000070ad56",
+      "text": "   >>> debugprint(value_table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410499,
+      "updated": 1595410499
+    },
+    {
+      "id": "5f180843aff09e000070ad57",
+      "text": "   |                a^2(b^2)^3((cd)^2)^3(e^2)^3f^2gh               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410499,
+      "updated": 1595410499
+    },
+    {
+      "id": "5f180843aff09e000070ad58",
+      "text": "   |      a^2(b^2)^3((cd)^2)^3     |          (e^2)^3f^2gh         |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410499,
+      "updated": 1595410499
+    },
+    {
+      "id": "5f180843aff09e000070ad59",
+      "text": "   |   a^2(b^2)^3  |   ((cd)^2)^3  |   (e^2)^3f^2  |       gh      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410499,
+      "updated": 1595410499
+    },
+    {
+      "id": "5f180843aff09e000070ad5a",
+      "text": "   |  a^2  |(b^2)^3|  c^6  |  d^6  |(e^2)^3|  f^2  |   g   |   h   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410499,
+      "updated": 1595410499
+    },
+    {
+      "id": "5f18081aaff09e000070ad52",
+      "text": "   >>> value_unity = \"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad53",
+      "text": "   >>> print(range_reduce(value_table, L, R, lambda x, y: f\"{x}{y}\", value_unity))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad54",
+      "text": "   d^6(e^2)^3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410459
+    },
+    {
+      "id": "5f18081aaff09e000070ad55",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410459,
+      "updated": 1595410460
+    },
+    {
+      "id": "5f17af48aff09e0000712a58",
+      "text": "Range add, range sumをやることを考える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a59",
+      "text": "　掛け算`a * b`と累乗`(^ n)`は`(a * b) ^ n = (a ^ n) * (b ^ n)`の関係が成り立つ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595410938
+    },
+    {
+      "id": "5f1809faaff09e0000972a37",
+      "text": "　 [分配法則]と呼ぶ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595410938,
+      "updated": 1595410950
+    },
+    {
+      "id": "5f17af48aff09e0000712a5a",
+      "text": "　Range add, range sumだと`a + b` と`(+ n)`の間に分配法則が成り立たない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595410936
+    },
+    {
+      "id": "5f17af48aff09e0000712a5b",
+      "text": "　\t`(a + b) + n = (a + n) + (b + n)` ではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a5c",
+      "text": "　\tサイズが4であるノードに(+1)をしたら、値は4増えないといけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595410975
+    },
+    {
+      "id": "5f17af48aff09e0000712a5d",
+      "text": "　プログラム的な解決: 作用が値だけでなくノードのサイズも引数に取るようにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a5e",
+      "text": "　数学的な解決: 値の定義域をノードサイズとの直積にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a5f",
+      "text": "　　親のノードサイズは子のノードサイズの和なので、上への伝搬で適切に構築できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a60",
+      "text": "　\t　(+) = `lambda (v1, s1), (v2, s2): (v1 + v2, s1 + s2)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a61",
+      "text": "\t\t\t(+n) = `lambda (v, s): v + s * n`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    },
+    {
+      "id": "5f17af48aff09e0000712a62",
+      "text": "　ここまでやってきた「二つの木の貼り合わせで表現する」というアプローチだと作用と値の対のテーブルに対して、作用の合成と値の更新を同時にやる関数(combined_action)にノードの位置やサイズが渡ってこないので数学的アプローチしか取れない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595411216
+    },
+    {
+      "id": "5f180b10aff09e0000972a38",
+      "text": "　　そろそろ現実的な速度で動かすこととのギャップが大きくなりすぎなのでここではやらないことにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595411216,
+      "updated": 1595411224
+    },
+    {
+      "id": "5f180b19aff09e0000972a39",
+      "text": "　　「作用と値の対のテーブル」を作らないで両方引数として渡す形の実装でAOJの4種類の遅延伝搬セグメント木の問題が解けてるのでそちらを参照",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595411226,
+      "updated": 1595411309
+    },
+    {
+      "id": "5f182f42aff09e000038ca74",
+      "text": "　　　[汎用で実用的な遅延伝搬セグメント木の実装]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595420483,
+      "updated": 1595420512
+    },
+    {
+      "id": "5f17af48aff09e0000712a63",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595387721,
+      "updated": 1595387721
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "id": "6167c8d1c7f2ef001d71d1ca",
+  "title": "FastAPIで雑にJSONを受け取る",
+  "created": 1634191570,
+  "updated": 1634193533,
+  "lines": [
+    {
+      "id": "6167c8d1c7f2ef001d71d1ca",
+      "text": "FastAPIで雑にJSONを受け取る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167c8d1aff09e0000681b79",
+      "text": "[FastAPI]はハンドラの引数にパスからの情報`\"/items/{item_id}\"`も、クエリパラメータからの情報`?q=foobar`も、リクエストボディに積まれたJSONなどからの情報も入る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191965
+    },
+    {
+      "id": "6167caa7aff09e0000273b35",
+      "text": "これは型ヒントの情報を元にして振り分けられ、APIのドキュメントの自動生成などにも使われる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192039,
+      "updated": 1634192076
+    },
+    {
+      "id": "6167ca5daff09e0000273b34",
+      "text": "これにはもちろんメリットもあるのだろうが、今回僕は他のサービスからWebhookを受け取る口を作ろうとしてたので「リクエストボディで送られてくるJSONの正確な型なんか知らんし、調べて正確に記述するのもめんどい、雑に受け取ってどんな値が来てるのか観察したい」と思った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191965,
+      "updated": 1634192161
+    },
+    {
+      "id": "6167c9feaff09e00002e64fe",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191871,
+      "updated": 1634192163
+    },
+    {
+      "id": "6167ccb5aff09e0000273b36",
+      "text": "結論",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192569,
+      "updated": 1634192569
+    },
+    {
+      "id": "6167c8d1aff09e0000681b7b",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167c8d1aff09e0000681b7c",
+      "text": " from fastapi import Body",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167c8d1aff09e0000681b7d",
+      "text": " (…snip…)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634193533
+    },
+    {
+      "id": "6167c8d1aff09e0000681b7e",
+      "text": " @app.post(\"/\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167c8d1aff09e0000681b7f",
+      "text": " async def root(body=Body(...)):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167c8d1aff09e0000681b80",
+      "text": " \tprint(body)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167c8d1aff09e0000681b81",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191570,
+      "updated": 1634191570
+    },
+    {
+      "id": "6167cd81aff09e0000273b37",
+      "text": "解説",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192769,
+      "updated": 1634192771
+    },
+    {
+      "id": "6167cd83aff09e0000273b38",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192772,
+      "updated": 1634192772
+    },
+    {
+      "id": "6167ccd7aff09e00002ab57c",
+      "text": "[doc https://fastapi.tiangolo.com/tutorial/body/#request-body-path-query-parametershttps://fastapi.tiangolo.com/tutorial/body/#request-body-path-query-parameters]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192600,
+      "updated": 1634192755
+    },
+    {
+      "id": "6167ccd0aff09e00002ab576",
+      "text": ">The function parameters will be recognized as follows:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192592,
+      "updated": 1634192594
+    },
+    {
+      "id": "6167ccd1aff09e00002ab579",
+      "text": "> If the parameter is also declared in the path, it will be used as a path parameter.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192594,
+      "updated": 1634192594
+    },
+    {
+      "id": "6167ccd1aff09e00002ab57a",
+      "text": "> If the parameter is of a singular type (like int, float, str, bool, etc) it will be interpreted as a query parameter.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192594,
+      "updated": 1634192594
+    },
+    {
+      "id": "6167ccd1aff09e00002ab57b",
+      "text": "> If the parameter is declared to be of the type of a Pydantic model, it will be interpreted as a request body.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192594,
+      "updated": 1634192594
+    },
+    {
+      "id": "6167ccd1aff09e00002ab577",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192593,
+      "updated": 1634192593
+    },
+    {
+      "id": "6167cd86aff09e0000273b39",
+      "text": "というわけでリクエストボディから値を受け取りたければそれはPydanticである必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192774,
+      "updated": 1634192805
+    },
+    {
+      "id": "6167ce26aff09e0000273b3c",
+      "text": "それは困るなーという時もあり、例えば整数値が来る場合を例にしてドキュメントでも解説されている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192934,
+      "updated": 1634193313
+    },
+    {
+      "id": "6167cda5aff09e0000273b3b",
+      "text": ">Without Pydantic",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192805,
+      "updated": 1634192843
+    },
+    {
+      "id": "6167cdc8aff09e00002ab57d",
+      "text": "> If you don't want to use Pydantic models, you can also use Body parameters. See the docs for [Body - Multiple Parameters: Singular values in body https://fastapi.tiangolo.com/tutorial/body-multiple-params/#singular-values-in-body].",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192841,
+      "updated": 1634193056
+    },
+    {
+      "id": "6167cd8aaff09e0000273b3a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634192778,
+      "updated": 1634193058
+    },
+    {
+      "id": "6167cf77aff09e0000273b3d",
+      "text": "ドキュメントのサンプルは引数にPydanticが複数あるケースで説明されているので今回の目的には直接的にはマッチしない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634193271,
+      "updated": 1634193340
+    },
+    {
+      "id": "6167cfbbaff09e0000273b3f",
+      "text": "重要な仕様:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634193340,
+      "updated": 1634193435
+    },
+    {
+      "id": "6167cfc7aff09e0000273b40",
+      "text": "　引数にPydanticが一つの場合リクエストボディ全体がその引数に入る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634193351,
+      "updated": 1634193379
+    },
+    {
+      "id": "6167cfe3aff09e0000273b41",
+      "text": "　引数にPydanticが複数の場合、リクエストボディから変数名のキーで得られるバリューがそれぞれの引数に入る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634193379,
+      "updated": 1634193431
+    },
+    {
+      "id": "6167cf79aff09e0000273b3e",
+      "text": "今回のケースはPydanticが一つなので全体が引数bodyに入る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634193273,
+      "updated": 1634193480
+    },
+    {
+      "id": "6167d01faff09e0000273b42",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634193440,
+      "updated": 1634193440
+    }
+  ]
+}

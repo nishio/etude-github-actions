@@ -1,0 +1,225 @@
+{
+  "id": "5f089e9320c82b0024a1f5e5",
+  "title": "abc130_d",
+  "created": 1594400405,
+  "updated": 1594401043,
+  "lines": [
+    {
+      "id": "5f089e9320c82b0024a1f5e5",
+      "text": "abc130_d",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400405,
+      "updated": 1594400405
+    },
+    {
+      "id": "5f08a00faff09e00004a70e4",
+      "text": "[D - Enough Array https://atcoder.jp/contests/abc130/tasks/abc130_d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400784,
+      "updated": 1594400810
+    },
+    {
+      "id": "5f08a02aaff09e0000b2c907",
+      "text": "\t数列が与えられて、その数列の連続部分列で、総和がK以上のものを数え上げる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400811,
+      "updated": 1594401029
+    },
+    {
+      "id": "5f08a0b1aff09e00004a70e7",
+      "text": "\t数列は最大10^5まで",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400945,
+      "updated": 1594400965
+    },
+    {
+      "id": "5f08a053aff09e00004a70e5",
+      "text": "\tまずは素朴なもの(といっても[累積和]は使ってしまったのでもっと素朴な書き方ができるが…)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400851,
+      "updated": 1594400893
+    },
+    {
+      "id": "5f089e95aff09e0000b2c8e5",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400406,
+      "updated": 1594400417
+    },
+    {
+      "id": "5f089ea1aff09e0000b2c8e7",
+      "text": " def solve(N, K, XS):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400417,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f1",
+      "text": "     from itertools import accumulate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f2",
+      "text": "     acc = [0] + list(accumulate(XS))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f3",
+      "text": "     ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f4",
+      "text": "     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f5",
+      "text": "         for j in range(i + 1, N + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f6",
+      "text": "             if acc[j] - acc[i] >= K:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f7",
+      "text": "                 ret += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f8",
+      "text": "     return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400571
+    },
+    {
+      "id": "5f089f3baff09e0000b2c8f9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400571,
+      "updated": 1594400914
+    },
+    {
+      "id": "5f08a093aff09e00004a70e6",
+      "text": "で、これだと二乗のオーダーで10^10なので、片方をlog Nに変える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400915,
+      "updated": 1594400983
+    },
+    {
+      "id": "5f089e9faff09e0000b2c8e6",
+      "text": "　[bisect]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400415,
+      "updated": 1594400990
+    },
+    {
+      "id": "5f089ff0aff09e0000b2c8fa",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400752,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff6aff09e0000b2c8fc",
+      "text": " def solve(N, K, XS):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c8fd",
+      "text": "     import bisect",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c8fe",
+      "text": "     from itertools import accumulate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c8ff",
+      "text": "     acc = [0] + list(accumulate(XS))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c900",
+      "text": "     ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c901",
+      "text": "     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c902",
+      "text": "         lb = acc[i] + K",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c903",
+      "text": "         j = bisect.bisect_left(acc, lb)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c904",
+      "text": "         ret += N + 1 - j",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff7aff09e0000b2c905",
+      "text": "     return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400759,
+      "updated": 1594400759
+    },
+    {
+      "id": "5f089ff4aff09e0000b2c8fb",
+      "text": "AC [提出 #15126807 - AtCoder Beginner Contest 130 https://atcoder.jp/contests/abc130/submissions/15126807]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594400757,
+      "updated": 1594401042
+    },
+    {
+      "id": "5f08a108aff09e0000b2c908",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594401033,
+      "updated": 1594401033
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "id": "60331e4e8abc19002109ed7d",
+  "title": "非同期たまたま動いたけど不適切",
+  "created": 1613962830,
+  "updated": 1613965020,
+  "lines": [
+    {
+      "id": "60331e4e8abc19002109ed7d",
+      "text": "非同期たまたま動いたけど不適切",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613964268
+    },
+    {
+      "id": "60331e4eaff09e0000262c2c",
+      "text": "from [非同期なReactの状態更新をテストする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c2d",
+      "text": "resolveをawaitしたらたまたま動いたけど不適切",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60332439aff09e00007fa745",
+      "text": "resolveの前にawaitをつけたらテストがたまたま通ったが、よく考えるとresolveはPromiseを返さないのでこれをawaitするのは筋が通らない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613964346,
+      "updated": 1613964410
+    },
+    {
+      "id": "60331e58aff09e00000a4098",
+      "text": "TypeScriptも警告する: `'await' has no effect on the type of this expression. ts(80007)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962840,
+      "updated": 1613964451
+    },
+    {
+      "id": "603324a2aff09e00007fa746",
+      "text": "なぜこの書き方で動いたのかはまだよくわかってないが、少なくともこの書き方は正しい書き方ではないので、本題のストーリーに混ぜると混乱するから切り出しておくことにした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613964450,
+      "updated": 1613964554
+    },
+    {
+      "id": "60332510aff09e00007fa747",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613964561,
+      "updated": 1613964561
+    },
+    {
+      "id": "60331e58aff09e00000a4099",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962840,
+      "updated": 1613962842
+    },
+    {
+      "id": "60331e4eaff09e0000262c2e",
+      "text": "下記のように書き換えると1,2,3,4,5,6,1,2,7の順で実行されるようになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c2f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c30",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c31",
+      "text": " export const MyAsyncComponent = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c32",
+      "text": "   const [value, setValue] = useState(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c33",
+      "text": "   console.log(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c34",
+      "text": "   userTrigger = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c35",
+      "text": "     console.log(4);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c36",
+      "text": "     return new Promise<number>((res) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c37",
+      "text": "       resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c38",
+      "text": "     }).then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c39",
+      "text": "       console.log(6);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c3a",
+      "text": "       setValue(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c3b",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c3c",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c3d",
+      "text": "   console.log(2);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c3e",
+      "text": "   return <span>{value}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c3f",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c40",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c41",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c42",
+      "text": "   render(<MyAsyncComponent />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c43",
+      "text": "   expect(screen.getByText(\"0\")).toBeTruthy(); ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c44",
+      "text": "   console.log(3);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c45",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c46",
+      "text": "   userTrigger();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c47",
+      "text": "   console.log(5);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c48",
+      "text": "   expect(screen.getByText(\"0\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c49",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c4a",
+      "text": "   await resolve(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c4b",
+      "text": "   console.log(7);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c4c",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c4d",
+      "text": "   expect(screen.queryByText(\"0\")).toBeNull();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c4e",
+      "text": "   expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c4f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c50",
+      "text": "(追記: await resolve(1);はおかしい)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "60331e4eaff09e0000262c51",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613962830,
+      "updated": 1613962830
+    },
+    {
+      "id": "603326daaff09e00000a409a",
+      "text": "setValueでの更新をactで包むために[useStateを差し替える]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613965019,
+      "updated": 1613965019
+    },
+    {
+      "id": "603326dbaff09e00000a409c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613965019,
+      "updated": 1613965019
+    },
+    {
+      "id": "603326dbaff09e00000a409d",
+      "text": "警告も消えてテストが通るようになった。めでたしめでたし。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613965019,
+      "updated": 1613965019
+    },
+    {
+      "id": "603326dbaff09e00000a409e",
+      "text": "full source code: https://gist.github.com/nishio/06249db25dafef81646d961ec9c0c70e",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613965019,
+      "updated": 1613965019
+    },
+    {
+      "id": "603326dbaff09e00000a409f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613965019,
+      "updated": 1613965019
+    }
+  ]
+}

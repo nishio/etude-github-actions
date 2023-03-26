@@ -1,0 +1,365 @@
+{
+  "id": "60332237bd4fdf001cbe4021",
+  "title": "useStateを差し替える",
+  "created": 1613963833,
+  "updated": 1615547726,
+  "lines": [
+    {
+      "id": "60332237bd4fdf001cbe4021",
+      "text": "useStateを差し替える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed81",
+      "text": "from [非同期なReactの状態更新をテストする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed82",
+      "text": "useStateを差し替える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332263aff09e0000cd0096",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963876,
+      "updated": 1613963876
+    },
+    {
+      "id": "60332237aff09e000088ed83",
+      "text": "コンポーネントの中でsetValueしている場合に、これがactで包まれていないと警告される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963934
+    },
+    {
+      "id": "6033227eaff09e0000cd0097",
+      "text": "　関連: [Reactのテストでactで包むのはrenderではなく状態更新]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963902,
+      "updated": 1613963925
+    },
+    {
+      "id": "6033229faff09e0000cd0098",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963935,
+      "updated": 1613963935
+    },
+    {
+      "id": "60332237aff09e000088ed84",
+      "text": "code:output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed85",
+      "text": " console.error",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed86",
+      "text": "     Warning: An update to MyAsyncComponent inside a test was not wrapped in act(...).",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed87",
+      "text": "     When testing, code that causes React state updates should be wrapped into act(...):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed88",
+      "text": "\t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed89",
+      "text": "       15 |       console.log(6);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed8a",
+      "text": "     > 16 |       setValue(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed8b",
+      "text": "          |       ^",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed8c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963833
+    },
+    {
+      "id": "60332237aff09e000088ed8d",
+      "text": "簡単な解決策としては「何もしないact実装を用意して本体コード中でそれを使っておき、テストの時だけ本物に差し替える」という案もあるが、なんとなく嫌なので useStateを差し替える。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1613963976
+    },
+    {
+      "id": "603322afaff09e0000cd0099",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963952,
+      "updated": 1613963952
+    },
+    {
+      "id": "60332237aff09e000088ed8e",
+      "text": "code:MockUseState.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1614937653
+    },
+    {
+      "id": "60332237aff09e000088ed8f",
+      "text": " import React, { Dispatch, useCallback } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613963833,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f97d",
+      "text": " import { act } from \"@testing-library/react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f97e",
+      "text": " import { useState as originalUseState } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f97f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f980",
+      "text": " export const mockUseState = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f981",
+      "text": "   return jest.spyOn(React, \"useState\").mockImplementation((arg?: unknown): [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f982",
+      "text": "     unknown,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f983",
+      "text": "     Dispatch<unknown>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f984",
+      "text": "   ] => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f985",
+      "text": "     const [s, dispatch] = originalUseState(arg);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f986",
+      "text": "     const wrappedDispatch = useCallback(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f987",
+      "text": "       (arg: unknown): void => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f988",
+      "text": "         act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f989",
+      "text": "           dispatch(arg);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f98a",
+      "text": "         });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f98b",
+      "text": "       },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f98c",
+      "text": "       [dispatch]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f98d",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f98e",
+      "text": "     return [s, wrappedDispatch];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f98f",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f990",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547685
+    },
+    {
+      "id": "604b4d24aff09e0000d7f991",
+      "text": "updated 2021-03-12",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615547685,
+      "updated": 1615547726
+    },
+    {
+      "id": "6041fe3daff09e0000d7f5da",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937661,
+      "updated": 1614937663
+    },
+    {
+      "id": "6041fe51aff09e0000d7f5db",
+      "text": "code:test.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937682,
+      "updated": 1614937685
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5dd",
+      "text": " let m_mockUseState: jest.SpyInstance<[unknown, React.Dispatch<unknown>], []>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937685,
+      "updated": 1614937686
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5de",
+      "text": " beforeEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937686,
+      "updated": 1614937690
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5e0",
+      "text": "   m_mockUseState = mockUseState();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937686,
+      "updated": 1614937693
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5e2",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937686,
+      "updated": 1614937696
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5e5",
+      "text": " afterEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937686,
+      "updated": 1614937686
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5e6",
+      "text": "   m_mockUseState.mockRestore();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937686,
+      "updated": 1614937701
+    },
+    {
+      "id": "6041fe55aff09e0000d7f5ec",
+      "text": " }); ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937686,
+      "updated": 1614937708
+    },
+    {
+      "id": "6041fe52aff09e0000d7f5dc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937682,
+      "updated": 1614937682
+    }
+  ]
+}

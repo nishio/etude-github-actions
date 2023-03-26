@@ -1,0 +1,897 @@
+{
+  "id": "5efe06f6a3bdb50021aeee90",
+  "title": "Cythonで添え字を型宣言しても速くない",
+  "created": 1593706233,
+  "updated": 1593785325,
+  "lines": [
+    {
+      "id": "5efe06f6a3bdb50021aeee90",
+      "text": "Cythonで添え字を型宣言しても速くない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706233,
+      "updated": 1593708600
+    },
+    {
+      "id": "5efe1041aff09e00007d0f5c",
+      "text": "[Cython]で添え字を型宣言しただけでは[PyPy]と比べて速くない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708609,
+      "updated": 1593709353
+    },
+    {
+      "id": "5efe8967aff09e00007d0f80",
+      "text": "　アクセス対象がPythonのリストやarray、Numpyのarrayでは添え字オブジェクトの作成コストがかかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739624,
+      "updated": 1593749741
+    },
+    {
+      "id": "5efe89a6aff09e00007d0f81",
+      "text": "　アクセス対象がCの配列の場合は直接C的にアクセスできる、この時はPyPyより速い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739686,
+      "updated": 1593741038
+    },
+    {
+      "id": "5efe104faff09e00007d0f5e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708623,
+      "updated": 1593708623
+    },
+    {
+      "id": "5efea6eaaff09e00005cbe0d",
+      "text": "table:実行時間まとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747179,
+      "updated": 1593747382
+    },
+    {
+      "id": "5efea6eeaff09e00005cbe0e",
+      "text": " Python\t285 ms\tOriginal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747182,
+      "updated": 1593747210
+    },
+    {
+      "id": "5efea6eeaff09e00005cbe0f",
+      "text": " Cython\t316 ms\tOriginal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747182,
+      "updated": 1593747213
+    },
+    {
+      "id": "5efea6eeaff09e00005cbe10",
+      "text": " PyPy\t82 ms\tOriginal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747182,
+      "updated": 1593747214
+    },
+    {
+      "id": "5efea716aff09e00005cbe12",
+      "text": " Cython\t173 ms\t添え字を型宣言",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747222,
+      "updated": 1593747234
+    },
+    {
+      "id": "5efea6eeaff09e00005cbe11",
+      "text": "\tCython\t137 ms\tリストを型宣言",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747182,
+      "updated": 1593747260
+    },
+    {
+      "id": "5efea731aff09e000048f96e",
+      "text": "\tCython\t220 ms\tリスト→array",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747250,
+      "updated": 1593747344
+    },
+    {
+      "id": "5efea756aff09e000048f975",
+      "text": "\tCython\tCE\tリスト→Numpyのnp.array",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747287,
+      "updated": 1593747355
+    },
+    {
+      "id": "5efea76faff09e000048f976",
+      "text": "\tCython\t25 ms\tリスト→Cの配列",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747311,
+      "updated": 1593747351
+    },
+    {
+      "id": "5efea79daff09e000048f977",
+      "text": "速度は全部AtCoderのコードテストで計測している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747358,
+      "updated": 1593749909
+    },
+    {
+      "id": "5efeb194aff09e0000fab1cd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593749909,
+      "updated": 1593749909
+    },
+    {
+      "id": "5efea67aaff09e00005cbe0c",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593747067,
+      "updated": 1593747069
+    },
+    {
+      "id": "5efe11baaff09e00007d0f5f",
+      "text": "まず元のコード",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708987,
+      "updated": 1593708991
+    },
+    {
+      "id": "5efe06faaff09e0000600851",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706234,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600853",
+      "text": " N = 1000_000 ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600854",
+      "text": " xs = [0] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600855",
+      "text": " for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600856",
+      "text": "   xs[i] = i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600857",
+      "text": " for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600858",
+      "text": "   xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e0000600859",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e000060085a",
+      "text": " print(xs[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706237
+    },
+    {
+      "id": "5efe06fcaff09e000060085b",
+      "text": "Python 285 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706237,
+      "updated": 1593706275
+    },
+    {
+      "id": "5efe070eaff09e000060085c",
+      "text": "Cython 316 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706255,
+      "updated": 1593706278
+    },
+    {
+      "id": "5efe0726aff09e000060085d",
+      "text": "PyPy 82 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706278,
+      "updated": 1593706302
+    },
+    {
+      "id": "5efe073eaff09e000060085e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706303,
+      "updated": 1593749907
+    },
+    {
+      "id": "5efe11c1aff09e00007d0f60",
+      "text": "添え字を型宣言",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708993,
+      "updated": 1593709001
+    },
+    {
+      "id": "5efe07b1aff09e0000600861",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706417,
+      "updated": 1593706443
+    },
+    {
+      "id": "5efe07c6aff09e0000600862",
+      "text": "\tcdef long i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706439,
+      "updated": 1593706444
+    },
+    {
+      "id": "5efe07abaff09e0000600860",
+      "text": "Cython 173 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706411,
+      "updated": 1593706416
+    },
+    {
+      "id": "5efe11d0aff09e00007d0f61",
+      "text": "　生Pythonより速くなったがPyPyにはかなわない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593709008,
+      "updated": 1593714320
+    },
+    {
+      "id": "5efe0741aff09e000060085f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706305,
+      "updated": 1593706305
+    },
+    {
+      "id": "5efe11f4aff09e00007d0f63",
+      "text": "リストを型宣言",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593709044,
+      "updated": 1593709052
+    },
+    {
+      "id": "5efe07cfaff09e0000600864",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706447,
+      "updated": 1593706482
+    },
+    {
+      "id": "5efe07f2aff09e0000600865",
+      "text": " cdef long i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706482,
+      "updated": 1593706483
+    },
+    {
+      "id": "5efe07f3aff09e0000600866",
+      "text": " cdef list xs",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706483,
+      "updated": 1593706483
+    },
+    {
+      "id": "5efe07f3aff09e0000600867",
+      "text": "Cython 137 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706483,
+      "updated": 1593706492
+    },
+    {
+      "id": "5efe07fcaff09e0000600868",
+      "text": "　もう少し速くなるが、やはりPyPyにかなわない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706493,
+      "updated": 1593738842
+    },
+    {
+      "id": "5efe11e9aff09e00007d0f62",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593709033,
+      "updated": 1593709033
+    },
+    {
+      "id": "5efe0af1aff09e00007d0f54",
+      "text": "なんでかというとこの`xs[i]`はCの配列アクセスなどとは全然違って",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707249,
+      "updated": 1593708418
+    },
+    {
+      "id": "5efe0edcaff09e00007d0f56",
+      "text": "　longの値からPyObjectを作成",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708253,
+      "updated": 1593708277
+    },
+    {
+      "id": "5efe0ef6aff09e00007d0f57",
+      "text": "　参照カウントを1増やす",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708279,
+      "updated": 1593708287
+    },
+    {
+      "id": "5efe0f1baff09e00007d0f5a",
+      "text": "　それを引数にしてSetItemを呼ぶ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708316,
+      "updated": 1593708400
+    },
+    {
+      "id": "5efe0effaff09e00007d0f58",
+      "text": "　合間で諸々のエラー処理をする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708288,
+      "updated": 1593708322
+    },
+    {
+      "id": "5efe0f09aff09e00007d0f59",
+      "text": "という処理をしているから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708298,
+      "updated": 1593708408
+    },
+    {
+      "id": "5efeb1a8aff09e0000fab1ce",
+      "text": "出力されたCのソースを読めばわかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593749929,
+      "updated": 1593749966
+    },
+    {
+      "id": "5efe0af1aff09e00007d0f55",
+      "text": "$ cython -a -3 tiny_cython.pyx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707249,
+      "updated": 1593708432
+    },
+    {
+      "id": "5efe0c69aff09e0000601512",
+      "text": "code:c",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707625,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601513",
+      "text": " +07:     xs[i] = i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601514",
+      "text": "     __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_11tiny_cython_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601515",
+      "text": "     __Pyx_GOTREF(__pyx_t_2);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601516",
+      "text": "     if (unlikely(__pyx_v_11tiny_cython_xs == Py_None)) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601517",
+      "text": "       PyErr_SetString(PyExc_TypeError, \"'NoneType' object is not subscriptable\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601518",
+      "text": "       __PYX_ERR(0, 7, __pyx_L1_error)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e0000601519",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e000060151a",
+      "text": "     if (unlikely(__Pyx_SetItemInt(__pyx_v_11tiny_cython_xs, __pyx_v_11tiny_cython_i, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 7, __pyx_L1_error)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e000060151b",
+      "text": "     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0c6baff09e000060151c",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707627,
+      "updated": 1593707627
+    },
+    {
+      "id": "5efe0fa0aff09e000060153d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708448,
+      "updated": 1593739323
+    },
+    {
+      "id": "5efe0fabaff09e00007d0f5b",
+      "text": "listの代わりにarrayを使ったら賢く処理してくれるかと思ったが、かえって遅くなった。初期化にリストを受け取るため、実質2回領域の確保が行われる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593708464,
+      "updated": 1593750240
+    },
+    {
+      "id": "5efe0d18aff09e000060152d",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707800,
+      "updated": 1593707959
+    },
+    {
+      "id": "5efe0db7aff09e000060152f",
+      "text": " cdef long i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707959,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601530",
+      "text": " from cpython cimport array",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601531",
+      "text": " import array as pyarray",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601532",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601533",
+      "text": " N = 1000_000 ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601534",
+      "text": " cdef array.array xs = pyarray.array(\"l\", [0] * N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601535",
+      "text": " for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601536",
+      "text": "   xs[i] = i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601537",
+      "text": " for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601538",
+      "text": "   xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e0000601539",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e000060153a",
+      "text": " print(xs[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707960
+    },
+    {
+      "id": "5efe0db8aff09e000060153b",
+      "text": "220 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707960,
+      "updated": 1593707972
+    },
+    {
+      "id": "5efe883faff09e00007d0f78",
+      "text": "　これもCソースを観察したら添え字アクセスでPyIntを作っていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739327,
+      "updated": 1593739368
+    },
+    {
+      "id": "5efe0dc4aff09e000060153c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707972,
+      "updated": 1593707972
+    },
+    {
+      "id": "5efe0d18aff09e000060152e",
+      "text": "リストではなくサイズで領域確保する方法としてnp.zerosが思いつくが…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707800,
+      "updated": 1593708568
+    },
+    {
+      "id": "5efe0c77aff09e000060151f",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707640,
+      "updated": 1593707783
+    },
+    {
+      "id": "5efe0d07aff09e0000601520",
+      "text": " cdef long i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707783,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601521",
+      "text": " import numpy as np",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601522",
+      "text": " cimport numpy as np",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601523",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601524",
+      "text": " N = 1000_000 ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601525",
+      "text": " cdef np.ndarray xs = np.zeros(N, np.int32)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601526",
+      "text": " for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601527",
+      "text": "   xs[i] = i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601528",
+      "text": " for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e0000601529",
+      "text": "   xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e000060152a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e000060152b",
+      "text": " print(xs[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593707797
+    },
+    {
+      "id": "5efe0d14aff09e000060152c",
+      "text": "なんと[AtCoderのCythonではNumpyが使えない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593707797,
+      "updated": 1593709077
+    },
+    {
+      "id": "5efe06faaff09e0000600852",
+      "text": "　手元でCソースを観察したらやはりこれも添え字アクセスでPyIntを作っていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593706234,
+      "updated": 1593739391
+    },
+    {
+      "id": "5eff3a3baff09e0000fab1f3",
+      "text": "　\tMemory Viewを作る必要がある。 see [Typed Memoryviews — Cython 3.0a5 documentation http://docs.cython.org/en/latest/src/userguide/memoryviews.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593784892,
+      "updated": 1593785325
+    },
+    {
+      "id": "5efe8881aff09e00007d0f7a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739394,
+      "updated": 1593739394
+    },
+    {
+      "id": "5efe8896aff09e00007d0f7c",
+      "text": "Cの配列を作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739414,
+      "updated": 1593739421
+    },
+    {
+      "id": "5efe87a6aff09e0000601541",
+      "text": "code:cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739174,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601543",
+      "text": " cdef long i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601544",
+      "text": " cdef long[1000_000] xs",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601545",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601546",
+      "text": " N = 1000_000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601547",
+      "text": " for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601548",
+      "text": "   xs[i] = i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e0000601549",
+      "text": " for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e000060154a",
+      "text": "   xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e000060154b",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e000060154c",
+      "text": " print(xs[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739179
+    },
+    {
+      "id": "5efe87abaff09e000060154d",
+      "text": "25 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739179,
+      "updated": 1593739268
+    },
+    {
+      "id": "5efe8886aff09e00007d0f7b",
+      "text": "　ついにPyPyより速くなった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739398,
+      "updated": 1593739412
+    },
+    {
+      "id": "5efe88e0aff09e00007d0f7f",
+      "text": "　Cソースを見ると単なる配列アクセスになっていることがわかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739489,
+      "updated": 1593739524
+    },
+    {
+      "id": "5efe87f2aff09e0000601550",
+      "text": "  code:c",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739251,
+      "updated": 1593739531
+    },
+    {
+      "id": "5efe87eaaff09e000060154e",
+      "text": "  \t(__pyx_v_11tiny_cython_xs[__pyx_v_11tiny_cython_i]) = __pyx_v_11tiny_cython_i;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739243,
+      "updated": 1593739531
+    },
+    {
+      "id": "5efe88deaff09e00007d0f7e",
+      "text": " なおサイズを変数で指定することはできない模様",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739486,
+      "updated": 1593739535
+    },
+    {
+      "id": "5efe87ebaff09e000060154f",
+      "text": "\t\tcode:cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739243,
+      "updated": 1593739570
+    },
+    {
+      "id": "5efe8932aff09e0000601551",
+      "text": "\t\t cdef long N = 1000_000 ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739570,
+      "updated": 1593739570
+    },
+    {
+      "id": "5efe8932aff09e0000601552",
+      "text": "   cdef long[N] xs",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739570,
+      "updated": 1593739570
+    },
+    {
+      "id": "5efe8932aff09e0000601553",
+      "text": "  code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739570,
+      "updated": 1593739573
+    },
+    {
+      "id": "5efe8935aff09e0000601554",
+      "text": "   Main.pyx:3:11: Not allowed in a constant expression",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739573,
+      "updated": 1593739590
+    },
+    {
+      "id": "5efe8947aff09e0000601555",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739591,
+      "updated": 1593739591
+    },
+    {
+      "id": "5efe8947aff09e0000601556",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593739591,
+      "updated": 1593739591
+    },
+    {
+      "id": "5efe1216aff09e000060153e",
+      "text": "もう一つ、malloc/freeを自分で呼ぶ方法も残されてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593709079,
+      "updated": 1593709144
+    },
+    {
+      "id": "5efe1277aff09e000060153f",
+      "text": "\t[Memory Allocation — Cython 3.0a5 documentation https://cython.readthedocs.io/en/latest/src/tutorial/memory_allocation.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593709175,
+      "updated": 1593709176
+    },
+    {
+      "id": "5efe1278aff09e0000601540",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593709176,
+      "updated": 1593749659
+    }
+  ]
+}

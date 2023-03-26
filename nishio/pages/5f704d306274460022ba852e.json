@@ -1,0 +1,386 @@
+{
+  "id": "5f704d306274460022ba852e",
+  "title": "遅延伝搬セグメント木",
+  "created": 1601195314,
+  "updated": 1608538057,
+  "lines": [
+    {
+      "id": "5f704d306274460022ba852e",
+      "text": "遅延伝搬セグメント木",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195314,
+      "updated": 1601195314
+    },
+    {
+      "id": "5f705295aff09e00002a6489",
+      "text": "値のセグメント木と作用のセグメント木を組み合わせて範囲作用・範囲縮約できるようにしたデータ構造",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196694,
+      "updated": 1601196719
+    },
+    {
+      "id": "5f7052b1aff09e00002a648a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196721,
+      "updated": 1601196721
+    },
+    {
+      "id": "5f704d7faff09e00006c970e",
+      "text": " 値の集合V([モノイド])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195391,
+      "updated": 1601196489
+    },
+    {
+      "id": "5f704db0aff09e00006c970f",
+      "text": "\t\t二項演算 [$ f(x, y) → z]where [$ x,y,z \\in V]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195440,
+      "updated": 1601196494
+    },
+    {
+      "id": "5f704e14aff09e0000299b0a",
+      "text": "\t\ttable:モノイドであること",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195540,
+      "updated": 1601198380
+    },
+    {
+      "id": "5f704e72aff09e0000299b0d",
+      "text": "\t\t 二項演算\t[結合則]\t[単位元]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195635,
+      "updated": 1601197068
+    },
+    {
+      "id": "5f704ed1aff09e0000299b10",
+      "text": "\t\t add\ta + (b + c) = (a + b) + c\t0\t0 + x = x + 0 = x ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195729,
+      "updated": 1601195934
+    },
+    {
+      "id": "5f704faeaff09e0000299b13",
+      "text": "\t\t mul\ta * (b * c) = (a * b) * c\t1\t1 * x = x * 1 = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195950,
+      "updated": 1601195969
+    },
+    {
+      "id": "5f704e83aff09e0000299b0e",
+      "text": "\t\t max\tmax(a, max(b, c)) = max(max(a, b), c)\t-INF\tmax(-INF, x) = max(x, -INF) = x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195651,
+      "updated": 1601195938
+    },
+    {
+      "id": "5f705278aff09e00002a6488",
+      "text": "　　この部分は[セグメント木]と同じ制約",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196664,
+      "updated": 1601196690
+    },
+    {
+      "id": "5f7052baaff09e00002a648b",
+      "text": "　　ある範囲に含まれる複数の値に対して二項演算を繰り返して一つの値にすることを「[範囲縮約]」と呼んでる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196730,
+      "updated": 1601251483
+    },
+    {
+      "id": "5f704eadaff09e0000299b0f",
+      "text": "\t作用の集合A (action)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195693,
+      "updated": 1601196471
+    },
+    {
+      "id": "5f704e37aff09e0000299b0b",
+      "text": "\t\t作用: [$ f(x) → y] where [$ x,y \\in V, f \\in A]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195576,
+      "updated": 1601196500
+    },
+    {
+      "id": "5f704f5daff09e0000299b12",
+      "text": "\t\t作用の合成: [$ c(f, g) → h] where [$ f,g \\in A, h(x) = g(f(x))]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601195870,
+      "updated": 1601196058
+    },
+    {
+      "id": "5f704fecaff09e0000299b14",
+      "text": "\t\ttable::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196013,
+      "updated": 1601196243
+    },
+    {
+      "id": "5f7050d3aff09e0000299b15",
+      "text": "\t\t 作用\t作用の合成\t単位元",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196243,
+      "updated": 1601196296
+    },
+    {
+      "id": "5f7050d3aff09e0000299b16",
+      "text": "\t\t add\tc(add(a), add(b)) = add(a + b)\tadd(0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196243,
+      "updated": 1601196411
+    },
+    {
+      "id": "5f7050d3aff09e0000299b17",
+      "text": "\t\t chmin\tc(chmin(a), chmin(b)) = chmin(min(a, b))\tchmin(INF)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196243,
+      "updated": 1601196455
+    },
+    {
+      "id": "5f7050d3aff09e0000299b18",
+      "text": "\t\t set\tc(set(a), set(b)) = set(a if b is None else b) \tset(None)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196243,
+      "updated": 1601196618
+    },
+    {
+      "id": "5f7050d3aff09e0000299b19",
+      "text": "　　ある範囲に含まれる複数の値に対して作用をすることを「[範囲作用]」と呼んでる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196243,
+      "updated": 1601251492
+    },
+    {
+      "id": "5f70532eaff09e00002a648d",
+      "text": "　　作用fは文字通り関数オブジェクトとして実装しても動きはするが、遅いので、普通は整数1でadd(1)を表現するなどが行われる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196846,
+      "updated": 1601251512
+    },
+    {
+      "id": "5f7128bdaff09e00002a649d",
+      "text": "　　 この整数を、作用を特定するためのパラメータという意味で「作用パラメータ」と呼ぶことにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601251517,
+      "updated": 1601251624
+    },
+    {
+      "id": "5f71292daff09e00002a649f",
+      "text": "　　 実装上は「作用の対象となる値」と「作用パラメータ」を引数に取って「作用後の値」を返す関数が必要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601251629,
+      "updated": 1601251696
+    },
+    {
+      "id": "5f7129c0aff09e00002a64a0",
+      "text": "　　 この関数を、遅延された作用の評価を強制する関数ということで作用強制関数action_forceと呼んでる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601251777,
+      "updated": 1601251852
+    },
+    {
+      "id": "5f712a10aff09e00002a64a1",
+      "text": "　　 世の中の説明の多くで「作用」「作用パラメータ」「作用強制関数」の3つを異なる名前で呼び分けないで、まとめて「作用」と呼んでて、僕はしばらく混乱した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601251857,
+      "updated": 1601251946
+    },
+    {
+      "id": "5f712a7baff09e00002a64a2",
+      "text": "　値の二項演算、値の単位元、作用の合成演算、作用強制関数、作用の単位元、の5つが必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601251963,
+      "updated": 1601252056
+    },
+    {
+      "id": "5f7053a7aff09e00002a648e",
+      "text": "　範囲縮約が必要ない、点取得でいい場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196968,
+      "updated": 1601197628
+    },
+    {
+      "id": "5f70566baff09e00002a6491",
+      "text": "　　二項演算で下から上に伝搬していくプロセスが不要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197676,
+      "updated": 1601197936
+    },
+    {
+      "id": "5f70566aaff09e00002a6490",
+      "text": "　　　=値のセグメント木が不要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197674,
+      "updated": 1601197707
+    },
+    {
+      "id": "5f705771aff09e000063ce9a",
+      "text": "　　→[半分遅延セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197937,
+      "updated": 1601197937
+    },
+    {
+      "id": "5f70568baff09e00002a6492",
+      "text": "　点取得で、かつ作用の合成が可換の場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197707,
+      "updated": 1601197753
+    },
+    {
+      "id": "5f7056b1aff09e00002a6493",
+      "text": "　　可換: [$ c(f, g) = c(g, f)] ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197745,
+      "updated": 1601197810
+    },
+    {
+      "id": "5f7056e5aff09e000063ce99",
+      "text": "　　\t例: c(add(a), add(b)) = c(add(b), add(a)) = add(a + b)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197798,
+      "updated": 1601197827
+    },
+    {
+      "id": "5f70530aaff09e00002a648c",
+      "text": "\t\t\taddやchminでは成り立つ、setでは成り立たない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601196811,
+      "updated": 1601197870
+    },
+    {
+      "id": "5f70572eaff09e00002a6495",
+      "text": "\t\tこの時、作用を追加する際に前の作用を下に伝搬する必要がなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197870,
+      "updated": 1601197942
+    },
+    {
+      "id": "5f705752aff09e00002a6496",
+      "text": "\t\t\t→[双対セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197906,
+      "updated": 1601197916
+    },
+    {
+      "id": "5f70571caff09e00002a6494",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601197852,
+      "updated": 1601197852
+    },
+    {
+      "id": "5f712b3faff09e00002a64a3",
+      "text": "ノードのサイズに関して",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252160,
+      "updated": 1601252168
+    },
+    {
+      "id": "5f712b48aff09e00002a64a5",
+      "text": "　例えば「1増やす」という作用を葉が4つあるようなノードに強制する場合、値は4増える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252169,
+      "updated": 1601252253
+    },
+    {
+      "id": "5f712ba3aff09e00002a64a6",
+      "text": "　これをコードで実現しようとすると、作用強制関数はノードのサイズを引数に受け取る必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252259,
+      "updated": 1601252307
+    },
+    {
+      "id": "5f712bd3aff09e00002a64a7",
+      "text": "　数学的構造から逸脱してて疑問に思った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252307,
+      "updated": 1601252360
+    },
+    {
+      "id": "5f712c08aff09e00002a64a8",
+      "text": "　これは数学的には",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252360,
+      "updated": 1601252365
+    },
+    {
+      "id": "5f712c1aaff09e00002a64a9",
+      "text": "　　値の集合がintではなく(int, size)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252379,
+      "updated": 1601252398
+    },
+    {
+      "id": "5f712c2daff09e00002a64aa",
+      "text": "　　葉の値は(int, 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252398,
+      "updated": 1601252417
+    },
+    {
+      "id": "5f712c41aff09e00002a64ab",
+      "text": "　実際にこの通りにタプルで値を持って、二項演算でサイズを計算しても良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252417,
+      "updated": 1601252516
+    },
+    {
+      "id": "5f712ca3aff09e00002a64ac",
+      "text": "　サイズはノードのIDから計算できるので値を持たないことで高速化ができる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252516,
+      "updated": 1601252600
+    },
+    {
+      "id": "5f712d13aff09e00002a64ae",
+      "text": "　問題によっては値の二項演算にもサイズが必要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252627,
+      "updated": 1601252642
+    },
+    {
+      "id": "5f721cceaff09e00008f81c8",
+      "text": "　　[ACL Beginner Contest]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601313999,
+      "updated": 1601314040
+    },
+    {
+      "id": "5f712cfcaff09e00002a64ad",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601252605,
+      "updated": 1601314119
+    },
+    {
+      "id": "5f9bb634aff09e00001ab3df",
+      "text": "表記揺れ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604040245,
+      "updated": 1604040255
+    },
+    {
+      "id": "5f9bb641aff09e00001ab3e1",
+      "text": "　[遅延セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604040257,
+      "updated": 1604040262
+    },
+    {
+      "id": "5f9bb636aff09e00001ab3e0",
+      "text": "　[遅延伝播segment木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604040247,
+      "updated": 1608538057
+    },
+    {
+      "id": "5fe057c2aff09e0000913a66",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608538050,
+      "updated": 1608538050
+    }
+  ]
+}

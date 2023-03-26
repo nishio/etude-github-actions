@@ -1,0 +1,316 @@
+{
+  "id": "612dd26c1a44cd001d71979c",
+  "title": "変更差分を作ってsetGlobalする",
+  "created": 1630392942,
+  "updated": 1630395327,
+  "lines": [
+    {
+      "id": "612dd26c1a44cd001d71979c",
+      "text": "変更差分を作ってsetGlobalする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392942,
+      "updated": 1630393778
+    },
+    {
+      "id": "612dd436aff09e00008b3139",
+      "text": "[ReactNのuseGlobalは参照が変化しなくても発火しうる]ということが発覚した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393398,
+      "updated": 1630393595
+    },
+    {
+      "id": "612dd49daff09e00008b313a",
+      "text": "つまりオブジェクト全体をsetGlobalに渡してしまうとすべてのフックが発動して再描画されてしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393502,
+      "updated": 1630393598
+    },
+    {
+      "id": "612dd4feaff09e00008b313b",
+      "text": "どう対処しようかしばらく考えて、オブジェクト全体を渡すのはimmerで全体のdraftを作って破壊的更新をしている場合だと気づいたので、そのための自作ユーティリティ関数updateGlobalを「変更差分を作って更新する」という仕組みに変えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393598,
+      "updated": 1630395327
+    },
+    {
+      "id": "612dd504aff09e00008b313c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393604,
+      "updated": 1630393604
+    },
+    {
+      "id": "612dd26eaff09e00004ebedf",
+      "text": "before",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392942,
+      "updated": 1630394930
+    },
+    {
+      "id": "612dd26faff09e00004ebee1",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392944,
+      "updated": 1630392944
+    },
+    {
+      "id": "612dd270aff09e00004ebee2",
+      "text": " import { State } from \"reactn/default\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392944,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee3",
+      "text": " import { setGlobal } from \"reactn\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee4",
+      "text": " import { produce } from \"immer\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee5",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee6",
+      "text": " export const updateGlobal = (update: (g: State) => void) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee7",
+      "text": "   // update global variable in destructive manner using immer",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee8",
+      "text": "   setGlobal((g: State) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebee9",
+      "text": "     return produce(g, update);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebeea",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebeeb",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392945
+    },
+    {
+      "id": "612dd270aff09e00004ebeec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392945,
+      "updated": 1630392946
+    },
+    {
+      "id": "612dd40faff09e00004ebeed",
+      "text": "after",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393360,
+      "updated": 1630394933
+    },
+    {
+      "id": "612dd411aff09e00004ebeef",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393362,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef0",
+      "text": " import { State } from \"reactn/default\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef1",
+      "text": " import { setGlobal } from \"reactn\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef2",
+      "text": " import { produce } from \"immer\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef4",
+      "text": " export const updateGlobal = (update: (draft: State) => void) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef5",
+      "text": "   // update global variable in destructive manner using immer",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef6",
+      "text": "   setGlobal((current_state: State) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef7",
+      "text": "     const new_state = produce(current_state, update);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef8",
+      "text": "     const update_delta: { [key: string]: unknown } = {};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebef9",
+      "text": "     Object.entries(current_state).forEach(([key, ref]) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebefa",
+      "text": "       // @ts-ignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebefb",
+      "text": "       if (current_state[key] !== new_state[key]) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebefc",
+      "text": "         // @ts-ignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebefd",
+      "text": "         update_delta[key] = new_state[key];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebefe",
+      "text": "       }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebeff",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebf00",
+      "text": "     return update_delta;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebf01",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebf02",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393365
+    },
+    {
+      "id": "612dd414aff09e00004ebf03",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630393365,
+      "updated": 1630393366
+    },
+    {
+      "id": "612dd26eaff09e00004ebee0",
+      "text": "before / after",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392944,
+      "updated": 1630394924
+    },
+    {
+      "id": "612dda2caff09e0000b1a426",
+      "text": "[https://gyazo.com/8daea14561c18aa4c85a9e22d8905b5e][https://gyazo.com/2378a32ec9295a85dff707a096f7615a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630394924,
+      "updated": 1630394924
+    },
+    {
+      "id": "612dda29aff09e0000b1a425",
+      "text": "単なるmousedownで画面全体を再描画して120msかかってたのが必要な部分だけの4.8msになった、めでたしめでたし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630394922,
+      "updated": 1630395110
+    },
+    {
+      "id": "612ddabbaff09e00008b313d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630395068,
+      "updated": 1630395068
+    }
+  ]
+}

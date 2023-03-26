@@ -1,0 +1,652 @@
+{
+  "id": "60ec5ba727cb5b001c1f18d8",
+  "title": "CypressのTypeScript化",
+  "created": 1626102696,
+  "updated": 1626106187,
+  "lines": [
+    {
+      "id": "60ec5ba727cb5b001c1f18d8",
+      "text": "CypressのTypeScript化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec6194aff09e0000cf35ec",
+      "text": "テストコードをTSにするかJSにするかという話、とりあえずデフォルトのJSでやってたけど[immerで更新してCypressでテスト]で、型で補完が効かないせいで早速Typoしたので、やっぱり[Cypress]の[TypeScript]化は必須だという結論になった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104213,
+      "updated": 1626104315
+    },
+    {
+      "id": "60ec6188aff09e0000f6a0c3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104201,
+      "updated": 1626104313
+    },
+    {
+      "id": "60ec617baff09e0000f6a0c2",
+      "text": "[https://gyazo.com/aa50d968a68da1936e93ddd738262053]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104187,
+      "updated": 1626104188
+    },
+    {
+      "id": "60ec5bbeaff09e0000f6a0ae",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102718,
+      "updated": 1626102719
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a078",
+      "text": "[TypeScript | Cypress Documentation https://docs.cypress.io/guides/tooling/typescript-support#Install-TypeScript]を参考にTypeScript化する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a079",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec5bfaaff09e0000cf35eb",
+      "text": "下記のようなことを書いてある記述を見かけたがこれはcypressディレクトリの中にtsconfigを置く場合は適切ではない、そうでない場合もカスタムコマンドのことを無視してる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102778,
+      "updated": 1626106054
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a07a",
+      "text": "code:tsconfig.json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a07b",
+      "text": " \"include\": [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102749
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a07c",
+      "text": "   \"cypress/integration/*.ts\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102749
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a07d",
+      "text": "   \"cypress/integration/**/*.ts\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102749
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a07e",
+      "text": " ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102749
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a081",
+      "text": "相対パスなのでこんな感じ(full)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104026
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a082",
+      "text": "code:tsconfig.json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec60e5aff09e0000f6a0af",
+      "text": " {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104038,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b0",
+      "text": "   \"compilerOptions\": {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b1",
+      "text": "     \"target\": \"es5\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b2",
+      "text": "     \"lib\": [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b3",
+      "text": "       \"es5\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b4",
+      "text": "       \"dom\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b5",
+      "text": "     ],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b6",
+      "text": "     \"types\": [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b7",
+      "text": "       \"cypress\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b8",
+      "text": "     ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0b9",
+      "text": "   },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0ba",
+      "text": "   \"include\": [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0bb",
+      "text": "     \"*.ts\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0bc",
+      "text": "     \"**/*.ts\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0bd",
+      "text": "     \"../src/*.ts\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0be",
+      "text": "     \"../src/**/*.ts\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0bf",
+      "text": "   ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec60e6aff09e0000f6a0c0",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104039,
+      "updated": 1626104039
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a08a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104046
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a08d",
+      "text": "*.tsxをインポートしようとすると--jsxが必要というエラーになるが、そもそも今回のユースケースでtsxをインポートできる必要があるか不明だったのでシンプルに保つことにした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104133
+    },
+    {
+      "id": "60ec6140aff09e0000f6a0c1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104128,
+      "updated": 1626104128
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a091",
+      "text": "`import { State } from \"reactn/default\";`して型宣言をすればちゃんとTypoが警告されるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104377
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a092",
+      "text": "[https://gyazo.com/cbbf38921672d36603034a047fa6e03c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a094",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a095",
+      "text": "ところで`@ts-ignore`してる件、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104396
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a096",
+      "text": "`cy.window().its(\"movidea\").then((movidea) => { ... }` だと引数はanyで、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104413
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a097",
+      "text": "`cy.get(\"@movidea\").then((movidea) => { ... }` だと `JQuery<HTMLElement>` になる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104475
+    },
+    {
+      "id": "60ec629aaff09e0000cf35ef",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104475,
+      "updated": 1626104479
+    },
+    {
+      "id": "60ec6286aff09e0000cf35ee",
+      "text": "いちいちmovideaをキャストするのは不便。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104455,
+      "updated": 1626104493
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a09a",
+      "text": "カスタムコマンドを作るか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626102696
+    },
+    {
+      "id": "60ec62d0aff09e0000cf35f0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104529,
+      "updated": 1626104529
+    },
+    {
+      "id": "60ec62d0aff09e0000cf35f1",
+      "text": "ここでサンプルの通りにしたつもりで`Type 'Chainable' is not generic.`とか`Property 'movidea' does not exist on type 'cy & EventEmitter'.`とかになったりすったもんだがあったが最終的にこれでOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104529,
+      "updated": 1626104693
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a09b",
+      "text": "code:cypress/support/index.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104578
+    },
+    {
+      "id": "60ec6308aff09e0000f6a0c5",
+      "text": " /// <reference types=\"cypress\" />",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104584,
+      "updated": 1626104594
+    },
+    {
+      "id": "60ec6311aff09e0000f6a0c6",
+      "text": " import { TMovidea } from \"../../src/exposeGlobal\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104594,
+      "updated": 1626104600
+    },
+    {
+      "id": "60ec631eaff09e0000f6a0c7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104607,
+      "updated": 1626104607
+    },
+    {
+      "id": "60ec631faff09e0000f6a0c8",
+      "text": " declare global {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104608,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0c9",
+      "text": "   namespace Cypress {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0ca",
+      "text": "     interface Chainable {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0cb",
+      "text": "       movidea(callback: (movidea: TMovidea) => void): Chainable;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0cc",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0cd",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0ce",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0cf",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0d0",
+      "text": " Cypress.Commands.add(\"movidea\", (callback: (movidea: TMovidea) => void) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0d1",
+      "text": "   return cy.window().its(\"movidea\").then(callback);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0d2",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104609
+    },
+    {
+      "id": "60ec6320aff09e0000f6a0d3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104609,
+      "updated": 1626104610
+    },
+    {
+      "id": "60ec5ba7aff09e0000f6a09c",
+      "text": "[公式ドキュメント https://docs.cypress.io/guides/tooling/typescript-support#Types-for-custom-commands]に下記のように書いてあったんだけど、これエラーにならない？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626102696,
+      "updated": 1626104884
+    },
+    {
+      "id": "60ec63a3aff09e0000f6a0d4",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104740,
+      "updated": 1626105039
+    },
+    {
+      "id": "60ec63a6aff09e0000f6a0d5",
+      "text": " declare namespace Cypress {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104742,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0d6",
+      "text": "   interface Chainable {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0d7",
+      "text": "     /**",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0d8",
+      "text": "      * Custom command to select DOM element by data-cy attribute.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0d9",
+      "text": "      * @example cy.dataCy('greeting')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0da",
+      "text": "      */",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0db",
+      "text": "     dataCy(value: string): Chainable<Element>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0dc",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec63d1aff09e0000f6a0dd",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104785,
+      "updated": 1626104785
+    },
+    {
+      "id": "60ec6306aff09e0000f6a0c4",
+      "text": "Cypressのソースを確認したら",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104583,
+      "updated": 1626104902
+    },
+    {
+      "id": "60ec643eaff09e0000cf35f2",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104894,
+      "updated": 1626105035
+    },
+    {
+      "id": "60ec6473aff09e0000f6a0df",
+      "text": " declare global {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104947,
+      "updated": 1626104947
+    },
+    {
+      "id": "60ec6473aff09e0000f6a0e0",
+      "text": "   namespace Cypress {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104947,
+      "updated": 1626104947
+    },
+    {
+      "id": "60ec6473aff09e0000f6a0e1",
+      "text": "     // TODO: Why is Subject unused?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104947,
+      "updated": 1626104947
+    },
+    {
+      "id": "60ec6473aff09e0000f6a0e2",
+      "text": "     // eslint-disable-next-line @typescript-eslint/no-unused-vars",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104947,
+      "updated": 1626104947
+    },
+    {
+      "id": "60ec6473aff09e0000f6a0e3",
+      "text": "     interface Chainable<Subject = any> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104947,
+      "updated": 1626104947
+    },
+    {
+      "id": "60ec6477aff09e0000f6a0e5",
+      "text": "       ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104951,
+      "updated": 1626104952
+    },
+    {
+      "id": "60ec6473aff09e0000f6a0e4",
+      "text": "ってなってるので、globalを補ったら期待通りに動くようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104947,
+      "updated": 1626104990
+    },
+    {
+      "id": "60ec6483aff09e0000cf35f3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626104963,
+      "updated": 1626104963
+    },
+    {
+      "id": "60ec658aaff09e0000f6a0e6",
+      "text": "最終的にテストコード中でこう書けるようになった。破壊的に更新してるように見えるけどimmerを使って非破壊的更新がされてて、ちゃんとReactのフックによる再描画が走る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105226,
+      "updated": 1626106187
+    },
+    {
+      "id": "60ec65a2aff09e0000f6a0e8",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105251,
+      "updated": 1626105258
+    },
+    {
+      "id": "60ec65a5aff09e0000f6a0e9",
+      "text": "     cy.movidea((movidea) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105253,
+      "updated": 1626105254
+    },
+    {
+      "id": "60ec65a5aff09e0000f6a0ea",
+      "text": "       movidea.updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105254,
+      "updated": 1626105254
+    },
+    {
+      "id": "60ec65a5aff09e0000f6a0eb",
+      "text": "         g.itemStore[\"1\"].position = [100, 0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105254,
+      "updated": 1626105254
+    },
+    {
+      "id": "60ec65a5aff09e0000f6a0ec",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105254,
+      "updated": 1626105254
+    },
+    {
+      "id": "60ec65a5aff09e0000f6a0ed",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105254,
+      "updated": 1626105254
+    },
+    {
+      "id": "60ec65a5aff09e0000f6a0ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626105254,
+      "updated": 1626105278
+    }
+  ]
+}

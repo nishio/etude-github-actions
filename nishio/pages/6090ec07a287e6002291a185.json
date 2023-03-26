@@ -1,0 +1,428 @@
+{
+  "id": "6090ec07a287e6002291a185",
+  "title": "Hatena2011-06-03",
+  "created": 1307026800,
+  "updated": 1307026800,
+  "lines": [
+    {
+      "id": "6090ec2baff09e00003d8f59",
+      "text": "Hatena2011-06-03",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f5a",
+      "text": "code:hatena",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f5b",
+      "text": " <body>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f5c",
+      "text": " *1307096599*Emacsで3の倍数の行に色をつける",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f5d",
+      "text": " 正確に言えば「行番号が3で割ったときに1と2の時に緑と青の背景にしたい」という目的。http://www.bookshelf.jp/soft/meadow_26.html#SEC314 を参考にしようとしたが結局小手先の修正では目的通りの挙動にならないので色々勉強した。",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f5e",
+      "text": " まずは行だとかエディタの一部に色をつけるのには<a href='http://www.gnu.org/software/emacs/manual/html_node/elisp/Overlays.html#Overlays'>Overlays - GNU Emacs Lisp Reference Manual</a>を使う。オーバーレイは始点と終点を指定して作成する。",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f5f",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f60",
+      "text": " >|lisp|",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f61",
+      "text": " ; stripes.el",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f62",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f63",
+      "text": " (defun stripes-create ()",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f64",
+      "text": "   \"Colors lines in current buffer alternatively.",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f65",
+      "text": " This will not monitor changes of the buffer.\"",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f66",
+      "text": "   (save-excursion",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f67",
+      "text": "     (save-restriction",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f68",
+      "text": "       (widen)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f69",
+      "text": "       (stripes-remove)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f6a",
+      "text": "       (goto-char (point-min))",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f6b",
+      "text": "       (while (not (eobp))",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f6c",
+      "text": " \t(forward-line stripes-lcount)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f6d",
+      "text": " \t(let ((ppp (point))",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f6e",
+      "text": " \t      ovl)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f6f",
+      "text": " \t  (unless (eobp)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f70",
+      "text": " \t    (forward-line stripes-lcount)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f71",
+      "text": " \t    (setq ovl (make-overlay ppp (point)))",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f72",
+      "text": " \t    (overlay-put ovl 'face 'stripes-face)))))))",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f73",
+      "text": " ||<",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f74",
+      "text": " (widen)はナローイングの解除。(goto-char (point-min))でバッファ先頭に移動してからforward-lineでstripes-lcount(通常1)行ずつ下に進み、進む前pppと後(point)の範囲でmake-overlayして、そのオーバーレイにoverlay-putでfaceを指定している。",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f75",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f76",
+      "text": " 行番号を3で割った余りは(% (line-number-at-pos) 3)でわかる。",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f77",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f78",
+      "text": " stripes.elでは全オーバーレイを取得してからそのfaceの値をチェックして削除する関数を自分で実装しているけど、(remove-overlays (point-min) (point-max) 'category 'stripe)とかでOK。",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f79",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f7a",
+      "text": " stripes.elではモードに入ったときにバッファの全体に対してオーバーレイを設置するけど、僕のニーズではバッファが100万行とかあるのでそれをされると困る。(window-start)と(window-end)の間だけ付けるようにしたけどスクロールしたときの更新はどうしようかなぁ。スクロールのコマンドに対してアドバイスを付ければいいのかなあ。<a href='http://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Advice.html#Defining-Advice'>Defining Advice - GNU Emacs Lisp Reference Manual</a>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f7b",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f7c",
+      "text": " stripes.elでは編集されたときにはこうやって作り直しているな",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f7d",
+      "text": " >|lisp|",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f7e",
+      "text": " (defun stripes-after-change-function (beg end length)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f7f",
+      "text": "   \"After change function for color alternation mode.",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f80",
+      "text": " Refreshes all the highlighting.  This is slow, but as mostly lists are",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f81",
+      "text": " not changed that often, it should be acceptable.  Arguments BEG END",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f82",
+      "text": " and LENGTH are not used.\"",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f83",
+      "text": "   (if stripes-mode",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f84",
+      "text": "       (stripes-create)))",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f85",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f86",
+      "text": " (add-hook 'after-change-functions",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f87",
+      "text": "    'stripes-after-change-function)",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f88",
+      "text": " ||<",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f89",
+      "text": " ",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f8a",
+      "text": " おお、スクロールのフックが用意されている：<a href='http://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html#Standard-Hooks'>Standard Hooks - GNU Emacs Lisp Reference Manual</a>　これでよさそうだな。",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f8b",
+      "text": " </body>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f8c",
+      "text": " <comments>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f8d",
+      "text": " <comment>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f8e",
+      "text": " <username>camlspotter</username>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f8f",
+      "text": " <body>私もオーバーレイ多用しようかなと思って、でも超いっぱい作ったらどうしようかと、そこで止まっていたので参考になりました！</body>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f90",
+      "text": " <timestamp>1307406634</timestamp>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f91",
+      "text": " </comment>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f92",
+      "text": " </comments>",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f93",
+      "text": "",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8f94",
+      "text": "[はてなダイアリー 2011-06-03 https://nishiohirokazu.hatenadiary.org/archive/2011/06/03]",
+      "created": 1307026800,
+      "updated": 1307026800,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

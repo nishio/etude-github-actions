@@ -1,0 +1,729 @@
+{
+  "id": "5cdfa6e12bfab2001722b2e8",
+  "title": "Reactの状態変化をイベントハンドラから読み書きする",
+  "created": 1558161142,
+  "updated": 1558164850,
+  "lines": [
+    {
+      "id": "5cdfa6e12bfab2001722b2e8",
+      "text": "Reactの状態変化をイベントハンドラから読み書きする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161142,
+      "updated": 1558162709
+    },
+    {
+      "id": "5cdfa9e3aff09e00009acaa1",
+      "text": "2019-05-17 [React勉強日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161891,
+      "updated": 1558164850
+    },
+    {
+      "id": "5cdfa9a9aff09e00009acaa0",
+      "text": "「1秒ごとに変更されてるかチェックして変更されていたら保存する」という実装をしようとして、Reactの関数コンポーネントの中でsetIntervalでチェックするコードを書いたが、これは正しくない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161834,
+      "updated": 1558161890
+    },
+    {
+      "id": "5cdfa6f6aff09e00009aca5c",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161142,
+      "updated": 1558161150
+    },
+    {
+      "id": "5cdfa6fdaff09e00009aca7c",
+      "text": " const App: React.FC = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161153
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca7d",
+      "text": "   let [toSave, setToSave] = useState(false);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161155
+    },
+    {
+      "id": "5cdfa709aff09e00009aca9d",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161161,
+      "updated": 1558161161
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca7f",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161157
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca82",
+      "text": "     let t = setInterval(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161165
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca8c",
+      "text": "       if (toSave) {                    // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161182
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca8e",
+      "text": "         setToSave(false);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161150
+    },
+    {
+      "id": "5cdfa72baff09e00009aca9e",
+      "text": "         // saveSomething()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161195,
+      "updated": 1558161213
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca8f",
+      "text": "       }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161194
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca98",
+      "text": "     }, 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161150
+    },
+    {
+      "id": "5cdfa6feaff09e00009aca9a",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161150,
+      "updated": 1558161150
+    },
+    {
+      "id": "5cdfa6f9aff09e00009aca7b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161145,
+      "updated": 1558161145
+    },
+    {
+      "id": "5cdfaa05aff09e00009acaa2",
+      "text": "なぜかというと、setIntervalの引数に渡されている関数オブジェクト(以下fと呼ぶ)の中のtoSaveは、fが作成されたタイミングでの外のスコープにあるtoSaveを指していて、その後のsetToSaveの呼び出しなどで状態が更新されても、ずっと初期値のfalseのままだから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558161925,
+      "updated": 1558162099
+    },
+    {
+      "id": "5cdfaab3aff09e00009acaa6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162099,
+      "updated": 1558162099
+    },
+    {
+      "id": "5cdfaab3aff09e00009acaa7",
+      "text": "この件に関して「状態をmutableなオブジェクトにして破壊的に更新する」という案があった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162099,
+      "updated": 1558162307
+    },
+    {
+      "id": "5cdfab85aff09e00009acaaa",
+      "text": "これはまた別の罠を踏む。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162310,
+      "updated": 1558162315
+    },
+    {
+      "id": "5cdfab8aaff09e00009acaab",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162315,
+      "updated": 1558162315
+    },
+    {
+      "id": "5cdfabcbaff09e00009acade",
+      "text": "このコードでは2つのタイマーが1つの状態を片方(1)は定期的に読み、もう片方(2)は定期的に書き換えている。その2つの表示は順次カウントアップしていくので期待通りに動いているように見えるかもしれない。だが(3)のDOMの更新はされない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162380,
+      "updated": 1558162510
+    },
+    {
+      "id": "5cdfab8aaff09e00009acaac",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162315,
+      "updated": 1558162323
+    },
+    {
+      "id": "5cdfab93aff09e00009acac5",
+      "text": " const App: React.FC = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162323,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acac6",
+      "text": "   let [count, setCount] = useState({value: 0});",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acac7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acac8",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acac9",
+      "text": "     let t = setInterval(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acaca",
+      "text": "       console.log(\"Read Timer\", count);  // (1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162370
+    },
+    {
+      "id": "5cdfab94aff09e00009acacb",
+      "text": "     }, 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acacc",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acacd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acace",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acacf",
+      "text": "     let t = setInterval(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad0",
+      "text": "       count.value++;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad1",
+      "text": "       setCount(count);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad2",
+      "text": "       console.log(\"Write Timer\", count);  // (2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162375
+    },
+    {
+      "id": "5cdfab94aff09e00009acad3",
+      "text": "     }, 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162337
+    },
+    {
+      "id": "5cdfab94aff09e00009acad5",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad6",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad7",
+      "text": "   return (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad8",
+      "text": "     <div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acad9",
+      "text": "       <p>You clicked {count.value} times</p>    // (3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162365
+    },
+    {
+      "id": "5cdfab94aff09e00009acada",
+      "text": "     </div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acadb",
+      "text": "   );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab94aff09e00009acadc",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162324,
+      "updated": 1558162324
+    },
+    {
+      "id": "5cdfab61aff09e00009acaa8",
+      "text": "僕も昨日まで知らなかったが、過去の値を破壊的に書き換えてそれをsetCountに渡した場合、setCountは「変化してない」と判断してしまう。なのでDOMの更新がトリガーされない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162273,
+      "updated": 1558162682
+    },
+    {
+      "id": "5cdfacd4aff09e00009acae0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162644,
+      "updated": 1558162644
+    },
+    {
+      "id": "5cdfb030aff09e00009acb0e",
+      "text": ">Both useState and useReducer Hooks bail out of updates if the next value is the same as the previous one. Mutating state in place and calling setState will not cause a re-render.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558163504,
+      "updated": 1558163506
+    },
+    {
+      "id": "5cdfb033aff09e00009acb10",
+      "text": "\thttps://reactjs.org/docs/hooks-faq.html#is-there-something-like-forceupdate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558163507,
+      "updated": 1558163574
+    },
+    {
+      "id": "5cdfb030aff09e00009acb0f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558163504,
+      "updated": 1558163504
+    },
+    {
+      "id": "5cdfad3eaff09e00009acae3",
+      "text": "つまりこのサンプルコードでWrite Timerが書いた値をRead Timerが読めてるように見えるのは、Reactの状態管理の効果ではなく「両方が同一のオブジェクトを読み書きしているから」だ。下記のようにuseStateを使うのをやめても同じ振る舞いをする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162751,
+      "updated": 1558162993
+    },
+    {
+      "id": "5cdfad9faff09e00009acae5",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162848,
+      "updated": 1558162855
+    },
+    {
+      "id": "5cdfada7aff09e00009acae6",
+      "text": " const App: React.FC = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162855,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae04aff09e00009acb09",
+      "text": "   // 書き換え",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162949,
+      "updated": 1558162953
+    },
+    {
+      "id": "5cdfae00aff09e00009acaf8",
+      "text": "   // let [count, setCount] = useState({value: 0});",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae00aff09e00009acaf9",
+      "text": "   let count = {value: 0};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae0faff09e00009acb0a",
+      "text": "   ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162959,
+      "updated": 1558162960
+    },
+    {
+      "id": "5cdfae00aff09e00009acafa",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162962
+    },
+    {
+      "id": "5cdfae00aff09e00009acb02",
+      "text": "     let t = setInterval(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae00aff09e00009acb03",
+      "text": "       count.value++;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae15aff09e00009acb0c",
+      "text": "       // コメントアウト",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162965,
+      "updated": 1558162968
+    },
+    {
+      "id": "5cdfae00aff09e00009acb04",
+      "text": "       // setCount(count);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162970
+    },
+    {
+      "id": "5cdfae00aff09e00009acb05",
+      "text": "       console.log(\"Write Timer\", count);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae00aff09e00009acb06",
+      "text": "     }, 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae00aff09e00009acb07",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558162945
+    },
+    {
+      "id": "5cdfae00aff09e00009acb08",
+      "text": " ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162945,
+      "updated": 1558164156
+    },
+    {
+      "id": "5cdfad3eaff09e00009acae4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162941,
+      "updated": 1558162941
+    },
+    {
+      "id": "5cdfb2dbaff09e00009acb49",
+      "text": "Write Timerで、新しいオブジェクトを作ってsetCountするようにすると、1回re-renderがトリガーされる。しかし2つのタイマーのcountが指している値は初回render時のスコープにある{value: 0}のままなので、カウントアップされていくことはない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164188,
+      "updated": 1558164302
+    },
+    {
+      "id": "5cdfb2dbaff09e00009acb4a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164188,
+      "updated": 1558164188
+    },
+    {
+      "id": "5cdfad24aff09e00009acae1",
+      "text": "で、どうするのがよいのか、はまだよくわかってない。[useRef]?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162724,
+      "updated": 1558163431
+    },
+    {
+      "id": "5cdfae37aff09e00009acb0d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558162999,
+      "updated": 1558162999
+    },
+    {
+      "id": "5cdfb26daff09e00009acb11",
+      "text": "----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164078,
+      "updated": 1558164078
+    },
+    {
+      "id": "5cdfb26eaff09e00009acb13",
+      "text": "2019-05-18",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164078,
+      "updated": 1558164079
+    },
+    {
+      "id": "5cdfb26faff09e00009acb14",
+      "text": "useRefはre-renderをトリガーしないので、useStateと一緒に使って、3ヶ所全部が更新されるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164079,
+      "updated": 1558164146
+    },
+    {
+      "id": "5cdfb27eaff09e00009acb15",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164095,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb287aff09e00009acb2f",
+      "text": " const App: React.FC = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb30",
+      "text": "   let [count, setCount] = useState({value: 0});",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb31",
+      "text": "   let countRef = useRef(count);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb32",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb33",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb34",
+      "text": "     let t = setInterval(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb35",
+      "text": "       console.log(\"Read Timer\", countRef.current);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb36",
+      "text": "     }, 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb37",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb38",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb39",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb3a",
+      "text": "     let t = setInterval(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb3b",
+      "text": "       let newCount = {value: countRef.current.value + 1};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb3c",
+      "text": "       setCount(newCount);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb3d",
+      "text": "       countRef.current = newCount;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb3e",
+      "text": "       console.log(\"Write Timer\", newCount);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb3f",
+      "text": "     }, 1000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb40",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb41",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb42",
+      "text": "   return (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb43",
+      "text": "     <div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb44",
+      "text": "       <p>You clicked {count.value} times</p>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb45",
+      "text": "     </div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb46",
+      "text": "   );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb288aff09e00009acb47",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164104,
+      "updated": 1558164104
+    },
+    {
+      "id": "5cdfb27eaff09e00009acb16",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164095,
+      "updated": 1558164096
+    },
+    {
+      "id": "5cdfb26daff09e00009acb12",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164078,
+      "updated": 1558164078
+    }
+  ]
+}

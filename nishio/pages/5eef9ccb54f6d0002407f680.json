@@ -1,0 +1,176 @@
+{
+  "id": "5eef9ccb54f6d0002407f680",
+  "title": "剰余群逆元漸化式の導出",
+  "created": 1592761549,
+  "updated": 1603551906,
+  "lines": [
+    {
+      "id": "5eef9ccb54f6d0002407f680",
+      "text": "剰余群逆元漸化式の導出",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761549,
+      "updated": 1592761549
+    },
+    {
+      "id": "5eef9ccdaff09e0000cc9e66",
+      "text": "[剰余群での除算]ではユークリッドの互除法で逆元を求めているが、これは一つの計算にO(log(N))かかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761549,
+      "updated": 1592761971
+    },
+    {
+      "id": "5eef9e73aff09e0000cc9e68",
+      "text": "まとめて[逆元テーブル]を作る場合には、ひとつO(1)、ぜんぶでO(N)で作る漸化式がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761971,
+      "updated": 1603551778
+    },
+    {
+      "id": "5eef9cd0aff09e0000cc9e67",
+      "text": "\t`inv[a] = MOD - inv[MOD % a] * (MOD / a) % MOD;`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761553,
+      "updated": 1603551906
+    },
+    {
+      "id": "5eef9d3faff09e00002ecccd",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761664,
+      "updated": 1592761690
+    },
+    {
+      "id": "5eef9d59aff09e00002ecccf",
+      "text": "  for i in range(2, P):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761690,
+      "updated": 1592761714
+    },
+    {
+      "id": "5eef9d5aaff09e00002eccd0",
+      "text": "      q, r = divmod(P, i)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761690,
+      "updated": 1592761700
+    },
+    {
+      "id": "5eef9d5aaff09e00002eccd4",
+      "text": "      INV[i] = -INV[r] * q % P",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761690,
+      "updated": 1592761696
+    },
+    {
+      "id": "5eefa2eaaff09e0000cc9e6a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763115,
+      "updated": 1592763115
+    },
+    {
+      "id": "5eef9d5aaff09e00002eccd5",
+      "text": "導出",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592761690,
+      "updated": 1592763111
+    },
+    {
+      "id": "5eefa2ecaff09e0000cc9e6b",
+      "text": "Pをaで割った商がq、余りがrだとする(`q, r = divmod(P, a)`)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763117,
+      "updated": 1592763163
+    },
+    {
+      "id": "5eefa327aff09e0000cc9e6c",
+      "text": "　以下の式が成り立つ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763176,
+      "updated": 1592763182
+    },
+    {
+      "id": "5eefa245aff09e0000f764a3",
+      "text": "\t[$ P = aq + r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592762949,
+      "updated": 1592762976
+    },
+    {
+      "id": "5eefa31eaff09e0000f764a9",
+      "text": "\t両辺をmod Pする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763166,
+      "updated": 1592763251
+    },
+    {
+      "id": "5eefa252aff09e0000f764a4",
+      "text": "\t[$ 0 \\equiv aq + r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592762963,
+      "updated": 1592763027
+    },
+    {
+      "id": "5eefa34baff09e0000cc9e6d",
+      "text": "\taの逆元を掛ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763211,
+      "updated": 1592763223
+    },
+    {
+      "id": "5eefa266aff09e0000f764a5",
+      "text": "\t[$ 0 \\equiv q + a^{-1}r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592762983,
+      "updated": 1592763048
+    },
+    {
+      "id": "5eefa358aff09e0000cc9e6e",
+      "text": "\tqを移項する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763225,
+      "updated": 1592763247
+    },
+    {
+      "id": "5eefa29aaff09e0000f764a6",
+      "text": "\t[$ -q \\equiv a^{-1}r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763034,
+      "updated": 1592763066
+    },
+    {
+      "id": "5eefa375aff09e0000cc9e6f",
+      "text": "　rの逆元を掛ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763254,
+      "updated": 1592763265
+    },
+    {
+      "id": "5eefa2afaff09e0000f764a7",
+      "text": "\t[$ -qr^{-1} \\equiv a^{-1}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763055,
+      "updated": 1592763076
+    },
+    {
+      "id": "5eefa2beaff09e0000f764a8",
+      "text": "　aの逆元を、aより小さいrの逆元を用いて求めることができた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763070,
+      "updated": 1592763317
+    },
+    {
+      "id": "5eefa3b6aff09e0000cc9e70",
+      "text": "　小さい順に逆元を求めていけば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763318,
+      "updated": 1592763342
+    },
+    {
+      "id": "5eefa3cfaff09e0000cc9e71",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592763343,
+      "updated": 1592763343
+    }
+  ]
+}

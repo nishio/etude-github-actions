@@ -1,0 +1,1121 @@
+{
+  "id": "60ee610b47c7c10022016edb",
+  "title": "2021-07-14Movidea開発日記",
+  "created": 1626235148,
+  "updated": 1629299870,
+  "lines": [
+    {
+      "id": "60ee610b47c7c10022016edb",
+      "text": "2021-07-14Movidea開発日記",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626235148,
+      "updated": 1629299775
+    },
+    {
+      "id": "60ef0b9caff09e00007a1432",
+      "text": "今日の一枚",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626278813,
+      "updated": 1626278817
+    },
+    {
+      "id": "60eed035aff09e0000707200",
+      "text": "[https://gyazo.com/e1f53457d5b6464ee09d9353282f24e7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626263606,
+      "updated": 1626263609
+    },
+    {
+      "id": "60eed035aff09e0000707201",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626263606,
+      "updated": 1626263612
+    },
+    {
+      "id": "60eeb332aff09e00007071ff",
+      "text": "prev [2021-07-13Movidea開発日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626256178,
+      "updated": 1629299885
+    },
+    {
+      "id": "60eea9d2aff09e0000576ac6",
+      "text": "Cypress、containsはDOMが選択されるが型がundefined",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626253779,
+      "updated": 1626253829
+    },
+    {
+      "id": "60ee610caff09e0000496618",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626235149,
+      "updated": 1626235219
+    },
+    {
+      "id": "60ee6153aff09e000049661a",
+      "text": " cy.get(\"div[data-testid='2']\").should((x) => {}); // x is JQuery<HTMLElement>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626235219,
+      "updated": 1626235224
+    },
+    {
+      "id": "60ee6153aff09e000049661b",
+      "text": " cy.contains(\"A B\").should((x) => {}); // x is undefined",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626235219,
+      "updated": 1626235224
+    },
+    {
+      "id": "60ee6153aff09e000049661c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626235219,
+      "updated": 1626235221
+    },
+    {
+      "id": "60eeaab0aff09e0000576ac7",
+      "text": "これはDOMを取得する方法としての実装とアサーションとしての実装の両方があるせい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254001,
+      "updated": 1626254437
+    },
+    {
+      "id": "60eeac56aff09e00007071fc",
+      "text": "こんな感じになってるが、cyが`Chainable<undefined>`だから`Subject=undefined`になってしまう。設計が悪い、名前を分けるべき。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254422,
+      "updated": 1626254438
+    },
+    {
+      "id": "60eeabadaff09e00007071ed",
+      "text": "code:cypress.d.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254254,
+      "updated": 1626254277
+    },
+    {
+      "id": "60eeabb1aff09e00007071ee",
+      "text": " contains(content: string | number | RegExp, options?: Partial<Loggable & Timeoutable & CaseMatchable & Shadow>): Chainable<Subject>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254258,
+      "updated": 1626254266
+    },
+    {
+      "id": "60eeabb1aff09e00007071ef",
+      "text": " contains<E extends Node = HTMLElement>(content: string | number | RegExp): Chainable<JQuery<E>>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254258,
+      "updated": 1626254266
+    },
+    {
+      "id": "60eeac4aaff09e00007071f9",
+      "text": " ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254411,
+      "updated": 1626254413
+    },
+    {
+      "id": "60eeac4caff09e00007071fa",
+      "text": " interface cy extends Chainable<undefined> {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254413,
+      "updated": 1626254413
+    },
+    {
+      "id": "60eeac50aff09e00007071fb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254417,
+      "updated": 1626254417
+    },
+    {
+      "id": "60eeabb1aff09e00007071f8",
+      "text": "それはさておき自分の実装としてはdata-testidを付けてあるので、それを使って選択するのをカスタムコマンドにしてやりやすくしようと考えた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254258,
+      "updated": 1626254513
+    },
+    {
+      "id": "60eeab12aff09e0000576ac8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254099,
+      "updated": 1626254416
+    },
+    {
+      "id": "60ee6151aff09e0000496619",
+      "text": "code:support/index.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626235218,
+      "updated": 1626237272
+    },
+    {
+      "id": "60ee6950aff09e000049661e",
+      "text": " declare global {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237264,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049661f",
+      "text": "   namespace Cypress {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496620",
+      "text": "     interface Chainable {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee6960aff09e0000496645",
+      "text": "       ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237281,
+      "updated": 1626237284
+    },
+    {
+      "id": "60ee695aaff09e0000496621",
+      "text": "       testid(testid: string): Chainable<Element>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237279
+    },
+    {
+      "id": "60ee695aaff09e0000496623",
+      "text": "       hasPosition(x: number, y: number): Chainable<Element>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496624",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496625",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496626",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496627",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496628",
+      "text": " Cypress.Commands.add(\"testid\", (testid: string) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237289
+    },
+    {
+      "id": "60ee695aaff09e0000496634",
+      "text": "   return cy.get(`*[data-testid='${testid}']`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496635",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496636",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496637",
+      "text": " Cypress.Commands.add(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496638",
+      "text": "   \"hasPosition\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496639",
+      "text": "   {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049663a",
+      "text": "     prevSubject: true,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049663b",
+      "text": "   },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049663c",
+      "text": "   (subject: Cypress.Chainable<Element>, x: number, y: number) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049663d",
+      "text": "     const cr = subject[0].getBoundingClientRect();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049663e",
+      "text": "     expect(cr.x).equal(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e000049663f",
+      "text": "     expect(cr.y).equal(y);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496640",
+      "text": "     return subject;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496641",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496642",
+      "text": " );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237274
+    },
+    {
+      "id": "60ee695aaff09e0000496643",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237274,
+      "updated": 1626237295
+    },
+    {
+      "id": "60eeacc3aff09e0000576aca",
+      "text": "これで",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254531,
+      "updated": 1626254532
+    },
+    {
+      "id": "60ee696faff09e0000496646",
+      "text": "`cy.testid(\"1\").hasPosition(159, 174);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237295,
+      "updated": 1626237307
+    },
+    {
+      "id": "60ee70b0aff09e0000496662",
+      "text": "と書けるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239153,
+      "updated": 1626254539
+    },
+    {
+      "id": "60eeacceaff09e0000576acb",
+      "text": "しかしこれはリトライが行われない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254542,
+      "updated": 1626254558
+    },
+    {
+      "id": "60eead91aff09e0000576acd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254737,
+      "updated": 1626254737
+    },
+    {
+      "id": "60eeace0aff09e0000576acc",
+      "text": "実際のところ[Custom Commands | Cypress Documentation https://docs.cypress.io/api/cypress-api/custom-commands]には子コマンドの作り方は書いてあるが例ではアサーションをしていない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254561,
+      "updated": 1626254770
+    },
+    {
+      "id": "60eeadb2aff09e0000576ace",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254770,
+      "updated": 1626254770
+    },
+    {
+      "id": "60ee697aaff09e0000496647",
+      "text": "[Assertions | Cypress Documentation https://docs.cypress.io/guides/references/assertions#Adding-New-Assertions]を見ると[Chai]にアサーションを追加しろと書いてある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237307,
+      "updated": 1626254842
+    },
+    {
+      "id": "60ee6bd3aff09e0000496649",
+      "text": "[Adding Chai Assertions https://github.com/cypress-io/cypress-example-recipes/tree/master/examples/extending-cypress__chai-assertions]を参考に書いてみた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237907,
+      "updated": 1626254862
+    },
+    {
+      "id": "60ee7064aff09e000049664a",
+      "text": "code:support/index.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239076,
+      "updated": 1626239083
+    },
+    {
+      "id": "60ee706baff09e000049664b",
+      "text": " chai.use((_chai, utils) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239083,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049664c",
+      "text": "   function hasPosition(options) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049664d",
+      "text": "     const [x, y] = options;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049664e",
+      "text": "     const cr = this._obj[0].getBoundingClientRect();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049664f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496650",
+      "text": "     this.assert(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496651",
+      "text": "       cr.x === x,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496652",
+      "text": "       `expected x:${cr.x} is ${x}`,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496653",
+      "text": "       `expected x:${cr.x} is not ${x}`,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496654",
+      "text": "       cr.x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496655",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496656",
+      "text": "     this.assert(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496657",
+      "text": "       cr.y === y,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496658",
+      "text": "       `expected y:${cr.y} is ${y}`,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496659",
+      "text": "       `expected y:${cr.y} is not ${y}`,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049665a",
+      "text": "       cr.y",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049665b",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049665c",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049665d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e000049665e",
+      "text": "   _chai.Assertion.addMethod(\"hasPosition\", hasPosition);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626254895
+    },
+    {
+      "id": "60ee706baff09e000049665f",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626239084
+    },
+    {
+      "id": "60ee706baff09e0000496660",
+      "text": "これで",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239084,
+      "updated": 1626254867
+    },
+    {
+      "id": "60ee6bd2aff09e0000496648",
+      "text": "`cy.testid(\"1\").should(\"hasPosition\", [159, 174]);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626237907,
+      "updated": 1626254904
+    },
+    {
+      "id": "60ee70caaff09e0000496663",
+      "text": "と書けるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239181,
+      "updated": 1626254874
+    },
+    {
+      "id": "60eeaf51aff09e0000576ad0",
+      "text": "shouldだったらhaveだなと思うがそういうことを言い出すとそもそもChai的には",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255185,
+      "updated": 1626255367
+    },
+    {
+      "id": "60eeafe1aff09e0000576ad1",
+      "text": "`cy.testid(\"1\").has.position([159, 174]);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255330,
+      "updated": 1626255339
+    },
+    {
+      "id": "60eeae19aff09e0000576acf",
+      "text": "と書けるべきなのでは、みたいな気持ちになってきて、これはCypressとChaiの境目あたりにあって話がややこしいので保留した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626254874,
+      "updated": 1626255411
+    },
+    {
+      "id": "60eeb02baff09e0000576ad2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255404,
+      "updated": 1626255404
+    },
+    {
+      "id": "60eeb03aaff09e0000576ad3",
+      "text": "下記のテストが簡潔に書けるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255419,
+      "updated": 1626255430
+    },
+    {
+      "id": "60ee742daff09e0000496666",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240046,
+      "updated": 1626240216
+    },
+    {
+      "id": "60ee7430aff09e0000496668",
+      "text": " // before",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240048,
+      "updated": 1626240052
+    },
+    {
+      "id": "60ee7433aff09e0000496669",
+      "text": " cy.get(\"div[data-testid='1']\").should((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240052,
+      "updated": 1626255539
+    },
+    {
+      "id": "60ee7434aff09e000049666a",
+      "text": "   expect(x[0].getBoundingClientRect().x).equal(x1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240052,
+      "updated": 1626255539
+    },
+    {
+      "id": "60ee7434aff09e000049666b",
+      "text": "   expect(x[0].getBoundingClientRect().y).equal(y1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240052,
+      "updated": 1626255539
+    },
+    {
+      "id": "60ee7434aff09e000049666c",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240052,
+      "updated": 1626255539
+    },
+    {
+      "id": "60ee7434aff09e000049666d",
+      "text": " // after",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240052,
+      "updated": 1626240055
+    },
+    {
+      "id": "60ee7437aff09e000049666e",
+      "text": " cy.testid(\"1\").should(\"hasPosition\", [x1, y1]);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240055,
+      "updated": 1626255541
+    },
+    {
+      "id": "60ee742daff09e0000496667",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240046,
+      "updated": 1626240046
+    },
+    {
+      "id": "60eeb060aff09e0000576ad4",
+      "text": "だいぶカスタムコマンドに慣れてきて、そもそもupdateGlobalもよく使うからカスタムコマンドにしたらいいなと気づいた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255456,
+      "updated": 1626255498
+    },
+    {
+      "id": "60ee74c6aff09e000049666f",
+      "text": "code:support/index.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240199,
+      "updated": 1626240207
+    },
+    {
+      "id": "60ee74cfaff09e0000496671",
+      "text": " Cypress.Commands.add(\"updateGlobal\", (callback: (g: State) => void) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240207,
+      "updated": 1626240209
+    },
+    {
+      "id": "60ee74d0aff09e0000496672",
+      "text": "   return cy.movidea((movidea) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240209,
+      "updated": 1626240209
+    },
+    {
+      "id": "60ee74d0aff09e0000496673",
+      "text": "     movidea.updateGlobal(callback);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240209,
+      "updated": 1626240209
+    },
+    {
+      "id": "60ee74d0aff09e0000496674",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240209,
+      "updated": 1626240209
+    },
+    {
+      "id": "60ee74d0aff09e0000496675",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240209,
+      "updated": 1626240209
+    },
+    {
+      "id": "60ee74d0aff09e0000496676",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240209,
+      "updated": 1626240209
+    },
+    {
+      "id": "60eeb091aff09e0000576ad5",
+      "text": "下記のようにいちいちmovideaを介さなくても状態更新ができるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255505,
+      "updated": 1626255523
+    },
+    {
+      "id": "60ee74d5aff09e0000496677",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240213,
+      "updated": 1626240219
+    },
+    {
+      "id": "60ee74dbaff09e0000496678",
+      "text": "\t// before",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240219,
+      "updated": 1626240233
+    },
+    {
+      "id": "60ee74e9aff09e0000496679",
+      "text": " cy.movidea((movidea) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240233,
+      "updated": 1626255545
+    },
+    {
+      "id": "60ee74e9aff09e000049667a",
+      "text": "   movidea.updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240234,
+      "updated": 1626255545
+    },
+    {
+      "id": "60ee74e9aff09e000049667b",
+      "text": "     g.itemStore[\"1\"].position = [dx, 0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240234,
+      "updated": 1626255545
+    },
+    {
+      "id": "60ee74e9aff09e000049667c",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240234,
+      "updated": 1626255545
+    },
+    {
+      "id": "60ee74e9aff09e000049667d",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240234,
+      "updated": 1626255545
+    },
+    {
+      "id": "60ee74e9aff09e000049667e",
+      "text": " // after",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240234,
+      "updated": 1626240237
+    },
+    {
+      "id": "60ee74edaff09e000049667f",
+      "text": " cy.updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240237,
+      "updated": 1626255547
+    },
+    {
+      "id": "60ee7524aff09e0000496680",
+      "text": "   g.itemStore[\"1\"].position = [dx, 0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240292,
+      "updated": 1626255547
+    },
+    {
+      "id": "60ee7524aff09e0000496681",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240292,
+      "updated": 1626255547
+    },
+    {
+      "id": "60ee7524aff09e0000496682",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240292,
+      "updated": 1626240294
+    },
+    {
+      "id": "60eeb0c7aff09e0000576ad6",
+      "text": "「アイテム3番(付箋B)を動かしたらアイテム1番(グループ)の位置はどこどこになるべき」というテスト。(アイテムIDもわかりやすい名前にした方がよかったな)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255560,
+      "updated": 1626255641
+    },
+    {
+      "id": "60ee74c6aff09e0000496670",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240199,
+      "updated": 1626240548
+    },
+    {
+      "id": "60ee7624aff09e0000496683",
+      "text": " cy.updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240548,
+      "updated": 1626240555
+    },
+    {
+      "id": "60ee7624aff09e0000496684",
+      "text": "   g.itemStore[\"3\"].position = [-100, 0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240549,
+      "updated": 1626240555
+    },
+    {
+      "id": "60ee7624aff09e0000496685",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240549,
+      "updated": 1626240555
+    },
+    {
+      "id": "60ee7624aff09e0000496686",
+      "text": " cy.testid(\"1\").should(\"hasPosition\", [55, 170]);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240549,
+      "updated": 1626240555
+    },
+    {
+      "id": "60ee73ecaff09e0000496664",
+      "text": "[https://gyazo.com/4dbdecd6194f095b8cb9127af8d6fb9a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239980,
+      "updated": 1626239982
+    },
+    {
+      "id": "60eeb123aff09e0000576ad7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255651,
+      "updated": 1626255651
+    },
+    {
+      "id": "60eeb123aff09e0000576ad8",
+      "text": "で、この状態からグループを閉じると場所がずれる。次はこれを直していこう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255651,
+      "updated": 1626255675
+    },
+    {
+      "id": "60ee73eeaff09e0000496665",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626239982,
+      "updated": 1626240625
+    },
+    {
+      "id": "60ee7671aff09e000049668a",
+      "text": " cy.updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240625,
+      "updated": 1626240628
+    },
+    {
+      "id": "60ee7671aff09e000049668b",
+      "text": "   (g.itemStore[\"1\"] as GroupItem).isOpen = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240625,
+      "updated": 1626240628
+    },
+    {
+      "id": "60ee7671aff09e000049668c",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240625,
+      "updated": 1626240628
+    },
+    {
+      "id": "60ee763daff09e0000496688",
+      "text": "[https://gyazo.com/1d073cc26748ada8d0a52dd54919dad8]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240574,
+      "updated": 1626240576
+    },
+    {
+      "id": "60ee763faff09e0000496689",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626240576,
+      "updated": 1626240576
+    },
+    {
+      "id": "60ee9b36aff09e00007071e4",
+      "text": "Cypress、テストの各段階のスナップショットが見れるので「微妙に4ピクセルずれるバグ」を確認することができた、便利",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626250039,
+      "updated": 1626250039
+    },
+    {
+      "id": "60ee97c8aff09e000049668e",
+      "text": "[https://gyazo.com/085db82b0e553d535a2d7c4cc66c69ae]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626249161,
+      "updated": 1626249161
+    },
+    {
+      "id": "60ee9b32aff09e00007071e3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626250034,
+      "updated": 1626250034
+    },
+    {
+      "id": "60ee9d3baff09e00007071ea",
+      "text": "ここいらでもう一度RegroupからエクスポートされたJSONを表示してみよう。なるほどここまでちゃんとなると何がバグの原因かわかりやすい、グループの中のグループのバウンディングボックスが平行移動の情報を失ってるのが原因だな。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626250556,
+      "updated": 1626255802
+    },
+    {
+      "id": "60ee9b74aff09e00007071e5",
+      "text": "[https://gyazo.com/9283591c224d11aa269132886d2a7230]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626250101,
+      "updated": 1626250103
+    },
+    {
+      "id": "60eeb1cdaff09e00007071fd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255821,
+      "updated": 1626255821
+    },
+    {
+      "id": "60eeb1cdaff09e00007071fe",
+      "text": "直した。色々なところに波及するが、テストケースがあるので動作確認しやすくて良い。ちゃんとした見栄えになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255821,
+      "updated": 1626255872
+    },
+    {
+      "id": "60ee9cebaff09e00007071e8",
+      "text": "[https://gyazo.com/e1f53457d5b6464ee09d9353282f24e7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626250475,
+      "updated": 1626250478
+    },
+    {
+      "id": "60ee9b76aff09e00007071e6",
+      "text": "Regroupでの見え方 from [2021-07-01#60df19d4aff09e0000c6d717]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626250103,
+      "updated": 1626251409
+    },
+    {
+      "id": "60eea07daff09e0000496691",
+      "text": "[https://gyazo.com/0d1187d7fe01b6a4de30333c80c1948e]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626251390,
+      "updated": 1626251390
+    },
+    {
+      "id": "60eea080aff09e0000496692",
+      "text": "ほぼ同じ！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626251394,
+      "updated": 1626255883
+    },
+    {
+      "id": "60eeb20baff09e0000576ada",
+      "text": "今までのテストケースも全部成功する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255883,
+      "updated": 1626255903
+    },
+    {
+      "id": "60eeb21eaff09e0000576adb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255903,
+      "updated": 1626255903
+    },
+    {
+      "id": "60eeb21eaff09e0000576adc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255903,
+      "updated": 1626263280
+    },
+    {
+      "id": "60eed000aff09e0000576add",
+      "text": "明日はメニューやダイアログ周りをやる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626263552,
+      "updated": 1626263566
+    },
+    {
+      "id": "60eed00eaff09e0000576ade",
+      "text": "https://material-ui.com/components/menus/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626263566,
+      "updated": 1626263567
+    },
+    {
+      "id": "60eeb205aff09e0000576ad9",
+      "text": "[OOUI]を読み返した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626255878,
+      "updated": 1626268042
+    },
+    {
+      "id": "60eee1c5aff09e0000576ae3",
+      "text": "OOUIの解説を読み直してたんだけど「新規作成」も「インポート」もタスク指向なんだよなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626268106,
+      "updated": 1626268106
+    },
+    {
+      "id": "60eee1c8aff09e0000576ae5",
+      "text": "オブジェクト指向UIにするとしたらどうなるのだろう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626268106,
+      "updated": 1626268106
+    },
+    {
+      "id": "60eee1c8aff09e0000576ae6",
+      "text": "既存のマップを開くURLではないものにアクセスする時点で「新規作成」なのは当たり前だし、新規作成した後コンテンツを入れないということも考えにくいのだからそもそも最初からインポートウィザードが開いているべきなのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626268106,
+      "updated": 1626268118
+    },
+    {
+      "id": "60eee1d7aff09e0000576ae8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626268120,
+      "updated": 1626268120
+    },
+    {
+      "id": "60eee1c6aff09e0000576ae4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626268106,
+      "updated": 1626268106
+    },
+    {
+      "id": "60eedb73aff09e0000576adf",
+      "text": "インポートではなく「付箋の追加」ではないか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626266483,
+      "updated": 1626266556
+    },
+    {
+      "id": "60eedbbdaff09e0000576ae1",
+      "text": "　URLからインポートするときのUIは？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626266557,
+      "updated": 1626266591
+    },
+    {
+      "id": "60eedbdfaff09e0000576ae2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626266591,
+      "updated": 1626266591
+    },
+    {
+      "id": "60efcb24aff09e0000496693",
+      "text": "Next [2021-07-15Movidea開発日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626327845,
+      "updated": 1629299870
+    },
+    {
+      "id": "60eedbb3aff09e0000576ae0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626266547,
+      "updated": 1626266547
+    }
+  ]
+}

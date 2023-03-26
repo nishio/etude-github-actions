@@ -1,0 +1,218 @@
+{
+  "id": "5eb3b7835c459500208cf1ae",
+  "title": "英字だけが化ける文字化け",
+  "created": 1588836247,
+  "updated": 1588860901,
+  "lines": [
+    {
+      "id": "5eb3b7835c459500208cf1ae",
+      "text": "英字だけが化ける文字化け",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836247,
+      "updated": 1588837103
+    },
+    {
+      "id": "5eb3b7a2aff09e0000eebde3",
+      "text": "[https://gyazo.com/f9added2b1a0d8a67793da8bec61af0f]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836258,
+      "updated": 1588836400
+    },
+    {
+      "id": "5eb3b82faff09e00000c8cf0",
+      "text": "https://twitter.com/1t0t/status/1258273516006199296?s=21",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836400,
+      "updated": 1588836419
+    },
+    {
+      "id": "5eb3b842aff09e00000c8cf1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836419,
+      "updated": 1588836419
+    },
+    {
+      "id": "5eb3b845aff09e00000c8cf2",
+      "text": "明示的な文字種の切り替えコードのあるISO2022-jpなどの文字コードで、何らかの理由で切り替えコードが失われることで英字を漢字と誤解するとこうなる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836421,
+      "updated": 1588859021
+    },
+    {
+      "id": "5eb4108daff09e0000afb62f",
+      "text": "この方法で完全再現はできなかったが文字化け中に含まれる文字が3つ一致している。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588859021,
+      "updated": 1588859021
+    },
+    {
+      "id": "5eb3b850aff09e00000c8cf3",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836433,
+      "updated": 1588836499
+    },
+    {
+      "id": "5eb3b893aff09e0000afb626",
+      "text": " >>> \"あTakayuki Itoh(あああ)\".encode(\"ISO2022-jp\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836500,
+      "updated": 1588836996
+    },
+    {
+      "id": "5eb3ba83aff09e0000afb62b",
+      "text": "\tb'\\x1b$B$\"\\x1b(BTakayuki Itoh(\\x1b$B$\"$\"$\"\\x1b(B)'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836996,
+      "updated": 1588837000
+    },
+    {
+      "id": "5eb3ba83aff09e0000afb62d",
+      "text": "\t>>> b'\\x1b$B$\"Takayuki Itoh(\\x1b$B$\"$\"$\"\\x1b(B)'.decode(\"ISO2022-jp\", \"ignore\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836996,
+      "updated": 1588837007
+    },
+    {
+      "id": "5eb3ba83aff09e0000afb62e",
+      "text": "\t'あ壤諱謇荐あああ)'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836996,
+      "updated": 1588837011
+    },
+    {
+      "id": "5eb3b88aaff09e0000afb625",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588836491,
+      "updated": 1588836491
+    },
+    {
+      "id": "5eb4150eaff09e0000afb633",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860175,
+      "updated": 1588860175
+    },
+    {
+      "id": "5eb41505aff09e0000afb630",
+      "text": "\t>>> b'\\x1b$BTakayuki Itoh(\\x1b$B$\"$\"$\"\\x1b(B)'.decode(\"ISO2022-jp\", \"backslashreplace\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860166,
+      "updated": 1588860179
+    },
+    {
+      "id": "5eb41507aff09e0000afb632",
+      "text": "\t'壤諱\\\\x79\\\\x75謇\\\\x20\\\\x49\\\\x74\\\\x6f荐あああ)'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860167,
+      "updated": 1588860183
+    },
+    {
+      "id": "5eb41505aff09e0000afb631",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860166,
+      "updated": 1588860166
+    },
+    {
+      "id": "5eb41529aff09e0000afb634",
+      "text": "\\\\x79\\\\x75 = yuなのだけど\"﨑\"に化けるのが謎だな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860202,
+      "updated": 1588860871
+    },
+    {
+      "id": "5eb41537aff09e0000afb635",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860216,
+      "updated": 1588860880
+    },
+    {
+      "id": "5eb41753aff09e0000afb636",
+      "text": "\t>>> \"﨑\".encode(\"ISO2022-jp\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860756,
+      "updated": 1588860884
+    },
+    {
+      "id": "5eb41754aff09e0000afb637",
+      "text": "\tUnicodeEncodeError: 'iso2022_jp' codec can't encode character '\\ufa11' in position 0: illegal multibyte sequence",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860756,
+      "updated": 1588860885
+    },
+    {
+      "id": "5eb41767aff09e0000afb63d",
+      "text": "おや？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860775,
+      "updated": 1588860891
+    },
+    {
+      "id": "5eb417daaff09e00000c8cf6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860891,
+      "updated": 1588860891
+    },
+    {
+      "id": "5eb417e0aff09e0000afb64d",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860897,
+      "updated": 1588860897
+    },
+    {
+      "id": "5eb41767aff09e0000afb63e",
+      "text": " >>> \"﨑\".encode(\"ISO2022jp-3\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860775,
+      "updated": 1588860899
+    },
+    {
+      "id": "5eb41775aff09e0000afb63f",
+      "text": " b'\\x1b$(OOr\\x1b(B'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860789,
+      "updated": 1588860899
+    },
+    {
+      "id": "5eb41775aff09e0000afb640",
+      "text": " >>> \"﨑\".encode(\"ISO2022jp-2004\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860789,
+      "updated": 1588860899
+    },
+    {
+      "id": "5eb41775aff09e0000afb64a",
+      "text": " b'\\x1b$(QOr\\x1b(B'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860789,
+      "updated": 1588860899
+    },
+    {
+      "id": "5eb41775aff09e0000afb64b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588860789,
+      "updated": 1588860789
+    },
+    {
+      "id": "5eb3baf5aff09e00000c8cf4",
+      "text": "[文字化け]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588837110,
+      "updated": 1588837115
+    },
+    {
+      "id": "5eb3baf8aff09e00000c8cf5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1588837113,
+      "updated": 1588837113
+    }
+  ]
+}

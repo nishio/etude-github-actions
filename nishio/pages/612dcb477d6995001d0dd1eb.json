@@ -1,0 +1,323 @@
+{
+  "id": "612dcb477d6995001d0dd1eb",
+  "title": "ReactNのuseGlobalは参照が変化しなくても発火しうる",
+  "created": 1630391114,
+  "updated": 1630392939,
+  "lines": [
+    {
+      "id": "612dcb477d6995001d0dd1eb",
+      "text": "ReactNのuseGlobalは参照が変化しなくても発火しうる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391114,
+      "updated": 1630391235
+    },
+    {
+      "id": "612dcbfdaff09e00008b312f",
+      "text": "下に「ボタンを押すとyの値が変わるコード」がある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391293,
+      "updated": 1630391372
+    },
+    {
+      "id": "612dcc4baff09e00008b3130",
+      "text": "コンポーネントComp1は`useGlobal(\"x\")`しているのでxが変わった時だけ再描画されることを期待している。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391372,
+      "updated": 1630391374
+    },
+    {
+      "id": "612dcc5daff09e00008b3132",
+      "text": "しかし、意外なコードで期待していない再描画が起きたのでメモする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391389,
+      "updated": 1630391430
+    },
+    {
+      "id": "612dcc4daff09e00008b3131",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391374,
+      "updated": 1630391374
+    },
+    {
+      "id": "612dcbcbaff09e00004ebea0",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391243,
+      "updated": 1630391247
+    },
+    {
+      "id": "612dcbceaff09e00004ebea2",
+      "text": " const TestApp = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391247,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea3",
+      "text": "   console.log(\"render TestApp\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea4",
+      "text": "   return (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea5",
+      "text": "     <div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea6",
+      "text": "       <Comp1 />",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea7",
+      "text": "       <Comp2 />",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea8",
+      "text": "     </div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebea9",
+      "text": "   );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeaa",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeab",
+      "text": " const Comp1 = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeac",
+      "text": "   const [x] = useGlobal(\"x\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebead",
+      "text": "   console.log(\"render Comp1\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeae",
+      "text": "   return <span>{x}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeaf",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeb0",
+      "text": " const Comp2 = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeb1",
+      "text": "   const onClick = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeb2",
+      "text": "     console.log(\"onClick\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbeaaff09e00004ebed4",
+      "text": "     // !!HERE!!",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391274,
+      "updated": 1630391280
+    },
+    {
+      "id": "612dcbdfaff09e00004ebeb3",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391274
+    },
+    {
+      "id": "612dcbdfaff09e00004ebece",
+      "text": "   return <button onClick={onClick}>update y</button>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebecf",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbdfaff09e00004ebed0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391264,
+      "updated": 1630391264
+    },
+    {
+      "id": "612dcbcdaff09e00004ebea1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391246,
+      "updated": 1630391246
+    },
+    {
+      "id": "612dcc8baff09e00004ebed5",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391436,
+      "updated": 1630391438
+    },
+    {
+      "id": "612dcc91aff09e00004ebed6",
+      "text": " // NG: 再描画される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391442,
+      "updated": 1630391793
+    },
+    {
+      "id": "612dcde7aff09e00004ebeda",
+      "text": " setGlobal((currentState) => ({ ...currentState, y: \"hello\" }));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391783,
+      "updated": 1630391789
+    },
+    {
+      "id": "612dcde5aff09e00004ebed9",
+      "text": " // NG: 何も更新してないのに再描画される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391781,
+      "updated": 1630391812
+    },
+    {
+      "id": "612dcbe4aff09e00004ebed1",
+      "text": " const currentState = getGlobal();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391269,
+      "updated": 1630391441
+    },
+    {
+      "id": "612dcbe4aff09e00004ebed2",
+      "text": " setGlobal(currentState);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391269,
+      "updated": 1630391441
+    },
+    {
+      "id": "612dcc95aff09e00004ebed7",
+      "text": " // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391445,
+      "updated": 1630391446
+    },
+    {
+      "id": "612dcc96aff09e00004ebed8",
+      "text": " setGlobal({y: \"hello\"});",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391447,
+      "updated": 1630391767
+    },
+    {
+      "id": "612dcbe4aff09e00004ebed3",
+      "text": "つまり、たとえ同じ参照がsetされるとしても更新があったと判定してしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391269,
+      "updated": 1630392695
+    },
+    {
+      "id": "612dd158aff09e00004ebedc",
+      "text": "\thttps://github.com/CharlesStover/reactn/blob/f4eb2fc4a3c616a7d0b6a0ff2c0f299784dc5826/src/global-state-manager.ts#L196",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392665,
+      "updated": 1630392666
+    },
+    {
+      "id": "612dcd29aff09e00008b3134",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391593,
+      "updated": 1630391593
+    },
+    {
+      "id": "612dcd29aff09e00008b3135",
+      "text": "前者の書き方なんかしないだろと思うかもしれない(この例だと必要ないから)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391593,
+      "updated": 1630391669
+    },
+    {
+      "id": "612dce13aff09e00008b3137",
+      "text": "Stateが複雑な場合にimmerで更新しようとしてこの問題を踏んだ。これはState全体を受け取り、更新したいものだけを更新したオブジェクトを作って返す。なので更新されない値も保持した`{ ...currentState, y: \"hello\" }`に相当するものができてしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391828,
+      "updated": 1630392103
+    },
+    {
+      "id": "612dceb8aff09e00008b3138",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630391992,
+      "updated": 1630391992
+    },
+    {
+      "id": "612dd269aff09e00004ebedd",
+      "text": "[変更差分を作ってsetGlobalする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392938,
+      "updated": 1630393779
+    },
+    {
+      "id": "612dd269aff09e00004ebede",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630392938,
+      "updated": 1630392938
+    }
+  ]
+}

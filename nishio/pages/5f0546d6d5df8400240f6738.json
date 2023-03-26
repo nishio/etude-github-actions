@@ -1,0 +1,232 @@
+{
+  "id": "5f0546d6d5df8400240f6738",
+  "title": "DP P",
+  "created": 1594181345,
+  "updated": 1594184399,
+  "lines": [
+    {
+      "id": "5f0546d6d5df8400240f6738",
+      "text": "DP P",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594181345,
+      "updated": 1594181345
+    },
+    {
+      "id": "5f0546e0aff09e0000d07b86",
+      "text": "[P - Independent Set https://atcoder.jp/contests/dp/tasks/dp_p]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594181345,
+      "updated": 1594181345
+    },
+    {
+      "id": "5f0551dcaff09e000038e9be",
+      "text": "　与えられた木を白黒で塗り分ける、黒い頂点は隣接してはいけない、何通りあるか数え上げよ、という問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594184156,
+      "updated": 1594184203
+    },
+    {
+      "id": "5f05520baff09e000038e9bf",
+      "text": "　直線的な依存関係の時に「端から順に」「直前だけ見て」DPができたのと同様に、木構造の依存関係の時には「葉から順に」「木の根だけ見て」DPができる　[木DP]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594184203,
+      "updated": 1594184315
+    },
+    {
+      "id": "5f054ebeaff09e0000d07b9d",
+      "text": "\t[https://gyazo.com/10a0e781f27b7b7fc988257afad814b8]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183358,
+      "updated": 1594183359
+    },
+    {
+      "id": "5f054ebfaff09e0000d07b9e",
+      "text": "　木をたどるところで再帰を使っているが、対象が木であって合流がないのでメモ化再帰にする必要はない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183359,
+      "updated": 1594184399
+    },
+    {
+      "id": "5f0546e1aff09e0000d07b88",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594181345,
+      "updated": 1594183255
+    },
+    {
+      "id": "5f054e57aff09e0000d07b89",
+      "text": "\tdef solve(N, edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183255,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb3",
+      "text": "     def visit(parent, self):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb4",
+      "text": "         if parent != 0 and len(edges[self]) == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb5",
+      "text": "             # self is leaf",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb6",
+      "text": "             return (1, 2)  # white, total",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb8",
+      "text": "         black = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bb9",
+      "text": "         white = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bba",
+      "text": "         for child in edges[self]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bbb",
+      "text": "             if child == parent:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bbc",
+      "text": "                 continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bbd",
+      "text": "             w, t = visit(self, child)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bbe",
+      "text": "             black *= w",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bbf",
+      "text": "             black %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc0",
+      "text": "             white *= t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc1",
+      "text": "             white %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc2",
+      "text": "         ret = (white, white + black)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc3",
+      "text": "         return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc5",
+      "text": "     return visit(0, 1)[1] % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183501
+    },
+    {
+      "id": "5f054f4daff09e0000d07bc6",
+      "text": "PyPy TLE https://atcoder.jp/contests/dp/submissions/15078877",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183501,
+      "updated": 1594183882
+    },
+    {
+      "id": "5f0550caaff09e0000d07bc9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183882,
+      "updated": 1594183882
+    },
+    {
+      "id": "5f0550a9aff09e0000d07bc7",
+      "text": "Cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183849,
+      "updated": 1594183850
+    },
+    {
+      "id": "5f0550aaaff09e0000d07bc8",
+      "text": "\thttps://atcoder.jp/contests/dp/submissions/15078970",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594183850,
+      "updated": 1594183853
+    },
+    {
+      "id": "5f0546e0aff09e0000d07b87",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594181345,
+      "updated": 1594181345
+    }
+  ]
+}

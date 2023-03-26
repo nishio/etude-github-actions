@@ -1,0 +1,449 @@
+{
+  "id": "602e00b2a7259200231a49f1",
+  "title": "any消し祭りのゴミ片付け",
+  "created": 1613627572,
+  "updated": 1613637893,
+  "lines": [
+    {
+      "id": "602e00b2a7259200231a49f1",
+      "text": "any消し祭りのゴミ片付け",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627572,
+      "updated": 1613628062
+    },
+    {
+      "id": "602e2826aff09e0000316be7",
+      "text": "2021-02-18",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613637670,
+      "updated": 1613637670
+    },
+    {
+      "id": "602e02acaff09e000013dd85",
+      "text": "先日のRegroupから[2日掛けてanyを撲滅した]件、やはり型のテストだけでは問題を全部発見することはできておらず[Sentry]にエラー報告が上がってきている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628076,
+      "updated": 1613628114
+    },
+    {
+      "id": "602e00b5aff09e000013dd7b",
+      "text": "[https://gyazo.com/f20acbd51bf9916b0546eeb288de68b4]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627574,
+      "updated": 1613627589
+    },
+    {
+      "id": "602e00c5aff09e000013dd7c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627589,
+      "updated": 1613627589
+    },
+    {
+      "id": "602e02ccaff09e000013dd87",
+      "text": "まずは一番多い`Error neverComeHere(assertion) Unhandled InitialState * onDrag`を見ていこう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628109,
+      "updated": 1613628187
+    },
+    {
+      "id": "602e031caff09e0000869975",
+      "text": "これは不整合が起きた時に早めに気づけるようにとassertしてるものなのだが、開発者が気づかなかった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628188,
+      "updated": 1613628270
+    },
+    {
+      "id": "602e00dcaff09e000013dd7d",
+      "text": "[https://gyazo.com/3515a0bbce298490cd68d418928f1a50]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627612,
+      "updated": 1613627615
+    },
+    {
+      "id": "602e00dfaff09e000013dd7e",
+      "text": "うーむ、何が原因か、とブレッドクラムを遡ってみたらlassoに切り替えてるのがわかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627615,
+      "updated": 1613628292
+    },
+    {
+      "id": "602e01c4aff09e000013dd7f",
+      "text": "[https://gyazo.com/f9ea011adeb463470ed9190eb24b6ff9]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627844,
+      "updated": 1613627845
+    },
+    {
+      "id": "602e01c5aff09e000013dd80",
+      "text": "lassoに切り替えて試したら手元でも問題が再現した。メッセージは違って",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627845,
+      "updated": 1613630918
+    },
+    {
+      "id": "602e0239aff09e000013dd84",
+      "text": "`ReferenceError: paper is not defined`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627961,
+      "updated": 1613627986
+    },
+    {
+      "id": "602e039faff09e0000869976",
+      "text": "とのこと。これは",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628319,
+      "updated": 1613630923
+    },
+    {
+      "id": "602e0235aff09e000013dd81",
+      "text": "`const paper = require(\"paper\");`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627957,
+      "updated": 1613627959
+    },
+    {
+      "id": "602e0235aff09e000013dd82",
+      "text": "を忘れてることによる。(え？これ型チェックで発見されないの？)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613627958,
+      "updated": 1613628341
+    },
+    {
+      "id": "602e03d6aff09e0000869978",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628375,
+      "updated": 1613628375
+    },
+    {
+      "id": "602e03d8aff09e0000869979",
+      "text": "メモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628376,
+      "updated": 1613628378
+    },
+    {
+      "id": "602e03daaff09e000086997a",
+      "text": "　なぜ型チェックで発見されないのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628378,
+      "updated": 1613628392
+    },
+    {
+      "id": "602e03e9aff09e000086997b",
+      "text": "　lassoに切り替えて動作確認すべき(自動テストで)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628393,
+      "updated": 1613628414
+    },
+    {
+      "id": "602e03fdaff09e000086997c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628414,
+      "updated": 1613628420
+    },
+    {
+      "id": "602e0404aff09e000013dd8b",
+      "text": "そこを直すと別のエラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628421,
+      "updated": 1613628442
+    },
+    {
+      "id": "602e041aaff09e000086997d",
+      "text": "`TypeError: Cannot read property 'children' of undefined`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628442,
+      "updated": 1613628450
+    },
+    {
+      "id": "602e03a3aff09e0000869977",
+      "text": "これも似た問題(追記: 誤認です)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628324,
+      "updated": 1613630988
+    },
+    {
+      "id": "602e0debaff09e0000869984",
+      "text": "Regroupを書き始めた時、どこからでもpaperにアクセスする方法がわからなくてwindowにぶら下げてた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613630955,
+      "updated": 1613630955
+    },
+    {
+      "id": "602e060eaff09e000013dd8c",
+      "text": "`const items = window.app.paper.projects[0].layers[0].children;`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628942,
+      "updated": 1613628975
+    },
+    {
+      "id": "602e062faff09e000013dd8e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628975,
+      "updated": 1613628975
+    },
+    {
+      "id": "602e046caff09e000086997f",
+      "text": "`const paper = require(\"paper\");`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613628525,
+      "updated": 1613629058
+    },
+    {
+      "id": "602e0e29aff09e0000869986",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631017,
+      "updated": 1613631017
+    },
+    {
+      "id": "602e0e27aff09e0000869985",
+      "text": "Typescipt doc: [export = and import = require() https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require]をみて",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631015,
+      "updated": 1613631072
+    },
+    {
+      "id": "602e0665aff09e000013dd8f",
+      "text": "`import paper = require(\"paper\");`にしたらエラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629030,
+      "updated": 1613631077
+    },
+    {
+      "id": "602e06adaff09e000013dd94",
+      "text": "code:error",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629101,
+      "updated": 1613629104
+    },
+    {
+      "id": "602e0683aff09e000013dd90",
+      "text": "\tSyntaxError: /Users/nishio/regroup/src/onOverlayCanvas.ts: `import =` is not supported by @babel/plugin-transform-typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629059,
+      "updated": 1613629099
+    },
+    {
+      "id": "602e06abaff09e000013dd91",
+      "text": " Please consider using `import <moduleName> from '<moduleName>';` alongside Typescript's --allowSyntheticDefaultImports option.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629099,
+      "updated": 1613629099
+    },
+    {
+      "id": "602e06abaff09e000013dd93",
+      "text": " > 2 | import paper = require(\"paper\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629099,
+      "updated": 1613629099
+    },
+    {
+      "id": "602e0e7aaff09e000013ddaa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631099,
+      "updated": 1613631099
+    },
+    {
+      "id": "602e06b9aff09e000013dd95",
+      "text": "素直な`import paper from \"paper\";`でちゃんと動いた。なんだこれでよかったのか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629114,
+      "updated": 1613631120
+    },
+    {
+      "id": "602e0f4caff09e000086998b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631309,
+      "updated": 1613631309
+    },
+    {
+      "id": "602e0e7baff09e000013ddab",
+      "text": "JavaScriptにモジュールの仕組みが発達する前の知識で、JavaScriptのサードパーティライブラリをJavaScript向けの解説を読みながらTypeScriptの中で使ったことで不必要にレガシーな書き方をしてしまっていた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631100,
+      "updated": 1613631464
+    },
+    {
+      "id": "602e0f4eaff09e000086998c",
+      "text": "検索したら`var paper = require(\"paper\");`なんてのまであった。varを使うなんて！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631311,
+      "updated": 1613631491
+    },
+    {
+      "id": "602e0e3eaff09e000013dda9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613631038,
+      "updated": 1613631038
+    },
+    {
+      "id": "602e0731aff09e000013dd99",
+      "text": "`window.app.paper`を`import paper from \"paper\";`に変えていく。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629233,
+      "updated": 1613631768
+    },
+    {
+      "id": "602e0923aff09e000013dd9c",
+      "text": "おや、新しい型エラーだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629732,
+      "updated": 1613631781
+    },
+    {
+      "id": "602e0924aff09e000013dd9d",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629732,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e0925aff09e000013dd9e",
+      "text": " Argument of type 'HTMLElement | null' is not assignable to parameter of type 'string | HTMLCanvasElement'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629734,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e0926aff09e000013dd9f",
+      "text": "   Type 'null' is not assignable to type 'string | HTMLCanvasElement'.  TS2345",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629734,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e0926aff09e000013dda0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629734,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e0926aff09e000013dda1",
+      "text": "     50 |     // Get a reference to the canvas object",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629734,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e0926aff09e000013dda2",
+      "text": "     51 |     const canvas = document.getElementById(\"myCanvas\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629734,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e0926aff09e000013dda3",
+      "text": "   > 52 |     paper.setup(canvas);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629734,
+      "updated": 1613629734
+    },
+    {
+      "id": "602e2839aff09e0000316be8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613637690,
+      "updated": 1613637690
+    },
+    {
+      "id": "602e0927aff09e000013dda4",
+      "text": "なるほど、requireしたものはanyだったのか！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629736,
+      "updated": 1613631800
+    },
+    {
+      "id": "602e0732aff09e000013dd9a",
+      "text": "[https://gyazo.com/43abf964f3c73d9c357cf5623b045d3e]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629234,
+      "updated": 1613629526
+    },
+    {
+      "id": "602e0856aff09e000013dd9b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629526,
+      "updated": 1613629526
+    },
+    {
+      "id": "602e081aaff09e0000869980",
+      "text": "片付け終わったけど問題は解決してない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613629473,
+      "updated": 1613637833
+    },
+    {
+      "id": "602e28c8aff09e000086998d",
+      "text": "えーと、じっくり見てみると、これはまだ何も描画してない状態ではレイヤーが存在しないってことだから、無ければ空リストにすれば良いか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613637833,
+      "updated": 1613637893
+    },
+    {
+      "id": "602e0ce8aff09e0000869983",
+      "text": "`const items = paper.projects[0].layers[0]?.children ?? [];`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613630696,
+      "updated": 1613630726
+    },
+    {
+      "id": "602e0d05aff09e000013dda8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613630725,
+      "updated": 1613630725
+    },
+    {
+      "id": "602e1988aff09e000013ddac",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613633928,
+      "updated": 1613633928
+    },
+    {
+      "id": "602e1988aff09e000013ddad",
+      "text": "`Property 'onDeactivate' does not exist on type 'Tool'.`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613633928,
+      "updated": 1613633931
+    },
+    {
+      "id": "602e198aaff09e000013ddae",
+      "text": "`Property 'getBounds' does not exist on type 'PointText'.`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613633930,
+      "updated": 1613633941
+    },
+    {
+      "id": "602e1994aff09e000013ddaf",
+      "text": "`Property 'getBounds' does not exist on type 'Layer'.`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613633940,
+      "updated": 1613634018
+    },
+    {
+      "id": "602e19e1aff09e000013ddb0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613634018,
+      "updated": 1613634018
+    },
+    {
+      "id": "602e1b9daff09e000013ddb1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613634462,
+      "updated": 1613634462
+    }
+  ]
+}

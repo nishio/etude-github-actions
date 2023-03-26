@@ -1,0 +1,225 @@
+{
+  "id": "5efdfb72849882001e9d75c1",
+  "title": "Cythonでは関数内で関数定義ができない",
+  "created": 1593703285,
+  "updated": 1593704481,
+  "lines": [
+    {
+      "id": "5efdfb72849882001e9d75c1",
+      "text": "Cythonでは関数内で関数定義ができない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703285,
+      "updated": 1593703433
+    },
+    {
+      "id": "5efdfc2aaff09e00007d0f4b",
+      "text": "Numbaでは「再帰呼び出しでなければできる」Cythonでは「そもそもそこで定義できない」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703467,
+      "updated": 1593704132
+    },
+    {
+      "id": "5efdfec6aff09e0000c0d3bc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593704135,
+      "updated": 1593704135
+    },
+    {
+      "id": "5efdfc49aff09e00007d0f4d",
+      "text": "AtCoderでの使用を考えると、Numbaは関数単位でコンパイルするので一つの関数にまとまっていて欲しいが、Cythonはファイル全体がCに変換されてコンパイルされるので素直にトップレベルに置いたらいい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703497,
+      "updated": 1593703759
+    },
+    {
+      "id": "5efdfd8aaff09e00007d0f4e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703819,
+      "updated": 1593703819
+    },
+    {
+      "id": "5efdfd8daff09e00007d0f4f",
+      "text": "その場合、呼び出し元関数のローカル変数にアクセスできないので引数で渡すのか、グローバルに置く必要がある。そもそもPythonでグローバルに置くのを避けるのは生Pythonでローカル変数のアクセスがグローバル変数へのアクセスより速いからなので、Cythonで避ける理由はない。global宣言が有効なのは確認済み。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703822,
+      "updated": 1593704120
+    },
+    {
+      "id": "5efdfda4aff09e00007d0f50",
+      "text": "\t関連 [Pythonでローカル変数はグローバル変数より速い]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703845,
+      "updated": 1593704481
+    },
+    {
+      "id": "5efe0015aff09e0000c0d3be",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593704470,
+      "updated": 1593704470
+    },
+    {
+      "id": "5efdfb74aff09e0000c0d396",
+      "text": "code:cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703285,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d398",
+      "text": " def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d399",
+      "text": "   cdef foo(long x):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d39a",
+      "text": "     if x == 0: return 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d39b",
+      "text": "     return foo(x - 1) + x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d39c",
+      "text": "   return foo(1000000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d39d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb79aff09e0000c0d39e",
+      "text": " main()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703289,
+      "updated": 1593703289
+    },
+    {
+      "id": "5efdfb75aff09e0000c0d397",
+      "text": "NG: `C function definition not allowed here`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703286,
+      "updated": 1593703402
+    },
+    {
+      "id": "5efdfbaaaff09e0000c0d39f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703339,
+      "updated": 1593703339
+    },
+    {
+      "id": "5efdfbaeaff09e0000c0d3a0",
+      "text": "code:cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703343,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a2",
+      "text": " cdef foo(long x):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a3",
+      "text": "   if x == 0: return 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a4",
+      "text": "   return foo(x - 1) + x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a5",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a6",
+      "text": " def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a7",
+      "text": "   return foo(1000000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe4aff09e0000c0d3a9",
+      "text": " print(main())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703396,
+      "updated": 1593703396
+    },
+    {
+      "id": "5efdfbe1aff09e0000c0d3a1",
+      "text": "OK ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703393,
+      "updated": 1593704089
+    },
+    {
+      "id": "5efdfe99aff09e0000c0d3bb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593704089,
+      "updated": 1593704089
+    },
+    {
+      "id": "5efdfc13aff09e00007d0f49",
+      "text": "[Cython]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703443,
+      "updated": 1593703463
+    },
+    {
+      "id": "5efdfc14aff09e00007d0f4a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703445,
+      "updated": 1593703445
+    }
+  ]
+}

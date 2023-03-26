@@ -1,0 +1,428 @@
+{
+  "id": "5cdd7ec4cab97a0017a1c274",
+  "title": "状態を持つ関数コンポーネントの再利用",
+  "created": 1558019795,
+  "updated": 1558165582,
+  "lines": [
+    {
+      "id": "5cdd7ec4cab97a0017a1c274",
+      "text": "状態を持つ関数コンポーネントの再利用",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019795,
+      "updated": 1558019800
+    },
+    {
+      "id": "5cdd7edaaff09e0000179279",
+      "text": "[React勉強日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019803,
+      "updated": 1558164856
+    },
+    {
+      "id": "5cdd7ee3aff09e000017927b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019812,
+      "updated": 1558019812
+    },
+    {
+      "id": "5cdd7f07aff09e000017927c",
+      "text": "あるコンポーネントAを再利用して新しいコンポーネントBを作りたいとする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019848,
+      "updated": 1558019863
+    },
+    {
+      "id": "5cdd809caff09e0000179281",
+      "text": "\t(1) 原始的な方法はソースコードをコピペして一部修正する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020252,
+      "updated": 1558020258
+    },
+    {
+      "id": "5cdd7f29aff09e000017927f",
+      "text": "\t(2) それより少し進んだ方法としては",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019881,
+      "updated": 1558020266
+    },
+    {
+      "id": "5cdd80a9aff09e0000179282",
+      "text": "\t\tコンポーネントAをクラスとして実装し、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020266,
+      "updated": 1558020270
+    },
+    {
+      "id": "5cdd80adaff09e0000179283",
+      "text": "\t\t変更される部分をメソッドに括り出しておいた上で、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020270,
+      "updated": 1558020273
+    },
+    {
+      "id": "5cdd80b1aff09e0000179284",
+      "text": "\t\tクラスAを継承してクラスBを作り",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020273,
+      "updated": 1558020279
+    },
+    {
+      "id": "5cdd80b7aff09e0000179285",
+      "text": "\t\t一部のメソッドをオーバーライドする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020279,
+      "updated": 1558020283
+    },
+    {
+      "id": "5cdd80bcaff09e0000179286",
+      "text": "\t(3) 今回は関数コンポーネントなのでシンプルな方法としては",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020284,
+      "updated": 1558020304
+    },
+    {
+      "id": "5cdd80d0aff09e0000179287",
+      "text": "\t\t関数Bから関数Aを呼び出す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020304,
+      "updated": 1558020308
+    },
+    {
+      "id": "5cdd7f62aff09e0000179280",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019939,
+      "updated": 1558019939
+    },
+    {
+      "id": "5cdd7f1eaff09e000017927e",
+      "text": "[https://gyazo.com/f1d9052982270e422f8bf397b0259f4d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558019871,
+      "updated": 1558020246
+    },
+    {
+      "id": "5cdd8095aff09e0000a48fb6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020246,
+      "updated": 1558020246
+    },
+    {
+      "id": "5cdd8095aff09e0000a48fb5",
+      "text": "ところが厄介なことにfunc Aが状態Xを持っている、func Bの中でこの状態にアクセスしたい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020246,
+      "updated": 1558020423
+    },
+    {
+      "id": "5cdd8146aff09e000017928b",
+      "text": "なおここでいう「状態X」とは下記の2つの対になったもの。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020423,
+      "updated": 1558021050
+    },
+    {
+      "id": "5cdd8167aff09e000017928c",
+      "text": "\t値x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020455,
+      "updated": 1558021054
+    },
+    {
+      "id": "5cdd82fcaff09e000017928d",
+      "text": "\t値xを更新する関数setX",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020861,
+      "updated": 1558021054
+    },
+    {
+      "id": "5cdd80feaff09e000017928a",
+      "text": "useStateを呼ぶことで返り値として得られる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020351,
+      "updated": 1558020966
+    },
+    {
+      "id": "5cdd8365aff09e000017928f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020966,
+      "updated": 1558020966
+    },
+    {
+      "id": "5cdd836caff09e0000179290",
+      "text": "\t(4) Xはfunc Aのローカル変数なのでfunc Aの外からアクセスできない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020973,
+      "updated": 1558021247
+    },
+    {
+      "id": "5cdd846aaff09e0000179291",
+      "text": "\t(5) そこでfunc BでXを作って渡そうと考えた(伏線: ここまでは良い)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021227,
+      "updated": 1558022486
+    },
+    {
+      "id": "5cdd848faff09e0000179293",
+      "text": "\t\tXをオプション引数にして、渡された時にはそれを使い、渡されなかった場合にはfunc Aが自分で作るようにした(伏線: これが間違い)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021263,
+      "updated": 1558022491
+    },
+    {
+      "id": "5cdd84e7aff09e0000179294",
+      "text": "\t\t`const [x, setX] = props.X ? props.X : useState(...);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021352,
+      "updated": 1558021381
+    },
+    {
+      "id": "5cdd850caff09e0000179295",
+      "text": "\t\tこれはNGである",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021389,
+      "updated": 1558021471
+    },
+    {
+      "id": "5cdd855eaff09e0000179296",
+      "text": "\t\t\t`React Hook \"useState\" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021471,
+      "updated": 1558021473
+    },
+    {
+      "id": "5cdd80e2aff09e0000179288",
+      "text": "[https://gyazo.com/92efab77f50234cd0e8415f8b9258d43]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558020323,
+      "updated": 1558021202
+    },
+    {
+      "id": "5cdd8451aff09e0000a48fb8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021202,
+      "updated": 1558021202
+    },
+    {
+      "id": "5cdd8451aff09e0000a48fb7",
+      "text": "\t(6) ならば状態Xを扱っているコードをfunc Aから括り出して func handleXとし、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021202,
+      "updated": 1558021906
+    },
+    {
+      "id": "5cdd8712aff09e0000179299",
+      "text": "\t\tAとBからそれを使えばいいのではないかと考えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021906,
+      "updated": 1558021906
+    },
+    {
+      "id": "5cdd8673aff09e0000179298",
+      "text": "\t\t[https://gyazo.com/fdb55f1a2b553824fd965c63f9e5e9ca]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021747,
+      "updated": 1558021910
+    },
+    {
+      "id": "5cdd8722aff09e000017929a",
+      "text": "\t\tこれはNG、なぜかというとfunc Bの中のXが更新されたからといってfunc Aの中のXは更新されない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021922,
+      "updated": 1558021972
+    },
+    {
+      "id": "5cdd8754aff09e000017929c",
+      "text": "\t\t個別にXを持ったのではいけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558021972,
+      "updated": 1558022059
+    },
+    {
+      "id": "5cdd87aaaff09e000017929e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022059,
+      "updated": 1558022059
+    },
+    {
+      "id": "5cdd87abaff09e000017929f",
+      "text": "\t(7) 状態Xを持つコンポーネントを1つにまとめるためにfunc Cを作った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022059,
+      "updated": 1558022328
+    },
+    {
+      "id": "5cdd888baff09e00001792a1",
+      "text": "\t\tfunc Cはprops.childrenを使って引数として子エレメントを受け取りレンダリングする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022284,
+      "updated": 1558022347
+    },
+    {
+      "id": "5cdd88c9aff09e00001792a3",
+      "text": "\t\t[Composition vs Inheritance – React https://reactjs.org/docs/composition-vs-inheritance.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022345,
+      "updated": 1558022393
+    },
+    {
+      "id": "5cdd88f9aff09e00001792a4",
+      "text": "\t\t[https://gyazo.com/e22ff02908cc76b91a455e23a1bcc7f0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022394,
+      "updated": 1558022506
+    },
+    {
+      "id": "5cdd894caff09e0000a48fbb",
+      "text": "\t\tこれで当初の目的は達成できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022476,
+      "updated": 1558022546
+    },
+    {
+      "id": "5cdd89c5aff09e00001792a5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022598,
+      "updated": 1558022598
+    },
+    {
+      "id": "5cdd89c6aff09e00001792a6",
+      "text": "ところで、このコンポーネントの状態Xはサーバ上のデータベースに同期したい。さてどうするか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022598,
+      "updated": 1558022646
+    },
+    {
+      "id": "5cdd8a10aff09e00001792aa",
+      "text": "\tfunc Cに同期のためのコードを置くのは変",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022672,
+      "updated": 1558022684
+    },
+    {
+      "id": "5cdfb7a5aff09e00007d70f8",
+      "text": "\t\tfunc Cの実際の名前は「DraggableSVGElement」だった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558165414,
+      "updated": 1558165443
+    },
+    {
+      "id": "5cdfb7c3aff09e00007d70f9",
+      "text": "\t\tここにデータベースアクセスのコードを書くのは明らかに[単一責任]でない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558165443,
+      "updated": 1558165582
+    },
+    {
+      "id": "5cdd89f6aff09e00001792a8",
+      "text": "\t[Lifting State Up – React https://reactjs.org/docs/lifting-state-up.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022646,
+      "updated": 1558022669
+    },
+    {
+      "id": "5cdd8a0daff09e00001792a9",
+      "text": "\t子コンポーネントは自分で状態を管理することを放棄して、親にそれを委譲する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022669,
+      "updated": 1558022717
+    },
+    {
+      "id": "5cdd8a3daff09e00001792ac",
+      "text": "\tこれは(5)のタイミングで思いついていたことの前半",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022717,
+      "updated": 1558025661
+    },
+    {
+      "id": "5cdd8adbaff09e00001792ad",
+      "text": "\t\t後半の「自分で状態Xを管理するコンポーネント」と「状態Xの管理を親に依存するコンポーネント」を一つの関数で表現しようとしたところが間違いであった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022875,
+      "updated": 1558025657
+    },
+    {
+      "id": "5cdd8b14aff09e00001792ae",
+      "text": "\t部品を小さい方からボトムアップで作るとき、つい部品がそれ自体で完結するようにしたくなってしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022932,
+      "updated": 1558022997
+    },
+    {
+      "id": "5cdd8b54aff09e00001792af",
+      "text": "\t\tこれは「部品」を「単独でインスタンス作成可能なクラス」で作ろうとする発想に似ている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558022997,
+      "updated": 1558023021
+    },
+    {
+      "id": "5cdd8b6daff09e00001792b1",
+      "text": "\t\t今どきの実装方法はそればかりではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558023021,
+      "updated": 1558025677
+    },
+    {
+      "id": "5cdd8bc8aff09e00001792b3",
+      "text": "\t\t\tMixinのように単独でインスタンスを作ることができず、クラスに混ぜ込まれる存在",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558023112,
+      "updated": 1558023153
+    },
+    {
+      "id": "5cdd8bc7aff09e00001792b2",
+      "text": "\t\t\tトレイトのように「自分が要求するメソッド」を提供してくれるトレイトと一緒になって初めてインスタンスを作れる存在",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558023111,
+      "updated": 1558023177
+    },
+    {
+      "id": "5cdd95cfaff09e00001792b4",
+      "text": "\t\tReactのコンポーネントは、自分自身を描画したり機能を果たしたりするために必要な「状態」を自分自身で持たない可能性がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558025679,
+      "updated": 1558025926
+    },
+    {
+      "id": "5cdd96ceaff09e00001792b7",
+      "text": "\t\t\t>React is all about one-way data flow down the component hierarchy. It may not be immediately clear which component should own what state. [* This is often the most challenging part for newcomers to understand]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558025935,
+      "updated": 1558025966
+    },
+    {
+      "id": "5cdd9673aff09e00001792b6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558025843,
+      "updated": 1558025843
+    },
+    {
+      "id": "5cdd96faaff09e00001792b8",
+      "text": "明日はこの気づきを元に再構成をしよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558025978,
+      "updated": 1558025998
+    },
+    {
+      "id": "5cdd970eaff09e00001792ba",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558025999,
+      "updated": 1558025999
+    },
+    {
+      "id": "5cdd96fbaff09e00001792b9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558025980,
+      "updated": 1558025980
+    }
+  ]
+}

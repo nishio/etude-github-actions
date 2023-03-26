@@ -1,0 +1,1016 @@
+{
+  "id": "632bd2d2936cb500214990f3",
+  "title": "WSL2にMacからSSHする",
+  "created": 1663816403,
+  "updated": 1666337789,
+  "lines": [
+    {
+      "id": "632bd2d2936cb500214990f3",
+      "text": "WSL2にMacからSSHする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663816403,
+      "updated": 1663828287
+    },
+    {
+      "id": "632c013faff09e0000fa1f37",
+      "text": "2022/9/22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828287,
+      "updated": 1663828556
+    },
+    {
+      "id": "632c024caff09e0000fa1f39",
+      "text": "僕のメインマシンはMacBookだが、Stable Diffusionの環境を構築するにあたってまともなGPUがあるのがWindowsのゲーミングPCだけだったのでWSL2で環境構築した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828557,
+      "updated": 1663828677
+    },
+    {
+      "id": "632c02a6aff09e0000fa1f3a",
+      "text": "そのゲーミングPCにMacBookからSSHして操作できるようにしたい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828646,
+      "updated": 1663828694
+    },
+    {
+      "id": "632c013faff09e0000fa1f38",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828288,
+      "updated": 1663828288
+    },
+    {
+      "id": "632bd2d5aff09e0000654bff",
+      "text": "WSL1と異なりWSL2ではネットワークが分離されている。なので基本的にはWindows側でWSL側にポートフォワーディングする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663816406,
+      "updated": 1663828713
+    },
+    {
+      "id": "632bd3a7aff09e0000fa1f1a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663816615,
+      "updated": 1663816615
+    },
+    {
+      "id": "632bd3a7aff09e0000fa1f1b",
+      "text": "[Linuxがほぼそのまま動くようになった「WSL2」のネットワーク機能：Windows 10 The Latest - ＠IT https://atmarkit.itmedia.co.jp/ait/articles/1909/09/news020.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663816616,
+      "updated": 1663816675
+    },
+    {
+      "id": "632bd3e3aff09e0000654c01",
+      "text": "\t[Hyper-V]のネットワークのしくみから書いてて親切",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663816676,
+      "updated": 1663824816
+    },
+    {
+      "id": "632be19eaff09e0000654c03",
+      "text": "\t[localhost]が単一の自分自身を指すアドレスではなく、127.0.0.0という特殊なネットワークの中の一つで、異なるIPアドレスでもlocalhost経由でアクセスできる、という仕組みは知らなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663820191,
+      "updated": 1663829328
+    },
+    {
+      "id": "632bf3b4aff09e0000ff4c8f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663824820,
+      "updated": 1663824820
+    },
+    {
+      "id": "632c02eeaff09e0000fa1f3b",
+      "text": "段階を追って確認していく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828718,
+      "updated": 1663828728
+    },
+    {
+      "id": "632c02eeaff09e0000fa1f3c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828718,
+      "updated": 1663828718
+    },
+    {
+      "id": "632bf460aff09e0000fa1f2d",
+      "text": "bashで下記を実行してHTTPサーバを8000番でたてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663824993,
+      "updated": 1663829460
+    },
+    {
+      "id": "632bf436aff09e000026e18b",
+      "text": "\t$ python -mhttp.server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663824952,
+      "updated": 1663828760
+    },
+    {
+      "id": "632bf3b4aff09e0000ff4c90",
+      "text": "Windowsのブラウザで下記にアクセスする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663824820,
+      "updated": 1663829466
+    },
+    {
+      "id": "632bf46caff09e0000fa1f2f",
+      "text": " http://localhost:8000/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825005,
+      "updated": 1663828766
+    },
+    {
+      "id": "632bf46caff09e0000fa1f2e",
+      "text": "見れた！一方で",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825004,
+      "updated": 1663829470
+    },
+    {
+      "id": "632bf513aff09e0000ff4c91",
+      "text": "\thttp://192.168.1.13:8000/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825172,
+      "updated": 1663828881
+    },
+    {
+      "id": "632c038faff09e0000ff4c95",
+      "text": "これは確かに見えない。なるほど。こういうことね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828879,
+      "updated": 1663829344
+    },
+    {
+      "id": "632c05a5aff09e0000fa1f3e",
+      "text": "[https://gyazo.com/1b783dd098acf7e6a56850d38703d06f]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829413,
+      "updated": 1663829417
+    },
+    {
+      "id": "632c05a9aff09e0000fa1f3f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829417,
+      "updated": 1663829417
+    },
+    {
+      "id": "632c0393aff09e0000ff4c97",
+      "text": "ポートフォワーディングの状態を確認するために管理者権限PowerShellを立ち上げらる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663828884,
+      "updated": 1663829514
+    },
+    {
+      "id": "632c0486aff09e0000ff4c98",
+      "text": "code:powershell",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829127,
+      "updated": 1663829535
+    },
+    {
+      "id": "632bf6aaaff09e000026e18c",
+      "text": "\t> netsh interface portproxy show v4tov4",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825579,
+      "updated": 1663829526
+    },
+    {
+      "id": "632bf6abaff09e000026e18e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825580,
+      "updated": 1663825580
+    },
+    {
+      "id": "632c061aaff09e0000ff4c99",
+      "text": "code:powershell",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829531,
+      "updated": 1663829538
+    },
+    {
+      "id": "632bf71eaff09e000026e18f",
+      "text": "\t> netsh interface portproxy add v4tov4 listenport=8000 connectaddress=localhost",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825695,
+      "updated": 1663829552
+    },
+    {
+      "id": "632bf71faff09e000026e190",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829557
+    },
+    {
+      "id": "632bf71faff09e000026e191",
+      "text": "\t> netsh interface portproxy show v4tov4",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829556
+    },
+    {
+      "id": "632bf71faff09e000026e193",
+      "text": "  ipv4 をリッスンする:         ipv4 に接続する:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829564
+    },
+    {
+      "id": "632bf71faff09e000026e194",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829566
+    },
+    {
+      "id": "632bf71faff09e000026e195",
+      "text": "  Address         Port        Address         Port",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829564
+    },
+    {
+      "id": "632bf71faff09e000026e196",
+      "text": "  --------------- ----------  --------------- ----------",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829564
+    },
+    {
+      "id": "632bf71faff09e000026e197",
+      "text": "  *               8000        localhost       8000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829564
+    },
+    {
+      "id": "632bf71faff09e000026e198",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825696,
+      "updated": 1663829571
+    },
+    {
+      "id": "632bf7c3aff09e000026e199",
+      "text": "\t> sc start iphlpsvc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825861,
+      "updated": 1663829570
+    },
+    {
+      "id": "632bf7c5aff09e000026e19a",
+      "text": "これで",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825862,
+      "updated": 1663829622
+    },
+    {
+      "id": "632c065faff09e0000ff4c9a",
+      "text": "Windowsのブラウザで下記にアクセスして見れるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829600,
+      "updated": 1663829632
+    },
+    {
+      "id": "632c065faff09e0000ff4c9d",
+      "text": "\thttp://192.168.1.13:8000/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829600,
+      "updated": 1663829600
+    },
+    {
+      "id": "632c065faff09e0000ff4c9e",
+      "text": "一方でMacBookのブラウザからは見れない、これはつまりファイヤーウォールで弾かれてるのだな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829600,
+      "updated": 1663829685
+    },
+    {
+      "id": "632bf7c5aff09e000026e19b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825862,
+      "updated": 1663825862
+    },
+    {
+      "id": "632c06b8aff09e0000fa1f40",
+      "text": "「Windowsファイヤーウォールによるアプリケーションの許可」ではアプリを指定することになる❌。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829688,
+      "updated": 1666337789
+    },
+    {
+      "id": "63524bfdaff09e0000784e98",
+      "text": "今回はポートを指定したいので「詳細設定」「受信の規則」「規則の追加」「ポート」と進む",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666337789,
+      "updated": 1666337789
+    },
+    {
+      "id": "632bf7ceaff09e000026e19d",
+      "text": "[https://gyazo.com/cd361182c52a789fdf641a2eb1467619]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663825871,
+      "updated": 1663826038
+    },
+    {
+      "id": "632bf875aff09e000026e19f",
+      "text": "[https://gyazo.com/d36739f795fbd1f7962939a102f95b41]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663826038,
+      "updated": 1663826270
+    },
+    {
+      "id": "632bf95caff09e000026e1a0",
+      "text": "これでMacBookからもブラウザでアクセスできるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663826270,
+      "updated": 1663829797
+    },
+    {
+      "id": "632c0725aff09e0000fa1f41",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829797,
+      "updated": 1663829797
+    },
+    {
+      "id": "632c0725aff09e0000fa1f42",
+      "text": "次はSSHの設定。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829797,
+      "updated": 1663829805
+    },
+    {
+      "id": "632c072daff09e0000fa1f43",
+      "text": "まずbashで",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829805,
+      "updated": 1663829843
+    },
+    {
+      "id": "632c075daff09e0000ff4ca1",
+      "text": "code:bash",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829854,
+      "updated": 1663829859
+    },
+    {
+      "id": "632c0752aff09e0000ff4ca0",
+      "text": "\t$ ssh localhost",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829843,
+      "updated": 1663829860
+    },
+    {
+      "id": "632bfd4faff09e000026e1a4",
+      "text": "\tssh: connect to host localhost port 22: Connection refused",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663827280,
+      "updated": 1663829861
+    },
+    {
+      "id": "632bfd50aff09e000026e1a5",
+      "text": "つながらない、つまりSSHサーバが起動してない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663827281,
+      "updated": 1663829882
+    },
+    {
+      "id": "632bfbd7aff09e0000fa1f35",
+      "text": "公開鍵をauthorized keysに書いて",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663826904,
+      "updated": 1663827204
+    },
+    {
+      "id": "632bfd04aff09e0000fa1f36",
+      "text": "$ sudo service ssh start",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663827204,
+      "updated": 1663829889
+    },
+    {
+      "id": "632bfd1eaff09e000026e1a1",
+      "text": "bashでつながるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663827232,
+      "updated": 1663829905
+    },
+    {
+      "id": "632c0791aff09e0000fa1f44",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829905,
+      "updated": 1663829905
+    },
+    {
+      "id": "632c0791aff09e0000fa1f45",
+      "text": "MacBookからSSHするとタイムアウト…ファイヤーウォールの22番ポートは開けたけど…あっ、ポートフォワーディングが8000番だけしかやってなかった。22番もポートフォワードして無事MacBookから繋がるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829905,
+      "updated": 1663830015
+    },
+    {
+      "id": "632c0787aff09e0000ff4ca3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663829896,
+      "updated": 1663829896
+    },
+    {
+      "id": "632bfd1faff09e000026e1a2",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663827232,
+      "updated": 1664161725
+    },
+    {
+      "id": "63312702aff09e0000f2e672",
+      "text": "2022-09-25",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165635,
+      "updated": 1664166939
+    },
+    {
+      "id": "63312c1caff09e000089afdb",
+      "text": "\t>なぜかWSLにSSHで繋がらなくなってしまってゲンナリしてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664166941,
+      "updated": 1664166942
+    },
+    {
+      "id": "63312c1faff09e000089afdc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664166943,
+      "updated": 1664166943
+    },
+    {
+      "id": "63312bf9aff09e000089afda",
+      "text": "2022-09-26",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664166906,
+      "updated": 1664166907
+    },
+    {
+      "id": "632bfbccaff09e0000fa1f33",
+      "text": "code:powershell",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663826893,
+      "updated": 1664164775
+    },
+    {
+      "id": "633117caaff09e000089afbe",
+      "text": " netsh interface portproxy show v4tov4",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664161738,
+      "updated": 1664161739
+    },
+    {
+      "id": "63311a96aff09e0000d8fcbc",
+      "text": " ipv4 をリッスンする:         ipv4 に接続する:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162462,
+      "updated": 1664162463
+    },
+    {
+      "id": "63311a97aff09e0000d8fcbe",
+      "text": " Address         Port        Address         Port",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162463,
+      "updated": 1664162463
+    },
+    {
+      "id": "63311a97aff09e0000d8fcbf",
+      "text": " --------------- ----------  --------------- ----------",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162463,
+      "updated": 1664162463
+    },
+    {
+      "id": "63311a97aff09e0000d8fcc0",
+      "text": " *               22          localhost       22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162463,
+      "updated": 1664162463
+    },
+    {
+      "id": "63311a97aff09e0000d8fcc1",
+      "text": " *               8000        localhost       8000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162463,
+      "updated": 1664162463
+    },
+    {
+      "id": "633117c9aff09e000089afbd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664161737,
+      "updated": 1664852314
+    },
+    {
+      "id": "63311bdaaff09e000089afbf",
+      "text": "code:bash",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162779,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311ab3aff09e0000d8fcc2",
+      "text": " $ python -mhttp.server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162492,
+      "updated": 1664162781
+    },
+    {
+      "id": "63311ab4aff09e0000d8fcc3",
+      "text": " Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162493,
+      "updated": 1664162781
+    },
+    {
+      "id": "63311ab4aff09e0000d8fcc4",
+      "text": "http://localhost:8000/ NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162493,
+      "updated": 1664164739
+    },
+    {
+      "id": "63312382aff09e000089afc0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164739,
+      "updated": 1664164739
+    },
+    {
+      "id": "63312382aff09e000089afc1",
+      "text": "code:bash",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164739,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311ab5aff09e0000d8fcc5",
+      "text": " $ ip -4 address",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162494,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311b81aff09e0000d8fcc6",
+      "text": " 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162697,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311b81aff09e0000d8fcc7",
+      "text": "     inet 127.0.0.1/8 scope host lo",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162697,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311b81aff09e0000d8fcc8",
+      "text": "        valid_lft forever preferred_lft forever",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162697,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311b81aff09e0000d8fcc9",
+      "text": " 6: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162697,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311b81aff09e0000d8fcca",
+      "text": "     inet 172.28.171.149/20 brd 172.28.175.255 scope global eth0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162697,
+      "updated": 1664164774
+    },
+    {
+      "id": "63311b81aff09e0000d8fccb",
+      "text": "        valid_lft forever preferred_lft forever",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664162697,
+      "updated": 1664164774
+    },
+    {
+      "id": "63312325aff09e0000d8fcce",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164654,
+      "updated": 1664164654
+    },
+    {
+      "id": "63312326aff09e0000d8fccf",
+      "text": "http://172.28.171.149:8000/ OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164654,
+      "updated": 1664164755
+    },
+    {
+      "id": "6331238daff09e000089afc2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164755,
+      "updated": 1664164755
+    },
+    {
+      "id": "633124c5aff09e0000f2e66b",
+      "text": "localhostの転送が働いてなさげ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165069,
+      "updated": 1664165079
+    },
+    {
+      "id": "633124c5aff09e0000f2e66c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165069,
+      "updated": 1664165069
+    },
+    {
+      "id": "633123f4aff09e000089afd0",
+      "text": "[https://stackoverflow.com/questions/69926941/localhost-refused-to-connect-on-wsl2-when-accessed-via-https-localhost8000-b windows - Localhost refused to connect on WSL2 when accessed via https://localhost:8000/ but works when using internal WSL IP adress - Stack Overflow]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164853,
+      "updated": 1664164874
+    },
+    {
+      "id": "633123ecaff09e000089afc3",
+      "text": ">When it's working normally, as you are clearly aware, the \"localhost forwarding\" feature of WSL2 means that you can access services running inside WSL2 using the \"localhost\" address of the Windows host.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164844,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afc5",
+      "text": "> ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afc6",
+      "text": "> Sometimes, however, [* that feature breaks down]. This is known to happen when you either:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664165013
+    },
+    {
+      "id": "633123efaff09e000089afc7",
+      "text": "\t> Hibernate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664165000
+    },
+    {
+      "id": "63312488aff09e000089afd4",
+      "text": "\t> Have the Windows \"Fast Startup\" feature enabled (and it is the default). Fast Startup is a pseudo-hibernation which triggers the same problem.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165000,
+      "updated": 1664165000
+    },
+    {
+      "id": "633123efaff09e000089afca",
+      "text": "> Typically the best solution is to disable Hibernation and Fast Startup. However, if you do need these features, you can reset the WSL localhost feature by:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afcb",
+      "text": "> ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afcc",
+      "text": "> Exiting any WSL instances",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afcd",
+      "text": "> Issuing wsl --shutdown",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afce",
+      "text": "> Restarting your instance",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123efaff09e000089afcf",
+      "text": "> It's my experience that localhost forwarding will work after that.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164848,
+      "updated": 1664164848
+    },
+    {
+      "id": "633123ecaff09e000089afc4",
+      "text": "WSLの再起動は試してみたけどダメだった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164844,
+      "updated": 1664165238
+    },
+    {
+      "id": "63312576aff09e0000f2e66d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165239,
+      "updated": 1664165239
+    },
+    {
+      "id": "633124aeaff09e000089afd7",
+      "text": "[https://abdus.dev/posts/fixing-wsl2-localhost-access-issue/ Fixing WSL2 localhost access issue - abdus.dev]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165038,
+      "updated": 1664165042
+    },
+    {
+      "id": "6331240daff09e000089afd2",
+      "text": ">Localhost redirection [* often fails] for some reason, such as [* when PC sleeps and wakes up], and localhost access to Linux services does not work anymore.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164878,
+      "updated": 1664164985
+    },
+    {
+      "id": "6331240daff09e000089afd3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164878,
+      "updated": 1664164878
+    },
+    {
+      "id": "633124a1aff09e000089afd6",
+      "text": "結論「WSL2のlocalhost bindingはすぐ壊れるから信用しないでIPアドレス直接指定にする」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165026,
+      "updated": 1664165109
+    },
+    {
+      "id": "633124a0aff09e000089afd5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165025,
+      "updated": 1664165025
+    },
+    {
+      "id": "633124feaff09e000089afd9",
+      "text": "code:powershell",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165118,
+      "updated": 1664165124
+    },
+    {
+      "id": "63312326aff09e0000d8fcd0",
+      "text": " > netsh interface portproxy set v4tov4 listenport=8000 connectaddress=172.28.174.254",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164654,
+      "updated": 1664165128
+    },
+    {
+      "id": "63312327aff09e0000d8fcd2",
+      "text": " > netsh interface portproxy set v4tov4 listenport=22 connectaddress=172.28.174.254",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164656,
+      "updated": 1664165128
+    },
+    {
+      "id": "6331232baff09e0000d8fcd4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664164660,
+      "updated": 1664164660
+    },
+    {
+      "id": "6331257baff09e0000f2e66e",
+      "text": "MacのブラウザからHTTPサーバに繋がるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165243,
+      "updated": 1664165269
+    },
+    {
+      "id": "63312595aff09e0000f2e670",
+      "text": "sshはつながらない、これはWSLを再起動してsshdが起動してないから",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165269,
+      "updated": 1664165293
+    },
+    {
+      "id": "633125c5aff09e0000f2e671",
+      "text": "起動した、つながるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165317,
+      "updated": 1664165325
+    },
+    {
+      "id": "6331257faff09e0000f2e66f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664165248,
+      "updated": 1664165248
+    },
+    {
+      "id": "633acefeaff09e0000fa9172",
+      "text": "2022-10-03",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664798463,
+      "updated": 1664798463
+    },
+    {
+      "id": "633aceffaff09e0000fa9173",
+      "text": "[https://medium.com/@gilad215/ssh-into-a-wsl2-host-remotely-and-reliabley-578a12c91a2 SSH into a WSL2 host remotely and reliably | by Gilad Lekner | Medium]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664798464,
+      "updated": 1664798466
+    },
+    {
+      "id": "633acf02aff09e0000fa9175",
+      "text": "[https://sunday-morning.app/posts/2020-07-16-wsl2-ubuntu-ssh WSL2のUbuntuにsshできるようにする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664798466,
+      "updated": 1664798550
+    },
+    {
+      "id": "633acf56aff09e0000574286",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664798550,
+      "updated": 1664798550
+    },
+    {
+      "id": "633acf00aff09e0000fa9174",
+      "text": "2022-10-10",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1664798464,
+      "updated": 1665393471
+    },
+    {
+      "id": "6343e33faff09e00002a830f",
+      "text": "bashの中でip -4 address",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393472,
+      "updated": 1665393493
+    },
+    {
+      "id": "6343e354aff09e00002a8311",
+      "text": "そのアドレスを管理者PowerShellの方で",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393493,
+      "updated": 1665393513
+    },
+    {
+      "id": "6343e369aff09e00002a8312",
+      "text": "PS C:\\WINDOWS\\system32> netsh.exe interface portproxy set v4tov4 listenport=22 connectaddress=172.22.33.108",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393514,
+      "updated": 1665393568
+    },
+    {
+      "id": "6343e39faff09e0000a919bc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393568,
+      "updated": 1665393568
+    },
+    {
+      "id": "6343e39faff09e0000a919bd",
+      "text": "PS C:\\WINDOWS\\system32> netsh.exe interface portproxy set v4tov4 listenport=8000 connectaddress=172.22.33.108",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393568,
+      "updated": 1665393568
+    },
+    {
+      "id": "6343e346aff09e00002a8310",
+      "text": "> netsh interface portproxy show v4tov4",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393479,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c4",
+      "text": "ipv4 をリッスンする:         ipv4 に接続する:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c6",
+      "text": "Address         Port        Address         Port",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c7",
+      "text": "--------------- ----------  --------------- ----------",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c8",
+      "text": "*               22          172.22.33.108   22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3d0aff09e0000a919c9",
+      "text": "*               8000        172.22.33.108   8000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3cfaff09e0000a919c2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393616,
+      "updated": 1665393616
+    },
+    {
+      "id": "6343e3b7aff09e0000a919be",
+      "text": "> sc.exe start iphlpsvc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393592,
+      "updated": 1665393592
+    },
+    {
+      "id": "6343e3b7aff09e0000a919bf",
+      "text": "[SC] StartService FAILED 1056:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393592,
+      "updated": 1665393592
+    },
+    {
+      "id": "6343e3b7aff09e0000a919c0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393592,
+      "updated": 1665393592
+    },
+    {
+      "id": "6343e3b7aff09e0000a919c1",
+      "text": "サービス インスタンスは既に実行されています。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393592,
+      "updated": 1665393592
+    },
+    {
+      "id": "6343e3d4aff09e0000a919ca",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393620,
+      "updated": 1665393620
+    },
+    {
+      "id": "6343e42eaff09e00002a8313",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393710,
+      "updated": 1665393725
+    },
+    {
+      "id": "6343e3d4aff09e0000a919cb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1665393621,
+      "updated": 1665393621
+    }
+  ]
+}

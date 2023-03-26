@@ -1,0 +1,3060 @@
+{
+  "id": "6090ebfca287e60022919f05",
+  "title": "Hatena2008-12-21",
+  "created": 1229785200,
+  "updated": 1229785200,
+  "lines": [
+    {
+      "id": "6090ec20aff09e00003cd81e",
+      "text": "Hatena2008-12-21",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd81f",
+      "text": "code:hatena",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd820",
+      "text": " <body>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd821",
+      "text": " *1229805950*[TopCoder] Single Round Match 430 (Div1/500point)",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd822",
+      "text": " 都市の座標と条件が与えられ、条件を満たすなるべく多いペア(2つの都市の「姉妹都市」関係)を作れ、という典型的なグラフ問題。条件とは「都市がminDistance以上離れている」と「一つの都市は最大maxPartner個の都市と姉妹都市になれる」の2つ。「ペアの個数が最大になるいくつかのペアの作り方のうち、一番距離の合計が短いものを選べ」という条件もついている。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd823",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd824",
+      "text": " 都市の数は最大10個、maxPartnerは最大で3なので、ペアになりうる組み合わせは最大45個、ペアの個数の最大は15個。全探索しても枝刈りをうまくやれば大丈夫じゃないかな、と思って試してみた。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd825",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd826",
+      "text": " >|cpp|",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd827",
+      "text": " class TwinTowns {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd828",
+      "text": " public:",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd829",
+      "text": "   int MAX_EDGES;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd82a",
+      "text": "   size_t N;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd82b",
+      "text": "   vector<pair<int, int> > edges;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd82c",
+      "text": "   vector<int> edgesLen;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd82d",
+      "text": "   size_t NUM_EDGES;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd82e",
+      "text": "   int MAX_PARTNERS;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd82f",
+      "text": "   int resultDist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd830",
+      "text": "   int resultEdges;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd831",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd832",
+      "text": "   void recur(size_t i, int numEdges, int dist, vector<int>& degree){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd833",
+      "text": "     int v0 = edges[i].first;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd834",
+      "text": "     int v1 = edges[i].second;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd835",
+      "text": "     if(degree[v0] == MAX_PARTNERS || degree[v1] == MAX_PARTNERS){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd836",
+      "text": "       // can't add the edge",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd837",
+      "text": "       return;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd838",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd839",
+      "text": "     numEdges++;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd83a",
+      "text": "     dist += edgesLen[i];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd83b",
+      "text": "     if(dist > resultDist && numEdges <= resultEdges){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd83c",
+      "text": "       // too distant",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd83d",
+      "text": "       return;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd83e",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd83f",
+      "text": "     if(numEdges > resultEdges){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd840",
+      "text": "       resultEdges = numEdges;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd841",
+      "text": "       resultDist = dist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd842",
+      "text": "     }else if(numEdges == resultEdges && dist < resultDist){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd843",
+      "text": "       resultDist = dist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd844",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd845",
+      "text": "     if(numEdges < MAX_EDGES){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd846",
+      "text": "       degree[v0]++;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd847",
+      "text": "       degree[v1]++;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd848",
+      "text": "       // enough room to add edge",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd849",
+      "text": "       for(size_t j=i+1; j<NUM_EDGES; j++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd84a",
+      "text": " \trecur(j, numEdges, dist, degree);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd84b",
+      "text": "       }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd84c",
+      "text": "       degree[v0]--;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd84d",
+      "text": "       degree[v1]--;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd84e",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd84f",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd850",
+      "text": "   vector <int> optimalTwinTowns(vector <int> x, vector <int> y, int maxPartners, int minDistance) {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd851",
+      "text": "     N = x.size();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd852",
+      "text": "     MAX_PARTNERS = maxPartners; ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd853",
+      "text": "     edges.clear();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd854",
+      "text": "     edgesLen.clear();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd855",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd856",
+      "text": "     for(size_t i=0; i<N; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd857",
+      "text": "       for(size_t j=i+1; j<N; j++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd858",
+      "text": "         int len = abs(x[i] - x[j]) + abs(y[i] - y[j]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd859",
+      "text": " \tif(len >= minDistance){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd85a",
+      "text": " \t  edges.push_back(make_pair(i, j));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd85b",
+      "text": " \t  edgesLen.push_back(len);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd85c",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd85d",
+      "text": "       }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd85e",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd85f",
+      "text": "     NUM_EDGES = edges.size();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd860",
+      "text": "     vector<int> degree(N);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd861",
+      "text": "     MAX_EDGES = N * maxPartners / 2;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd862",
+      "text": "     resultEdges = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd863",
+      "text": "     resultDist = 2000 * 100; // infinity",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd864",
+      "text": "     vector<int> result;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd865",
+      "text": "     for(size_t i=0; i<NUM_EDGES; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd866",
+      "text": "       recur(i, 0, 0, degree);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd867",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd868",
+      "text": "     result.push_back(resultEdges);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd869",
+      "text": "     result.push_back(resultDist);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd86a",
+      "text": "     return result;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd86b",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd86c",
+      "text": " }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd86d",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd86e",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd86f",
+      "text": " システムテストに十分短い時間で通ったのでsubmitしたのだけど",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd870",
+      "text": " >|cpp|",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd871",
+      "text": "     if(dist > resultDist && numEdges <= resultEdges){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd872",
+      "text": "       // too distant",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd873",
+      "text": "       return;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd874",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd875",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd876",
+      "text": " ダメダメですな。まだ正解の見つかっていない状態ではresultEdgesは正解より小さい値になっている可能性があるからこれでは枝を刈りすぎている。かといってこれをコメントアウトすると普通にタイムアウトになる。さて、どうするのが正解か。。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd877",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd878",
+      "text": " 位数とその位数のときの今までで一番短かったのとを記録しておいて、それで枝刈りをするようにした。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd879",
+      "text": " >|cpp|",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd87a",
+      "text": " class TwinTowns {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd87b",
+      "text": " public:",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd87c",
+      "text": "   size_t N;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd87d",
+      "text": "   vector<pair<int, int> > edges;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd87e",
+      "text": "   vector<int> edgesLen;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd87f",
+      "text": "   size_t NUM_EDGES;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd880",
+      "text": "   int MAX_PARTNERS;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd881",
+      "text": "   int resultDist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd882",
+      "text": "   int resultEdges;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd883",
+      "text": "   vector<int> cache;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd884",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd885",
+      "text": "   int getDegree(int deg, int i){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd886",
+      "text": "     return (deg >> (i * 2)) & 3;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd887",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd888",
+      "text": "   int setDegree(int deg, int i, int v){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd889",
+      "text": "     return (deg & ~(3 << (i * 2))) | (v << (i * 2));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd88a",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd88b",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd88c",
+      "text": "   void recur(size_t i, int numEdges, int dist, int degree){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd88d",
+      "text": "     int v0 = edges[i].first;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd88e",
+      "text": "     int v1 = edges[i].second;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd88f",
+      "text": "     if(getDegree(degree, v0) == MAX_PARTNERS || getDegree(degree, v1) == MAX_PARTNERS){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd890",
+      "text": "       // can't add the edge",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd891",
+      "text": "       return;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd892",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd893",
+      "text": "     numEdges++;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd894",
+      "text": "     dist += edgesLen[i];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd895",
+      "text": "     if(numEdges > resultEdges){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd896",
+      "text": "       resultEdges = numEdges;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd897",
+      "text": "       resultDist = dist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd898",
+      "text": "     }else if(numEdges == resultEdges && dist < resultDist){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd899",
+      "text": "       resultDist = dist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd89a",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd89b",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd89c",
+      "text": "     degree = setDegree(degree, v0, getDegree(degree, v0) + 1);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd89d",
+      "text": "     degree = setDegree(degree, v1, getDegree(degree, v1) + 1);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd89e",
+      "text": "     if(cache[degree] == 0 || dist <= cache[degree]){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd89f",
+      "text": "       // add edge",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a0",
+      "text": "       cache[degree] = dist;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a1",
+      "text": "       for(size_t j=i+1; j<NUM_EDGES; j++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a2",
+      "text": " \trecur(j, numEdges, dist, degree);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a3",
+      "text": "       }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a4",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a5",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a6",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a7",
+      "text": "   vector <int> optimalTwinTowns(vector <int> x, vector <int> y, int maxPartners, int minDistance) {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a8",
+      "text": "     N = x.size();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8a9",
+      "text": "     MAX_PARTNERS = maxPartners; ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8aa",
+      "text": "     edges.clear();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ab",
+      "text": "     edgesLen.clear();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ac",
+      "text": "     cache.clear();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ad",
+      "text": "     cache.resize(1 << (2 * N));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ae",
+      "text": "     for(size_t i=0; i<N; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8af",
+      "text": "       for(size_t j=i+1; j<N; j++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b0",
+      "text": "         int len = abs(x[i] - x[j]) + abs(y[i] - y[j]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b1",
+      "text": " \tif(len >= minDistance){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b2",
+      "text": " \t  edges.push_back(make_pair(i, j));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b3",
+      "text": " \t  edgesLen.push_back(len);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b4",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b5",
+      "text": "       }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b6",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b7",
+      "text": "     NUM_EDGES = edges.size();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b8",
+      "text": "     resultEdges = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8b9",
+      "text": "     resultDist = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ba",
+      "text": "     for(size_t i=0; i<NUM_EDGES; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8bb",
+      "text": "       recur(i, 0, 0, 0);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8bc",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8bd",
+      "text": "     vector<int> result;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8be",
+      "text": "     result.push_back(resultEdges);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8bf",
+      "text": "     result.push_back(resultDist);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c0",
+      "text": "     return result;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c1",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c2",
+      "text": " }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c3",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c4",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c5",
+      "text": " 結果",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c6",
+      "text": " >||",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c7",
+      "text": " Args:",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c8",
+      "text": " {{851, 33, 108, 369, 127, 778, 434, 88, 873, 246}, {646, 532, 395, 134, 364, 276, 72, 592, 628, 249}, 3, 649}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8c9",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ca",
+      "text": " Expected:",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8cb",
+      "text": " {14, 12205}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8cc",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8cd",
+      "text": " Received:",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ce",
+      "text": " {14, 12325}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8cf",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d0",
+      "text": " うーん。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d1",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d2",
+      "text": " *1229824697*CUDA日記1",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d3",
+      "text": " スレッドのsyncはブロック単位。ブロックごとにあるshared memoryはレジスタ並みに高速。協調する必要があるスレッドは同じブロックにいるべき。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d4",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d5",
+      "text": " GPU Gemsを見てGPUPUではscatter(ランダムアクセス書き込み)が困難だからアルゴリズムを工夫する必要がある、と認識していたがCUDAの長所はそれを可能にしたところらしい。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d6",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d7",
+      "text": " カーネルの実行は非同期だが、結果を取り出すMemcpyがカーネルの実行を待つので同期処理しているように見えていたみたいだ。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d8",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8d9",
+      "text": " ホストからいじれるのは__device__のメモリだけ。__device__はレイテンシが大きい。__shared__の数百倍。テーブル引きをするような場合、__device__に入れっぱなし二するのは愚の骨頂なので__shared__にコピーすべきだろうか。それともカーネルの中に埋め込んだ方がいいのかな？もちろんカーネルのサイズに限界はあるのだろうけど。テーブルのサイズとアクセスの量に依存するかな。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8da",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8db",
+      "text": " カーネルの中で何も修飾子を書かずに宣言している変数は__shared__になる。ただしサイズが5以上の配列は__device__になる。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8dc",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8dd",
+      "text": " int4とかの「ベクトル型」がある。これって、例えば足し算したら並列に足されるのかな？後で試そう。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8de",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8df",
+      "text": " cudaMemcpyAsyncなんてのがあるな。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e0",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e1",
+      "text": " -----",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e2",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e3",
+      "text": " そんなこんなで最中限の一番最後のターンで最善手が何かを全探索するコードを書いてみた。とりあえずエラーなく動くところまでやってみただけなので結果が正しいかどうかはまだ検証していないけど、実行するとtime = 10232で-1, 23, 3という結果が帰ってくる。僕がプレイするときでもこの曲面では真ん中の5を出すので、あってるのかな～。速度はブロックも1個しか使っていないし問題が小さすぎて面白みがないから最終ラウンド全体の読み切りまでやるようにしてからC++でのコードと比較しよう。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e4",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e5",
+      "text": " あ、とりあえずx == yのケースを省くの忘れてるな。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e6",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e7",
+      "text": " >|cpp|",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e8",
+      "text": " #include <stdio.h>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8e9",
+      "text": " #include <stdlib.h>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ea",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8eb",
+      "text": " #include <cutil.h>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ec",
+      "text": " #define NUM_BLOCKS    1",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ed",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ee",
+      "text": " __device__ static int calc_median(int v0, int v1, int v2){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ef",
+      "text": "     if(v1 < v2){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f0",
+      "text": "     \tif(v2 < v0){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f1",
+      "text": " \t    return v2;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f2",
+      "text": " \t}else if(v0 < v1){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f3",
+      "text": " \t    return v1;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f4",
+      "text": " \t}else{",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f5",
+      "text": " \t    return v0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f6",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f7",
+      "text": "     }else{",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f8",
+      "text": "     \tif(v1 < v0){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8f9",
+      "text": " \t    return v1;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8fa",
+      "text": " \t}else if(v0 < v2){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8fb",
+      "text": " \t    return v2;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8fc",
+      "text": " \t}else{",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8fd",
+      "text": " \t    return v0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8fe",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd8ff",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd900",
+      "text": " }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd901",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd902",
+      "text": " __global__ static void kernel(const int * input, int * output, clock_t * timer)",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd903",
+      "text": " {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd904",
+      "text": "     __shared__ int shared[3 * 7 * 7];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd905",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd906",
+      "text": "     const int x = threadIdx.x, y = threadIdx.y, z = threadIdx.z;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd907",
+      "text": "     const int bid = blockIdx.x;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd908",
+      "text": "     const int tid = x + y * 7 + z * 7 * 7;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd909",
+      "text": "     if (tid == 0) timer[bid] = clock();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd90a",
+      "text": "     ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd90b",
+      "text": "     // update round score",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd90c",
+      "text": "     int buf[] = {input[10], input[11], input[12]};",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd90d",
+      "text": "     int my=input[z], o1=input[3 + x], o2=input[3 + y];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd90e",
+      "text": "     int median = calc_median(my, o1, o2);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd90f",
+      "text": "     if(my == median) buf[0] += median / 4 + 1;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd910",
+      "text": "     if(o1 == median) buf[1] += median / 4 + 1;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd911",
+      "text": "     if(o2 == median) buf[2] += median / 4 + 1;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd912",
+      "text": "     ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd913",
+      "text": "     // update game score",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd914",
+      "text": "     median = calc_median(buf[0], buf[1], buf[2]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd915",
+      "text": "     o1 = buf[1]; o2 = buf[2]; my = buf[0];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd916",
+      "text": "     buf[0] = input[13]; // game score",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd917",
+      "text": "     buf[1] = input[14];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd918",
+      "text": "     buf[2] = input[15];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd919",
+      "text": "     if(my == median) buf[0] += median;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd91a",
+      "text": "     if(o1 == median) buf[1] += median;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd91b",
+      "text": "     if(o2 == median) buf[2] += median;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd91c",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd91d",
+      "text": "     // find winner",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd91e",
+      "text": "     o1 = buf[1]; o2 = buf[2]; my = buf[0];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd91f",
+      "text": "     median = calc_median(buf[0], buf[1], buf[2]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd920",
+      "text": "     int win = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd921",
+      "text": "     if(my == median) win += 2;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd922",
+      "text": "     if(o1 == median) win--;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd923",
+      "text": "     if(o2 == median) win--;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd924",
+      "text": "     ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd925",
+      "text": "     shared[tid] = win;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd926",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd927",
+      "text": "     __syncthreads();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd928",
+      "text": "     if(x == 0){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd929",
+      "text": "         int sum = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd92a",
+      "text": "     \tfor(int i=0; i < 7; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd92b",
+      "text": " \t    sum += shared[tid + 7 * i];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd92c",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd92d",
+      "text": " \tshared[tid] = sum;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd92e",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd92f",
+      "text": "     __syncthreads();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd930",
+      "text": "     if(x == 0 && y == 0){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd931",
+      "text": "         int sum = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd932",
+      "text": "     \tfor(int i=0; i < 7; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd933",
+      "text": " \t    sum += shared[tid + i];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd934",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd935",
+      "text": " \toutput[z] = sum;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd936",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd937",
+      "text": "     __syncthreads();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd938",
+      "text": "     if (tid == 0) timer[bid+gridDim.x] = clock();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd939",
+      "text": " }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd93a",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd93b",
+      "text": " int main(int argc, char** argv)",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd93c",
+      "text": " {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd93d",
+      "text": "     CUT_DEVICE_INIT();",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd93e",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd93f",
+      "text": "     int * dinput = NULL;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd940",
+      "text": "     int * doutput = NULL;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd941",
+      "text": "     clock_t * dtimer = NULL;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd942",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd943",
+      "text": "     clock_t timer[NUM_BLOCKS * 2];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd944",
+      "text": "     int input[] = {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd945",
+      "text": "     \t1, 5, 13, // own cards",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd946",
+      "text": "     \t4, 15, 6, 7, 8, 9, 10, // others cards",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd947",
+      "text": " \t0, 5, 0, // round score",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd948",
+      "text": " \t0, 5, 0}; // game score",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd949",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd94a",
+      "text": "     CUDA_SAFE_CALL(cudaMalloc((void**)&dinput, sizeof(int) * 16));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd94b",
+      "text": "     CUDA_SAFE_CALL(cudaMalloc((void**)&doutput, sizeof(int) * 3));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd94c",
+      "text": "     CUDA_SAFE_CALL(cudaMalloc((void**)&dtimer, sizeof(clock_t) * NUM_BLOCKS * 2));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd94d",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd94e",
+      "text": "     CUDA_SAFE_CALL(cudaMemcpy(dinput, input, sizeof(int) * 16, cudaMemcpyHostToDevice));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd94f",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd950",
+      "text": "     dim3 THREADS(7, 7, 3);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd951",
+      "text": "     kernel<<<NUM_BLOCKS, THREADS>>>(dinput, doutput, dtimer);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd952",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd953",
+      "text": "     int output[3];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd954",
+      "text": "     CUDA_SAFE_CALL(cudaMemcpy(output, doutput, sizeof(int) * 3, cudaMemcpyDeviceToHost));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd955",
+      "text": "     CUDA_SAFE_CALL(cudaMemcpy(timer, dtimer, sizeof(clock_t) * NUM_BLOCKS * 2, cudaMemcpyDeviceToHost));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd956",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd957",
+      "text": "     CUDA_SAFE_CALL(cudaFree(dinput));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd958",
+      "text": "     CUDA_SAFE_CALL(cudaFree(doutput));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd959",
+      "text": "     CUDA_SAFE_CALL(cudaFree(dtimer));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd95a",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd95b",
+      "text": "     clock_t minStart = timer[0];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd95c",
+      "text": "     clock_t maxEnd = timer[NUM_BLOCKS];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd95d",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd95e",
+      "text": "     for (int i = 1; i < NUM_BLOCKS; i++)",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd95f",
+      "text": "     {",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd960",
+      "text": "         minStart = timer[i] < minStart ? timer[i] : minStart;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd961",
+      "text": "         maxEnd = timer[NUM_BLOCKS+i] > maxEnd ? timer[NUM_BLOCKS+i] : maxEnd;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd962",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd963",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd964",
+      "text": "     printf(\"time = %d\\n\", maxEnd - minStart);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd965",
+      "text": "     printf(\"%d, %d, %d\\n\", output[0], output[1], output[2]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd966",
+      "text": "     CUT_EXIT(argc, argv);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd967",
+      "text": " }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd968",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd969",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd96a",
+      "text": " *1229825420*Vim日記",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd96b",
+      "text": " 動的略語補完はC-n、置換は:s/.../.../g、ファイル全体から確認付きで置換したければ:%s/.../.../gc",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd96c",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd96d",
+      "text": " *1229836965*案内板",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd96e",
+      "text": " こういうのがもっといろんな駅にあればハッピーなのに。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd96f",
+      "text": " f:id:nishiohirokazu:20081221142244j:image",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd970",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd971",
+      "text": " *1229854217*日光",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd972",
+      "text": " 天気がよかったので、特に意味もなく東武動物公園駅まで行ってきた。Tobu zooはローマ字読みをすると飛ぶぞー。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd973",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd974",
+      "text": " *1229880372*[最中限]ひさしぶり",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd975",
+      "text": " <a href='http://d.hatena.ne.jp/nishiohirokazu/20081101/1225517718'>気がついたら </a>での議論を参考に少し書き直してみた。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd976",
+      "text": " >|cpp|",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd977",
+      "text": " class Cards{",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd978",
+      "text": " public:",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd979",
+      "text": "   Cards(vector<int> xs):",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd97a",
+      "text": "     values(xs),len(xs.size()){}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd97b",
+      "text": "   inline int pop(size_t i){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd97c",
+      "text": "     len--;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd97d",
+      "text": "     swap(values[i], values[len]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd97e",
+      "text": "     return values[len];",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd97f",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd980",
+      "text": "   inline void revert(size_t i){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd981",
+      "text": "     swap(values[i], values[len]);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd982",
+      "text": "     len++;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd983",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd984",
+      "text": "   vector<int> values;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd985",
+      "text": "   size_t len;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd986",
+      "text": " };",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd987",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd988",
+      "text": " 挙動は一目瞭然かと思うけども一応テスト用の出力結果を貼ろう。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd989",
+      "text": " >||",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd98a",
+      "text": "   DP(hands.values);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd98b",
+      "text": "   DP(hands.pop(2));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd98c",
+      "text": "   DP(hands.values);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd98d",
+      "text": "   hands.revert(2);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd98e",
+      "text": "   DP(hands.values);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd98f",
+      "text": " ----以下出力",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd990",
+      "text": " hands.values: {4, 14, 15, 17, 49}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd991",
+      "text": " hands.pop(2): 15",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd992",
+      "text": " hands.values: {4, 14, 49, 17, 15}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd993",
+      "text": " hands.values: {4, 14, 15, 17, 49}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd994",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd995",
+      "text": " これを使って最初から最後まで同じカード配列を使い回す。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd996",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd997",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd998",
+      "text": " コア部分もシンプルにして一つの関数にまとめてみた。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd999",
+      "text": " >|cpp|",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd99a",
+      "text": " Result turn(const int iturn, Cards& unknowns, Cards &hand, ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd99b",
+      "text": " \t\t   const scores &round_score, const scores &game_score){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd99c",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd99d",
+      "text": "   Result result;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd99e",
+      "text": "   size_t N = unknowns.len;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd99f",
+      "text": "   ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a0",
+      "text": "   for(size_t myi=0; myi<hand.len; myi++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a1",
+      "text": "     int my = hand.pop(myi);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a2",
+      "text": "     eval_value score = 0;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a3",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a4",
+      "text": "     for(size_t i=0; i < N; i++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a5",
+      "text": "       int o1 = unknowns.pop(i);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a6",
+      "text": "       for(size_t j=0; j < N - 1; j++){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a7",
+      "text": " \tif(i == j) continue;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a8",
+      "text": " \tint o2 = unknowns.pop(j);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9a9",
+      "text": " \tif(iturn == 3){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9aa",
+      "text": " \t  score += end_of_game(",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ab",
+      "text": " \t    end_of_round(",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ac",
+      "text": " \t      end_of_turn(my, o1, o2, round_score), ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ad",
+      "text": " \t      game_score));",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ae",
+      "text": " \t  ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9af",
+      "text": " \t}else{",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b0",
+      "text": " \t  score += turn(",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b1",
+      "text": " \t    iturn + 1,",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b2",
+      "text": " \t    unknowns, hand,",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b3",
+      "text": " \t    end_of_turn(my, o1, o2, round_score),",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b4",
+      "text": " \t    game_score).score;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b5",
+      "text": " \t}",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b6",
+      "text": " \tunknowns.revert(j);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b7",
+      "text": "       }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b8",
+      "text": "       unknowns.revert(i);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9b9",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ba",
+      "text": "     if(score > result.score){",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9bb",
+      "text": "       result.score = score;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9bc",
+      "text": "       result.hand = my;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9bd",
+      "text": "     }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9be",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9bf",
+      "text": "     hand.revert(myi);",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c0",
+      "text": "   }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c1",
+      "text": "   return result;",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c2",
+      "text": " }",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c3",
+      "text": " ||<",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c4",
+      "text": " ",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c5",
+      "text": " あれー、実行すると9.9秒かかる。。古いバージョンで4.2秒くらいなのに。。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c6",
+      "text": " http://coderepos.org/share/browser/lang/python/saichugen/experiments/cpp/saichugen_simple.cpp?rev=27176",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c7",
+      "text": " んー。2倍も遅くなるって、なにか大きな失敗をしてそうな気がするなぁ。",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c8",
+      "text": " </body>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9c9",
+      "text": " <comments>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ca",
+      "text": " <comment>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9cb",
+      "text": " <username>tgbt</username>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9cc",
+      "text": " <body>昔のGPGPUは１回の描画パス中においてGPU上の共有メモリへのWrite->Readの順の処理が不可能だったんですが，CUDAはその辺が楽なのでらくちんです．<br><br>まぁ，要するにTextureしか無かったので必死だったんですが．<br>同一ブロック（Block）内のスレッド（Thread）は同時に異なる種類の演算を行えないのでちゃんとSIMDっぽくなるようにしましょうとか，GlobalMemoryは確かに遅いけど実際100倍の差が出るかは別とか，テーブル引くならいっそConstantMemoryですよ，とかヒントをおいておきます．最近都合によりCUDAプログラミングしてないけど！</body>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9cd",
+      "text": " <timestamp>1229866391</timestamp>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9ce",
+      "text": " </comment>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9cf",
+      "text": " </comments>",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9d0",
+      "text": "",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec20aff09e00003cd9d1",
+      "text": "[はてなダイアリー 2008-12-21 https://nishiohirokazu.hatenadiary.org/archive/2008/12/21]",
+      "created": 1229785200,
+      "updated": 1229785200,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

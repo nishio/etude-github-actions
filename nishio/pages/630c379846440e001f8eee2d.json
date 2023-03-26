@@ -1,0 +1,449 @@
+{
+  "id": "630c379846440e001f8eee2d",
+  "title": "プロセスを中断せずにループを中断する",
+  "created": 1661745050,
+  "updated": 1661754415,
+  "lines": [
+    {
+      "id": "630c379846440e001f8eee2d",
+      "text": "プロセスを中断せずにループを中断する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745050,
+      "updated": 1661753747
+    },
+    {
+      "id": "630c578daff09e00002fe972",
+      "text": "単発の処理が重たくて、それが二重ループで行われている時に、プロセスを中断せずにループを中断したいケースがある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753229,
+      "updated": 1661753238
+    },
+    {
+      "id": "630c5797aff09e00002fe974",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753240,
+      "updated": 1661753240
+    },
+    {
+      "id": "630c57a0aff09e00002fe975",
+      "text": "例えばAIによるテキストからの画像生成を「ランダムシードを変えながら、色々なテキストに対して試す」は重たい処理が二重ループで行われている状態だ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753249,
+      "updated": 1661753524
+    },
+    {
+      "id": "630c57feaff09e00002fe976",
+      "text": " 「シードについてのループ」の中に「テキストについてのループ」が入っているとする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753342,
+      "updated": 1661753504
+    },
+    {
+      "id": "630c589baff09e00002fe977",
+      "text": " 各シードの処理の最初で処理対象テキストをファイルから読むようにすると、処理対象を追加削除するたびにプロセスを再起動する必要がなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753499,
+      "updated": 1661753506
+    },
+    {
+      "id": "630c58c0aff09e00002fe978",
+      "text": " ところで、いま「なるべく早く結果が知りたいテキスト」があるとしよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753536,
+      "updated": 1661753638
+    },
+    {
+      "id": "630c5926aff09e00002fe979",
+      "text": " 　処理対象リストの先頭に書いたとしても「今実行中のテキストについてループ」が完了するまで読まれない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753639,
+      "updated": 1661753681
+    },
+    {
+      "id": "630c5951aff09e00002fe97a",
+      "text": " 　そこで、今実行中のループを中断(break)したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753682,
+      "updated": 1661753735
+    },
+    {
+      "id": "630c5997aff09e00002fe97b",
+      "text": " 　　しかしプロセスを中断すると、モデルのロードからやることになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753751,
+      "updated": 1661753831
+    },
+    {
+      "id": "630c59e7aff09e00002fe97c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753831,
+      "updated": 1661753835
+    },
+    {
+      "id": "630c59ecaff09e00002fe97d",
+      "text": "この状況を解決するためにユーザ定義シグナルを使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753836,
+      "updated": 1661753856
+    },
+    {
+      "id": "630c379aaff09e00005e33fb",
+      "text": "code:test.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745051,
+      "updated": 1661752565
+    },
+    {
+      "id": "630c37a8aff09e00005e33fd",
+      "text": " from time import sleep",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e33fe",
+      "text": " import signal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e33ff",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3400",
+      "text": " class SignalRecieved(Exception):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3401",
+      "text": "     pass",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3402",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3403",
+      "text": " def break_loop(signum, frame):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3404",
+      "text": "     raise SignalRecieved",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3405",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3406",
+      "text": " signal.signal(signal.SIGUSR1, break_loop)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3407",
+      "text": " for i in range(10):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3408",
+      "text": "     try:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e3409",
+      "text": "         for j in range(10):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e340a",
+      "text": "             print(i, j)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e340b",
+      "text": "             sleep(0.5)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e340c",
+      "text": "         print(\"after for j\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e340d",
+      "text": "     except SignalRecieved:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e340e",
+      "text": "         print(\"except\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a9aff09e00005e340f",
+      "text": "     print(\"after try\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745065,
+      "updated": 1661745065
+    },
+    {
+      "id": "630c37a5aff09e00005e33fc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745061,
+      "updated": 1661745061
+    },
+    {
+      "id": "630c5a0baff09e00002fe97e",
+      "text": "動作(#で始まる日本語は加筆したコメント)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753867,
+      "updated": 1661753903
+    },
+    {
+      "id": "630c54e3aff09e0000d730d8",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661752548,
+      "updated": 1661752549
+    },
+    {
+      "id": "630c37c7aff09e00005e3410",
+      "text": " $ python test.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745095,
+      "updated": 1661752560
+    },
+    {
+      "id": "630c37c8aff09e00005e3411",
+      "text": " 0 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3412",
+      "text": " 0 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3413",
+      "text": " 0 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c5ae3aff09e00002fe982",
+      "text": " # 実行中のプロセスを一時停止する(SIGTSTP)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661754083,
+      "updated": 1661754208
+    },
+    {
+      "id": "630c37c8aff09e00005e3416",
+      "text": " ^Z",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661753965
+    },
+    {
+      "id": "630c37c8aff09e00005e3417",
+      "text": " [1]+  Stopped                 python test.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c5a6eaff09e00002fe980",
+      "text": " # プロセスが一時停止された、ジョブ番号は1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661753967,
+      "updated": 1661754102
+    },
+    {
+      "id": "630c5aeaaff09e00002fe983",
+      "text": "\t# ジョブ1にユーザ定義シグナル(SIGUSR1)を送る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661754090,
+      "updated": 1661754220
+    },
+    {
+      "id": "630c37c8aff09e00005e3418",
+      "text": " $ kill -s USR1 %1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752576
+    },
+    {
+      "id": "630c37c8aff09e00005e341a",
+      "text": " [1]+  Stopped                 python test.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c5ad8aff09e00002fe981",
+      "text": " # 一時停止されたプロセスをforegroundで再開する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661754072,
+      "updated": 1661754148
+    },
+    {
+      "id": "630c37c8aff09e00005e341b",
+      "text": " $ fg",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752583
+    },
+    {
+      "id": "630c37c8aff09e00005e341c",
+      "text": " python test.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e341d",
+      "text": " except",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e341e",
+      "text": " after try",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e341f",
+      "text": " 1 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3420",
+      "text": " 1 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3421",
+      "text": " 1 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3422",
+      "text": " # 内側のループを抜けて次のループを開始したのがわかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661754189
+    },
+    {
+      "id": "630c5b4daff09e00002fe984",
+      "text": " # ちなみによく知られたCtrl+Cは中断シグナル(SIGINT)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661754189,
+      "updated": 1661754290
+    },
+    {
+      "id": "630c37c8aff09e00005e3424",
+      "text": " ^C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661754300
+    },
+    {
+      "id": "630c5bbbaff09e00002fe985",
+      "text": " Traceback (most recent call last):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661754300,
+      "updated": 1661754300
+    },
+    {
+      "id": "630c37c8aff09e00005e3425",
+      "text": "   File \"/home/nishio/mysd/stable-diffusion/scripts/test.py\", line 15, in <module>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3426",
+      "text": "     sleep(0.5)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c37c8aff09e00005e3427",
+      "text": " KeyboardInterrupt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745096,
+      "updated": 1661752552
+    },
+    {
+      "id": "630c3a8aaff09e0000259611",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745803,
+      "updated": 1661745803
+    },
+    {
+      "id": "630c3a8aaff09e0000259612",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1661745803,
+      "updated": 1661747146
+    }
+  ]
+}

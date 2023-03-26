@@ -1,0 +1,512 @@
+{
+  "id": "6090ec0ea287e6002291a32c",
+  "title": "Hatena2015-06-19",
+  "created": 1434639600,
+  "updated": 1434639600,
+  "lines": [
+    {
+      "id": "6090ec32aff09e00003e01e0",
+      "text": "Hatena2015-06-19",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e1",
+      "text": "code:hatena",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e2",
+      "text": " <body>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e3",
+      "text": " *1434706295*Schemeのマクロをかじってみる",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e4",
+      "text": " 今日の昼休みの雑談で「次に学ぶ言語って何かなぁ」という話題になって、JuliaとかElixirとか色々案が出た中で「やっぱりLisp」という話が出て、「Lispを学ぶならやはりマクロは外せない」って話と「Lispは関数が冒頭に来る記法がしっくりこない、Haskellみたいに$でつなげたらいいのに」という話が出て、それってマクロで実装してみるのにちょうどいい課題じゃーん、と思ったので実装してみました。",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e5",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e6",
+      "text": " Gaucheでどうやってコード中に$が出現しているかをチェックしたらいいのかがわからないので、文字列の\"$\"を使うことにしました。",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e7",
+      "text": " >|scheme|",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e8",
+      "text": " gosh> (eq? $ $)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01e9",
+      "text": " #t",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01ea",
+      "text": " gosh> (eq? (car `($ 1)) $)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01eb",
+      "text": " #f",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01ec",
+      "text": " gosh> (eqv? (car `($ 1)) $)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01ed",
+      "text": " #f",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01ee",
+      "text": " gosh> (equal? (car `($ 1)) $)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01ef",
+      "text": " #f",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f0",
+      "text": " ||<",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f1",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f2",
+      "text": " で、こんな感じのコードを書くと(1 \"$\" inc \"$\" print)で2と出力されるようになりました。",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f3",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f4",
+      "text": " >|scheme|",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f5",
+      "text": " (define (strip form)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f6",
+      "text": "   (if (= (length form) 1) (car form) form))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f7",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f8",
+      "text": " (define (f form ret)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01f9",
+      "text": "   (cond",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01fa",
+      "text": "    ((null? form) (reverse ret))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01fb",
+      "text": "    ((equal? (car form) \"$\") `( ,(strip (reverse ret)) ,(strip (f (cdr form) ()))))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01fc",
+      "text": "    (else (f (cdr form) (append ret `( ,(car form) ) )))))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01fd",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01fe",
+      "text": " (define (g form)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e01ff",
+      "text": "    (f (reverse form) ()))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0200",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0201",
+      "text": " (define-macro (haskell form) (g form))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0202",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0203",
+      "text": " (define (inc x) (+ x 1))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0204",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0205",
+      "text": " (haskell (1 \"$\" inc \"$\" print))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0206",
+      "text": " ; -> 2",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0207",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0208",
+      "text": " (haskell (inc 1 \"$\" print))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0209",
+      "text": " ; -> 2",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e020a",
+      "text": " ||<",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e020b",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e020c",
+      "text": " 1個以上の引数を取る関数とかリストがネストしている場合とかはサポート対象外です。",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e020d",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e020e",
+      "text": " リストがネストしているケースも遊ぼうと思って中置記法で書かれている式を前置記法に変換してから評価するマクロも作りました。( (1 + 2) * (3 + 4) )が21になります。",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e020f",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0210",
+      "text": " >|scheme|",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0211",
+      "text": " (define (f2 form)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0212",
+      "text": "   (cond ((not (list? form)) form)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0213",
+      "text": "         ((= (length form) 3)",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0214",
+      "text": "          `(,(cadr form) ,(f2 (car form)) ,(f2 (caddr form))))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0215",
+      "text": "         (else form)))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0216",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0217",
+      "text": " (define-macro (fortran form) (f2 form))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0218",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0219",
+      "text": " (fortran ((1 + 2) * (3 + 4)))",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e021a",
+      "text": " ; -> 21",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e021b",
+      "text": " ||<",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e021c",
+      "text": " ",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e021d",
+      "text": " しかしやってみて思うのは、複雑なことをやらないで「～はサポート範囲外です」と切り捨てればシンプルなコードで面白いことができるけど、現実的に使おうとすると「現実的に入力されうる構文木」が複雑であるがために複雑な条件分岐が必要になってめんどくさくなるってところですね。",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e021e",
+      "text": " </body>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e021f",
+      "text": " <comments>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0220",
+      "text": " <comment>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0221",
+      "text": " <username>shiro</username>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0222",
+      "text": " <body>$マクロありますよー http://practical-scheme.net/gauche/man/?p=$ <br>と書きかけて気づいたけれどこの記事のやつはチェインの方向が反対なんですね。Clojureの -> マクロが近いと思います。まあGaucheの$もClojureの->も最初の開き括弧の直後に1シンボル必要ですが、どうせ全体をマクロ呼び出しで囲むなら変わらないような。</body>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0223",
+      "text": " <timestamp>1434726086</timestamp>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0224",
+      "text": " </comment>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0225",
+      "text": " </comments>",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0226",
+      "text": "",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec32aff09e00003e0227",
+      "text": "[はてなダイアリー 2015-06-19 https://nishiohirokazu.hatenadiary.org/archive/2015/06/19]",
+      "created": 1434639600,
+      "updated": 1434639600,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

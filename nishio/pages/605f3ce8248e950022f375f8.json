@@ -1,0 +1,603 @@
+{
+  "id": "605f3ce8248e950022f375f8",
+  "title": "ABC197",
+  "created": 1616854250,
+  "updated": 1616855099,
+  "lines": [
+    {
+      "id": "605f3ce8248e950022f375f8",
+      "text": "ABC197",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854250,
+      "updated": 1616854250
+    },
+    {
+      "id": "605f3ceaaff09e0000a310b2",
+      "text": "Fの1WAが解消せず5問、Cを2^20回全探索するのではなく「上位ビットから順に絞り込んだらいい！」と謎の複雑な解法に突き進んで時間をロスした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854251,
+      "updated": 1616854265
+    },
+    {
+      "id": "605f3cf8aff09e0000a310b4",
+      "text": "[https://gyazo.com/eea10722a2bd37aeecc3b655bb307f20]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854265,
+      "updated": 1616854292
+    },
+    {
+      "id": "605f3d13aff09e0000a310b5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854292,
+      "updated": 1616854292
+    },
+    {
+      "id": "605f3db1aff09e0000a310b6",
+      "text": "C",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854449,
+      "updated": 1616854510
+    },
+    {
+      "id": "605f3dfdaff09e0000a310cc",
+      "text": "\t「上位ビットから順に絞り込んだらいい！」とか考えてしまったが、全探索でよかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854526,
+      "updated": 1616854541
+    },
+    {
+      "id": "605f3e30aff09e000041d2a6",
+      "text": "\t最初の実装に23分、実装しなおしに12分、全探索で良いと気付いて実装するのに7分掛けている。35分の浪費",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854576,
+      "updated": 1616854686
+    },
+    {
+      "id": "605f3decaff09e0000a310b7",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854510,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310b8",
+      "text": "\t def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310b9",
+      "text": "      N = int(input())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310ba",
+      "text": "      AS = list(map(int, input().split()))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310bb",
+      "text": "      if N == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310bc",
+      "text": "          print(AS[0])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310bd",
+      "text": "          return",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310be",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310bf",
+      "text": "      ret = INF = 9223372036854775807",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c0",
+      "text": "      for s in range(2 ** N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c1",
+      "text": "          xor_ed = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c2",
+      "text": "          or_ed = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c3",
+      "text": "          for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c4",
+      "text": "              or_ed |= AS[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c5",
+      "text": "              if s & (1 << i):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c6",
+      "text": "                  xor_ed ^= or_ed",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c7",
+      "text": "                  or_ed = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c8",
+      "text": "          xor_ed ^= or_ed",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310c9",
+      "text": "          ret = min(ret, xor_ed)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310ca",
+      "text": "      print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854515
+    },
+    {
+      "id": "605f3df2aff09e0000a310cb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854515,
+      "updated": 1616854516
+    },
+    {
+      "id": "605f3cf8aff09e0000a310b3",
+      "text": "D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854265,
+      "updated": 1616854693
+    },
+    {
+      "id": "605f3ea4aff09e000041d2a8",
+      "text": " 幾何の問題、複素数は僕の時は中学か高校で習ったけど最近はどうなのかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854693,
+      "updated": 1616854753
+    },
+    {
+      "id": "605f3ea4aff09e000041d2a7",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854693,
+      "updated": 1616854733
+    },
+    {
+      "id": "605f3eceaff09e0000a310ce",
+      "text": "\t def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310cf",
+      "text": "      N = int(input())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d0",
+      "text": "      x0, y0 = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d1",
+      "text": "      x2, y2 = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d2",
+      "text": "      cx = (x0 + x2) / 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d3",
+      "text": "      cy = (y0 + y2) / 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d4",
+      "text": "      v = (x0 - cx) + (y0 - cy) * 1j",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d5",
+      "text": "      from math import sin, cos, pi",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d6",
+      "text": "      rot = cos(2 * pi / N) + sin(2 * pi / N) * 1j",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d7",
+      "text": "      v *= rot",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d8",
+      "text": "      x1 = cx + v.real",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310d9",
+      "text": "      y1 = cy + v.imag",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310da",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310db",
+      "text": "      print(x1, y1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854734
+    },
+    {
+      "id": "605f3eceaff09e0000a310dc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854734,
+      "updated": 1616854736
+    },
+    {
+      "id": "605f3eccaff09e0000a310cd",
+      "text": "E",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854732,
+      "updated": 1616854768
+    },
+    {
+      "id": "605f3ef3aff09e000041d2aa",
+      "text": " 数字の小さい順に探索していく問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854772,
+      "updated": 1616854791
+    },
+    {
+      "id": "605f3f07aff09e000041d2ab",
+      "text": " 数字のグループの半ばで終わることはない、端で終わるのが必ずそれよりも低コスト",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854792,
+      "updated": 1616854834
+    },
+    {
+      "id": "605f3f32aff09e000041d2ac",
+      "text": " 右端で終わるのと左端で終わるののどちらが良いかはわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854834,
+      "updated": 1616855068
+    },
+    {
+      "id": "605f401baff09e000041d2af",
+      "text": " 　なので両方のパターンを計算していく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616855068,
+      "updated": 1616855068
+    },
+    {
+      "id": "605f401daff09e000041d2b0",
+      "text": " 　左端で終わる場合のコストと、その場合の最終位置、右端も同様",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616855070,
+      "updated": 1616855099
+    },
+    {
+      "id": "605f3eefaff09e000041d2a9",
+      "text": "　　変数が4つしかないDPと解釈しても良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854768,
+      "updated": 1616854900
+    },
+    {
+      "id": "605f3f5aaff09e000041d2ad",
+      "text": "\tcode:py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854875,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f83aff09e0000a310de",
+      "text": "\t def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310df",
+      "text": "      N = int(input())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e0",
+      "text": "      INF = 9223372036854775807",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e1",
+      "text": "      MAX = [-INF] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e2",
+      "text": "      MIN = [INF] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e3",
+      "text": "      for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e4",
+      "text": "          X, C = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e5",
+      "text": "          MAX[C] = max(MAX[C], X)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e6",
+      "text": "          MIN[C] = min(MIN[C], X)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e7",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e8",
+      "text": "      lx = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310e9",
+      "text": "      rx = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310ea",
+      "text": "      lt = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310eb",
+      "text": "      rt = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310ec",
+      "text": "      for c in range(N + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310ed",
+      "text": "          if MIN[c] == INF:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310ee",
+      "text": "              continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310ef",
+      "text": "          l = MIN[c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f0",
+      "text": "          r = MAX[c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f1",
+      "text": "          lt2 = min(lt + abs(r - lx), rt + abs(r - rx)) + (r - l)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f2",
+      "text": "          rt2 = min(lt + abs(l - lx), rt + abs(l - rx)) + (r - l) ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f3",
+      "text": "          lx, rx, lt, rt = l, r, lt2, rt2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f4",
+      "text": "          # debug(lx, rx, lt, rt, msg=\":\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f5",
+      "text": "      print(min(lt + abs(lx), rt + abs(rx)))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854916
+    },
+    {
+      "id": "605f3f84aff09e0000a310f6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854916,
+      "updated": 1616854917
+    },
+    {
+      "id": "605f3f8faff09e0000a310f7",
+      "text": "F",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854927,
+      "updated": 1616854927
+    },
+    {
+      "id": "605f3f8faff09e0000a310f8",
+      "text": "\t1WAが解消せず",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854928,
+      "updated": 1616854951
+    },
+    {
+      "id": "605f3fa6aff09e0000a310f9",
+      "text": "\tなるほど頂点ペアを頂点とみなせばダイクストラになるのか。僕は頂点ペアを明示的に扱いながら優先度キューにいれて短い方から探索したのだが、実質ダイクストラを実装することになっててなんらかのバグが入ってしまってるのだな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854951,
+      "updated": 1616854958
+    },
+    {
+      "id": "605f3fb8aff09e0000a310fa",
+      "text": "\t\tダイクストラと見比べたけどどこが間違ってるのかわからないなぁ、テストケースの公開待ちかな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854969,
+      "updated": 1616854969
+    },
+    {
+      "id": "605f3f81aff09e0000a310dd",
+      "text": " TLEになってる人は多分訪問済みペアをスキップするのを忘れてると思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854914,
+      "updated": 1616855016
+    },
+    {
+      "id": "605f3fd2aff09e000041d2ae",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616854995,
+      "updated": 1616854995
+    }
+  ]
+}

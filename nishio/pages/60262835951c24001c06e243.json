@@ -1,0 +1,225 @@
+{
+  "id": "60262835951c24001c06e243",
+  "title": "無意識に例外を握りつぶしてた",
+  "created": 1613113403,
+  "updated": 1613126022,
+  "lines": [
+    {
+      "id": "60262835951c24001c06e243",
+      "text": "無意識に例外を握りつぶしてた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113403,
+      "updated": 1613115106
+    },
+    {
+      "id": "6026285caff09e0000e7c418",
+      "text": "例外が発生したら画面(react-error-overlay)に出るだろうと期待している状況で、画面に出なかったので問題に気づくのが遅れた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113436,
+      "updated": 1613115335
+    },
+    {
+      "id": "602628bfaff09e0000e7c41a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113536,
+      "updated": 1613113536
+    },
+    {
+      "id": "602628bfaff09e0000e7c41b",
+      "text": "観測事実",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113536,
+      "updated": 1613113539
+    },
+    {
+      "id": "60262861aff09e0000e7c419",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113442,
+      "updated": 1613113573
+    },
+    {
+      "id": "602628e5aff09e00007ffc55",
+      "text": " console.log(\"will report\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113573,
+      "updated": 1613113585
+    },
+    {
+      "id": "602628e5aff09e00007ffc56",
+      "text": " throw new TypeError(\"report\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113573,
+      "updated": 1613113578
+    },
+    {
+      "id": "602628e5aff09e00007ffc57",
+      "text": "これでwill reportがコンソールに出るが、画面にもコンソールにもTypeErrorのエラーメッセージが表示されない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113573,
+      "updated": 1613126022
+    },
+    {
+      "id": "6026291daff09e0000e7c41d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113630,
+      "updated": 1613113630
+    },
+    {
+      "id": "60262ee5aff09e0000e7c41f",
+      "text": "原因",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115110,
+      "updated": 1613115112
+    },
+    {
+      "id": "60262ee8aff09e0000e7c420",
+      "text": " このコードはPromiseの中にあった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115112,
+      "updated": 1613115148
+    },
+    {
+      "id": "60262f07aff09e0000e7c421",
+      "text": " 　サーバ上のデータを取得するところなのでこれは自然",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115143,
+      "updated": 1613115148
+    },
+    {
+      "id": "60262f0caff09e0000e7c422",
+      "text": " そのPromiseの.catchで、問題を[Sentry]に報告するようにしていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115149,
+      "updated": 1613115623
+    },
+    {
+      "id": "6026291daff09e0000e7c41e",
+      "text": "  code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613113630,
+      "updated": 1613115285
+    },
+    {
+      "id": "60262c63aff09e00007ffc58",
+      "text": "        console.log(\"report1\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613114467,
+      "updated": 1613118624
+    },
+    {
+      "id": "60262f50aff09e00007ffc62",
+      "text": "        throw new TypeError(\"report\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115217,
+      "updated": 1613118624
+    },
+    {
+      "id": "60263c9baff09e00007ffc80",
+      "text": "\t\t\t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613118619,
+      "updated": 1613118628
+    },
+    {
+      "id": "60262f50aff09e00007ffc63",
+      "text": "   })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115217,
+      "updated": 1613118624
+    },
+    {
+      "id": "60262f50aff09e00007ffc64",
+      "text": "   .catch((error: unknown) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115217,
+      "updated": 1613118634
+    },
+    {
+      "id": "60262f50aff09e00007ffc74",
+      "text": "     Sentry.captureException(error);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115217,
+      "updated": 1613118638
+    },
+    {
+      "id": "60262f50aff09e00007ffc75",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115217,
+      "updated": 1613118639
+    },
+    {
+      "id": "60262f97aff09e00007ffc7c",
+      "text": "　つまり例外をReactが捕捉する前に処理してしまっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115288,
+      "updated": 1613115442
+    },
+    {
+      "id": "6026304eaff09e0000e7c423",
+      "text": "　throwすると期待通りに表示されるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115471,
+      "updated": 1613115486
+    },
+    {
+      "id": "60262f50aff09e00007ffc77",
+      "text": " \tcode:diff  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115217,
+      "updated": 1613115492
+    },
+    {
+      "id": "60262f89aff09e00007ffc7a",
+      "text": "  \t- Sentry.captureException(error);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115273,
+      "updated": 1613115492
+    },
+    {
+      "id": "60263043aff09e00007ffc7d",
+      "text": "  \t+ throw error;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115460,
+      "updated": 1613115492
+    },
+    {
+      "id": "60262f89aff09e00007ffc7b",
+      "text": "\t\t[https://gyazo.com/c70223995aa6073814fb6b4bf4905aa7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115274,
+      "updated": 1613115522
+    },
+    {
+      "id": "60263081aff09e00007ffc7f",
+      "text": "\tということはつまりそもそも`.catch(...)`を書くべきではなかったのでは",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613115522,
+      "updated": 1613115598
+    },
+    {
+      "id": "60263a10aff09e0000e7c426",
+      "text": "\t　単にレポートするだけのcatchに意味はない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613117968,
+      "updated": 1613118060
+    },
+    {
+      "id": "60263a6caff09e0000e7c427",
+      "text": "\tSentryのユーザフィードバックダイアログを出すようにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613118060,
+      "updated": 1613118088
+    },
+    {
+      "id": "602639f3aff09e0000e7c425",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613117940,
+      "updated": 1613117940
+    }
+  ]
+}

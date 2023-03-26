@@ -1,0 +1,540 @@
+{
+  "id": "5eeee9a718e981001e395cb3",
+  "title": "ABC170 E",
+  "created": 1592715688,
+  "updated": 1592984486,
+  "lines": [
+    {
+      "id": "5eeee9a718e981001e395cb3",
+      "text": "ABC170 E",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed955",
+      "text": "[ABC170] 問題E Smart Infants ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592984480
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed958",
+      "text": "20万個の数値が20万個の集合を20万回動き回る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592984486
+    },
+    {
+      "id": "5ef303a5aff09e000083ac7b",
+      "text": "このとき「集合の最大値」の最小値を各移動ごとに求めよ、という[問題 https://atcoder.jp/contests/abc170/tasks/abc170_e]。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592984486,
+      "updated": 1592984486
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed95a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592984468
+    },
+    {
+      "id": "5ef30392aff09e000083ac7a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592984466,
+      "updated": 1592984466
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed95b",
+      "text": "コンテスト中の思考",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed95c",
+      "text": "当然、各移動ごとに各集合に対してO(N)の処理をしたらTLEするだろう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed95d",
+      "text": "最小値をサッと取り出したいわけだから[heapq] [ヒープキュー]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed95e",
+      "text": "[優先度付きキュー - Wikipedia https://ja.wikipedia.org/wiki/%E5%84%AA%E5%85%88%E5%BA%A6%E4%BB%98%E3%81%8D%E3%82%AD%E3%83%A5%E3%83%BC]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed95f",
+      "text": "かな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed960",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed961",
+      "text": "しかし数の移動に伴って、「最大値の集合」から最小値以外の値が取り除かれることがある。例: {1}, {2}, {3} → {1}, {2, 3}, {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed962",
+      "text": "うーん、ソート済みの配列に対する二分探索で目的のものを見つけて…いや配列への追加削除がO(N)だから追加削除を繰り返す攻撃でTLEにされるな。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed963",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed964",
+      "text": "リンクトリストにすることで追加削除のコストを下げる…いや、それだと削除対象を見つけるのがO(N)じゃん…じゃあ双方向リストにして、かつ各オブジェクトへのインデックスをつける？？？？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed965",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed966",
+      "text": "解答考察編。[multiset - C++ Reference http://www.cplusplus.com/reference/set/multiset/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed967",
+      "text": "[平衡二分探索木 - Wikipedia https://ja.wikipedia.org/wiki/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%88%86%E6%8E%A2%E7%B4%A2%E6%9C%A8]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed968",
+      "text": "などの意見が…なるほど追加削除O(N)をO(1)にしようとして「あちらを立てればこちらが立たず」だったが、全般的にO(logN)にすれば良いのか。方向性はわかった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed969",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed96a",
+      "text": "それで具体的な実装はどうするのかな…あれ？heapqを使ってる人がいるぞ？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed96b",
+      "text": "https://atcoder.jp/contests/abc170/submissions/14361676",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed96c",
+      "text": "なるほど。ヒープキューの先頭以外の要素を取り除くコストは高いが、取り除かなければ良い、その代わり読み飛ばす仕組みをつければ良い、と。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed96d",
+      "text": "　集合から離れた人は先頭以外の場合は取り除かない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed96e",
+      "text": "　　先頭の人が取り除かれた場合の次の人を探すタイミングで「同じ人」と「現時点で他の集合に入ってる人」を取り除く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed96f",
+      "text": "　「集合ごとの最大スコアのヒープキュー」も更新時に古い要素を取り除かない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed970",
+      "text": "　　代わりに各集合ごとに「自分が最後に最大スコアを更新した時刻」を記録する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed971",
+      "text": "　　出力のために先頭要素を取得した時点で、それが古いデータであれば捨てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed972",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed973",
+      "text": "というわけで参考にしつつ書いたコードはACになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed974",
+      "text": "https://atcoder.jp/contests/abc170/submissions/14371172",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed975",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed976",
+      "text": "感想",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed977",
+      "text": "　これでTLEしないということに確信が持てない…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed978",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed979",
+      "text": "適当なAVL木の実装を持ってきて置き換えてみた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed97a",
+      "text": "→コードはシンプルになるが、TLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed97b",
+      "text": "オーダーはO(logN)のはずだが定数倍が大きい？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed97c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed97d",
+      "text": "PyPy実装の人の速い方から5件をみる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed97e",
+      "text": "\t個別の集合を持つのには4人がheapq。数が多いのでツリー構築はオーバーヘッドが大きいから避けられてるのだろう。削除をする代わりに読み飛ばすアプローチは広く使われてるようだ。一人だけset、つまりハッシュマップ的アプローチでやってる人がいた。意外な抜け道。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed97f",
+      "text": "\t最大値の集合を持つのには、[セグメント木]3人、heapq1人、[フェニック木]1人。フェニック木も面白そうだけど、とりあえずセグメント木が使えるようになりたいなーという気持ちになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed980",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed981",
+      "text": "\thttps://atcoder.jp/contests/abc170/submissions/14369529",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed982",
+      "text": "\t\t二つのheapqで集合に入った数値と抜けた数値を保管",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed983",
+      "text": "\t\tセグメント木で最小値を求める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed984",
+      "text": "\thttps://atcoder.jp/contests/abc170/submissions/14332420",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed985",
+      "text": "\t\tシフトを使ってるのはタプルを使わずに数値をパックするため",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed986",
+      "text": "\t\theapqに入れる、離れた人を先頭取得時に取り除く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed987",
+      "text": "\t\t最大値の集合もheapqに入れる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed988",
+      "text": "\t\t最小値の人が、最小値の人の所属する集合の最大値でないなら読み飛ばす",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed989",
+      "text": "\t\t　それでいいのか？？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed98a",
+      "text": "\thttps://atcoder.jp/contests/abc170/submissions/14338427",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed98b",
+      "text": "　\theapqに入れる、離れた人を先頭取得時に取り除く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed98c",
+      "text": "　\t移動元と移動先の最大値をセグメント木に入れる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed98d",
+      "text": "　\tこの人のセグメント木のコードは読みやすい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed98e",
+      "text": "　https://atcoder.jp/contests/abc170/submissions/14349092",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed98f",
+      "text": "　\t集合を集合(set)で表現",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed990",
+      "text": "　\t集合の最大値は普通にmaxで計算",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed991",
+      "text": "　\t　それでTLEならないのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed992",
+      "text": "　\t　　単純に真似したら一つの集合に密集してるhandmade06などのテストケースでTLEになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed993",
+      "text": "　\t　　よく読むとうまい工夫があるのかもしれない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed994",
+      "text": "　\t　　他のheapqアプローチが(レート, 人ID)の対を入れてるのに対してこちらはレートだけを入れてるのが独特",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed995",
+      "text": "　\t最大値はセグメント木に入れる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed996",
+      "text": "\thttps://atcoder.jp/contests/abc170/submissions/14360320",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed997",
+      "text": "\t\tレートに対して[座標圧縮]を掛ける、なぜ？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed998",
+      "text": "\t\t集合はheapqで表現",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed999",
+      "text": "\t\t最大値の集合はBinary Indexed Tree([フェニック木])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed99a",
+      "text": "\t\t 更新が効率的に行える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed99b",
+      "text": "\t\t 座標圧縮は木のサイズを小さくするのに寄与する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed99c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed99d",
+      "text": "これを踏まえて",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed99e",
+      "text": "　[heapq]で集合を表現して、その最小値を(heapqでも良いが勉強のために)[セグメント木]でつくるアプローチで、[標準入出力でTLE]の罠にハマりつつもACに至った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed99f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    },
+    {
+      "id": "5eeee9a7aff09e00000ed9a0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592715688,
+      "updated": 1592715688
+    }
+  ]
+}

@@ -1,0 +1,393 @@
+{
+  "id": "5f0fc681cde5660022b3552b",
+  "title": "双対セグメント木の下への伝搬",
+  "created": 1594869382,
+  "updated": 1601214957,
+  "lines": [
+    {
+      "id": "5f0fc681cde5660022b3552b",
+      "text": "双対セグメント木の下への伝搬",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869382,
+      "updated": 1594869386
+    },
+    {
+      "id": "5f0fc7ecaff09e0000ee77b7",
+      "text": "\t[DSL 2 D Range Update Query]ではこう書いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869740,
+      "updated": 1594871122
+    },
+    {
+      "id": "5f0fc827aff09e0000f85629",
+      "text": "\t\t「値を上書きする」の範囲作用がどう定義されるべきか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869799,
+      "updated": 1594869894
+    },
+    {
+      "id": "5f0fc884aff09e0000ee77bb",
+      "text": "\t\t範囲作用はノードが上にあるか下にあるかでどちらが後かわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869892,
+      "updated": 1594869894
+    },
+    {
+      "id": "5f0fc884aff09e0000ee77bc",
+      "text": "\t\tそこで値をタイムスタンプ付きにして、下への伝搬は「タイムスタンプの新しい方を取る」二項演算にした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869892,
+      "updated": 1594869894
+    },
+    {
+      "id": "5f0fc884aff09e0000ee77bd",
+      "text": " これは改めて考えてみると下記を意味している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869892,
+      "updated": 1594870033
+    },
+    {
+      "id": "5f0fc8e6aff09e0000f8562b",
+      "text": " 　作用が可換だと無意識に前提した実装にしていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869990,
+      "updated": 1594869992
+    },
+    {
+      "id": "5f0fc8e8aff09e0000f8562c",
+      "text": " 　可換でない\"上書き作用\"の時に正しく動作しない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869992,
+      "updated": 1594869992
+    },
+    {
+      "id": "5f0fc8eaaff09e0000f8562d",
+      "text": " 　タイムスタンプを付与することで可換なmax演算に変えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869994,
+      "updated": 1594870027
+    },
+    {
+      "id": "5f0fc91baff09e0000f8562e",
+      "text": " [- 範囲作用の前に下への伝搬を正しくやっていないことが問題]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870044,
+      "updated": 1601214725
+    },
+    {
+      "id": "5f0fc95daff09e0000f8562f",
+      "text": "\t\t点取得しか必要ない時に値のセグメント木を省くのが[半分遅延セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870113,
+      "updated": 1601214894
+    },
+    {
+      "id": "5f7099aeaff09e00002a649b",
+      "text": "\t\tさらに作用の合成が可換である時に、下への伝搬をサボるのが[双対セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601214894,
+      "updated": 1601214904
+    },
+    {
+      "id": "5f7099b8aff09e00002a649c",
+      "text": "\t\t正しく双対セグメント木を作ったが「作用の合成が可換」を見落としていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601214904,
+      "updated": 1601214953
+    },
+    {
+      "id": "5f709908aff09e0000d12b01",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601214728,
+      "updated": 1601214728
+    },
+    {
+      "id": "5f709908aff09e0000d12b02",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1601214728,
+      "updated": 1601214728
+    },
+    {
+      "id": "5f0fc839aff09e0000f8562a",
+      "text": "範囲作用を2回やって、fとgが順不同で重なっているデモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869818,
+      "updated": 1594870168
+    },
+    {
+      "id": "5f0fc983aff09e0000f85630",
+      "text": "　下への伝搬が可換ならここで順番が入れ替わってても問題ない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870147,
+      "updated": 1594870190
+    },
+    {
+      "id": "5f0fc6ddaff09e0000ee7799",
+      "text": " code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869470,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee779a",
+      "text": "  >>> range_update(table, 3, 10, lambda x: \"f\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869732,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee779c",
+      "text": "  >>> range_update(table, 5, 15, lambda x: \"g\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee779d",
+      "text": "  >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee779e",
+      "text": "  |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee779f",
+      "text": "  |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a0",
+      "text": "  |   0   |   f   |   g   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a1",
+      "text": "  | 0 | 0 | 0 | g | f | 0 | g | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a2",
+      "text": "  |0|0|0|f|0|g|0|0|0|0|0|0|0|0|g|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870198
+    },
+    {
+      "id": "5f0fc821aff09e0000ee77b9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869793,
+      "updated": 1594869793
+    },
+    {
+      "id": "5f0fc9bcaff09e0000f85631",
+      "text": "可換でない時の正しいやり方",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870210,
+      "updated": 1594870213
+    },
+    {
+      "id": "5f0fc9c6aff09e0000f85632",
+      "text": "　2つ目の範囲作用の前に下への伝搬をしておく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870214,
+      "updated": 1594870233
+    },
+    {
+      "id": "5f0fc9f6aff09e0000f85633",
+      "text": "　次の範囲作用で書き換えるセルの上のセルが下に降りてることが保証される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870269,
+      "updated": 1594870295
+    },
+    {
+      "id": "5f0fca3baff09e0000ee77be",
+      "text": "　範囲作用させてる`lambda x: \"g\"`は、下伝搬の二項演算`lambda x, y: x if x else y`のxに\"g\"が入ったもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594870332,
+      "updated": 1594870437
+    },
+    {
+      "id": "5f0fc81eaff09e0000ee77b8",
+      "text": " code:python ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869790,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a4",
+      "text": "  >>> table = [0] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a5",
+      "text": "  >>> range_update(table, 3, 10, lambda x: \"f\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a6",
+      "text": "  >>> down_propagate(table, up(5), lambda x, y: x if x else y, 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a7",
+      "text": "  >>> down_propagate(table, up(15), lambda x, y: x if x else y, 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a8",
+      "text": "  >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77a9",
+      "text": "  |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77aa",
+      "text": "  |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77ab",
+      "text": "  |   0   |   0   |   0   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77ac",
+      "text": "  | 0 | 0 | 0 | f | f | 0 | 0 | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77ad",
+      "text": "  |0|0|0|f|f|f|0|0|0|0|0|0|0|0|0|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77ae",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77af",
+      "text": "  >>> range_update(table, 5, 15, lambda x: \"g\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b0",
+      "text": "  >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b1",
+      "text": "  |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b2",
+      "text": "  |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b3",
+      "text": "  |   0   |   0   |   g   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b4",
+      "text": "  | 0 | 0 | 0 | g | f | 0 | g | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b5",
+      "text": "  |0|0|0|f|f|g|0|0|0|0|0|0|0|0|g|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594870240
+    },
+    {
+      "id": "5f0fc7e4aff09e0000ee77b6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869733,
+      "updated": 1594869734
+    },
+    {
+      "id": "5f0fceb9aff09e0000f85635",
+      "text": "付録: [下への伝搬の影響範囲]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594871481,
+      "updated": 1594873909
+    },
+    {
+      "id": "5f0fd832aff09e0000c6863b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594873906,
+      "updated": 1594873906
+    },
+    {
+      "id": "5f0fcd71aff09e00009b5a31",
+      "text": "[双対セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594871154,
+      "updated": 1594871159
+    },
+    {
+      "id": "5f0fc68aaff09e0000f85628",
+      "text": "[セグメント木の可視化] ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869387,
+      "updated": 1594871126
+    }
+  ]
+}

@@ -1,0 +1,687 @@
+{
+  "id": "5ca56fa09d37d7001722e490",
+  "title": "Bitapアルゴリズム",
+  "created": 1554345890,
+  "updated": 1554437247,
+  "lines": [
+    {
+      "id": "5ca56fa09d37d7001722e490",
+      "text": "Bitapアルゴリズム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345890,
+      "updated": 1554345893
+    },
+    {
+      "id": "5ca56fa4aff09e0000f994d6",
+      "text": ">Bitapアルゴリズムは、ビット演算の並列性を利用した文字列探索アルゴリズム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345893,
+      "updated": 1554345950
+    },
+    {
+      "id": "5ca56fddaff09e0000f994d8",
+      "text": "> Baeza–Yates–Gonnetアルゴリズムや、Shift-andアルゴリズム・Shift-orアルゴリズムとも呼ばれる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345950,
+      "updated": 1554345957
+    },
+    {
+      "id": "5ca56fe5aff09e0000f994d9",
+      "text": "> [あいまい検索]に利用できることが、他の文字列探索アルゴリズムにない特徴である。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345957,
+      "updated": 1554346022
+    },
+    {
+      "id": "5ca56ff4aff09e0000f994da",
+      "text": "\t[Bitapアルゴリズム - Wikipedia https://ja.wikipedia.org/wiki/Bitap%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345973,
+      "updated": 1554346007
+    },
+    {
+      "id": "5ca57003aff09e0000f994db",
+      "text": "\t>'bitap' (bit-parallel approximate pattern matching)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345987,
+      "updated": 1554345989
+    },
+    {
+      "id": "5ca56fceaff09e0000f994d7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554345934,
+      "updated": 1554345934
+    },
+    {
+      "id": "5ca5728baff09e0000f994e8",
+      "text": "\t[asearch]で実装されている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346636,
+      "updated": 1554346649
+    },
+    {
+      "id": "5ca5728baff09e0000f994e9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346636,
+      "updated": 1554346636
+    },
+    {
+      "id": "5ca570cdaff09e0000f994dd",
+      "text": "まずシンプルな「あいまいでない検索」から説明",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346189,
+      "updated": 1554346201
+    },
+    {
+      "id": "5ca57018aff09e0000f994dc",
+      "text": "[https://gyazo.com/32dc88bb9200d0663c6cdc643ea29938]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346008,
+      "updated": 1554346175
+    },
+    {
+      "id": "5ca570e3aff09e0000f994de",
+      "text": "こういう直線状の[NFA]を使って文字列の受理を判断する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346212,
+      "updated": 1554350207
+    },
+    {
+      "id": "5ca5713faff09e0000f994df",
+      "text": "各状態にいるかどうかの1bitを整数にパックするとANDやシフトの演算を使える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346303,
+      "updated": 1554346318
+    },
+    {
+      "id": "5ca5714daff09e0000f994e0",
+      "text": "この図の場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346318,
+      "updated": 1554346335
+    },
+    {
+      "id": "5ca57151aff09e0000f994e1",
+      "text": "\t初期状態 100",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346321,
+      "updated": 1554346356
+    },
+    {
+      "id": "5ca571f5aff09e0000f994e4",
+      "text": "\t受理状態マスク accept 001",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346486,
+      "updated": 1554346524
+    },
+    {
+      "id": "5ca57161aff09e0000f994e2",
+      "text": "\t文字aに対応するマスク 100",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346337,
+      "updated": 1554346354
+    },
+    {
+      "id": "5ca570bfaff09e0000806daa",
+      "text": "\t文字bに対応するマスク 010",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346175,
+      "updated": 1554346366
+    },
+    {
+      "id": "5ca57241aff09e0000f994e6",
+      "text": "\t\tその文字で次の状態へ遷移する矢印の生えている根元の状態にビットが立っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346562,
+      "updated": 1554346587
+    },
+    {
+      "id": "5ca5717caff09e0000f994e3",
+      "text": "\t状態の更新: `state = (state & mask) >> 1`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346364,
+      "updated": 1554346447
+    },
+    {
+      "id": "5ca570bfaff09e0000806da9",
+      "text": "\t受理の判定: `state & accept != 0`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346175,
+      "updated": 1554347271
+    },
+    {
+      "id": "5ca57201aff09e0000f994e5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346497,
+      "updated": 1554346497
+    },
+    {
+      "id": "5ca57271aff09e0000f994e7",
+      "text": "このパターンは正規表現で言うところの\"ab\"にマッチするわけだが、\".*a.*b\"にマッチするようにすることも簡単にできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346609,
+      "updated": 1554346873
+    },
+    {
+      "id": "5ca57353aff09e0000f994ea",
+      "text": "[https://gyazo.com/0af6aed29ac322dd24d4577d7490b892]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346835,
+      "updated": 1554347234
+    },
+    {
+      "id": "5ca574e2aff09e00006fa016",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554347234,
+      "updated": 1554347234
+    },
+    {
+      "id": "5ca573b5aff09e0000f994ec",
+      "text": "\t任意文字での遷移のマスク eps 110",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346933,
+      "updated": 1554350024
+    },
+    {
+      "id": "5ca574eeaff09e0000f994f2",
+      "text": "\t\t任意文字での遷移の生えている根元の状態にビットが立っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554347246,
+      "updated": 1554350028
+    },
+    {
+      "id": "5ca573c2aff09e0000f994ed",
+      "text": "\t状態の更新: `state = (state & eps) | (state & mask) >> 1`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346946,
+      "updated": 1554346984
+    },
+    {
+      "id": "5ca573efaff09e0000f994ef",
+      "text": "\t\tepsマスクで1の立っている状態が一度1になると、その後もずっと1であり続ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346991,
+      "updated": 1554347022
+    },
+    {
+      "id": "5ca5740aaff09e0000f994f1",
+      "text": "\t[asearch]の実装では、0x20をこの遷移を意味する文字にしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554347018,
+      "updated": 1554347312
+    },
+    {
+      "id": "5ca573f5aff09e0000f994f0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554346998,
+      "updated": 1554346998
+    },
+    {
+      "id": "5ca57530aff09e0000f994f3",
+      "text": "あいまい検索",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554347313,
+      "updated": 1554347334
+    },
+    {
+      "id": "5ca57546aff09e0000f994f5",
+      "text": "[https://gyazo.com/4fc58b867e8bbde5eaafafd6cf7d75da]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554347334,
+      "updated": 1554349260
+    },
+    {
+      "id": "5ca57ccbaff09e00006fa017",
+      "text": "\t1文字誤りを許容するパターンを別の整数で表現する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349260,
+      "updated": 1554349296
+    },
+    {
+      "id": "5ca57feaaff09e0000f99500",
+      "text": "\t\tこの(1), (2), (3)のそれぞれの遷移について解説しようと思ったが、どうも解説の図と実装に食い違いがあるようなので保留",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350058,
+      "updated": 1554350085
+    },
+    {
+      "id": "5ca57cefaff09e0000f994f6",
+      "text": "\t(3)の遷移に関して",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349296,
+      "updated": 1554349328
+    },
+    {
+      "id": "5ca57d19aff09e0000f994f9",
+      "text": "\t\t[/masui/曖昧検索asearch]の図ではbになっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349338,
+      "updated": 1554349351
+    },
+    {
+      "id": "5ca57d0faff09e0000f994f7",
+      "text": "\t\t[https://gyazo.com/d3884cc7d269be9eed5de95a28b261f0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349328,
+      "updated": 1554349330
+    },
+    {
+      "id": "5ca57d12aff09e0000f994f8",
+      "text": "\t\tしかしasearchの実装ではi0をアップデートした後に `i1 |= (i0 >> 1)` しているのでaでの遷移になっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349330,
+      "updated": 1554349413
+    },
+    {
+      "id": "5ca57541aff09e0000f994f4",
+      "text": "\t\tこの図における\"*\"の遷移とasearchの実装は「文字を消費しないイプシロン遷移」ではなくて「任意の1文字での遷移」であるように見える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554347330,
+      "updated": 1554350126
+    },
+    {
+      "id": "5ca5802faff09e0000f99503",
+      "text": "\t\t\t(asearchの実装ではepsilonと言う変数名は使われてはいるが)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350127,
+      "updated": 1554350128
+    },
+    {
+      "id": "5ca57e07aff09e0000f994fc",
+      "text": "\t\tそのため",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349576,
+      "updated": 1554350114
+    },
+    {
+      "id": "5ca58021aff09e0000f99502",
+      "text": "\t\t\tNFAの図の通りに実装しているなら\"ab\"は\"b\"を受理して\"a\"を受理しない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350114,
+      "updated": 1554382069
+    },
+    {
+      "id": "5ca58020aff09e0000f99501",
+      "text": "\t\t\t現状のasearchの実装では\"a\"を受理して\"b\"を受理しない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350112,
+      "updated": 1554350112
+    },
+    {
+      "id": "5ca57f07aff09e0000f994fe",
+      "text": "\t\t文字を消費しないイプシロン遷移である場合には桂馬とびの遷移(3)がなくても\"a\"も\"b\"も受理される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349832,
+      "updated": 1554349859
+    },
+    {
+      "id": "5ca57e73aff09e0000f994fd",
+      "text": "\t\t\t[https://gyazo.com/515ce7163d379ad3ffc1c5368a9c456b]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349683,
+      "updated": 1554349850
+    },
+    {
+      "id": "5ca57ef0aff09e00006fa018",
+      "text": "\t\t\tビット演算でこれを実装するのが楽かどうかは未検討",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349808,
+      "updated": 1554350237
+    },
+    {
+      "id": "5ca580a4aff09e0000f99504",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350245,
+      "updated": 1554350529
+    },
+    {
+      "id": "5ca581c2aff09e0000f99505",
+      "text": "https://github.com/masui/asearch-ruby",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350530,
+      "updated": 1554350530
+    },
+    {
+      "id": "5ca581c3aff09e0000f99506",
+      "text": "\tcode:ruby",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350531,
+      "updated": 1554350536
+    },
+    {
+      "id": "5ca581c8aff09e0000f99507",
+      "text": "  chars.each { |c|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350536,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f99508",
+      "text": "    mask = @shiftpat[c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f99509",
+      "text": "    i3 = (i3 & @epsilon) | ((i3 & mask) >> 1) | (i2 >> 1) | i2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f9950a",
+      "text": "    i2 = (i2 & @epsilon) | ((i2 & mask) >> 1) | (i1 >> 1) | i1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f9950b",
+      "text": "    i1 = (i1 & @epsilon) | ((i1 & mask) >> 1) | (i0 >> 1) | i0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f9950c",
+      "text": "    i0 = (i0 & @epsilon) | ((i0 & mask) >> 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f9950d",
+      "text": "    i1 |= (i0 >> 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f9950e",
+      "text": "    i2 |= (i1 >> 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f9950f",
+      "text": "    i3 |= (i2 >> 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca581f4aff09e0000f99510",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350580,
+      "updated": 1554350587
+    },
+    {
+      "id": "5ca57d86aff09e0000f994fb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554349447,
+      "updated": 1554349447
+    },
+    {
+      "id": "5ca594a0aff09e0000099efc",
+      "text": "[レーベンシュタイン距離]の定義を見ながらどんな遷移があるべきなのかを考える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355360,
+      "updated": 1554355379
+    },
+    {
+      "id": "5ca58227aff09e0000f99511",
+      "text": "\t[https://gyazo.com/222b0f954e5cbd652709f8af937e4958]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350632,
+      "updated": 1554355382
+    },
+    {
+      "id": "5ca594b7aff09e0000099efd",
+      "text": "\t\t1文字挿入は、任意の1文字が来たときに、その文字によらず上への遷移が起きれば良いので",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355383,
+      "updated": 1554355480
+    },
+    {
+      "id": "5ca594fdaff09e0000099efe",
+      "text": "\t\t\t`i1 |= i0`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355453,
+      "updated": 1554355462
+    },
+    {
+      "id": "5ca5946baff09e00006fa019",
+      "text": "\t\t1文字置換は、任意の1文字が来たときに、その文字によらず右上への遷移が起きれば良いので",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355308,
+      "updated": 1554355487
+    },
+    {
+      "id": "5ca5951eaff09e0000099eff",
+      "text": "\t\t\t`i1 |= (i0 >> 1)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355487,
+      "updated": 1554355497
+    },
+    {
+      "id": "5ca59529aff09e0000099f00",
+      "text": "\t\t1文字削除が文字を消費しないイプシロン遷移なのが面倒",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355498,
+      "updated": 1554355529
+    },
+    {
+      "id": "5ca59549aff09e0000099f01",
+      "text": "\t\t\t「前の文字が来たとき」に、ついでに遷移しておく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355529,
+      "updated": 1554355860
+    },
+    {
+      "id": "5ca59554aff09e0000099f02",
+      "text": "\t\t\tというわけで文字を消費する遷移が終わった後で `i1 |= (i0 >> 1)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355540,
+      "updated": 1554355605
+    },
+    {
+      "id": "5ca5955daff09e0000099f03",
+      "text": "\t\tこう考えてみるとasearchの実装の遷移の部分には問題がないことがわかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355549,
+      "updated": 1554355636
+    },
+    {
+      "id": "5ca595b4aff09e0000099f05",
+      "text": "\t\t問題があるのはここ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355636,
+      "updated": 1554355744
+    },
+    {
+      "id": "5ca5961faff09e0000099f08",
+      "text": "\t\t\tcode:ruby",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355744,
+      "updated": 1554355747
+    },
+    {
+      "id": "5ca59622aff09e0000099f09",
+      "text": "\t\t\t def initstate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355747,
+      "updated": 1554355747
+    },
+    {
+      "id": "5ca59623aff09e0000099f0a",
+      "text": "      [INITPAT, 0, 0, 0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355747,
+      "updated": 1554355754
+    },
+    {
+      "id": "5ca59623aff09e0000099f0b",
+      "text": "    end",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355747,
+      "updated": 1554355754
+    },
+    {
+      "id": "5ca595c0aff09e0000099f06",
+      "text": "\t\t\t最初の文字が来る前のイプシロン遷移でi1〜i3にもビットが立つはずなのに0にしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355648,
+      "updated": 1554355806
+    },
+    {
+      "id": "5ca595c0aff09e0000099f07",
+      "text": "\t\t図に関しては、イプシロン遷移を使って描くなら斜め遷移がイプシロンも含むということなのだが、使わずに描くならその斜めの遷移が[Bitapアルゴリズム#5ca57e73aff09e0000f994fd]の仕組みで2通りの遷移になるので桂馬飛びの線にはa, b両方を描くのが正しそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554355649,
+      "updated": 1554356175
+    },
+    {
+      "id": "5ca59772aff09e0000099f0c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554356082,
+      "updated": 1554356082
+    },
+    {
+      "id": "5ca59ba8aff09e0000099f0d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554357161,
+      "updated": 1554357161
+    },
+    {
+      "id": "5ca58227aff09e0000f99512",
+      "text": "その他の話題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350632,
+      "updated": 1554350634
+    },
+    {
+      "id": "5ca5822caff09e0000f99514",
+      "text": "\t文字ごとのマスク(shiftpat)は「その文字が来たときに、どの状態が遷移元になるか」を示したものなので、例えば\"a\"に対応するマスクと\"A\"に対応するマスクの両方でビットを立てておけばcase-insensitiveなマッチもできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350636,
+      "updated": 1554350758
+    },
+    {
+      "id": "5ca582b0aff09e0000f99516",
+      "text": "\t\tcase-insensitiveに限らず、複数種類の1文字で遷移するタイプのものならなんでも。例えば\\d。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350768,
+      "updated": 1554350860
+    },
+    {
+      "id": "5ca5830baff09e0000f99517",
+      "text": "\t一方「文字ごとのマスク」は、文字ごとに必要なので、日本語文字列に対するマッチに一工夫必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350860,
+      "updated": 1554350995
+    },
+    {
+      "id": "5ca58392aff09e0000f99518",
+      "text": "\t\tasearchの実装では文字を複数のバイトに分割してバイトごとにマッチしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554350995,
+      "updated": 1554351022
+    },
+    {
+      "id": "5ca583adaff09e0000f99519",
+      "text": "\t\t\tcons: 日本語の1文字の違いはあいまい検索において2文字の違いになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351022,
+      "updated": 1554351052
+    },
+    {
+      "id": "5ca583ceaff09e0000f9951a",
+      "text": "\t\t\t\tたまたま2バイトの片方が一致した場合は1文字の違いになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351055,
+      "updated": 1554351075
+    },
+    {
+      "id": "5ca583e9aff09e0000f9951b",
+      "text": "\t\t僕の実装では下位1バイトの情報だけ取って残りを捨てている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351081,
+      "updated": 1554351114
+    },
+    {
+      "id": "5ca58409aff09e0000f9951d",
+      "text": "\t\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351114,
+      "updated": 1554351175
+    },
+    {
+      "id": "5ca58447aff09e0000f9951e",
+      "text": "\t\t\t >>> ensure_bytes(\"こんにちは\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351175,
+      "updated": 1554351179
+    },
+    {
+      "id": "5ca58448aff09e0000f9951f",
+      "text": "    b'S\\x93kao'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351176,
+      "updated": 1554351182
+    },
+    {
+      "id": "5ca583f5aff09e0000f9951c",
+      "text": "\t\t\tある程度(5文字〜)の長さの日本語文字列の下位1バイトの列がたまたまASCII文字列で意味をなす文字列になる確率は無視できるくらい小さいと考えている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351094,
+      "updated": 1554351280
+    },
+    {
+      "id": "5ca6d45daff09e0000059353",
+      "text": "\t\t\t\tcons: asearchの実装みたいに0x20を特殊な意味の文字に使ったりしている場合、日本語文字がたまたまその文字になった時に予期しない挙動になるな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554437214,
+      "updated": 1554437247
+    },
+    {
+      "id": "5ca58480aff09e0000f99520",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554351233,
+      "updated": 1554351233
+    },
+    {
+      "id": "5ca6bf54aff09e0000c44833",
+      "text": "\t速度",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554431829,
+      "updated": 1554431831
+    },
+    {
+      "id": "5ca6bf56aff09e0000c44834",
+      "text": "\t\tScrapboxをクロールして手に入れたページタイトルの集合25743件に対して長さ20のクエリで曖昧検索をして min 29, max 47, med 33 msec だった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554431830,
+      "updated": 1554437202
+    },
+    {
+      "id": "5ca6bf5aaff09e0000c44835",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1554431835,
+      "updated": 1554431835
+    }
+  ]
+}

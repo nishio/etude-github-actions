@@ -1,0 +1,512 @@
+{
+  "id": "60f10bd514700000220361cb",
+  "title": "2021-07-16Movidea開発日記",
+  "created": 1626409946,
+  "updated": 1629299492,
+  "lines": [
+    {
+      "id": "60f10bd514700000220361cb",
+      "text": "2021-07-16Movidea開発日記",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626409946,
+      "updated": 1629299492
+    },
+    {
+      "id": "60f10bdbaff09e00001a3ce7",
+      "text": "最近Movideaの開発がこのページみたいに日記スタイルなんだけど[pRegroup]や[pKeicho]みたいにやらないのは「構造が事後的に発生するのでは」というような気持ちなのです",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626409947,
+      "updated": 1626410124
+    },
+    {
+      "id": "60f10c8caff09e00001a3ce9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410124,
+      "updated": 1626410124
+    },
+    {
+      "id": "60f10c8caff09e00001a3cea",
+      "text": "実際「そういえば実装すべき機能のリストを作ったはずだな」と日記を遡ってみて「この段落、何度も参照するなら別ページに切り出して日付ではないタイトルがあるべきだな」となって[Movidea実際に使えるようにするために必要な機能]のページができた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410125,
+      "updated": 1626410315
+    },
+    {
+      "id": "60f10d8caff09e00001a3ceb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410380,
+      "updated": 1626410380
+    },
+    {
+      "id": "60f10e72aff09e00001a3ced",
+      "text": "Cypressの試行錯誤と機能追加が渾然一体となっててページへの分離に余計な認知的コストが掛かるから、まずはコストを掛けずに書き出そうとしてるのかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410610,
+      "updated": 1626410684
+    },
+    {
+      "id": "60f10e73aff09e00001a3cee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410611,
+      "updated": 1626410611
+    },
+    {
+      "id": "60f10d8caff09e00001a3cec",
+      "text": "今日は色々と会議のインタラプトがあるし、振り返りなどを中心に。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410380,
+      "updated": 1626410697
+    },
+    {
+      "id": "60f10ec8aff09e00001a3cef",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410697,
+      "updated": 1626410697
+    },
+    {
+      "id": "60f10ecaaff09e00001a3cf0",
+      "text": "昨日作ったドラッグの機能は[HTML5 Drag&Drop API]を使っていて、これは初のことだったので色々書くことがあるけど書いてないなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410698,
+      "updated": 1626412993
+    },
+    {
+      "id": "60f117c3aff09e00001a3cf6",
+      "text": "　ドラッグ対象",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412995,
+      "updated": 1626413000
+    },
+    {
+      "id": "60f117eeaff09e00001a3cf7",
+      "text": "　　draggableにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626413038,
+      "updated": 1626413050
+    },
+    {
+      "id": "60f117faaff09e00001a3cf8",
+      "text": "　　ドラッグ開始時のマウスダウンの位置が中心からどの程度ずれているか記録する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626413050,
+      "updated": 1626413088
+    },
+    {
+      "id": "60f11695aff09e0000441c33",
+      "text": " \tcode:tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412693,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f11721aff09e0000441c34",
+      "text": " \t\t<GroupDiv ... onDragStart={onDragStart} draggable={true}>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412834,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f11721aff09e0000441c3b",
+      "text": " \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412834,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c3c",
+      "text": "   const onDragStart = (event: React.DragEvent<HTMLDivElement>) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412874,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c3d",
+      "text": "     updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c3e",
+      "text": "       const [x, y] = value.position;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c3f",
+      "text": "       const [cx, cy] = screen_to_world([event.clientX, event.clientY]);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c40",
+      "text": "       g.dragstart_position = [cx - x, cy - y];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c41",
+      "text": "       g.drag_target = value.id;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c42",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f1174aaff09e0000441c43",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413096
+    },
+    {
+      "id": "60f11828aff09e0000441c53",
+      "text": "\tドロップ対象",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626413097,
+      "updated": 1626413106
+    },
+    {
+      "id": "60f11832aff09e00001a3cf9",
+      "text": "\t　onDragOverでpreventDefaultすることがドロップ受け入れの条件",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626413106,
+      "updated": 1626413147
+    },
+    {
+      "id": "60f1174aaff09e0000441c44",
+      "text": "  code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412875,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f1176aaff09e0000441c45",
+      "text": "   <div id=\"canvas\" onDrop={onDrop} onDragOver={allowDrop}>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412907,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f1176faff09e0000441c46",
+      "text": "  code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412912,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11771aff09e0000441c47",
+      "text": "   export const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412914,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c48",
+      "text": "     event.preventDefault();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c49",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c4a",
+      "text": "   export const onDrop = (event: React.DragEvent<HTMLDivElement>) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c4b",
+      "text": "     updateGlobal((g) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c4c",
+      "text": "       const [dsx, dsy] = g.dragstart_position;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c4d",
+      "text": "       const [x, y] = screen_to_world([event.clientX, event.clientY]);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c4e",
+      "text": "       g.itemStore[g.drag_target].position = [x - dsx, y - dsy];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c4f",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c50",
+      "text": "     event.preventDefault();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c51",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626413158
+    },
+    {
+      "id": "60f11784aff09e0000441c52",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626412933,
+      "updated": 1626412934
+    },
+    {
+      "id": "60f135beaff09e00001a3d10",
+      "text": "ドラッグ時にプラスマークを表示しないために修正",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420671,
+      "updated": 1626420708
+    },
+    {
+      "id": "60f13600aff09e00001a3d11",
+      "text": "　Cypressでテストする時、`onDragStart`で`event.dataTransfer`がundefinedなので、ない時には無視する形にする必要があった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420736,
+      "updated": 1626420834
+    },
+    {
+      "id": "60f1359eaff09e0000f2d421",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420638,
+      "updated": 1626420640
+    },
+    {
+      "id": "60f135a0aff09e0000f2d422",
+      "text": "   const onDragStart = (event: React.DragEvent<HTMLDivElement>) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420640,
+      "updated": 1626420640
+    },
+    {
+      "id": "60f135a0aff09e0000f2d423",
+      "text": "     if (event.dataTransfer !== undefined) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420640,
+      "updated": 1626420640
+    },
+    {
+      "id": "60f135a0aff09e0000f2d424",
+      "text": "       event.dataTransfer.effectAllowed = \"move\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420640,
+      "updated": 1626420640
+    },
+    {
+      "id": "60f135a0aff09e0000f2d425",
+      "text": "     }...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420640,
+      "updated": 1626420645
+    },
+    {
+      "id": "60f135a0aff09e0000f2d426",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420640,
+      "updated": 1626420648
+    },
+    {
+      "id": "60f135a7aff09e0000f2d427",
+      "text": " export const allowDrop = (event: React.DragEvent<HTMLDivElement>) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420648,
+      "updated": 1626420656
+    },
+    {
+      "id": "60f135afaff09e0000f2d428",
+      "text": "   event.dataTransfer.dropEffect = \"move\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420656,
+      "updated": 1626420656
+    },
+    {
+      "id": "60f135afaff09e0000f2d429",
+      "text": "   event.preventDefault();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420656,
+      "updated": 1626420656
+    },
+    {
+      "id": "60f135afaff09e0000f2d42a",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420656,
+      "updated": 1626420656
+    },
+    {
+      "id": "60f135afaff09e0000f2d42b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420656,
+      "updated": 1626420811
+    },
+    {
+      "id": "60f13590aff09e0000f2d420",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626420625,
+      "updated": 1626420625
+    },
+    {
+      "id": "60f10f09aff09e00001a3cf2",
+      "text": "[不安なことは早く試す]原則からすると、DOMに対して範囲選択するのを次は試すべき",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410762,
+      "updated": 1626410855
+    },
+    {
+      "id": "60f10f69aff09e00001a3cf3",
+      "text": "逆に、前回Regroupでは不安だったから早く試したクラウド保存機能に関しては今回は後回しにする予定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410857,
+      "updated": 1626410898
+    },
+    {
+      "id": "60f10f9aaff09e00001a3cf4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626410907,
+      "updated": 1626410948
+    },
+    {
+      "id": "60f12550aff09e00001a3cfa",
+      "text": "今週のまとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416465,
+      "updated": 1626416470
+    },
+    {
+      "id": "60f12556aff09e00001a3cfc",
+      "text": "　[immerで更新してCypressでテスト]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416471,
+      "updated": 1626416493
+    },
+    {
+      "id": "60f1256eaff09e00001a3cfd",
+      "text": "　[CypressのTypeScript化]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416494,
+      "updated": 1626416594
+    },
+    {
+      "id": "60f12590aff09e00001a3cfe",
+      "text": "　[2021-07-13Movidea開発日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416529,
+      "updated": 1629299885
+    },
+    {
+      "id": "60f12556aff09e00001a3cfb",
+      "text": "\t[2021-07-14Movidea開発日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416470,
+      "updated": 1629299777
+    },
+    {
+      "id": "60f1260faff09e0000441c54",
+      "text": "\t[2021-07-15Movidea開発日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416656,
+      "updated": 1629299540
+    },
+    {
+      "id": "60f12617aff09e0000441c55",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626416664,
+      "updated": 1626416664
+    },
+    {
+      "id": "60f12bf9aff09e00001a3d0a",
+      "text": "DOMによる矩形範囲の表現",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626418169,
+      "updated": 1626418183
+    },
+    {
+      "id": "60f12c07aff09e00001a3d0c",
+      "text": "矩形範囲との交差判定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626418184,
+      "updated": 1626418194
+    },
+    {
+      "id": "60f12c12aff09e00001a3d0d",
+      "text": "　部分交差で選択するか全体包含で選択するか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626418194,
+      "updated": 1626418254
+    },
+    {
+      "id": "60f12c4eaff09e00001a3d0e",
+      "text": " 　グループの中の一部の選択を許すか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626418254,
+      "updated": 1626418303
+    },
+    {
+      "id": "60f12c69aff09e00001a3d0f",
+      "text": " 　　許さないイメージ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626418282,
+      "updated": 1626418303
+    },
+    {
+      "id": "60f12bfeaff09e00001a3d0b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626418175,
+      "updated": 1626418175
+    },
+    {
+      "id": "60f1bfabaff09e0000f2d42c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626455979,
+      "updated": 1626455979
+    }
+  ]
+}

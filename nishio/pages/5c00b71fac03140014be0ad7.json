@@ -1,0 +1,169 @@
+{
+  "id": "5c00b71fac03140014be0ad7",
+  "title": "Google Bertのtokenizerで濁音が取れる理由",
+  "created": 1543550755,
+  "updated": 1556001605,
+  "lines": [
+    {
+      "id": "5c00b71fac03140014be0ad7",
+      "text": "Google Bertのtokenizerで濁音が取れる理由",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550755,
+      "updated": 1543550766
+    },
+    {
+      "id": "5c00b7aeaff09e0000a7138e",
+      "text": "Google Bertのトークナイザにたとえば「モデル」という文字列を入れると濁音が取り除かれて「モテル」になってしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550894,
+      "updated": 1543550924
+    },
+    {
+      "id": "5c00b752aff09e0000a71384",
+      "text": "これはアクセント記号を取り除くことを意図した下記の関数で、カテゴリ`Mn`(Mark, nonspacing)のものを全部捨てているが濁音記号などもこのジャンルに含まれるため。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550803,
+      "updated": 1543550930
+    },
+    {
+      "id": "5c00b72eaff09e0000a71378",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550766,
+      "updated": 1543550791
+    },
+    {
+      "id": "5c00b747aff09e0000a7137a",
+      "text": "   def _run_strip_accents(self, text):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a7137b",
+      "text": "     \"\"\"Strips accents from a piece of text.\"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a7137c",
+      "text": "     text = unicodedata.normalize(\"NFD\", text)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a7137d",
+      "text": "     output = []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a7137e",
+      "text": "     for char in text:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a7137f",
+      "text": "       cat = unicodedata.category(char)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a71380",
+      "text": "       if cat == \"Mn\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a71381",
+      "text": "         continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a71382",
+      "text": "       output.append(char)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b748aff09e0000a71383",
+      "text": "     return \"\".join(output)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550792,
+      "updated": 1543550792
+    },
+    {
+      "id": "5c00b745aff09e0000a71379",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550790,
+      "updated": 1543550790
+    },
+    {
+      "id": "5c00b794aff09e0000a7138c",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550868,
+      "updated": 1543550870
+    },
+    {
+      "id": "5c00b78daff09e0000a71385",
+      "text": " >>> chars = list(unicodedata.normalize(\"NFD\", \"モデル\"))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550861,
+      "updated": 1543550871
+    },
+    {
+      "id": "5c00b78daff09e0000a71386",
+      "text": " >>> chars",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550862,
+      "updated": 1543550877
+    },
+    {
+      "id": "5c00b78daff09e0000a71388",
+      "text": " ['モ', 'テ', '゙', 'ル']",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550862,
+      "updated": 1543550882
+    },
+    {
+      "id": "5c00b78daff09e0000a71389",
+      "text": " >>> [unicodedata.category(c) for c in chars]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550862,
+      "updated": 1543550887
+    },
+    {
+      "id": "5c00b78daff09e0000a7138b",
+      "text": "\t>>> ['Lo', 'Lo', 'Mn', 'Lo']",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550862,
+      "updated": 1543550891
+    },
+    {
+      "id": "5c00b7aaaff09e0000a7138d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1543550891,
+      "updated": 1543550891
+    },
+    {
+      "id": "5cbeb31eaff09e0000f6f8f7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556001566,
+      "updated": 1556001605
+    }
+  ]
+}

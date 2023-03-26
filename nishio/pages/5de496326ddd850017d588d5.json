@@ -1,0 +1,176 @@
+{
+  "id": "5de496326ddd850017d588d5",
+  "title": "学習済みモデルはどこで読むか",
+  "created": 1575261749,
+  "updated": 1575274244,
+  "lines": [
+    {
+      "id": "5de496326ddd850017d588d5",
+      "text": "学習済みモデルはどこで読むか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261749,
+      "updated": 1575261749
+    },
+    {
+      "id": "5de49635aff09e00004f867b",
+      "text": "model_fn_builderの中のmodel_fnの中で",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261749,
+      "updated": 1575261775
+    },
+    {
+      "id": "5de4964eaff09e00004f867d",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261775,
+      "updated": 1575261796
+    },
+    {
+      "id": "5de49664aff09e00004f867e",
+      "text": " if init_checkpoint:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261796,
+      "updated": 1575261801
+    },
+    {
+      "id": "5de49664aff09e00004f867f",
+      "text": "   (assignment_map, initialized_variable_names",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261796,
+      "updated": 1575261801
+    },
+    {
+      "id": "5de49664aff09e00004f8680",
+      "text": "    ) = modeling.get_assignment_map_from_checkpoint(tvars, init_checkpoint)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261796,
+      "updated": 1575261801
+    },
+    {
+      "id": "5de49644aff09e00004f867c",
+      "text": "ってやってる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261765,
+      "updated": 1575261809
+    },
+    {
+      "id": "5de49673aff09e00004f8682",
+      "text": "\t`tvars = tf.trainable_variables()`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261811,
+      "updated": 1575262742
+    },
+    {
+      "id": "5de49a0faff09e00004f868b",
+      "text": "\t`init_vars = tf.train.list_variables(init_checkpoint)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575262736,
+      "updated": 1575262825
+    },
+    {
+      "id": "5de49a6caff09e00004f868d",
+      "text": "\tinit_varsの各要素のうちtvarsに含まれているものについてassignment_map に name→nameの対応づけを書き込んでいる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575262828,
+      "updated": 1575262928
+    },
+    {
+      "id": "5de49acfaff09e00004f868e",
+      "text": "\t\tコメントに `\"\"\"Compute the union of the current variables and checkpoint variables.\"\"\"`って書かれてるけどUnionじゃなくてIntersectじゃない？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575262928,
+      "updated": 1575262947
+    },
+    {
+      "id": "5de49a10aff09e00004f868c",
+      "text": "\tなぜこれをやっているのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575262736,
+      "updated": 1575274212
+    },
+    {
+      "id": "5de4c6e3aff09e0000485f92",
+      "text": "\t\tこれによってPretrainedモデルでも、Fine-tunedモデルでも気にせずに読める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575274212,
+      "updated": 1575274244
+    },
+    {
+      "id": "5de4c6ddaff09e0000485f91",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575274205,
+      "updated": 1575274205
+    },
+    {
+      "id": "5de49673aff09e00004f8683",
+      "text": "その後[TPU]のためにアダプタをかませたりする分岐はあるが基本的には",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261811,
+      "updated": 1575261864
+    },
+    {
+      "id": "5de496a8aff09e00004f8684",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261864,
+      "updated": 1575261869
+    },
+    {
+      "id": "5de496acaff09e00004f8685",
+      "text": " tf.train.init_from_checkpoint(init_checkpoint, assignment_map)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261869,
+      "updated": 1575261873
+    },
+    {
+      "id": "5de49b1faff09e00004f868f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575263008,
+      "updated": 1575263008
+    },
+    {
+      "id": "5de498c0aff09e00004f8689",
+      "text": "\t[tf.compat.v1.train.init_from_checkpoint  |  TensorFlow Core r2.0 https://www.tensorflow.org/api_docs/python/tf/compat/v1/train/init_from_checkpoint]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575262401,
+      "updated": 1575262402
+    },
+    {
+      "id": "5de498c2aff09e00004f868a",
+      "text": "\t\t第1引数はファイル名など",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575262402,
+      "updated": 1575263024
+    },
+    {
+      "id": "5de496caaff09e00004f8687",
+      "text": "\t\tassignment_map はどの変数をどの変数に対応づけるかを記述する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261898,
+      "updated": 1575263038
+    },
+    {
+      "id": "5de49b3eaff09e00004f8690",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575263038,
+      "updated": 1575263039
+    },
+    {
+      "id": "5de49b6faff09e00004f8691",
+      "text": "\tinitialized_variable_namesはログ表示にしか使ってなさげ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575263088,
+      "updated": 1575263092
+    },
+    {
+      "id": "5de49b70aff09e00004f8692",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575263088,
+      "updated": 1575263088
+    }
+  ]
+}

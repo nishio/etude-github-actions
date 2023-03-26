@@ -1,0 +1,1142 @@
+{
+  "id": "5b174540cba6c30014eacccd",
+  "title": "CopyToClipboard",
+  "created": 1528251727,
+  "updated": 1528268258,
+  "lines": [
+    {
+      "id": "5b174540cba6c30014eacccd",
+      "text": "CopyToClipboard",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251727,
+      "updated": 1528252505
+    },
+    {
+      "id": "5b17483eaff09e0000442fcf",
+      "text": "「何かをクリップボードにコピーする」という作業を手軽にするブックマークレットを作る話",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252479,
+      "updated": 1528252500
+    },
+    {
+      "id": "5b17483daff09e0000442fce",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252479,
+      "updated": 1528252479
+    },
+    {
+      "id": "5b174833aff09e0000442fcd",
+      "text": "今までのいきさつ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252469,
+      "updated": 1528252475
+    },
+    {
+      "id": "5b174550aff09e0000442f99",
+      "text": " [/yujif/今見ているページをScrapboxのリンク形式でコピーできるブックマークレット]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251730,
+      "updated": 1528251732
+    },
+    {
+      "id": "5b174550aff09e0000442f9a",
+      "text": " [/shiology/05107-180420 今見ているページのScrapboxリンクをワンクリックでコピーできるようになった]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251730,
+      "updated": 1528251743
+    },
+    {
+      "id": "5b17455eaff09e0000442f9c",
+      "text": " [/shiology/05148-180531 flickrのScrapboxリンクを取得するブックマークレットを書きました]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251744,
+      "updated": 1528251757
+    },
+    {
+      "id": "5b178358aff09e0000443088",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267610,
+      "updated": 1528267610
+    },
+    {
+      "id": "5b178374aff09e000044308a",
+      "text": "現時点のまとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267637,
+      "updated": 1528267646
+    },
+    {
+      "id": "5b17837caff09e000044308c",
+      "text": "\t最新のChromeでブックマークレットからexecCommandを起動した場合返り値がfalseでコピーされない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267646,
+      "updated": 1528267689
+    },
+    {
+      "id": "5b1783a2aff09e000044308d",
+      "text": " 同じコードをdevtoolから実行すると返り値がtrueでコピーされる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267684,
+      "updated": 1528267725
+    },
+    {
+      "id": "5b1783cbaff09e000044308e",
+      "text": " これは`outside a user-generated event handler`的な問題に思えるが、何か回避方法はあるのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267725,
+      "updated": 1528267956
+    },
+    {
+      "id": "5b178374aff09e000044308b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267637,
+      "updated": 1528267637
+    },
+    {
+      "id": "5b178358aff09e0000443089",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267610,
+      "updated": 1528267640
+    },
+    {
+      "id": "5b17459caff09e0000442fa7",
+      "text": "実装1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251806,
+      "updated": 1528267962
+    },
+    {
+      "id": "5b17459caff09e0000442fa8",
+      "text": "code:javascript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251806,
+      "updated": 1528252210
+    },
+    {
+      "id": "5b1745c5aff09e0000442faa",
+      "text": " function copy_impl1(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251847,
+      "updated": 1528252242
+    },
+    {
+      "id": "5b174626aff09e0000442fb1",
+      "text": " \t// コピー機能の実装1: 目的の文字列が入ったinputエレメントを作成し、それを選択してコピーコマンドを実行",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251943,
+      "updated": 1528251985
+    },
+    {
+      "id": "5b174646aff09e0000442fb2",
+      "text": "  \t// MacのChrome、Safariでは動くがiOSのSafariではダメらしい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251975,
+      "updated": 1528252016
+    },
+    {
+      "id": "5b1745cfaff09e0000442fab",
+      "text": " \tconst e=document.createElement('input');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251856,
+      "updated": 1528251863
+    },
+    {
+      "id": "5b1745d5aff09e0000442fac",
+      "text": "  \te.value=target;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251863,
+      "updated": 1528252253
+    },
+    {
+      "id": "5b1745dbaff09e0000442fad",
+      "text": "   \tdocument.querySelector('body').append(e);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251869,
+      "updated": 1528251873
+    },
+    {
+      "id": "5b1745e0aff09e0000442fae",
+      "text": "     e.select();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251873,
+      "updated": 1528252685
+    },
+    {
+      "id": "5b17490caff09e0000442fd5",
+      "text": "     document.execCommand('copy');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252685,
+      "updated": 1528252685
+    },
+    {
+      "id": "5b1745f4aff09e0000442faf",
+      "text": "     e.remove();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251894,
+      "updated": 1528251897
+    },
+    {
+      "id": "5b1745f8aff09e0000442fb0",
+      "text": " }) ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251897,
+      "updated": 1528251921
+    },
+    {
+      "id": "5b1784bcaff09e000044308f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267965,
+      "updated": 1528267965
+    },
+    {
+      "id": "5b17458daff09e0000442fa3",
+      "text": "実装2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251790,
+      "updated": 1528267967
+    },
+    {
+      "id": "5b17458daff09e0000442fa5",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251790,
+      "updated": 1528251790
+    },
+    {
+      "id": "5b17458daff09e0000442fa6",
+      "text": " function copy_impl2(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528251790,
+      "updated": 1528252239
+    },
+    {
+      "id": "5b1747edaff09e0000442fcb",
+      "text": " \t// コピー機能の実装2: 目的の文字列が入ったtextareaエレメントを作成し、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252398,
+      "updated": 1528252523
+    },
+    {
+      "id": "5b174869aff09e0000442fd0",
+      "text": "  \t// 0から999999文字目まで選択してコピーコマンドを実行",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252523,
+      "updated": 1528252524
+    },
+    {
+      "id": "5b1747edaff09e0000442fcc",
+      "text": "  \t// iOS, MacともSafariで動作確認済み",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252398,
+      "updated": 1528252414
+    },
+    {
+      "id": "5b174742aff09e0000442fbb",
+      "text": "\t\tvar a = document.createElement(\"textarea\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252228,
+      "updated": 1528252276
+    },
+    {
+      "id": "5b174773aff09e0000442fbc",
+      "text": " \ta.textContent = target;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252277,
+      "updated": 1528252285
+    },
+    {
+      "id": "5b1747afaff09e0000442fc3",
+      "text": "     var b = document.getElementsByTagName(\"body\")[0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252337,
+      "updated": 1528252681
+    },
+    {
+      "id": "5b1747b0aff09e0000442fc4",
+      "text": "     b.appendChild(a);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252337,
+      "updated": 1528252361
+    },
+    {
+      "id": "5b1747c8aff09e0000442fc9",
+      "text": "     a.contentEditable = true;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252361,
+      "updated": 1528252371
+    },
+    {
+      "id": "5b1747d1aff09e0000442fca",
+      "text": "     a.readOnly = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252371,
+      "updated": 1528252375
+    },
+    {
+      "id": "5b1747b0aff09e0000442fc5",
+      "text": "     a.setSelectionRange(0, 999999);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252337,
+      "updated": 1528252381
+    },
+    {
+      "id": "5b1747b0aff09e0000442fc6",
+      "text": "     document.execCommand(\"copy\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252337,
+      "updated": 1528252337
+    },
+    {
+      "id": "5b1747b0aff09e0000442fc7",
+      "text": "     b.removeChild(a)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252337,
+      "updated": 1528252337
+    },
+    {
+      "id": "5b1747b0aff09e0000442fc8",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252337,
+      "updated": 1528252383
+    },
+    {
+      "id": "5b1748a5aff09e0000442fd3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252582,
+      "updated": 1528252582
+    },
+    {
+      "id": "5b1748a5aff09e0000442fd4",
+      "text": " 2つを比較してみると、大きな違いはtextareaを使うことと、contentEditableをtrueにすること",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252582,
+      "updated": 1528267980
+    },
+    {
+      "id": "5b174967aff09e0000442fd7",
+      "text": " querySelectorはiOSのSafariでもサポートされてる https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252777,
+      "updated": 1528252788
+    },
+    {
+      "id": "5b1784cfaff09e0000443091",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267985,
+      "updated": 1528267985
+    },
+    {
+      "id": "5b174a12aff09e0000442fd8",
+      "text": "でもまあ深追いはしないで今回は単に両方呼んでしまおう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252947,
+      "updated": 1528265803
+    },
+    {
+      "id": "5b1754dfaff09e0000583d09",
+      "text": " うまく動かなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528255712,
+      "updated": 1528255716
+    },
+    {
+      "id": "5b1785c8aff09e0000443092",
+      "text": " 第3案",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528268234,
+      "updated": 1528268236
+    },
+    {
+      "id": "5b1754e4aff09e0000583d0a",
+      "text": " http://yuw27b.hatenablog.com/entry/2017/02/19/230000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528255716,
+      "updated": 1528255718
+    },
+    {
+      "id": "5b1754e6aff09e0000583d0b",
+      "text": " 選択の方法に違いがあるな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528255719,
+      "updated": 1528255729
+    },
+    {
+      "id": "5b17771eaff09e0000443026",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264480,
+      "updated": 1528264480
+    },
+    {
+      "id": "5b177744aff09e0000443033",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264518,
+      "updated": 1528264518
+    },
+    {
+      "id": "5b177744aff09e0000443034",
+      "text": " function copy_impl3(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264518,
+      "updated": 1528264526
+    },
+    {
+      "id": "5b177744aff09e0000443035",
+      "text": " \t// コピー機能の実装3: 目的の文字列が入ったpエレメントを作成しそれを選択してコピーコマンドを実行、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264518,
+      "updated": 1528264564
+    },
+    {
+      "id": "5b177744aff09e0000443036",
+      "text": "\t\tvar a = document.createElement(\"p\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264518,
+      "updated": 1528264574
+    },
+    {
+      "id": "5b177744aff09e0000443039",
+      "text": "     var b = document.querySelector(\"body\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264518,
+      "updated": 1528264645
+    },
+    {
+      "id": "5b1777c4aff09e0000443042",
+      "text": "     b.append(a);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264645,
+      "updated": 1528264702
+    },
+    {
+      "id": "5b177816aff09e0000443044",
+      "text": " \tvar range = document.createRange();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264728,
+      "updated": 1528264733
+    },
+    {
+      "id": "5b177816aff09e0000443045",
+      "text": "  \trange.selectNode(a);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264728,
+      "updated": 1528264743
+    },
+    {
+      "id": "5b177816aff09e0000443046",
+      "text": "  \twindow.getSelection().removeAllRanges();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264728,
+      "updated": 1528264857
+    },
+    {
+      "id": "5b177816aff09e0000443047",
+      "text": "  \twindow.getSelection().addRange(range);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264728,
+      "updated": 1528264859
+    },
+    {
+      "id": "5b177816aff09e0000443048",
+      "text": "  \tdocument.execCommand('copy');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264728,
+      "updated": 1528264861
+    },
+    {
+      "id": "5b1778a2aff09e000044304a",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264867,
+      "updated": 1528264872
+    },
+    {
+      "id": "5b177816aff09e0000443049",
+      "text": "この方法で、pエレメントが追加されてそれが選択されるところまでは確認されたが、コピーされてない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264728,
+      "updated": 1528265782
+    },
+    {
+      "id": "5b177de5aff09e0000443063",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266215,
+      "updated": 1528266215
+    },
+    {
+      "id": "5b177dbcaff09e0000443061",
+      "text": "Chrome",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266174,
+      "updated": 1528266215
+    },
+    {
+      "id": "5b174a30aff09e0000442fdb",
+      "text": " impl1ではe.selectでinputが選択されていることを確認した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252978,
+      "updated": 1528266216
+    },
+    {
+      "id": "5b177dd6aff09e0000443062",
+      "text": " しかしコピーされていない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266199,
+      "updated": 1528268249
+    },
+    {
+      "id": "5b177de9aff09e0000443064",
+      "text": " その後devtoolからdocument.execCommand('copy')を実行したらコピーされてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266219,
+      "updated": 1528266776
+    },
+    {
+      "id": "5b178036aff09e0000443066",
+      "text": " この時の返り値はtrue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266808,
+      "updated": 1528266821
+    },
+    {
+      "id": "5b178028aff09e0000443065",
+      "text": " ブックマークレットからの実行ではfalse",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266794,
+      "updated": 1528266824
+    },
+    {
+      "id": "5b17818eaff09e0000443068",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267152,
+      "updated": 1528267152
+    },
+    {
+      "id": "5b178048aff09e0000443067",
+      "text": "さらに別解",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528266826,
+      "updated": 1528267158
+    },
+    {
+      "id": "5b178194aff09e0000443069",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267158,
+      "updated": 1528267163
+    },
+    {
+      "id": "5b178202aff09e0000443077",
+      "text": " function copy_impl4(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267267,
+      "updated": 1528267278
+    },
+    {
+      "id": "5b17819aaff09e000044306a",
+      "text": " \tlet copyListener = event => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267163,
+      "updated": 1528267292
+    },
+    {
+      "id": "5b17819baff09e000044306b",
+      "text": "  \t\tdocument.removeEventListener(\"copy\", copyListener, true);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267294
+    },
+    {
+      "id": "5b17819baff09e000044306c",
+      "text": "   \tevent.preventDefault();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267283
+    },
+    {
+      "id": "5b17819baff09e000044306d",
+      "text": "   \tlet clipboardData = event.clipboardData;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267283
+    },
+    {
+      "id": "5b17819baff09e000044306e",
+      "text": "  \t\tclipboardData.clearData();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267298
+    },
+    {
+      "id": "5b17819baff09e000044306f",
+      "text": "  \t\tclipboardData.setData(\"text/plain\", target);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267419
+    },
+    {
+      "id": "5b17819baff09e0000443070",
+      "text": " \t};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267422
+    },
+    {
+      "id": "5b1781eaaff09e0000443075",
+      "text": " \tdocument.addEventListener(\"copy\", copyListener, true);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267244,
+      "updated": 1528267308
+    },
+    {
+      "id": "5b17819baff09e0000443073",
+      "text": " \tdocument.execCommand(\"copy\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267164,
+      "updated": 1528267310
+    },
+    {
+      "id": "5b1781eeaff09e0000443076",
+      "text": " \tdocument.removeEventListener(\"copy\", copyListener);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267247,
+      "updated": 1528267311
+    },
+    {
+      "id": "5b178215aff09e0000443078",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267286,
+      "updated": 1528267288
+    },
+    {
+      "id": "5b17830daff09e0000443086",
+      "text": "この場合もブックマークレットからの起動では動かず、execCommandはfalse、devtoolで実行するとちゃんとコピーされる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267534,
+      "updated": 1528267572
+    },
+    {
+      "id": "5b174891aff09e0000442fd2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528252563,
+      "updated": 1528253030
+    },
+    {
+      "id": "5b174aa2aff09e0000442fe2",
+      "text": "というわけで全部入りのコードは下記",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253092,
+      "updated": 1528253218
+    },
+    {
+      "id": "5b174b20aff09e0000442fe4",
+      "text": "code:main.js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253218,
+      "updated": 1528253245
+    },
+    {
+      "id": "5b174b2baff09e0000442fe5",
+      "text": " function copy_impl1(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442fe6",
+      "text": " \t// コピー機能の実装1: 目的の文字列が入ったinputエレメントを作成し、それを選択してコピーコマンドを実行",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442fe7",
+      "text": "  \t// MacのChrome、Safariでは動くがiOSのSafariではダメらしい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442fe8",
+      "text": " \tconst e=document.createElement('input');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442fe9",
+      "text": "  \te.value=target;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174ceeaff09e0000443015",
+      "text": "   \tdocument.querySelector('body').append(e);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253679,
+      "updated": 1528253702
+    },
+    {
+      "id": "5b174d05aff09e0000443016",
+      "text": "   \tconsole.log(e)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253703,
+      "updated": 1528253703
+    },
+    {
+      "id": "5b174b2baff09e0000442feb",
+      "text": "     e.select();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442fec",
+      "text": "     console.log(document.execCommand('copy'));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528266786
+    },
+    {
+      "id": "5b174b2baff09e0000442fed",
+      "text": "     //e.remove();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528266111
+    },
+    {
+      "id": "5b174b2baff09e0000442fee",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253496
+    },
+    {
+      "id": "5b174b2baff09e0000442fef",
+      "text": " function copy_impl2(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253238
+    },
+    {
+      "id": "5b174b2baff09e0000442ff2",
+      "text": " \t// コピー機能の実装2: 目的の文字列が入ったtextareaエレメントを作成し、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff3",
+      "text": "  \t// 0から999999文字目まで選択してコピーコマンドを実行",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff4",
+      "text": "  \t// iOS, MacともSafariで動作確認済み",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff5",
+      "text": "\t\tvar a = document.createElement(\"textarea\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff6",
+      "text": " \ta.textContent = target;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff7",
+      "text": "     var b = document.getElementsByTagName(\"body\")[0];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff8",
+      "text": "     b.appendChild(a);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ff9",
+      "text": "     a.contentEditable = true;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ffa",
+      "text": "     a.readOnly = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ffb",
+      "text": "     a.setSelectionRange(0, 999999);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b177ccdaff09e0000443060",
+      "text": "     console.log(window.getSelection())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265934,
+      "updated": 1528265939
+    },
+    {
+      "id": "5b174b2baff09e0000442ffc",
+      "text": "     document.execCommand(\"copy\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000442ffd",
+      "text": "     //b.removeChild(a)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528265884
+    },
+    {
+      "id": "5b174b2baff09e0000442ffe",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b1778f5aff09e000044304c",
+      "text": " function copy_impl3(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1778f5aff09e000044304d",
+      "text": " \t// コピー機能の実装3: 目的の文字列が入ったpエレメントを作成しそれを選択してコピーコマンドを実行、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1778f5aff09e000044304e",
+      "text": "\t\tvar a = document.createElement(\"p\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1779e4aff09e000044305b",
+      "text": "  \ta.textContent = target;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265190,
+      "updated": 1528265199
+    },
+    {
+      "id": "5b1778f5aff09e000044304f",
+      "text": "     var b = document.querySelector(\"body\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1778f5aff09e0000443050",
+      "text": "     b.append(a);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b177993aff09e000044305a",
+      "text": "     console.log(a)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265109,
+      "updated": 1528265113
+    },
+    {
+      "id": "5b1778f5aff09e0000443051",
+      "text": " \tvar range = document.createRange();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1778f5aff09e0000443052",
+      "text": "  \trange.selectNode(a);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b177926aff09e0000443057",
+      "text": "     console.log(range)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265000,
+      "updated": 1528265010
+    },
+    {
+      "id": "5b1778f5aff09e0000443053",
+      "text": "  \twindow.getSelection().removeAllRanges();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1778f5aff09e0000443054",
+      "text": "  \twindow.getSelection().addRange(range);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1778f5aff09e0000443055",
+      "text": "  \tdocument.execCommand('copy');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b177936aff09e0000443058",
+      "text": "     console.log(window.getSelection())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265015,
+      "updated": 1528265025
+    },
+    {
+      "id": "5b1778f5aff09e0000443056",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264951,
+      "updated": 1528264951
+    },
+    {
+      "id": "5b1782c9aff09e000044307a",
+      "text": " function copy_impl4(target){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e000044307b",
+      "text": " \tlet copyListener = event => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e000044307c",
+      "text": "  \t\tdocument.removeEventListener(\"copy\", copyListener, true);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e000044307d",
+      "text": "   \tevent.preventDefault();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e000044307e",
+      "text": "   \tlet clipboardData = event.clipboardData;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e000044307f",
+      "text": "  \t\tclipboardData.clearData();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e0000443080",
+      "text": "  \t\tclipboardData.setData(\"text/plain\", target);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e0000443081",
+      "text": " \t};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e0000443082",
+      "text": " \tdocument.addEventListener(\"copy\", copyListener, true);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e0000443083",
+      "text": " \tconsole.log(document.execCommand(\"copy\"));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267502
+    },
+    {
+      "id": "5b1782c9aff09e0000443084",
+      "text": " \tdocument.removeEventListener(\"copy\", copyListener);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b1782c9aff09e0000443085",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267466,
+      "updated": 1528267466
+    },
+    {
+      "id": "5b174b2baff09e0000442fff",
+      "text": " function main(){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253234
+    },
+    {
+      "id": "5b174b2baff09e0000443007",
+      "text": " \tvar target = `[${document.title.replace(/\\s*[\\[\\]]\\s*/g,' ')} ${location.href}]`;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b2baff09e0000443008",
+      "text": "  \t//copy_impl1(target);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528267437
+    },
+    {
+      "id": "5b174b2baff09e0000443009",
+      "text": "   \t//copy_impl2(target);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528266074
+    },
+    {
+      "id": "5b1778bdaff09e000044304b",
+      "text": "     //copy_impl3(target);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528264895,
+      "updated": 1528265820
+    },
+    {
+      "id": "5b1782afaff09e0000443079",
+      "text": "     copy_impl4(target)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528267441,
+      "updated": 1528267446
+    },
+    {
+      "id": "5b174c8caff09e0000443014",
+      "text": "     console.log(\"ok\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253582,
+      "updated": 1528264993
+    },
+    {
+      "id": "5b174b2baff09e000044300a",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253229,
+      "updated": 1528253229
+    },
+    {
+      "id": "5b174b45aff09e000044300b",
+      "text": " main();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253255,
+      "updated": 1528253259
+    },
+    {
+      "id": "5b174b78aff09e000044300c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253305,
+      "updated": 1528253305
+    },
+    {
+      "id": "5b174b1aaff09e0000442fe3",
+      "text": "これが`https://scrapbox.io/api/code/nishio/CopyToClipboard/main.js`でアクセスできるので",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253212,
+      "updated": 1528253315
+    },
+    {
+      "id": "5b174bafaff09e000044300f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253361,
+      "updated": 1528253361
+    },
+    {
+      "id": "5b174bafaff09e000044300e",
+      "text": "javascript: var url=\"https://scrapbox.io/api/code/nishio/CopyToClipboard/main.js\";var elm=document.createElement('script');elm.setAttribute('src', url);document.body.appendChild(elm);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253361,
+      "updated": 1528253362
+    },
+    {
+      "id": "5b177c66aff09e000044305e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265832,
+      "updated": 1528265832
+    },
+    {
+      "id": "5b174c78aff09e0000443011",
+      "text": "a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528253562,
+      "updated": 1528265833
+    },
+    {
+      "id": "5b177c64aff09e000044305d",
+      "text": "a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265829,
+      "updated": 1528265837
+    },
+    {
+      "id": "5b177c6caff09e000044305f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1528265837,
+      "updated": 1528265837
+    }
+  ]
+}

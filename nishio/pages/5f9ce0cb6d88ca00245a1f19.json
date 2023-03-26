@@ -1,0 +1,694 @@
+{
+  "id": "5f9ce0cb6d88ca00245a1f19",
+  "title": "PAST3N",
+  "created": 1604116684,
+  "updated": 1608886971,
+  "lines": [
+    {
+      "id": "5f9ce0cb6d88ca00245a1f19",
+      "text": "PAST3N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604116684,
+      "updated": 1604116685
+    },
+    {
+      "id": "5fe08c86aff09e00002b2441",
+      "text": "[第三回 アルゴリズム実技検定] [PAST3]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551559,
+      "updated": 1608552478
+    },
+    {
+      "id": "5fe0901aaff09e000048c080",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552474,
+      "updated": 1608552474
+    },
+    {
+      "id": "5fe08c86aff09e00002b2442",
+      "text": "[https://gyazo.com/26b3466b604902db61b32e3f82986ffb]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551559,
+      "updated": 1608552474
+    },
+    {
+      "id": "5fe08c86aff09e00002b2444",
+      "text": "[N - 入れ替えと並び替え https://atcoder.jp/contests/past202005-open/tasks/past202005_n]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551559,
+      "updated": 1608551559
+    },
+    {
+      "id": "5fe08c86aff09e00002b2445",
+      "text": "　考えたこと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551559,
+      "updated": 1608551882
+    },
+    {
+      "id": "5fe08dcaaff09e0000791411",
+      "text": "　　範囲をソートするクエリを素朴に実装するとO(NlogN)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551882,
+      "updated": 1608551977
+    },
+    {
+      "id": "5fe08e35aff09e0000791412",
+      "text": "　　 明らかに間に合わない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551990,
+      "updated": 1608551994
+    },
+    {
+      "id": "5fe08e3aaff09e0000791413",
+      "text": "　　 O(logN)ぐらいにならないといけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551995,
+      "updated": 1608552011
+    },
+    {
+      "id": "5fe08e4baff09e0000791414",
+      "text": "　　 どうやって？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552011,
+      "updated": 1608552014
+    },
+    {
+      "id": "5fe08e7baff09e0000791415",
+      "text": "　　 ソート済みのところからスワップを高々Q回行うので、ソート前の列はかなりソート済みに近い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552060,
+      "updated": 1608552101
+    },
+    {
+      "id": "5fe08f7baff09e0000791416",
+      "text": "　　 ソート済みの列を一つの塊として扱おう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552316,
+      "updated": 1608552330
+    },
+    {
+      "id": "5fe08dc7aff09e0000791410",
+      "text": "\t\t\t[$ [x, y) ]をタプル`(x, y)`で表現？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608551880,
+      "updated": 1608552877
+    },
+    {
+      "id": "5fe09067aff09e000048c081",
+      "text": "\t\t\tzでのスワップは [$ [x, y) → [x, z), [z+1, z+2), [z, z+1), [z+2, y) ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552551,
+      "updated": 1608552675
+    },
+    {
+      "id": "5fe09101aff09e0000791417",
+      "text": "\t\t\t区間はオーバーラップしないので先頭だけ見てソートすれば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552705,
+      "updated": 1608552721
+    },
+    {
+      "id": "5fe09112aff09e0000791418",
+      "text": "\t\t\t　その後、連続するならくっつける？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552723,
+      "updated": 1608552866
+    },
+    {
+      "id": "5fe091a2aff09e0000791419",
+      "text": "\t\t\tソートの計算量が、それまでにスワップした回数Mを使ってO(MlogM)になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552866,
+      "updated": 1608552959
+    },
+    {
+      "id": "5fe091ffaff09e000079141a",
+      "text": "\t\t\t　これを増やすのにQを消費するからあまり重たくできない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552959,
+      "updated": 1608552993
+    },
+    {
+      "id": "5fe09221aff09e000079141b",
+      "text": "\t\t\t　ソートをX回やるならMは平均してQ/Xなのでソートクエリ全体の計算量はO(X Q/X log(Q/X)) = O(Q log(Q/X))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552993,
+      "updated": 1608553143
+    },
+    {
+      "id": "5fe092b6aff09e000079141d",
+      "text": "\t\t\t　　クエリ全体の平均計算量がO(logN)以下になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553143,
+      "updated": 1608553146
+    },
+    {
+      "id": "5fe092b2aff09e000079141c",
+      "text": "\t\t\t　　間に合うだろう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553138,
+      "updated": 1608553151
+    },
+    {
+      "id": "5fe092bfaff09e000079141e",
+      "text": "\t\t\tこれをどう実装するのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553151,
+      "updated": 1608553158
+    },
+    {
+      "id": "5fe092c5aff09e000079141f",
+      "text": "\t\t\t　スワップでオブジェクトの挿入が起きるので配列はダメ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553158,
+      "updated": 1608553294
+    },
+    {
+      "id": "5fe092e9aff09e0000791420",
+      "text": "\t\t\t　でもzで分割するってなった時に、分割対象のオブジェクトをすぐに見つけたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553193,
+      "updated": 1608553301
+    },
+    {
+      "id": "5fe09355aff09e0000791421",
+      "text": "\t\t\t　　二分探索するなら配列でないといけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553302,
+      "updated": 1608553319
+    },
+    {
+      "id": "5fe09368aff09e0000791422",
+      "text": "\t\t\t　　リンクトリストにすると探索が線形オーダーになってしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553321,
+      "updated": 1608553363
+    },
+    {
+      "id": "5fe094ddaff09e0000791423",
+      "text": "\t\t\t　なんかこういう「配列でもリンクトリストでもダメ」ってケース、フェニック木なことが多い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553693,
+      "updated": 1608553863
+    },
+    {
+      "id": "5fe09584aff09e0000791425",
+      "text": "\t\t\t　フェニック木で1を立てることで集合を表現したものは配列同様に対数オーダーで二分探索できるが、挿入削除が定数オーダーである",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553861,
+      "updated": 1608553909
+    },
+    {
+      "id": "5fe098edaff09e0000791426",
+      "text": "\t\t\t　ただしこれは順序を持たないので別途リンクトリストで順序を持たせたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608554736,
+      "updated": 1608554763
+    },
+    {
+      "id": "5fe0990caff09e0000791427",
+      "text": "\t\t\t　二分探索で見つけた後、リンクトリストの該当ノードを定数オーダーで見つけたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608554765,
+      "updated": 1608554794
+    },
+    {
+      "id": "5fe0992aaff09e0000791428",
+      "text": "\t\t\t　これは[スカスカのリンクトリスト]で実現できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608554794,
+      "updated": 1608554813
+    },
+    {
+      "id": "5fe0995eaff09e0000791429",
+      "text": "\t\t\t　　サイズNの配列を先に確保してしまって、ほとんど空で使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608554847,
+      "updated": 1608554903
+    },
+    {
+      "id": "5fe099a1aff09e000079142a",
+      "text": "\t\t\tというわけでこれでいける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608554914,
+      "updated": 1608554919
+    },
+    {
+      "id": "5fe09accaff09e000079142b",
+      "text": "\t\t\t　[https://gyazo.com/95f13e11267e5141c0af54f9673191d1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608555217,
+      "updated": 1608555217
+    },
+    {
+      "id": "5fe09aceaff09e000079142c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608555217,
+      "updated": 1608555217
+    },
+    {
+      "id": "5fe094ffaff09e0000791424",
+      "text": "\t実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608553727,
+      "updated": 1608878073
+    },
+    {
+      "id": "5fe587f9aff09e000020eb46",
+      "text": "\t　ソートはどうやるんだ？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608878074,
+      "updated": 1608878677
+    },
+    {
+      "id": "5fe58a54aff09e000020eb47",
+      "text": "\t　あ、前回の図ではダメだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608878677,
+      "updated": 1608878685
+    },
+    {
+      "id": "5fe58a5daff09e000020eb48",
+      "text": "\t　　これはフェニック木に「断片のstartの値」が入ってるが、実際のソートやスワップのクエリは「配列上の位置」に対して掛かる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608878685,
+      "updated": 1608878769
+    },
+    {
+      "id": "5fe58ab1aff09e000020eb49",
+      "text": "\t　　それが検索できないといけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608878769,
+      "updated": 1608878775
+    },
+    {
+      "id": "5fe58ab7aff09e000020eb4a",
+      "text": "\t　むしろ前後の値はフェニック木の二分探索で手に入るからリンクトリストが要らないのでは",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608878776,
+      "updated": 1608878959
+    },
+    {
+      "id": "5fe58bcbaff09e000020eb4b",
+      "text": "\t　[https://gyazo.com/9b21a8ee557b8855ed9b46e4621182d7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608879052,
+      "updated": 1608879054
+    },
+    {
+      "id": "5fe58bceaff09e000020eb4c",
+      "text": "　　startとendの差から「次の断片」がどこにあるかは定数オーダーでわかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608879054,
+      "updated": 1608879133
+    },
+    {
+      "id": "5fe59364aff09e000020eb4d",
+      "text": "　　フェニック木の実装が1-originなのが混乱を招いたのでインターフェースを0-originにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608880997,
+      "updated": 1608881039
+    },
+    {
+      "id": "5fe5938faff09e000020eb4e",
+      "text": "　　場合わけが大変で混乱してきた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608881039,
+      "updated": 1608881721
+    },
+    {
+      "id": "5fe59639aff09e000020eb4f",
+      "text": "　　　[https://gyazo.com/c20874fb17cf8a9686e9f2d724e6e50f]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608881721,
+      "updated": 1608881722
+    },
+    {
+      "id": "5fe59639aff09e000020eb50",
+      "text": "　一旦中断",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608881722,
+      "updated": 1608882794
+    },
+    {
+      "id": "5fe59a6aaff09e000020eb51",
+      "text": "　ネットで解説を探すともっとシンプルにやってそうな感じ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608882794,
+      "updated": 1608882849
+    },
+    {
+      "id": "5fe59aa1aff09e000020eb52",
+      "text": "　スワップは[転倒数]を最大1増やし、[バブルソート]でのスワップは転倒数を1減らす",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608882850,
+      "updated": 1608883415
+    },
+    {
+      "id": "5fe59cfeaff09e000020eb58",
+      "text": "　スワップされたところを記録しておいて、ソートの時にはそこだけを確認すれば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608883455,
+      "updated": 1608883550
+    },
+    {
+      "id": "5fe59d5eaff09e000020eb59",
+      "text": "　ほんとにそうなのかいまいち自信が持てないけどその方針で実装してみよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608883551,
+      "updated": 1608883594
+    },
+    {
+      "id": "5fe59e24aff09e000020eb5a",
+      "text": "　サンプルは通ったがジャッジは11TLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608883748,
+      "updated": 1608885869
+    },
+    {
+      "id": "5fe5a4aaaff09e000020eb5b",
+      "text": "　一度立てたフラグを消してない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608885418,
+      "updated": 1608886598
+    },
+    {
+      "id": "5fe5a945aff09e000020eb5c",
+      "text": "　消すとサンプルが通らなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886598,
+      "updated": 1608886607
+    },
+    {
+      "id": "5fe5a94faff09e000020eb5d",
+      "text": "　　バグってるのにフラグを消してなかったことでたまたま通ってただけ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886607,
+      "updated": 1608886624
+    },
+    {
+      "id": "5fe5a962aff09e000020eb5e",
+      "text": "　スワップの結果、手前に転倒が発生することがある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886627,
+      "updated": 1608886647
+    },
+    {
+      "id": "5fe5aa42aff09e0000411f22",
+      "text": "　スワップの際(ソートの時に行われるものも含め)転倒しうるところにフラグを立てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886850,
+      "updated": 1608886937
+    },
+    {
+      "id": "5fe5aa9aaff09e000020eb5f",
+      "text": "　ソートはフラグを消しながら行う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886938,
+      "updated": 1608886962
+    },
+    {
+      "id": "5fe5aab3aff09e000020eb60",
+      "text": "　これでACした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886963,
+      "updated": 1608886968
+    },
+    {
+      "id": "5fe5aab9aff09e000020eb61",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886970,
+      "updated": 1608886971
+    },
+    {
+      "id": "5fe5aa44aff09e0000411f24",
+      "text": "AC:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886853,
+      "updated": 1608886855
+    },
+    {
+      "id": "5fe5aa47aff09e0000411f25",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886855,
+      "updated": 1608886858
+    },
+    {
+      "id": "5fe5aa4aaff09e0000411f26",
+      "text": "\t def solve(N, Q, QS):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886858,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f27",
+      "text": "      values = list(range(1, N + 1))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f28",
+      "text": "      ft = FenwickTree(N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f29",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f2a",
+      "text": "      def swap(i):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f2b",
+      "text": "          values[i], values[i + 1] = values[i + 1], values[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f2c",
+      "text": "          if i > 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f2d",
+      "text": "              ft.set(i - 1, 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f2e",
+      "text": "          ft.set(i, 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f2f",
+      "text": "          if i < N - 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f30",
+      "text": "              ft.set(i + 1, 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f31",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f32",
+      "text": "      for t, x, y in QS:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f33",
+      "text": "          if t == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f34",
+      "text": "              x -= 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f35",
+      "text": "              # swap query",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f36",
+      "text": "              swap(x)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f37",
+      "text": "          else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f38",
+      "text": "              x -= 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f39",
+      "text": "              y -= 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f3a",
+      "text": "              # sort query",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f3b",
+      "text": "              s = ft.sum(x) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f3c",
+      "text": "              pos = ft.bisect(s) - 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f3d",
+      "text": "              while pos < y:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f3e",
+      "text": "                  ft.set(pos, 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f3f",
+      "text": "                  while pos >= x and values[pos] > values[pos + 1]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f40",
+      "text": "                      swap(pos)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f41",
+      "text": "                      pos -= 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f42",
+      "text": "                  pos = ft.bisect(s) - 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f43",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f44",
+      "text": "      return values",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886868
+    },
+    {
+      "id": "5fe5aa54aff09e0000411f45",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886868,
+      "updated": 1608886869
+    },
+    {
+      "id": "5fe5aa42aff09e0000411f23",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608886850,
+      "updated": 1608886850
+    },
+    {
+      "id": "5fe09010aff09e000048c07e",
+      "text": "[増えた分しか減らせない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552465,
+      "updated": 1608552465
+    },
+    {
+      "id": "5fe54535aff09e000020eaf1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608860985,
+      "updated": 1608860985
+    },
+    {
+      "id": "5fe09010aff09e000048c07f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608552465,
+      "updated": 1608552465
+    }
+  ]
+}

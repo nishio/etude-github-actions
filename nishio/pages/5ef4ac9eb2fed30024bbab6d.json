@@ -1,0 +1,505 @@
+{
+  "id": "5ef4ac9eb2fed30024bbab6d",
+  "title": "AGC044A",
+  "created": 1593093280,
+  "updated": 1608260792,
+  "lines": [
+    {
+      "id": "5ef4ac9eb2fed30024bbab6d",
+      "text": "AGC044A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093280,
+      "updated": 1593094858
+    },
+    {
+      "id": "5fdc1cafaff09e00002f70ee",
+      "text": "AC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608260784,
+      "updated": 1608260784
+    },
+    {
+      "id": "5fdc1cb8aff09e00002f70ef",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608260792,
+      "updated": 1608260792
+    },
+    {
+      "id": "5ef4ad12aff09e0000ed2d74",
+      "text": "0からスタートして、2倍、3倍、5倍、プラスマイナス1、のいずれかの操作を繰り返してNにする。4種類の操作それぞれにコストが定められており、最小コストを求める[問題 https://atcoder.jp/contests/agc044/tasks/agc044_a]。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093394,
+      "updated": 1593093496
+    },
+    {
+      "id": "5ef4adbdaff09e0000ed2d75",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093565,
+      "updated": 1593093565
+    },
+    {
+      "id": "5ef4adbdaff09e0000ed2d76",
+      "text": "問題文の通り0からNを目指すのではなく、Nから0を目指すことにして、選択肢を「2の倍数まで移動して2で割る」「3について同様」「5について同様」「0まで移動する」の4つにすることで「やたらたくさん+1をやって時間を食い潰す」という罠を回避する。[時間軸反転]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093565,
+      "updated": 1593094596
+    },
+    {
+      "id": "5ef4ae6eaff09e0000ed2d77",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093743,
+      "updated": 1593093743
+    },
+    {
+      "id": "5ef4ae6faff09e0000ed2d78",
+      "text": "Nからスタートして「最も大きい未探索の数(頂点)」に上記の4通りの操作をしていく。なぜなら全ての操作は数を減少させるので、最大の数は他にその数に至る選択肢がなく「暫定最小スコア」が真に最小スコアだと確定してるから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093743,
+      "updated": 1593094695
+    },
+    {
+      "id": "5ef4af26aff09e0000ed2d79",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093926,
+      "updated": 1593093926
+    },
+    {
+      "id": "5ef4af26aff09e0000ed2d7a",
+      "text": "各頂点ごとの「暫定最小スコア」はPythonのdictに入れた。定義域が10^18あるので配列にはしたくないよね。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093926,
+      "updated": 1593094049
+    },
+    {
+      "id": "5ef4afa1aff09e0000ed2d7b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094049,
+      "updated": 1593094049
+    },
+    {
+      "id": "5ef4b03faff09e0000c135a6",
+      "text": "普段なんとなくINF=10**10とかやって「これで十分だろ」と思ってるのだけど、この問題Nが最大10^18、各コストが最大10^9なのであっさり超えてしまう。微妙にWAする。いくらが理論上の最大値なのか考えてないけど、十分大きな数にしておく。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094208,
+      "updated": 1593094716
+    },
+    {
+      "id": "5ef4b040aff09e0000c135a7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094208,
+      "updated": 1593094208
+    },
+    {
+      "id": "5ef4b13eaff09e0000ed2d7d",
+      "text": "ピュアPythonでAC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094462,
+      "updated": 1593094480
+    },
+    {
+      "id": "5ef4afa1aff09e0000ed2d7c",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094049,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b01daff09e0000c135a5",
+      "text": " INF = 10 ** 27 + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094173,
+      "updated": 1593094181
+    },
+    {
+      "id": "5ef4b013aff09e0000c13571",
+      "text": " def solve(N, A, B, C, D):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13572",
+      "text": "     to_visit = [-N]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13573",
+      "text": "     cost = {N: 0}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13574",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13575",
+      "text": "     def put(n, c):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13576",
+      "text": "         cost[n] = min(cost.get(n, INF), c)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13577",
+      "text": "         heappush(to_visit, -n)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13578",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13579",
+      "text": "     visited = N + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1357a",
+      "text": "     while to_visit:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1357b",
+      "text": "         n = -heappop(to_visit)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1357c",
+      "text": "         if n == visited:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1357d",
+      "text": "             continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1357e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1357f",
+      "text": "         visited = n",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13580",
+      "text": "         c = cost[n]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13581",
+      "text": "         put(0, c + n * D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13582",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13583",
+      "text": "         if n % 2 == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13584",
+      "text": "             put(n // 2, c + A)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13585",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13586",
+      "text": "             put((n+1) // 2, c + A + D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13587",
+      "text": "             put((n-1) // 2, c + A + D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13588",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13589",
+      "text": "         if n % 3 == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1358a",
+      "text": "             put(n // 3, c + B)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1358b",
+      "text": "         elif n % 3 == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1358c",
+      "text": "             put((n-1) // 3, c + B + D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1358d",
+      "text": "             put((n+2) // 3, c + B + D * 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1358e",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1358f",
+      "text": "             put((n+1) // 3, c + B + D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13590",
+      "text": "             put((n-2) // 3, c + B + D * 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13591",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13592",
+      "text": "         if n % 5 == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13593",
+      "text": "             put(n // 5, c + C)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13594",
+      "text": "         elif n % 5 == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13595",
+      "text": "             put((n-1) // 5, c + C + D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13596",
+      "text": "             put((n+4) // 5, c + C + D * 4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13597",
+      "text": "         elif n % 5 == 2:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13598",
+      "text": "             put((n-2) // 5, c + C + D * 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c13599",
+      "text": "             put((n+3) // 5, c + C + D * 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1359a",
+      "text": "         elif n % 5 == 3:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1359b",
+      "text": "             put((n+2) // 5, c + C + D * 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1359c",
+      "text": "             put((n-3) // 5, c + C + D * 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1359d",
+      "text": "         elif n % 5 == 4:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1359e",
+      "text": "             put((n+1) // 5, c + C + D)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c1359f",
+      "text": "             put((n-4) // 5, c + C + D * 4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c135a0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c135a1",
+      "text": "     return cost[0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094163
+    },
+    {
+      "id": "5ef4b013aff09e0000c135a2",
+      "text": "https://atcoder.jp/contests/agc044/submissions/14679372",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593094163,
+      "updated": 1593094552
+    },
+    {
+      "id": "5ef4ad7caff09e0000c1356e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093501,
+      "updated": 1593093501
+    },
+    {
+      "id": "5ef4ad7eaff09e0000c13570",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093502,
+      "updated": 1593093502
+    },
+    {
+      "id": "5ef4ad7daff09e0000c1356f",
+      "text": "[桁DP]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093501,
+      "updated": 1593100903
+    },
+    {
+      "id": "5ef4aca1aff09e0000c1356c",
+      "text": "[AGC044] [atcoder]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093282,
+      "updated": 1593094556
+    },
+    {
+      "id": "5ef4aca2aff09e0000c1356d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593093282,
+      "updated": 1593093282
+    }
+  ]
+}

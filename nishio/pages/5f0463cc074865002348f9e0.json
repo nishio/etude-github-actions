@@ -1,0 +1,463 @@
+{
+  "id": "5f0463cc074865002348f9e0",
+  "title": "DP A",
+  "created": 1594123213,
+  "updated": 1600020146,
+  "lines": [
+    {
+      "id": "5f0463cc074865002348f9e0",
+      "text": "DP A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f047bbeaff09e000000d4cf",
+      "text": "[A - Frog 1 https://atcoder.jp/contests/dp/tasks/dp_a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594129343,
+      "updated": 1594129343
+    },
+    {
+      "id": "5f047bbfaff09e000000d4d0",
+      "text": "\tスタートからゴールへ行く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594129344,
+      "updated": 1594129420
+    },
+    {
+      "id": "5f047c0eaff09e00003aab28",
+      "text": "\t各点で1つ進むか2つ進むかの2通りの選択肢があり、それによってコストが異なる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594129423,
+      "updated": 1594129456
+    },
+    {
+      "id": "5f047c30aff09e00003aab29",
+      "text": "\tゴールに至る最小コストを求める問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594129457,
+      "updated": 1594129471
+    },
+    {
+      "id": "5f047c3faff09e00003aab2a",
+      "text": "\t各点を定義域とし、そこに至る最小コストを値とするDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594129472,
+      "updated": 1594129493
+    },
+    {
+      "id": "5f047bc1aff09e000000d4d1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594129346,
+      "updated": 1594129346
+    },
+    {
+      "id": "5f0463ccaff09e0000248b7a",
+      "text": "from [動的計画法]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b7b",
+      "text": "DP_A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b7d",
+      "text": "とりあえずなんとなく書いてみたら、[集めるDP]だった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1600020136
+    },
+    {
+      "id": "5f0463ccaff09e0000248b7e",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b7f",
+      "text": " def solve(N, heights):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b80",
+      "text": "     costs = [0] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b81",
+      "text": "     costs[0] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b82",
+      "text": "     costs[1] = abs(heights[1] - heights[0])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b83",
+      "text": "     for i in range(2, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b84",
+      "text": "         costs[i] = min(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b85",
+      "text": "             costs[i - 2] + abs(heights[i] - heights[i - 2]),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b86",
+      "text": "             costs[i - 1] + abs(heights[i] - heights[i - 1]),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b87",
+      "text": "         )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b88",
+      "text": "     return costs[-1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b89",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b8a",
+      "text": "これをあえて[配るDP]で書いてみた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1600020141
+    },
+    {
+      "id": "5f0463ccaff09e0000248b8b",
+      "text": "　「今入ってる値と、新しい値の小さい方を選ぶ」という書き方のため、十分大きな値INFで初期化している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b8c",
+      "text": "　実はこの問題に関しては2つ目のminで常に新しい値が小さいし、必ず最初に更新されるので、ここをminでなくして、コストを初期化しなくしてもよい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b8d",
+      "text": "　iがゴールの直前まで走る必要があるのに、2つ先まで参照するので、範囲外アクセスを避けるために一つ大きく確保する必要があった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b8e",
+      "text": "　　これに相当することは集めるDPでは「0と1を事前に計算」「ループを2から始める」という形で対処している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b8f",
+      "text": "　個人的には、ちょっと頭をひねる必要がある感じ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b90",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b91",
+      "text": " def solve(N, heights):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b92",
+      "text": "     heights += [INF]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b93",
+      "text": "     costs = [INF] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b94",
+      "text": "     costs[0] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b95",
+      "text": "     for i in range(N - 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b96",
+      "text": "         costs[i + 1] = min(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b97",
+      "text": "             costs[i + 1],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b98",
+      "text": "             costs[i] + abs(heights[i + 1] - heights[i]))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b99",
+      "text": "         costs[i + 2] = min(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b9a",
+      "text": "             costs[i + 2],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b9b",
+      "text": "             costs[i] + abs(heights[i + 2] - heights[i]))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b9c",
+      "text": "     return costs[N - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b9d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248b9e",
+      "text": "[メモ化再帰]で書いたもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1600020146
+    },
+    {
+      "id": "5f0463ccaff09e0000248b9f",
+      "text": "　これは素直",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba0",
+      "text": "　どの値が計算済みかはメモ化の部分に押しつけて、人間は気にしていない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba1",
+      "text": "　計算済みかどうかを識別できる必要があるので、コストとしてあり得ない値(None)で初期化してある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba2",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba3",
+      "text": " def solve(N, heights):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba4",
+      "text": "     costs = [None] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba5",
+      "text": "     costs[0] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba6",
+      "text": "     costs[1] = abs(heights[1] - heights[0])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba8",
+      "text": "     def get_cost(i):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248ba9",
+      "text": "         if costs[i] != None:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248baa",
+      "text": "             return costs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bab",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bac",
+      "text": "         c = min(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bad",
+      "text": "             get_cost(i - 2) + abs(heights[i] - heights[i - 2]),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bae",
+      "text": "             get_cost(i - 1) + abs(heights[i] - heights[i - 1]),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248baf",
+      "text": "         )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bb0",
+      "text": "         costs[i] = c",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bb1",
+      "text": "         return c",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bb2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bb3",
+      "text": "     return get_cost(N - 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    },
+    {
+      "id": "5f0463ccaff09e0000248bb4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594123213,
+      "updated": 1594123213
+    }
+  ]
+}

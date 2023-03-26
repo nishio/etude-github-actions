@@ -1,0 +1,246 @@
+{
+  "id": "6045993a3616700022c83ace",
+  "title": "react-dom/test-utilsのactは何をする？",
+  "created": 1615173980,
+  "updated": 1615175615,
+  "lines": [
+    {
+      "id": "6045993a3616700022c83ace",
+      "text": "react-dom/test-utilsのactは何をする？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615173980,
+      "updated": 1615173980
+    },
+    {
+      "id": "6045995baff09e00000688a0",
+      "text": "簡潔に言えば「コールバックを呼んだ後で更新キューが空になるまでflushする」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615173980,
+      "updated": 1615174160
+    },
+    {
+      "id": "6045998aaff09e0000c8e345",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615174026,
+      "updated": 1615174026
+    },
+    {
+      "id": "60459ccfaff09e0000c8e347",
+      "text": "コールバックがsyncの場合はwhile文で空になるまでflushPassiveEffectsを繰り返す。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615174863,
+      "updated": 1615175441
+    },
+    {
+      "id": "60459ecfaff09e00000688a1",
+      "text": " code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175376,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed1aff09e00000688a2",
+      "text": "  const flushWork =",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175378,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a3",
+      "text": "    Scheduler.unstable_flushAllWithoutAsserting ||",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a4",
+      "text": "    function() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a5",
+      "text": "      let didFlushWork = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a6",
+      "text": "      while (flushPassiveEffects()) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a7",
+      "text": "        didFlushWork = true;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a8",
+      "text": "      }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688a9",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688aa",
+      "text": "      return didFlushWork;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688ab",
+      "text": "    };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175383
+    },
+    {
+      "id": "60459ed2aff09e00000688ac",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175379,
+      "updated": 1615175381
+    },
+    {
+      "id": "60459d03aff09e0000c8e348",
+      "text": "asyncの場合はflushして、キューが空になるまで自分自身をキューに積み直す。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615174915,
+      "updated": 1615175506
+    },
+    {
+      "id": "6045998aaff09e0000c8e346",
+      "text": "\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615174026,
+      "updated": 1615175394
+    },
+    {
+      "id": "60459ee2aff09e00000688ad",
+      "text": "\t function flushWorkAndMicroTasks(onDone: (err: ?Error) => void) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688ae",
+      "text": "    try {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688af",
+      "text": "      flushWork();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b0",
+      "text": "      enqueueTask(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b1",
+      "text": "        if (flushWork()) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b2",
+      "text": "          flushWorkAndMicroTasks(onDone);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b3",
+      "text": "        } else {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b4",
+      "text": "          onDone();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b5",
+      "text": "        }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b6",
+      "text": "      });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b7",
+      "text": "    } catch (err) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b8",
+      "text": "      onDone(err);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688b9",
+      "text": "    }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688ba",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175395
+    },
+    {
+      "id": "60459ee3aff09e00000688bb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615175395,
+      "updated": 1615175396
+    },
+    {
+      "id": "6045996baff09e0000c8e344",
+      "text": "この他にも「actが二重になってないか」「asyncでないものをawaitしてないか」「asyncなのにawaitし忘れてないか」などのチェックのためのコードがある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615173996,
+      "updated": 1615175613
+    }
+  ]
+}

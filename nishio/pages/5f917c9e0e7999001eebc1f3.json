@@ -1,0 +1,253 @@
+{
+  "id": "5f917c9e0e7999001eebc1f3",
+  "title": "ABC154E",
+  "created": 1603370172,
+  "updated": 1603710278,
+  "lines": [
+    {
+      "id": "5f917c9e0e7999001eebc1f3",
+      "text": "ABC154E",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603370172,
+      "updated": 1603708075
+    },
+    {
+      "id": "5f917cbcaff09e00004a7c6f",
+      "text": "[E - Almost Everywhere Zero https://atcoder.jp/contests/abc154/tasks/abc154_e]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603370172,
+      "updated": 1603381342
+    },
+    {
+      "id": "5f917cbcaff09e00004a7c70",
+      "text": "[https://gyazo.com/3144c591c48ca98ba526eb541f2ade6d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603370172,
+      "updated": 1603370174
+    },
+    {
+      "id": "5f917cbdaff09e00004a7c71",
+      "text": "　考えたこと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603370174,
+      "updated": 1603381362
+    },
+    {
+      "id": "5f91a871aff09e00005536aa",
+      "text": "　　[桁DP]ですよね？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603381362,
+      "updated": 1603381381
+    },
+    {
+      "id": "5f91a89faff09e00005536ab",
+      "text": " 　　100桁についてゼロでない数値の出現回数3のテーブルでDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603381407,
+      "updated": 1603710248
+    },
+    {
+      "id": "5f91a8d2aff09e00005536ac",
+      "text": " 　　[ABC154E_old]に以前解きかけた残骸のメモがあるな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603381459,
+      "updated": 1603710248
+    },
+    {
+      "id": "5f95b246aff09e00002c0ecc",
+      "text": " 　　[DP S]を参考にライブラリ化できないかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603646023,
+      "updated": 1603710248
+    },
+    {
+      "id": "5f95beadaff09e00002c0ecd",
+      "text": "　　桁DPとは",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603649200,
+      "updated": 1603710253
+    },
+    {
+      "id": "5f96ad2daff09e0000e45cd2",
+      "text": "　　\t巨大な整数Nが与えられてN以下の非負の整数から条件を満たすものの数を数え上げる時に使える動的計画法アルゴリズム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710253,
+      "updated": 1603710253
+    },
+    {
+      "id": "5f95bf17aff09e00002c0ece",
+      "text": "\t　　上位i桁について既知の時にそれを使ってi+1桁の場合を求める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603649303,
+      "updated": 1603710265
+    },
+    {
+      "id": "5f95bf8aaff09e00002c0ecf",
+      "text": "\t　　今回の場合なら上位i桁でゼロでない数字をk個つかう場合の和がxなら、0を末尾につけたらkのままi+1桁になる、1〜9ならk+1になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603649419,
+      "updated": 1603710266
+    },
+    {
+      "id": "5f95c023aff09e00002c0ed0",
+      "text": "\t　　ただし上位i桁がNと一致してる場合だけは例外で、1〜9ではNを超える可能性があるのでNのi+1桁目の値をケアする必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603649572,
+      "updated": 1603710267
+    },
+    {
+      "id": "5f91a86daff09e00005536a9",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603381357,
+      "updated": 1603707853
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c7b",
+      "text": "\t def solve(N, K):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707853,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c7c",
+      "text": "      less = [0] * (K + 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c7d",
+      "text": "      equal = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c7e",
+      "text": "      for v in N:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c7f",
+      "text": "          new_less = [0] * (K + 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c80",
+      "text": "          if v != 0 and equal <= K:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c81",
+      "text": "              new_less[equal] += 1  # for 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c82",
+      "text": "              new_less[equal + 1] += v - 1  # for 1..",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c83",
+      "text": "              equal += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c84",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c85",
+      "text": "          for k in range(K + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c86",
+      "text": "              new_less[k] += less[k]  # for 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c87",
+      "text": "              new_less[k + 1] += 9 * less[k]  # for 1..9",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c88",
+      "text": "          less = new_less",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c89",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c8a",
+      "text": "      ret = less[K]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c8b",
+      "text": "      if equal == K:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c8c",
+      "text": "          ret += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c8d",
+      "text": "      return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603707854
+    },
+    {
+      "id": "5f96a3cdaff09e0000e45c8e",
+      "text": " AC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707854,
+      "updated": 1603710278
+    },
+    {
+      "id": "5f96a3c7aff09e0000e45c7a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603707848,
+      "updated": 1603707848
+    }
+  ]
+}

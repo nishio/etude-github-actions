@@ -1,0 +1,183 @@
+{
+  "id": "5bd6d728b5333c0014586b43",
+  "title": "物理演算でスライドを近寄らせない",
+  "created": 1531292844,
+  "updated": 1531295296,
+  "lines": [
+    {
+      "id": "5bd6d728aff09e000076a4cf",
+      "text": "物理演算でスライドを近寄らせない",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d0",
+      "text": "from [物理演算の改善]",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d1",
+      "text": "",
+      "created": 1531292848,
+      "updated": 1531292848,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d2",
+      "text": "\t[物理演算]でスライドが近寄ってくる現象",
+      "created": 1531292844,
+      "updated": 1531292852,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d3",
+      "text": " \tそもそも物理演算が起きるということはスライドが混んでいて衝突しているということなので、近づくのはおかしい",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d4",
+      "text": "  というわけで近寄らないようにした。こんな感じ",
+      "created": 1531292844,
+      "updated": 1531292863,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d5",
+      "text": "code:cs",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d6",
+      "text": " // update position",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d7",
+      "text": " for (int i = 0; i < slides.Count; i++)",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d8",
+      "text": " {",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4d9",
+      "text": "     GameObject obj = slides[i] as GameObject;",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4da",
+      "text": "     // current position and distance",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4db",
+      "text": "     Vector3 cpos = obj.transform.position;",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4dc",
+      "text": "     float cdist = (cpos - eye).magnitude;",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4dd",
+      "text": "     // next position and distance",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4de",
+      "text": "     Vector3 npos = cpos + updateVec[obj];",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4df",
+      "text": "     float ndist = (npos - eye).magnitude;",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e0",
+      "text": "     if(ndist < cdist)",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e1",
+      "text": "     {",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e2",
+      "text": "         npos = eye + (npos - eye).normalized * cdist;",
+      "created": 1531295292,
+      "updated": 1531295294,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e3",
+      "text": "     }",
+      "created": 1531292844,
+      "updated": 1531295296,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e4",
+      "text": "     obj.transform.position = npos;",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e5",
+      "text": " }",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e6",
+      "text": "",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a4e7",
+      "text": "",
+      "created": 1531292844,
+      "updated": 1531292844,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

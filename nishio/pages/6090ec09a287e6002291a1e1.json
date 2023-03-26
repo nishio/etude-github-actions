@@ -1,0 +1,967 @@
+{
+  "id": "6090ec09a287e6002291a1e1",
+  "title": "Hatena2011-12-13",
+  "created": 1323702000,
+  "updated": 1323702000,
+  "lines": [
+    {
+      "id": "6090ec2caff09e00003da256",
+      "text": "Hatena2011-12-13",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da257",
+      "text": "code:hatena",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da258",
+      "text": " <body>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da259",
+      "text": " *1323766254*gitをテキトーに使って生産性を向上したユースケース",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da25a",
+      "text": " バージョン管理とかgitとかが「おおげさでめんどくさいもの」だと思う人は多い。でも、それは生産性向上のチャンスを逃していると思う。特に業務として多人数で開発している人たちの「変更前にはまずトピックブランチ」というやり方が、それはそれでよい方法なんだけど、いかにもめんどくさそうで尻込みさせてしまうのではないか。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da25b",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da25c",
+      "text": " 先日の日曜日に、テキトーなgitの使い方をして、とても役に立ったのでユースケースとして報告しておこう。ただし、若干特殊な環境なのでここでやった方法が直接そのまま皆さんの所で使えるとは限らないが。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da25d",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da25e",
+      "text": " まず環境の説明。プロジェクトは「<a href='http://d.hatena.ne.jp/nishiohirokazu/20111211/1323533985'>次の日曜日、新感覚シューティングゲームを展示します</a>」で紹介している、テーブル型ディスプレイで動くシューティングゲーム。メインは @tokoroten で、ソースコードをバリバリ変更している。土曜日にとりあえず動くところまでは行った。改善点は山積みだ。使える時間は7時間。僕のMUSTな作業は終わったので、僕もゲームの実装を手伝いたい。テーブル型ディスプレイはWindowsマシンにつながっていて、ファイル共有でLAN内のマシンからファイルをいじれる。僕のマシンはMacBook Air。実機テストが必要かつ実機がでかいので、相手の作業が一段落ついたかどうかが振る舞いで感じ取れるのも重要なポイントだったかも。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da25f",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da260",
+      "text": " <iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/embed/OF0gX2JNIDM\" frameborder=\"0\" allowfullscreen></iframe>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da261",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da262",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da263",
+      "text": " いちばん初期コストが安い方法は「ソースツリーを自分用にまるごとコピーしてそれをいじる」だよね。でもそれをやった場合、あとでどうやってマージするか考えると辛い。「同じソースを同時にいじらないように相手が今何をいじろうとしているか把握しないといけない」「あるファイルをいじりたいけども、相手も同じファイルをいじっているので待機」「それでもやっぱり同じファイルをいじってしまって、仕方がないのでdiff取ったりして頑張ってマージ」「そしてマージ失敗して修正したバグが復活」という地獄が待ってることが予想できてしまう。それを気合で何とかするとかやりたくないなーというのが僕の心情。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da264",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da265",
+      "text": " そして僕が到着した時tokorotenはまだ来ていなかった。うむ、そうだ、閃いた。git化してしまおう。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da266",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da267",
+      "text": " ** 相手のソースツリーを勝手にgitリポジトリ化",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da268",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da269",
+      "text": " tokorotenのソースツリーの中で git init すると、そこに.gitというフォルダが作られてリポジトリになる。 git status してどういうファイルがあるか確認。.svnがあったから.gitignoreで無視することにする。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da26a",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da26b",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da26c",
+      "text": " pattern: glob",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da26d",
+      "text": " *.pyc",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da26e",
+      "text": " .svn",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da26f",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da270",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da271",
+      "text": " プロジェクトに必要そうなファイルを全部 git add してインデックスに登録し、git commit する。これでgitリポジトリを介してソースコードを共有する準備は完了。大して時間は掛からない。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da272",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da273",
+      "text": " なお、この作業は僕のMacBookAirからsamba経由で行ったので、gitのインストールとか設定とかは何もしていない。それが楽チンな理由の一つかもしれない。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da274",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da275",
+      "text": " コマンドを書いて置く。t$と書いてある場合はtokorotenのワークツリーの中で作業していることを表現している。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da276",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da277",
+      "text": " t$ git init",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da278",
+      "text": " t$ git status",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da279",
+      "text": " t$ emacs .gitignore",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da27a",
+      "text": " t$ git add .",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da27b",
+      "text": " t$ git commit",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da27c",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da27d",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da27e",
+      "text": " ** 自分用のリポジトリを作成",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da27f",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da280",
+      "text": " 次は僕がソースコードをいじって機能追加をするために自分用のリポジトリを作る。というと大仰だがshared/tokoroten/TreFesってのが先ほどgitリポジトリ化したソースツリーなので僕は自分のshared/nishioディレクトリの中で git clone ../tokoroten/TreFes とかやるだけ。これで nishio/TreFes の中にはあとはそこのソースコードを好きにいじるだけ。自分のワークツリーの中にいることをn$で表現する。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da281",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da282",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da283",
+      "text": " $ git clone ../tokoroten/TreFes",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da284",
+      "text": " $ cd TreFes",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da285",
+      "text": " n$ ...",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da286",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da287",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da288",
+      "text": " で、ソースコードをガリガリいじって、動作テストして、うん、うまく動いた、一段落ついた、という時にコミットをする。まずは git status で何が変更されてるかを見る。 git add (filename) で変更されたファイルを丸ごとインデックスに登録してもいいし、個人的には git add -p して変更箇所ごとに登録するのが好き。うっかり消し忘れのデバッグ出力とかをコミットしたくないし。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da289",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da28a",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da28b",
+      "text": " n$ git add -p",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da28c",
+      "text": " n$ git commit",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da28d",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da28e",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da28f",
+      "text": " 勝手に機能追加を始めていたところtokoroten登場。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da290",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da291",
+      "text": " ** 相手の切りの良いタイミングを見極めてコミット",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da292",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da293",
+      "text": " tokorotenにgitの操作を教えるかそのままやってもらうか考えた結果、時間も限られているから僕がやればいいやという結論になった。tokorotenが切りの良いタイミングで、彼の行った変更を僕がcommitする。っていってもsambaでファイル共有されているので、彼のワークツリーにcdして、細かいことは気にせずに git status で表示される変更されたり追加されたりしたファイルを git add して git commit するだけ。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da294",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da295",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da296",
+      "text": " t$ git status",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da297",
+      "text": " t$ git add <files>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da298",
+      "text": " t$ git commit",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da299",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da29a",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da29b",
+      "text": " ** 相手の変更を自分のリポジトリに取り込む",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da29c",
+      "text": " 次に自分のリポジトリでtokorotenの行った変更を git pull する。これで相手のリポジトリにコミットされている変更箇所のデータが自分のリポジトリに運ばれて、かつワークツリーのファイルとマージされる。自分の未コミットの変更とかがあると怒られる気がする。(あー、そうか、自分がトピックブランチ切って作業しているなら気にせずマージできるのかな、気づかなかった) 現場では最初に1回それで怒られて、コミットしてからpullしなおしたけど、それ以降は問題にならなかった。相手の作業完了に気づく時って、自分の作業も一段落ついるんだろうな。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da29d",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da29e",
+      "text": " pullすると自動でmergeも行われる。その結果「自動で問題なくマージできたよ！」って言われる場合もあるし「このファイルはできなかったから手動でマージしてね」って言われる(コンフリクト)場合もある。1日で31件のコミットがあって、コンフリクトは6回だった。うち1件だけ「ちょっとこれどういう意図？」って自然言語でのコミュニケーションが必要になったけど、残りはパッと見てすぐ直せるものだった。直した場合はそのファイルを git add して git commit する必要がある。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da29f",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a0",
+      "text": " さて、これでtokorotenの行った変更を僕のリポジトリに反映させる作業が終わった。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a1",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a2",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a3",
+      "text": " n$ git pull",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a4",
+      "text": " コンフリクトしたファイルを編集",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a5",
+      "text": " n$ git add <コンフリクトしたファイル>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a6",
+      "text": " n$ git commit",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a7",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a8",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2a9",
+      "text": " ** こちらの変更を相手のリポジトリにつっこむ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2aa",
+      "text": " 大体において前の章の作業はあっという間に終わるので、相手がソースをいじっていないすきにこちらの変更を相手に送り込む。今回は間にbareリポジトリがないのでpushはできない。相手のリポジトリで git pull することになる。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ab",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ac",
+      "text": " >||",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ad",
+      "text": " t$ git pull ../../nishio/TreFes",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ae",
+      "text": " ||<",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2af",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b0",
+      "text": " これで終了。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b1",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b2",
+      "text": " ただし、相手がすでにコードをいじっているとこのpullの時に、未コミット変更のせいでマージ出来なかったりする可能性があるね。現場では問題にならなかった。多分作業が一段落ついたら作業の内容を話したりトイレに行ったりお茶を飲んだりしているからだろう。一回だけコンフリクト修正に手間取っている間にtokorotenがソースをいじってたことがあって、その時は「どこいじってる？」と聞いて、いじっていたファイルがこれから送り込む内容とかぶってないのでGOした。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b3",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b4",
+      "text": " あと、これを書いていて気づいたんだけども、相手が「開いているファイルを書きこみロックするエディタ」とか「開いているファイルが更新されても気づかないエディタ」だと問題が起きそうね。特に後者とか pull で変更されていることに気づかずに上書き保存したりして…。そんなエディタ使うなよ、という結論でいいかな？",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b5",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b6",
+      "text": " ** まとめ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b7",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b8",
+      "text": " こんな感じで日曜日の午後を使ってシューティングゲームを作ったのだけど、14時から21時の7時間で31コミットが行われるくらいの速度感で、コンフリクトは6回。うち直すのに頭を使うコンフリクトは1回だけ。ちょうど同時にプレイヤーが玉を打つ部分のコードをいじったのでな。二人が同一のファイルをいじっていたケースは数えきれず…っていうかファイルがtrefes.pyとかplayer.pyとかの粒度なので当然そうなるよね。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2b9",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ba",
+      "text": " もし「同一のファイルをいじったら後でマージ大変だな」とか「同じファイルをいじらないようにしよう」という気持ちがあったら、どれだけ機能追加のモチベーションを損ねたことだろうか。多分僕はダラダラしながら「こうしたらいいんじゃない？このコードいじればできるんじゃない？」なんて口を挟むだけで自分でコードを書こうとしなかったんじゃないだろうか？",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2bb",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2bc",
+      "text": " ちなみにその7時間で僕が行った作業をコミットログから掘り起こしてみると:",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2bd",
+      "text": " - キャラによって弾の色を変更",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2be",
+      "text": " - シナリオをデータファイルだけでなくスクリプトで指定できるように変更",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2bf",
+      "text": " - 弾が壁で反射するようにした",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c0",
+      "text": " - 起動用のbatファイル作成",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c1",
+      "text": " - 画面端との衝突判定",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c2",
+      "text": " - enemyを複数種類にできるようリファクタリング",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c3",
+      "text": " - まどかの弾を散弾銃にした",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c4",
+      "text": " - 前方からの弾を反射する敵の追加",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c5",
+      "text": " - 反射周りのリファクタリング",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c6",
+      "text": " - ほむらの弾種変更",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c7",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c8",
+      "text": " 弾の反射みたいな結構大きな変更が安心して実装できたってのもメリットだけども、弾の色の変更とかそういう些細なタスクをメインプログラマに積まずに周りがさくっと片付けることで、メインプログラマにはもっと重要な作業に専念してもらうってところがチームとしての生産性を考えた場合に重要だったのではないか。僕がこういう細かいことをやっている間にtokorotenはゲームの状態遷移とかボスの出現とか効果音とか、ゲームの全体に関わることをしていたので。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2c9",
+      "text": " ",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ca",
+      "text": " そういうわけで自分の生産性を高めるために、チームの他のメンバがgitを使っているかどうかとは無関係に、自分がgitを使えることにはメリットがある。ブランチを切りすらしていないテキトーな使い方でも、使わないよりは明らかに優れている。",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2cb",
+      "text": " </body>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2cc",
+      "text": " <comments>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2cd",
+      "text": " <comment>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2ce",
+      "text": " <username>o_show</username>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2cf",
+      "text": " <body>「こちらの変更を相手のリポジトリにつっこむ」の節で、<br><br>＞今回は間にbareリポジトリがないのでpushはできない。相手のリポジトリで git pull することになる。<br><br>とありますが、shared/tokoroten/TreFes の方がclone元なので、<br>そのままでは shared/tokoroten/TreFesの方からは<br>git pull はできないはずだから、remoteを設定したんですよね？<br>せっかくの良いチュートリアルなのでそのコマンドも補完してもらえないでしょうか。<br><br>t$ git remote add nishio ../../nishio/TreFes<br><br>↑多分、こんな感じでやったのではと思うのですが。</body>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d0",
+      "text": " <timestamp>1323773028</timestamp>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d1",
+      "text": " </comment>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d2",
+      "text": " <comment>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d3",
+      "text": " <username>nishiohirokazu</username>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d4",
+      "text": " <body>まさにそのとおりのことをしていました！<br>でもまあ、remote addはこの場合必須ではないので、説明することを増やして混乱させないように、<br>リポジトリを指定してpullする方法に修正しておきました。<br>- git pull<br>+ git pull ../../nishio/TreFes</body>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d5",
+      "text": " <timestamp>1323773487</timestamp>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d6",
+      "text": " </comment>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d7",
+      "text": " <comment>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d8",
+      "text": " <username>o_show</username>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2d9",
+      "text": " <body>おお、なるほどその場でリポジトリを指定して pull も可能ですね。<br>remoteを説明しなくていいというのは大きいかも。<br><br>こういう「頑張り過ぎない」例でもGitは有効ってのが<br>よくわかるいい記事だと思います。ユースケースの公開ありがとうございました。</body>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2da",
+      "text": " <timestamp>1323774061</timestamp>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2db",
+      "text": " </comment>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2dc",
+      "text": " </comments>",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2dd",
+      "text": "",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2caff09e00003da2de",
+      "text": "[はてなダイアリー 2011-12-13 https://nishiohirokazu.hatenadiary.org/archive/2011/12/13]",
+      "created": 1323702000,
+      "updated": 1323702000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

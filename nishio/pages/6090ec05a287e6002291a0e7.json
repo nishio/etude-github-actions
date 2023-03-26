@@ -1,0 +1,1681 @@
+{
+  "id": "6090ec05a287e6002291a0e7",
+  "title": "Hatena2010-08-01",
+  "created": 1280588400,
+  "updated": 1280588400,
+  "lines": [
+    {
+      "id": "6090ec29aff09e00003d6ddc",
+      "text": "Hatena2010-08-01",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ddd",
+      "text": "code:hatena",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dde",
+      "text": " <body>",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ddf",
+      "text": " *1280651063*抜粋翻訳 PEP3104: Access to Names in Outer Scopes",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de0",
+      "text": " ** 概要",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de1",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de2",
+      "text": " ネストしたスコープをサポートする多くの言語では、コードは最も近いスコープの名前を参照したり再束縛(代入)したりできる。現在のところPythonは外側のスコープの任意の名前を参照できるが再束縛は2つのスコープの中でしかできない。ローカルスコープ(単なる代入を使う)と、モジュールグローバルのスコープ( ``global`` 宣言を使う)だ。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de3",
+      "text": " この制限はなんどもPython-Devメーリングリストやその他で話題にあがり、多くの議論とこの制限を取り除く方法の提案につながった。このPEPでは提案された数多くの選択肢を総括し、それぞれに指摘された長所と他所を付記する。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de4",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de5",
+      "text": " ** 理由",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de6",
+      "text": " バージョン2.1以前、Pythonのスコープの扱いは標準的なCに似たものであった。ファイルの中には2つのスコープレベルしか存在しない。グローバルとローカルである。Cでは、これは関数の定義がネストできないことによる自然な結果である。しかしPythonでは、関数は通常トップレベルで定義されるとはいえ、関数定義はどこでも実行できる。これは構文上はPythonにネストしたスコープがあるように見せる。しかしその機能はない。この不一致はプログラマを驚かせる。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de7",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de8",
+      "text": " たとえばトップレベルで動いていた再帰関数は他の関数の中に入れると動かなくなるだろう。なぜなら再帰関数自体の名前が再帰関数の本体のスコープからは見えなくなるからだ。これは関数はどこに置かれているかにかかわらず同じように振舞うべきだ、という直感に反する。下に例を挙げる::",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6de9",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dea",
+      "text": " >|python|",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6deb",
+      "text": "     def enclosing_function():",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dec",
+      "text": "         def factorial(n):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ded",
+      "text": "             if n < 2:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dee",
+      "text": "                 return 1",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6def",
+      "text": "             return n * factorial(n - 1)  # fails with NameError",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df0",
+      "text": "         print factorial(5)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df1",
+      "text": " ||<",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df2",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df3",
+      "text": " Python 2.1では外側のスコープすべてで束縛された名前が見えるようになり、より静的にネストしたスコープに近づいた (PEP 227を参照)この変更によって上で挙げたコード例は期待通りに動くようになった。しかし、全ての名前への代入は暗黙的にその名前をローカルとして宣言するので外側のスコープの名前を再束縛することは不可能である(``global`` 宣言によって名前をグローバルスコープに強制することをのぞく)　なので下記のコードは、ボタンをクリックすると表示された数値が増えたり減ったりすることを期待したコードだが、レキシカルスコープに慣れた人が期待するようには動かない。::",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df4",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df5",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df6",
+      "text": " >|python|",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df7",
+      "text": "     def make_scoreboard(frame, score=0):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df8",
+      "text": "         label = Label(frame)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6df9",
+      "text": "         label.pack()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dfa",
+      "text": "         for i in [-10, -1, 1, 10]:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dfb",
+      "text": "             def increment(step=i):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dfc",
+      "text": "                 score = score + step  # fails with UnboundLocalError",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dfd",
+      "text": "                 label['text'] = score",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dfe",
+      "text": "             button = Button(frame, text='%+d' % i, command=increment)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6dff",
+      "text": "             button.pack()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e00",
+      "text": "         return label",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e01",
+      "text": " ||<",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e02",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e03",
+      "text": " **他の言語での例",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e04",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e05",
+      "text": " *** JavaScript, Perl, Scheme, Smalltalk, GNU C, C# 2.0",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e06",
+      "text": " これらの言語はスコープを示すために変数の宣言を用いる。JavaScriptでは、字句的スコープの変数はキーワード ``var`` をつけて宣言される。宣言されていない変数名はグローバルと解釈される。Perlでは字句的スコープの変数はキーワード ``my`` をつけて宣言される。宣言されていない変数名はグローバルと解釈される。Schemeではすべての変数は(``define`` や ``let`` をつけるか、仮引数として)宣言が必要である。Smalltalkではブロックはすべて、縦棒で挟まれた、ローカル変数名を宣言するリストで始められる。CとC#ではすべての変数に型宣言が必要である。これらすべてにおいて変数はその宣言が含まれているスコープに属する。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e07",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e08",
+      "text": " ***Ruby1.8",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e09",
+      "text": " Rubyは参考になる例だ。なぜなら他の現在有名な言語で唯一、Pythonのように、変数宣言を要求することなく静的にネストしたスコープをサポートすることに挑戦しているように見える。そしてそれゆえに一般的でない解決方法に到達したからだ。Rubyの関数は他の関数定義をもつことができる。そして波カッコで囲われたブロックを持つことができる。ブロックは外のスコープにアクセスすることが出来る。しかしネストした関数はそうではない。ブロックの中での名前への代入は、外のスコープですでに束縛された名前を隠さない場合に限りローカル変数の宣言と解釈される。そうでない場合は代入は外の名前の再束縛と解釈される。Rubyのスコープに関する構文とルールも長きに渡って議論されており、Ruby 2.0で変更される見込みである。 [28]_",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e0a",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e0b",
+      "text": " *1280656890*抜粋翻訳 PEP 342: Coroutines via Enhanced Generators",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e0c",
+      "text": " ** 概要",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e0d",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e0e",
+      "text": " このPEPはジェネレータのAPIと構文を改善して、シンプルなコルーチンとして使えるようにすることを提案する。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e0f",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e10",
+      "text": " ** 動機",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e11",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e12",
+      "text": " コルーチンはいろいろなアルゴリズムを表現する自然な方法である。たとえば、シミュレーション、ゲーム、非同期I/O、そしてイベントドリブンプログラミングや協調的マルチタスクの他の形だ。 Pythonのジェネレータ関数はほとんどコルーチンだ、しかし完全にではない、なぜなら値を作って処理を一時停止することは許すが、処理を再開するときに値や例外を渡す方法がないからだ。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e13",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e14",
+      "text": " ** 実装例",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e15",
+      "text": " 1. ジェネレータ関数が最初に呼ばれたときに自動的に最初のyieldまで処理が進むようにする “consumer” デコレータ:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e16",
+      "text": " >|python|",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e17",
+      "text": " def consumer(func):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e18",
+      "text": "     def wrapper(*args,**kw):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e19",
+      "text": "         gen = func(*args, **kw)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e1a",
+      "text": "         gen.next()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e1b",
+      "text": "         return gen",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e1c",
+      "text": "     wrapper.__name__ = func.__name__",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e1d",
+      "text": "     wrapper.__dict__ = func.__dict__",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e1e",
+      "text": "     wrapper.__doc__  = func.__doc__",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e1f",
+      "text": "     return wrapper",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e20",
+      "text": " ||<",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e21",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e22",
+      "text": " 2. “consumer”デコレータを使って”reverse generator”を作る。これは、複数の画像を受け取ってサムネイルの並んだページを作り、それを他のcomsumerに送る。このような関数は、それぞれは複雑な内部状態を持ちうるような”consumers”を、効率的な処理パイプラインを作るためにつなぎあわせることができる:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e23",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e24",
+      "text": " >|python|",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e25",
+      "text": " @consumer",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e26",
+      "text": " def thumbnail_pager(pagesize, thumbsize, destination):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e27",
+      "text": "     while True:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e28",
+      "text": "         page = new_image(pagesize)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e29",
+      "text": "         rows, columns = pagesize / thumbsize",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e2a",
+      "text": "         pending = False",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e2b",
+      "text": "         try:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e2c",
+      "text": "             for row in xrange(rows):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e2d",
+      "text": "                 for column in xrange(columns):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e2e",
+      "text": "                     thumb = create_thumbnail((yield), thumbsize)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e2f",
+      "text": "                     page.write(",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e30",
+      "text": "                         thumb, col*thumbsize.x, row*thumbsize.y",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e31",
+      "text": "                     )",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e32",
+      "text": "                     pending = True",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e33",
+      "text": "         except GeneratorExit:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e34",
+      "text": "             # close() was called, so flush any pending output",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e35",
+      "text": "             if pending:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e36",
+      "text": "                 destination.send(page)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e37",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e38",
+      "text": "             # then close the downstream consumer, and exit",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e39",
+      "text": "             destination.close()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e3a",
+      "text": "             return",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e3b",
+      "text": "         else:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e3c",
+      "text": "             # we finished a page full of thumbnails, so send it",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e3d",
+      "text": "             # downstream and keep on looping",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e3e",
+      "text": "             destination.send(page)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e3f",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e40",
+      "text": " @consumer",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e41",
+      "text": " def jpeg_writer(dirname):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e42",
+      "text": "     fileno = 1",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e43",
+      "text": "     while True:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e44",
+      "text": "         filename = os.path.join(dirname,\"page%04d.jpg\" % fileno)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e45",
+      "text": "         write_jpeg((yield), filename)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e46",
+      "text": "         fileno += 1",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e47",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e48",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e49",
+      "text": " # Put them together to make a function that makes thumbnail",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e4a",
+      "text": " # pages from a list of images and other parameters.",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e4b",
+      "text": " #",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e4c",
+      "text": " def write_thumbnails(pagesize, thumbsize, images, output_dir):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e4d",
+      "text": "     pipeline = thumbnail_pager(",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e4e",
+      "text": "         pagesize, thumbsize, jpeg_writer(output_dir)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e4f",
+      "text": "     )",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e50",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e51",
+      "text": "     for image in images:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e52",
+      "text": "         pipeline.send(image)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e53",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e54",
+      "text": "     pipeline.close()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e55",
+      "text": " ||<",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e56",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e57",
+      "text": " 3. シンプルなコルーチンのスケジューラ、またの名を「トランポリン」とも言う。これは呼びたいコルーチンをyieldすることで、コルーチンが他のコルーチンを”call”できるようにする。 yieldされた値がジェネレータではない場合は、そのコルーチンを”call”したコルーチンに返される同様にコルーチンが例外を投げた場合には、その例外は”call”したコルーチンに伝搬する。結果としてこの例は、yield式をルーチンを起動するために使っている限りにおいて、Stackless Pythonで使われているシンプルなタスクレットのように振舞う。さもなくば”block”する。これはとてもシンプルな例に過ぎない。もっと洗練されたスケジューラも可能である (たとえば既存のPython用GTaskletフレームワーク(http://www.gnome.org/~gjc/gtasklet/gtasklets.html) やpeak.eventsフレームワーク(http://peak.telecommunity.com/)はすでによく似た機能を実装している。しかし現在はジェネレータに値や例外を渡す方法がないために奇妙なワークアラウンドを使っている。):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e58",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e59",
+      "text": " >|python|",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e5a",
+      "text": " import collections",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e5b",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e5c",
+      "text": " class Trampoline:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e5d",
+      "text": "     \"\"\"Manage communications between coroutines\"\"\"",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e5e",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e5f",
+      "text": "     running = False",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e60",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e61",
+      "text": "     def __init__(self):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e62",
+      "text": "         self.queue = collections.deque()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e63",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e64",
+      "text": "     def add(self, coroutine):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e65",
+      "text": "         \"\"\"Request that a coroutine be executed\"\"\"",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e66",
+      "text": "         self.schedule(coroutine)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e67",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e68",
+      "text": "     def run(self):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e69",
+      "text": "         result = None",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e6a",
+      "text": "         self.running = True",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e6b",
+      "text": "         try:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e6c",
+      "text": "             while self.running and self.queue:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e6d",
+      "text": "                 func = self.queue.popleft()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e6e",
+      "text": "                 result = func()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e6f",
+      "text": "             return result",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e70",
+      "text": "         finally:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e71",
+      "text": "             self.running = False",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e72",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e73",
+      "text": "     def stop(self):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e74",
+      "text": "         self.running = False",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e75",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e76",
+      "text": "     def schedule(self, coroutine, stack=(), value=None, *exc):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e77",
+      "text": "         def resume():",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e78",
+      "text": "             try:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e79",
+      "text": "                 if exc:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e7a",
+      "text": "                     value = coroutine.throw(value,*exc)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e7b",
+      "text": "                 else:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e7c",
+      "text": "                     value = coroutine.send(value)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e7d",
+      "text": "             except:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e7e",
+      "text": "                 if stack:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e7f",
+      "text": "                     # send the error back to the \"caller\"",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e80",
+      "text": "                     self.schedule(",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e81",
+      "text": "                         stack[0], stack[1], *sys.exc_info()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e82",
+      "text": "                     )",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e83",
+      "text": "                 else:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e84",
+      "text": "                     # Nothing left in this pseudothread to",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e85",
+      "text": "                     # handle it, let it propagate to the",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e86",
+      "text": "                     # run loop",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e87",
+      "text": "                     raise",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e88",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e89",
+      "text": "             if isinstance(value, types.GeneratorType):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e8a",
+      "text": "                 # Yielded to a specific coroutine, push the",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e8b",
+      "text": "                 # current one on the stack, and call the new",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e8c",
+      "text": "                 # one with no args",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e8d",
+      "text": "                 self.schedule(value, (coroutine,stack))",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e8e",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e8f",
+      "text": "             elif stack:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e90",
+      "text": "                 # Yielded a result, pop the stack and send the",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e91",
+      "text": "                 # value to the caller",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e92",
+      "text": "                 self.schedule(stack[0], stack[1], value)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e93",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e94",
+      "text": "             # else: this pseudothread has ended",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e95",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e96",
+      "text": "         self.queue.append(resume)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e97",
+      "text": " ||<",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e98",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e99",
+      "text": " 4. シンプルなechoサーバとトランポリンを使ってそれを走らせるコード (“nonblocking_read”, “nonblocking_write” と、たとえば接続が閉じられたときにはConnectionLostを投げるようなその他のI/Oコルーチンの存在を仮定している):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e9a",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e9b",
+      "text": " >|python|",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e9c",
+      "text": " # coroutine function that echos data back on a connected",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e9d",
+      "text": " # socket",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e9e",
+      "text": " #",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6e9f",
+      "text": " def echo_handler(sock):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea0",
+      "text": "     while True:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea1",
+      "text": "         try:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea2",
+      "text": "             data = yield nonblocking_read(sock)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea3",
+      "text": "             yield nonblocking_write(sock, data)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea4",
+      "text": "         except ConnectionLost:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea5",
+      "text": "             pass  # exit normally if connection lost",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea6",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea7",
+      "text": " # coroutine function that listens for connections on a",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea8",
+      "text": " # socket, and then launches a service \"handler\" coroutine",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ea9",
+      "text": " # to service the connection",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eaa",
+      "text": " #",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eab",
+      "text": " def listen_on(trampoline, sock, handler):",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eac",
+      "text": "     while True:",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ead",
+      "text": "         # get the next incoming connection",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eae",
+      "text": "         connected_socket = yield nonblocking_accept(sock)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eaf",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb0",
+      "text": "         # start another coroutine to handle the connection",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb1",
+      "text": "         trampoline.add( handler(connected_socket) )",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb2",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb3",
+      "text": " # Create a scheduler to manage all our coroutines",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb4",
+      "text": " t = Trampoline()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb5",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb6",
+      "text": " # Create a coroutine instance to run the echo_handler on",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb7",
+      "text": " # incoming connections",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb8",
+      "text": " #",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eb9",
+      "text": " server = listen_on(",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eba",
+      "text": "     t, listening_socket(\"localhost\",\"echo\"), echo_handler",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ebb",
+      "text": " )",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ebc",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ebd",
+      "text": " # Add the coroutine to the scheduler",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ebe",
+      "text": " t.add(server)",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ebf",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec0",
+      "text": " # loop forever, accepting connections and servicing them",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec1",
+      "text": " # \"in parallel\"",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec2",
+      "text": " #",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec3",
+      "text": " t.run()",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec4",
+      "text": " ||<",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec5",
+      "text": " ",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec6",
+      "text": " *1280678844*ぼへー",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec7",
+      "text": " 今日翻訳したPEPを講義資料に追加して提出するつもりだったのをすっかり忘れてそのまま提出してしまった、まあいいけど。入れるとしたらOuter Scopeの方だけだから実例が1個増えるだけだし。",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec8",
+      "text": " </body>",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6ec9",
+      "text": "",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec29aff09e00003d6eca",
+      "text": "[はてなダイアリー 2010-08-01 https://nishiohirokazu.hatenadiary.org/archive/2010/08/01]",
+      "created": 1280588400,
+      "updated": 1280588400,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

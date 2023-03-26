@@ -1,0 +1,974 @@
+{
+  "id": "5ef01c936d546d001e4f09ba",
+  "title": "np.arrayが遅い",
+  "created": 1592794264,
+  "updated": 1598110386,
+  "lines": [
+    {
+      "id": "5ef01c936d546d001e4f09ba",
+      "text": "np.arrayが遅い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794264,
+      "updated": 1593053671
+    },
+    {
+      "id": "5ef4137faff09e000065e07f",
+      "text": "まとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054080,
+      "updated": 1593054083
+    },
+    {
+      "id": "5ef41383aff09e000065e081",
+      "text": "　np.array はリストに比べて2倍ほど要素アクセスが遅い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054083,
+      "updated": 1593054131
+    },
+    {
+      "id": "5f413ab1aff09e0000a73fac",
+      "text": "　\t[numpyの添え字アクセスは遅い]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598110385,
+      "updated": 1598110386
+    },
+    {
+      "id": "5ef413b7aff09e000065e082",
+      "text": "　累積和を計算するコードを作りnumbaでコンパイルするとnp.arrayを使った側が速くなった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054136,
+      "updated": 1596119253
+    },
+    {
+      "id": "5f22d8d6aff09e000087d484",
+      "text": "　　速くなりすぎ感があるので今度もう少しちゃんと調べたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119255,
+      "updated": 1596119281
+    },
+    {
+      "id": "5ef41380aff09e000065e080",
+      "text": "　numbaを調べてた時に書いたのでnumbaの話ばかりだが、Numpyを使う上ではまず[ループをNumpyに任せる]ことを優先した方が良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054080,
+      "updated": 1596119731
+    },
+    {
+      "id": "5f22da78aff09e000087d487",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119673,
+      "updated": 1596119673
+    },
+    {
+      "id": "5ef0516aaff09e0000ad8767",
+      "text": "[numba]に渡すために[RBST]の今までリストで作ってたところをnp.arrayに置き換えたらやたら遅くなった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592807787,
+      "updated": 1593052019
+    },
+    {
+      "id": "5ef01c9daff09e0000e60bf6",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794269,
+      "updated": 1592794276
+    },
+    {
+      "id": "5ef01cb7aff09e0000e60c0f",
+      "text": " # 6.080607408sec",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794295,
+      "updated": 1592794315
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c03",
+      "text": " self.vals = np.repeat(SUM_UNITY, MAX_NODE_ID)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794276,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c04",
+      "text": " self.sizes = np.ones(MAX_NODE_ID, dtype=np.int)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c05",
+      "text": " self.sums = np.repeat(SUM_UNITY, MAX_NODE_ID)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c06",
+      "text": " self.lefts = np.zeros(MAX_NODE_ID, dtype=np.int)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c07",
+      "text": " self.rights = np.zeros(MAX_NODE_ID, dtype=np.int)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c08",
+      "text": "\t# 2.765020115",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794323
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c09",
+      "text": " # self.vals = [SUM_UNITY] * MAX_NODE_ID",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c0a",
+      "text": " # self.sizes = [1] * MAX_NODE_ID",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c0b",
+      "text": " # self.sums = [SUM_UNITY] * MAX_NODE_ID",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c0c",
+      "text": " # self.lefts = [0] * MAX_NODE_ID",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c0d",
+      "text": " # self.rights = [0] * MAX_NODE_ID",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794298
+    },
+    {
+      "id": "5ef01ca4aff09e0000e60c0e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794277,
+      "updated": 1592794280
+    },
+    {
+      "id": "5ef40ea7aff09e000083accf",
+      "text": "調べてみると添え字アクセスが2倍ちょい遅い: list 57.4 ms / np.array 134 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052840,
+      "updated": 1596118976
+    },
+    {
+      "id": "5ef01ca1aff09e0000e60c02",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592794273,
+      "updated": 1593052103
+    },
+    {
+      "id": "5ef40bc7aff09e000083ac9a",
+      "text": " In [34]: %%timeit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052103,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083ac9b",
+      "text": "     ...: N = 1000_000; xs = [0] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083ac9c",
+      "text": "     ...: for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083ac9d",
+      "text": "     ...:     xs[i] = xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083ac9e",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083ac9f",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca0",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca1",
+      "text": " 57.4 ms ± 454 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca3",
+      "text": " In [35]: %%timeit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca4",
+      "text": "     ...: N = 1000_000; xs = np.zeros(N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca5",
+      "text": "     ...: for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca6",
+      "text": "     ...:     xs[i] = xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca7",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca8",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083aca9",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40bc7aff09e000083acaa",
+      "text": " 134 ms ± 1.55 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052104,
+      "updated": 1593052104
+    },
+    {
+      "id": "5ef40c7eaff09e000083acab",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052287,
+      "updated": 1593052464
+    },
+    {
+      "id": "5ef40ef9aff09e000083acd2",
+      "text": "これは本題でないグローバルアクセスが遅い現象: global 155 ms / local 135 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052921,
+      "updated": 1593053768
+    },
+    {
+      "id": "5ef40d31aff09e000083acc0",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052465,
+      "updated": 1593052467
+    },
+    {
+      "id": "5ef40c7faff09e000083acac",
+      "text": " In [37]: def foo():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052287,
+      "updated": 1593052343
+    },
+    {
+      "id": "5ef40c7faff09e000083acad",
+      "text": "     ...:     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052287,
+      "updated": 1593052287
+    },
+    {
+      "id": "5ef40c7faff09e000083acae",
+      "text": "     ...:         xs[i] = xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052287,
+      "updated": 1593052287
+    },
+    {
+      "id": "5ef40c80aff09e000083acaf",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052289,
+      "updated": 1593052289
+    },
+    {
+      "id": "5ef40c80aff09e000083acb0",
+      "text": " In [40]: %timeit foo()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052289,
+      "updated": 1593052303
+    },
+    {
+      "id": "5ef40c8eaff09e000083acb1",
+      "text": " 155 ms ± 2.05 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052303,
+      "updated": 1593052303
+    },
+    {
+      "id": "5ef40c8faff09e000083acb2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052304,
+      "updated": 1593052304
+    },
+    {
+      "id": "5ef40cbaaff09e000083acb4",
+      "text": " In [44]: def foo(xs):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052347,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acb5",
+      "text": "     ...:     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acb6",
+      "text": "     ...:         xs[i] = xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acb7",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acb8",
+      "text": "     ...:         ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acb9",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acba",
+      "text": " In [45]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40cddaff09e000083acbb",
+      "text": " 135 ms ± 2.84 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052382,
+      "updated": 1593052382
+    },
+    {
+      "id": "5ef40c90aff09e000083acb3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052304,
+      "updated": 1593052909
+    },
+    {
+      "id": "5ef40f33aff09e000083acd4",
+      "text": "numbaコンパイルすれば速くなるが、これは速くなりすぎ(np.array: 255 ns)なので最適化でループごと消えてそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052979,
+      "updated": 1593054008
+    },
+    {
+      "id": "5ef41268aff09e000083ace4",
+      "text": "list: 1.69 s、かえって遅くなる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053801,
+      "updated": 1596119066
+    },
+    {
+      "id": "5f22d819aff09e000087d482",
+      "text": "この使い方はNumbaPendingDeprecationWarning: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119066,
+      "updated": 1596119066
+    },
+    {
+      "id": "5ef415afaff09e000083ad14",
+      "text": "Encountered the use of a type that is scheduled for deprecation: type 'reflected list' found for argument 'xs' of function 'foo'. For more information visit http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054639,
+      "updated": 1593054658
+    },
+    {
+      "id": "5ef40ef6aff09e000083acd0",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052918,
+      "updated": 1593052918
+    },
+    {
+      "id": "5ef40cfeaff09e000083acbc",
+      "text": " In [46]: foo = numba.njit(foo)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052414,
+      "updated": 1593052414
+    },
+    {
+      "id": "5ef40cfeaff09e000083acbd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052414,
+      "updated": 1593052414
+    },
+    {
+      "id": "5ef40cfeaff09e000083acbe",
+      "text": " In [47]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052414,
+      "updated": 1593052414
+    },
+    {
+      "id": "5ef40cfeaff09e000083acbf",
+      "text": " 255 ns ± 2.11 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052414,
+      "updated": 1593052414
+    },
+    {
+      "id": "5ef40e3faff09e000083acc1",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052736,
+      "updated": 1593052736
+    },
+    {
+      "id": "5ef40e3faff09e000083acc2",
+      "text": " n [58]: numba.void(numba.typeof([0]))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052736,
+      "updated": 1593052736
+    },
+    {
+      "id": "5ef40e40aff09e000083acc3",
+      "text": " Out[58]: (reflected list(int64),) -> none",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052736,
+      "updated": 1593052736
+    },
+    {
+      "id": "5ef40e40aff09e000083acc4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052736,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083acc5",
+      "text": " In [59]: def foo(xs):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083acc6",
+      "text": "     ...:     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083acc7",
+      "text": "     ...:         xs[i] = xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083acc8",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083acc9",
+      "text": "     ...:         ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083acca",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e40aff09e000083accb",
+      "text": " In [60]: foo = numba.njit(numba.void(numba.typeof([0])))(foo)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053795,
+      "updated": 1593053795
+    },
+    {
+      "id": "5ef40e41aff09e000083accc",
+      "text": " ...NumbaPendingDeprecationWarning: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052737,
+      "updated": 1593054682
+    },
+    {
+      "id": "5ef415cbaff09e000083ad17",
+      "text": " Encountered the use of a type that is scheduled for deprecation: type 'reflected list' found for argument 'xs' of function 'foo'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054667,
+      "updated": 1593054667
+    },
+    {
+      "id": "5ef415cbaff09e000083ad18",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054667,
+      "updated": 1593054667
+    },
+    {
+      "id": "5ef415cbaff09e000083ad19",
+      "text": " For more information visit http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054667,
+      "updated": 1593054677
+    },
+    {
+      "id": "5ef415ceaff09e000083ad1a",
+      "text": "\t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054671,
+      "updated": 1593054684
+    },
+    {
+      "id": "5ef40e41aff09e000083accd",
+      "text": " In [63]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052737,
+      "updated": 1593052749
+    },
+    {
+      "id": "5ef40e4caff09e000083acce",
+      "text": " 1.69 s ± 12 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052749,
+      "updated": 1593052749
+    },
+    {
+      "id": "5ef40bc5aff09e000083ac99",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593052102,
+      "updated": 1593052102
+    },
+    {
+      "id": "5ef411cdaff09e000083ace2",
+      "text": "最適化で消えないようにしてコンパイルした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053645,
+      "updated": 1593053979
+    },
+    {
+      "id": "5ef41321aff09e000065e07e",
+      "text": "np.arrayの方が3000倍ほど速くなった: list: 1.69 s / np.array 549 µs",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053986,
+      "updated": 1596119190
+    },
+    {
+      "id": "5f22d899aff09e000087d483",
+      "text": " 本当か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119193,
+      "updated": 1596119197
+    },
+    {
+      "id": "5ef411a0aff09e000083acd5",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053600,
+      "updated": 1593053602
+    },
+    {
+      "id": "5ef411a2aff09e000083acd7",
+      "text": " In [85]: xs = np.zeros(N, np.int32)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acd8",
+      "text": "     ...: @numba.njit(numba.i4(numba.i4[:]))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acd9",
+      "text": "     ...: def foo(xs):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acda",
+      "text": "     ...:     for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acdb",
+      "text": "     ...:         xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acdc",
+      "text": "     ...:     return xs[N - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acdd",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acde",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083acdf",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083ace0",
+      "text": " In [86]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef411a3aff09e000083ace1",
+      "text": " 549 µs ± 10.6 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053603,
+      "updated": 1593053603
+    },
+    {
+      "id": "5ef412deaff09e000083ace6",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053918,
+      "updated": 1593053918
+    },
+    {
+      "id": "5ef412deaff09e000083ace7",
+      "text": " In [87]: xs = [0] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053919,
+      "updated": 1593053919
+    },
+    {
+      "id": "5ef412dfaff09e000083ace8",
+      "text": "     ...: @numba.njit(numba.i4(numba.typeof([0])))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053919,
+      "updated": 1593053919
+    },
+    {
+      "id": "5ef412dfaff09e000083ace9",
+      "text": "     ...: def foo(xs):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053919,
+      "updated": 1593053919
+    },
+    {
+      "id": "5ef412dfaff09e000083acea",
+      "text": "     ...:     for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053919,
+      "updated": 1593053919
+    },
+    {
+      "id": "5ef412dfaff09e000083aceb",
+      "text": "     ...:         xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053919,
+      "updated": 1593053919
+    },
+    {
+      "id": "5ef412dfaff09e000083acec",
+      "text": "     ...:     return xs[N - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053919,
+      "updated": 1593053919
+    },
+    {
+      "id": "5ef412dfaff09e000083aced",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053920,
+      "updated": 1593053929
+    },
+    {
+      "id": "5ef412e9aff09e000083acee",
+      "text": " In [88]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053930,
+      "updated": 1593053931
+    },
+    {
+      "id": "5ef412eaaff09e000083acef",
+      "text": " 1.69 s ± 11.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053931,
+      "updated": 1593053931
+    },
+    {
+      "id": "5ef411a1aff09e000083acd6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593053601,
+      "updated": 1593053601
+    },
+    {
+      "id": "5ef413eeaff09e000083acf3",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054190,
+      "updated": 1593054193
+    },
+    {
+      "id": "5ef413f1aff09e000083acf5",
+      "text": " In [89]: xs = [0] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054193,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acf6",
+      "text": "     ...: def foo(xs):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acf7",
+      "text": "     ...:     for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acf8",
+      "text": "     ...:         xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acf9",
+      "text": "     ...:     return xs[N - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acfa",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acfb",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acfc",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acfd",
+      "text": " In [90]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054199
+    },
+    {
+      "id": "5ef413f6aff09e000083acfe",
+      "text": " 116 ms ± 2.27 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054216
+    },
+    {
+      "id": "5ef4142aaff09e000083ad12",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054251,
+      "updated": 1593054252
+    },
+    {
+      "id": "5ef41408aff09e000083ad08",
+      "text": " In [91]: xs = np.zeros(N, np.int32)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054216,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad09",
+      "text": "     ...: def foo(xs):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad0a",
+      "text": "     ...:     for i in range(1, N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad0b",
+      "text": "     ...:         xs[i] += xs[i - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad0c",
+      "text": "     ...:     return xs[N - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad0d",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad0e",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad0f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad10",
+      "text": " In [92]: %timeit foo(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef41427aff09e000083ad11",
+      "text": " 280 ms ± 5.67 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054248,
+      "updated": 1593054248
+    },
+    {
+      "id": "5ef413f7aff09e000083acff",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593054199,
+      "updated": 1593054211
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "id": "604738ca5d7936001f819da6",
+  "title": "ReactNのsetGlobalはPromiseを返すけど同期的更新できる",
+  "created": 1615280335,
+  "updated": 1615281703,
+  "lines": [
+    {
+      "id": "604738ca5d7936001f819da6",
+      "text": "ReactNのsetGlobalはPromiseを返すけど同期的更新できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280335,
+      "updated": 1615280364
+    },
+    {
+      "id": "60473a6eaff09e0000b431c3",
+      "text": "ReactNのsetGlobalは`Promise<G>`を返すので、てっきり「非同期にいつだかわからないタイミングで更新され、Promiseのthenが呼ばれる」と思っていた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280751,
+      "updated": 1615280858
+    },
+    {
+      "id": "60473adaaff09e0000e0bc1c",
+      "text": "なので順番に呼ばれることを保証するためにはasync/awaitしなきゃいけないと思っていた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280858,
+      "updated": 1615280858
+    },
+    {
+      "id": "60473ae5aff09e0000e0bc1e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280870,
+      "updated": 1615280870
+    },
+    {
+      "id": "60473adeaff09e0000e0bc1d",
+      "text": "これは間違い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280862,
+      "updated": 1615280866
+    },
+    {
+      "id": "60473ae7aff09e0000e0bc1f",
+      "text": "引数newGlobalStateがプロミスである場合以外は同期的に更新してからresolve済みのPromiseを返す。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280871,
+      "updated": 1615280994
+    },
+    {
+      "id": "60473a87aff09e0000e0bc1b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280775,
+      "updated": 1615280775
+    },
+    {
+      "id": "604738ebaff09e0000e0bc19",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280364,
+      "updated": 1615280553
+    },
+    {
+      "id": "604739a9aff09e0000b431b9",
+      "text": " export default function _setGlobal<...>(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280554,
+      "updated": 1615281215
+    },
+    {
+      "id": "604739aaaff09e0000b431bd",
+      "text": "   globalStateManager: GlobalStateManager<G, R>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280554,
+      "updated": 1615280554
+    },
+    {
+      "id": "604739aaaff09e0000b431be",
+      "text": "   newGlobalState: NewGlobalState<G>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280554,
+      "updated": 1615280554
+    },
+    {
+      "id": "604739aaaff09e0000b431bf",
+      "text": "   callback: Callback<G, R> = null,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280554,
+      "updated": 1615280554
+    },
+    {
+      "id": "604739aaaff09e0000b431c0",
+      "text": " ): Promise<G> { ... }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280554,
+      "updated": 1615280557
+    },
+    {
+      "id": "604739a8aff09e0000b431b8",
+      "text": "https://github.com/CharlesStover/reactn/blob/master/src/set-global.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280553,
+      "updated": 1615280714
+    },
+    {
+      "id": "60473c4faff09e0000e0bc20",
+      "text": "第一引数にデフォルトのGlobalStateManagerをbindしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281231,
+      "updated": 1615281259
+    },
+    {
+      "id": "60473a2daff09e0000b431c1",
+      "text": "\t`setGlobal: setGlobal.bind(null, defaultGlobalStateManager),` [index.ts https://github.com/CharlesStover/reactn/blob/master/src/index.ts]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280686,
+      "updated": 1615281261
+    },
+    {
+      "id": "60473a2eaff09e0000b431c2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615280686,
+      "updated": 1615280686
+    },
+    {
+      "id": "60473c80aff09e0000e0bc21",
+      "text": "引数がPromiseでない場合は最終的にここにくる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281280,
+      "updated": 1615281308
+    },
+    {
+      "id": "60473bc7aff09e0000b431c6",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281096,
+      "updated": 1615281105
+    },
+    {
+      "id": "60473bceaff09e0000b431c7",
+      "text": "   public setObject<O extends Partial<G> = Partial<G>>(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281103,
+      "updated": 1615281156
+    },
+    {
+      "id": "60473c04aff09e0000b431c8",
+      "text": "     obj: O, ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281156,
+      "updated": 1615281167
+    },
+    {
+      "id": "60473c04aff09e0000b431c9",
+      "text": "   ): Promise<Partial<G>> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281156,
+      "updated": 1615281168
+    },
+    {
+      "id": "60473c12aff09e0000b431d7",
+      "text": "     ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281171,
+      "updated": 1615281173
+    },
+    {
+      "id": "60473c04aff09e0000b431cc",
+      "text": "     const stateChange: Partial<G> = this.flush(reducerName, reducerArgs);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281156,
+      "updated": 1615281170
+    },
+    {
+      "id": "60473c04aff09e0000b431d4",
+      "text": "     return Promise.resolve(stateChange);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281156,
+      "updated": 1615281156
+    },
+    {
+      "id": "60473c04aff09e0000b431d5",
+      "text": "   } ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281156,
+      "updated": 1615281176
+    },
+    {
+      "id": "60473b78aff09e0000b431c4",
+      "text": "https://github.com/CharlesStover/reactn/blob/master/src/global-state-manager.ts#L350",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281017,
+      "updated": 1615281094
+    },
+    {
+      "id": "60473bc6aff09e0000b431c5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281094,
+      "updated": 1615281094
+    },
+    {
+      "id": "60473ca6aff09e0000e0bc22",
+      "text": "引数がPromiseの場合は与えられたPromiseのthenにつながる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281318,
+      "updated": 1615281339
+    },
+    {
+      "id": "60473ca9aff09e0000e0bc23",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281322,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc5aff09e0000b431da",
+      "text": "   public setPromise(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc6aff09e0000b431db",
+      "text": "     promise: Promise<NewGlobalState<G>>, ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281356
+    },
+    {
+      "id": "60473cc6aff09e0000b431dc",
+      "text": "   ): Promise<Partial<G>> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281355
+    },
+    {
+      "id": "60473cc6aff09e0000b431df",
+      "text": "     return promise",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc6aff09e0000b431e0",
+      "text": "       .then((result: NewGlobalState<G>): Promise<Partial<G>> =>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc6aff09e0000b431e1",
+      "text": "         this.set(result, reducerName, reducerArgs),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc6aff09e0000b431e2",
+      "text": "       );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc6aff09e0000b431e3",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281350,
+      "updated": 1615281350
+    },
+    {
+      "id": "60473cc4aff09e0000b431d9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615281349,
+      "updated": 1615281349
+    }
+  ]
+}

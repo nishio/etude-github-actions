@@ -1,0 +1,883 @@
+{
+  "id": "5f06e130746df1001e90eb31",
+  "title": "DP V",
+  "created": 1594286402,
+  "updated": 1594388279,
+  "lines": [
+    {
+      "id": "5f06e130746df1001e90eb31",
+      "text": "DP V",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594286402,
+      "updated": 1594286402
+    },
+    {
+      "id": "5f06e141aff09e0000f308a2",
+      "text": "[V - Subtree https://atcoder.jp/contests/dp/tasks/dp_v]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594286402,
+      "updated": 1594286402
+    },
+    {
+      "id": "5f06e141aff09e0000f308a3",
+      "text": "\t木が与えられる、どの黒頂点から黒頂点へも黒頂点だけを通って到達できるような塗り分けの総数を求める問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594286402,
+      "updated": 1594286515
+    },
+    {
+      "id": "5f06e174aff09e000055fc2c",
+      "text": "　　部分木の個数を求めるって理解でいいのかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594286452,
+      "updated": 1594286543
+    },
+    {
+      "id": "5f06e1feaff09e000055fc2e",
+      "text": "　　あ「頂点vが黒であるような組み合わせは何通りか」を答えるのか。単純に部分木を求めるのではオーダーがN倍になっちゃうから部分問題を使いまわしたいわけね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594286590,
+      "updated": 1594286663
+    },
+    {
+      "id": "5f06e247aff09e000055fc2f",
+      "text": "　　[全方位木DP]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594286663,
+      "updated": 1594287165
+    },
+    {
+      "id": "5f07e35caff09e000083d108",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594352477,
+      "updated": 1594352477
+    },
+    {
+      "id": "5f06e5c1aff09e0000f308a4",
+      "text": "　素朴に作って問題が大きいところだけRE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594287554,
+      "updated": 1594349940
+    },
+    {
+      "id": "5f07d97caff09e0000b2223c",
+      "text": "　 タプルをキーにした辞書が遅かろうと思って積の整数をインデックスにしてた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594349948,
+      "updated": 1594352507
+    },
+    {
+      "id": "5f07e37baff09e00007f0ea9",
+      "text": "　 Nが10^5まで行くので2乗で10^10になってMemoryError",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594352507,
+      "updated": 1594352507
+    },
+    {
+      "id": "5f07e37daff09e00007f0eaa",
+      "text": "　 　手元ではメモリがたくさんあるので動いてしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594352509,
+      "updated": 1594352519
+    },
+    {
+      "id": "5f07e386aff09e00007f0eab",
+      "text": "　 　MLEではなくREになるので原因がわかりにくかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594352519,
+      "updated": 1594352567
+    },
+    {
+      "id": "5f07e32aaff09e000083d104",
+      "text": "\t\tRE https://atcoder.jp/contests/dp/submissions/15106317",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594352426,
+      "updated": 1594352430
+    },
+    {
+      "id": "5f07e32aaff09e000083d105",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594352426,
+      "updated": 1594352426
+    },
+    {
+      "id": "5f07dac3aff09e0000b2223d",
+      "text": "　修正してもTLE https://atcoder.jp/contests/dp/submissions/15114039",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594350276,
+      "updated": 1594352582
+    },
+    {
+      "id": "5f07dafaaff09e0000b2223e",
+      "text": "　 1つの頂点から生えている辺が多い時に集計がO(N)になってしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594350331,
+      "updated": 1594350454
+    },
+    {
+      "id": "5f07dc10aff09e0000b22240",
+      "text": "　 「たくさんの中から1つ取り除いたものの集計」を演算結果を使い回して計算量削減する必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594350609,
+      "updated": 1594350656
+    },
+    {
+      "id": "5f07db76aff09e0000b2223f",
+      "text": "　 乗算での集計は0に逆元がないので「全部かけたものから一つだけ戻す」ができない、加算なら逆元があるからできるのだが…。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594350454,
+      "updated": 1594350694
+    },
+    {
+      "id": "5f07dc65aff09e0000b22241",
+      "text": "　 というわけで前からと後ろからの累積積を作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594350694,
+      "updated": 1594350723
+    },
+    {
+      "id": "5f081922aff09e0000fc540a",
+      "text": "　 これって位数制限のないグラフだと常に必要になると思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594366242,
+      "updated": 1594366264
+    },
+    {
+      "id": "5f0719ddaff09e0000c4b009",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594300894,
+      "updated": 1594352437
+    },
+    {
+      "id": "5f07ec10aff09e000083d109",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354705,
+      "updated": 1594354706
+    },
+    {
+      "id": "5f07ec12aff09e000083d10c",
+      "text": " N = 700",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354706,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d10d",
+      "text": " xs = range(1, N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d10e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d10f",
+      "text": " head = [0] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d110",
+      "text": " cur = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d111",
+      "text": " for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d112",
+      "text": "     cur *= xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d113",
+      "text": "     head[i] = cur",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d114",
+      "text": " head[-1] = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d115",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d116",
+      "text": " tail = [0] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d117",
+      "text": " cur = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d118",
+      "text": " for i in range(N - 1, -1, -1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d119",
+      "text": "     cur *= xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d11a",
+      "text": "     tail[i] = cur",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d11b",
+      "text": " tail[-1] = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d11c",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d11d",
+      "text": " one_out_product = [head[i - 1] * tail[i + 1] for i in range(N)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d11e",
+      "text": " # print(head)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d11f",
+      "text": " # print(tail)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d120",
+      "text": " # print(one_out_product)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d121",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d122",
+      "text": " if not\"TEST\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d123",
+      "text": "     bluteforce = [1] * N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d124",
+      "text": "     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d125",
+      "text": "         for j in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d126",
+      "text": "             if i == j:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d127",
+      "text": "                 continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d128",
+      "text": "             bluteforce[i] *= xs[j]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d129",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d12a",
+      "text": "     #print(bluteforce)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354707
+    },
+    {
+      "id": "5f07ec12aff09e000083d12b",
+      "text": "     assert bluteforce == one_out_product ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354707,
+      "updated": 1594354719
+    },
+    {
+      "id": "5f07ec10aff09e000083d10a",
+      "text": "作ったはいいが、これの実行タイミングは？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594354705,
+      "updated": 1594388253
+    },
+    {
+      "id": "5f080ef3aff09e000083d12d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594363635,
+      "updated": 1594363635
+    },
+    {
+      "id": "5f080ef3aff09e000083d12e",
+      "text": "他の人のコードを読む",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594363635,
+      "updated": 1594388279
+    },
+    {
+      "id": "5f080ef3aff09e000083d12f",
+      "text": "\thttps://atcoder.jp/contests/dp/submissions/14624575",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594363635,
+      "updated": 1594381918
+    },
+    {
+      "id": "5f080ef8aff09e000083d131",
+      "text": "\tPython  523msec",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594363640,
+      "updated": 1594381919
+    },
+    {
+      "id": "5f083b87aff09e000056426c",
+      "text": "　なるほど、僕のコードは「全部白、根が黒い、それ以外で根が白い」の3つにわけて後者二つを伝搬してるけど、子供の根が白いと親が黒になり得ないので最終計算の時に必ず無視されるから伝搬する必要がないのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594375047,
+      "updated": 1594375340
+    },
+    {
+      "id": "5f0842e3aff09e000056426f",
+      "text": "　　「子供の値を掛け合わせて1を足したもの」という更新で良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594376931,
+      "updated": 1594376951
+    },
+    {
+      "id": "5f0842f7aff09e0000564270",
+      "text": "　　1を足すのは子供が全白のパターン",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594376951,
+      "updated": 1594376983
+    },
+    {
+      "id": "5f083d04aff09e000056426d",
+      "text": "　しかも再帰呼び出しは必要ない、と。最初に幅優先探索でたどった順番を記録している。またその時に逆向きの辺を消している。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594375429,
+      "updated": 1594376899
+    },
+    {
+      "id": "5f0842c3aff09e000056426e",
+      "text": "　[https://gyazo.com/b910e1af8eb9355d9717ec6f26604f7f]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594376900,
+      "updated": 1594377770
+    },
+    {
+      "id": "5f084627aff09e0000564271",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594377770,
+      "updated": 1594377770
+    },
+    {
+      "id": "5f080ef4aff09e000083d130",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594363638,
+      "updated": 1594363638
+    },
+    {
+      "id": "5f0860c6aff09e000083d133",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594384583,
+      "updated": 1594385206
+    },
+    {
+      "id": "5f086336aff09e000083d137",
+      "text": " def solve(N, M, edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385206,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d138",
+      "text": "     # convert bidirectional graph to tree",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d139",
+      "text": "     root = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d13a",
+      "text": "     parent = [-1] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d13b",
+      "text": "     to_visit = deque([root])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d13c",
+      "text": "     bfs_visited_order = []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d13d",
+      "text": "     while to_visit:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d13e",
+      "text": "         cur = to_visit.popleft()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d13f",
+      "text": "         bfs_visited_order.append(cur)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d140",
+      "text": "         for child in edges[cur]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d141",
+      "text": "             if child == parent[cur]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d142",
+      "text": "                 continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d143",
+      "text": "             parent[child] = cur",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d144",
+      "text": "             edges[child].remove(cur)  # remove back-link",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d145",
+      "text": "             to_visit.append(child)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d146",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d147",
+      "text": "     # up-edge: v -> parent[v]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d148",
+      "text": "     # default: if no child, one black, one white (1 + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d149",
+      "text": "     # f(x) = prod(f(c) for c in children) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d14a",
+      "text": "     upedge = [0] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d14b",
+      "text": "     # stores multiply result (1 is unity)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d14c",
+      "text": "     multiply_of_upedge = [1] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d14d",
+      "text": "     for cur in reversed(bfs_visited_order[1:]):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d14e",
+      "text": "         # visit vertexes except root, in reversed order",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d14f",
+      "text": "         upedge[cur] = multiply_of_upedge[cur] + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d150",
+      "text": "         p = parent[cur]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d151",
+      "text": "         multiply_of_upedge[p] *= upedge[cur]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d152",
+      "text": "         multiply_of_upedge[p] %= M",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d153",
+      "text": "     # root: multiply children and don't add one",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d154",
+      "text": "     # the one is \"all-white\" pattern",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d155",
+      "text": "     upedge[root] = multiply_of_upedge[root]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d156",
+      "text": "     final_result = upedge[:]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d157",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d158",
+      "text": "     # down-edge: parent[v] -> v",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d159",
+      "text": "     downedge = [1] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d15a",
+      "text": "     for cur in bfs_visited_order:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d15b",
+      "text": "         prod = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d15c",
+      "text": "         # left-to-right accumlated products (* downedge[cur])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d15d",
+      "text": "         for child in edges[cur]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d15e",
+      "text": "             downedge[child] = prod",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d15f",
+      "text": "             prod *= upedge[child]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d160",
+      "text": "             prod %= M",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d161",
+      "text": "         # multiply right-to-left accumlated products",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d162",
+      "text": "         prod = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d163",
+      "text": "         for child in reversed(edges[cur]):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d164",
+      "text": "             downedge[child] = (downedge[cur] * downedge[child] * prod) % M + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d165",
+      "text": "             prod *= upedge[child]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d166",
+      "text": "             prod %= M",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d167",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d168",
+      "text": "         for child in edges[cur]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d169",
+      "text": "             # update final result",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d16a",
+      "text": "             final_result[child] = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d16b",
+      "text": "                 multiply_of_upedge[child]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d16c",
+      "text": "                 * downedge[child]) % M",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d16d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f086341aff09e000083d16e",
+      "text": "     return final_result[1:]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385217,
+      "updated": 1594385217
+    },
+    {
+      "id": "5f0860c7aff09e000083d134",
+      "text": "https://atcoder.jp/contests/dp/submissions/15122587",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594384583,
+      "updated": 1594385202
+    },
+    {
+      "id": "5f086331aff09e000083d136",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594385202,
+      "updated": 1594385202
+    }
+  ]
+}

@@ -1,0 +1,869 @@
+{
+  "id": "6090ec03a287e6002291a092",
+  "title": "Hatena2010-04-10",
+  "created": 1270825200,
+  "updated": 1270825200,
+  "lines": [
+    {
+      "id": "6090ec27aff09e00003d56e6",
+      "text": "Hatena2010-04-10",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56e7",
+      "text": "code:hatena",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56e8",
+      "text": " <body>",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56e9",
+      "text": " *1270887517*GAEでPagination その2",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ea",
+      "text": " <a href='http://d.hatena.ne.jp/nishiohirokazu/20100408/1270751829'>GAEでPagination</a>でPaginationの方法はわかったものの、似たようなコードをあちこちに書くのは嫌なのでまとめてみた。Paginateされたアイテムを表示する場所が1箇所増えるごとにviews.pyが2文、テンプレートが1行増える。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56eb",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ec",
+      "text": " 現状の実装ではソートに使うキー(order_by引数)がdb.DateTimeProperty1つで1秒に1回以上の投稿がないことを前提にしているが、より一般的にはこれがリストを受け取るようにすることと、bookmarkの文字列へのシリアライズとデシリアライズの方法を渡せるようにする必要がある。まあ必要になった時に作る。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ed",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ee",
+      "text": " 引数のデフォルト値は、こういうプロパティを付けている時に便利なように設定してある。これは僕がそうしてるから。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ef",
+      "text": " >|python|",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f0",
+      "text": " class Item(polymodel.PolyModel):",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f1",
+      "text": "     (中略)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f2",
+      "text": "     created_on = db.DateTimeProperty(auto_now_add=True)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f3",
+      "text": " ||<",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f4",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f5",
+      "text": " 使い方はビューの中でこうやって、",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f6",
+      "text": " >|python|",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f7",
+      "text": " def user_page(request, key):",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f8",
+      "text": "   (中略)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56f9",
+      "text": "   bookmark = request.args.get(\"bookmark\")",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56fa",
+      "text": "   items, next = utils.pagination(",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56fb",
+      "text": "     Item.all().filter(\"user =\", user), bookmark)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56fc",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56fd",
+      "text": "   return render_to_response(",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56fe",
+      "text": "     'core/user_page.html', ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ff",
+      "text": "     dict(",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5700",
+      "text": "       items=items,",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5701",
+      "text": "       next=next))",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5702",
+      "text": " ||<",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5703",
+      "text": " テンプレートの側では下のマクロを呼び出すだけ。(Jinja2の機能)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5704",
+      "text": " >||",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5705",
+      "text": " {{ macro.paginated_items(items, next) }}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5706",
+      "text": " ||<",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5707",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5708",
+      "text": " マクロの実装はこうなっている。一般的にはこのマクロの中で呼び出している「itemを表示するマクロ」quoteは引数で渡せるようにするべきだね。まあ必要になったらそうする。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5709",
+      "text": " >||",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d570a",
+      "text": " {% macro paginated_items(items, next) %}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d570b",
+      "text": " {% for item in items %}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d570c",
+      "text": " {{ quote(item) }}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d570d",
+      "text": " {% endfor %}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d570e",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d570f",
+      "text": " {% if next %}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5710",
+      "text": " <a href=\"?bookmark={{ next }}\">next>></a>",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5711",
+      "text": " {% endif %}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5712",
+      "text": " {% endmacro %}",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5713",
+      "text": " ||<",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5714",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5715",
+      "text": " 以下ソースコード",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5716",
+      "text": " >|python|",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5717",
+      "text": " def pagination(query, bookmark=None, order_by=\"created_on\", desc=True, ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5718",
+      "text": "                page_size=10):",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5719",
+      "text": "     if desc:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d571a",
+      "text": "         param_for_order_by = \"-\" + order_by",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d571b",
+      "text": "         param_for_filter = order_by + \" <=\"",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d571c",
+      "text": "     else:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d571d",
+      "text": "         param_for_order_by = order_by",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d571e",
+      "text": "         param_for_filter = order_by + \" >=\"",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d571f",
+      "text": "     ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5720",
+      "text": "     if bookmark:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5721",
+      "text": "         import datetime",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5722",
+      "text": "         bookmark = datetime.datetime.strptime(bookmark, \"%Y%m%d%H%M%S\")",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5723",
+      "text": "         items = (query.order(param_for_order_by)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5724",
+      "text": "                  .filter(param_for_filter, bookmark)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5725",
+      "text": "                  .fetch(page_size + 1))",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5726",
+      "text": "     else:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5727",
+      "text": "         items = (query.order(param_for_order_by)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5728",
+      "text": "                  .fetch(page_size + 1))",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5729",
+      "text": "         ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d572a",
+      "text": "     next = None",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d572b",
+      "text": "     if len(items) == page_size + 1:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d572c",
+      "text": "         next = getattr(items[-1], order_by).strftime(\"%Y%m%d%H%M%S\")",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d572d",
+      "text": "     ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d572e",
+      "text": "     items = items[:page_size]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d572f",
+      "text": "     return items, next",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5730",
+      "text": " ||<",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5731",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5732",
+      "text": " *1270907826*コメントだらけ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5733",
+      "text": " 激しく抽象化したらあんまりコメントを書かない僕としては驚きのレベルのコメント比率のコードが出来上がった。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5734",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5735",
+      "text": " 追記: レベルがHARDでrendererがシャッフルされたとき、？の位置がcodomではない可能性があるのでbogusの生成方法が間違っているなぁ。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5736",
+      "text": " >|python|",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5737",
+      "text": "     # 単項演算のジェネレータopgenをチョイスする",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5738",
+      "text": "     opgen = choice(opgens)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5739",
+      "text": "     # opgenを引数にして演算の定義域domをチョイスする",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d573a",
+      "text": "     dom = opgen.get_domain()",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d573b",
+      "text": "     # 単項演算の定義域domから単項演算の引数argを3つ作る",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d573c",
+      "text": "     args = [dom.get_instance() for i in range(3)]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d573d",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d573e",
+      "text": "     # opgenとdomを引数にしてopgenのパラメータの定義域param_domを作る",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d573f",
+      "text": "     param_dom = opgen.get_param_dom(dom)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5740",
+      "text": "     # param_domから単項演算のパラメータparamを3つ作る、",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5741",
+      "text": "     params = [param_dom.get_instance() for i in range(3)]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5742",
+      "text": "     # 単項演算ジェネレータopgenにparamを渡して具体的な単項演算opを3つ作る",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5743",
+      "text": "     ops = [opgen.get_instance(p) for p in params]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5744",
+      "text": "     # 各々の単項演算opに各々の引数argを渡して演算結果resultを作る",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5745",
+      "text": "     results = [op(arg) for (op, arg) in zip(ops, args)]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5746",
+      "text": "     correct_answer = results[2]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5747",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5748",
+      "text": "     # opgenと引数の定義域domから結果の定義域codomを作る(偽回答作成のため)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5749",
+      "text": "     codom = opgen.get_codom(dom)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d574a",
+      "text": "     # 偽回答bogusを5つ作る",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d574b",
+      "text": "     bogus = []",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d574c",
+      "text": "     while len(bogus) < 5:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d574d",
+      "text": "         v = codom.get_instance()",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d574e",
+      "text": "         if v != correct_answer:",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d574f",
+      "text": "             bogus.append(v)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5750",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5751",
+      "text": "     # opgenにdom, param_dom, codomを与えてそれぞれのrendererを作る",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5752",
+      "text": "     dom_ren, pdom_ren, codom_ren = opgen.get_renderer(dom, param_dom, codom)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5753",
+      "text": "     renderers = [lambda cont, i: dom_ren(cont, args[i]),",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5754",
+      "text": "                  lambda cont, i: pdom_ren(cont, params[i]),",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5755",
+      "text": "                  lambda cont, i: codom_ren(cont, results[i])]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5756",
+      "text": "     if HARD: renderers = shuffled(renderers)",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5757",
+      "text": " ||<",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5758",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5759",
+      "text": " そしてこの範囲のデバッグ中に出したエラーの個数を考えると、1行に1個バグがあったことになる(ぉ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d575a",
+      "text": " ",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d575b",
+      "text": " わーい、ちゃんと動いたー",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d575c",
+      "text": " <img src=\"http://gyazo.com/6dd4fccabd6359d53ae2a44ec0a41c8a.png\">",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d575d",
+      "text": " この例ではまだ t -> t -> t な関数なんでここまで抽象化したメリットが生きてないけど、t1 -> t2 -> t3 をできるように枠組みを作ったので今後の具体的な実装が楽しみである。",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d575e",
+      "text": " </body>",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d575f",
+      "text": "",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5760",
+      "text": "[はてなダイアリー 2010-04-10 https://nishiohirokazu.hatenadiary.org/archive/2010/04/10]",
+      "created": 1270825200,
+      "updated": 1270825200,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

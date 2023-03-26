@@ -1,0 +1,925 @@
+{
+  "id": "6090ec08a287e6002291a1a4",
+  "title": "Hatena2011-08-15",
+  "created": 1313334000,
+  "updated": 1313334000,
+  "lines": [
+    {
+      "id": "6090ec2baff09e00003d967a",
+      "text": "Hatena2011-08-15",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d967b",
+      "text": "code:hatena",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d967c",
+      "text": " <body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d967d",
+      "text": " *1313395069*セキュリティ＆プログラミングキャンプ「Rubyのバグを探せ」問題",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d967e",
+      "text": " これはセキュリティ＆プログラミングキャンプのCTF競技(タイムトライアルのチーム戦)で出題された問題です。Ruby処理系へのバグの仕込みと問題文の原稿を僕が書き、竹迫さんが競技環境で実行するための調査や加筆を行ってくれました。参加者の<a href='http://sorah.jp/'>Shota Fukumori (sora_h)</a>が「21日に『セプキャン行ってきたトーク』するから早く公開しろ」というので、取り急ぎ公開します。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d967f",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9680",
+      "text": " ** 問題文",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9681",
+      "text": " これはプログラミング言語クラスでのタイムトライアル処理系デバッグ演習のために作られた、バグの混入してあるRuby処理系のソースコードです。C言語で書かれています。誰も着手しなかった「veryhard」の問題なので、解説を加筆してCTFの問題とします。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9682",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9683",
+      "text": " 言語クラスではRuby処理系のビルドの仕方やテストのためのツールを2日目に演習し、3日目の朝に「1時間で8問のバグを易しい順に倒す演習」(タイムトライアル処理系デバッグ)をやりました。演習を受けていない人でも着手できるように、Rubyのビルド方法を改めて書いておきます。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9684",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9685",
+      "text": " >||",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9686",
+      "text": " $ mkdir build",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9687",
+      "text": " $ cd build",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9688",
+      "text": " $ ../configure --disable-gems --disable-install-docs",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9689",
+      "text": " $ make",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d968a",
+      "text": " ||<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d968b",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d968c",
+      "text": " これで本来はmakeに成功するはずですが、rubyコマンドがビルドされた後、Rubyにバグが入っているためmake中に自動で走るmake testが失敗します。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d968d",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d968e",
+      "text": " >||",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d968f",
+      "text": " $ make",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9690",
+      "text": " /.../veryhard/lib/fileutils.rb:1399:in `quote': can't convert",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9691",
+      "text": " NilClass to String (TypeError)",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9692",
+      "text": "        from /.../veryhard/lib/fileutils.rb:1399:in `<class:Entry_>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9693",
+      "text": "        from /.../veryhard/lib/fileutils.rb:1092:in `<module:FileUtils>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9694",
+      "text": "        from /.../veryhard/lib/fileutils.rb:85:in `<top (required)>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9695",
+      "text": "        from ../tool/mkconfig.rb:11:in `require'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9696",
+      "text": "        from ../tool/mkconfig.rb:11:in `<main>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9697",
+      "text": " make: *** [.rbconfig.time] Error 1",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9698",
+      "text": " ||<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d9699",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d969a",
+      "text": " make runやmake gdbを使うと(src)/test.rbが実行されます。自分で好きな内容をtest.rbに書いてmake runしてみてください。で、このバグ入り処理系はなにか「常識的に考えておかしいだろこれ」という挙動をするはずなので、原因となるバグを見つけ出し、処理系が正しく動くようにCで書かれたコードを修正してください。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d969b",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d969c",
+      "text": " 添付したtest.rbはおかしな挙動の一つの例として、下記のように「素数を計算しようとしてThread.rbがエラーを吐く」という意味不明なものにしてあります。しかしtest.rbは「バグを再現するための最小限のコード」にした方がいいでしょう。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d969d",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d969e",
+      "text": " >||",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d969f",
+      "text": " $ make run",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a0",
+      "text": " ./miniruby -I../lib -I.ext/common -I./- -r../ext/purelib.rb  ../test.rb",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a1",
+      "text": " /.../veryhard/lib/thread.rb:11:in `<top (required)>': Thread not",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a2",
+      "text": " available for this ruby interpreter (RuntimeError)",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a3",
+      "text": "        from /.../veryhard/lib/singleton.rb:63:in `require'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a4",
+      "text": "        from /.../veryhard/lib/singleton.rb:63:in `<top (required)>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a5",
+      "text": "        from /.../veryhard/lib/prime.rb:14:in `require'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a6",
+      "text": "        from /.../veryhard/lib/prime.rb:14:in `<top (required)>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a7",
+      "text": "        from ../test.rb:1:in `require'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a8",
+      "text": "        from ../test.rb:1:in `<main>'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96a9",
+      "text": " make: *** [run] Error 1",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96aa",
+      "text": " ||<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ab",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ac",
+      "text": " このRuby処理系のバグを直すために修正されるべきファイル名と行番号を回答してください。たとえばspcamp.cの2403行目であれば「spcamp.c:2403」が回答となります。2行以上の修正が必要な場合は、修正を開始する行目を回答としてください。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ad",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ae",
+      "text": " なお、VM環境で走らせていることなどが原因でgc周りでのテストにコケることがありますが、これはこの課題の意図したものではありません。またmakeしたrubyをmake installしないで使うとgems(パッケージ管理)周辺でコケることがありますが、これも意図したものではありません。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96af",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b0",
+      "text": " ※BackTrack 4 Live CD (Ubuntu8.10) でビルドできるようにしています。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b1",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b2",
+      "text": " ** ファイル",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b3",
+      "text": " http://www.nishiohirokazu.org/files/veryhard.zip",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b4",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b5",
+      "text": " ** 余談",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b6",
+      "text": " 大雑把に言って、10分以内に解けたらmoriyoshi級で、10時間以内で解けたらsora_h級。(sora_hは他の問題も解きつつ6時間掛けて解けなかったが、その後帰ってきて僕の「( https://gist.github.com/1145883 )」というヒントを聞いてノータイムで「◯◯か！」と答えたのでオーダーとしては10時間ってことでいいかなーと。)",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b7",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b8",
+      "text": " 他の大人の所要時間:",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96b9",
+      "text": " >>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ba",
+      "text": " knu:「Rubyのバグを探せ」はソース取得から10分掛からなかったが、ホームだし当然か。実際のバグはこんな単純じゃないしな… http://twitter.com/#!/knu/status/103037840899846144",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96bb",
+      "text": " <<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96bc",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96bd",
+      "text": " >>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96be",
+      "text": " mrkn: 解けたけど15分もかかっちゃった。http://twitter.com/#!/mrkn/status/103062497954775040",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96bf",
+      "text": " <<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c0",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c1",
+      "text": " >>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c2",
+      "text": " znz: 40分ぐらいで出来た。「バグを再現するための最小限のコード」は簡単に作れても、直すのは見慣れないところが対象だったから時間がかかった。 http://twitter.com/#!/znz/status/103084755758755840",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c3",
+      "text": " <<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c4",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c5",
+      "text": " ** 余談2",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c6",
+      "text": " 言語クラス内での演習の際の、加筆のない問題文",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c7",
+      "text": " >>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c8",
+      "text": " 問8 (全部クリアした人向け)",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96c9",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ca",
+      "text": " おめでとう！",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96cb",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96cc",
+      "text": " ここまでの問題をクリアして時間が余ってしまった人のために、veryhard.zipが用意されています。ヒントは一切ありません。",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96cd",
+      "text": " <<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ce",
+      "text": " ",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96cf",
+      "text": " ** 余談3",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d0",
+      "text": " test.rbの内容",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d1",
+      "text": " >||",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d2",
+      "text": " require 'prime'",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d3",
+      "text": " p Prime.prime? 2403",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d4",
+      "text": " ||<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d5",
+      "text": " そしてその結果:",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d6",
+      "text": " >||",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d7",
+      "text": " /.../veryhard/lib/thread.rb:11:in `<top (required)>': Thread not",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d8",
+      "text": " available for this ruby interpreter (RuntimeError)",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96d9",
+      "text": " ||<",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96da",
+      "text": " </body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96db",
+      "text": " <comments>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96dc",
+      "text": " <comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96dd",
+      "text": " <username>sora_h</username>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96de",
+      "text": " <body>>※BackTrack 4 Live CD (Ubuntu8.10) でビルドできるようにしています。<br>できなかったけどね<br><br>なので，細かく環境について<br><br>・Windowsでやると遠回りするんじゃね?<br>・Rubyがちゃんとサポートしてないプラットフォームでやると無関係なバグ踏むんじゃね?<br>・DebianやUbuntuが安定</body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96df",
+      "text": " <timestamp>1313397745</timestamp>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e0",
+      "text": " </comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e1",
+      "text": " <comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e2",
+      "text": " <username>nishiohirokazu</username>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e3",
+      "text": " <body>最初に公開していたzipはBackTrack 4 Live CD (Ubuntu8.10)で実行できるものではなく、その後竹迫さんが修正したとのことなので18:17頃zipファイルを差し替えました。<br><br>まあ、CTFではネット接続ができないってのが一番の問題点だったわけなので、今これを解こうとしている人は素直に必要なパッケージをインストールすればいいとおもいます。ちなみに僕が問題を作る際に使ったOSはUbuntu 11.04 64bitです。</body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e4",
+      "text": " <timestamp>1313400196</timestamp>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e5",
+      "text": " </comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e6",
+      "text": " <comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e7",
+      "text": " <username>TAKESAKO</username>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e8",
+      "text": " <body><br>> できなかったけどね<br><br>CTF競技中にヒントは出さなかったのですが zip ファイルの中に<br>bison で生成済みの parse.c や lex.c を同梱しておきました。<br><br>これは build ディレクトリ以下に置いてあったので<br>問題文の指定通りcd build && ../configure としていれば<br>きちんとビルドできていたのです。<br><br>なので ./configure とやってしまうと bison を要求されてしまいますが<br>cp build/*.[ch] . として必要なファイルをコピーすればビルドできます。</body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96e9",
+      "text": " <timestamp>1313404046</timestamp>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ea",
+      "text": " </comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96eb",
+      "text": " <comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ec",
+      "text": " <username>sora_h</username>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ed",
+      "text": " <body>>18:17頃zipファイルを差し替えました。<br>no通知ヒドス<br><br>>CTF競技中にヒントは出さなかったのですが zip ファイルの中に<br>>bison で生成済みの parse.c や lex.c を同梱しておきました。<br>だからparse.cがあったのか…<br><br>>まあ、CTFではネット接続ができないってのが一番の問題点だったわけなので、今これを解こうとしている人は素直に必要なパッケージをインストールすればいいとおもいます。ちなみに僕が問題を作る際に使ったOSはUbuntu 11.04 64bitです。<br><br>Debian/Ubuntuではsudo apt-get build-dep ruby1.9.1でOKです<br><br>>Windows<br><br>Windowsでやると近道になることが判明しました</body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ee",
+      "text": " <timestamp>1313468572</timestamp>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96ef",
+      "text": " </comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f0",
+      "text": " <comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f1",
+      "text": " <username>nishiohirokazu</username>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f2",
+      "text": " <body>>>18:17頃zipファイルを差し替えました。<br>>no通知ヒドス<br><br>あ、CTF競技中に差し替えたんじゃなくて、このブログからリンクしていたzipが最初は僕の手元のバージョンだったけど、18:17以降は竹迫さんがBackTrackで動くようにした(つまりCTFで使われたのと同じ)バージョンだよ、ってことです。</body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f3",
+      "text": " <timestamp>1313496011</timestamp>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f4",
+      "text": " </comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f5",
+      "text": " <comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f6",
+      "text": " <username>sora_h</username>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f7",
+      "text": " <body>なるほどそういうことか．</body>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f8",
+      "text": " <timestamp>1313666852</timestamp>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96f9",
+      "text": " </comment>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96fa",
+      "text": " </comments>",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96fb",
+      "text": "",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d96fc",
+      "text": "[はてなダイアリー 2011-08-15 https://nishiohirokazu.hatenadiary.org/archive/2011/08/15]",
+      "created": 1313334000,
+      "updated": 1313334000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

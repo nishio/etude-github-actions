@@ -1,0 +1,169 @@
+{
+  "id": "602c8e8c246108004c0b5318",
+  "title": "Jestのモックは同一モジュール内の呼び出しに影響を与えない",
+  "created": 1613532813,
+  "updated": 1613534875,
+  "lines": [
+    {
+      "id": "602c8e8c246108004c0b5318",
+      "text": "Jestのモックは同一モジュール内の呼び出しに影響を与えない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083dc",
+      "text": "from [Jestメモ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083dd",
+      "text": "[Jest]のモックは同一モジュール内の呼び出しに影響を与えない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532821
+    },
+    {
+      "id": "602c8e8caff09e00001083de",
+      "text": "code:MyModule.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083df",
+      "text": " export const A = () => \"old value\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e0",
+      "text": " export const callA = () => A();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e1",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e2",
+      "text": "\ttest(\"render\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e3",
+      "text": "   jest.spyOn(MyModule, \"A\").mockImplementation(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e4",
+      "text": "     return \"new value\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e5",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e6",
+      "text": "   expect(MyModule.callA()).toBe(\"new value\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e7",
+      "text": "code:result",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e8",
+      "text": " Error: expect(received).toBe(expected) // Object.is equality",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083e9",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083ea",
+      "text": " Expected: \"new value\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083eb",
+      "text": " Received: \"old value\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c8e8caff09e00001083ec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613532813,
+      "updated": 1613532813
+    },
+    {
+      "id": "602c947caff09e00001c6e27",
+      "text": "モジュールの中の特定の関数だけ1行で別の処理に置き換えることができるのは便利だが、それが同一モジュール内の関数から呼ばれてる場合は混乱の元になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613534333,
+      "updated": 1613534395
+    },
+    {
+      "id": "602c9484aff09e00001c6e28",
+      "text": "Aをモックに置き換えるのが本当に正しい場合、callAとAの間にモジュール境界があるべき(OK1)だし、callAとAを別のモジュールに分けるのが適当でないくらい密結合なのであればモックに置き換えるべきなのはAではない(OK2)、ということか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613534340,
+      "updated": 1613534872
+    },
+    {
+      "id": "602c954eaff09e00001c6e2c",
+      "text": "[https://gyazo.com/14dc24bc22d734c03c4906a938f365b7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613534543,
+      "updated": 1613534846
+    },
+    {
+      "id": "602c967daff09e00001c6e2d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613534846,
+      "updated": 1613534846
+    },
+    {
+      "id": "602c94d5aff09e00001c6e29",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613534421,
+      "updated": 1613534421
+    }
+  ]
+}

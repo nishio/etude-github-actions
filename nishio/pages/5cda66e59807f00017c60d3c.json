@@ -1,0 +1,435 @@
+{
+  "id": "5cda66e59807f00017c60d3c",
+  "title": "非同期でFirestoreから読んでReactでrender",
+  "created": 1557830599,
+  "updated": 1558164843,
+  "lines": [
+    {
+      "id": "5cda66e59807f00017c60d3c",
+      "text": "非同期でFirestoreから読んでReactでrender",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830599,
+      "updated": 1557830612
+    },
+    {
+      "id": "5cdfb563aff09e00007d70f6",
+      "text": "[React勉強日記]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164835,
+      "updated": 1558164842
+    },
+    {
+      "id": "5cdfb56aaff09e00007d70f7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558164843,
+      "updated": 1558164843
+    },
+    {
+      "id": "5cda9df5aff09e0000d03e69",
+      "text": "[Firestore]のリアルタイム更新リスナを登録して、更新があった時に[React]で再renderをしたい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557831157,
+      "updated": 1557833359
+    },
+    {
+      "id": "5cdaa413aff09e0000839bee",
+      "text": "リアルタイム更新をリスンするかどうかにかかわらず、読み出しAPIはプロミスを返すので非同期。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557832724,
+      "updated": 1557833362
+    },
+    {
+      "id": "5cda9e26aff09e0000d03e6b",
+      "text": "Reactは状態更新のタイミングで再描画をするのでこれを使う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557831207,
+      "updated": 1557846679
+    },
+    {
+      "id": "5cdaa465aff09e0000839bef",
+      "text": "結果: Firestore上の値が変わるとブラウザ上の表示も自動的に変わるプロトタイプができた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557832805,
+      "updated": 1557847503
+    },
+    {
+      "id": "5cdaddcfaff09e00001df120",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847503,
+      "updated": 1557847503
+    },
+    {
+      "id": "5cda9c17aff09e0000d03e36",
+      "text": "つまずきポイント",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830679,
+      "updated": 1557830721
+    },
+    {
+      "id": "5cda9c41aff09e0000d03e37",
+      "text": "\tReact.Componentは型関数で、第二型引数としてstateの型を取る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830722,
+      "updated": 1557847071
+    },
+    {
+      "id": "5cdadc20aff09e000060e19f",
+      "text": "\t\t与えなかった場合は`{}`が与えられたものとして動く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847072,
+      "updated": 1557850981
+    },
+    {
+      "id": "5cdaeb65aff09e00001df15b",
+      "text": "\t\t\t定義: `interface Component<P = {}, S = {}, SS = any>`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850982,
+      "updated": 1557850987
+    },
+    {
+      "id": "5cdadc3faff09e000060e1a0",
+      "text": "\t\tその結果`this.state.pieces`に対して「Readonly<{}>はpiecesを持たない」ってなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847104,
+      "updated": 1557847178
+    },
+    {
+      "id": "5cdadc8aaff09e000060e1a2",
+      "text": "\t\tProperty 'pieces' does not exist on type 'Readonly<{}>'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847178,
+      "updated": 1557847196
+    },
+    {
+      "id": "5cdaeb79aff09e00001df15c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557851001,
+      "updated": 1557851001
+    },
+    {
+      "id": "5cdadc44aff09e000060e1a1",
+      "text": "\tFirebaseのサンプルではonSnapshotの引数にfunctionを使っているが、このままだとComponentのthisをshadowする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847109,
+      "updated": 1557847318
+    },
+    {
+      "id": "5cdadd17aff09e000060e1a5",
+      "text": "\t\tVisual Studio Codeが警告してくれたのでそこにはハマらなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847319,
+      "updated": 1557847333
+    },
+    {
+      "id": "5cdadd25aff09e000060e1a6",
+      "text": "\t\tだがこの問題の解決方法を僕が正しく理解していなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847333,
+      "updated": 1557847470
+    },
+    {
+      "id": "5cdadde3aff09e00001df121",
+      "text": "\t\tthisがshadowされてアクセスできなくなるので",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847523,
+      "updated": 1557851037
+    },
+    {
+      "id": "5cdaeb9caff09e00001df15d",
+      "text": "\t\t外のスコープで`let setState = this.setState`してこれを使えば良いだろうと考えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557851037,
+      "updated": 1557851037
+    },
+    {
+      "id": "5cdade0daff09e00001df123",
+      "text": "\t\t\tPython的発想。Pythonはオブジェクトのメソッドはオブジェクトにバインドされている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847568,
+      "updated": 1557847584
+    },
+    {
+      "id": "5cdade13aff09e00001df124",
+      "text": "\t\t\tJSではそんなことはない。this.setStateは単なる関数",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847571,
+      "updated": 1557847617
+    },
+    {
+      "id": "5cdaddeeaff09e00001df122",
+      "text": "\t\t\tその結果 TypeError: Cannot read property 'updater' of undefined",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847534,
+      "updated": 1557847639
+    },
+    {
+      "id": "5cdadcbaaff09e000060e1a3",
+      "text": "\t\t\t\t[TypeError: Cannot read property 'updater' of undefined · Issue #9654 · facebook/react https://github.com/facebook/react/issues/9654]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847227,
+      "updated": 1557847646
+    },
+    {
+      "id": "5cda9c4eaff09e0000d03e38",
+      "text": "\t\t\t\t[エラーで学ぶReactJS - くろのて http://note.crohaco.net/2018/react-errors-warnings/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830734,
+      "updated": 1557847649
+    },
+    {
+      "id": "5cda9cf5aff09e0000d03e39",
+      "text": "\t\tかつてのJSでは明示的にバインドすることで解決する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830901,
+      "updated": 1557847755
+    },
+    {
+      "id": "5cdadebaaff09e00001df126",
+      "text": "\t\t\t`const setState = this.setState.bind(this)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847738,
+      "updated": 1557847740
+    },
+    {
+      "id": "5cdadebcaff09e00001df127",
+      "text": "\t\t今時のES6ではアロー関数が呼び出し時にthisをbindしない(のでshadowしない)ことを使うことができる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847741,
+      "updated": 1557847831
+    },
+    {
+      "id": "5cdadf1caff09e00001df129",
+      "text": "\t\t\t今回はこれを使った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847836,
+      "updated": 1557847840
+    },
+    {
+      "id": "5cdaeb0caff09e00001df158",
+      "text": "   >An arrow function expression is a syntactically compact alternative to a regular function expression, although without its own bindings to the this, arguments, super, or new.target keywords.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850893,
+      "updated": 1557850898
+    },
+    {
+      "id": "5cdaeb0daff09e00001df15a",
+      "text": "   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850893,
+      "updated": 1557850893
+    },
+    {
+      "id": "5cdae5b9aff09e000060e1a7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849529,
+      "updated": 1557849529
+    },
+    {
+      "id": "5cdada9aaff09e00001df11d",
+      "text": "疑問点",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557846683,
+      "updated": 1557846685
+    },
+    {
+      "id": "5cdada9daff09e00001df11f",
+      "text": "\t僕はconstructorを使ったが、[componentDidMount]を使っている人がちらほらいる。何が違うのか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557846685,
+      "updated": 1557894242
+    },
+    {
+      "id": "5cdada9aaff09e00001df11e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557846683,
+      "updated": 1557846683
+    },
+    {
+      "id": "5cda9bd1aff09e0000dcb2de",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830609,
+      "updated": 1557830618
+    },
+    {
+      "id": "5cda9bd9aff09e0000dcb2e0",
+      "text": "\tclass App extends React.Component<{}, { pieces: any[] }> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557830618,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df141",
+      "text": "   constructor(props: {}) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df142",
+      "text": "     super(props);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df143",
+      "text": "     this.state = { pieces: [] };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df144",
+      "text": "     db.collection(\"pieces\").onSnapshot((querySnapshot: any) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df145",
+      "text": "       let pieces: any[] = [];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df146",
+      "text": "       querySnapshot.forEach(function (doc: any) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df147",
+      "text": "         pieces.push(doc.data().text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df148",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df149",
+      "text": "       this.setState({ pieces: pieces });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df14a",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df14b",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df14c",
+      "text": "   render() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df14d",
+      "text": "     let pieces = this.state.pieces.map((x) => <SimplePiece text={x}></SimplePiece>);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df14e",
+      "text": "     return (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df14f",
+      "text": "       <div className=\"App\">",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df150",
+      "text": "         <header className=\"App-header\">",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df151",
+      "text": "           {pieces}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df152",
+      "text": "         </header>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df153",
+      "text": "       </div>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df154",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df155",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df156",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847950
+    },
+    {
+      "id": "5cdadf8daff09e00001df157",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847950,
+      "updated": 1557847951
+    },
+    {
+      "id": "5cda9bd4aff09e0000dcb2df",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557847943,
+      "updated": 1557847943
+    }
+  ]
+}

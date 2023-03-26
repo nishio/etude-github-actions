@@ -1,0 +1,925 @@
+{
+  "id": "603ca49792de1a001ce11ca3",
+  "title": "Jestメモ Day2",
+  "created": 1614587032,
+  "updated": 1614587032,
+  "lines": [
+    {
+      "id": "603ca49792de1a001ce11ca3",
+      "text": "Jestメモ Day2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b37",
+      "text": "from [Jestメモ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b38",
+      "text": "Jestメモ Day2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b39",
+      "text": "　テストユーティリティの謎の挙動",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b3a",
+      "text": "　　結論: ReactTestUtilsを使うのをやめる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b3b",
+      "text": "　\t[テストユーティリティ – React https://ja.reactjs.org/docs/test-utils.html]で[React Testing Library | Testing Library https://testing-library.com/docs/react-testing-library/intro/]を使うのがおすすめされてるので従う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b3c",
+      "text": "　とりあえずまずはコンポーネントをレンダリングして観察しようと思った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b3d",
+      "text": "　\t`await render(<ShowLog talk=\"SJSLzd0PCLcJ3Nzlfdc4\" />);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b3e",
+      "text": "\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b3f",
+      "text": "\t\t (node:40175) UnhandledPromiseRejectionWarning: Error: FIRESTORE (7.24.0) INTERNAL ASSERTION FAILED: Unexpected state",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b40",
+      "text": "   (node:40175) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 36)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b41",
+      "text": "   (node:40175) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 36)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b42",
+      "text": "　　うーん、どうやらawaitでFirestoreにアクセスするPromiseを呼ぶとエラーになるっぽい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b43",
+      "text": "　　一方でawaitしないと、データを得る前に次のコードに処理が移ってしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b44",
+      "text": "　　「データを読み込む→setGlobalする」というコードを2つに分けて、データを取り終わったところでPromiseを返すようにし、それのthenでexpectする [doc https://jestjs.io/docs/en/asynchronous#promises]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b45",
+      "text": "\t\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b46",
+      "text": "\t\t\t test(\"show log\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b47",
+      "text": "      return loadLogsFromFirestore(\"SJSLzd0PCLcJ3Nzlfdc4\").then((talkObject) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b48",
+      "text": "        expect(talkObject).toMatchSnapshot();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b49",
+      "text": "      });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b4a",
+      "text": "\t　　ダメだ、それでも `FIRESTORE (7.24.0) INTERNAL ASSERTION FAILED: Unexpected state`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b4b",
+      "text": "\t\tテストコードのなかでFirestoreにアクセスするのをやめよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b4c",
+      "text": "\t\t Firestoreは自前でリトライをしたりとかするのでテストの中で触らない方が良さそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b4d",
+      "text": "\t\tアプリのトップレベルでFirestoreから取った値を表示する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b4e",
+      "text": " \t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b4f",
+      "text": " \t\t function App() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b50",
+      "text": "      const [logs, setLogs] = useState(\"\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b51",
+      "text": "      loadLogsFromFirestore(\"SJSLzd0PCLcJ3Nzlfdc4\").then((talkObject) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b52",
+      "text": "        setLogs(JSON.stringify(talkObject));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b53",
+      "text": "      });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b54",
+      "text": "      return <pre>{logs}</pre>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b55",
+      "text": "  この内容をtalkObject.jsonに保存",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b56",
+      "text": "  \t`import * as MockTalkObject from \"./talkObject.json\";`で読める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b57",
+      "text": "  Firestoreから読む関数をモックで置き換える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b58",
+      "text": "  \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b59",
+      "text": "  \t   const m = jest",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b5a",
+      "text": "        .spyOn(loadLogsModule, \"loadLogsFromFirestore\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b5b",
+      "text": "        .mockResolvedValue(MockTalkObject);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b5c",
+      "text": "  モックしてるのにエラーになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b5d",
+      "text": "  　これ同一モジュール内の関数呼び出しはモックしても置き換わらない風の挙動だな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b5e",
+      "text": "  　　追加 [Jestのモックは同一モジュール内の呼び出しに影響を与えない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b5f",
+      "text": "  　モックする関数を独立のモジュールにしたら動いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b60",
+      "text": "  ここまで動いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b61",
+      "text": "  \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b62",
+      "text": "  \t test(\"show log\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b63",
+      "text": "      const m = jest",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b64",
+      "text": "        .spyOn(loadLogsModule, \"loadLogsFromFirestore\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b65",
+      "text": "        .mockResolvedValue(MockTalkObject);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b66",
+      "text": "    ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b67",
+      "text": "      // no talkID needed beacuse loadLogsFromFirestore is mocked",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b68",
+      "text": "      render(<ShowLog talk=\"\" />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b69",
+      "text": "      screen.debug();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b6a",
+      "text": "    });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b6b",
+      "text": "  しかしまだ目的のテストには辿り着かない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b6c",
+      "text": "  　ReactのsetStateが非同期だからこれをやっても「データは受け取ったがまだ画面の再描画が行われてない状態」のDOMが得られる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b6d",
+      "text": "  rerenderか？ [doc https://testing-library.com/docs/react-testing-library/api/#rerender]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b6e",
+      "text": "  \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b6f",
+      "text": "  \t   const { rerender } = render(<ShowLog talk=\"\" />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b70",
+      "text": "      rerender(<ShowLog talk=\"\" />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b71",
+      "text": "\t\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b72",
+      "text": "\t\t\t console.error",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b73",
+      "text": "        Warning: An update to ShowLog inside a test was not wrapped in act(...).",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b74",
+      "text": "        ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b75",
+      "text": "        When testing, code that causes React state updates should be wrapped into act(...):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b76",
+      "text": "        ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b77",
+      "text": "        act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b78",
+      "text": "          /* fire events that update state */",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b79",
+      "text": "        });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b7a",
+      "text": "        /* assert on the output */",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b7b",
+      "text": "        ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b7c",
+      "text": "        This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b7d",
+      "text": "\t\tいや、rerender以前にこのコードだけでも同じエラーメッセージが出るな。actで包めと言われたものを包んでるのにエラーになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b7e",
+      "text": " \t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b7f",
+      "text": " \t\t\t  act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b80",
+      "text": "        render(<ShowLog talk=\"\" />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b81",
+      "text": "      });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b82",
+      "text": "\t\tサンプルを読み直す [doc https://testing-library.com/docs/react-testing-library/example-intro]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b83",
+      "text": "\t\t　特定のエレメントが出現するまで待ってるな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b84",
+      "text": "\t　\t\t`await waitFor(() => screen.getByRole(\"heading\"))`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b85",
+      "text": "\t　\t\tこれ再レンダリングが行われたかどうか知る方法がないから要素があるかの判定を何度も繰り返して待つ風の引数だな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b86",
+      "text": "\t\t\tしかし今回のテスト対象、ログのロード待ちなので特に新しく出現するエレメントがない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b87",
+      "text": "\t\t\t　いやまてよ、ログデータはモックで固定されてるので、ログに出現する適当な文字列が出現するのを待てば良いのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b88",
+      "text": "\t\t\tできた、debugでログがレンダリングされてるのを確認した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b89",
+      "text": "\t\t\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b8a",
+      "text": "\t\t\t\t test(\"show log\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b8b",
+      "text": "       const m = jest",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b8c",
+      "text": "         .spyOn(loadLogsModule, \"loadLogsFromFirestore\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b8d",
+      "text": "         .mockResolvedValue(MockTalkObject);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b8e",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b8f",
+      "text": "       // no talkID needed beacuse loadLogsFromFirestore is mocked",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b90",
+      "text": "       render(<ShowLog talk=\"\" />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b91",
+      "text": "       await waitFor(() => screen.getByText(\"🙁\"));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b92",
+      "text": "       screen.debug();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b93",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b94",
+      "text": "\t\tメニューからエクスポートを選んだ時にエクスポート内容として出力されるテキストをスナップショットする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b95",
+      "text": "\t\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b96",
+      "text": "\t   const m2 = jest.spyOn(RegroupDialogModule, \"openRegroupDialog\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b97",
+      "text": "    fireEvent.click(screen.getByLabelText(\"menu\"));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b98",
+      "text": "    fireEvent.click(screen.getByText(\"Export for Regroup\"));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b99",
+      "text": "    expect(m2).toHaveBeenCalled();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b9a",
+      "text": "    expect(m2.mock.calls[0][0]).toMatchSnapshot();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b9b",
+      "text": "   `[0][0]`は初回呼び出しの1つ目の引数という意味",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b9c",
+      "text": "　　これは期待通りテストできた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b9d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b9e",
+      "text": "　昨日",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385b9f",
+      "text": "　　[https://gyazo.com/29e227d54e0659616f0efb73f7f60c1c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba0",
+      "text": "\t今日",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba1",
+      "text": "\t　[https://gyazo.com/08401b0c38956da44c29a55d969cefa8]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba2",
+      "text": "　めでたしめでたし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba4",
+      "text": "残り",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba5",
+      "text": "[https://gyazo.com/2e99067085ced9ee46727cb443ad1fb5]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba7",
+      "text": "あ、昨日のテストはフレームワークを変えるにあたってコメントアウトしたんだった。だからNewTalkのカバレッジが低いんだな。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba8",
+      "text": "次は昨日のテストを新しい方式で書き直すか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385ba9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385baa",
+      "text": "--- matome",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bab",
+      "text": "\tReactTestUtils [Test Utilities – React https://reactjs.org/docs/test-utils.html#act]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bac",
+      "text": "\t\t>We recommend using React Testing Library",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bad",
+      "text": "\tReact Testing Library:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bae",
+      "text": "\t\t>The @testing-library family of packages helps you test UI components in a user-centric way.  --- [doc https://testing-library.com/docs/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385baf",
+      "text": "\t\t>The [DOM Testing Library] is a very light-weight solution for testing DOM nodes (whether simulated with JSDOM as provided by default with [Jest] or in the browser) [doc https://testing-library.com/docs/dom-testing-library/intro/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb0",
+      "text": "\t\t>[React Testing Library] builds on top of [DOM Testing Library] by adding APIs for working with React components. ... Projects created with [Create React App] have out of the box support for [React Testing Library] --- [doc https://testing-library.com/docs/react-testing-library/intro]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb1",
+      "text": "\t\t[Example | Testing Library https://testing-library.com/docs/react-testing-library/example-intro/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb2",
+      "text": "\t\t[API | Testing Library https://testing-library.com/docs/react-testing-library/api/#queries]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb3",
+      "text": "\t\t[About Queries | Testing Library https://testing-library.com/docs/queries/about/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb4",
+      "text": "\tJest",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb5",
+      "text": "\t\t[The Jest Object · Jest https://jestjs.io/docs/ja/jest-object]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb6",
+      "text": "\t\t[Testing React Apps · Jest https://jestjs.io/docs/en/tutorial-react]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb7",
+      "text": "\t[Promise - JavaScript | MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    },
+    {
+      "id": "603ca497aff09e0000385bb8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587032,
+      "updated": 1614587032
+    }
+  ]
+}

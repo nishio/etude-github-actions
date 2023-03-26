@@ -1,0 +1,470 @@
+{
+  "id": "5e2682e589a1890017be9235",
+  "title": "awaitとcall/cc",
+  "created": 1579582183,
+  "updated": 1581580525,
+  "lines": [
+    {
+      "id": "5e2682e589a1890017be9235",
+      "text": "awaitとcall/cc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579582183,
+      "updated": 1579582196
+    },
+    {
+      "id": "5e26931daff09e00004d8919",
+      "text": "[Promise]の[await]と[call/cc]はよく似ているが、call/ccは処理を止めず、Promiseは再実行できない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586334,
+      "updated": 1579588035
+    },
+    {
+      "id": "5e269501aff09e00004d891b",
+      "text": "awaitは現在の継続を与えられたPromiseの後に接続するだけであって、継続をユーザに露出するわけではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586817,
+      "updated": 1579587150
+    },
+    {
+      "id": "5e269907aff09e00004d8921",
+      "text": "awaitの挙動をcall/ccで真似ることはできそうだが逆は無理そう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579587848,
+      "updated": 1579588021
+    },
+    {
+      "id": "5e2699c6aff09e00004d8923",
+      "text": "[JavaScript] [Scheme]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579588039,
+      "updated": 1579588072
+    },
+    {
+      "id": "5e4500bfaff09e00002c11b7",
+      "text": "こんな記事があった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580480,
+      "updated": 1581580496
+    },
+    {
+      "id": "5e4500d0aff09e00002c11b8",
+      "text": "\t[JavaScript + generator で Maybe、 Either、 Promise、 継続モナドと do 構文を実装し async-await と比べてみる - Qiita https://qiita.com/legokichi/items/0582e71f4e6984548933]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580497,
+      "updated": 1581580506
+    },
+    {
+      "id": "5e4500daaff09e00002c11b9",
+      "text": "\t[ES2017におけるasyncとgenerator、Promise、CPS、モナドの関係 - Qiita https://qiita.com/legokichi/items/77a36b7d2b75d8278f9d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580506,
+      "updated": 1581580525
+    },
+    {
+      "id": "5e2699b5aff09e00004d8922",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579588022,
+      "updated": 1579588022
+    },
+    {
+      "id": "5e2682f8aff09e00004d88da",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579582200,
+      "updated": 1579582219
+    },
+    {
+      "id": "5e26830baff09e00004d88dc",
+      "text": " let p = new Promise((resolve) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579582219,
+      "updated": 1579584897
+    },
+    {
+      "id": "5e268d80aff09e00004d88e0",
+      "text": "   console.log(\"promise called\", resolve);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584897,
+      "updated": 1579584897
+    },
+    {
+      "id": "5e268d80aff09e00004d88e1",
+      "text": "   // @ts-ignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584897,
+      "updated": 1579584897
+    },
+    {
+      "id": "5e268d80aff09e00004d88e2",
+      "text": "   window.resolve = resolve;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584897,
+      "updated": 1579584897
+    },
+    {
+      "id": "5e268d80aff09e00004d88e3",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584897,
+      "updated": 1579584897
+    },
+    {
+      "id": "5e268e3daff09e00004d88ee",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585086,
+      "updated": 1579585086
+    },
+    {
+      "id": "5e268e3aaff09e00004d88e8",
+      "text": " (async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585082,
+      "updated": 1579585083
+    },
+    {
+      "id": "5e268e3aaff09e00004d88e9",
+      "text": "   console.log(\"before await\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585083,
+      "updated": 1579585083
+    },
+    {
+      "id": "5e268e3aaff09e00004d88ea",
+      "text": "   console.log(await p);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585083,
+      "updated": 1579585083
+    },
+    {
+      "id": "5e268e3aaff09e00004d88eb",
+      "text": "   console.log(\"after await\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585083,
+      "updated": 1579585083
+    },
+    {
+      "id": "5e268e3aaff09e00004d88ec",
+      "text": " })()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585083,
+      "updated": 1579585083
+    },
+    {
+      "id": "5e26905eaff09e00004d8906",
+      "text": " // before await を表示して処理を中断",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585630,
+      "updated": 1579585945
+    },
+    {
+      "id": "5e26916baff09e00004d890a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585899,
+      "updated": 1579585899
+    },
+    {
+      "id": "5e269077aff09e00004d8907",
+      "text": " window.resolve(42)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585655,
+      "updated": 1579585660
+    },
+    {
+      "id": "5e269077aff09e00004d8908",
+      "text": " // 42",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585656,
+      "updated": 1579585884
+    },
+    {
+      "id": "5e269077aff09e00004d8909",
+      "text": " // after await // 中断されていた処理が再開される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585656,
+      "updated": 1579585990
+    },
+    {
+      "id": "5e268d58aff09e00004d88df",
+      "text": "\t// undefined",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584856,
+      "updated": 1579586269
+    },
+    {
+      "id": "5e2692daaff09e00004d8915",
+      "text": "\twindow.resolve(53)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586267,
+      "updated": 1579586271
+    },
+    {
+      "id": "5e2692daaff09e00004d8916",
+      "text": "\t// undefined // 2回目以降は何も起こらない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586267,
+      "updated": 1579586320
+    },
+    {
+      "id": "5e2692e3aff09e00004d8917",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586275,
+      "updated": 1579586277
+    },
+    {
+      "id": "5e2692e3aff09e00004d8918",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586275,
+      "updated": 1579586276
+    },
+    {
+      "id": "5e268307aff09e00004d88db",
+      "text": "code:scheme",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579582216,
+      "updated": 1579584845
+    },
+    {
+      "id": "5e268d4eaff09e00004d88de",
+      "text": " (define resolve #f)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584846,
+      "updated": 1579584915
+    },
+    {
+      "id": "5e268d94aff09e00004d88e5",
+      "text": " (define (p c)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584916,
+      "updated": 1579584963
+    },
+    {
+      "id": "5e268dc3aff09e00004d88e6",
+      "text": " \t(print \"promise called\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584963,
+      "updated": 1579585357
+    },
+    {
+      "id": "5e268eb6aff09e00004d88ef",
+      "text": " \t(print c)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585207,
+      "updated": 1579585360
+    },
+    {
+      "id": "5e268dc6aff09e00004d88e7",
+      "text": " \t(set! resolve c))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579584967,
+      "updated": 1579584975
+    },
+    {
+      "id": "5e268f71aff09e00004d88f4",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585393,
+      "updated": 1579585396
+    },
+    {
+      "id": "5e268f06aff09e00004d88f0",
+      "text": " gosh> (begin",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585286,
+      "updated": 1579585485
+    },
+    {
+      "id": "5e268f07aff09e00004d88f1",
+      "text": "     (print \"before call/cc\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585288,
+      "updated": 1579585361
+    },
+    {
+      "id": "5e268f07aff09e00004d88f2",
+      "text": "     (print (call/cc p))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585288,
+      "updated": 1579585362
+    },
+    {
+      "id": "5e268f07aff09e00004d88f3",
+      "text": "     (print \"after call/cc\"))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585288,
+      "updated": 1579585363
+    },
+    {
+      "id": "5e268f75aff09e00004d88f5",
+      "text": " ;before call/cc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585397,
+      "updated": 1579586019
+    },
+    {
+      "id": "5e268f78aff09e00004d88f6",
+      "text": " ;promise called",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585400,
+      "updated": 1579586021
+    },
+    {
+      "id": "5e268f78aff09e00004d88f7",
+      "text": " ;#<subr \"continuation\">",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585400,
+      "updated": 1579586022
+    },
+    {
+      "id": "5e268f78aff09e00004d88f8",
+      "text": " ;#<subr \"continuation\">",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585400,
+      "updated": 1579586022
+    },
+    {
+      "id": "5e268f78aff09e00004d88f9",
+      "text": " ;after call/cc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585400,
+      "updated": 1579586023
+    },
+    {
+      "id": "5e268f78aff09e00004d88fa",
+      "text": " ;#<undef>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585400,
+      "updated": 1579586023
+    },
+    {
+      "id": "5e268fc6aff09e00004d88fb",
+      "text": " ;処理は最後まで実行される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585478,
+      "updated": 1579586084
+    },
+    {
+      "id": "5e269226aff09e00004d890b",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586086,
+      "updated": 1579586086
+    },
+    {
+      "id": "5e26901eaff09e00004d8900",
+      "text": " gosh> resolve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585567,
+      "updated": 1579585567
+    },
+    {
+      "id": "5e26901faff09e00004d8901",
+      "text": " #<subr \"continuation\">",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585567,
+      "updated": 1579585567
+    },
+    {
+      "id": "5e26901faff09e00004d8902",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585567,
+      "updated": 1579585567
+    },
+    {
+      "id": "5e268fc6aff09e00004d88fc",
+      "text": " gosh> (resolve 42)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585478,
+      "updated": 1579585605
+    },
+    {
+      "id": "5e269044aff09e00004d8903",
+      "text": " 42",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585605,
+      "updated": 1579585605
+    },
+    {
+      "id": "5e269044aff09e00004d8904",
+      "text": " after call/cc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585605,
+      "updated": 1579585605
+    },
+    {
+      "id": "5e269044aff09e00004d8905",
+      "text": " #<undef>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579585605,
+      "updated": 1579585605
+    },
+    {
+      "id": "5e26922eaff09e00004d890c",
+      "text": " ;再度実行される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586095,
+      "updated": 1579586179
+    },
+    {
+      "id": "5e269277aff09e00004d890e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586168,
+      "updated": 1579586168
+    },
+    {
+      "id": "5e269277aff09e00004d890f",
+      "text": " gosh> (resolve 53)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586168,
+      "updated": 1579586168
+    },
+    {
+      "id": "5e269278aff09e00004d8910",
+      "text": " 53",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586168,
+      "updated": 1579586168
+    },
+    {
+      "id": "5e269278aff09e00004d8911",
+      "text": " after call/cc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586168,
+      "updated": 1579586168
+    },
+    {
+      "id": "5e269278aff09e00004d8912",
+      "text": " #<undef>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586168,
+      "updated": 1579586168
+    },
+    {
+      "id": "5e26927caff09e00004d8913",
+      "text": " ;何度でも実行される ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586173,
+      "updated": 1579586193
+    },
+    {
+      "id": "5e269286aff09e00004d8914",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579586183,
+      "updated": 1579587231
+    },
+    {
+      "id": "5e4500b7aff09e00002c11b6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581580471,
+      "updated": 1581580471
+    }
+  ]
+}

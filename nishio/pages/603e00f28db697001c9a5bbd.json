@@ -1,0 +1,197 @@
+{
+  "id": "603e00f28db697001c9a5bbd",
+  "title": "最初のパスがジャンプするバグ",
+  "created": 1614676215,
+  "updated": 1614677468,
+  "lines": [
+    {
+      "id": "603e00f28db697001c9a5bbd",
+      "text": "最初のパスがジャンプするバグ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676215,
+      "updated": 1614676226
+    },
+    {
+      "id": "603e0102aff09e0000a8f8a6",
+      "text": "[https://gyazo.com/55537ca9d5975829b1dc159adde930fb]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676227,
+      "updated": 1614676311
+    },
+    {
+      "id": "603e0156aff09e000086fc32",
+      "text": "最初に描いたパスだけがキャンバス中央にジャンプするバグ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676311,
+      "updated": 1614676398
+    },
+    {
+      "id": "603e01aeaff09e0000a8f8a8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676398,
+      "updated": 1614676398
+    },
+    {
+      "id": "603e01aeaff09e0000a8f8a9",
+      "text": "実は付箋が画面中央に出るのもこのバグの影響だったが、付箋の追加は人間が位置を指定していないので違和感を持たなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676398,
+      "updated": 1614676442
+    },
+    {
+      "id": "603e0191aff09e000086fc33",
+      "text": "[https://gyazo.com/e4aca30fec3a4ffbc1d5fdba8295193c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676370,
+      "updated": 1614676370
+    },
+    {
+      "id": "603e0191aff09e000086fc34",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676370,
+      "updated": 1614676370
+    },
+    {
+      "id": "603e0127aff09e0000a8f8a7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676263,
+      "updated": 1614676263
+    },
+    {
+      "id": "603e01f2aff09e0000a8f8aa",
+      "text": "原因",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676467,
+      "updated": 1614676471
+    },
+    {
+      "id": "603e01f6aff09e0000a8f8ad",
+      "text": "　[編集者のロード時は全体が見えるズーム]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676471,
+      "updated": 1614676507
+    },
+    {
+      "id": "603e021baff09e0000a8f8ae",
+      "text": "　 ロード後、初回の描画の際に「コンテンツ全体がキャンバスに収まるように」とコンテンツからキャンバスの表示範囲を計算するようにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676508,
+      "updated": 1614676556
+    },
+    {
+      "id": "603e024caff09e0000a8f8af",
+      "text": "　白紙でスタートした場合に「ロード後の描画」がないので、最初にパスを書いた後の描画が最初の描画になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676557,
+      "updated": 1614676610
+    },
+    {
+      "id": "603e0282aff09e0000a8f8b0",
+      "text": "　最初に描いたものが中央に来るような座標系が設定される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676610,
+      "updated": 1614676627
+    },
+    {
+      "id": "603e01f4aff09e0000a8f8ab",
+      "text": "\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676469,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e035eaff09e000086fc36",
+      "text": "\t export const drawItems = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e0366aff09e000086fc4c",
+      "text": "\t   ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676839,
+      "updated": 1614676840
+    },
+    {
+      "id": "603e035eaff09e000086fc37",
+      "text": "    if (global.beforeFirstDraw) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676837
+    },
+    {
+      "id": "603e035eaff09e000086fc46",
+      "text": "      if (!global.isViewportSpecified) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e035eaff09e000086fc47",
+      "text": "        fitToContents();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e035eaff09e000086fc48",
+      "text": "      }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e035eaff09e000086fc49",
+      "text": "      setGlobal({ beforeFirstDraw: false });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e035eaff09e000086fc4a",
+      "text": "    }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614676831
+    },
+    {
+      "id": "603e035eaff09e000086fc4b",
+      "text": "\tblankなどのデータをサーバからロードしない特殊ページでは`beforeFirstDraw: false`にした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614676831,
+      "updated": 1614677457
+    },
+    {
+      "id": "603e0565aff09e000086fc4e",
+      "text": "\t\t`handleSpecialURLParam`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614677350,
+      "updated": 1614677462
+    },
+    {
+      "id": "603e0537aff09e000086fc4d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614677303,
+      "updated": 1614677463
+    },
+    {
+      "id": "603e05d6aff09e000086fc55",
+      "text": "[pRegroup-done]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614677463,
+      "updated": 1614677468
+    },
+    {
+      "id": "603e05d7aff09e000086fc56",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614677464,
+      "updated": 1614677464
+    }
+  ]
+}

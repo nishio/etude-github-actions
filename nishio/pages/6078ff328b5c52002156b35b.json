@@ -1,0 +1,666 @@
+{
+  "id": "6078ff328b5c52002156b35b",
+  "title": "TwitterをScrapboxにまとめる",
+  "created": 1618542390,
+  "updated": 1622453077,
+  "lines": [
+    {
+      "id": "6078ff328b5c52002156b35b",
+      "text": "TwitterをScrapboxにまとめる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618542390,
+      "updated": 1618542398
+    },
+    {
+      "id": "6078ff3eaff09e0000a78af9",
+      "text": "　[Twitter]上の議論は読みづらいのでScrapboxにまとめたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618542398,
+      "updated": 1618633498
+    },
+    {
+      "id": "6078ff93aff09e0000a78afb",
+      "text": "　そのまとめるプロセスを手軽にしたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618542484,
+      "updated": 1618542572
+    },
+    {
+      "id": "6078ffecaff09e0000a78afc",
+      "text": "　　まとめるbotを試したが満足いく結果にはならなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618542572,
+      "updated": 1618633489
+    },
+    {
+      "id": "607a62faaff09e00008b4198",
+      "text": "　　APIでやるよりブラウザ上でJSを走らせるのが良い？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618633467,
+      "updated": 1618633468
+    },
+    {
+      "id": "6078ff76aff09e0000a78afa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618542454,
+      "updated": 1618542454
+    },
+    {
+      "id": "607a5f69aff09e0000d20539",
+      "text": "Togetter編集画面からやる方法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632554,
+      "updated": 1618632776
+    },
+    {
+      "id": "607a5fbcaff09e00008b4197",
+      "text": "　並び替えや除去が自然なUIでできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632636,
+      "updated": 1618632661
+    },
+    {
+      "id": "607a5f76aff09e0000d2053b",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d2053c",
+      "text": "\ttweets = document.querySelectorAll('.choices_box li[data-type=\"tweet\"]');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618749941
+    },
+    {
+      "id": "607a5f76aff09e0000d2053d",
+      "text": "\tget_name = (tweet) => tweet.querySelector(\".user_link .status_name\").innerText.substring(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618749940
+    },
+    {
+      "id": "607c29f1aff09e00002d9417",
+      "text": "\tremove_mention = (text) => text.replace(/@\\w+\\s+/g, \"\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618749937,
+      "updated": 1618750049
+    },
+    {
+      "id": "607c29faaff09e00002d9418",
+      "text": "\tconcat_line = (text) => text.replace(/\\n+/g, \" \");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618749946,
+      "updated": 1622453074
+    },
+    {
+      "id": "607a5f76aff09e0000d2053e",
+      "text": " text = Array.from(tweets).map(x=> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d2053f",
+      "text": "     name = get_name(x)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d20540",
+      "text": "     url = x.querySelector(\".link[target='_blank']\").href",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d20541",
+      "text": "     body = x.querySelector(\".tweet\").innerText;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607c29d3aff09e00002d9416",
+      "text": "     body = remove_mention(body)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618749907,
+      "updated": 1618749908
+    },
+    {
+      "id": "607c2a1faff09e00002d9419",
+      "text": "     //body = concat_line(body)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618749984,
+      "updated": 1622453077
+    },
+    {
+      "id": "607a5f76aff09e0000d20542",
+      "text": "     return `>[${name} ${url}]: ${body}`;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d20543",
+      "text": " }).join(\"\\n\\n\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d20544",
+      "text": " document.querySelector(\".title_input\").value = text",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d20545",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632566,
+      "updated": 1618632566
+    },
+    {
+      "id": "607a5f76aff09e0000d20546",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632567,
+      "updated": 1618632567
+    },
+    {
+      "id": "607a5f69aff09e0000d2053a",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618632554,
+      "updated": 1618632564
+    },
+    {
+      "id": "607901c5aff09e000031501f",
+      "text": "Togetterから",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543046,
+      "updated": 1618551586
+    },
+    {
+      "id": "60790329aff09e0000315022",
+      "text": "\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543401,
+      "updated": 1618543908
+    },
+    {
+      "id": "60790523aff09e0000315029",
+      "text": "\t\ttweets = document.getElementsByClassName(\"list_box type_tweet\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543908,
+      "updated": 1618543912
+    },
+    {
+      "id": "60790327aff09e0000315021",
+      "text": "\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543400,
+      "updated": 1618543675
+    },
+    {
+      "id": "6079043baff09e0000315024",
+      "text": "\t get_name = (tweet) => tweet.querySelector(\".user_link .status_name\").innerText.substring(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543675,
+      "updated": 1618545217
+    },
+    {
+      "id": "6079043caff09e0000315025",
+      "text": "\t // e.g. getName(x) => \"nishio\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543677,
+      "updated": 1618543703
+    },
+    {
+      "id": "607903fcaff09e0000315023",
+      "text": "\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543613,
+      "updated": 1618543862
+    },
+    {
+      "id": "607904f6aff09e0000315028",
+      "text": "\t count = {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543862,
+      "updated": 1618544029
+    },
+    {
+      "id": "6079059daff09e000031502a",
+      "text": "  tweets.forEach(x=>{",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544029,
+      "updated": 1618544032
+    },
+    {
+      "id": "6079059daff09e000031502c",
+      "text": "      name = get_name(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544029,
+      "updated": 1618545220
+    },
+    {
+      "id": "6079059daff09e000031502d",
+      "text": "      count[name] = (count[name] || 0) + 1;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544029,
+      "updated": 1618544036
+    },
+    {
+      "id": "6079059daff09e000031502e",
+      "text": "  })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544029,
+      "updated": 1618544029
+    },
+    {
+      "id": "607904f4aff09e0000315027",
+      "text": "\t\t// e.g. {nishio: 26, YukiMihashi: 8, maltonn_: 1, ukkaripon: 3, teramotodaiki: 2, …}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618543861,
+      "updated": 1618544069
+    },
+    {
+      "id": "607905a6aff09e000031502f",
+      "text": "\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544039,
+      "updated": 1618544659
+    },
+    {
+      "id": "6079080faff09e0000315031",
+      "text": "\t name_or_icon = (name) => name in use_icon ? `[${name}.icon]` : name;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544656,
+      "updated": 1618544656
+    },
+    {
+      "id": "60790810aff09e0000315033",
+      "text": "  // name_or_icon(\"nishio\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544656,
+      "updated": 1618544671
+    },
+    {
+      "id": "60790810aff09e0000315034",
+      "text": "  // \"[nishio.icon]\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544656,
+      "updated": 1618544673
+    },
+    {
+      "id": "60790810aff09e0000315035",
+      "text": "  // name_or_icon(\"foo\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544656,
+      "updated": 1618544674
+    },
+    {
+      "id": "60790810aff09e0000315036",
+      "text": "  // \"foo\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544656,
+      "updated": 1618544675
+    },
+    {
+      "id": "6079080caff09e0000315030",
+      "text": "\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544653,
+      "updated": 1618544711
+    },
+    {
+      "id": "60790847aff09e0000315038",
+      "text": "\t text = Array.from(tweets).map(x=> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544712,
+      "updated": 1618544951
+    },
+    {
+      "id": "60790937aff09e0000315039",
+      "text": "      name = name_or_icon(getName(x))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544951,
+      "updated": 1618544951
+    },
+    {
+      "id": "60790937aff09e000031503a",
+      "text": "      body = x.querySelector(\".tweet\").innerText;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544951,
+      "updated": 1618544951
+    },
+    {
+      "id": "60790937aff09e000031503b",
+      "text": "      return `${name}\\n${body}`;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544951,
+      "updated": 1618544951
+    },
+    {
+      "id": "60790937aff09e000031503c",
+      "text": "  }).join(\"\\n\\n\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544951,
+      "updated": 1618544951
+    },
+    {
+      "id": "60790938aff09e000031503d",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544952,
+      "updated": 1618544952
+    },
+    {
+      "id": "60790844aff09e0000315037",
+      "text": "\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618544709,
+      "updated": 1618545083
+    },
+    {
+      "id": "607909b8aff09e0000315044",
+      "text": "\t navigator.clipboard.writeText(text)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545080,
+      "updated": 1618545080
+    },
+    {
+      "id": "60790979aff09e000031503f",
+      "text": "\t\t// on Devtool: Uncaught (in promise) DOMException: Document is not focused.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545018,
+      "updated": 1618545101
+    },
+    {
+      "id": "607909bdaff09e0000315045",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545085,
+      "updated": 1618545134
+    },
+    {
+      "id": "607909f0aff09e0000315046",
+      "text": "matome",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545137,
+      "updated": 1618545197
+    },
+    {
+      "id": "60790a2daff09e0000315049",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545197,
+      "updated": 1618545200
+    },
+    {
+      "id": "60790a30aff09e000031504a",
+      "text": " tweets = document.getElementsByClassName(\"list_box type_tweet\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545201,
+      "updated": 1618545208
+    },
+    {
+      "id": "60790a49aff09e000031504b",
+      "text": "\tget_name = (tweet) => tweet.querySelector(\".user_link .status_name\").innerText.substring(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545225,
+      "updated": 1618545228
+    },
+    {
+      "id": "60790a7baff09e000031504e",
+      "text": "\tcount = {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545275,
+      "updated": 1618545280
+    },
+    {
+      "id": "60790a7baff09e000031504f",
+      "text": " tweets.forEach(x=>{",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545275,
+      "updated": 1618545282
+    },
+    {
+      "id": "60790a7baff09e0000315050",
+      "text": "   name = get_name(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545275,
+      "updated": 1618545314
+    },
+    {
+      "id": "60790a7baff09e0000315051",
+      "text": "   count[name] = (count[name] || 0) + 1;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545275,
+      "updated": 1618545314
+    },
+    {
+      "id": "60790a7baff09e0000315052",
+      "text": " })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545275,
+      "updated": 1618545320
+    },
+    {
+      "id": "60790aa8aff09e0000315054",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545320,
+      "updated": 1618545328
+    },
+    {
+      "id": "60790ab4aff09e0000315055",
+      "text": " tweets = document.getElementsByClassName(\"list_box type_tweet\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545333,
+      "updated": 1618545333
+    },
+    {
+      "id": "60790ab4aff09e0000315056",
+      "text": "\tget_name = (tweet) => tweet.querySelector(\".user_link .status_name\").innerText.substring(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545333,
+      "updated": 1618545333
+    },
+    {
+      "id": "60790a5caff09e000031504d",
+      "text": "\tuse_icon = {nishio:0, YukiMihashi:0, ukkaripon:0, teramotodaiki:0}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545245,
+      "updated": 1618545426
+    },
+    {
+      "id": "60790ac1aff09e0000315058",
+      "text": "\tname_or_icon = (name) => name in use_icon ? `[${name}.icon]` : name;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545345,
+      "updated": 1618545348
+    },
+    {
+      "id": "60790accaff09e000031505a",
+      "text": " text = Array.from(tweets).map(x=> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545356,
+      "updated": 1618545365
+    },
+    {
+      "id": "60790accaff09e000031505b",
+      "text": "     name = name_or_icon(get_name(x))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545356,
+      "updated": 1618545464
+    },
+    {
+      "id": "60790accaff09e000031505c",
+      "text": "     body = x.querySelector(\".tweet\").innerText;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545356,
+      "updated": 1618545365
+    },
+    {
+      "id": "60790accaff09e000031505d",
+      "text": "     return `${name}\\n${body}`;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545356,
+      "updated": 1618545365
+    },
+    {
+      "id": "60790accaff09e000031505e",
+      "text": " }).join(\"\\n\\n\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545356,
+      "updated": 1618545365
+    },
+    {
+      "id": "60790ac1aff09e0000315059",
+      "text": " document.write(`<textarea>${text}</textarea>`)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545345,
+      "updated": 1618545389
+    },
+    {
+      "id": "60790ab6aff09e0000315057",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545334,
+      "updated": 1618545467
+    },
+    {
+      "id": "60796b96aff09e0000b6a868",
+      "text": "アイコン記法はHelpfeelでは使えないらしい、じゃあとりあえずこうかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570136,
+      "updated": 1618570217
+    },
+    {
+      "id": "60796bbbaff09e0000b6a86b",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570172,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d0",
+      "text": " tweets = document.getElementsByClassName(\"list_box type_tweet\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d1",
+      "text": "\tget_name = (tweet) => tweet.querySelector(\".user_link .status_name\").innerText.substring(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d2",
+      "text": "\tuse_icon = {nishio:0, YukiMihashi:0, ukkaripon:0, teramotodaiki:0, kyasbal_1994: 3, mitoujr: 2, yasulab: 1}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618571064
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d3",
+      "text": "\tname_or_icon = (name) => name in use_icon ? `[${name}]` : name;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570194
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d4",
+      "text": " text = Array.from(tweets).map(x=> {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d5",
+      "text": "     name = name_or_icon(get_name(x))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d6",
+      "text": "     body = x.querySelector(\".tweet\").innerText;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d7",
+      "text": "     return `${name}:\\n${body}`;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570199
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d8",
+      "text": " }).join(\"\\n\\n\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0d9",
+      "text": " document.write(`<textarea>${text}</textarea>`)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796bcdaff09e00006cc0da",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570190,
+      "updated": 1618570190
+    },
+    {
+      "id": "60796b96aff09e0000b6a869",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570136,
+      "updated": 1618570136
+    },
+    {
+      "id": "60796b96aff09e0000b6a86a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618570136,
+      "updated": 1618632561
+    },
+    {
+      "id": "607a4f7aaff09e0000d20515",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618628474,
+      "updated": 1618628474
+    },
+    {
+      "id": "60790a2aaff09e0000315048",
+      "text": "[test_fromTogetter]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545195,
+      "updated": 1618545518
+    },
+    {
+      "id": "60790b3faff09e000031505f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618545471,
+      "updated": 1618545471
+    }
+  ]
+}

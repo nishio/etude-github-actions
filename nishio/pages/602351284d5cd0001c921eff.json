@@ -1,0 +1,1506 @@
+{
+  "id": "602351284d5cd0001c921eff",
+  "title": "2日掛けてanyを撲滅した",
+  "created": 1612927274,
+  "updated": 1613643674,
+  "lines": [
+    {
+      "id": "602351284d5cd0001c921eff",
+      "text": "2日掛けてanyを撲滅した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927274,
+      "updated": 1613132871
+    },
+    {
+      "id": "602673fbaff09e0000e7c47b",
+      "text": "元タイトル「anyをunknownに変える」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132796,
+      "updated": 1613132821
+    },
+    {
+      "id": "6026741aaff09e0000e7c47d",
+      "text": "変えた結果、8〜9割のanyはunknownの状態に留まらなかったのでタイトルを変えた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132826,
+      "updated": 1613132858
+    },
+    {
+      "id": "602673fbaff09e0000e7c47c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132796,
+      "updated": 1613132796
+    },
+    {
+      "id": "60267454aff09e0000e7c47e",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132884,
+      "updated": 1613132887
+    },
+    {
+      "id": "60267456aff09e0000e7c47f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132887,
+      "updated": 1613132887
+    },
+    {
+      "id": "60235982aff09e000068898f",
+      "text": "[TypeScript]で手抜きしてanyを使っている箇所って「自分の書いたコードだけど型をきちんと書くのが面倒だからanyにしてる」って場合と「サードパーティのライブラリからやってくる値で、型がなんなのか調べるのが面倒だからanyにしている」ってケースがある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929411,
+      "updated": 1612930102
+    },
+    {
+      "id": "6023512baff09e0000c82d7d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927276,
+      "updated": 1612927276
+    },
+    {
+      "id": "60235a13aff09e0000688990",
+      "text": "例えば後者の例で、Firestoreから取ってきたドキュメントオブジェクトの型がよくわからないのでanyにしていた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929555,
+      "updated": 1612929989
+    },
+    {
+      "id": "6023512baff09e0000c82d7e",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927276,
+      "updated": 1612927288
+    },
+    {
+      "id": "6023513caff09e0000c82d84",
+      "text": "\t(doc: any) => { ... }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927292,
+      "updated": 1612927304
+    },
+    {
+      "id": "60235138aff09e0000c82d80",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927288,
+      "updated": 1612927305
+    },
+    {
+      "id": "60235a37aff09e0000688991",
+      "text": "これをunknownに変えると…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929591,
+      "updated": 1612929600
+    },
+    {
+      "id": "6023517aaff09e0000c82d85",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927354,
+      "updated": 1612927354
+    },
+    {
+      "id": "6023517aaff09e0000c82d86",
+      "text": "\t(doc: unknown) => { ... }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927354,
+      "updated": 1612927359
+    },
+    {
+      "id": "6023517aaff09e0000c82d87",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927354,
+      "updated": 1612927354
+    },
+    {
+      "id": "60235a44aff09e0000688992",
+      "text": "unknownにexistsが生えてるかどうか知らないぞ、と指摘される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929604,
+      "updated": 1613061548
+    },
+    {
+      "id": "60235a89aff09e0000688993",
+      "text": "きちんとした型をつける必要があるのだが、どうすれば良いか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929674,
+      "updated": 1612929689
+    },
+    {
+      "id": "6023518eaff09e0000c82d88",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927375,
+      "updated": 1612927376
+    },
+    {
+      "id": "60235191aff09e0000c82d8a",
+      "text": " if (doc.exists) {  // ERROR: Object is of type 'unknown'.  TS2571",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927377,
+      "updated": 1612927393
+    },
+    {
+      "id": "6023518faff09e0000c82d89",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927376,
+      "updated": 1612927376
+    },
+    {
+      "id": "60235a9aaff09e0000688994",
+      "text": "それに必要な情報を得るために、あり得ない型を付けてみる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929691,
+      "updated": 1612930194
+    },
+    {
+      "id": "602351b5aff09e0000c82d8b",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927414,
+      "updated": 1612927416
+    },
+    {
+      "id": "602351b8aff09e0000c82d8d",
+      "text": " (doc: number) => { ... }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927416,
+      "updated": 1612927419
+    },
+    {
+      "id": "602351b7aff09e0000c82d8c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927415,
+      "updated": 1612927415
+    },
+    {
+      "id": "60235ab4aff09e0000688995",
+      "text": "そうすると型の互換性エラーでどういう型が期待されているのか表示される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929717,
+      "updated": 1612929736
+    },
+    {
+      "id": "602351c9aff09e0000c82d8e",
+      "text": ">Argument of type '(doc: number) => void' is not assignable to parameter of type '(value: DocumentSnapshot<DocumentData>) => void | PromiseLike<void>'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927433,
+      "updated": 1612927434
+    },
+    {
+      "id": "602351c9aff09e0000c82d8f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927433,
+      "updated": 1612927433
+    },
+    {
+      "id": "60235b04aff09e0000c82da1",
+      "text": "`DocumentSnapshot<DocumentData>`だという名前がわかったのでそれで検索してみるとリファレンスが見つかる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929796,
+      "updated": 1612929834
+    },
+    {
+      "id": "602351e1aff09e0000c82d90",
+      "text": "　[DocumentSnapshot | JavaScript SDK  |  Firebase https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentSnapshot]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927458,
+      "updated": 1612929836
+    },
+    {
+      "id": "602351e1aff09e0000c82d91",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927458,
+      "updated": 1612927458
+    },
+    {
+      "id": "60235b32aff09e0000688996",
+      "text": "長いので別名をつけることにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929843,
+      "updated": 1612929860
+    },
+    {
+      "id": "60235255aff09e0000c82d92",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927574,
+      "updated": 1612927577
+    },
+    {
+      "id": "60235259aff09e0000c82d94",
+      "text": " type Document = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927577,
+      "updated": 1612927578
+    },
+    {
+      "id": "60235259aff09e0000c82d95",
+      "text": " ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927578,
+      "updated": 1612927581
+    },
+    {
+      "id": "6023525daff09e0000c82d96",
+      "text": " (doc: Document) => { ... }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927581,
+      "updated": 1612927589
+    },
+    {
+      "id": "60235256aff09e0000c82d93",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927575,
+      "updated": 1612927575
+    },
+    {
+      "id": "60235b4baff09e0000688997",
+      "text": "この後、別のエラーが出る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929867,
+      "updated": 1612929877
+    },
+    {
+      "id": "60235272aff09e0000c82d97",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927602,
+      "updated": 1612927603
+    },
+    {
+      "id": "60235273aff09e0000c82d99",
+      "text": " JSON.parse(data.json)  // ERROR: Object is possibly 'undefined'.  TS2532",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927604,
+      "updated": 1612927616
+    },
+    {
+      "id": "60235272aff09e0000c82d98",
+      "text": "Firestoreの解説通りに`doc.exists`で存在を確認してから`data = doc.data()`で取得しているので、undefinedになることはないはずだが、TypeScriptはそんなこと知らない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927603,
+      "updated": 1612930022
+    },
+    {
+      "id": "60235b8aaff09e0000c82da4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929930,
+      "updated": 1612929930
+    },
+    {
+      "id": "60235b8aaff09e0000c82da5",
+      "text": "そこで例外を投げることにする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612929930,
+      "updated": 1612930050
+    },
+    {
+      "id": "602352efaff09e0000c82d9a",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927728,
+      "updated": 1612927730
+    },
+    {
+      "id": "602352f2aff09e0000c82d9c",
+      "text": " if (data === undefined) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927730,
+      "updated": 1612927735
+    },
+    {
+      "id": "602352f2aff09e0000c82d9d",
+      "text": "   throw new TypeError(\"doc.data is undefined\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927730,
+      "updated": 1612927749
+    },
+    {
+      "id": "602352f2aff09e0000c82d9e",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927730,
+      "updated": 1612927735
+    },
+    {
+      "id": "602352f2aff09e0000c82d9f",
+      "text": "こうすることで、ここ以降のフローではundefinedの可能性が消える。TypeScriptはそれをちゃんと理解する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612927730,
+      "updated": 1612970983
+    },
+    {
+      "id": "6023fbe6aff09e0000dcf6ac",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970983,
+      "updated": 1612970983
+    },
+    {
+      "id": "6023fbe7aff09e0000dcf6ad",
+      "text": "ところで昔は「無視したら処理を続行できそうなら例外を投げるのはやめとこ」って思ってたのだけど、[Sentry]を使うようになって「ならないはずの状態になってるのを検知したら速やかに例外を投げとけば通知が来るからバグを見つけやすい」と考え方が変わった。ユーザのブラウザ上での例外が開発者に届くことはプログラミングに対する考え方にも影響するのだな。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970983,
+      "updated": 1612971249
+    },
+    {
+      "id": "60235cbdaff09e0000688998",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930238,
+      "updated": 1612930238
+    },
+    {
+      "id": "60235cbdaff09e0000688999",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930238,
+      "updated": 1612930279
+    },
+    {
+      "id": "60235cc0aff09e000068899a",
+      "text": "anyを全部一度にunknownに変えて大変だった。一つずつやるべきだった。複雑な問題が起きた時に切り分けが難しくなる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930241,
+      "updated": 1612930752
+    },
+    {
+      "id": "60235e97aff09e000068899b",
+      "text": "\t[React.forwardRef]にハマった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930712,
+      "updated": 1612970555
+    },
+    {
+      "id": "6023fa3baff09e0000dcf6a4",
+      "text": "\t　FCをラップするための関数なのに「FCだ」と型宣言するとダメ、宣言しなければOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970556,
+      "updated": 1613061633
+    },
+    {
+      "id": "6023fb17aff09e0000dcf6a7",
+      "text": "\t　forwardRefをFCを受け取れるように実装するべきなのでは。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970775,
+      "updated": 1612970807
+    },
+    {
+      "id": "60235f24aff09e0000c0dfff",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930853,
+      "updated": 1612930853
+    },
+    {
+      "id": "60235cf3aff09e0000c82da7",
+      "text": "結局unknownのままでは使えないのできちんと型を書く羽目になり、unknownも大体消える。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930291,
+      "updated": 1612931496
+    },
+    {
+      "id": "60235d1aaff09e0000c82da9",
+      "text": "anyからunknownに変えることで型チェックが走るようにして、エラー内容を見ながら適切な型に変える、という移行プロセスなんだなぁと思った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930330,
+      "updated": 1613061657
+    },
+    {
+      "id": "602361dbaff09e000068899e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612931548,
+      "updated": 1612931548
+    },
+    {
+      "id": "60235d11aff09e0000c82da8",
+      "text": "unknownは1箇所だけしか残らなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612930322,
+      "updated": 1612931546
+    },
+    {
+      "id": "602361d9aff09e000068899d",
+      "text": "　`onClick: () => unknown`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612931546,
+      "updated": 1612931546
+    },
+    {
+      "id": "602361dcaff09e000068899f",
+      "text": "　返り値がvoidなのかそうでないのか確認してないけど、使わないのでどっちでもいいや、ということで残ることになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612931549,
+      "updated": 1612931600
+    },
+    {
+      "id": "602361aaaff09e00002129ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612931498,
+      "updated": 1612931498
+    },
+    {
+      "id": "60239306aff09e00006889a2",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944135,
+      "updated": 1612944137
+    },
+    {
+      "id": "60239309aff09e00006889a4",
+      "text": "何年も前に書き始めたプロジェクトのソースコードをanyで検索して処理してみる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944137,
+      "updated": 1613120456
+    },
+    {
+      "id": "60267472aff09e0000e7c481",
+      "text": "TypeScriptを学びながら書いたので結構anyがある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132914,
+      "updated": 1613132930
+    },
+    {
+      "id": "60267484aff09e0000e7c482",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613132933,
+      "updated": 1613132933
+    },
+    {
+      "id": "60239326aff09e00006889a5",
+      "text": "　1日目: 4ポモドーロで124個あったanyが56個になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944166,
+      "updated": 1613122973
+    },
+    {
+      "id": "6023933faff09e00006889a6",
+      "text": " 　anyが良くある場所",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944192,
+      "updated": 1613120377
+    },
+    {
+      "id": "60239343aff09e00006889a7",
+      "text": " 　　Firebaseとのやりとり",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944195,
+      "updated": 1613120377
+    },
+    {
+      "id": "60239373aff09e00006889aa",
+      "text": " 　　　doc.data()がどんなメンバーを持ってるかとかTypeScriptは知りようがない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944244,
+      "updated": 1613120377
+    },
+    {
+      "id": "60239349aff09e00006889a8",
+      "text": " 　　MouseEventとかTouchEventとかをanyで受けてた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944202,
+      "updated": 1613120377
+    },
+    {
+      "id": "60239371aff09e00006889a9",
+      "text": " 　　　「ここはTouchEventだな！」と書き換えたら「TouchEventならこのメンバー持ってないと思いますけど…」って突っ込まれる、ぐぬぬ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944242,
+      "updated": 1613120377
+    },
+    {
+      "id": "6023faa4aff09e0000dcf6a5",
+      "text": " 　　　 この件、ReactのTouchの定義がradiusXを持ってないことがわかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970661,
+      "updated": 1613120377
+    },
+    {
+      "id": "6023fb07aff09e0000dcf6a6",
+      "text": " 　　　 　これは標準ではないがiPadのSafariで使えるので使いたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970760,
+      "updated": 1613120377
+    },
+    {
+      "id": "602393c4aff09e00006889ab",
+      "text": " 　　　Paper.jsがラップしてToolEventにして渡してくるところもある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944324,
+      "updated": 1613120377
+    },
+    {
+      "id": "60242652aff09e0000dcf736",
+      "text": " 　　　　ToolEvent.eventに実際は生のイベントを持ってるのに、型の上では持ってないことになってる不整合がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612981842,
+      "updated": 1613120377
+    },
+    {
+      "id": "60239309aff09e00006889a3",
+      "text": " 　型を故意に衝突させたり、マウスホバーして処理系がつけた型を読んだりするテクニックを身につける前に書いたコードが、複雑な型がわからなくてanyにしてるケースが多い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944137,
+      "updated": 1613120377
+    },
+    {
+      "id": "6023fb4daff09e0000dcf6a8",
+      "text": " 　　そういうのはすぐ直せるから楽",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970829,
+      "updated": 1613120377
+    },
+    {
+      "id": "60255f5eaff09e0000854ad4",
+      "text": " 　サードパーティのコードが自分の期待に合わない場合、ズレをどこかで吸収する必要があるわけだが、型をanyにする方法ではその値とそこから派生する値のつかられる箇所すべてで型チェックが無効になるのに対し、ts-ignoreならその1箇所のみで無効になるので影響範囲を限定できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613061983,
+      "updated": 1613120377
+    },
+    {
+      "id": "6023fb59aff09e0000dcf6a9",
+      "text": " 　型がついてないことによる根本的に悪い設計と思しきものにぶつかって、設計から変えないと小手先の変更ではダメな感じがしてきた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612970841,
+      "updated": 1613120377
+    },
+    {
+      "id": "60264da9aff09e00007ffd0c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122985,
+      "updated": 1613122985
+    },
+    {
+      "id": "60264370aff09e00007ffca3",
+      "text": "\t2日目: ほぼ全部消えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613120368,
+      "updated": 1613122978
+    },
+    {
+      "id": "60263d75aff09e00007ffc82",
+      "text": "\t\t`return (x as any).item !== undefined;`は`return \"item\" in x;`でいい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613118837,
+      "updated": 1613120386
+    },
+    {
+      "id": "60263dc3aff09e00007ffc86",
+      "text": "  React Routerでcomponentの型は何か",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613118916,
+      "updated": 1613120390
+    },
+    {
+      "id": "60239561aff09e00006889ac",
+      "text": "  \t`<Route path=\"/:id\" component={MyComponent} />`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612944737,
+      "updated": 1613120390
+    },
+    {
+      "id": "60263db6aff09e00007ffc85",
+      "text": "  \t`<Route path=\"/:id\" component={1} />`ってやっても`Type 'number' is not assignable to type 'FunctionComponent<any> | ComponentClass<any, any> | ComponentClass<RouteComponentProps<any, StaticContext, PoorMansUnknown>, any> | FunctionComponent<...> | undefined'`とか言うので参考にならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613118902,
+      "updated": 1613120494
+    },
+    {
+      "id": "602643efaff09e00007ffca5",
+      "text": "  \t正解は`const MyComponent: React.FC<RouteComponentProps<{ id: string }>>`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613120495,
+      "updated": 1613120503
+    },
+    {
+      "id": "60263ea1aff09e00007ffc89",
+      "text": " \tFirestoreはundefinedを含む値を保存しようとするとエラーになるようだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119138,
+      "updated": 1613120392
+    },
+    {
+      "id": "602641ddaff09e00007ffca0",
+      "text": " \t\t`{x: 1}` はOKで `{x: 1, y: undefined}`はNGということになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119965,
+      "updated": 1613120392
+    },
+    {
+      "id": "60264215aff09e0000e7c42d",
+      "text": " \t\tTypeScriptの型ではこの2つは区別できない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613120021,
+      "updated": 1613120403
+    },
+    {
+      "id": "60264393aff09e00007ffca4",
+      "text": " \t\t`{ x: number; y: number | null }`みたいな型で、yがない時は`{ x: 1, y: null };`とやる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613120404,
+      "updated": 1613120448
+    },
+    {
+      "id": "60263effaff09e0000e7c428",
+      "text": " \t`obj.foo = convertType(obj.foo)`みたいに型の違うものでメンバを上書きをするような書き方はやめる必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119232,
+      "updated": 1613133035
+    },
+    {
+      "id": "60264583aff09e0000e7c42f",
+      "text": " \t　そもそも「型を変えてメンバを入れ直したオブジェクト」は「別物」なのだから型が異なっているわけで、それを一つの変数でやろうとするから型をつけられなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613120899,
+      "updated": 1613133041
+    },
+    {
+      "id": "60263fa2aff09e00007ffc8d",
+      "text": "  　`new_obj = {...obj, foo: convertType(obj.foo)}`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119394,
+      "updated": 1613121055
+    },
+    {
+      "id": "60263febaff09e0000e7c42a",
+      "text": "  オブジェクトに順番に値を入れていって完成させるような書き方もやめる必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119467,
+      "updated": 1613121057
+    },
+    {
+      "id": "60263fa2aff09e00007ffc8e",
+      "text": "  　Bad",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119394,
+      "updated": 1613121057
+    },
+    {
+      "id": "6026403caff09e0000e7c42b",
+      "text": "    code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119548,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc8f",
+      "text": "     export const createFoo = (): FOO => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc90",
+      "text": "       const ret: any = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc91",
+      "text": "         version: 2,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc92",
+      "text": "       };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc93",
+      "text": "       ret.items = [];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc95",
+      "text": "       return ret;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc96",
+      "text": "     };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "602640b4aff09e00007ffc9f",
+      "text": "   Good",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119668,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc97",
+      "text": "    code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc98",
+      "text": "     export const createFoo = (): FOO => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc99",
+      "text": "       const version = 2;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc9a",
+      "text": "       const items: ItemID[] = [];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc9c",
+      "text": "       return { version, items };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc9d",
+      "text": "     };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613121057
+    },
+    {
+      "id": "60264057aff09e00007ffc9e",
+      "text": " 　　　前者のようにanyにしてると、この関数が作ったオブジェクトが本当にFOO型であるかはチェックされない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119575,
+      "updated": 1613133078
+    },
+    {
+      "id": "602640ceaff09e0000e7c42c",
+      "text": " \t`e: paper.ToolEvent`は本当は`e.event`を持っているが、型の上では無いことになっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613119695,
+      "updated": 1613122862
+    },
+    {
+      "id": "60264719aff09e00007ffca8",
+      "text": " \t\t以前は`const event = (e as any).event;`と書いていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121305,
+      "updated": 1613122862
+    },
+    {
+      "id": "6026484baff09e00007ffcac",
+      "text": " \t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121611,
+      "updated": 1613122862
+    },
+    {
+      "id": "60264855aff09e00007ffcae",
+      "text": " \t\t // const event = e.event; // Property 'event' does not exist on type 'ToolEvent'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121621,
+      "updated": 1613122862
+    },
+    {
+      "id": "6026484daff09e00007ffcad",
+      "text": " \t\t const event = (e as any).event; // event: any",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121613,
+      "updated": 1613122862
+    },
+    {
+      "id": "60264a11aff09e00007ffcb9",
+      "text": " \t\tanyを消すならこうかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122065,
+      "updated": 1613122862
+    },
+    {
+      "id": "602649f0aff09e00007ffcb8",
+      "text": " \t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122032,
+      "updated": 1613122862
+    },
+    {
+      "id": "602649c3aff09e00007ffcb4",
+      "text": "    // @ts-ignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121988,
+      "updated": 1613122862
+    },
+    {
+      "id": "602649c3aff09e00007ffcb5",
+      "text": "    const event: MouseEvent = e.event;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121988,
+      "updated": 1613122862
+    },
+    {
+      "id": "60264858aff09e00007ffcb0",
+      "text": " \tこういうのの組み合わせで、ブラウザ上の状態をFirestoreに保存できるオブジェクトに変換する関数を下記のように書き変えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613121625,
+      "updated": 1613133139
+    },
+    {
+      "id": "60264c8daff09e00007ffcf0",
+      "text": " \t\tpositionがpaper.Pointオブジェクトなのがダメなので`[number, number]`にしたり",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122702,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264ccdaff09e00007ffcf1",
+      "text": " \t\t保存する値だけを取り出したり",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122766,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264c75aff09e00007ffcee",
+      "text": " \t\tbefore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122678,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b04aff09e00007ffcca",
+      "text": "   \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122308,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcbc",
+      "text": "     export const convertStateItemToFirestore = (x: StateItem) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcbd",
+      "text": "       const ret: any;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcbe",
+      "text": "       ret.type = x.type;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcbf",
+      "text": "       ret.id = x.id;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc0",
+      "text": "       ret.position = [x.position.x, x.position.y]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc1",
+      "text": "       if (isPieceStateItem(x)) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc2",
+      "text": "         ret.text = x.text;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc3",
+      "text": "    \t\t...\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc4",
+      "text": "       } else if (isPathStateItem(x)) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc5",
+      "text": "         ret.opacity = x.opacity ?? 1.0;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc6",
+      "text": "     \t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc7",
+      "text": "    \t  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc8",
+      "text": "    \t  return ret;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264ba3aff09e00007ffcec",
+      "text": "    \t}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122467,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264c7daff09e00007ffcef",
+      "text": " \t\tafter",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122686,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b01aff09e00007ffcc9",
+      "text": "   \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122305,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b4aaff09e00007ffce9",
+      "text": "   \t export const convertStateItemToFirestore = (x: StateItem) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122379,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b4baff09e00007ffcea",
+      "text": "   \t   const { type, id } = x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122379,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffccc",
+      "text": "       const position: [number, number] = [x.position.x, x.position.y];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffccd",
+      "text": "       const common = { type, id, position };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcce",
+      "text": "       if (isPieceStateItem(x)) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffccf",
+      "text": "         const { text, compact, scale } = x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcd0",
+      "text": "         return {...common, text, compact, scale};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613123008
+    },
+    {
+      "id": "60264b3faff09e00007ffcd6",
+      "text": "       } else if (isPathStateItem(x)) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcd7",
+      "text": "         const { opacity, dashArray, created } = x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcd8",
+      "text": "         return {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcd9",
+      "text": "           ...common, created,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613123018
+    },
+    {
+      "id": "60264b3faff09e00007ffcda",
+      "text": "           opacity: opacity ?? 1.0,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcdb",
+      "text": "           dashArray: dashArray ?? [],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcdc",
+      "text": "         };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613123020
+    },
+    {
+      "id": "60264b3faff09e00007ffcde",
+      "text": "       } else if (...) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b6faff09e00007ffceb",
+      "text": "       \t...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122416,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffcdf",
+      "text": "       } else {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffce7",
+      "text": "         throw new TypeError(`unknown type: ${type}`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264b3faff09e00007ffce8",
+      "text": "       }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122367,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264c32aff09e00007ffced",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122611,
+      "updated": 1613122866
+    },
+    {
+      "id": "60264affaff09e00007ffcbb",
+      "text": " \t関数を受け取って処理で包んで返す関数、これは厄介",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122304,
+      "updated": 1613133220
+    },
+    {
+      "id": "60264d4faff09e00007ffcf4",
+      "text": " \t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122896,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcf5",
+      "text": "    export const onOverlayCanvas = (f: (...args: any[]) => unknown) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcf6",
+      "text": "      return (...args: unknown[]) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcf7",
+      "text": "        paper.projects[1].activate();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcf8",
+      "text": "        const ret = f(...args);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcf9",
+      "text": "        paper.projects[0].activate();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcfa",
+      "text": "        return ret;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcfb",
+      "text": "      };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcfc",
+      "text": "    };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d61aff09e00007ffd0b",
+      "text": " \t\tなんとかするためにはジェネリクスが必要になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122914,
+      "updated": 1613124864
+    },
+    {
+      "id": "60264d5eaff09e00007ffcfd",
+      "text": "   code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcfe",
+      "text": "    import { ToolEvent } from \"paper\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffcff",
+      "text": "    ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd00",
+      "text": "    export const onOverlayCanvas = <T extends [ToolEvent] | []>(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd01",
+      "text": "      f: (...args: T) => unknown,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd02",
+      "text": "    ) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd03",
+      "text": "      return (...args: T) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd04",
+      "text": "        paper.projects[1].activate();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd05",
+      "text": "        const ret = f(...args);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd06",
+      "text": "        paper.projects[0].activate();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd07",
+      "text": "        return ret;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd08",
+      "text": "      };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd09",
+      "text": "    };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613123150
+    },
+    {
+      "id": "60264d5eaff09e00007ffd0a",
+      "text": "　Firestoreから過去のデータを読むことができないというバグを入れてしまった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613122911,
+      "updated": 1613125790
+    },
+    {
+      "id": "6026586daff09e0000e7c440",
+      "text": "　　`isReadOnly: bool`だと思い込んでたがtrueの時しかエントリーがなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613125742,
+      "updated": 1613125903
+    },
+    {
+      "id": "60265952aff09e0000e7c442",
+      "text": "　　[無意識に例外を握りつぶしてた]ことが原因で、バグの原因の特定に時間が掛かった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613125970,
+      "updated": 1613125991
+    },
+    {
+      "id": "60265844aff09e0000e7c43e",
+      "text": "　124個あったanyが3個になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613125701,
+      "updated": 1613125701
+    },
+    {
+      "id": "60265580aff09e0000e7c43a",
+      "text": "　　うち2つはコメントやメッセージ文字列の中身",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613124993,
+      "updated": 1613125004
+    },
+    {
+      "id": "60265591aff09e0000e7c43b",
+      "text": "　　最後の1つはデバッグの便利さのために作ってあるデバッグオブジェクトの型",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613125010,
+      "updated": 1613125069
+    },
+    {
+      "id": "602655feaff09e0000e7c43c",
+      "text": "　　unknownは16個",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613125119,
+      "updated": 1613125152
+    },
+    {
+      "id": "60265620aff09e0000e7c43d",
+      "text": "　　　8〜9割のanyはunknownに変わるのではなくまともな型に変わった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613125153,
+      "updated": 1613125188
+    },
+    {
+      "id": "60265548aff09e0000e7c439",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613124936,
+      "updated": 1613124936
+    },
+    {
+      "id": "602e3937aff09e00005e911b",
+      "text": "追記 2021-02-18 [any消し祭りのゴミ片付け]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613642040,
+      "updated": 1613642298
+    },
+    {
+      "id": "602e393daff09e00005e911d",
+      "text": "\t[requireしたものはanyになる]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613642046,
+      "updated": 1613642046
+    },
+    {
+      "id": "602e3a55aff09e000086998e",
+      "text": "\t　これが原因でPaper.jsを使うコードに無自覚のanyがあった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613642326,
+      "updated": 1613642423
+    },
+    {
+      "id": "602e3ed4aff09e000086998f",
+      "text": "　\t修正してpaper.Itemが型チェックされるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643477,
+      "updated": 1613643508
+    },
+    {
+      "id": "602e393daff09e00005e911c",
+      "text": "\t[クラスのインスタンスをspreadしてもメソッドは複製されない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613642046,
+      "updated": 1613642288
+    },
+    {
+      "id": "602e3f80aff09e0000869991",
+      "text": "\t　なのでキャストで解決した。あちこちにキャストがあるのも良くないので一箇所にまとめた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643649,
+      "updated": 1613643674
+    },
+    {
+      "id": "602e3a2faff09e00005e911e",
+      "text": "　　code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613642288,
+      "updated": 1613643611
+    },
+    {
+      "id": "602e3f5baff09e00005e911f",
+      "text": "　　 export const attachStateItem = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643611,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9120",
+      "text": "     paperItem: paper.Item,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9121",
+      "text": "     stateItem: StateItem,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9122",
+      "text": "   ): PaperItem => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9123",
+      "text": "     const ret = paperItem as PaperItem;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9124",
+      "text": "     ret.item = stateItem;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9125",
+      "text": "     return ret;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9126",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643623
+    },
+    {
+      "id": "602e3f66aff09e00005e9127",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643623,
+      "updated": 1613643624
+    },
+    {
+      "id": "602e3ef7aff09e0000869990",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613643512,
+      "updated": 1613643512
+    }
+  ]
+}

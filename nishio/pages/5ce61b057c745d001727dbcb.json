@@ -1,0 +1,554 @@
+{
+  "id": "5ce61b057c745d001727dbcb",
+  "title": "undoの実装",
+  "created": 1558584070,
+  "updated": 1560753751,
+  "lines": [
+    {
+      "id": "5ce61b057c745d001727dbcb",
+      "text": "undoの実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1558584070
+    },
+    {
+      "id": "5ce61b06aff09e0000153f6f",
+      "text": "[pRegroup-done-2019]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1580046376
+    },
+    {
+      "id": "5cf4e950aff09e00009d698b",
+      "text": "付箋の追加や移動をUndo可能にするReact的状態の設計",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554385,
+      "updated": 1559813085
+    },
+    {
+      "id": "5cf8dbdcaff09e000001c1b0",
+      "text": "\tuseHistoryをTSに移植した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813085,
+      "updated": 1559813097
+    },
+    {
+      "id": "5cf8dccaaff09e000001c1b2",
+      "text": "\t若干モヤモヤするけど早すぎる最適化は諸悪の根源なので「全状態履歴を保持する実装」でまずは作る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813322,
+      "updated": 1559813323
+    },
+    {
+      "id": "5cf8dccaaff09e000001c1b3",
+      "text": " 生の状態ではなく実験的な状態でuseHistoryの挙動をまず試す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813323,
+      "updated": 1559813323
+    },
+    {
+      "id": "5cf8dccaaff09e000001c1b4",
+      "text": " 次に付箋をReact的な状態に変換する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813323,
+      "updated": 1559813323
+    },
+    {
+      "id": "5cf8dccaaff09e000001c1b5",
+      "text": " (パスもやる？？パスがかける以上、ユーザはパスをUndoしようとするだろう。状態に異種のものが混じっている状態はどうせ将来的に発生するのでシンプルな今の段階で試しておくべき→やる)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813323,
+      "updated": 1559813323
+    },
+    {
+      "id": "5cf8dccaaff09e000001c1b6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813323,
+      "updated": 1559813324
+    },
+    {
+      "id": "5cf8dbe1aff09e000001c1b1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813090,
+      "updated": 1559813090
+    },
+    {
+      "id": "5cf4e956aff09e00009d698c",
+      "text": "[Using React Hooks with canvas – ITNEXT https://itnext.io/using-react-hooks-with-canvas-f188d6e416c0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554391,
+      "updated": 1559554391
+    },
+    {
+      "id": "5cf4e957aff09e00009d698d",
+      "text": "\t解説: [React+Canvas]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554391,
+      "updated": 1559554432
+    },
+    {
+      "id": "5cf4e981aff09e00009d698e",
+      "text": "\tこれがReact的な状態管理で描画の永続化までやっててよい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554434,
+      "updated": 1559554458
+    },
+    {
+      "id": "5cf4e99aaff09e00009d6990",
+      "text": "\tこの方法はとてもわかりやすい反面、性能を度外視して「ユーザの操作履歴を毎回全部描く」をやっている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554458,
+      "updated": 1559554493
+    },
+    {
+      "id": "5cf4e9bdaff09e00009d6991",
+      "text": " なんだけども、Paper.jsが現状、画面外のカリングとかしないで全部愚直に書いているっぽいし、ユーザとのインタラクションをするPaperはこのあと別レイヤーとして上に重ねるわけなので、まずは愚直に実装したらいいのかもな〜と思った。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554493,
+      "updated": 1559554504
+    },
+    {
+      "id": "5cf4e9bdaff09e00009d6995",
+      "text": " Regroupのユースケースでは「追加」だけではなく「移動」がある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554493,
+      "updated": 1559554514
+    },
+    {
+      "id": "5cf4e9bdaff09e00009d6997",
+      "text": "\t Undo可能にするためには「移動」を「どこからどこへの移動」という反転可能な形で保持して、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554493,
+      "updated": 1559554519
+    },
+    {
+      "id": "5cf4e9d6aff09e00009d699a",
+      "text": "\t 実際のレンダリング前に履歴を実行して現在の位置を特定し、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554519,
+      "updated": 1559554519
+    },
+    {
+      "id": "5cf4e9bdaff09e00009d6999",
+      "text": "\t その現在の位置から画面内に含まれてるかどうかをチェックして、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554493,
+      "updated": 1559554525
+    },
+    {
+      "id": "5cf4e9ddaff09e00009d699b",
+      "text": "\t 含まれてるものだけ描くって処理になると思われ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554525,
+      "updated": 1559554525
+    },
+    {
+      "id": "5cf4e982aff09e00009d698f",
+      "text": "\t直近のスナップショットを保存して置いても良いと思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554434,
+      "updated": 1559554548
+    },
+    {
+      "id": "5cf4e9eeaff09e00009d699c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559554543,
+      "updated": 1559554543
+    },
+    {
+      "id": "5ce61b06aff09e0000153f70",
+      "text": "undoの実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1558584070
+    },
+    {
+      "id": "5ce61b06aff09e0000153f71",
+      "text": "\t特に手書きが入ると必須",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1558584070
+    },
+    {
+      "id": "5ce61b06aff09e0000153f72",
+      "text": "\thttps://usehooks.com/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1558584070
+    },
+    {
+      "id": "5ce61b06aff09e0000153f73",
+      "text": "\tこれのuseHistoryパターンが良さそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1558584070
+    },
+    {
+      "id": "5ce61b06aff09e0000153f74",
+      "text": "\t[useCallback]、[useReducer]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558584070,
+      "updated": 1559813348
+    },
+    {
+      "id": "5cf8bdf3aff09e000001c19d",
+      "text": "\tこれも全ての状態を持っておいて、全体を更新するタイプ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559805428,
+      "updated": 1559813353
+    },
+    {
+      "id": "5cf8dce5aff09e000001c1b8",
+      "text": " \tそれでいいのかなぁ、修正差分にしなくていいのかなぁ、と言う気もするが、性能問題がでないならシンプルな実装の方が良いのでまずはその方針でやるべきかなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813350,
+      "updated": 1559813359
+    },
+    {
+      "id": "5cf8dce5aff09e000001c1ba",
+      "text": "\t 早すぎる最適化は諸悪の根源。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813350,
+      "updated": 1559813361
+    },
+    {
+      "id": "5cfa2a15aff09e000041a6ea",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898646,
+      "updated": 1559898646
+    },
+    {
+      "id": "5cfa2a15aff09e000041a6eb",
+      "text": "[useHistory]の実装がSETで状態を代入することしか考えてなくて、(state)=>(newState)がわたされる可能性を考えていない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898646,
+      "updated": 1559898672
+    },
+    {
+      "id": "5cfa2a30aff09e000041a6ef",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898673,
+      "updated": 1559898700
+    },
+    {
+      "id": "5cfa2a4caff09e000041a6f0",
+      "text": " let newPresent;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898700,
+      "updated": 1559898707
+    },
+    {
+      "id": "5cfa2a4caff09e000041a6f1",
+      "text": " if(typeof action.newPresent == \"function\"){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898701,
+      "updated": 1559898707
+    },
+    {
+      "id": "5cfa2a4caff09e000041a6f2",
+      "text": "   newPresent = action.newPresent(present);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898701,
+      "updated": 1559898707
+    },
+    {
+      "id": "5cfa2a4caff09e000041a6f3",
+      "text": " }else{",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898701,
+      "updated": 1559898707
+    },
+    {
+      "id": "5cfa2a4caff09e000041a6f4",
+      "text": "   newPresent = action.newPresent",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898701,
+      "updated": 1559898707
+    },
+    {
+      "id": "5cfa2a4caff09e000041a6f5",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898701,
+      "updated": 1559898707
+    },
+    {
+      "id": "5cfa2a59aff09e000041a6f7",
+      "text": "こうやった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898714,
+      "updated": 1559898722
+    },
+    {
+      "id": "5cfa2a61aff09e000041a6f9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898722,
+      "updated": 1559898722
+    },
+    {
+      "id": "5cfa2a61aff09e000041a6fa",
+      "text": "ズームがUndoできるようになった！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898722,
+      "updated": 1559898737
+    },
+    {
+      "id": "5cfa2a71aff09e000041a6fb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898738,
+      "updated": 1559898738
+    },
+    {
+      "id": "5cfa2a72aff09e000041a6fc",
+      "text": "付箋のリストとして状態を保つのではなく「描画されるアイテムのリスト」にオブジェクトを入れてobj.typeでどういう描画をするか切り分ける設計にした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898738,
+      "updated": 1559898766
+    },
+    {
+      "id": "5cfa2a89aff09e000041a6fd",
+      "text": "これによって将来的に手書きパスも一貫して扱えるようになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898761,
+      "updated": 1559898761
+    },
+    {
+      "id": "5cfa2a61aff09e000041a6f8",
+      "text": "付箋と手書きパスの他に将来的に現れる予定なものは",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898722,
+      "updated": 1559898778
+    },
+    {
+      "id": "5cfa2a99aff09e000041a6fe",
+      "text": "・グループ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898778,
+      "updated": 1559898778
+    },
+    {
+      "id": "5cfa2a99aff09e000041a6ff",
+      "text": "・コネクタ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898778,
+      "updated": 1559898778
+    },
+    {
+      "id": "5cfa2a9aaff09e000041a700",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898778,
+      "updated": 1559898778
+    },
+    {
+      "id": "5cfa2aa6aff09e000041a701",
+      "text": "状態更新を呼んで正しく描画されてるのにUndoが機能しない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898791,
+      "updated": 1559898791
+    },
+    {
+      "id": "5cfa2aa6aff09e000041a702",
+      "text": "あ、元の状態を破壊的に変更してしまってるんだな、これ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898791,
+      "updated": 1559898791
+    },
+    {
+      "id": "5cfa2aa7aff09e000041a703",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898791,
+      "updated": 1559898802
+    },
+    {
+      "id": "5cfa2ab2aff09e000041a705",
+      "text": "  const updateItemPosition = (item:any, position:paper.Point) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898802,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a706",
+      "text": "    let newItems:any[] = state.items.filter((x:any) => (x != item));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a707",
+      "text": "    item.position = position; //ダメ！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a708",
+      "text": "    newItems.push(item);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a709",
+      "text": "    set((state:any) => ({",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a70a",
+      "text": "      ...state, ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a70b",
+      "text": "      items: newItems, ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a70c",
+      "text": "    }));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ab3aff09e000041a70d",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898804,
+      "updated": 1559898804
+    },
+    {
+      "id": "5cfa2ac6aff09e000041a70f",
+      "text": "一見できるようになったが2回目のドラッグ時になぜか初期位置に新しい付箋が生成される...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898823,
+      "updated": 1559898827
+    },
+    {
+      "id": "5cfa2ac4aff09e000041a70e",
+      "text": ">let newItems:any[] = [* state].items.filter((x:any) => (x != item));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898820,
+      "updated": 1559898862
+    },
+    {
+      "id": "5cfa2ae4aff09e000041a710",
+      "text": "このstateが直前の状態ではなく外のスコープの初期状態を見ている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898852,
+      "updated": 1559898881
+    },
+    {
+      "id": "5cfa2b15aff09e000041a71e",
+      "text": "これが正解:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898902,
+      "updated": 1559898905
+    },
+    {
+      "id": "5cfa2af0aff09e000041a711",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898864,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a713",
+      "text": "  const updateItemPosition = (item:any, position:paper.Point) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a714",
+      "text": "     set((state:any) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a715",
+      "text": "       let newItems:any[] = state.items.filter((x:any) => (x != item));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a716",
+      "text": "       item = {...item, position: position};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a717",
+      "text": "       newItems.push(item);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a718",
+      "text": "       return {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a719",
+      "text": "         ...state, ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a71a",
+      "text": "         items: newItems, ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a71b",
+      "text": "       };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a71c",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b11aff09e000041a71d",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898897,
+      "updated": 1559898897
+    },
+    {
+      "id": "5cfa2b0faff09e000041a712",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559898896,
+      "updated": 1559898896
+    }
+  ]
+}

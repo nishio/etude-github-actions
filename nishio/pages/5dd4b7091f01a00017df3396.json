@@ -1,0 +1,645 @@
+{
+  "id": "5dd4b7091f01a00017df3396",
+  "title": "日本語BERTのfine-tuning",
+  "created": 1574221581,
+  "updated": 1575261740,
+  "lines": [
+    {
+      "id": "5dd4b7091f01a00017df3396",
+      "text": "日本語BERTのfine-tuning",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221581,
+      "updated": 1574221581
+    },
+    {
+      "id": "5dd4ca72aff09e000033d258",
+      "text": "\t[日本語BERT]の[fine-tuning]をする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226547,
+      "updated": 1574226560
+    },
+    {
+      "id": "5dd4b78caff09e000033d241",
+      "text": "\t手元でBERTの学習済みモデルをロードして文章をベクトル化して識別モデルを学習するところまではやってある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221709,
+      "updated": 1574221762
+    },
+    {
+      "id": "5dd4b7c2aff09e000033d242",
+      "text": "\t\t72.1%だったのでこれをfine-tuningしてどこまで上がるか実験したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221762,
+      "updated": 1574221778
+    },
+    {
+      "id": "5dd4b70daff09e000033d23c",
+      "text": "\tこれを読む",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221581,
+      "updated": 1574221670
+    },
+    {
+      "id": "5dd4b765aff09e000033d23e",
+      "text": "\t\thttps://github.com/yoheikikuta/bert-japanese/blob/master/notebook/finetune-to-livedoor-corpus.ipynb",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221670,
+      "updated": 1574221671
+    },
+    {
+      "id": "5dd4b767aff09e000033d23f",
+      "text": "\tfinetune-to-livedoor-corpus.ipynbを自分のGoogle Colab環境に複製",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221671,
+      "updated": 1574221782
+    },
+    {
+      "id": "5dd4b7d5aff09e000033d243",
+      "text": "\tGCPにおいてからgcutil cpするように書かれているが、Google Driveをマウントすることにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221782,
+      "updated": 1574222769
+    },
+    {
+      "id": "5dd4bbb1aff09e000033d244",
+      "text": "\t\t[Google ColabからDriveをみる]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574222769,
+      "updated": 1574222769
+    },
+    {
+      "id": "5dd4bd24aff09e000033d247",
+      "text": "\trun_classifierのオプション:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223141,
+      "updated": 1574223384
+    },
+    {
+      "id": "5dd4b765aff09e000033d23d",
+      "text": "  `--model_file=../model/wiki-ja.model \\`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574221670,
+      "updated": 1574224258
+    },
+    {
+      "id": "5dd4bd22aff09e000033d245",
+      "text": "  `--vocab_file=../model/wiki-ja.vocab \\`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223139,
+      "updated": 1574224257
+    },
+    {
+      "id": "5dd4be1eaff09e000033d249",
+      "text": "  これらはSentencePieceのモデルを指定してる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223390,
+      "updated": 1574223449
+    },
+    {
+      "id": "5dd4be59aff09e000033d24a",
+      "text": "  \tipynbの手順通りだとあらかじめGCPからColabのFSにコピーされている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223449,
+      "updated": 1574223449
+    },
+    {
+      "id": "5dd4be5baff09e000033d24b",
+      "text": "  \t僕はやってないので、Google Driveから読むことにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223452,
+      "updated": 1574223465
+    },
+    {
+      "id": "5dd4be6aaff09e000033d24c",
+      "text": "  \tこうなった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223466,
+      "updated": 1574223483
+    },
+    {
+      "id": "5dd4be7aaff09e000033d24d",
+      "text": " \t\t `--model_file=/content/gdrive/My\\ Drive/bert-wiki-ja/wiki-ja.model \\`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223483,
+      "updated": 1574233027
+    },
+    {
+      "id": "5dd4be7baff09e000033d24e",
+      "text": "    `--vocab_file=/content/gdrive/My\\ Drive/bert-wiki-ja/wiki-ja.vocab \\`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223484,
+      "updated": 1574233030
+    },
+    {
+      "id": "5dd4be7baff09e000033d24f",
+      "text": "    `--init_checkpoint=/content/gdrive/My\\ Drive/bert-wiki-ja/model.ckpt-1400000 \\`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223484,
+      "updated": 1574233031
+    },
+    {
+      "id": "5dd4e3adaff09e000033d26f",
+      "text": "   Google ColabのFSのルートは/contentなの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574233005,
+      "updated": 1574233056
+    },
+    {
+      "id": "5dd4e3e7aff09e000033d271",
+      "text": "   \t相対パス起因の失敗をするのは嫌なので絶対パスにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574233064,
+      "updated": 1574233082
+    },
+    {
+      "id": "5dd4ee35aff09e000033d276",
+      "text": "   注: BERTモデルの読み込みと結果の書き出し先はGCPでなければならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235702,
+      "updated": 1574235727
+    },
+    {
+      "id": "5dd4f947aff09e000033d294",
+      "text": "   \tinit_checkpointはTPUが読もうとするので上記の書き方だと失敗する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574238535,
+      "updated": 1574238555
+    },
+    {
+      "id": "5dd4ee4faff09e000033d277",
+      "text": "   \t[TPUからGoogle ColabのローカルFSには書き込めない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235727,
+      "updated": 1574235731
+    },
+    {
+      "id": "5dd4c5d3aff09e000033d251",
+      "text": "\tデータの読み込みを行なっている場所",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574225363,
+      "updated": 1574226192
+    },
+    {
+      "id": "5dd4bd22aff09e000033d246",
+      "text": "\t\t`train_examples = processor.get_train_examples(FLAGS.data_dir)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574223139,
+      "updated": 1574225376
+    },
+    {
+      "id": "5dd4c16faff09e000033d250",
+      "text": "\t\t\tprocessorは`processor = processors[task_name]()`しててコマンドライン引数で渡した`--task_name=livedoor`によって`LivedoorProcessor`が選択されている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574224240,
+      "updated": 1574226196
+    },
+    {
+      "id": "5dd4c7a8aff09e000033d253",
+      "text": "\t\t\t`LivedoorProcessor`は`DataProcessor`を継承して親クラスのクラスメソッド`_read_tsv`を呼んでいるが、これは単にファイルを開いてTSVとして読んで各行をリストに入れて返すだけ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574225833,
+      "updated": 1574226198
+    },
+    {
+      "id": "5dd4c884aff09e000033d254",
+      "text": "\t\t\tその結果を元に `LivedoorProcessor#_create_examples`の中で`InputExample`オブジェクトを作ってリストに入れている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226053,
+      "updated": 1574226199
+    },
+    {
+      "id": "5dd4c92caff09e000033d256",
+      "text": "\t\t\t`InputExample`は文章とラベルを持つ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226220,
+      "updated": 1574226227
+    },
+    {
+      "id": "5dd4c903aff09e000033d255",
+      "text": "\tモデルの作成",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226180,
+      "updated": 1574226490
+    },
+    {
+      "id": "5dd4ca3aaff09e000033d257",
+      "text": "\t `model_fn_builder(...)`で`model_fn`を作ってから、それを`tf.contrib.tpu.TPUEstimator`で包んで`estimator`と呼ぶ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226490,
+      "updated": 1574226539
+    },
+    {
+      "id": "5de49625aff09e00004f867a",
+      "text": "\t \t[学習済みモデルはどこで読むか]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575261734,
+      "updated": 1575261740
+    },
+    {
+      "id": "5dd4cadeaff09e000033d259",
+      "text": "\t\t `model_fn_builder(...)`は`create_model`を呼ぶ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226655,
+      "updated": 1574226671
+    },
+    {
+      "id": "5dd4caecaff09e000033d25a",
+      "text": "\t \tこれはオリジナルのBERTモデルを作ってから`output_layer = model.get_pooled_output()`する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226669,
+      "updated": 1574226733
+    },
+    {
+      "id": "5dd4cb2eaff09e000033d25b",
+      "text": "\t \t\tこの`get_pooled_output`が何かは[日本語BERTのrun_classifier読解#5db89bb6aff09e0000d4c214]で説明した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574226734,
+      "updated": 1574226772
+    },
+    {
+      "id": "5dd4c5e2aff09e000033d252",
+      "text": "\t\t\t`get_pooled_output`を入力とするシンプルなロジスティック回帰を実装しているように見えるが、なんで自前で実装する必要があったのかよくわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574225378,
+      "updated": 1574227026
+    },
+    {
+      "id": "5dd4cc52aff09e000033d25e",
+      "text": "\t\t\t将来的にはいろいろカスタマイズしたいが、今回は「そういうものだ」と認めて進むことにするか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574227026,
+      "updated": 1574227840
+    },
+    {
+      "id": "5dd4cf7faff09e000033d25f",
+      "text": "\t\t\t今回の僕のケースではラベルが0/1なのがちょっと違う点",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574227840,
+      "updated": 1574228403
+    },
+    {
+      "id": "5dd4d1b3aff09e000033d260",
+      "text": "\t実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574228403,
+      "updated": 1574228451
+    },
+    {
+      "id": "5dd4d1e2aff09e000033d261",
+      "text": "\t\trun_clussifier.pyをインポートして`LivedoorProcessor`相当のものを自作して、mainを書き換えてそれを呼ぶようにしよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574228451,
+      "updated": 1574228495
+    },
+    {
+      "id": "5dd4cc38aff09e000033d25d",
+      "text": "\t\ttitle(unique id)から本文への対応づけがhonbun_data.jsonに入っているのでこれを使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574227001,
+      "updated": 1574229933
+    },
+    {
+      "id": "5dd4d7acaff09e000033d263",
+      "text": "\t\t`LivedoorProcessor`はそれぞれのメソッド呼び出しに応じて異なるファイルを読んでいるが、僕のケースでは1つ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574229933,
+      "updated": 1574230092
+    },
+    {
+      "id": "5dd4d7dbaff09e000033d264",
+      "text": "\t\t\tクラスの外でデータを作っておいてメソッドは参照を返すだけにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574229980,
+      "updated": 1574230105
+    },
+    {
+      "id": "5dd4d796aff09e000033d262",
+      "text": "\t\tネガポジのペアはnegaposi.jsonに入ってるのでこれを使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574229911,
+      "updated": 1574230166
+    },
+    {
+      "id": "5dd4d896aff09e000033d266",
+      "text": "\t\t>将来的にはいろいろカスタマイズしたいが、今回は「そういうものだ」と認めて進むことにするか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230166,
+      "updated": 1574230213
+    },
+    {
+      "id": "5dd4d8c5aff09e000033d267",
+      "text": "\t\t\tこれできないのではって気がしてきた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230214,
+      "updated": 1574230220
+    },
+    {
+      "id": "5dd4d8cbaff09e000033d268",
+      "text": "\t\t\tできなくはないが、2個の値のペアを受け取ってネガポジ判定するのをLRで実装するのは...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230220,
+      "updated": 1574230249
+    },
+    {
+      "id": "5dd4d8e8aff09e000033d269",
+      "text": "\t\t\t組み合わせ素性がないので流石にダメでは...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230249,
+      "updated": 1574230297
+    },
+    {
+      "id": "5dd4d90aaff09e000033d26b",
+      "text": "\t\t\tまあ素朴な手段としてやっておくか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230283,
+      "updated": 1574230283
+    },
+    {
+      "id": "5dd4d8ecaff09e000033d26a",
+      "text": "\t\tそもそも入力が2文であって、それぞれに`pooled_output`が必要か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230253,
+      "updated": 1574238585
+    },
+    {
+      "id": "5dd4d877aff09e000033d265",
+      "text": "\t\t\tBERTのtext_aとtext_bに入れれば良いか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574230135,
+      "updated": 1574231340
+    },
+    {
+      "id": "5dd4f98eaff09e000033d295",
+      "text": "\t\tオリジナルの`_create_examples`では`tokenization.convert_to_unicode`してるけど、僕の場合0/1だからintで入れて大丈夫かな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574238606,
+      "updated": 1574238631
+    },
+    {
+      "id": "5dd4dfc6aff09e000033d26e",
+      "text": "\t少し走って死んだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574232007,
+      "updated": 1574234276
+    },
+    {
+      "id": "5dd4e8a4aff09e000033d272",
+      "text": "\t\t[TPUからGoogle ColabのローカルFSには書き込めない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574234276,
+      "updated": 1574234321
+    },
+    {
+      "id": "5dd4ee59aff09e000033d27a",
+      "text": "\t\t\"service-***@cloud-tpu.iam.gserviceaccount.com does not have storage.objects.list access to ***.appspot.com.\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235738,
+      "updated": 1574235857
+    },
+    {
+      "id": "5dd4ee5aaff09e000033d27b",
+      "text": "\t\t\tipynbの「TPUのチェック」と書かれたセルが、TPUに対してGCP Bucketのアクセス権を付与することまでやっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235742,
+      "updated": 1574235885
+    },
+    {
+      "id": "5dd4eeeeaff09e000033d27d",
+      "text": "\t\t\tうまくいかない場合はここが失敗しているので最初からやり直せば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235886,
+      "updated": 1574235899
+    },
+    {
+      "id": "5dd4eefbaff09e000033d27e",
+      "text": "\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235899,
+      "updated": 1574237393
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d27f",
+      "text": "\t ***** Eval results *****",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237393,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d280",
+      "text": "  eval_accuracy = 0.9525939",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237394,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d281",
+      "text": "  eval_loss = 0.40050572",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237394,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d282",
+      "text": "  global_step = 1047",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237394,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d283",
+      "text": "  loss = 0.39979258",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237394,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d284",
+      "text": "  CPU times: user 2.1 s, sys: 313 ms, total: 2.41 s",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237394,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4f4d1aff09e000033d285",
+      "text": "  Wall time: 7min 54s",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237394,
+      "updated": 1574237394
+    },
+    {
+      "id": "5dd4eed2aff09e000033d27c",
+      "text": "\tcode:classification_report",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574235859,
+      "updated": 1574238002
+    },
+    {
+      "id": "5dd4f718aff09e000033d287",
+      "text": "\t              precision    recall  f1-score   support",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237976,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d288",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d289",
+      "text": "             0       0.94      0.96      0.95      1118",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d28a",
+      "text": "             1       0.95      0.94      0.95      1117",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d28b",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d28c",
+      "text": "      accuracy                           0.95      2235",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d28d",
+      "text": "     macro avg       0.95      0.95      0.95      2235",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f719aff09e000033d28e",
+      "text": "  weighted avg       0.95      0.95      0.95      2235",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237977,
+      "updated": 1574237977
+    },
+    {
+      "id": "5dd4f717aff09e000033d286",
+      "text": "\tcode:confusion_matrix",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237976,
+      "updated": 1574238046
+    },
+    {
+      "id": "5dd4f720aff09e000033d290",
+      "text": "\t [[1068   50]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237984,
+      "updated": 1574238024
+    },
+    {
+      "id": "5dd4f748aff09e000033d291",
+      "text": "   [  68 1049]]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574238024,
+      "updated": 1574238024
+    },
+    {
+      "id": "5dd4f71eaff09e000033d28f",
+      "text": "\tほんとなのかと眉に唾をつけたくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574237983,
+      "updated": 1574238228
+    },
+    {
+      "id": "5dd4f814aff09e000033d293",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574238228,
+      "updated": 1574238376
+    },
+    {
+      "id": "5dd4fadfaff09e000033d297",
+      "text": "まとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574238944,
+      "updated": 1574238948
+    },
+    {
+      "id": "5dd4fae3aff09e000033d298",
+      "text": "\t6705件のデータを使ったBERTのfine-tuningがTPUを使うと7分程度でできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574238948,
+      "updated": 1574239037
+    },
+    {
+      "id": "5dd4fb38aff09e000033d299",
+      "text": "\t72%→95%の精度",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574239033,
+      "updated": 1574405610
+    },
+    {
+      "id": "5dd4fb9eaff09e000033d29a",
+      "text": "\t\t[https://gyazo.com/e779e6a21c7867c92d9c4676110066cb]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574239134,
+      "updated": 1574405615
+    },
+    {
+      "id": "5dd785a9aff09e0000824f5d",
+      "text": "\t\tただしBの処理結果をキャッシュできないという問題点がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405545,
+      "updated": 1574405670
+    },
+    {
+      "id": "5dd78625aff09e00005420c3",
+      "text": "\t\t\t計測してないけど処理にかかる時間が1〜2桁上がる懸念",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405670,
+      "updated": 1574405693
+    },
+    {
+      "id": "5dd78634aff09e00005420c4",
+      "text": "\t\t\t右の形を試したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405685,
+      "updated": 1574405810
+    },
+    {
+      "id": "5dd786b3aff09e00005420c5",
+      "text": "\t\t\t\tこれは加算注意",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405811,
+      "updated": 1574405815
+    },
+    {
+      "id": "5dd786b7aff09e00005420c6",
+      "text": "\t\t\t内積注意や次元削減注意を試したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405815,
+      "updated": 1574405827
+    },
+    {
+      "id": "5dd786c2aff09e00005420c7",
+      "text": "\t\t\t\tsee [CybozuHackathon2019]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405827,
+      "updated": 1574405829
+    },
+    {
+      "id": "5dd785a9aff09e0000824f5c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1574405545,
+      "updated": 1574405545
+    }
+  ]
+}

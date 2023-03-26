@@ -1,0 +1,806 @@
+{
+  "id": "602cd6d2e143ac001e65be75",
+  "title": "Promiseの結果で状態更新する場合、全体をactで包んでもダメ",
+  "created": 1613551317,
+  "updated": 1613620431,
+  "lines": [
+    {
+      "id": "602cd6d2e143ac001e65be75",
+      "text": "Promiseの結果で状態更新する場合、全体をactで包んでもダメ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551317,
+      "updated": 1613554148
+    },
+    {
+      "id": "602cd6d4aff09e00004edbf8",
+      "text": "前提の話、[Reactのテストでactで包むのはrenderではなく状態更新]を踏まえて、ではこの状態更新が非同期の時にはどうなるのか、という話。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551317,
+      "updated": 1613551372
+    },
+    {
+      "id": "602cd9c2aff09e00001c6e90",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552066,
+      "updated": 1613552066
+    },
+    {
+      "id": "602cd9c3aff09e00001c6e91",
+      "text": "前回はテストコードの中でsetValueを直接呼んだが、今回は`asyncUpdate`というPromiseのthenで呼ぶ形にする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552067,
+      "updated": 1613552303
+    },
+    {
+      "id": "602cda02aff09e00001c6e92",
+      "text": "例えばネットワークアクセスをした結果や、IndexedDBの読み出し結果などはPromiseの形になってることが多い。テストの際にモックで置き換えたとしてもPromiseであることは変わらないので、こういう形での非同期な状態更新が行われる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552130,
+      "updated": 1613552371
+    },
+    {
+      "id": "602cd6d5aff09e00004edbf9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551317,
+      "updated": 1613551317
+    },
+    {
+      "id": "602cdafdaff09e00001c6e93",
+      "text": "これはテストに失敗する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552381,
+      "updated": 1613552390
+    },
+    {
+      "id": "602cd719aff09e00004edbfa",
+      "text": "code:test.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551386,
+      "updated": 1613551392
+    },
+    {
+      "id": "602cd719aff09e00004edbfb",
+      "text": "\ttest(\"MyComponent2\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551386,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edbfc",
+      "text": "   type TSetState = React.Dispatch<React.SetStateAction<number>>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613552266
+    },
+    {
+      "id": "602cda89aff09e00004edc33",
+      "text": "   let setValue: TSetState | undefined;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552266,
+      "updated": 1613552266
+    },
+    {
+      "id": "602cda89aff09e00004edc34",
+      "text": "   const exportSetValue = (s: TSetState) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552266,
+      "updated": 1613552266
+    },
+    {
+      "id": "602cda89aff09e00004edc35",
+      "text": "     setValue = s;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552266,
+      "updated": 1613552266
+    },
+    {
+      "id": "602cda89aff09e00004edc36",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552266,
+      "updated": 1613552266
+    },
+    {
+      "id": "602cd720aff09e00004edc00",
+      "text": "   const asyncUpdate: Promise<number> = new Promise((resolve) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc01",
+      "text": "     resolve(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc02",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc03",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc04",
+      "text": "   render(<MyComponent exportSetValue={exportSetValue} />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc05",
+      "text": "   expect(screen.getByText(\"0\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc06",
+      "text": "   expect(setValue).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc07",
+      "text": "   act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc08",
+      "text": "     asyncUpdate.then((x) => setValue!(x));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc09",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc0a",
+      "text": "   expect(screen.queryByText(\"0\")).toBeNull(); // fails",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc0b",
+      "text": "   expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc0c",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551393
+    },
+    {
+      "id": "602cd720aff09e00004edc0d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551393,
+      "updated": 1613551394
+    },
+    {
+      "id": "602cdb18aff09e00001c6e94",
+      "text": "そして、前回`act`でラップしなかった時に出た警告 `Warning: An update to MyComponent inside a test was not wrapped in act(...).` がまた出る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552409,
+      "updated": 1613552450
+    },
+    {
+      "id": "602cd89aaff09e00004edc2a",
+      "text": "ラップしてるじゃん？何を言ってるのか？と思いそうになるが、つまりこのコードでは適切にラップできてないというのが問題の本質。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551771,
+      "updated": 1613552504
+    },
+    {
+      "id": "602cdb78aff09e00001c6e95",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552504,
+      "updated": 1613552504
+    },
+    {
+      "id": "602cdb7caff09e00001c6e96",
+      "text": "Promiseの振る舞いについておさらい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552508,
+      "updated": 1613552521
+    },
+    {
+      "id": "602cd850aff09e00004edc28",
+      "text": "[Promise - JavaScript | MDN https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Promise]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551697,
+      "updated": 1613551698
+    },
+    {
+      "id": "602cd7dbaff09e00004edc25",
+      "text": "\t>プロミスは非同期であることが保証されていることに注意してください。したがって、既に「解決済み」のプロミスに対するアクションは、スタックがクリアされ、クロックティックが経過した後にのみ実行されます。この効果は setTimeout(action,10) とよく似ています",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551579,
+      "updated": 1613551698
+    },
+    {
+      "id": "602cdc63aff09e00004edc49",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552740,
+      "updated": 1613552740
+    },
+    {
+      "id": "602cd844aff09e00004edc27",
+      "text": "つまり下記のコードの`console.log`の順番の通り、`setValue`は`act`の外で呼ばれる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551684,
+      "updated": 1613552819
+    },
+    {
+      "id": "602cd7dbaff09e00004edc26",
+      "text": " code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551579,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc48aff09e00004edc3e",
+      "text": "  console.log(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552712,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc3f",
+      "text": "  act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc40",
+      "text": "    console.log(2);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc41",
+      "text": "    asyncUpdate.then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc42",
+      "text": "      console.log(5);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc43",
+      "text": "      setValue!(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc44",
+      "text": "    });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc45",
+      "text": "    console.log(3);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc46",
+      "text": "  });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc47",
+      "text": "  console.log(4);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdc4aaff09e00004edc48",
+      "text": "  expect(screen.queryByText(\"0\")).toBeNull(); // fails",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552715,
+      "updated": 1613552741
+    },
+    {
+      "id": "602cdbbbaff09e00004edc39",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613552572,
+      "updated": 1613552575
+    },
+    {
+      "id": "602cdd9eaff09e00001c6e97",
+      "text": "ならばどうすれば良いかというと、`setValue`を直接`act`でラップして、`await asyncUpdate.then`する。これで警告なくテストが通る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553055,
+      "updated": 1613553116
+    },
+    {
+      "id": "602cd739aff09e00004edc0e",
+      "text": "code:test.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551417,
+      "updated": 1613551421
+    },
+    {
+      "id": "602cd73daff09e00004edc10",
+      "text": " test(\"MyComponent3\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551421,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc11",
+      "text": "   ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551587
+    },
+    {
+      "id": "602cd73daff09e00004edc1c",
+      "text": "   await asyncUpdate.then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc1d",
+      "text": "     act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc1e",
+      "text": "       setValue!(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc1f",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc20",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc21",
+      "text": "   expect(screen.queryByText(\"0\")).toBeNull(); // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551608
+    },
+    {
+      "id": "602cd73daff09e00004edc22",
+      "text": "   expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc23",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551422
+    },
+    {
+      "id": "602cd73daff09e00004edc24",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551422,
+      "updated": 1613551423
+    },
+    {
+      "id": "602cd91caff09e00004edc31",
+      "text": "この`await`を見て「あれ？actにawaitつけたらどうなるんだろ？」と試してみたら「actはプロミスを返さないのでawaitするな」と親切な警告が出た。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551900,
+      "updated": 1613553210
+    },
+    {
+      "id": "602cd8bbaff09e00004edc2b",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551804,
+      "updated": 1613551806
+    },
+    {
+      "id": "602cd8beaff09e00004edc2c",
+      "text": "   await act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551806,
+      "updated": 1613551806
+    },
+    {
+      "id": "602cd8beaff09e00004edc2d",
+      "text": "     asyncUpdate.then((x) => setValue!(x));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551806,
+      "updated": 1613551806
+    },
+    {
+      "id": "602cd8beaff09e00004edc2e",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551806,
+      "updated": 1613551806
+    },
+    {
+      "id": "602cd8beaff09e00004edc2f",
+      "text": "code:warning",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551806,
+      "updated": 1613551821
+    },
+    {
+      "id": "602cd8cdaff09e00004edc30",
+      "text": " Warning: Do not await the result of calling act(...) with sync logic, it is not a Promise.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551821,
+      "updated": 1613551822
+    },
+    {
+      "id": "602cd739aff09e00004edc0f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551418,
+      "updated": 1613551418
+    },
+    {
+      "id": "602cde61aff09e00001c6e98",
+      "text": "なおasync / awaitを使わない素朴な書き方もできる。ロジックは同じ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553250,
+      "updated": 1613553541
+    },
+    {
+      "id": "602cdeeeaff09e00004edc64",
+      "text": "Jest doc:[Promises https://jestjs.io/docs/ja/asynchronous#promises] [Async/Await https://jestjs.io/docs/ja/asynchronous#asyncawait]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553390,
+      "updated": 1613553473
+    },
+    {
+      "id": "602cdf46aff09e00004edc65",
+      "text": "\t>これらのケースでは async や await は事実上、promiseを使用した例と同じロジックの糖衣構文です。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553478,
+      "updated": 1613553514
+    },
+    {
+      "id": "602cdf4daff09e00004edc66",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553486,
+      "updated": 1613553486
+    },
+    {
+      "id": "602cde62aff09e00001c6e99",
+      "text": "code:test.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553251,
+      "updated": 1613553300
+    },
+    {
+      "id": "602cde94aff09e00004edc4b",
+      "text": " test(\"MyComponent4\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde9aaff09e00004edc63",
+      "text": "\t  ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553307,
+      "updated": 1613553311
+    },
+    {
+      "id": "602cde95aff09e00004edc4c",
+      "text": "   return asyncUpdate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553307
+    },
+    {
+      "id": "602cde95aff09e00004edc58",
+      "text": "     .then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc59",
+      "text": "       act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc5a",
+      "text": "         setValue!(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc5b",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc5c",
+      "text": "     })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc5d",
+      "text": "     .then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc5e",
+      "text": "       expect(screen.queryByText(\"0\")).toBeNull(); // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc5f",
+      "text": "       expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc60",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc61",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553301
+    },
+    {
+      "id": "602cde95aff09e00004edc62",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553301,
+      "updated": 1613553317
+    },
+    {
+      "id": "602cde91aff09e00004edc4a",
+      "text": "さて、`Promise`によって非同期に`setValue`される場合にどうすべきであるのか、原理のところは理解できた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553298,
+      "updated": 1613553945
+    },
+    {
+      "id": "602cdfabaff09e00001c6e9b",
+      "text": "次に解決するべき問題は？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553580,
+      "updated": 1613553863
+    },
+    {
+      "id": "602ce0c6aff09e00001c6e9c",
+      "text": "「ユーザがボタンをクリックしたら、ネットワークアクセスをして結果を表示」というシナリオを考えてみると、Promiseが`setValue`するコードはテストコードの中ではなく本体コードの側で一塊のイベントハンドラになってる場合が多い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553863,
+      "updated": 1613554024
+    },
+    {
+      "id": "602ce152aff09e00001c6e9d",
+      "text": "この本体コードに手を入れて`setValue`を`act`で包むのは現実的ではない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613554003,
+      "updated": 1613554081
+    },
+    {
+      "id": "602ce185aff09e00001c6e9e",
+      "text": "さあどうするか？というところで続きは次回。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613554053,
+      "updated": 1613554071
+    },
+    {
+      "id": "602ce088aff09e00004edc67",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553801,
+      "updated": 1613553802
+    },
+    {
+      "id": "602ce08aaff09e00004edc68",
+      "text": " test(\"MyComponent5\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce092aff09e00004edc7f",
+      "text": "   ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553810,
+      "updated": 1613553812
+    },
+    {
+      "id": "602ce08baff09e00004edc69",
+      "text": "   const userEventHandler = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553809
+    },
+    {
+      "id": "602ce08baff09e00004edc71",
+      "text": "     asyncUpdate.then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc72",
+      "text": "       setValue!(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc73",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc74",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc75",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc76",
+      "text": "   render(<MyComponent exportSetValue={exportSetValue} />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc77",
+      "text": "   expect(screen.getByText(\"0\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc78",
+      "text": "   expect(setValue).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc79",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc7a",
+      "text": "   userEventHandler(); // Here",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc7b",
+      "text": "   expect(screen.queryByText(\"0\")).toBeNull(); // fails",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc7c",
+      "text": "   expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc7d",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553803
+    },
+    {
+      "id": "602ce08baff09e00004edc7e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613553803,
+      "updated": 1613553823
+    },
+    {
+      "id": "602de4ccaff09e00000bb4c6",
+      "text": "[非同期なReactの状態更新をテストする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613620428,
+      "updated": 1613625235
+    },
+    {
+      "id": "602de4ccaff09e00000bb4c7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613620428,
+      "updated": 1613620428
+    }
+  ]
+}

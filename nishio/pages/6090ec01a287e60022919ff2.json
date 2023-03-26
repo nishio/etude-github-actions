@@ -1,0 +1,407 @@
+{
+  "id": "6090ec01a287e60022919ff2",
+  "title": "Hatena2009-08-22",
+  "created": 1250866800,
+  "updated": 1250866800,
+  "lines": [
+    {
+      "id": "6090ec25aff09e00003d3228",
+      "text": "Hatena2009-08-22",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3229",
+      "text": "code:hatena",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d322a",
+      "text": " <body>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d322b",
+      "text": " *1250885641*セプキャン日記",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d322c",
+      "text": " <a href='http://d.hatena.ne.jp/Pasta-K/20090820/1250770929'>成果発表会で使用したプレゼン用のスライドを公開しました - Pastalablog in はてな</a>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d322d",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d322e",
+      "text": " 共用マシンの接続テストでドタバタしていたのでid:Pasta-Kのマシンの接続チェックをするのを忘れていた。それ以外には目立った問題が発生しなかっただけにかなり悔しい。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d322f",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3230",
+      "text": " さて、キャンプの雰囲気を伝えるためにちょっと書いてみるか。この課題、ささださんは当初gc.cに手を加えてgc時に音をならすというのを考えていたようだけども、開始直後にPasta-Kが一言「if文がtrueかfalseかで違う音をならしたい」と。うん、そっちのほうが面白そうだ、それでいこう。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3231",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3232",
+      "text": " じゃあ構文木からバイトコードに落とす過程でフックするようなバイトコードを挟もう、と簡単に方針を説明した後、じゃあcompile.cを読んで該当箇所を探してみよう！と言ってしばらく放置。書く前に十分読むことが重要。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3233",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3234",
+      "text": " しばらくしたら、ちゃんとifの条件式をコンパイルする部分にたどり着いていた。すばらしい。ところで当初はif(condition) thenをif(make_sound(condition)) thenに置き換えるつもりでいたのだけど、スタックマシンの挙動がまだあまりしっかりとイメージできていない状況で「引数の手前にレシーバが入る必要があるからスタックをローテートして」とか説明するのは難しいなぁと思った。thenの頭に音を鳴らす命令を入れようという提案があったのでそれで行くことにした。elseでも音が鳴らしたいと思ったら別の名前の関数を呼べばいいし。「thenのジャンプ先ラベルがずれると困るから末尾に入れよう」と思ったのだけどささださんにつっこまれて先頭に入れるのも難しくないことに気付く。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3235",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3236",
+      "text": " 結果として",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3237",
+      "text": " >|ruby|",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3238",
+      "text": " if condition",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3239",
+      "text": "     # then",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d323a",
+      "text": " else",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d323b",
+      "text": "     # else",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d323c",
+      "text": " end",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d323d",
+      "text": " ||<",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d323e",
+      "text": " の形の構文木が",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d323f",
+      "text": " >|ruby|",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3240",
+      "text": " if condition",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3241",
+      "text": "     then_sound()",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3242",
+      "text": "     # then",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3243",
+      "text": " else",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3244",
+      "text": "     else_sound()",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3245",
+      "text": "     # else",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3246",
+      "text": " end",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3247",
+      "text": " ||<",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3248",
+      "text": " に相当するバイトコードにコンパイルされることになった。とりあえずpする命令を書いてみてきちんと呼ばれていることを確認。これがまたprelude.rbとかgem_prelude.rbなんていう勝手に読まれるコードがあってつまづくわけだが。まあ、なんとかなる。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3249",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d324a",
+      "text": " 次は音を鳴らす命令を書く。適当なライブラリを入れたりすればサウンドファイルを再生したりもできるはずなんだけど、とりあえずechoでOSSを叩いてみると音が鳴ったのでこれでいくことにした。きれいな音を出そうとして「間に合わなかったので音が出ません」になるよりは、ノコギリ波の音でも出ている方がいい。最初timesで1文字ずつ書いたせいで周波数を変えたつもりであんまり変わらないという罠にはまった。バッファされてある程度まとまってから書かれると思ったんだけどな。波形データを作ってから書き込む形に変更したらちゃんと期待通りの音が出るようになった。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d324b",
+      "text": " ",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d324c",
+      "text": " などと試行錯誤しながら20時間という限られた時間でよくここまでできたと思う。間に合わなさそうだったら音を鳴らす部分とかは「作っておいたものがこちらにあります」って出そうかと思っていたけど、全部自力でやり遂げた。スライドに僕の名前は出ているけど、僕のコードは一行も入っていないんだよ。これは結構すごいと思うんだ。",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d324d",
+      "text": " </body>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d324e",
+      "text": " <comments>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d324f",
+      "text": " <comment>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3250",
+      "text": " <username>ささだ</username>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3251",
+      "text": " <body>gc 考えたの西尾さんじゃん．</body>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3252",
+      "text": " <timestamp>1250888921</timestamp>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3253",
+      "text": " </comment>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3254",
+      "text": " <comment>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3255",
+      "text": " <username>nishiohirokazu</username>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3256",
+      "text": " <body>ありゃ、そうだっけ？</body>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3257",
+      "text": " <timestamp>1250889242</timestamp>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3258",
+      "text": " </comment>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3259",
+      "text": " <comment>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d325a",
+      "text": " <username>Pasta-K</username>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d325b",
+      "text": " <body>そういえば、西尾さんの手書きメモは大切に持ち帰らせて頂きました。</body>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d325c",
+      "text": " <timestamp>1250904795</timestamp>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d325d",
+      "text": " </comment>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d325e",
+      "text": " </comments>",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d325f",
+      "text": "",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec25aff09e00003d3260",
+      "text": "[はてなダイアリー 2009-08-22 https://nishiohirokazu.hatenadiary.org/archive/2009/08/22]",
+      "created": 1250866800,
+      "updated": 1250866800,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "id": "603746518e8f65001e20a986",
+  "title": "良くない抽象化",
+  "created": 1614235219,
+  "updated": 1614254790,
+  "lines": [
+    {
+      "id": "603746518e8f65001e20a986",
+      "text": "良くない抽象化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235219,
+      "updated": 1614254790
+    },
+    {
+      "id": "603771c9aff09e00003ca3e9",
+      "text": "かつて良かれと思ってやったんだけど今思うとダメだった設計",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246346,
+      "updated": 1614246368
+    },
+    {
+      "id": "60374652aff09e000062c868",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235219,
+      "updated": 1614235220
+    },
+    {
+      "id": "60374654aff09e000062c86a",
+      "text": "   if (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235220,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c86b",
+      "text": "     state.type === \"MouseDownOnNothing\" ||",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c86c",
+      "text": "     state.type === \"MouseDownOnNothing_WithShift\" ||",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c86d",
+      "text": "     state.type === \"LassoMouseDownOnNothing\" ||",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c86e",
+      "text": "     state.type === \"LassoMouseDownOnSelection\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c86f",
+      "text": "   ) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c870",
+      "text": "     state.handler.onDragEnd(event, dragStartPoint);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c871",
+      "text": "     state = INITIAL_STATE;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c872",
+      "text": "     return;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c873",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235225
+    },
+    {
+      "id": "60374659aff09e000062c874",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235225,
+      "updated": 1614235226
+    },
+    {
+      "id": "603771e4aff09e00003ca3ea",
+      "text": "`state.handler.onDragEnd`が具体的に何を指しているのかIDEで追いかけられない、下記に飛んでしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246372,
+      "updated": 1614246494
+    },
+    {
+      "id": "60377220aff09e000062c881",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246433,
+      "updated": 1614246433
+    },
+    {
+      "id": "60377220aff09e000062c882",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246433,
+      "updated": 1614246445
+    },
+    {
+      "id": "6037722daff09e000062c883",
+      "text": " export type Handler = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246445,
+      "updated": 1614246445
+    },
+    {
+      "id": "6037722daff09e000062c884",
+      "text": "   onDrag: (event: ToolEvent, dragStartPoint: paper.Point) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246445,
+      "updated": 1614246445
+    },
+    {
+      "id": "6037722daff09e000062c885",
+      "text": "   onDragEnd: (event: ToolEvent, dragStartPoint: paper.Point) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246445,
+      "updated": 1614246445
+    },
+    {
+      "id": "6037722daff09e000062c886",
+      "text": "   onClick: (event: ToolEvent) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246445,
+      "updated": 1614246445
+    },
+    {
+      "id": "6037722daff09e000062c887",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246445,
+      "updated": 1614246445
+    },
+    {
+      "id": "6037722daff09e000062c888",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246445,
+      "updated": 1614246447
+    },
+    {
+      "id": "6037722faff09e000062c889",
+      "text": "なので、`state.type === \"LassoMouseDownOnNothing\"`の時、`state.handler.onDragEnd`が具体的にどんな値なのかをIDEに頼らずに自分で追う必要が出てくる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246447,
+      "updated": 1614246584
+    },
+    {
+      "id": "60377289aff09e000062c88a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246537,
+      "updated": 1614246537
+    },
+    {
+      "id": "6037466daff09e000062c875",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235246,
+      "updated": 1614235246
+    },
+    {
+      "id": "6037466eaff09e000062c876",
+      "text": "   if (global.selectedTool === \"lasso\" && leafItem === null) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235246,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c877",
+      "text": "     //　新しい選択開始",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c878",
+      "text": "     clearLasso();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c879",
+      "text": "     hideBalloon();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c87a",
+      "text": "     state = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c87b",
+      "text": "       type: \"LassoMouseDownOnNothing\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c87c",
+      "text": "       handler: startLasso(),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c87d",
+      "text": "     };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c87e",
+      "text": "     return;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c87f",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235247
+    },
+    {
+      "id": "6037466eaff09e000062c880",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235247,
+      "updated": 1614235248
+    },
+    {
+      "id": "60374653aff09e000062c869",
+      "text": "というわけで結局`startLasso()`の実装を読む必要が出てきて、読むとこのハンドラは状態を持たないので、単に1つの関数が呼ばれるだけだとわかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614235219,
+      "updated": 1614246678
+    },
+    {
+      "id": "60377317aff09e00003ca3ec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246679,
+      "updated": 1614246679
+    },
+    {
+      "id": "60377317aff09e00003ca3ed",
+      "text": "こんな抽象化をしてメリットがあったのだろうか？4つの異なるstateで「dragEndを呼ぶ」という抽象的な操作が同じだからという理由でまとめてあるが、その必要はなかった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246679,
+      "updated": 1614246753
+    },
+    {
+      "id": "603772c9aff09e00003ca3eb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614246602,
+      "updated": 1614246602
+    }
+  ]
+}

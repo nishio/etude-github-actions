@@ -1,0 +1,533 @@
+{
+  "id": "5ff415d45c03910022b0b353",
+  "title": "係り受け連続範囲",
+  "created": 1609831893,
+  "updated": 1609831893,
+  "lines": [
+    {
+      "id": "5ff415d45c03910022b0b353",
+      "text": "係り受け連続範囲",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b6f",
+      "text": "from [長文の付箋への分割支援]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b70",
+      "text": "[係り受け連続範囲]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b71",
+      "text": "　[係り受け解析]して、チャンクのかかり先が次のチャンクであるようなブロックを取り出す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b72",
+      "text": "\t[CaboCha]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b73",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b74",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b75",
+      "text": " from cabocha.analyzer import CaboChaAnalyzer",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b76",
+      "text": " analyzer = CaboChaAnalyzer()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b77",
+      "text": " tree = analyzer.parse(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b78",
+      "text": "     \"僕が今作ってるものも「たくさんのアトムがあって、しばしば複数のコンポーネントが一つのアトムに依存してたり、複数のアトムに依存するコンポーネントがあったりする、アトムの変更では一部のコンポーネントだけ再描画したい」という特徴なのでRecoilのアプローチはとてもフィットしそう\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b79",
+      "text": " start = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b7a",
+      "text": " while start < tree.chunk_size:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b7b",
+      "text": "     i = start",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b7c",
+      "text": "     result = [tree[i].surface]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b7d",
+      "text": "     while True:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b7e",
+      "text": "         if tree[i].next_link_id == i + 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b7f",
+      "text": "             result.append(tree[i + 1].surface)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b80",
+      "text": "             i += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b81",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b82",
+      "text": "             break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b83",
+      "text": "     print(start, result, tree[i].next_link_id)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b84",
+      "text": "     start = i + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b85",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b86",
+      "text": "    0 ['僕が'] 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b87",
+      "text": "    1 ['今', '作ってる', 'ものも'] 23",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b88",
+      "text": "    4 ['「たくさんの', 'アトムが', 'あって、'] 12",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b89",
+      "text": "    7 ['しばしば'] 12",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b8a",
+      "text": "    8 ['複数の', 'コンポーネントが'] 12",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b8b",
+      "text": "    10 ['一つの', 'アトムに', '依存してたり、'] 15",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b8c",
+      "text": "    13 ['複数の', 'アトムに', '依存する', 'コンポーネントが', 'あったりする、'] 22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b8d",
+      "text": "    18 ['アトムの', '変更では'] 22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b8e",
+      "text": "    20 ['一部の', 'コンポーネントだけ', '再描画したい」という', '特徴なので'] 27",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b8f",
+      "text": "    24 ['Recoilの', 'アプローチは'] 27",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b90",
+      "text": "    26 ['とても', 'フィットしそう'] -1 ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b91",
+      "text": "助詞や活用を削る(手作業、これも機械的に支援したい)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b92",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b93",
+      "text": "\t僕",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b94",
+      "text": " 今作ってるもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b95",
+      "text": " たくさんのアトムがある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b96",
+      "text": " しばしば",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b97",
+      "text": " 複数のコンポーネント",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b98",
+      "text": " 一つのアトムに依存",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b99",
+      "text": " 複数のアトムに依存するコンポーネントがある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b9a",
+      "text": " アトムの変更",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b9b",
+      "text": " 一部のコンポーネントだけ再描画したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b9c",
+      "text": " Recoilのアプローチ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b9d",
+      "text": " とてもフィットしそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b9e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9b9f",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba0",
+      "text": " input",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba1",
+      "text": " 僕は短文の付箋を作ることとか、長文で書いてしまったものを短く刻むことに慣れてるのだけど、世の中の人は慣れてないから長文のまま入れてしまって「字が小さすぎて読めない付箋」を作っちゃうよね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba3",
+      "text": "\texpected output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba4",
+      "text": " 僕",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba5",
+      "text": " 短文の付箋を作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba6",
+      "text": " 長文で書いてしまったものを短く刻む",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba7",
+      "text": " 慣れてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba8",
+      "text": " 世の中の人",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9ba9",
+      "text": " 慣れてない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9baa",
+      "text": " 長文のまま入れてしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bab",
+      "text": " 字が小さすぎて読めない付箋",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bac",
+      "text": " 作っちゃう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bad",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bae",
+      "text": " 0 ['僕は'] 11",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9baf",
+      "text": " 1 ['短文の', '付箋を', '作る', 'こととか、'] 7",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb0",
+      "text": " 5 ['長文で', '書いてしまった', 'ものを'] 9",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb1",
+      "text": " 8 ['短く', '刻む', 'ことに', '慣れてるのだけど、'] 22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb2",
+      "text": " 12 ['世の中の', '人は', '慣れてないから'] 22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb3",
+      "text": " 15 ['長文の', 'まま', '入れてしまって'] 22",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb4",
+      "text": " 18 ['「字が', '小さすぎて', '読めない', '付箋」を', '作っちゃうよね'] -1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb5",
+      "text": "これは係り受け解析で失敗してる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb7",
+      "text": "[pRegroup2020]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    },
+    {
+      "id": "5ff415d5aff09e00001b9bb8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609831893,
+      "updated": 1609831893
+    }
+  ]
+}

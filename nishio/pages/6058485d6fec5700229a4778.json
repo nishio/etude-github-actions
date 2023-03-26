@@ -1,0 +1,407 @@
+{
+  "id": "6058485d6fec5700229a4778",
+  "title": "useGlobalでダイアログ表示",
+  "created": 1616398433,
+  "updated": 1616399926,
+  "lines": [
+    {
+      "id": "6058485d6fec5700229a4778",
+      "text": "useGlobalでダイアログ表示",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398433,
+      "updated": 1616398433
+    },
+    {
+      "id": "605848adaff09e00008dd259",
+      "text": "ダイアログは「開いてる/閉じてる」という状態を持ったコンポーネントである。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398509,
+      "updated": 1616398538
+    },
+    {
+      "id": "605848c9aff09e00008dd25a",
+      "text": "通常、メニューなどの「ダイアログとは親子関係にないコンポーネント」から状態が更新される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398538,
+      "updated": 1616398570
+    },
+    {
+      "id": "605848eaaff09e00008dd25b",
+      "text": "これをどうやるのがいいか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398570,
+      "updated": 1616398697
+    },
+    {
+      "id": "60584968aff09e00008dd25c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398697,
+      "updated": 1616398697
+    },
+    {
+      "id": "60584968aff09e00008dd25d",
+      "text": "案1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398697,
+      "updated": 1616398702
+    },
+    {
+      "id": "6058496daff09e00008dd25e",
+      "text": " 共通の親コンポートが状態を保つ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398702,
+      "updated": 1616398716
+    },
+    {
+      "id": "6058497baff09e00008dd25f",
+      "text": " 子コンポーネントにはpropsで渡す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398716,
+      "updated": 1616398764
+    },
+    {
+      "id": "605849acaff09e00008dd260",
+      "text": " オーソドックスなやり方だが、個人的に嫌い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398765,
+      "updated": 1616398781
+    },
+    {
+      "id": "60584bddaff09e00008dd26a",
+      "text": " 　setterをpropsで子コンポーネントに渡していくスタイルが納得できない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399326,
+      "updated": 1616399362
+    },
+    {
+      "id": "605849bdaff09e00008dd261",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398781,
+      "updated": 1616398859
+    },
+    {
+      "id": "605849e0aff09e00008dd262",
+      "text": "案2:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398816,
+      "updated": 1616398822
+    },
+    {
+      "id": "60584a0faff09e00008dd263",
+      "text": "　ダイアログが状態をもつ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398864,
+      "updated": 1616398916
+    },
+    {
+      "id": "60584861aff09e0000b4ee11",
+      "text": " code:FooDialog.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398433,
+      "updated": 1616399007
+    },
+    {
+      "id": "60584864aff09e0000b4ee13",
+      "text": "  const FooDialog = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398436,
+      "updated": 1616399003
+    },
+    {
+      "id": "6058487baff09e0000b4ee16",
+      "text": "    const [open, setOpen] = useState(false);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398459,
+      "updated": 1616398924
+    },
+    {
+      "id": "60584889aff09e0000b4ee17",
+      "text": "    ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398473,
+      "updated": 1616398924
+    },
+    {
+      "id": "60584874aff09e0000b4ee15",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398452,
+      "updated": 1616398924
+    },
+    {
+      "id": "60584872aff09e0000b4ee14",
+      "text": "　このままではsetterがローカルスコープに閉じ込められてるので、露出する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398451,
+      "updated": 1616398962
+    },
+    {
+      "id": "60584862aff09e0000b4ee12",
+      "text": "\tcode:FooDialog.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616398434,
+      "updated": 1616399146
+    },
+    {
+      "id": "60584aa3aff09e0000b4ee19",
+      "text": "\t export let openFooDialog: () => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399011,
+      "updated": 1616399016
+    },
+    {
+      "id": "60584aa3aff09e0000b4ee1a",
+      "text": "  const FooDialog = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399011,
+      "updated": 1616399021
+    },
+    {
+      "id": "60584aadaff09e0000b4ee1b",
+      "text": "    const [open, setOpen] = useState(false);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399021,
+      "updated": 1616399021
+    },
+    {
+      "id": "60584ab3aff09e0000b4ee20",
+      "text": "    openFooDialog = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399027,
+      "updated": 1616399035
+    },
+    {
+      "id": "60584abcaff09e0000b4ee22",
+      "text": "      setOpen(true);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399037,
+      "updated": 1616399042
+    },
+    {
+      "id": "60584abbaff09e0000b4ee21",
+      "text": "    }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399035,
+      "updated": 1616399036
+    },
+    {
+      "id": "60584aadaff09e0000b4ee1c",
+      "text": "    ...   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399021,
+      "updated": 1616399025
+    },
+    {
+      "id": "60584aadaff09e0000b4ee1d",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399021,
+      "updated": 1616399021
+    },
+    {
+      "id": "60584aadaff09e0000b4ee1e",
+      "text": "　最近までこうやってた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399021,
+      "updated": 1616399076
+    },
+    {
+      "id": "60584ae4aff09e00008dd265",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399076,
+      "updated": 1616399076
+    },
+    {
+      "id": "60584ae4aff09e00008dd266",
+      "text": "案3:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399076,
+      "updated": 1616399084
+    },
+    {
+      "id": "60584ae8aff09e00008dd267",
+      "text": " ダイアログがuseGlobalする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399081,
+      "updated": 1616399100
+    },
+    {
+      "id": "60584afbaff09e00008dd268",
+      "text": " code:FooDialog.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399100,
+      "updated": 1616399140
+    },
+    {
+      "id": "60584b2caff09e0000b4ee23",
+      "text": "  export const FooDialog = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399148,
+      "updated": 1616399153
+    },
+    {
+      "id": "60584b2caff09e0000b4ee24",
+      "text": "    const [dialog, setDialog] = useGlobal(\"dialog\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399148,
+      "updated": 1616399148
+    },
+    {
+      "id": "60584b2caff09e0000b4ee25",
+      "text": "    const open = dialog === \"Foo\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399148,
+      "updated": 1616399158
+    },
+    {
+      "id": "60584b37aff09e0000b4ee27",
+      "text": "    ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399159,
+      "updated": 1616399160
+    },
+    {
+      "id": "60584b38aff09e0000b4ee28",
+      "text": "  }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399161,
+      "updated": 1616399162
+    },
+    {
+      "id": "60584d7aaff09e0000b4ee2e",
+      "text": " booleanのopenを直接globalにするのではなく「開いているダイアログ」を意味する変数を導入されたした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399738,
+      "updated": 1616399811
+    },
+    {
+      "id": "60584dc2aff09e00008dd270",
+      "text": " 　ダイアログはアプリ全体で一度に一つしか開かないという想定を反映した実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399811,
+      "updated": 1616399861
+    },
+    {
+      "id": "60584e14aff09e00008dd27c",
+      "text": " 型で値を限定してTypoなどを防ぐ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399893,
+      "updated": 1616399926
+    },
+    {
+      "id": "60584dfcaff09e0000b4ee2f",
+      "text": " \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399868,
+      "updated": 1616399914
+    },
+    {
+      "id": "60584df5aff09e00008dd271",
+      "text": "  　const INITIAL_GLOBAL_STATE = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399861,
+      "updated": 1616399914
+    },
+    {
+      "id": "60584e05aff09e0000b4ee31",
+      "text": "  　  ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399877,
+      "updated": 1616399914
+    },
+    {
+      "id": "60584df6aff09e00008dd272",
+      "text": "     dialog: null as \"Foo\" | null,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399863,
+      "updated": 1616399914
+    },
+    {
+      "id": "60584df6aff09e00008dd27a",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399863,
+      "updated": 1616399914
+    },
+    {
+      "id": "60584b2caff09e0000b4ee26",
+      "text": "\t開く側はsetGlobalする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399148,
+      "updated": 1616399429
+    },
+    {
+      "id": "60584c23aff09e0000b4ee29",
+      "text": "\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399395,
+      "updated": 1616399399
+    },
+    {
+      "id": "60584c26aff09e0000b4ee2a",
+      "text": "\t export const openFooDialog = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399399,
+      "updated": 1616399404
+    },
+    {
+      "id": "60584c27aff09e0000b4ee2b",
+      "text": "    setGlobal({ dialog: \"Foo\" });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399399,
+      "updated": 1616399409
+    },
+    {
+      "id": "60584c27aff09e0000b4ee2c",
+      "text": "  };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399399,
+      "updated": 1616399399
+    },
+    {
+      "id": "60584c27aff09e0000b4ee2d",
+      "text": " 2021-03-22にこのやり方を思いついた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399399,
+      "updated": 1616399469
+    },
+    {
+      "id": "60584c6faff09e00008dd26c",
+      "text": " 最初は`openFooDialog`に相当するコードはメニューの側に置かれていたが、その後この名前に変えてFooDialog.tsxの中に移動した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399471,
+      "updated": 1616399553
+    },
+    {
+      "id": "60584cb5aff09e00008dd26d",
+      "text": "　　どこで定義されてるダイアログを表示するのか明確になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399541,
+      "updated": 1616399610
+    },
+    {
+      "id": "60584c5aaff09e00008dd26b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399450,
+      "updated": 1616399450
+    },
+    {
+      "id": "60584cffaff09e00008dd26e",
+      "text": "何が最良なのかまだピンときていないが、方針変更があったこのタイミングで記録しておくことが有益だと思って記録した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399615,
+      "updated": 1616399663
+    },
+    {
+      "id": "60584d04aff09e00008dd26f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1616399621,
+      "updated": 1616399621
+    }
+  ]
+}

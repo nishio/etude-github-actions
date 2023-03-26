@@ -1,0 +1,365 @@
+{
+  "id": "5ef777f4b8070f002398a5fb",
+  "title": "ABC172D",
+  "created": 1593276409,
+  "updated": 1605605986,
+  "lines": [
+    {
+      "id": "5ef777f4b8070f002398a5fb",
+      "text": "ABC172D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593276409,
+      "updated": 1593276409
+    },
+    {
+      "id": "5fb39a5eaff09e0000bcd8d1",
+      "text": "[https://gyazo.com/d184857cee408b25e6ea65eb0d7f3799]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1605605983,
+      "updated": 1605605986
+    },
+    {
+      "id": "5fb39a61aff09e0000bcd8d3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1605605986,
+      "updated": 1605605986
+    },
+    {
+      "id": "5fb39a5eaff09e0000bcd8d2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1605605983,
+      "updated": 1605605983
+    },
+    {
+      "id": "5ef78df5aff09e0000ddc7ed",
+      "text": "[問題文 https://atcoder.jp/contests/abc172/tasks/abc172_d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593282038,
+      "updated": 1593282054
+    },
+    {
+      "id": "5ef777f8aff09e00006cbdc8",
+      "text": "問題文の通りに考えると、約数の個数を計算してからKを掛けて足し合わせるイメージになるが[演算順序の変更]を行うのが肝。[問題文の順にやらない]。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593276409,
+      "updated": 1593967875
+    },
+    {
+      "id": "5ef7783caff09e00006cbdca",
+      "text": "掛け算は足し算の繰り返しであり、足し算は順序を変えても結果が変わらない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593276476,
+      "updated": 1593276517
+    },
+    {
+      "id": "5ef77865aff09e00006cbdcb",
+      "text": "「条件を満たすものの数を数える」も「条件を満たすなら1、満たさないなら0」の総和を取る処理。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593276517,
+      "updated": 1593277850
+    },
+    {
+      "id": "5ef77ea9aff09e00006cbdce",
+      "text": "なので「数えた後でK倍」は順番を交換して「条件を満たすならK、の足し合わせ」にできる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278122,
+      "updated": 1593307470
+    },
+    {
+      "id": "5ef77ea2aff09e00006cbdcc",
+      "text": "[https://gyazo.com/c5ad2bfbd34a616a96d2e65e5a7c4177]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278119,
+      "updated": 1593278119
+    },
+    {
+      "id": "5ef77ea3aff09e00006cbdcd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278119,
+      "updated": 1593278119
+    },
+    {
+      "id": "5ef77ee1aff09e00006cbdcf",
+      "text": "一旦この変換をしておいてから、[縦横変換]する。横に足したものがKf(K)で、それを足し合わせたものが得たい答え。先に縦に足しても足し算順序の交換なので結果に影響しない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278177,
+      "updated": 1602347689
+    },
+    {
+      "id": "5ef77803aff09e00006cbdc9",
+      "text": "[https://gyazo.com/0d96d3c6ed540a523a4c41b8aff945c6]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593276420,
+      "updated": 1593278412
+    },
+    {
+      "id": "5ef77fcbaff09e00006cbdd1",
+      "text": "縦に足したものは[等差数列の和]なので、ループを回さなくても公式で出せる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278412,
+      "updated": 1593278633
+    },
+    {
+      "id": "5ef77fcbaff09e00006cbdd0",
+      "text": "これが解説で紹介されてるやり方",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278412,
+      "updated": 1593278961
+    },
+    {
+      "id": "5ef7820eaff09e0000ddc7d5",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278990,
+      "updated": 1593278995
+    },
+    {
+      "id": "5ef78214aff09e0000ddc7d6",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278997,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78223aff09e0000ddc7d7",
+      "text": "     ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279012,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78223aff09e0000ddc7d8",
+      "text": "     for i in range(1, N + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279012,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78223aff09e0000ddc7d9",
+      "text": "         num = N // i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279012,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78223aff09e0000ddc7da",
+      "text": "         end = num * i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279012,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78223aff09e0000ddc7db",
+      "text": "         ret += (i + end) * num // 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279012,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78223aff09e0000ddc7dc",
+      "text": "     print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279012,
+      "updated": 1593279012
+    },
+    {
+      "id": "5ef78206aff09e0000ddc7d4",
+      "text": "AC 1565 ms https://atcoder.jp/contests/abc172/submissions/14787794",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278983,
+      "updated": 1593281926
+    },
+    {
+      "id": "5ef781e1aff09e00006cbdd4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593278945,
+      "updated": 1593278945
+    },
+    {
+      "id": "5ef7822aaff09e00006cbdd5",
+      "text": "この問題は、もっとオーダーの小さい方法と、大きいけどなんとか通せる方法とがあるそうなので後で探求する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279018,
+      "updated": 1593279055
+    },
+    {
+      "id": "5ef78a35aff09e00006cbddb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281079,
+      "updated": 1593281079
+    },
+    {
+      "id": "5ef78a36aff09e00006cbddc",
+      "text": "ところで、この縦に足す方法では、半分から先はどうせ1つしかないのにループを回して一つずつ足してしまう。ここを斜めに足せばループは半分で済む。しかしどうせ斜めに足すなら…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281079,
+      "updated": 1593281163
+    },
+    {
+      "id": "5ef78a36aff09e00006cbddd",
+      "text": "[https://gyazo.com/8ce00ba56e9147b6791e01a708f97b66]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281079,
+      "updated": 1593281079
+    },
+    {
+      "id": "5ef78a37aff09e00006cbdde",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281079,
+      "updated": 1593281079
+    },
+    {
+      "id": "5ef7822faff09e00006cbdd6",
+      "text": "左上までしっかり斜めに足す。そうするとループの回数はルートNのオーダーになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593279023,
+      "updated": 1593313698
+    },
+    {
+      "id": "5ef7889eaff09e00006cbdd8",
+      "text": "[https://gyazo.com/eefa326a4a1e00751adbecea14d340fd]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593280674,
+      "updated": 1593280674
+    },
+    {
+      "id": "5ef7889faff09e00006cbdda",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593280674,
+      "updated": 1593280674
+    },
+    {
+      "id": "5ef7889faff09e00006cbdd9",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593280674,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7df",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e0",
+      "text": "     ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e1",
+      "text": "     i = 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e2",
+      "text": "     while True:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e3",
+      "text": "         step = i // 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e4",
+      "text": "         start = (i + 1) // 2 * step",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e5",
+      "text": "         if start > N:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e6",
+      "text": "             break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e7",
+      "text": "         end = N // step * step",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e8",
+      "text": "         ret += (start + end) * ((end - start) // step + 1) // 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7e9",
+      "text": "         i += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7ea",
+      "text": "     print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281940
+    },
+    {
+      "id": "5ef78d94aff09e0000ddc7eb",
+      "text": "AC 33 ms https://atcoder.jp/contests/abc172/submissions/14788541",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281940,
+      "updated": 1593281985
+    },
+    {
+      "id": "5ef78d92aff09e0000ddc7de",
+      "text": "50倍も速くなった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593281938,
+      "updated": 1593282010
+    },
+    {
+      "id": "5ef78dd7aff09e00006cbddf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593282007,
+      "updated": 1593282007
+    },
+    {
+      "id": "5ef78e75aff09e0000ddc7ee",
+      "text": "[atcoder]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593282165,
+      "updated": 1593282169
+    },
+    {
+      "id": "5ef78e76aff09e0000ddc7ef",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593282166,
+      "updated": 1593282166
+    }
+  ]
+}

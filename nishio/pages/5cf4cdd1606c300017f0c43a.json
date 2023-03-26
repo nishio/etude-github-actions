@@ -1,0 +1,435 @@
+{
+  "id": "5cf4cdd1606c300017f0c43a",
+  "title": "Paper.jsの更新後に呼ばれるコールバックをつける",
+  "created": 1559547366,
+  "updated": 1559555451,
+  "lines": [
+    {
+      "id": "5cf4cdd1606c300017f0c43a",
+      "text": "Paper.jsの更新後に呼ばれるコールバックをつける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559548470
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c32",
+      "text": "Paper.jsの再描画は非同期に行われているっぽい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c33",
+      "text": "それ自体はよいこと？なのだが",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c34",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c35",
+      "text": " PaperのZoomの値を設定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547373
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c36",
+      "text": " Imageを消す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547373
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c37",
+      "text": " Paperを表示",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547373
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c38",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c39",
+      "text": "って処理をすると",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c3a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c3b",
+      "text": " Imageが消える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547379
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c3c",
+      "text": " ズーム前のPaperが表示される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547379
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c3d",
+      "text": " その後ズームされたPaperが表示される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547379
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c3e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c3f",
+      "text": "ってなって見栄えが最悪。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c40",
+      "text": "Paperに再描画終了後に呼ばれるハンドラとかあるかな、Imageを消すのを遅らせたい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cdf5aff09e0000006c53",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547382,
+      "updated": 1559547382
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c41",
+      "text": "setZoomはMatrixの変更を引き起こしてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547382
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c43",
+      "text": "https://github.com/paperjs/paper.js/blob/cc135eaba80943f78075f84ca430dc3152bd154e/src/basic/Matrix.js#L382",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c44",
+      "text": "それが_changedを呼ぶ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547387
+    },
+    {
+      "id": "5cf4cdfbaff09e0000006c54",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547387,
+      "updated": 1559547387
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c46",
+      "text": "これが画面全体を削除して再描画している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c47",
+      "text": "https://github.com/paperjs/paper.js/blob/cc135eaba80943f78075f84ca430dc3152bd154e/src/view/CanvasView.js#L132",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c48",
+      "text": "これがおそらく非同期に呼ばれるのだと思うがどこで呼ばれているのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cdffaff09e0000006c55",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547391,
+      "updated": 1559547391
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c49",
+      "text": "ここでDomEvent.[requestAnimationFrame]している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559555451
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c4b",
+      "text": "https://github.com/paperjs/paper.js/blob/cc135eaba80943f78075f84ca430dc3152bd154e/src/view/View.js#L222",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4ce01aff09e0000006c56",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547393,
+      "updated": 1559547393
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c4c",
+      "text": "なので今僕が求めている「描画完了時にコールバックしてほしい」って点に関しては",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547393
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c4e",
+      "text": "https://github.com/paperjs/paper.js/blob/cc135eaba80943f78075f84ca430dc3152bd154e/src/view/CanvasView.js#L142",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c4f",
+      "text": "ここにコールバックの呼び出しがあってほしいわけだが、現状ない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547366
+    },
+    {
+      "id": "5cf4ce04aff09e0000006c57",
+      "text": "→モンキーパッチを当てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547397,
+      "updated": 1559547401
+    },
+    {
+      "id": "5cf4ce09aff09e0000006c58",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547401,
+      "updated": 1559547401
+    },
+    {
+      "id": "5cf4cde6aff09e0000006c50",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547366,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce26aff09e0000006c5a",
+      "text": "   window.app.paper.project.view.__proto__.update = function() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547438
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c5b",
+      "text": "       if (!this._needsUpdate)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c5c",
+      "text": "           return false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c5d",
+      "text": "       var project = this._project,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c5e",
+      "text": "           ctx = this._context,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c5f",
+      "text": "           size = this._viewSize;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c60",
+      "text": "       ctx.clearRect(0, 0, size.width + 1, size.height + 1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c61",
+      "text": "       if (project)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c62",
+      "text": "           project.draw(ctx, this._matrix, this._pixelRatio);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c63",
+      "text": "       this._needsUpdate = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c64",
+      "text": "       if(window.app.callbackAfterCanvasViewUpdate){",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c65",
+      "text": "         window.app.callbackAfterCanvasViewUpdate();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c66",
+      "text": "       }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c67",
+      "text": "       return true;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c68",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547431
+    },
+    {
+      "id": "5cf4ce27aff09e0000006c69",
+      "text": "とやっておいて",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547431,
+      "updated": 1559547444
+    },
+    {
+      "id": "5cf4ce33aff09e0000006c6a",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547444,
+      "updated": 1559547551
+    },
+    {
+      "id": "5cf4ce9eaff09e0000006c6c",
+      "text": "   window.app.callbackAfterCanvasViewUpdate = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547551,
+      "updated": 1559547565
+    },
+    {
+      "id": "5cf4ce9faff09e0000006c6d",
+      "text": "       image.style.display = \"none\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547551,
+      "updated": 1559547565
+    },
+    {
+      "id": "5cf4ce9faff09e0000006c6e",
+      "text": "       let canvas = document.getElementById(\"myCanvas\") as HTMLElement;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547551,
+      "updated": 1559547565
+    },
+    {
+      "id": "5cf4ce9faff09e0000006c6f",
+      "text": "       canvas.style.display = \"inline\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547551,
+      "updated": 1559547565
+    },
+    {
+      "id": "5cf4ce9faff09e0000006c70",
+      "text": "       window.app.callbackAfterCanvasViewUpdate = null;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547551,
+      "updated": 1559547565
+    },
+    {
+      "id": "5cf4ce9faff09e0000006c71",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547551,
+      "updated": 1559547565
+    },
+    {
+      "id": "5cf4ce24aff09e0000006c59",
+      "text": "って感じ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547429,
+      "updated": 1559547570
+    },
+    {
+      "id": "5cf4ceb1aff09e0000006c73",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559547570,
+      "updated": 1559547570
+    },
+    {
+      "id": "5cf4d23daff09e0000006c74",
+      "text": "[pRegroup-done-2019]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559548477,
+      "updated": 1580046377
+    },
+    {
+      "id": "5cf4d23eaff09e0000006c75",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559548479,
+      "updated": 1559548479
+    }
+  ]
+}

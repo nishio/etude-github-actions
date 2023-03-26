@@ -1,0 +1,1394 @@
+{
+  "id": "612baddd86c929001f0f9830",
+  "title": "Cloud FunctionsでScrapboxのAPIを叩く",
+  "created": 1630252510,
+  "updated": 1630423330,
+  "lines": [
+    {
+      "id": "612baddd86c929001f0f9830",
+      "text": "Cloud FunctionsでScrapboxのAPIを叩く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f15",
+      "text": "from [Kozaneba開発日記2021-08-29]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1643113730
+    },
+    {
+      "id": "612badddaff09e0000df1f16",
+      "text": "[Cloud Functions]で[ScrapboxAPI]を叩く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252520
+    },
+    {
+      "id": "612badf0aff09e0000df1fc2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252528,
+      "updated": 1630252528
+    },
+    {
+      "id": "612badddaff09e0000df1f17",
+      "text": "いきさつ:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252532
+    },
+    {
+      "id": "612badf3aff09e0000df1fc3",
+      "text": "\tKozanebaにScrapboxこざねを追加した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252532,
+      "updated": 1630252534
+    },
+    {
+      "id": "612badf6aff09e0000df1fc4",
+      "text": "\t各種パラメータを人間が設定するのは面倒",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252534,
+      "updated": 1630252538
+    },
+    {
+      "id": "612badfaaff09e0000df1fc5",
+      "text": "\tページのURLを渡したらScrapboxのAPIを叩いて必要なデータを取ってくるようにしようと考えた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252538,
+      "updated": 1630252538
+    },
+    {
+      "id": "612badddaff09e0000df1f18",
+      "text": "\tしかしScrapboxのAPIのCORS制限により、Kozanebaを開いたブラウザからScrapboxのAPIは直接叩けない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252580
+    },
+    {
+      "id": "612bae24aff09e000060f3f2",
+      "text": "\tそこでCloud Functionsで叩く。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252580,
+      "updated": 1630252585
+    },
+    {
+      "id": "612e4793aff09e00008b318e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630422931,
+      "updated": 1630422932
+    },
+    {
+      "id": "612e4794aff09e00008b318f",
+      "text": "絵で解説",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630422933,
+      "updated": 1630422938
+    },
+    {
+      "id": "612e479aaff09e00008b3190",
+      "text": "　[https://gyazo.com/2dba023d5006b6d506f526d52bd3b7d2]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630422938,
+      "updated": 1630422940
+    },
+    {
+      "id": "612e479baff09e00008b3191",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630422940,
+      "updated": 1630422940
+    },
+    {
+      "id": "612badddaff09e0000df1f19",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612bae2aaff09e000060f3f3",
+      "text": "やったことメモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252586,
+      "updated": 1630252589
+    },
+    {
+      "id": "612badddaff09e0000df1f1a",
+      "text": "　料金プランのアップグレード",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f1b",
+      "text": "　サーバサイドはPythonに慣れてるけど、ずっとPythonだけなのもなんだし、今回のは難しくないはずだからNode.jsでやるか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f1c",
+      "text": "　　近いうちに[scrabox-parser]を使いたいし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f1d",
+      "text": "\t[https://cloud.google.com/functions/docs/writing Writing Cloud Functions | Cloud Functions Documentation | Google Cloud]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f1e",
+      "text": " エミュレータにFunctionsを追加するのどうするんだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f1f",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f20",
+      "text": " $ firebase init emulators",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f21",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f22",
+      "text": " You're about to initialize a Firebase project in this directory:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f23",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f24",
+      "text": "   /Users/nishio/kozaneba",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f25",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f26",
+      "text": " Before we get started, keep in mind:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f27",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f28",
+      "text": "   * You are initializing within an existing Firebase project directory",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f29",
+      "text": "[https://gyazo.com/78375db9636c8d0659bee712c2839151]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f2a",
+      "text": "できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f2b",
+      "text": "　設定を変更する方法が「init」なのおかしいだろ…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f2c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f2d",
+      "text": "できてない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f2e",
+      "text": "$ firebase emulators:start --import firebase_emulator_data",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f2f",
+      "text": "[https://gyazo.com/e1be11881d578cfc80150730880d92ce]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f30",
+      "text": ">⚠  functions: The functions emulator is configured but there is no functions source directory. Have you run firebase init functions?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f31",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f32",
+      "text": "$ firebase init functions",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f33",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f34",
+      "text": " ? What language would you like to use to write Cloud Functions? TypeScript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f35",
+      "text": " ? Do you want to use ESLint to catch probable bugs and enforce style? Yes",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f36",
+      "text": " ? Do you want to install dependencies with npm now? Yes",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f37",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612bae4caff09e000060f3f4",
+      "text": "これでできたかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252620,
+      "updated": 1630252632
+    },
+    {
+      "id": "612badddaff09e0000df1f38",
+      "text": "$ firebase emulators:start --import firebase_emulator_data",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f39",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f3a",
+      "text": " ⚠  Error: Cannot find module '/Users/nishio/kozaneba/functions/lib/index.js'. Please verify that the package.json has a valid \"main\" entry ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f3b",
+      "text": " ⚠  We were unable to load your functions code. (see above)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f3c",
+      "text": "    - It appears your code is written in Typescript, which must be compiled before emulation.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f3d",
+      "text": "    - You may be able to run \"npm run build\" in your functions directory to resolve this.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f3e",
+      "text": "あー、TypeScriptを選択したから先にビルドしろとのことらしい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f3f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f40",
+      "text": "サンプルコードがあったからコメントアウトを外してビルドしてみる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f41",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f42",
+      "text": " import * as functions from \"firebase-functions\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f43",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f44",
+      "text": " // // Start writing Firebase Functions",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f45",
+      "text": " // // https://firebase.google.com/docs/functions/typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f46",
+      "text": " //",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f47",
+      "text": " export const helloWorld = functions.https.onRequest((request, response) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f48",
+      "text": "   functions.logger.info(\"Hello logs!\", { structuredData: true });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f49",
+      "text": "   response.send(\"Hello from Firebase!\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f4a",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f4b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f4c",
+      "text": "今度こそできた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f4d",
+      "text": "[https://gyazo.com/3c15fc1641e8e7a27ec20d7ec43212de]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f4e",
+      "text": "`http://localhost:5001/regroup-d4932/us-central1/helloWorld`にブラウザでアクセスしてレスポンスを見る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f4f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f50",
+      "text": "`  functions.logger.info(\"Hello logs!\", { structuredData: true });`に関してはエミュレータが走ってるターミナルにこう表示されてた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f51",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f52",
+      "text": " i  functions: Beginning execution of \"us-central1-helloWorld\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f53",
+      "text": " >  {\"structuredData\":true,\"severity\":\"INFO\",\"message\":\"Hello logs!\"}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f54",
+      "text": " i  functions: Finished \"us-central1-helloWorld\" in ~1s",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f55",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f56",
+      "text": "さて、ScrapboxAPIを作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f57",
+      "text": "requestオブジェクトの仕様はどこにあるかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f58",
+      "text": "[https://gyazo.com/7f105c12581a995e808e2796a65301fd]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f59",
+      "text": "なるほどExpressと同じか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f5a",
+      "text": "https://expressjs.com/en/4x/api.html#req",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f5b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f5c",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f5d",
+      "text": " export const get_scrapbox_page = functions.https.onRequest(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f5e",
+      "text": "   (request, response) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f5f",
+      "text": "     console.log(request.body);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f60",
+      "text": "     response.json(request.body);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f61",
+      "text": "     // functions.logger.info(\"Hello logs!\", { structuredData: true });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f62",
+      "text": "     // response.send(\"Hello from Firebase!\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f63",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f64",
+      "text": " );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f65",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f66",
+      "text": " fetch(\"http://localhost:5001/regroup-d4932/us-central1/get_scrapbox_page\", {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f67",
+      "text": "   method: \"post\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f68",
+      "text": "   body: JSON.stringify({ foo: \"bar\" }),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f69",
+      "text": " })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f6a",
+      "text": "   .then((x) => x.json())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f6b",
+      "text": "   .then((x) => console.log(x));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f6c",
+      "text": "code:output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f6d",
+      "text": " {\"foo\":\"bar\"}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f6e",
+      "text": "よし、やりとり部分はできた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f6f",
+      "text": "ではScrapboxのAPIを叩こう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f70",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f71",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f72",
+      "text": " import fetch from \"node-fetch\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f73",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f74",
+      "text": " export const get_scrapbox_page = functions.https.onRequest(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f75",
+      "text": "   (request, response) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f76",
+      "text": "     const body = JSON.parse(request.body);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f77",
+      "text": "     const url = body.url;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f78",
+      "text": "     const api_url = url.replace(\"scrapbox.io/\", \"scrapbox.io/api/pages/\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f79",
+      "text": "     fetch(api_url).then((req) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f7a",
+      "text": "       console.log(req);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f7b",
+      "text": "       req.text().then((text) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f7c",
+      "text": "         console.log(text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f7d",
+      "text": "         response.send(text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f7e",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f7f",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f80",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f81",
+      "text": " );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f82",
+      "text": "code:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f83",
+      "text": " fetch(\"http://localhost:5001/regroup-d4932/us-central1/get_scrapbox_page\", {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f84",
+      "text": "   method: \"post\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f85",
+      "text": "   body: JSON.stringify({",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f86",
+      "text": "     url: \"https://scrapbox.io/nishio/2021-08-28Kozaneba%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f87",
+      "text": "   }),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f88",
+      "text": " })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f89",
+      "text": "   .then((x) => x.json())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f8a",
+      "text": "   .then((x) => console.log(x));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f8b",
+      "text": "output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f8c",
+      "text": "[https://gyazo.com/8703a9fcaa4f8fec4b0c26b8443f1a3d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f8d",
+      "text": "できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f8e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f8f",
+      "text": "じゃあアプリからこのAPIを叩こう→CORS",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f90",
+      "text": "https://cloud.google.com/functions/docs/writing/http#handling_cors_requests",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f91",
+      "text": "\t[https://gyazo.com/c22f02704c9ea44de89383deddd5643c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f92",
+      "text": "なるほど、こうか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f93",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f94",
+      "text": " export const get_scrapbox_page = functions.https.onRequest((req, res) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f95",
+      "text": "   res.set(\"Access-Control-Allow-Origin\", \"*\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f96",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f97",
+      "text": "   if (req.method === \"OPTIONS\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f98",
+      "text": "     // Send response to OPTIONS requests",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f99",
+      "text": "     res.set(\"Access-Control-Allow-Methods\", \"GET\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f9a",
+      "text": "     res.set(\"Access-Control-Allow-Headers\", \"Content-Type\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f9b",
+      "text": "     res.set(\"Access-Control-Max-Age\", \"3600\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f9c",
+      "text": "     res.status(204).send(\"\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f9d",
+      "text": "     return;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f9e",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1f9f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa0",
+      "text": "   const body = JSON.parse(req.body);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa1",
+      "text": "   const url = body.url;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa2",
+      "text": "   const api_url = url.replace(\"scrapbox.io/\", \"scrapbox.io/api/pages/\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa3",
+      "text": "   fetch(api_url).then((req) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa4",
+      "text": "     req.text().then((text) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa5",
+      "text": "       res.send(text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa6",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa7",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa8",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fa9",
+      "text": "問題なくアプリから叩けるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1faa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fab",
+      "text": "できたできた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fac",
+      "text": "[https://gyazo.com/9c5646f9b6aae0c45c0cbc4351f97867]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fad",
+      "text": "あとはfirebase deployして...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fae",
+      "text": "$ firebase deploy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1faf",
+      "text": "[https://gyazo.com/702e52e97041dee67073fc8713680227]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612bae7aaff09e000060f3f5",
+      "text": "ESLintが文句を言ってうるさいので無効にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252667,
+      "updated": 1630252688
+    },
+    {
+      "id": "612bae90aff09e000060f3f6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252689,
+      "updated": 1630252689
+    },
+    {
+      "id": "612badddaff09e0000df1fb0",
+      "text": "$ firebase init functions",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb1",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb2",
+      "text": " ? Do you want to use ESLint to catch probable bugs and enforce style? No",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612bae93aff09e000060f3f7",
+      "text": "再度デプロイ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252692,
+      "updated": 1630252696
+    },
+    {
+      "id": "612badddaff09e0000df1fb4",
+      "text": "$ firebase deploy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb5",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb6",
+      "text": " i  functions: creating Node.js 14 function get_scrapbox_page(us-central1)...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb7",
+      "text": " ✔  functions[get_scrapbox_page(us-central1)]: Successful create operation. ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb8",
+      "text": " i  functions: cleaning up build files...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fb9",
+      "text": " Function URL (get_scrapbox_page(us-central1)): https://us-central1-regroup-d4932.cloudfunctions.net/get_scrapbox_page",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fba",
+      "text": "[https://gyazo.com/74cc324e13b6c473331b5535e3f4b57d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fbb",
+      "text": "できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fbc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fbd",
+      "text": "叩くのを`localhost:5001`から`https://us-central1-regroup-d4932.cloudfunctions.net/get_scrapbox_page`にかえる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fbe",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612e490aaff09e000013dd78",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423306,
+      "updated": 1630423308
+    },
+    {
+      "id": "612e490baff09e000013dd79",
+      "text": " fetch(\"https://us-central1-regroup-d4932.cloudfunctions.net/get_scrapbox_page\", {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd7b",
+      "text": "   method: \"post\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd7c",
+      "text": "   body: JSON.stringify({",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd7d",
+      "text": "     url: \"https://scrapbox.io/nishio/2021-08-28Kozaneba%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd7e",
+      "text": "   }),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd7f",
+      "text": " })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd80",
+      "text": "   .then((x) => x.json())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd81",
+      "text": "   .then((x) => console.log(x));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423328
+    },
+    {
+      "id": "612e490caff09e000013dd82",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630423308,
+      "updated": 1630423330
+    },
+    {
+      "id": "612badddaff09e0000df1fbf",
+      "text": "できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612badddaff09e0000df1fc0",
+      "text": "[https://gyazo.com/56af245ad9d26f348640d586b1258b98]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252510,
+      "updated": 1630252510
+    },
+    {
+      "id": "612baeb0aff09e000060f3f8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1630252721,
+      "updated": 1630252721
+    }
+  ]
+}

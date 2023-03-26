@@ -1,0 +1,407 @@
+{
+  "id": "5f045b97c90532002123b454",
+  "title": "DP N",
+  "created": 1594121113,
+  "updated": 1594122900,
+  "lines": [
+    {
+      "id": "5f045b97c90532002123b454",
+      "text": "DP N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121113,
+      "updated": 1594121114
+    },
+    {
+      "id": "5f046240aff09e0000df793b",
+      "text": "[N - Slimes https://atcoder.jp/contests/dp/tasks/dp_n]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122817,
+      "updated": 1594122817
+    },
+    {
+      "id": "5f046241aff09e0000df793c",
+      "text": "\t隣接するものをくっつける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122818,
+      "updated": 1594122834
+    },
+    {
+      "id": "5f046252aff09e0000d3f7db",
+      "text": "\tくっつける順番によってコストが異なる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122835,
+      "updated": 1594122844
+    },
+    {
+      "id": "5f04625caff09e0000d3f7dc",
+      "text": "\tコストを最小化する問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122844,
+      "updated": 1594122851
+    },
+    {
+      "id": "5f045f7baff09e0000d3f7d2",
+      "text": "　領域を定義域とするDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122108,
+      "updated": 1594122148
+    },
+    {
+      "id": "5f045fa5aff09e0000d3f7d3",
+      "text": "　 [DP L]と同様",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122149,
+      "updated": 1594122161
+    },
+    {
+      "id": "5f046265aff09e0000d3f7dd",
+      "text": "　 領域が指定された時のその領域をくっつける最安コストを値としてDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122854,
+      "updated": 1594122900
+    },
+    {
+      "id": "5f045fb2aff09e0000d3f7d4",
+      "text": "　[累積和]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122162,
+      "updated": 1594122193
+    },
+    {
+      "id": "5f045b99aff09e0000df78fe",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121114,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7900",
+      "text": " def solve(N, XS):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7901",
+      "text": "     accum = list(accumulate(XS)) + [0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7902",
+      "text": "     @lru_cache(maxsize=None)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7903",
+      "text": "     def sub(L, R):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7904",
+      "text": "         if L == R:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121125
+    },
+    {
+      "id": "5f045b9caff09e0000df7906",
+      "text": "             return 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7907",
+      "text": "         ret = INF",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7908",
+      "text": "         for x in range(L, R):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7909",
+      "text": "             v = sub(L, x) + sub(x + 1, R)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df790a",
+      "text": "             if v < ret:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df790b",
+      "text": "                 ret = v",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df790c",
+      "text": "         return ret + accum[R] - accum[L - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121127
+    },
+    {
+      "id": "5f045b9caff09e0000df790f",
+      "text": "     return sub(0, N - 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121116
+    },
+    {
+      "id": "5f045b9caff09e0000df7910",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594121116,
+      "updated": 1594121131
+    },
+    {
+      "id": "5f045fd7aff09e0000d3f7d5",
+      "text": "Cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122199,
+      "updated": 1594122203
+    },
+    {
+      "id": "5f045f49aff09e0000df7911",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122058,
+      "updated": 1594122061
+    },
+    {
+      "id": "5f045f4caff09e0000df7914",
+      "text": " cdef long long[400 * 400] table",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122061,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7915",
+      "text": " cdef long long[410] accum",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7916",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7917",
+      "text": " cdef sub(long L, long R):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7918",
+      "text": "     cdef long long ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7919",
+      "text": "     if L == R:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df791a",
+      "text": "         return 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df791b",
+      "text": "     ret = table[L * 400 + R]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df791c",
+      "text": "     if ret != 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df791d",
+      "text": "         return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df791e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df791f",
+      "text": "     ret = INF",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7920",
+      "text": "     for x in range(L, R):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7921",
+      "text": "         v = sub(L, x) + sub(x + 1, R)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7922",
+      "text": "         if v < ret:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7923",
+      "text": "             ret = v",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7924",
+      "text": "     ret += accum[R + 1] - accum[L]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7925",
+      "text": "     table[L * 400 + R] = ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7926",
+      "text": "     return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7927",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7928",
+      "text": " cdef solve(N, XS):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7929",
+      "text": "     cdef long i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df792a",
+      "text": "     cdef long long v",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df792b",
+      "text": "     v = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df792c",
+      "text": "     accum[0] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df792d",
+      "text": "     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df792e",
+      "text": "         v += XS[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df792f",
+      "text": "         accum[i + 1] = v",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f58aff09e0000df7930",
+      "text": "     return sub(0, N - 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122073,
+      "updated": 1594122073
+    },
+    {
+      "id": "5f045f49aff09e0000df7912",
+      "text": "https://atcoder.jp/contests/dp/submissions/15066323",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122058,
+      "updated": 1594122058
+    },
+    {
+      "id": "5f045f4aaff09e0000df7913",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594122058,
+      "updated": 1594122058
+    }
+  ]
+}

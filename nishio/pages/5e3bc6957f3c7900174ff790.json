@@ -1,0 +1,309 @@
+{
+  "id": "5e3bc6957f3c7900174ff790",
+  "title": "状態名と変数を束ねて型で制約",
+  "created": 1580975767,
+  "updated": 1580984904,
+  "lines": [
+    {
+      "id": "5e3bc6957f3c7900174ff790",
+      "text": "状態名と変数を束ねて型で制約",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975767,
+      "updated": 1580984894
+    },
+    {
+      "id": "5e3bea3faff09e0000f36a63",
+      "text": "[TypeScriptの型]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580984896,
+      "updated": 1580984904
+    },
+    {
+      "id": "5e3bc69eaff09e000091fb1e",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975774,
+      "updated": 1580975775
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb20",
+      "text": " type STATE_TYPE = \"INITIAL\" | \"HAS_NUMBER\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb21",
+      "text": " let state: STATE_TYPE = \"INITIAL\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb22",
+      "text": " let value: number | undefined;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb23",
+      "text": " const setNumber = (x: number) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb24",
+      "text": "   state = \"HAS_NUMBER\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb25",
+      "text": "   value = x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb26",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb27",
+      "text": " const useNumber = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb28",
+      "text": "   if (state === \"HAS_NUMBER\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb29",
+      "text": "     const x: number = value;  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb2a",
+      "text": "     // Type 'number | undefined' is not assignable to type 'number'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb2b",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc6a0aff09e000091fb2c",
+      "text": " } ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975776,
+      "updated": 1580975783
+    },
+    {
+      "id": "5e3bc69eaff09e000091fb1f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975774,
+      "updated": 1580975774
+    },
+    {
+      "id": "5e3bc6a8aff09e000091fb2e",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975785,
+      "updated": 1580975880
+    },
+    {
+      "id": "5e3bc708aff09e000091fb30",
+      "text": " const useNumber = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb31",
+      "text": "   if (state === \"HAS_NUMBER\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb32",
+      "text": "     if (value !== undefined) {  // mmm...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb33",
+      "text": "       const x: number = value;  // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb34",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb35",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb36",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975884
+    },
+    {
+      "id": "5e3bc709aff09e000091fb37",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975881,
+      "updated": 1580975882
+    },
+    {
+      "id": "5e3bc706aff09e000091fb2f",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975879,
+      "updated": 1580975993
+    },
+    {
+      "id": "5e3bc779aff09e000091fb39",
+      "text": " type STATE_TYPE = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb3a",
+      "text": "   { type: \"INITIAL\", value: undefined } |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb3b",
+      "text": "   { type: \"HAS_NUMBER\", value: number }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb3c",
+      "text": " );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb3d",
+      "text": " let state: STATE_TYPE = { type: \"INITIAL\", value: undefined };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb3e",
+      "text": " const setNumber = (x: number) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb3f",
+      "text": "   state = { type: \"HAS_NUMBER\", value: x };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb40",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb41",
+      "text": " const useNumber = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb42",
+      "text": "   if (state.type === \"HAS_NUMBER\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb43",
+      "text": "     const x: number = state.value;  // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb44",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc779aff09e000091fb45",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975993,
+      "updated": 1580975996
+    },
+    {
+      "id": "5e3bc778aff09e000091fb38",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580975992,
+      "updated": 1580975992
+    },
+    {
+      "id": "5e3bdd46aff09e000091fb71",
+      "text": "`console.log(state)` become more useful",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580981574,
+      "updated": 1580981595
+    },
+    {
+      "id": "5e3bdd47aff09e000091fb72",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580981575,
+      "updated": 1580981575
+    }
+  ]
+}

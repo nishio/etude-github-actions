@@ -1,0 +1,330 @@
+{
+  "id": "6020fda0f2ae17002208bb18",
+  "title": "Sentryでエラー時にUser Feedbackのフォームを出す",
+  "created": 1612774817,
+  "updated": 1612777350,
+  "lines": [
+    {
+      "id": "6020fda0f2ae17002208bb18",
+      "text": "Sentryでエラー時にUser Feedbackのフォームを出す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774816,
+      "updated": 1612777191
+    },
+    {
+      "id": "6020fda0aff09e000056beea",
+      "text": "from [Sentry Memo]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fda0aff09e000056beeb",
+      "text": "[Sentry] User Feedback",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774823
+    },
+    {
+      "id": "6020fda0aff09e000056beec",
+      "text": "[https://gyazo.com/acaeefbdd92094f9ebfebfc4fb086cb4]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fda0aff09e000056beed",
+      "text": "\t[React Error Boundary for React | Sentry Documentation https://docs.sentry.io/platforms/javascript/guides/react/components/errorboundary/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fda0aff09e000056beee",
+      "text": "\t\t[User Feedback for React | Sentry Documentation https://docs.sentry.io/platforms/javascript/guides/react/enriching-events/user-feedback/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fda0aff09e000056beef",
+      "text": "　　エラーが起きた時にそれをユーザに伝えたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774920
+    },
+    {
+      "id": "6020fe07aff09e0000cc6bdc",
+      "text": "　　　コンソールにエラーメッセージが出てるだけだと伝わらない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774920,
+      "updated": 1612774937
+    },
+    {
+      "id": "6020fe19aff09e0000cc6bdd",
+      "text": "　　エラー時にそれを伝えてユーザからフィードバックを集めるダイアログがプリセットされてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774937,
+      "updated": 1612774961
+    },
+    {
+      "id": "60210693aff09e0000cc6be9",
+      "text": "　　　これを出せば良いか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777108,
+      "updated": 1612777115
+    },
+    {
+      "id": "6021069aaff09e0000cc6bea",
+      "text": "　　　ユーザが書いてくれるとは期待してないけど、自分が使ってる時なら何をしてて起きたかここから送信できるし、それがSentryのサーバ上でスタックトレースとかとセットで読める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777115,
+      "updated": 1612777174
+    },
+    {
+      "id": "602106faaff09e0000cc6beb",
+      "text": "　　故意にエラーを発生させるメニューを作って試す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777211,
+      "updated": 1612777222
+    },
+    {
+      "id": "6020fda0aff09e000056bef0",
+      "text": "　　`<Sentry.ErrorBoundary fallback=\"An error has occurred\" showDialog>`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fda0aff09e000056bef1",
+      "text": "　　　developだとReactのエラー画面が出て、消すと元の画面。productionだと何も出ない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fe38aff09e0000cc6bde",
+      "text": "　　自前で送信前にフックして表示する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774969,
+      "updated": 1612774983
+    },
+    {
+      "id": "6020fda0aff09e000056bef2",
+      "text": " \t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef3",
+      "text": " \t\t Sentry.init({...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef4",
+      "text": "      beforeSend(event, hint) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef5",
+      "text": "        // Check if it is an exception, and if so, show the report dialog",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef6",
+      "text": "        if (event.exception) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef7",
+      "text": "          Sentry.showReportDialog({ eventId: event.event_id });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef8",
+      "text": "        }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056bef9",
+      "text": "        return event;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056befa",
+      "text": "      },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056befb",
+      "text": "    });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774990
+    },
+    {
+      "id": "6020fda0aff09e000056befd",
+      "text": " 　　developだとエラー画面の下にフィードバック画面が出てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "6020fda0aff09e000056befe",
+      "text": " 　　　ID重複の警告が出てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "6020fda0aff09e000056beff",
+      "text": " 　　　フィードバック画面がそもそも2枚出てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "6020fda0aff09e000056bf00",
+      "text": " 　　　showDialogとの重複かと思ったが、消しても変わらない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "6020fda0aff09e000056bf01",
+      "text": " 　　　エラーIDやタイムスタンプの異なるエラーが2回発生している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "60210719aff09e0000cc6bed",
+      "text": " 　　　　内容は同じ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777241,
+      "updated": 1612777245
+    },
+    {
+      "id": "6020fda0aff09e000056bf02",
+      "text": " 　　　　Sentry上でのイベント回数表示も2ずつ増えてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "6020fda0aff09e000056bf03",
+      "text": " 　　　エラーバウンダリーのせいで2回出るのか？と思ったが、有無と関係ない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612777268
+    },
+    {
+      "id": "6020fda0aff09e000056bf04",
+      "text": " 　　　→1回だけ表示するための処理を自前でやることにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612775001
+    },
+    {
+      "id": "6020fda0aff09e000056bf05",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612774817,
+      "updated": 1612774817
+    },
+    {
+      "id": "6020fe5eaff09e0000cc6bdf",
+      "text": "考察",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775006,
+      "updated": 1612775008
+    },
+    {
+      "id": "6020fe60aff09e0000cc6be1",
+      "text": "　メニューを選択した時のイベントハンドラの中で起きたエラーに関して、エラーバウンダリーどは捕捉されないのかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775008,
+      "updated": 1612775046
+    },
+    {
+      "id": "6020feedaff09e0000cc6be6",
+      "text": " 　そういうことらしい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775150,
+      "updated": 1612777285
+    },
+    {
+      "id": "6020fef1aff09e0000cc6be7",
+      "text": " 　https://ja.reactjs.org/docs/error-boundaries.html",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775153,
+      "updated": 1612777287
+    },
+    {
+      "id": "6020feccaff09e0000cc6be2",
+      "text": " 　>error boundary は自身の子コンポーネントツリーで発生した JavaScript エラーをキャッチし、エラーを記録し、クラッシュしたコンポーネントツリーの代わりにフォールバック用の UI を表示する React コンポーネントです。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775120,
+      "updated": 1612777289
+    },
+    {
+      "id": "6020fedeaff09e0000cc6be3",
+      "text": " 　>error boundary は以下のエラーをキャッチしません：",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775143,
+      "updated": 1612777292
+    },
+    {
+      "id": "60210750aff09e0000cc6bef",
+      "text": "   > イベントハンドラ（詳細）",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777296,
+      "updated": 1612777299
+    },
+    {
+      "id": "6020fee1aff09e0000cc6be5",
+      "text": "   > 非同期コード（例：setTimeout や requestAnimationFrame のコールバック）",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775143,
+      "updated": 1612777301
+    },
+    {
+      "id": "6020fe5faff09e0000cc6be0",
+      "text": "　なぜ2回出るのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612775008,
+      "updated": 1612777313
+    },
+    {
+      "id": "60210761aff09e0000cc6bf1",
+      "text": "　　Reactが一旦キャッチしてから再スローしてんのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777314,
+      "updated": 1612777350
+    },
+    {
+      "id": "6021075aaff09e0000cc6bf0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612777307,
+      "updated": 1612777307
+    }
+  ]
+}

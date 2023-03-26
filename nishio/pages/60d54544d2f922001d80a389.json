@@ -1,0 +1,463 @@
+{
+  "id": "60d54544d2f922001d80a389",
+  "title": "名前的型と構造的型の勘違いによる実話",
+  "created": 1624589638,
+  "updated": 1624625960,
+  "lines": [
+    {
+      "id": "60d54544d2f922001d80a389",
+      "text": "名前的型と構造的型の勘違いによる実話",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589638,
+      "updated": 1624589638
+    },
+    {
+      "id": "60d54632aff09e000026c2ee",
+      "text": "addという関数があり、型Aの値同士を足せば型Aが返り、型Bの値同士を足せば形Bが返る、と宣言した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589875,
+      "updated": 1624589966
+    },
+    {
+      "id": "60d54633aff09e000026c2ef",
+      "text": "code:test.d.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589875,
+      "updated": 1624589957
+    },
+    {
+      "id": "60d54685aff09e0000580172",
+      "text": " export function add(x: A, y: A): A;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589957,
+      "updated": 1624589957
+    },
+    {
+      "id": "60d54685aff09e0000580173",
+      "text": " export function add(x: B, y: B): B;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589957,
+      "updated": 1624589957
+    },
+    {
+      "id": "60d54685aff09e0000580174",
+      "text": "しかし実際に使うとB同士を足した結果がAになってしまった、なぜか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589957,
+      "updated": 1624589995
+    },
+    {
+      "id": "60d54680aff09e0000580171",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589953,
+      "updated": 1624589953
+    },
+    {
+      "id": "60d54546aff09e0000580155",
+      "text": "[https://gyazo.com/fc1d9dca9ea1ceedf5575090dc7d119f]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589638,
+      "updated": 1624589639
+    },
+    {
+      "id": "60d54547aff09e0000580156",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589639,
+      "updated": 1624589639
+    },
+    {
+      "id": "60d546ccaff09e0000580175",
+      "text": "問題を再現する最小限のコード全体",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590028,
+      "updated": 1624590048
+    },
+    {
+      "id": "60d54555aff09e0000580157",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589653,
+      "updated": 1624589661
+    },
+    {
+      "id": "60d5455daff09e0000580159",
+      "text": " import { A, B, add } from \"./testlib.js\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589661,
+      "updated": 1624589665
+    },
+    {
+      "id": "60d54561aff09e000058015a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589665,
+      "updated": 1624589665
+    },
+    {
+      "id": "60d54561aff09e000058015b",
+      "text": " let x = new B();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589665,
+      "updated": 1624589665
+    },
+    {
+      "id": "60d54561aff09e000058015c",
+      "text": " let y = new B();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589665,
+      "updated": 1624589665
+    },
+    {
+      "id": "60d54561aff09e000058015d",
+      "text": " let z = add(x, y);  // type of z is A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589665,
+      "updated": 1624589733
+    },
+    {
+      "id": "60d54561aff09e0000580160",
+      "text": " console.log(z);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589665,
+      "updated": 1624589665
+    },
+    {
+      "id": "60d54561aff09e0000580161",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589665,
+      "updated": 1624589671
+    },
+    {
+      "id": "60d54566aff09e0000580162",
+      "text": "code:testlib.d.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589671,
+      "updated": 1624589685
+    },
+    {
+      "id": "60d54574aff09e0000580164",
+      "text": " export class A {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589685,
+      "updated": 1624589689
+    },
+    {
+      "id": "60d54579aff09e0000580165",
+      "text": " export class B {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589689,
+      "updated": 1624589689
+    },
+    {
+      "id": "60d54579aff09e0000580166",
+      "text": " export function add(x: A, y: A): A;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589689,
+      "updated": 1624589689
+    },
+    {
+      "id": "60d54579aff09e0000580167",
+      "text": " export function add(x: B, y: B): B;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589689,
+      "updated": 1624589689
+    },
+    {
+      "id": "60d54579aff09e0000580168",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589689,
+      "updated": 1624589690
+    },
+    {
+      "id": "60d54587aff09e0000580169",
+      "text": "code:testlib.js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589704,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d5458baff09e000058016a",
+      "text": " class A{ }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589707,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d5458baff09e000058016b",
+      "text": " class B{ }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589707,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d5458baff09e000058016c",
+      "text": " function add(x, y) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589707,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d5458baff09e000058016d",
+      "text": "   return x + y;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589707,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d5458baff09e000058016e",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589707,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d5458baff09e000058016f",
+      "text": " export {A, B, add}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589707,
+      "updated": 1624589707
+    },
+    {
+      "id": "60d54571aff09e0000580163",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624589682,
+      "updated": 1624589682
+    },
+    {
+      "id": "60d54707aff09e000026c2f0",
+      "text": "解説",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590088,
+      "updated": 1624590089
+    },
+    {
+      "id": "60d54709aff09e000026c2f2",
+      "text": " TypeScriptは名前的型システムではなく構造的型システム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590090,
+      "updated": 1624590120
+    },
+    {
+      "id": "60d54725aff09e000026c2f6",
+      "text": " なので構造が一致する型は同じ型",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590117,
+      "updated": 1624590123
+    },
+    {
+      "id": "60d54722aff09e000026c2f3",
+      "text": " AとBは同じ構造なので同じ型",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590114,
+      "updated": 1624590135
+    },
+    {
+      "id": "60d54722aff09e000026c2f4",
+      "text": " なので先に出現した`export function add(x: A, y: A): A;`のルールが使われ、返り値がAとなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590114,
+      "updated": 1624590455
+    },
+    {
+      "id": "60d54709aff09e000026c2f1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590089,
+      "updated": 1624590089
+    },
+    {
+      "id": "60d54845aff09e000026c2f7",
+      "text": "AとBが区別されていないのでAとBをaddしてもエラーにならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590406,
+      "updated": 1624591090
+    },
+    {
+      "id": "60d54887aff09e000026c2f9",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590471,
+      "updated": 1624591069
+    },
+    {
+      "id": "60d54addaff09e0000580176",
+      "text": " let ab = add(new A(), new B());  // No error",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591069,
+      "updated": 1624591069
+    },
+    {
+      "id": "60d54ae0aff09e0000580179",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591073,
+      "updated": 1624591073
+    },
+    {
+      "id": "60d54addaff09e0000580177",
+      "text": "解決方法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591069,
+      "updated": 1624591073
+    },
+    {
+      "id": "60d54b0baff09e000058017a",
+      "text": "code:testlib.d.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591115,
+      "updated": 1624591120
+    },
+    {
+      "id": "60d54b10aff09e000058017b",
+      "text": " export class A {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591121
+    },
+    {
+      "id": "60d54b11aff09e000058017c",
+      "text": "   _A_Brand: never;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591121
+    },
+    {
+      "id": "60d54b11aff09e000058017d",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591121
+    },
+    {
+      "id": "60d54b11aff09e000058017e",
+      "text": " export class B {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591121
+    },
+    {
+      "id": "60d54b11aff09e000058017f",
+      "text": "   _B_Brand: never;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591121
+    },
+    {
+      "id": "60d54b11aff09e0000580180",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591121
+    },
+    {
+      "id": "60d54b53aff09e000026c2fb",
+      "text": "これでAとBが異なる構造になるので型として区別される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591188,
+      "updated": 1624591209
+    },
+    {
+      "id": "60d54b11aff09e0000580181",
+      "text": "[https://gyazo.com/7d13e82f4439f5fece41d74ac85a3224]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591121,
+      "updated": 1624591183
+    },
+    {
+      "id": "60d54b4faff09e0000580182",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591183,
+      "updated": 1624591183
+    },
+    {
+      "id": "60d54e1caff09e000026c2fc",
+      "text": "この例では2つのクラスを区別したいシチュエーションだったので「使わないメンバーをつける」という選択をした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591900,
+      "updated": 1624625960
+    },
+    {
+      "id": "60d5d327aff09e0000fe3c60",
+      "text": "文字列型を区別したいケースではメンバーを追加できないのでこの方法は使えない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624625960,
+      "updated": 1624625960
+    },
+    {
+      "id": "60d54f3caff09e000026c2fe",
+      "text": "別の方法としてenumとのintersectionを作る方法がある。この場合は文字列型をFooId型にするのが`as FooId`でできる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624592188,
+      "updated": 1624592200
+    },
+    {
+      "id": "60d54e1caff09e000026c2fd",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591900,
+      "updated": 1624592025
+    },
+    {
+      "id": "60d54e97aff09e0000580186",
+      "text": " enum FooIdBrand { _ = \"\" };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624592023,
+      "updated": 1624592023
+    },
+    {
+      "id": "60d54e97aff09e0000580187",
+      "text": " type FooId = FooIdBrand & string;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624592023,
+      "updated": 1624592023
+    },
+    {
+      "id": "60d54eecaff09e0000580188",
+      "text": " const fooId = 'foo' as FooId;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624592109,
+      "updated": 1624592115
+    },
+    {
+      "id": "60d54f5caff09e000026c2ff",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624592220,
+      "updated": 1624592220
+    },
+    {
+      "id": "60d54c0faff09e0000580184",
+      "text": "関連",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591376,
+      "updated": 1624591453
+    },
+    {
+      "id": "60d54c0daff09e0000580183",
+      "text": "\t[TypeScript で幽霊型っぽいものをつくる https://zenn.dev/f_subal/articles/phantom_type_in_typescript]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591374,
+      "updated": 1624591378
+    },
+    {
+      "id": "60d54848aff09e000026c2f8",
+      "text": "\t[Nominal Typing - TypeScript Deep Dive https://basarat.gitbook.io/typescript/main-1/nominaltyping]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624590408,
+      "updated": 1624591447
+    },
+    {
+      "id": "60d54c56aff09e0000580185",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624591447,
+      "updated": 1624591447
+    }
+  ]
+}

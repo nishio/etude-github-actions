@@ -1,0 +1,190 @@
+{
+  "id": "5fcc55a5058fdc001c5d1b35",
+  "title": "巨大なnについての二項係数",
+  "created": 1607226790,
+  "updated": 1607355602,
+  "lines": [
+    {
+      "id": "5fcc55a5058fdc001c5d1b35",
+      "text": "巨大なnについての二項係数",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607226790,
+      "updated": 1607226823
+    },
+    {
+      "id": "5fcc55a6aff09e000077cc59",
+      "text": "巨大なn(10^9)について二項係数を求める場合、n!の計算がO(n)なので間に合わない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607226790,
+      "updated": 1607355515
+    },
+    {
+      "id": "5fcc55a6aff09e000077cc5c",
+      "text": "[$ \\binom{n}{k} = \\frac{n!}{k!(n-k)!} = \\frac{n!}{(n-k)!} \\frac{1}{k!}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607226790,
+      "updated": 1607226790
+    },
+    {
+      "id": "5fcc55a6aff09e000077cc5d",
+      "text": "と変形すればそれぞれはO(k)で求められる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607226790,
+      "updated": 1607226790
+    },
+    {
+      "id": "5fce4c77aff09e0000278530",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355512,
+      "updated": 1607355512
+    },
+    {
+      "id": "5fce4c9daff09e0000278545",
+      "text": "実装例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355549,
+      "updated": 1607355562
+    },
+    {
+      "id": "5fce4c98aff09e0000278535",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355545,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278536",
+      "text": "\t def naive_comb(n, k, MOD=MOD):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278537",
+      "text": "      assert n >= 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278538",
+      "text": "      assert k >= 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278539",
+      "text": "      if n < k:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e000027853a",
+      "text": "          return 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e000027853b",
+      "text": "      k = min(k, n - k)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e000027853c",
+      "text": "      a = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e000027853d",
+      "text": "      b = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e000027853e",
+      "text": "      for i in range(k):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e000027853f",
+      "text": "          a *= (n - i)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278540",
+      "text": "          a %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278541",
+      "text": "          b *= (i + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278542",
+      "text": "          b %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278543",
+      "text": "      return (a * mod_inverse(b, MOD)) % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355548
+    },
+    {
+      "id": "5fce4c99aff09e0000278544",
+      "text": "\tmod_inverseについては [mod Pでの逆元]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355546,
+      "updated": 1607355601
+    },
+    {
+      "id": "5fce4cd1aff09e0000278546",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355602,
+      "updated": 1607355602
+    },
+    {
+      "id": "5fce4c7caff09e0000278533",
+      "text": "[巨大なnについての組み合わせ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355516,
+      "updated": 1607355518
+    },
+    {
+      "id": "5fce4c77aff09e0000278531",
+      "text": "from [mod Pでの組み合わせ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355512,
+      "updated": 1607355512
+    },
+    {
+      "id": "5fce4c78aff09e0000278532",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607355512,
+      "updated": 1607355512
+    }
+  ]
+}

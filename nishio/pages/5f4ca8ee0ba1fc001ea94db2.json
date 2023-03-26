@@ -1,0 +1,274 @@
+{
+  "id": "5f4ca8ee0ba1fc001ea94db2",
+  "title": "高速素因数分解",
+  "created": 1598859525,
+  "updated": 1598863242,
+  "lines": [
+    {
+      "id": "5f4ca8ee0ba1fc001ea94db2",
+      "text": "高速素因数分解",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598859525,
+      "updated": 1598859525
+    },
+    {
+      "id": "5f4ca905aff09e0000477152",
+      "text": " [エラトステネスのふるい]を少しいじって、試し割りなしでの[素因数分解]を可能にするアルゴリズム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598859526,
+      "updated": 1598860684
+    },
+    {
+      "id": "5f4caef5aff09e00002df0dd",
+      "text": " ある数xが素数かどうかtrue/falseのテーブルを持つ代わりに、xを割り切る最小の素数のテーブルを作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598861045,
+      "updated": 1598861108
+    },
+    {
+      "id": "5f4cad8daff09e00002df0db",
+      "text": " code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860685,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae2daff09e0000477160",
+      "text": "  def precompute(AS)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860846,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae23aff09e0000477153",
+      "text": "      maxAS = max(AS)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e0000477154",
+      "text": "      eratree = [0] * (maxAS + 10)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e0000477155",
+      "text": "      for p in range(2, maxAS + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e0000477156",
+      "text": "          if eratree[p]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e0000477157",
+      "text": "              continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e0000477158",
+      "text": "          # p is prime",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e0000477159",
+      "text": "          eratree[p] = p",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e000047715a",
+      "text": "          x = p * p",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e000047715b",
+      "text": "          while x <= maxAS:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e000047715c",
+      "text": "              if not eratree[x]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e000047715d",
+      "text": "                  eratree[x] = p",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae24aff09e000047715e",
+      "text": "              x += p",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cae37aff09e0000477161",
+      "text": "      return eratree",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860856,
+      "updated": 1598860928
+    },
+    {
+      "id": "5f4cb390aff09e00002df0e4",
+      "text": " O(N log log N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598862225,
+      "updated": 1598862225
+    },
+    {
+      "id": "5f4cb390aff09e00002df0e5",
+      "text": "  see https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598862225,
+      "updated": 1598862225
+    },
+    {
+      "id": "5f4cae24aff09e000047715f",
+      "text": " `x = p * p`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860836,
+      "updated": 1598861689
+    },
+    {
+      "id": "5f4ca905aff09e0000477151",
+      "text": "　　これより小さいものはもし合成数ならpより小さい約数を持つので。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598859525,
+      "updated": 1598862282
+    },
+    {
+      "id": "5f4cb0adaff09e00002df0de",
+      "text": "　実際に素因数分解をする時には1になるまでテーブル引きと割り算をすれば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598861486,
+      "updated": 1598861519
+    },
+    {
+      "id": "5f4cb0d0aff09e00002df0df",
+      "text": "　　これがlog Nなので高速",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598861520,
+      "updated": 1598861745
+    },
+    {
+      "id": "5f4cb1e5aff09e00002df0e3",
+      "text": "　　sqrt N以下の素数で割るのより高速、ただし前処理が必要なので、たくさん素因数分解する場合向き",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598861797,
+      "updated": 1598861864
+    },
+    {
+      "id": "5f4caeb8aff09e0000477163",
+      "text": "\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860984,
+      "updated": 1598860987
+    },
+    {
+      "id": "5f4caebbaff09e0000477165",
+      "text": "  for a in AS:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebbaff09e0000477166",
+      "text": "      factors = []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebbaff09e0000477167",
+      "text": "      while a > 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebbaff09e0000477168",
+      "text": "          d = eratree[a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebbaff09e0000477169",
+      "text": "          factors.append(d)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebbaff09e000047716a",
+      "text": "          a //= d",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebeaff09e000047716c",
+      "text": "      ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860991,
+      "updated": 1598861008
+    },
+    {
+      "id": "5f4caebbaff09e000047716b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860987,
+      "updated": 1598861000
+    },
+    {
+      "id": "5f4caeb8aff09e0000477164",
+      "text": " ちなみに「xを割り切る最小の素数のテーブル」にするためにループをNまで走ってるが「最小の素数もしくは0、0の時はxが素数」とするならループはsqrt Nまでで良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598860984,
+      "updated": 1598863192
+    },
+    {
+      "id": "5f4cb758aff09e00002df0e7",
+      "text": " 　多少は速くなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598863193,
+      "updated": 1598863234
+    },
+    {
+      "id": "5f4cb782aff09e00002df0e8",
+      "text": " 　素因数分解のところで場合わけが必要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598863234,
+      "updated": 1598863236
+    },
+    {
+      "id": "5f4cb6ebaff09e00002df0e6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1598863083,
+      "updated": 1598863083
+    }
+  ]
+}

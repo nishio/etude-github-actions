@@ -1,0 +1,267 @@
+{
+  "id": "603337971d51a7001ef3ca6e",
+  "title": "useEffectで作ったPromiseをexport",
+  "created": 1613969305,
+  "updated": 1613970246,
+  "lines": [
+    {
+      "id": "603337971d51a7001ef3ca6e",
+      "text": "useEffectで作ったPromiseをexport",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969305,
+      "updated": 1613969305
+    },
+    {
+      "id": "603338c5aff09e0000cd00ae",
+      "text": "Promiseによって非同期で行われる状態更新の結果をテストしたい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969605,
+      "updated": 1613969605
+    },
+    {
+      "id": "60333853aff09e00007fa7e0",
+      "text": "前回の話: [非同期なReactの状態更新をテストする]で、Promiseを返り値として得られる場合の解説をした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969492,
+      "updated": 1613969660
+    },
+    {
+      "id": "60333892aff09e00007fa7e2",
+      "text": "useEffectは返り値がcleanup関数と定められているのでその方法は使えない。そこで作られたPromiseをexportすることにした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969554,
+      "updated": 1613969710
+    },
+    {
+      "id": "603339e1aff09e0000cd00b0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969889,
+      "updated": 1613969889
+    },
+    {
+      "id": "603339e6aff09e0000cd00b1",
+      "text": "シンプルに下記のコードで目的が達成できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969894,
+      "updated": 1613969915
+    },
+    {
+      "id": "60333894aff09e00007fa7e3",
+      "text": "なおloadFromServerはサーバからfetchするコードがモック実装で置き換えられたものとする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969556,
+      "updated": 1613969920
+    },
+    {
+      "id": "60333ae0aff09e0000cd00b4",
+      "text": "promiseの型は`Promise<unknown>`で構わない。テストコード内でawaitするのにしか使わないので。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613970144,
+      "updated": 1613970194
+    },
+    {
+      "id": "60333798aff09e00007fa7b6",
+      "text": "code:MyUseEffectComponent.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969305,
+      "updated": 1613969326
+    },
+    {
+      "id": "603337a3aff09e00007fa7b8",
+      "text": " import { useEffect, useState } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7b9",
+      "text": " export let promise: Promise<unknown>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7ba",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7bb",
+      "text": " const loadFromServer = async () => 1;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7bc",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7bd",
+      "text": " export const MyUseEffectComponent = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7be",
+      "text": "   const [value, setValue] = useState(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7bf",
+      "text": "   useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c0",
+      "text": "     promise = loadFromServer().then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c1",
+      "text": "       setValue(x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c2",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c3",
+      "text": "   }, []);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c4",
+      "text": "   return <span>{value}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c5",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969315
+    },
+    {
+      "id": "603337a3aff09e00007fa7c6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969315,
+      "updated": 1613969329
+    },
+    {
+      "id": "60333a1caff09e0000cd00b3",
+      "text": "テストコード。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969948,
+      "updated": 1613970209
+    },
+    {
+      "id": "60333b1faff09e00007fa7e5",
+      "text": "冒頭の[useStateを差し替える]はここでは解説しない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613970209,
+      "updated": 1613970224
+    },
+    {
+      "id": "603337cfaff09e00007fa7c7",
+      "text": "code:My.test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969359,
+      "updated": 1613969366
+    },
+    {
+      "id": "603337d6aff09e00007fa7c8",
+      "text": " test(\"MyUseEffectComponent\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613970246
+    },
+    {
+      "id": "603337d7aff09e00007fa7c9",
+      "text": "   jest.spyOn(React, \"useState\")...;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969376
+    },
+    {
+      "id": "603337d7aff09e00007fa7d9",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337d7aff09e00007fa7da",
+      "text": "   render(<MyUseEffectComponent />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337d7aff09e00007fa7db",
+      "text": "   expect(screen.getByText(\"0\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337d7aff09e00007fa7dc",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337d7aff09e00007fa7dd",
+      "text": "   await promise;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337d7aff09e00007fa7de",
+      "text": "   expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337d7aff09e00007fa7df",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969367,
+      "updated": 1613969367
+    },
+    {
+      "id": "603337a1aff09e00007fa7b7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613969314,
+      "updated": 1613969314
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "id": "5cdae60217755b0017ba7939",
+  "title": "TypeScriptでwindowに新しいプロパティを足す",
+  "created": 1557849604,
+  "updated": 1557850766,
+  "lines": [
+    {
+      "id": "5cdae60217755b0017ba7939",
+      "text": "TypeScriptでwindowに新しいプロパティを足す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849604,
+      "updated": 1557849624
+    },
+    {
+      "id": "5cdae618aff09e0000d03e7f",
+      "text": "デバッグ目的で変数dbを露出させたくて`window.db = db;`したら「windowはそんなプロパティ持ってないよ」と言われる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849624,
+      "updated": 1557849648
+    },
+    {
+      "id": "5cdae628aff09e0000d03e82",
+      "text": "Quick Fixでdeclareできそうだったのでやってみたらlib.dom.d.tsの中のinterface Windowの定義に db : any が追加された。これは絶対に後で戻すのを忘れるのでいやだ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849640,
+      "updated": 1557849658
+    },
+    {
+      "id": "5cdae66faff09e0000d03e8b",
+      "text": "TypeScriptにおいて宣言はだいたいマージされる。だから直接編集しなくてもこれで良い:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849712,
+      "updated": 1557850711
+    },
+    {
+      "id": "5cdae636aff09e0000d03e84",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849655,
+      "updated": 1557849686
+    },
+    {
+      "id": "5cdae655aff09e0000d03e86",
+      "text": " declare global {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849686,
+      "updated": 1557849688
+    },
+    {
+      "id": "5cdae657aff09e0000d03e88",
+      "text": "     interface Window { db: any; }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849688,
+      "updated": 1557849688
+    },
+    {
+      "id": "5cdae657aff09e0000d03e89",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849688,
+      "updated": 1557849688
+    },
+    {
+      "id": "5cdae657aff09e0000d03e8a",
+      "text": " window.db = db;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849688,
+      "updated": 1557849688
+    },
+    {
+      "id": "5cdae655aff09e0000d03e87",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557849686,
+      "updated": 1557849689
+    },
+    {
+      "id": "5cdae8afaff09e0000d03e8c",
+      "text": "このglobalはは[Module Augmentation]の一種、Global augmentationだ。see [Declaration Merging · TypeScript https://www.typescriptlang.org/docs/handbook/declaration-merging.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850288,
+      "updated": 1557850734
+    },
+    {
+      "id": "5cdaea72aff09e0000d03e97",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850738,
+      "updated": 1557850738
+    },
+    {
+      "id": "5cdae97faff09e0000d03e8f",
+      "text": "code:typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850495,
+      "updated": 1557850501
+    },
+    {
+      "id": "5cdae985aff09e0000d03e90",
+      "text": " declare module \"./modulename\" {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850501,
+      "updated": 1557850611
+    },
+    {
+      "id": "5cdae986aff09e0000d03e91",
+      "text": "     interface Foo { Bar: Baz; }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850502,
+      "updated": 1557850646
+    },
+    {
+      "id": "5cdae986aff09e0000d03e94",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850502,
+      "updated": 1557850502
+    },
+    {
+      "id": "5cdae8b8aff09e0000d03e8d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850296,
+      "updated": 1557850296
+    },
+    {
+      "id": "5cdaea7daff09e0000d03e98",
+      "text": "「この宣言が書かれているモジュールで新しいWindowを定義するんじゃなくて、グローバルのWindowに対してマージせよ」という意味でglobalがついている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850749,
+      "updated": 1557850766
+    },
+    {
+      "id": "5cdaea7eaff09e0000d03e99",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557850750,
+      "updated": 1557850750
+    }
+  ]
+}

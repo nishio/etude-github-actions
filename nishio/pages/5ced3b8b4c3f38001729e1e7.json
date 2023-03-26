@@ -1,0 +1,176 @@
+{
+  "id": "5ced3b8b4c3f38001729e1e7",
+  "title": "二本指ジェスチャ時に一本指での描画が同時に発生する問題",
+  "created": 1559051150,
+  "updated": 1559104512,
+  "lines": [
+    {
+      "id": "5ced3b8b4c3f38001729e1e7",
+      "text": "二本指ジェスチャ時に一本指での描画が同時に発生する問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559051150,
+      "updated": 1559104379
+    },
+    {
+      "id": "5cee0b50aff09e0000789d2d",
+      "text": "old title: マウスでの描画が同時に発生するので変な線ができる問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104337,
+      "updated": 1559104340
+    },
+    {
+      "id": "5cee0c00aff09e000097724d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104512,
+      "updated": 1559104512
+    },
+    {
+      "id": "5cee0ad4aff09e0000789d22",
+      "text": "解決",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104212,
+      "updated": 1559104218
+    },
+    {
+      "id": "5cee0adaaff09e0000789d25",
+      "text": "\ttouchstartのハンドラでpreventDefaultしてもPaper.jsのToolの側のonMouseDownが呼ばれる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104218,
+      "updated": 1559104255
+    },
+    {
+      "id": "5cee0af8aff09e0000789d28",
+      "text": "\tこれがなぜかというとPaper.jsがそもそもtouch可能なデバイスについてはtouchStartを掴んでmouseDownに中継しているからだ: [src https://github.com/paperjs/paper.js/blob/cc135eaba80943f78075f84ca430dc3152bd154e/src/view/View.js#L1078]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104248,
+      "updated": 1559104277
+    },
+    {
+      "id": "5cee0adbaff09e0000789d27",
+      "text": "\tというわけで直すべきなのはToolに描画のために僕が渡したハンドラの側",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104219,
+      "updated": 1559104450
+    },
+    {
+      "id": "5cee0b88aff09e0000789d2e",
+      "text": "\t\tonMouseDownでパスオブジェクトを作成していたが、それを遅延させる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104393,
+      "updated": 1559104452
+    },
+    {
+      "id": "5cee0b95aff09e0000789d2f",
+      "text": "\t\tonMouseDragで生のイベントオブジェクトを確認",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104406,
+      "updated": 1559104456
+    },
+    {
+      "id": "5cee0bc8aff09e0000789d30",
+      "text": "\t\t\tそれがtouchmoveでtouches.length > 1なら何もせずにreturnする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104456,
+      "updated": 1559104456
+    },
+    {
+      "id": "5cee0b1aaff09e0000789d2c",
+      "text": "→直った！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104283,
+      "updated": 1559104473
+    },
+    {
+      "id": "5cee0bdaaff09e0000789d31",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104475,
+      "updated": 1559104475
+    },
+    {
+      "id": "5cee0ad4aff09e0000789d24",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104212,
+      "updated": 1559104216
+    },
+    {
+      "id": "5ced3b8eaff09e0000fa3fcd",
+      "text": "\tマルチタッチの開始時にpreventDefaultしてるのにマウスイベントが発生しているのはなぜだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559051150,
+      "updated": 1559051154
+    },
+    {
+      "id": "5ced3b8eaff09e0000fa3fce",
+      "text": "\thttps://developer.mozilla.org/ja/docs/Web/API/Document_Object_Model/Examples#Example_5.3A_Event_Propagation",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559051150,
+      "updated": 1559051157
+    },
+    {
+      "id": "5cedf077aff09e0000de0bb2",
+      "text": "\thttps://qiita.com/hosomichi/items/49500fea5fdf43f59c58",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559097463,
+      "updated": 1559097465
+    },
+    {
+      "id": "5ced3b8eaff09e0000fa3fd1",
+      "text": "\tそうか、タップのハンドラはwindowに付けたから、デフォルトではキャンバスについてる方が先に呼ばれるわけか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559051150,
+      "updated": 1559051159
+    },
+    {
+      "id": "5ced3b8eaff09e0000fa3fd3",
+      "text": "\tキャプチャしてstopPropagationするのが正しいのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559051150,
+      "updated": 1559051160
+    },
+    {
+      "id": "5cedf688aff09e00001e0542",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559099017,
+      "updated": 1559099017
+    },
+    {
+      "id": "5cedf688aff09e00001e0543",
+      "text": " stopPropagationしても振る舞いは変わらず",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559099017,
+      "updated": 1559099019
+    },
+    {
+      "id": "5cedf689aff09e00001e0544",
+      "text": " useCaptureをつけると予想に反してドローだけ発生して2本指ジェスチャが動かなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559099017,
+      "updated": 1559099019
+    },
+    {
+      "id": "5cee0acbaff09e0000789d20",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104203,
+      "updated": 1559104203
+    },
+    {
+      "id": "5cee0be3aff09e0000789d32",
+      "text": "[pRegroup-done-2019]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104483,
+      "updated": 1580046377
+    },
+    {
+      "id": "5cee0acbaff09e0000789d21",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559104203,
+      "updated": 1559104203
+    }
+  ]
+}

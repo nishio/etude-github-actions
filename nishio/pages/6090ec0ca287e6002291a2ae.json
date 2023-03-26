@@ -1,0 +1,540 @@
+{
+  "id": "6090ec0ca287e6002291a2ae",
+  "title": "Hatena2013-05-10",
+  "created": 1368111600,
+  "updated": 1368111600,
+  "lines": [
+    {
+      "id": "6090ec30aff09e00003de53a",
+      "text": "Hatena2013-05-10",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de53b",
+      "text": "code:hatena",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de53c",
+      "text": " <body>",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de53d",
+      "text": " *1368196109*文字列の解析",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de53e",
+      "text": " プログラミング言語の処理系は、文字列として与えられたソースコードから意味を汲み取る必要があります。例えば\"int x = 1234;\"という文字列から、\"1234\"の部分が整数を意味しているということを理解する必要があります。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de53f",
+      "text": " どうすればそのようなことができるでしょうか？",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de540",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de541",
+      "text": " 最初の一歩として\"ab12cd\"という文字列を受け取ると\"12\"を返す関数を作ることを考えてみましょう。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de542",
+      "text": " どうすればそのような関数を作れるでしょうか？",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de543",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de544",
+      "text": " ** 素朴に1文字ずつループ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de545",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de546",
+      "text": " まずはやりたいことをもっと明確に言語化してみましょう。やりたいことは「文字列を頭から1文字ずつ見ていって、0～9の文字が続いている範囲を取り出したい」です",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de547",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de548",
+      "text": " 最初の文字が「0～9の文字」でなかったら？その時は特に何もせずに次の文字を見れば良い。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de549",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de54a",
+      "text": " 次の文字も「0～9の文字」でなかったら？その時も特に何もせずに次の文字を見れば良い。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de54b",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de54c",
+      "text": " 次の文字が「0～9の文字」だったら？これは結果として返すべき文字列の一部ですね。だけどまだreturnしてはいけません。だって次の文字の「0～9の文字」かもしれませんから。と言うことは「後で結果として返すもの」を溜めておく必要がありますね。resultという名前で呼ぶことにします。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de54d",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de54e",
+      "text": " 次の文字も「0～9の文字」だったら？これも結果として返すべき文字列の一部です。これも溜めておく必要があります。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de54f",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de550",
+      "text": " その次の文字が「0～9の文字」でなかったら？ここでついに「0～9の文字が続いている範囲」が終わりました！溜めておいた結果を返しましょう。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de551",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de552",
+      "text": " でも、「文字が『0～9の文字』でない」という条件は「0～9の文字が続いている範囲」の前と後と両方で使われていますね。「文字が『0～9の文字』でない」という条件だけではどう行動するべきかが決まらないわけです。そこで「0～9の文字が続いている範囲」が見つかったか、まだ見つかっていないのかを条件に含めることにします。これはis_foundという名前で呼ぶことにします。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de553",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de554",
+      "text": " こういう考え方で作られたPythonのコードが以下になります。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de555",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de556",
+      "text": " >|python|",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de557",
+      "text": " def find_int(string):",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de558",
+      "text": "     result = \"\"",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de559",
+      "text": "     is_found = False",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de55a",
+      "text": "     for char in string:",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de55b",
+      "text": "         print 'char=%r, result=%r, is_found=%r' % (char, result, is_found)",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de55c",
+      "text": "         if char in '0123456789':",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de55d",
+      "text": "             result += char",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de55e",
+      "text": "             is_found = True",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de55f",
+      "text": "         elif is_found:",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de560",
+      "text": "             return result",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de561",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de562",
+      "text": "     return ''",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de563",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de564",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de565",
+      "text": " print find_int(\"ab12cd\")",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de566",
+      "text": " ||<",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de567",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de568",
+      "text": " 実行すると次のようになります。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de569",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de56a",
+      "text": " >||",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de56b",
+      "text": " char='a', result='', is_found=False",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de56c",
+      "text": " char='b', result='', is_found=False",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de56d",
+      "text": " char='1', result='', is_found=False",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de56e",
+      "text": " char='2', result='1', is_found=True",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de56f",
+      "text": " char='c', result='12', is_found=True",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de570",
+      "text": " 12",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de571",
+      "text": " ||<",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de572",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de573",
+      "text": " <hr>",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de574",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de575",
+      "text": " 拙著「<a href=\"http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X&linkCode=as2&tag=nishiohirokaz-22\">コーディングを支える技術</a>」の読者から頂いた質問など対して、こんな感じで補足記事を書いて行きたいと思っています。質問・感想はおきがねなくどうぞ。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de576",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de577",
+      "text": " この解説は拙著の第3章と第4章の間に新しい章として入るのが適当かなと思います。その章のこの後の話の流れとしては",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de578",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de579",
+      "text": " - is_foundってのが1個あるだけならまだしも、もっと複雑になると分けがわからなくなる、どうしよう。(状態遷移図の導入)",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de57a",
+      "text": " - 正規表現を使うと楽ちん",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de57b",
+      "text": " - ネストしたカッコを正規表現で切り出せるか？(正規言語, 文脈自由言語)",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de57c",
+      "text": " - どうやる？(再帰下降パーサ, yacc)",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de57d",
+      "text": " - どう表現する？(BNF)",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de57e",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de57f",
+      "text": " という感じかな。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de580",
+      "text": " ",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de581",
+      "text": " 拙著に関する他のエントリーは「<a href='http://nhiro.org/langbook/'>「コーディングを支える技術」著者公式ページ</a>」からたどれるようにします。",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de582",
+      "text": " <iframe src=\"http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X\" style=\"width:120px;height:240px;\" scrolling=\"no\" marginwidth=\"0\" marginheight=\"0\" frameborder=\"0\"></iframe>",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de583",
+      "text": " </body>",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de584",
+      "text": "",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de585",
+      "text": "[はてなダイアリー 2013-05-10 https://nishiohirokazu.hatenadiary.org/archive/2013/05/10]",
+      "created": 1368111600,
+      "updated": 1368111600,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

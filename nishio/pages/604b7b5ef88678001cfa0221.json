@@ -1,0 +1,834 @@
+{
+  "id": "604b7b5ef88678001cfa0221",
+  "title": "Can't perform a React state update on an unmounted component",
+  "created": 1615559519,
+  "updated": 1615559558,
+  "lines": [
+    {
+      "id": "604b7b5ef88678001cfa0221",
+      "text": "Can't perform a React state update on an unmounted component",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7f7",
+      "text": "from [Jestメモ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7f8",
+      "text": "Can't perform a React state update on an unmounted component",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7f9",
+      "text": "2021-03-09",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7fa",
+      "text": "\t>Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7fb",
+      "text": "\tまとめてテストした時に、コンポーネントがアンマウントされてから状態更新して警告される場合があり、それは非同期の更新が完了するのを待たずにテストケースが終了してしまってると思われる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7fc",
+      "text": "2021-03-11",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7fd",
+      "text": "\tイベントハンドラからasyncを無くす作業をしたのにアンマウント後の更新が起きる問題が解決しなくてよくわからなくなっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7fe",
+      "text": "2021-03-12",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f7ff",
+      "text": "\t[React state update on an unmounted component | Code, Thoughts & Opinions - By Sagiv Ben Giat https://www.debuggr.io/react-update-unmounted-component/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f800",
+      "text": "\t\t同じ問題を再現するサンプルコードを見たりしたけどにてるところをコメントアウトしても再現するのでこれは今再現してるコードから削っていって最小限の再現コードを作るしかないな、というのをやってるのだが全く予想外のものが影響してて、なんだろうなとなってる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f801",
+      "text": "\t\tワークアラウンドと、なぜここでだけ発生するのかががわかったけど問題が発生する原理がよくわからないなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f802",
+      "text": "\t\t\tワークアラウンド: `useGlobal()`を`useGlobal(\"foo\")`にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f803",
+      "text": "\t「なるほどReactNの中でuseEffectのクリーンアップをしてないに違いない！」と思ってソースを読んだらやっていた…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f804",
+      "text": "\t モック絡みでクリーンアップがうまくいってないのかな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f805",
+      "text": "\tとりあえずわかったこと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f806",
+      "text": " \t非同期更新のせいでアンマウント後に更新が遅れてるのではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f807",
+      "text": " \t次のテストケースの開始時に値を初期化するところでアンマウント後のコンポーネントが更新されようとしている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f808",
+      "text": " \t\tテスト環境でしか起こらないし、警告が出るだけで処理に影響はない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f809",
+      "text": " \t\t複数のテストケースを実行した時にだけ起こるのはこれが原因",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f80a",
+      "text": " これを防ぐためにuseEffectのクリーンアップでフラグを立ててそれ以上更新されないようにする方法が知られている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f80b",
+      "text": " \t[React state update on an unmounted component | Code, Thoughts & Opinions - By Sagiv Ben Giat https://www.debuggr.io/react-update-unmounted-component/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f80c",
+      "text": " \tReactNは内部的にuseEffectを使っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f80d",
+      "text": " \tしかしクリーンアップもやっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f80e",
+      "text": "\tReactNの実装でクリーンアップ自体は呼ばれてる！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f80f",
+      "text": " 読んだ結果を描画に使ってなくても警告が再現するのは、getterを監視しているから",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f810",
+      "text": "　\t[ReactNのuseGlobalはgetを監視する]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f811",
+      "text": "\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f812",
+      "text": "\t\t // Happen",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f813",
+      "text": "\t\t const [g] = useGlobal()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f814",
+      "text": "\t\t console.log(g.foo);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f815",
+      "text": "\t\t return null;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f816",
+      "text": "\t\t // Not Happen",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f817",
+      "text": "\t\t const [g] = useGlobal()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f818",
+      "text": "\t\t return null;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f819",
+      "text": "\t更新リスナーがなぜか二つついている、これは正しい挙動か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f81a",
+      "text": "\tsetGlobalでなぜか更新リスナーが追加される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f81b",
+      "text": "\t コードの目的としてここで追加される意味がわからないし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f81c",
+      "text": " \tコードを読んでも何故追加が起きているのかわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f81d",
+      "text": " \tそしてこのリスナーはコンポーネントのアンマウント時に解除されないのでテストケースを跨いでリークする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f81e",
+      "text": " setGlobalでコンポーネントの再描画がトリガーされる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f81f",
+      "text": "\t 再描画でget監視し、再び更新リスナーの追加が走る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f820",
+      "text": " \tこの時リスナーが同一なので追加しても増えないのが期待される挙動",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f821",
+      "text": "\t 実際には同一でないので追加で増える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f822",
+      "text": "\t クリーンアップで最後の一つしか削除されない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f823",
+      "text": "\tReactN自体のテストコードでは確かにリスナーが同一である",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f824",
+      "text": "\t　つまり僕がやったことが原因でリスナーの同一性が失われてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f825",
+      "text": "\tMockUseStateを止めると(actの警告は出るが)この警告は出なくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f826",
+      "text": "\t更新リスナーは[use-force-update]である",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559554
+    },
+    {
+      "id": "604b7b5eaff09e000001f827",
+      "text": "\t　https://github.com/CharlesStover/use-force-update/blob/master/src/use-force-update.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f828",
+      "text": "\t　code:use-force-update.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f829",
+      "text": "\t　 import { useCallback, useState } from 'react';",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f82a",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f82b",
+      "text": "   // Returning a new object reference guarantees that a before-and-after",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f82c",
+      "text": "   //   equivalence check will always be false, resulting in a re-render, even",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f82d",
+      "text": "   //   when multiple calls to forceUpdate are batched.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f82e",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f82f",
+      "text": "   export default function useForceUpdate(): () => void {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f830",
+      "text": "     const [ , dispatch ] = useState<{}>(Object.create(null));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f831",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f832",
+      "text": "     // Turn dispatch(required_parameter) into dispatch().",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f833",
+      "text": "     const memoizedDispatch = useCallback(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f834",
+      "text": "       (): void => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f835",
+      "text": "         dispatch(Object.create(null));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f836",
+      "text": "       },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f837",
+      "text": "       [ dispatch ],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f838",
+      "text": "     );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f839",
+      "text": "     return memoizedDispatch;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f83a",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f83b",
+      "text": "\t　これはuseStateの第二返り値をuseCallbackしたものを返す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f83c",
+      "text": "\t[doc https://reactjs.org/docs/hooks-reference.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f83d",
+      "text": "\t\t>React guarantees that [* setState function identity is stable] and won’t change on re-renders. This is why it’s safe to omit from the useEffect or useCallback dependency list.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f83e",
+      "text": "\t\t>[useCallback] will return a memoized version of the callback that only changes if one of the dependencies has changed.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559558
+    },
+    {
+      "id": "604b7b5eaff09e000001f83f",
+      "text": "\t\tつまり何度呼び出されても同一であることが保証されてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f840",
+      "text": "\t一方僕のコード",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f841",
+      "text": "\t\tcode:MockUseState.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f842",
+      "text": "\t\t import React, { Dispatch } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f843",
+      "text": "   import { act } from \"@testing-library/react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f844",
+      "text": "   import { useState as originalUseState } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f845",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f846",
+      "text": "   export const mockUseState = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f847",
+      "text": "     return jest.spyOn(React, \"useState\").mockImplementation((arg?: unknown): [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f848",
+      "text": "       unknown,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f849",
+      "text": "       Dispatch<unknown>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f84a",
+      "text": "     ] => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f84b",
+      "text": "       const [s, setS] = originalUseState(arg);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f84c",
+      "text": "       return [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f84d",
+      "text": "         s,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f84e",
+      "text": "         (arg: unknown) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f84f",
+      "text": "           act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f850",
+      "text": "             setS(arg);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f851",
+      "text": "           });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f852",
+      "text": "         },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f853",
+      "text": "       ];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f854",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f855",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f856",
+      "text": "　　なるほど、これは呼び出しのたびに違うものを返しそうだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f857",
+      "text": "　　use-force-updateと同じように[useCallback]しよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559545
+    },
+    {
+      "id": "604b7b5eaff09e000001f858",
+      "text": "\t\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f859",
+      "text": "\t\t\t export const mockUseState = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f85a",
+      "text": "      return jest.spyOn(React, \"useState\").mockImplementation((arg?: unknown): [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f85b",
+      "text": "        unknown,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f85c",
+      "text": "        Dispatch<unknown>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f85d",
+      "text": "      ] => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f85e",
+      "text": "        const [s, dispatch] = originalUseState(arg);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f85f",
+      "text": "        const wrappedDispatch = useCallback(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f860",
+      "text": "          (arg: unknown): void => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f861",
+      "text": "            act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f862",
+      "text": "              dispatch(arg);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f863",
+      "text": "            });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f864",
+      "text": "          },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f865",
+      "text": "          [dispatch]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f866",
+      "text": "        );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f867",
+      "text": "        return [s, wrappedDispatch];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f868",
+      "text": "      });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f869",
+      "text": "    };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559538
+    },
+    {
+      "id": "604b7b5eaff09e000001f86a",
+      "text": " やったー、ついに警告なくテストが通ったぞ！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    },
+    {
+      "id": "604b7b5eaff09e000001f86b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615559519,
+      "updated": 1615559519
+    }
+  ]
+}

@@ -1,0 +1,505 @@
+{
+  "id": "5ef608d352a29500214f698a",
+  "title": "Pythonでの累乗・逆数・階乗・階乗逆数・組み合わせ",
+  "created": 1593182422,
+  "updated": 1593345362,
+  "lines": [
+    {
+      "id": "5ef608d352a29500214f698a",
+      "text": "Pythonでの累乗・逆数・階乗・階乗逆数・組み合わせ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182422,
+      "updated": 1593182484
+    },
+    {
+      "id": "5ef60914aff09e0000d88412",
+      "text": "自分が[ABC171 F]の時に書いたコードを再利用するために整理してて、ついでに[maspy法 https://maspypy.com/numpyn-mod-p%e3%81%ae%e8%a8%88%e7%ae%97]と速度比較してみたらmaspy法を[Numba]でコンパイルしたものが一番速かった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182484,
+      "updated": 1593187348
+    },
+    {
+      "id": "5ef609a9aff09e0000c2f8bf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182633,
+      "updated": 1593182633
+    },
+    {
+      "id": "5ef609a9aff09e0000c2f8c0",
+      "text": "100万件からの組み合わせテーブル作成が、特定のnに対してワンショットなら35msec、階乗と逆数階乗を先に作って使い回すなら49msec(準備に30msec)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182634,
+      "updated": 1593187278
+    },
+    {
+      "id": "5ef60b36aff09e0000c2f8c1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183030,
+      "updated": 1593183030
+    },
+    {
+      "id": "5ef60b36aff09e0000c2f8c2",
+      "text": "自作のも53msecと割といいとこ言ってると思うんだけどなー。負けは負けです。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183030,
+      "updated": 1593183062
+    },
+    {
+      "id": "5ef60924aff09e0000d88413",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182501,
+      "updated": 1593182501
+    },
+    {
+      "id": "5ef6b168aff09e0000d3df1c",
+      "text": "その後、maspy法からreshapeと反転を取り除いて33msecになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225577,
+      "updated": 1593225671
+    },
+    {
+      "id": "5ef6b14aaff09e0000d88433",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225546,
+      "updated": 1593225554
+    },
+    {
+      "id": "5ef6b152aff09e0000d88435",
+      "text": " @numba.njit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88436",
+      "text": " def makeCombibationTableJointedNoReshapeNumba(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88437",
+      "text": "     \"\"\" make table of C(n, i) for i in [0, N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88438",
+      "text": "     Jointed version of makeFactorialTableMaspy, ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88439",
+      "text": "     makeInvFactoTableMaspyOriginal, and makeCombibationTableMaspy.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8843a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8843b",
+      "text": "     >>> list(makeCombibationTableJointedNumba(10000)[:5])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8843c",
+      "text": "     [1, 10000, 49995000, 616668838, 709582588]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8843d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8843e",
+      "text": "     %timeit makeCombibationTableJointedNoReshapeNumba(K)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8843f",
+      "text": "     33 ms ± 809 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88440",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88441",
+      "text": "     K = math.ceil(math.sqrt(N + 1)) ** 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88442",
+      "text": "     rootK = math.ceil(math.sqrt(K))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88443",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88444",
+      "text": "     facto = np.arange(K, dtype=np.int64)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88445",
+      "text": "     facto[0] = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88446",
+      "text": "     for i in range(1, rootK):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88447",
+      "text": "         facto[i::rootK] *= facto[i-1::rootK]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88448",
+      "text": "         facto[i::rootK] %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88449",
+      "text": "     for start in range(rootK, K, rootK):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8844a",
+      "text": "         end = start + rootK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8844b",
+      "text": "         facto[start:end] *= facto[start - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8844c",
+      "text": "         facto[start:end] %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8844d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8844e",
+      "text": "     invf = np.arange(1, K + 1, dtype=np.int64)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d8844f",
+      "text": "     invf[-1] = getSingleInverseNumba(facto[K - 1])  # inverse of (k-1)!",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88450",
+      "text": "     for pos in range(rootK - 2, -1, -1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88451",
+      "text": "         invf[pos::rootK] *= invf[pos + 1::rootK]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88452",
+      "text": "         invf[pos::rootK] %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88453",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88454",
+      "text": "     for end in range(-rootK, -K, -rootK):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88455",
+      "text": "         start = end - rootK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88456",
+      "text": "         invf[start:end] *= invf[end]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88457",
+      "text": "         invf[start:end] %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88458",
+      "text": "     return facto[N] * invf[:N + 1] % MOD * invf[N::-1] % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225555
+    },
+    {
+      "id": "5ef6b153aff09e0000d88459",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225555,
+      "updated": 1593225556
+    },
+    {
+      "id": "5ef6b14aaff09e0000d88434",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593225546,
+      "updated": 1593225546
+    },
+    {
+      "id": "5ef60c02aff09e0000c2f8c3",
+      "text": "実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183234,
+      "updated": 1593183237
+    },
+    {
+      "id": "5ef60ad5aff09e0000d88414",
+      "text": "https://github.com/nishio/atcoder/blob/master/memo/combination.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182934,
+      "updated": 1593182934
+    },
+    {
+      "id": "5ef60e6aaff09e0000d88417",
+      "text": " Power: 13msec",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183851,
+      "updated": 1593183958
+    },
+    {
+      "id": "5ef60e6baff09e0000d88418",
+      "text": " Inverse: 47msec",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183852,
+      "updated": 1593183960
+    },
+    {
+      "id": "5ef60e6baff09e0000d88419",
+      "text": " Factorial: 13msec (K is excluded)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183852,
+      "updated": 1593184025
+    },
+    {
+      "id": "5ef60e6baff09e0000d8841b",
+      "text": " InvFactorial: 17msec (Need to give (K - 1)!)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183852,
+      "updated": 1593183962
+    },
+    {
+      "id": "5ef60e99aff09e0000d88420",
+      "text": " Combination:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183897,
+      "updated": 1593183968
+    },
+    {
+      "id": "5ef60edfaff09e0000d8842c",
+      "text": " \t35msec (if you need C(n, r) for specific n)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183968,
+      "updated": 1593183968
+    },
+    {
+      "id": "5ef60e6baff09e0000d8841e",
+      "text": " \t19msec (need f and invf. 13 + 17 + 19 = 49msec)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183852,
+      "updated": 1593183964
+    },
+    {
+      "id": "5ef60ea8aff09e0000d88423",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183913,
+      "updated": 1593183913
+    },
+    {
+      "id": "5ef60ad6aff09e0000d88415",
+      "text": "メモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593182934,
+      "updated": 1593183240
+    },
+    {
+      "id": "5ef60c08aff09e0000c2f8c5",
+      "text": "　Numbaはcontiguous arrayでないとreshapeできないので[np.ascontiguousarray]する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183240,
+      "updated": 1593183324
+    },
+    {
+      "id": "5ef60c5caff09e0000d88416",
+      "text": "　逆元を[フェルマーの小定理]で求めてるところはNumba的には「floatかな？」となるので[ユークリッドの互除法]に変更",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183324,
+      "updated": 1593183452
+    },
+    {
+      "id": "5ef60daeaff09e0000c2f8c6",
+      "text": "　maspy法は[平方分割]の一種なのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183662,
+      "updated": 1593184000
+    },
+    {
+      "id": "5ef60dc0aff09e0000c2f8c7",
+      "text": "　オリジナルの実装では`[0, K)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183681,
+      "updated": 1593184190
+    },
+    {
+      "id": "5ef60fbeaff09e0000d8842e",
+      "text": "　\t問題条件で「10 ** 6を含む」とされてるケースが多いから`[1, K]`の方が良いのではないか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593184190,
+      "updated": 1593184295
+    },
+    {
+      "id": "5ef61027aff09e0000d88430",
+      "text": "　\t実装してみたが、この場合n!がn-1に入ってるからバグの元かもなと思った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593184295,
+      "updated": 1593184300
+    },
+    {
+      "id": "5ef61094aff09e0000c2f8c8",
+      "text": "　\t一回り大きめに作るのが良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593184405,
+      "updated": 1593184420
+    },
+    {
+      "id": "5ef61c53aff09e0000c2f8d2",
+      "text": "　\t　平方数の制約があるのでちょっと面倒",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593187411,
+      "updated": 1593187438
+    },
+    {
+      "id": "5ef610a9aff09e0000c2f8c9",
+      "text": "　　　一回り大きくするコードも入れておいた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593184426,
+      "updated": 1593187410
+    },
+    {
+      "id": "5ef60c08aff09e0000c2f8c4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593183240,
+      "updated": 1593184395
+    },
+    {
+      "id": "5ef88551aff09e00009dbcda",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593345362,
+      "updated": 1593345362
+    },
+    {
+      "id": "5ef88551aff09e00009dbcdb",
+      "text": "https://ikatakos.com/pot/programming_algorithm/number_theory/mod_combination",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593345362,
+      "updated": 1593345362
+    },
+    {
+      "id": "5ef88551aff09e00009dbcdc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593345362,
+      "updated": 1593345362
+    }
+  ]
+}

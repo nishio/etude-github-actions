@@ -1,0 +1,428 @@
+{
+  "id": "6090ec0ca287e6002291a29e",
+  "title": "Hatena2013-03-19",
+  "created": 1363618800,
+  "updated": 1363618800,
+  "lines": [
+    {
+      "id": "6090ec30aff09e00003de1c2",
+      "text": "Hatena2013-03-19",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c3",
+      "text": "code:hatena",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c4",
+      "text": " <body>",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c5",
+      "text": " *1363672267*Javaでヒープ領域を余らせたままOutOfMemoryErrorを出す方法",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c6",
+      "text": " 先日、こんな問題を見かけたのだけども、JavaのGCにはあまり詳しくないので答えがわからなかった。",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c7",
+      "text": " >>",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c8",
+      "text": " OutOfMemoryErrorが発生しました。(中略)ヒープメモリは足りているようです。原因として何が考えられますか？",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1c9",
+      "text": " <<",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ca",
+      "text": " http://d.hatena.ne.jp/iad_otomamay/20130318/1363596244",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1cb",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1cc",
+      "text": " なんでだろうなぁと思っていたところid:moriyoshiが「Permanent領域があふれたんじゃないの」と一言。「Permanent領域」で検索してみると、なるほど、そういうことなのかー。",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1cd",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ce",
+      "text": " というわけで早速それを再現させるコードを書いてみた。ヒープの大部分ががら空きなのにPermanent領域だけ99%になっているのがわかるかと思う。",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1cf",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d0",
+      "text": " >||",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d1",
+      "text": " Exception in thread \"main\" [Full GC [Tenured: 515K->515K(56896K), 0.0106600 secs] 972K->515K(82560K), [Perm : 4095K->4026K(4096K)], 0.0107050 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d2",
+      "text": " java.lang.OutOfMemoryError: PermGen space",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d3",
+      "text": " \tat java.lang.ClassLoader.defineClass1(Native Method)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d4",
+      "text": " \tat java.lang.ClassLoader.defineClass(ClassLoader.java:791)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d5",
+      "text": " \tat java.lang.ClassLoader.defineClass(ClassLoader.java:634)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d6",
+      "text": " \tat Test.loadNext(Test.java:135)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d7",
+      "text": " \tat Test.main(Test.java:142)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d8",
+      "text": " Heap",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1d9",
+      "text": "  def new generation   total 25664K, used 914K [0x00000007bfc00000, 0x00000007c17d0000, 0x00000007d5150000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1da",
+      "text": "   eden space 22848K,   4% used [0x00000007bfc00000, 0x00000007bfce4878, 0x00000007c1250000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1db",
+      "text": "   from space 2816K,   0% used [0x00000007c1250000, 0x00000007c1250000, 0x00000007c1510000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1dc",
+      "text": "   to   space 2816K,   0% used [0x00000007c1510000, 0x00000007c1510000, 0x00000007c17d0000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1dd",
+      "text": "  tenured generation   total 56896K, used 515K [0x00000007d5150000, 0x00000007d88e0000, 0x00000007ffc00000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1de",
+      "text": "    the space 56896K,   0% used [0x00000007d5150000, 0x00000007d51d0e30, 0x00000007d51d1000, 0x00000007d88e0000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1df",
+      "text": "  compacting perm gen  total 4096K, used 4058K [0x00000007ffc00000, 0x0000000800000000, 0x0000000800000000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e0",
+      "text": "    the space 4096K,  99% used [0x00000007ffc00000, 0x00000007ffff6bd8, 0x00000007ffff6c00, 0x0000000800000000)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e1",
+      "text": " No shared spaces configured.",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e2",
+      "text": " ||<",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e3",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e4",
+      "text": " コードは重要なところだけ抜粋するとこんな感じ。",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e5",
+      "text": " >|java|",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e6",
+      "text": " public class Test extends ClassLoader{",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e7",
+      "text": "     static int count = 0;",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e8",
+      "text": "     Class loadNext() throws ClassNotFoundException {",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1e9",
+      "text": "         (中略)",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ea",
+      "text": "         return defineClass(name, b, 0, b.length);",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1eb",
+      "text": "     }",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ec",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ed",
+      "text": "     public static void main(String args[]) throws ClassNotFoundException{",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ee",
+      "text": "         Test me = new Test();",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1ef",
+      "text": "         while(true){",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f0",
+      "text": "             me.loadNext();",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f1",
+      "text": "             count++;",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f2",
+      "text": "         }",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f3",
+      "text": "     }",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f4",
+      "text": " }",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f5",
+      "text": " ||<",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f6",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f7",
+      "text": " つまりクラスを動的に生成しつづけるコードだ。先ほどのコンソール出力の例では手早く落とすために「-XX:PermSize=4m -XX:MaxPermSize=4m」を指定してPermanent領域を小さくしたので800個ちょいのクラスを定義した所で落ちる。その設定なしだと僕の環境では8万個のクラスを定義したあたりで落ちる。",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f8",
+      "text": " ",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1f9",
+      "text": " ソースコードはこちら。なお、バイトコードを理解しないままコピペするのが嫌で、理解できるまで調査した結果大量のコメントが入っているけども、そこは今回のストーリー上ではあんまり重要じゃないので無視してもよいだろう。",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1fa",
+      "text": " https://github.com/nishio/learn_language/blob/master/oome/Test.java",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1fb",
+      "text": " </body>",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1fc",
+      "text": "",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de1fd",
+      "text": "[はてなダイアリー 2013-03-19 https://nishiohirokazu.hatenadiary.org/archive/2013/03/19]",
+      "created": 1363618800,
+      "updated": 1363618800,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

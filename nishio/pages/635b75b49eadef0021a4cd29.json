@@ -1,0 +1,596 @@
+{
+  "id": "635b75b49eadef0021a4cd29",
+  "title": "Next.jsでReactNを使う",
+  "created": 1666938295,
+  "updated": 1666947783,
+  "lines": [
+    {
+      "id": "635b75b49eadef0021a4cd29",
+      "text": "Next.jsでReactNを使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666938295,
+      "updated": 1666938295
+    },
+    {
+      "id": "635b7c74aff09e0000beea8a",
+      "text": "3行で言えば",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666940021,
+      "updated": 1666940210
+    },
+    {
+      "id": "635b7d3aaff09e000097f690",
+      "text": "\tコンポーネントのマウントの前に1回だけグローバル状態の初期化をしたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666940219,
+      "updated": 1666940224
+    },
+    {
+      "id": "635b7d1caff09e0000beea8b",
+      "text": "　しかし[Next.js]ではそれを手軽に書ける場所がない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666940188,
+      "updated": 1666943217
+    },
+    {
+      "id": "635b7d1faff09e0000beea8c",
+      "text": "　ので、1回だけ初期化を実行する高階コンポーネント([HOC])を使って初期化を行う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666940191,
+      "updated": 1666943221
+    },
+    {
+      "id": "635b75b8aff09e000097f68e",
+      "text": ">In some cases (such as when using [Next.js]), you may be unable to run a setup script prior to your ReactN components mounting. In order to instantiate your global state and reducers prior to mounting, you may use the withInit Higher Order Component. This HOC will await the setting of your global state before mounting the provided Lower Order Component (e.g. <App />).",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666938297,
+      "updated": 1666938343
+    },
+    {
+      "id": "635b75b6aff09e000097f68c",
+      "text": "https://github.com/CharlesStover/reactn#withinit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666938295,
+      "updated": 1666938295
+    },
+    {
+      "id": "635b9aa9aff09e0000beea94",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666947753,
+      "updated": 1666947753
+    },
+    {
+      "id": "635b75ecaff09e000097f68f",
+      "text": "Next.jsのコードジェネレータが作ったコード`_app.tsx`はこんな感じ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666938349,
+      "updated": 1666947765
+    },
+    {
+      "id": "635b8061aff09e000097f6a0",
+      "text": "code:_app.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941026,
+      "updated": 1666941040
+    },
+    {
+      "id": "635b8064aff09e000097f6a2",
+      "text": " import '../styles/globals.css'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a3",
+      "text": " import type { AppProps } from 'next/app'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a5",
+      "text": " function MyApp({ Component, pageProps }: AppProps) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a6",
+      "text": "   return <Component {...pageProps} />",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a7",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8064aff09e000097f6a9",
+      "text": " export default MyApp",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941029,
+      "updated": 1666941029
+    },
+    {
+      "id": "635b8061aff09e000097f6a1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941026,
+      "updated": 1666941026
+    },
+    {
+      "id": "635b81f1aff09e0000beea8d",
+      "text": "これに高階コンポーネントwithInitをつける。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941425,
+      "updated": 1666947783
+    },
+    {
+      "id": "635b8217aff09e0000beea8e",
+      "text": "READMEのサンプルは下記のようになっているが",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941464,
+      "updated": 1666943072
+    },
+    {
+      "id": "635b822baff09e0000beea8f",
+      "text": "　型情報がない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941484,
+      "updated": 1666941494
+    },
+    {
+      "id": "635b8236aff09e0000beea90",
+      "text": "　コンポーネントが引数を取らない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941495,
+      "updated": 1666941516
+    },
+    {
+      "id": "635b824baff09e0000beea91",
+      "text": "という点でそのまま`_app.tsx`に適用できない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941516,
+      "updated": 1666943159
+    },
+    {
+      "id": "635b8252aff09e0000beea92",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941523,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872ed",
+      "text": " import React, { useDispatch, useGlobal, withInit } from 'reactn';",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872ee",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872ef",
+      "text": " const INITIAL_REDUCERS = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f0",
+      "text": "   addOne: ({ count }) => ({",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f1",
+      "text": "     count: count + 1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f2",
+      "text": "   }),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f3",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f5",
+      "text": " const INITIAL_STATE = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f6",
+      "text": "   count: 0,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f7",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872f9",
+      "text": " export default withInit(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872fa",
+      "text": "   INITIAL_STATE,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872fb",
+      "text": "   INITIAL_REDUCERS",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872fc",
+      "text": " )(function App() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872fd",
+      "text": "   const addOne = useDispatch('addOne');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872fe",
+      "text": "   const [count] = useGlobal('count');",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f872ff",
+      "text": "   return <button onClick={addOne}>Count: {count}</button>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8891aff09e0000f87300",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943121,
+      "updated": 1666943121
+    },
+    {
+      "id": "635b8892aff09e0000f87301",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666943123,
+      "updated": 1666943123
+    },
+    {
+      "id": "635b83aeaff09e000097f6ed",
+      "text": "ソースを読んで確認したけども、3番目の型引数でコンポーネントの引数の型を受け取っていた。なのでそこに適切に渡してやればOK。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941870,
+      "updated": 1666943037
+    },
+    {
+      "id": "635b83c4aff09e0000beea93",
+      "text": "TypeScriptで使うときのためのdeclareもする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941892,
+      "updated": 1666943022
+    },
+    {
+      "id": "635b842baff09e000097f6ef",
+      "text": "\thttps://github.com/CharlesStover/reactn#typescript-support",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941996,
+      "updated": 1666942036
+    },
+    {
+      "id": "635b83aeaff09e000097f6ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941871,
+      "updated": 1666941871
+    },
+    {
+      "id": "635b80abaff09e000097f6aa",
+      "text": "code:_app.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941100,
+      "updated": 1666941107
+    },
+    {
+      "id": "635b80b5aff09e000097f6ac",
+      "text": " import \"../styles/globals.css\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941109,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6ce",
+      "text": " import type { AppProps } from \"next/app\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6cf",
+      "text": " import React, { withInit } from \"reactn\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d1",
+      "text": " const INITIAL_STATE = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d2",
+      "text": "   count: 0,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d3",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d5",
+      "text": " type TYPE_STATE = typeof INITIAL_STATE;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d6",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d7",
+      "text": " const INITIAL_REDUCERS = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d8",
+      "text": "   addOne: ({ count }: TYPE_STATE) => ({",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6d9",
+      "text": "     count: count + 1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6da",
+      "text": "   }),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6db",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6dc",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6dd",
+      "text": " type TYPE_REDUCERS = typeof INITIAL_REDUCERS;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6de",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6df",
+      "text": " declare module \"reactn/default\" {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e0",
+      "text": "   export interface State extends TYPE_STATE {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e1",
+      "text": "   export interface Reducers extends TYPE_REDUCERS {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e2",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e4",
+      "text": " const MyApp = withInit<TYPE_STATE, TYPE_REDUCERS, AppProps>(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e5",
+      "text": "   INITIAL_STATE,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e6",
+      "text": "   INITIAL_REDUCERS",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e7",
+      "text": " )(({ Component, pageProps }: AppProps) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e8",
+      "text": "   return <Component {...pageProps} />;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6e9",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6ea",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6eb",
+      "text": " export default MyApp;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941804
+    },
+    {
+      "id": "635b836baff09e000097f6ec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941804,
+      "updated": 1666941806
+    },
+    {
+      "id": "635b80abaff09e000097f6ab",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1666941100,
+      "updated": 1666941867
+    }
+  ]
+}

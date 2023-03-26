@@ -1,0 +1,568 @@
+{
+  "id": "6090ec06a287e6002291a130",
+  "title": "Hatena2011-01-07",
+  "created": 1294326000,
+  "updated": 1294326000,
+  "lines": [
+    {
+      "id": "6090ec2aaff09e00003d7e50",
+      "text": "Hatena2011-01-07",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e51",
+      "text": "code:hatena",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e52",
+      "text": " <body>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e53",
+      "text": " *1294371878*dllやsoから本体側の関数を呼ぶ方法",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e54",
+      "text": " [注: この記事はわかったところまでを忘れないうちに書き留める目的のもので、soとdylibの違いとかELFとMach-Oの違いとかがいまいちわかってない人間が書いているので要注意です！]",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e55",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e56",
+      "text": " プラグインの側から本体が提供している関数(API)を呼んでどうこうしたいってケースの話。たとえば下の例ではプラグインの側から本体で定義されているaddって関数を呼ぼうとしている。しかし単に本体側の関数のプロトタイプ宣言を持ってきただけではシンボルが見つからない旨のエラーになる。",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e57",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e58",
+      "text": " >|cpp|",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e59",
+      "text": " #include <stdio.h>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e5a",
+      "text": " int add(int, int);",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e5b",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e5c",
+      "text": " extern \"C\" {",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e5d",
+      "text": " void foo(int x){",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e5e",
+      "text": "   printf(\"%d\\n\", add(x, 42));",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e5f",
+      "text": " }",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e60",
+      "text": " }",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e61",
+      "text": " ||<",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e62",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e63",
+      "text": " >||",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e64",
+      "text": " $ g++ -shared -o so.so so.cpp",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e65",
+      "text": " Undefined symbols:",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e66",
+      "text": "   \"add(int, int)\", referenced from:",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e67",
+      "text": "       _foo in ccyB73dJ.o",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e68",
+      "text": " ld: symbol(s) not found",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e69",
+      "text": " collect2: ld returned 1 exit status",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e6a",
+      "text": " ||<",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e6b",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e6c",
+      "text": " コンパイラオプションに「-Wl,-undefined,dynamic_lookup」を付けると、見つからないシンボルは無視をして実行時に動的にルックアップするようになる。so.soのビルドができたので次はそれを呼び出すコードを書いてみよう。もちろんaddの定義も。",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e6d",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e6e",
+      "text": " >|cpp|",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e6f",
+      "text": " // base.cpp",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e70",
+      "text": " #include <stdio.h>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e71",
+      "text": " #include <stdlib.h>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e72",
+      "text": " #include <dlfcn.h>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e73",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e74",
+      "text": " int add(int x, int y){",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e75",
+      "text": "   return x + y;",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e76",
+      "text": " }",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e77",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e78",
+      "text": " int main(){",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e79",
+      "text": "   void* handle = dlopen(\"so.so\", RTLD_LAZY); /* soを開く */",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e7a",
+      "text": "   char *error;",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e7b",
+      "text": "   if (!handle) {",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e7c",
+      "text": "     fprintf (stderr, \"%s\\n\", dlerror());",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e7d",
+      "text": "     exit(1);",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e7e",
+      "text": "   }",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e7f",
+      "text": "   dlerror();    /* Clear any existing error */",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e80",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e81",
+      "text": "   typedef void (*Foo)(int); /* (1) */",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e82",
+      "text": "   Foo foo = (Foo)dlsym(handle, \"foo\"); /* (2) */",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e83",
+      "text": "   if ((error = dlerror()) != NULL)  {",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e84",
+      "text": "     fprintf (stderr, \"%s\\n\", error);",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e85",
+      "text": "     exit(1);",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e86",
+      "text": "   }",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e87",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e88",
+      "text": "   foo(42); /* (3) */",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e89",
+      "text": "   dlclose(handle);",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e8a",
+      "text": " }",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e8b",
+      "text": " ||<",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e8c",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e8d",
+      "text": " (1)ではintを取ってvoidを返す関数ポインタ型Fooを作っている。そして(2)で\"foo\"という名前の関数へのポインタを取得してそれをFooにキャストして、fooという名前の変数に入れている。そうすると(3)のように普通の関数みたいに呼ぶことが出来る。(see http://www.kouno.jp/home/c_faq/c4.html#12)",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e8e",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e8f",
+      "text": " これを実行すると期待通りのaddが呼ばれた結果が返るので「本体側の関数を呼ぶことは簡単にできる」ということがわかった。筆者はこれを「POSIXでは簡単にできる」「ELFでは簡単にできる」「gccでは簡単にできる」のどれにするのが適切かわからない。ELFらしいけど。(moriyoshi先生談)",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e90",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e91",
+      "text": " さてここからが本題で、これと同じことをWindowsでやりたい場合にどうすればいいか。色々調べて、とあるオプション(忘れてしまった)を付けると未定義のシンボルをエラーにせずに無視してビルドすることが出来ることがわかった。",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e92",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e93",
+      "text": " しかしこれは罠で、実行時に動的ルックアップはしてくれないらしい！",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e94",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e95",
+      "text": " それに気づかずに例外0xC0000005とか出たり、調べてみたらこれはアクセスバイオレーションだとわかったり、「あれー、デバッグビルドしてるのにどこでアクセスバイオレーションになってるのかソースが見れないぞー」ってなったり、アクセスバイオレーションが発生する最小限のコードにしてみたら最初のAPIコールで死んでいることがわかったのでその関数にブレークポイントをつけてみたらテスト実行までに何度も呼ばれてたり、エラーの直前に呼ばれるときの引数などが特におかしく見えなかったり、エラーの直前に呼ばれてからの処理をステップ実行していたらスレッドがたくさんあってあっちゃこっちゃ行って意味不明だったり、………という盛大な遠回りをしてしまったがようするにAPIをコールした後死んでいるのでも、APIをコールする前に死んでいるのでもなくAPIの関数ポインタが不正な値なので呼んだ瞬間に死んでいるというオチだった。変なところに飛んで死ぬのでソースが見れず、「死ぬ直前に呼ばれた問題のAPIの処理」を追っかけても単なるハウスキーピングだから意味がなく、スレッドが切り替わってプラグイン内でその呼び出しが呼ばれたタイミングで死ぬので死のタイミングが変わりうる、と。",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e96",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e97",
+      "text": " さて、罠と遠回りはさておき、じゃあWindowsではどうすればいいのか？方法は二つあるようだ。1つは関数ポインタを構造体などに詰め合わせにして引数などでDLL側に渡してやる方法(thanks 光成さん)、もうひとつは本体側の公開したい関数に__declspec(dllexport)をつけて、<a href='http://msdn.microsoft.com/en-us/library/ms683200(v=vs.85).aspx'>GetModuleHandleEx</a>で本体exeのハンドルを取得する方法(thanks id:moriyoshi)",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e98",
+      "text": " >>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e99",
+      "text": " If this parameter is NULL, the function returns a handle to the file used to create the calling process (.exe file).",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e9a",
+      "text": " <<",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e9b",
+      "text": " ",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e9c",
+      "text": " で、前者のサンプルを作ったり、後者のサンプルをmoriyoshi先生にもらったりしたのだけども、これからプログラミングシンポジウムが始まるので続きはまた今度で。",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e9d",
+      "text": " </body>",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e9e",
+      "text": "",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2aaff09e00003d7e9f",
+      "text": "[はてなダイアリー 2011-01-07 https://nishiohirokazu.hatenadiary.org/archive/2011/01/07]",
+      "created": 1294326000,
+      "updated": 1294326000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

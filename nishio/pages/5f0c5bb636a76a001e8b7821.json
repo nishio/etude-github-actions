@@ -1,0 +1,1842 @@
+{
+  "id": "5f0c5bb636a76a001e8b7821",
+  "title": "セグメント木の可視化",
+  "created": 1594645433,
+  "updated": 1595419935,
+  "lines": [
+    {
+      "id": "5f0c5bb636a76a001e8b7821",
+      "text": "セグメント木の可視化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645433,
+      "updated": 1594645437
+    },
+    {
+      "id": "5f0c5bbdaff09e0000093d51",
+      "text": "[セグメント木]の概念を、単純なセグメント木だけではなく[双対セグメント木]や[遅延伝搬セグメント木]まで通じて整理したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645437,
+      "updated": 1594645489
+    },
+    {
+      "id": "5f0c5c40aff09e0000093d57",
+      "text": "　Pythonであることを生かして、二項演算や作用はハードコードせずに引数として渡す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645574,
+      "updated": 1594645626
+    },
+    {
+      "id": "5f0c5c63aff09e0000093d58",
+      "text": "　理解が目的なので速度のことは気にしない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645604,
+      "updated": 1594645621
+    },
+    {
+      "id": "5f0c5c1aaff09e0000f19f2a",
+      "text": "\t1-origin、サイズは2ベキ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645530,
+      "updated": 1594706763
+    },
+    {
+      "id": "5f0d0a1caff09e0000f19f86",
+      "text": "\t[Segment Tree のお勉強(2) | maspyのHP https://maspypy.com/segment-tree-%E3%81%AE%E3%81%8A%E5%8B%89%E5%BC%B72]を参考にした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594690077,
+      "updated": 1594706769
+    },
+    {
+      "id": "5f0d4b54aff09e0000cf7d2a",
+      "text": "\t[ソースコードはこちら https://github.com/nishio/atcoder/blob/master/memo/segment_tree/segment_tree_vis.py]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706772,
+      "updated": 1595416158
+    },
+    {
+      "id": "5f0d4188aff09e0000cf7cf3",
+      "text": "\t　ここの解説とソースのdocが食い違っている時はソースの方が正しい、doctestで回帰テストしてるから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704264,
+      "updated": 1594706886
+    },
+    {
+      "id": "5f0d4b5faff09e0000cf7d2b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706784,
+      "updated": 1594706784
+    },
+    {
+      "id": "5f129ca4aff09e000028d2b2",
+      "text": "下記ではセグメント木、双対セグメント木、遅延伝搬セグメント木、までを実装してAOJのテストケースでベリファイしているが、遅延伝搬セグメント木に関してはTLEしていて、柔軟な設計のせいでTLEしてるのかアルゴリズム的に何か間違えてるのかはまだ識別できてない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595055269,
+      "updated": 1595055372
+    },
+    {
+      "id": "5f129ca5aff09e000028d2b3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595055269,
+      "updated": 1595055269
+    },
+    {
+      "id": "5f0d41ceaff09e0000cf7cf4",
+      "text": "IDはこういう順番になっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704338,
+      "updated": 1594704355
+    },
+    {
+      "id": "5f0c5d83aff09e0000f19f2e",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645891,
+      "updated": 1594645901
+    },
+    {
+      "id": "5f0c5d87aff09e0000f19f2f",
+      "text": " >>> debugprint(range(SEGTREE_SIZE))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594645895,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f5a",
+      "text": " |                       1                       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f5b",
+      "text": " |           2           |           3           |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f5c",
+      "text": " |     4     |     5     |     6     |     7     |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f5d",
+      "text": " |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f5e",
+      "text": " |16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31| ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594704302
+    },
+    {
+      "id": "5f0d41acaff09e0000f19f88",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704300,
+      "updated": 1594704300
+    },
+    {
+      "id": "5f0d41f5aff09e0000cf7cf5",
+      "text": "配列が与えられたときに隣り合うものに二項演算をかけながらO(N)で構築できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704374,
+      "updated": 1594704407
+    },
+    {
+      "id": "5f0d42aaaff09e0000cf7cfa",
+      "text": "　ここでは和を求めてる、この構築された木を使って範囲の和が高速に求められる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704555,
+      "updated": 1594704577
+    },
+    {
+      "id": "5f0d41abaff09e0000f19f87",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704299,
+      "updated": 1594704299
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f60",
+      "text": " >>> table = [None] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f61",
+      "text": " >>> set_items(table, range(16))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f62",
+      "text": " >>> full_up(table, lambda x, y: f\"{x}+{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f63",
+      "text": " >>> debugprint(table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f64",
+      "text": " |             0+1+2+3+4+5+6+7+8+9+10+11+12+13+14+15             |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f65",
+      "text": " |        0+1+2+3+4+5+6+7        |     8+9+10+11+12+13+14+15     |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f66",
+      "text": " |    0+1+2+3    |    4+5+6+7    |   8+9+10+11   |  12+13+14+15  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f67",
+      "text": " |  0+1  |  2+3  |  4+5  |  6+7  |  8+9  | 10+11 | 12+13 | 14+15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f68",
+      "text": " | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14| 15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f69",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594704305
+    },
+    {
+      "id": "5f0d421eaff09e0000cf7cf6",
+      "text": "点更新",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704415,
+      "updated": 1594704417
+    },
+    {
+      "id": "5f0d4223aff09e0000cf7cf7",
+      "text": "　末端の値に関数を掛ける(作用と呼んだりする)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704420,
+      "updated": 1594704459
+    },
+    {
+      "id": "5f0d424caff09e0000cf7cf8",
+      "text": "　 親に作用を伝搬していくことがlogNでできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704460,
+      "updated": 1594704493
+    },
+    {
+      "id": "5f0d4275aff09e0000cf7cf9",
+      "text": "　 例えば末端を+5すると、親も+5されるのでこれでセグメント木全体を正しく更新できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704501,
+      "updated": 1594704626
+    },
+    {
+      "id": "5f0d41b1aff09e0000f19f89",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704305,
+      "updated": 1594704305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f6a",
+      "text": " >>> point_update(table, 3, lambda x: f\"f({x})\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f6b",
+      "text": " >>> debugprint(table, 4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f6c",
+      "text": " |                    f(0+1+2+3+4+5+6+7+8+9+10+11+12+13+14+15)                   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f6d",
+      "text": " |           f(0+1+2+3+4+5+6+7)          |         8+9+10+11+12+13+14+15         |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f6e",
+      "text": " |     f(0+1+2+3)    |      4+5+6+7      |     8+9+10+11     |    12+13+14+15    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f6f",
+      "text": " |   0+1   |  f(2+3) |   4+5   |   6+7   |   8+9   |  10+11  |  12+13  |  14+15  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0c6309aff09e0000f19f70",
+      "text": " | 0  | 1  | 2  |f(3)| 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594647305,
+      "updated": 1594647305
+    },
+    {
+      "id": "5f0d4349aff09e0000cf7cfb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704713,
+      "updated": 1594704713
+    },
+    {
+      "id": "5f0d4681aff09e0000cf7d05",
+      "text": "別のパターン",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705537,
+      "updated": 1594705747
+    },
+    {
+      "id": "5f0d434aaff09e0000cf7cfc",
+      "text": "　末端の値が、以前の値と無関係に設定される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704715,
+      "updated": 1594704746
+    },
+    {
+      "id": "5f0d4369aff09e0000cf7cfd",
+      "text": "　　この場合、親が2つの子の二項演算をやりながら上に伝搬していけばよい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704746,
+      "updated": 1594704777
+    },
+    {
+      "id": "5f0d4389aff09e0000cf7cfe",
+      "text": "　変化を作用で表現できないケースもこちら",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704777,
+      "updated": 1594704803
+    },
+    {
+      "id": "5f0d4403aff09e0000cf7d00",
+      "text": "　　例えばmaxを取る演算で値が減少する時",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704900,
+      "updated": 1594704938
+    },
+    {
+      "id": "5f0d442aaff09e0000cf7d01",
+      "text": "　　値が増加しかしない時は「新しい値とmaxを取る」という作用でできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704938,
+      "updated": 1594705276
+    },
+    {
+      "id": "5f0d45f2aff09e0000cf7d02",
+      "text": "　　値が減少する時max(x, y)を求めた後でxが0 になってもyの値が失われてるので戻せない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705396,
+      "updated": 1594705459
+    },
+    {
+      "id": "5f0d430eaff09e0000f19f8b",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704654,
+      "updated": 1594704696
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f94",
+      "text": " >>> point_set(table, 3, \"x\", lambda x, y: f\"{x}+{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704696,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f95",
+      "text": " >>> debugprint(table, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f96",
+      "text": " |             0+1+2+x+4+5+6+7+8+9+10+11+12+13+14+15             |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f97",
+      "text": " |        0+1+2+x+4+5+6+7        |     8+9+10+11+12+13+14+15     |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f98",
+      "text": " |    0+1+2+x    |    4+5+6+7    |   8+9+10+11   |  12+13+14+15  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f99",
+      "text": " |  0+1  |  2+x  |  4+5  |  6+7  |  8+9  | 10+11 | 12+13 | 14+15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f9a",
+      "text": " | 0 | 1 | 2 | x | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14| 15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4338aff09e0000f19f9b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704697,
+      "updated": 1594704697
+    },
+    {
+      "id": "5f0d4a30aff09e0000f19ffb",
+      "text": "max二項演算を上に伝搬していくデモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706481,
+      "updated": 1594706504
+    },
+    {
+      "id": "5f0d4a21aff09e0000f19fc2",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706465,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fdf",
+      "text": " # Point update, range max",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe1",
+      "text": " >>> table = [0] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe2",
+      "text": " >>> set_items(table, range(16))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe3",
+      "text": " >>> full_up(table, max)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe4",
+      "text": " >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe5",
+      "text": " |                       15                      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe6",
+      "text": " |           7           |           15          |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe7",
+      "text": " |     3     |     7     |     11    |     15    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe8",
+      "text": " |  1  |  3  |  5  |  7  |  9  |  11 |  13 |  15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fe9",
+      "text": " |0 |1 |2 |3 |4 |5 |6 |7 |8 |9 |10|11|12|13|14|15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fea",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19feb",
+      "text": " >>> set_item(table, 5, 99)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fec",
+      "text": " >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fed",
+      "text": " |                       15                      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fee",
+      "text": " |           7           |           15          |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19fef",
+      "text": " |     3     |     7     |     11    |     15    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff0",
+      "text": " |  1  |  3  |  5  |  7  |  9  |  11 |  13 |  15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff1",
+      "text": " |0 |1 |2 |3 |4 |99|6 |7 |8 |9 |10|11|12|13|14|15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff3",
+      "text": " >>> up_propagate_from_leaf(table, 5, max)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff4",
+      "text": " >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff5",
+      "text": " |                       99                      |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff6",
+      "text": " |           99          |           15          |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff7",
+      "text": " |     3     |     99    |     11    |     15    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff8",
+      "text": " |  1  |  3  |  99 |  7  |  9  |  11 |  13 |  15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ff9",
+      "text": " |0 |1 |2 |3 |4 |99|6 |7 |8 |9 |10|11|12|13|14|15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706474
+    },
+    {
+      "id": "5f0d4a2aaff09e0000f19ffa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706474,
+      "updated": 1594706475
+    },
+    {
+      "id": "5f0d4a21aff09e0000f19fc3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706465,
+      "updated": 1594706465
+    },
+    {
+      "id": "5f0d472caff09e0000f19f9c",
+      "text": "範囲縮約",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705708,
+      "updated": 1594705749
+    },
+    {
+      "id": "5f0d4755aff09e0000f19fa7",
+      "text": "　範囲に対して二項演算で縮約できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705749,
+      "updated": 1594705749
+    },
+    {
+      "id": "5f0d4755aff09e0000f19fa8",
+      "text": "　　Pythonだとreduce",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705749,
+      "updated": 1594705749
+    },
+    {
+      "id": "5f0d4755aff09e0000f19fa9",
+      "text": "　　Haskellだとfold系、Rubyだとinjectとか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705749,
+      "updated": 1594705749
+    },
+    {
+      "id": "5f0d4c39aff09e0000cf7d2e",
+      "text": "　　セグメント木文脈ではRange sumとかRange maxみたいに具体的な二項演算を特定した表現をよく見る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594707001,
+      "updated": 1594707088
+    },
+    {
+      "id": "5f0d4c90aff09e0000cf7d2f",
+      "text": "　　「範囲内の複数の値に対して繰り返し二項演算を適用して1つの値にすること」を指す言葉が見つからなかったのでここでは範囲縮約と呼んでおく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594707088,
+      "updated": 1594720008
+    },
+    {
+      "id": "5f0d7f08aff09e000005235f",
+      "text": "　　　メジャーな言い方ではなさげ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594720008,
+      "updated": 1594720008
+    },
+    {
+      "id": "5f0d7f0aaff09e0000052360",
+      "text": "　　　「畳み込み」と呼ぶ人もいる(多義語…)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594720010,
+      "updated": 1594720025
+    },
+    {
+      "id": "5f0d4755aff09e0000f19fab",
+      "text": "　二項演算は[結合法則]を満たす必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705749,
+      "updated": 1594705838
+    },
+    {
+      "id": "5f0d47bcaff09e0000cf7d0a",
+      "text": "　　加算、乗算、maxはOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705853,
+      "updated": 1594705866
+    },
+    {
+      "id": "5f0d47cbaff09e0000cf7d0b",
+      "text": "　[交換法則]は満たさなくて良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705867,
+      "updated": 1594705957
+    },
+    {
+      "id": "5f0d4804aff09e0000cf7d0d",
+      "text": "　　…ように実装できるが整数の加算、乗算、maxでは交換法則が成り立つので、成り立たなくても大丈夫な実装にしてない人もいるかもね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705925,
+      "updated": 1594723700
+    },
+    {
+      "id": "5f0d47efaff09e0000cf7d0c",
+      "text": "　　交換法則を満たさないケース",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705903,
+      "updated": 1594723629
+    },
+    {
+      "id": "5f0d7f28aff09e0000052361",
+      "text": "　　 値が行列で二項演算が行列積の場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594720040,
+      "updated": 1594720076
+    },
+    {
+      "id": "5f0d7f8baff09e000054044f",
+      "text": "　　 [ARC008_D https://atcoder.jp/contests/arc008/tasks/arc008_4]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594720139,
+      "updated": 1594723369
+    },
+    {
+      "id": "5f0d8c50aff09e0000540450",
+      "text": "　　 \t二項演算が[$ T\\times T→T ]ではなく [$ T \\times S→T ]なので交換できない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594723408,
+      "updated": 1594723561
+    },
+    {
+      "id": "5f0d472caff09e0000f19f9d",
+      "text": " code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705708,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d472faff09e0000f19f9e",
+      "text": "  >>> set_items(table, range(16))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705711,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19f9f",
+      "text": "  >>> full_up(table, lambda x, y: f\"{x}+{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa0",
+      "text": "  >>> range_reduce(table, 3, 11, lambda x, y: f\"{x}+{y}\", unity=\"0\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa1",
+      "text": "  '0+3+4+5+6+7+8+9+10+0'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa2",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa3",
+      "text": "  # Bin-op must be associative",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa4",
+      "text": "  >>> range_reduce(table, 3, 11, lambda x, y: f\"({x}+{y})\", unity=\"0\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa5",
+      "text": "  '(((0+3)+4+5+6+7)+(8+9+(10+0)))'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594707612
+    },
+    {
+      "id": "5f0d4730aff09e0000f19fa6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594705712,
+      "updated": 1594705713
+    },
+    {
+      "id": "5f0d494eaff09e0000cf7d12",
+      "text": "点更新と範囲縮約の組み合わせで点更新と範囲和ができる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706254,
+      "updated": 1594707623
+    },
+    {
+      "id": "5f0d4971aff09e0000f19fc1",
+      "text": " code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706290,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4961aff09e0000cf7d14",
+      "text": "  >>> table = [0] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706273,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d15",
+      "text": "  >>> set_items(table, range(16))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d16",
+      "text": "  >>> full_up(table, lambda x, y: f\"{x}+{y}\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d17",
+      "text": "  >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d18",
+      "text": "  |     0+1+2+3+4+5+6+7+8+9+10+11+12+13+14+15     |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d19",
+      "text": "  |    0+1+2+3+4+5+6+7    | 8+9+10+11+12+13+14+15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d1a",
+      "text": "  |  0+1+2+3  |  4+5+6+7  | 8+9+10+11 |12+13+14+15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d1b",
+      "text": "  | 0+1 | 2+3 | 4+5 | 6+7 | 8+9 |10+11|12+13|14+15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d1c",
+      "text": "  |0 |1 |2 |3 |4 |5 |6 |7 |8 |9 |10|11|12|13|14|15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d1d",
+      "text": " \t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d1e",
+      "text": "  >>> point_update(table, 5, lambda x: f\"{x}+99\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d1f",
+      "text": "  >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d20",
+      "text": "  |                    0+1+2+3+4+5+6+7+8+9+10+11+12+13+14+15+99                   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d21",
+      "text": "  |           0+1+2+3+4+5+6+7+99          |         8+9+10+11+12+13+14+15         |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d22",
+      "text": "  |      0+1+2+3      |     4+5+6+7+99    |     8+9+10+11     |    12+13+14+15    |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d23",
+      "text": "  |   0+1   |   2+3   |  4+5+99 |   6+7   |   8+9   |  10+11  |  12+13  |  14+15  |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d24",
+      "text": "  | 0  | 1  | 2  | 3  | 4  |5+99| 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d25",
+      "text": " \t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d26",
+      "text": "  >>> range_reduce(table, 3, 11, lambda x, y: f\"{x}+{y}\", \"0\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d4968aff09e0000cf7d27",
+      "text": "  '0+3+4+5+6+7+99+8+9+10+0'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706281,
+      "updated": 1594707627
+    },
+    {
+      "id": "5f0d494eaff09e0000cf7d13",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594707652,
+      "updated": 1594707652
+    },
+    {
+      "id": "5f0d4336aff09e0000f19f93",
+      "text": "[双対セグメント木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594704695,
+      "updated": 1594719961
+    },
+    {
+      "id": "5f0d464faff09e0000cf7d04",
+      "text": "　範囲更新、点取得にできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594707652,
+      "updated": 1594707652
+    },
+    {
+      "id": "5f0d48b3aff09e0000cf7d0f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594707652,
+      "updated": 1594707652
+    },
+    {
+      "id": "5f0d48afaff09e0000cf7d0e",
+      "text": "範囲更新",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706101,
+      "updated": 1594706101
+    },
+    {
+      "id": "5f0d48b7aff09e0000cf7d10",
+      "text": "　left以上right未満の範囲に対して作用を掛ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706103,
+      "updated": 1594707585
+    },
+    {
+      "id": "5f0d48ecaff09e0000cf7d11",
+      "text": "\t　末端の要素に対してかけないことでlogNオーダーになっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706156,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a2aff09e0000f19fac",
+      "text": "  code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706082,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a4aff09e0000f19faf",
+      "text": "   >>> table = [\"\"] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb0",
+      "text": "   >>> set_items(table, range(16))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb1",
+      "text": "   >>> range_update(table, 1, 11, lambda x: f\"f\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb2",
+      "text": "   >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb3",
+      "text": "   |                                               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb4",
+      "text": "   |                       |                       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb5",
+      "text": "   |           |     f     |           |           |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb6",
+      "text": "   |     |  f  |     |     |  f  |     |     |     |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb7",
+      "text": "   |0 |f |2 |3 |4 |5 |6 |7 |8 |9 |f |11|12|13|14|15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb8",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fb9",
+      "text": "   >>> range_update(table, 3, 15, lambda x: f\"{x}g\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fba",
+      "text": "   >>> debugprint(table)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fbb",
+      "text": "   |                                                               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fbc",
+      "text": "   |                               |                               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fbd",
+      "text": "   |               |       fg      |       g       |               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fbe",
+      "text": "   |       |   f   |       |       |   f   |       |   g   |       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d48a5aff09e0000f19fbf",
+      "text": "   | 0 | f | 2 | 3g| 4 | 5 | 6 | 7 | 8 | 9 | f | 11| 12| 13|14g| 15|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706085,
+      "updated": 1594707584
+    },
+    {
+      "id": "5f0d4a7daff09e0000f1a00f",
+      "text": " これを使って、範囲更新で(+1)と(+2)の作用を範囲に適用する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706557,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d48a2aff09e0000f19fad",
+      "text": "  code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706082,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f19ffe",
+      "text": "   >>> table = [0] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f19fff",
+      "text": "   >>> range_update(table, 1, 11, lambda x: x + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a000",
+      "text": "   >>> debugprint(table, maxsize=4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a001",
+      "text": "   |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a002",
+      "text": "   |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a003",
+      "text": "   |   0   |   1   |   0   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a004",
+      "text": "   | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a005",
+      "text": "   |0|1|0|0|0|0|0|0|0|0|1|0|0|0|0|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a006",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a007",
+      "text": "   >>> range_update(table, 3, 15, lambda x: x + 2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a008",
+      "text": "   >>> debugprint(table, maxsize=4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a009",
+      "text": "   |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a00a",
+      "text": "   |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a00b",
+      "text": "   |   0   |   3   |   2   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a00c",
+      "text": "   | 0 | 1 | 0 | 0 | 1 | 0 | 2 | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a00d",
+      "text": "   |0|1|0|2|0|0|0|0|0|0|1|0|0|0|2|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707593
+    },
+    {
+      "id": "5f0d4a78aff09e0000f1a00e",
+      "text": " 5番目の値が欲しいとき、親からそこまで下向きに作用を伝搬させれば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706552,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4a75aff09e0000f19ffc",
+      "text": "  code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706550,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a011",
+      "text": "   >>> down_propagate_to_leaf(table, 5, add, 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a012",
+      "text": "   >>> debugprint(table, maxsize=4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a013",
+      "text": "   |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a014",
+      "text": "   |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a015",
+      "text": "   |   0   |   0   |   2   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a016",
+      "text": "   | 0 | 1 | 0 | 3 | 1 | 0 | 2 | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a017",
+      "text": "   |0|1|0|2|3|3|0|0|0|0|1|0|0|0|2|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a018",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a019",
+      "text": "   >>> down_propagate_to_leaf(table, 9, add, 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a01a",
+      "text": "   >>> debugprint(table, maxsize=4)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a01b",
+      "text": "   |               0               |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a01c",
+      "text": "   |       0       |       0       |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a01d",
+      "text": "   |   0   |   0   |   0   |   0   |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a01e",
+      "text": "   | 0 | 1 | 0 | 3 | 0 | 2 | 2 | 0 |",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a01f",
+      "text": "   |0|1|0|2|3|3|0|0|3|3|1|0|0|0|2|0|",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594707601
+    },
+    {
+      "id": "5f0d4afaaff09e0000f1a020",
+      "text": "\t[双対セグメント木の下への伝搬]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594706682,
+      "updated": 1594873598
+    },
+    {
+      "id": "5f0fd718aff09e0000f85636",
+      "text": "\t　作用が可換でないなら範囲作用の前に下への伝搬が必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594873625,
+      "updated": 1594873651
+    },
+    {
+      "id": "5f0fd6d3aff09e00009b5a3e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594873556,
+      "updated": 1594873556
+    },
+    {
+      "id": "5f182d11aff09e0000dadb50",
+      "text": "\t続き [遅延伝搬セグメント木の可視化]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595419921,
+      "updated": 1595419935
+    },
+    {
+      "id": "5f182d0faff09e0000dadb4f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595419919,
+      "updated": 1595419919
+    },
+    {
+      "id": "5f0ee7f0aff09e00009b59c7",
+      "text": "Verified",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812401,
+      "updated": 1594812404
+    },
+    {
+      "id": "5f0ee7f4aff09e00009b59c9",
+      "text": " [DSL_2_A Range Minimum Query (RMQ) https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_A]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812404,
+      "updated": 1594812463
+    },
+    {
+      "id": "5f0ee7f0aff09e00009b59c8",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812401,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59ca",
+      "text": "\t\t def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59cb",
+      "text": "       N, Q = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59cc",
+      "text": "       depth = N.bit_length() + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59cd",
+      "text": "       set_depth(depth)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59ce",
+      "text": "       table = [INF] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59cf",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d0",
+      "text": "       for _q in range(Q):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d1",
+      "text": "           q, x, y = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d2",
+      "text": "           if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d3",
+      "text": "               # update",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d4",
+      "text": "               point_set(table, x, y, min)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d5",
+      "text": "           else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d6",
+      "text": "               # find",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d7",
+      "text": "               print(range_reduce(table, x, y + 1, min, INF))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812482
+    },
+    {
+      "id": "5f0ee841aff09e00009b59d8",
+      "text": "\t[DSL_2_B Range Sum Query https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_B]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812482,
+      "updated": 1594812738
+    },
+    {
+      "id": "5f0ee915aff09e00009b59d9",
+      "text": " \tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812694,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee919aff09e00009b59db",
+      "text": " \t def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59dc",
+      "text": "       from operator import add",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59dd",
+      "text": "       N, Q = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59de",
+      "text": "       depth = N.bit_length() + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59df",
+      "text": "       set_depth(depth)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e0",
+      "text": "       table = [0] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e1",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e2",
+      "text": "       for _q in range(Q):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e3",
+      "text": "           q, x, y = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e4",
+      "text": "           if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e5",
+      "text": "               # add",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e6",
+      "text": "               point_update(table, x, lambda x: x + y)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e7",
+      "text": "           else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e8",
+      "text": "               # sum",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812746
+    },
+    {
+      "id": "5f0ee91aaff09e00009b59e9",
+      "text": "               print(range_reduce(table, x, y + 1, add, 0))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812698,
+      "updated": 1594812707
+    },
+    {
+      "id": "5f0fc84faff09e00005dbdc4",
+      "text": "\t[DSL_2_D Range Update Query]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869840,
+      "updated": 1594869866
+    },
+    {
+      "id": "5f0fc867aff09e00005dbdc5",
+      "text": "\t[DSL_2_E Range Add Query https://onlinejudge.u-aizu.ac.jp/courses/library/3/DSL/2/DSL_2_E]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594869863,
+      "updated": 1594869863
+    },
+    {
+      "id": "5f0ee94baff09e00009b59ec",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594812747,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a1c",
+      "text": "\t\t def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a1d",
+      "text": "       from operator import add",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a1e",
+      "text": "       N, Q = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a1f",
+      "text": "       depth = N.bit_length() + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a20",
+      "text": "       set_depth(depth)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a21",
+      "text": "       table = [0] * SEGTREE_SIZE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a22",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a23",
+      "text": "       for time in range(Q):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a24",
+      "text": "           q, *args = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a25",
+      "text": "           if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a26",
+      "text": "               # update",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a27",
+      "text": "               s, t, value = args",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a28",
+      "text": "               range_update(table, s, t + 1, lambda x: x + value)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a29",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a2a",
+      "text": "           else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a2b",
+      "text": "               # find",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a2c",
+      "text": "               print(down_propagate_to_leaf(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a2d",
+      "text": "                   table, args[0], add, 0))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1594815498
+    },
+    {
+      "id": "5f0ef40aaff09e00009b5a2e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594815498,
+      "updated": 1595340994
+    }
+  ]
+}

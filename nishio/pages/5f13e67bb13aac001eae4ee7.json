@@ -1,0 +1,225 @@
+{
+  "id": "5f13e67bb13aac001eae4ee7",
+  "title": "最短経路の双対と差分制約",
+  "created": 1595139712,
+  "updated": 1595141652,
+  "lines": [
+    {
+      "id": "5f13e67bb13aac001eae4ee7",
+      "text": "最短経路の双対と差分制約",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595139712,
+      "updated": 1595139724
+    },
+    {
+      "id": "5f13e68caff09e000031473d",
+      "text": "[最短経路]問題の[LP双対]に[差分制約]が出てくる理由",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595139724,
+      "updated": 1595141308
+    },
+    {
+      "id": "5f13e693aff09e000031473e",
+      "text": "[https://gyazo.com/6383c2b4450a186f5a729b809b359e18]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595139732,
+      "updated": 1595139778
+    },
+    {
+      "id": "5f13e6c1aff09e000070acb2",
+      "text": "\t最短経路問題は[最小費用流]問題の、辺の容量に余裕があって1のフローを流す特殊ケースに相当する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595139778,
+      "updated": 1595141647
+    },
+    {
+      "id": "5f13e82faff09e000031473f",
+      "text": "\t辺がないことと、辺があってコストが0であることは区別しなければならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140144,
+      "updated": 1595141643
+    },
+    {
+      "id": "5f13e894aff09e0000314740",
+      "text": "\t　辺の有無を表現する変数を作ると複雑になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140245,
+      "updated": 1595141652
+    },
+    {
+      "id": "5f13ee13aff09e000070acc7",
+      "text": "\t　ので、あらかじめ辺集合は一列に並べられて自然数と対応づけられてるとする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141652,
+      "updated": 1595141652
+    },
+    {
+      "id": "5f13e8eaaff09e0000314741",
+      "text": "　それぞれの辺がどの頂点を繋いでいるのかを表現した[$ |E| \\times |V| ] 行列Aを考える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140331,
+      "updated": 1595140487
+    },
+    {
+      "id": "5f13e987aff09e0000314742",
+      "text": "　　i行目は、辺[$ i = (u, v)]についてu列=-1, v列=1としたもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140487,
+      "updated": 1595140584
+    },
+    {
+      "id": "5f13eac9aff09e000070acbf",
+      "text": "　始点と終点を表現する[$ |V|]次元ベクトルbを考える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140810,
+      "updated": 1595140879
+    },
+    {
+      "id": "5f13eae9aff09e000070acc0",
+      "text": "　\t始点sが-1, 終点tが1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140841,
+      "updated": 1595141029
+    },
+    {
+      "id": "5f13e93aaff09e000070acb5",
+      "text": "\tf: flow, c: costは[$ |E|]次元ベクトルとする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140410,
+      "updated": 1595140706
+    },
+    {
+      "id": "5f13ea0daff09e0000314743",
+      "text": "\tこうすると[線形計画問題]としてシンプルに書ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140622,
+      "updated": 1595140643
+    },
+    {
+      "id": "5f13e7acaff09e000070acb4",
+      "text": "  minimize: [$ f^T c]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140012,
+      "updated": 1595140650
+    },
+    {
+      "id": "5f13e779aff09e000070acb3",
+      "text": "  subject to:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595139961,
+      "updated": 1595140650
+    },
+    {
+      "id": "5f13e962aff09e000070acb8",
+      "text": "  \t[$ A^Tf = b] ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140450,
+      "updated": 1595140650
+    },
+    {
+      "id": "5f13e953aff09e000070acb7",
+      "text": "  \t[$ f \\ge 0] ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140435,
+      "updated": 1595140650
+    },
+    {
+      "id": "5f13e94caff09e000070acb6",
+      "text": "\t[双対線形計画問題]は[$ |V|]次元ベクトル p (potential)を使ってこう書ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140429,
+      "updated": 1595140969
+    },
+    {
+      "id": "5f13ea3daff09e000070acb9",
+      "text": "  maximize: [$ p^T b]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140669,
+      "updated": 1595140697
+    },
+    {
+      "id": "5f13ea3daff09e000070acba",
+      "text": "  subject to:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140669,
+      "updated": 1595140669
+    },
+    {
+      "id": "5f13ea3daff09e000070acbb",
+      "text": "  \t[$ Ap \\le c] ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140669,
+      "updated": 1595140779
+    },
+    {
+      "id": "5f13ea3daff09e000070acbc",
+      "text": "\tAのi行目は、辺[$ i = (u, v)]についてu列=-1, v列=1としたもの, bは始点sが-1, 終点tが1ということを思い出すと差分の形になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595140669,
+      "updated": 1595141285
+    },
+    {
+      "id": "5f13ebb4aff09e000070acc2",
+      "text": "  maximize: [$ p_t - p_s]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141045,
+      "updated": 1595141054
+    },
+    {
+      "id": "5f13ebb5aff09e000070acc3",
+      "text": "  subject to:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141045,
+      "updated": 1595141045
+    },
+    {
+      "id": "5f13ebb5aff09e000070acc4",
+      "text": "  \t[$ p_v - p_u \\le c_e \\quad (\\mathrm{for\\,all\\,} e = (u, v))] ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141045,
+      "updated": 1595141202
+    },
+    {
+      "id": "5f13ebb5aff09e000070acc5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141045,
+      "updated": 1595141045
+    },
+    {
+      "id": "5f13ecd6aff09e0000314744",
+      "text": "参考資料",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141334,
+      "updated": 1595141340
+    },
+    {
+      "id": "5f13ecf0aff09e000070acc6",
+      "text": "\t[双対性]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141360,
+      "updated": 1595141361
+    },
+    {
+      "id": "5f13ecdcaff09e0000314746",
+      "text": "　[LPとグラフと定式化]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141340,
+      "updated": 1595141351
+    },
+    {
+      "id": "5f13ecdbaff09e0000314745",
+      "text": "\tどちらも点に出入りする辺の集合[$ \\delta^+(v), \\delta^-(v)]を使って定式化しているが、それが行列の掛け算で表現された線形計画問題の一般形にどう対応するのかと、どう双対になるのかが僕にとっては自明ではなかったので噛み砕いた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141340,
+      "updated": 1595141521
+    },
+    {
+      "id": "5f13ed11aff09e0000314747",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1595141394,
+      "updated": 1595141394
+    }
+  ]
+}

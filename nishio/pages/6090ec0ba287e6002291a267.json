@@ -1,0 +1,610 @@
+{
+  "id": "6090ec0ba287e6002291a267",
+  "title": "Hatena2012-10-02",
+  "created": 1349103600,
+  "updated": 1349103600,
+  "lines": [
+    {
+      "id": "6090ec2faff09e00003dd10f",
+      "text": "Hatena2012-10-02",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd110",
+      "text": "code:hatena",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd111",
+      "text": " <body>",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd112",
+      "text": " *1349154963*素数を計算するオートマトンを実装してみた",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd113",
+      "text": " 先日の<a href=\"http://www.amazon.co.jp/gp/product/4774151904/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=4774151904&linkCode=as2&tag=nishiohirokaz-22\">WEB+DB PRESS Vol.70</a>で和田先生が紹介されていた素数を計算するオートマトン、面白そうだったので僕も実装してみた。",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd114",
+      "text": " ",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd115",
+      "text": " まずは出力結果から。一番左端が空白(状態0)であるとき、それは素数。最初は0～Fを使っていたんだけどもアスキーアート的にした方が面白いのでこれでｗ",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd116",
+      "text": " ",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd117",
+      "text": " >||",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd118",
+      "text": "   　米　１≫　　　　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd119",
+      "text": "  1／：　１＼＞　　　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd11a",
+      "text": "  2　：ノ２＼≫　　　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd11b",
+      "text": "  3　米＼３＼≫＞　　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd11c",
+      "text": "  4／：ノ②　＼＞　　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd11d",
+      "text": "  5　米＼①　　≫　　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd11e",
+      "text": "  6／：ノ米＼　≫＞　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd11f",
+      "text": "  7　米／：　ノ≫＞　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd120",
+      "text": "  8／米ノ：ノ　｜＞　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd121",
+      "text": "  9／米＼米＼　｜≫　　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd122",
+      "text": " 10／：ノ：　ノ｜≫＞　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd123",
+      "text": " 11　米　：ノ　・≫＞　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd124",
+      "text": " 12／：ノ米＼　・＼＞　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd125",
+      "text": " 13　米／：　ノ・＼≫　　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd126",
+      "text": " 14／米ノ：ノ　１＼≫＞　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd127",
+      "text": " 15／米＼米＼　２＼＼＞　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd128",
+      "text": " 16／：ノ：　ノ３＼＼≫　　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd129",
+      "text": " 17　米　：ノ　②　＼≫＞　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd12a",
+      "text": " 18／：ノ米＼　①　　＼＞　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd12b",
+      "text": " 19　米／：　ノ米＼　　≫　　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd12c",
+      "text": " 20／米ノ：ノ／：　＼　≫＞　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd12d",
+      "text": " 21／米＼米Ｘ　：　　ノ≫＞　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd12e",
+      "text": " 22／：ノ米　ノ：　ノ　｜＞　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd12f",
+      "text": " 23　米／：ノ　：ノ　　｜≫　　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd130",
+      "text": " 24／米ノ米＼　米＼　　｜≫＞　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd131",
+      "text": " 25／米／：　ノ：　＼　｜≫＞　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd132",
+      "text": " 26／米ノ：ノ　：　　ノ｜≫＞　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd133",
+      "text": " 27／米＼米＼　：　ノ　・≫＞　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd134",
+      "text": " 28／：ノ：　ノ：ノ　　・＼＞　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd135",
+      "text": " 29　米　：ノ　米＼　　・＼≫　　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd136",
+      "text": " 30／：ノ米＼／：　＼　・＼≫＞　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd137",
+      "text": " 31　米／：／ノ：　　ノ・＼＼＞　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd138",
+      "text": " 32／米ノ米ノ　：　ノ　１＼＼≫　　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd139",
+      "text": " 33／米／米＼　：ノ　　２＼＼≫＞　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd13a",
+      "text": " 34／米ノ：　ノ米＼　　３＼＼＼＞　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd13b",
+      "text": " 35／米＼：ノ／：　＼　３　＼＼≫　　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd13c",
+      "text": " 36／：ノ米Ｘ　：　　ノ３　　＼≫＞　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd13d",
+      "text": " 37　米／米　ノ：　ノ　②　　　＼＞　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd13e",
+      "text": " 38／米ノ：ノ　：ノ　　①　　　　≫　　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd13f",
+      "text": " 39／米＼米＼　米＼　　米＼　　　≫＞　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd140",
+      "text": " 40／：ノ：　ノ：　＼／：　＼　　≫＞　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd141",
+      "text": " 41　米　：ノ　：　／ノ：　　＼　≫＞　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd142",
+      "text": " 42／：ノ米＼　：／ノ　：　　　ノ≫＞　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd143",
+      "text": " 43　米／：　ノ米ノ　　：　　ノ　｜＞　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd144",
+      "text": " 44／米ノ：ノ／米＼　　：　ノ　　｜≫　　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd145",
+      "text": " 45／米＼米Ｘ／：　＼　：ノ　　　｜≫＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd146",
+      "text": " 46／：ノ米／ノ：　　ノ米＼　　　｜≫＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd147",
+      "text": " 47　米／米ノ　：　ノ／：　＼　　｜≫＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd148",
+      "text": " 48／米ノ米＼　：ノ／　：　　＼　｜≫＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd149",
+      "text": " 49／米／：　ノ米Ｘ　　：　　　ノ｜≫＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd14a",
+      "text": " 50／米ノ：ノ／米　＼　：　　ノ　・≫＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd14b",
+      "text": " 51／米＼米Ｘ／：　　ノ：　ノ　　・＼＞　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd14c",
+      "text": " 52／：ノ米／ノ：　ノ　：ノ　　　・＼≫　　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd14d",
+      "text": " 53　米／米ノ　：ノ　　米＼　　　・＼≫＞　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd14e",
+      "text": " 54／米ノ米＼　米＼　／：　＼　　・＼＼＞　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd14f",
+      "text": " 55／米／：　ノ：　Ｘ　：　　＼　・＼＼≫　　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd150",
+      "text": " 56／米ノ：ノ　：／　ノ：　　　ノ・＼＼≫＞　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd151",
+      "text": " 57／米＼米＼　米　ノ　：　　ノ　１＼＼＼＞　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd152",
+      "text": " 58／：ノ：　ノ：ノ　　：　ノ　　２＼＼＼≫　　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd153",
+      "text": " 59　米　：ノ　米＼　　：ノ　　　３＼＼＼≫＞　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd154",
+      "text": " 60／：ノ米＼／：　＼　米＼　　　３　＼＼＼＞　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd155",
+      "text": " 61　米／：／ノ：　　ノ：　＼　　３　　＼＼≫　　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd156",
+      "text": " 62／米ノ米ノ　：　ノ　：　　＼　３　　　＼≫＞　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd157",
+      "text": " 63／米／米＼　：ノ　　：　　　ノ３　　　　＼＞　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd158",
+      "text": " 64／米ノ：　ノ米＼　　：　　ノ　②　　　　　≫　　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd159",
+      "text": " 65／米＼：ノ／：　＼　：　ノ　　①　　　　　≫＞　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd15a",
+      "text": " 66／：ノ米Ｘ　：　　ノ：ノ　　　米＼　　　　≫＞　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd15b",
+      "text": " 67　米／米　ノ：　ノ　米＼　　／：　＼　　　≫＞　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd15c",
+      "text": " 68／米ノ：ノ　：ノ　／：　＼／　：　　＼　　≫＞　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd15d",
+      "text": " 69／米＼米＼　米＼／　：　／＼　：　　　＼　≫＞　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd15e",
+      "text": " 70／：ノ：　ノ：／＼　：／　　ノ：　　　　ノ≫＞　　",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd15f",
+      "text": " ||<",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd160",
+      "text": " ",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd161",
+      "text": " 実装はこんな感じ。 https://github.com/nishio/automaton/blob/master/ca.py",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd162",
+      "text": " </body>",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd163",
+      "text": "",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2faff09e00003dd164",
+      "text": "[はてなダイアリー 2012-10-02 https://nishiohirokazu.hatenadiary.org/archive/2012/10/02]",
+      "created": 1349103600,
+      "updated": 1349103600,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

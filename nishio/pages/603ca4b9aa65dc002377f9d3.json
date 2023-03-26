@@ -1,0 +1,512 @@
+{
+  "id": "603ca4b9aa65dc002377f9d3",
+  "title": "Jestメモ Day3",
+  "created": 1614587066,
+  "updated": 1614587066,
+  "lines": [
+    {
+      "id": "603ca4b9aa65dc002377f9d3",
+      "text": "Jestメモ Day3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611d4",
+      "text": "from [Jestメモ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611d5",
+      "text": "Jestメモ Day3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611d6",
+      "text": "--- day 3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611d7",
+      "text": "\t`MissingAPIError: indexedDB API missing`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611d8",
+      "text": "\t\tFirestoreの時と同様にIndexeDBに触れるコードも分離してモックで置き換える必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611d9",
+      "text": "\t\t前回、Firestoreから値を取った後のコードを下記のように切り出してエクスポートし、これを直接呼び出すPromiseでgetNewTalkIDを置き換える、というモックをした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611da",
+      "text": "\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611db",
+      "text": "\t\t // exported for test",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611dc",
+      "text": "   export const _gotNewTalkID = (text: string) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611dd",
+      "text": "     return localDB.talks",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611de",
+      "text": "       .orderBy(\"id\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611df",
+      "text": "       .reverse()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e0",
+      "text": "       .limit(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e1",
+      "text": "       .toArray()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e2",
+      "text": "       .then((x) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e3",
+      "text": "         const previousTalkID = x[0]?.TalkID;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e4",
+      "text": "         if (previousTalkID !== undefined) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e5",
+      "text": "           setGlobal({ TalkID: text, previousTalkID: x[0].TalkID });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e6",
+      "text": "         } else {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e7",
+      "text": "           setGlobal({ TalkID: text, previousTalkID: \"\" });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e8",
+      "text": "         }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611e9",
+      "text": "         localDB.talks.add({ TalkID: text });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611ea",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611eb",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611ec",
+      "text": "　Promiseの型を明記しつつ読み出し、利用、書き込みの3つの関数に分割",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611ed",
+      "text": "　[Jestのモックは同一モジュール内の呼び出しに影響を与えない]から、IndexedDBに触れるところだけ別モジュールにくくり出してモックしよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611ee",
+      "text": "\tユーザーモジュールのモック [doc https://jestjs.io/docs/ja/manual-mocks#%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%81%AE%E3%83%A2%E3%83%83%E3%82%AF]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611ef",
+      "text": "\t\tなるほど",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f0",
+      "text": "\t\tでも2通りの実装が欲しいな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f1",
+      "text": "\t\tcode:__mocks__/managePreviousTalkID.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f2",
+      "text": "\t\t // no previoud id",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f3",
+      "text": "   export const getPreviousTalkID = (): Promise<string> => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f4",
+      "text": "     return Promise.resolve(\"\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f5",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f6",
+      "text": "   export const MOCK_PREVIOUS_ID_EXISTS = (): Promise<string> => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f7",
+      "text": "     return Promise.resolve(\"test\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f8",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611f9",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611fa",
+      "text": "   export const updatePreviousTalkID = (currentTalkID: string): void => {};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611fb",
+      "text": " トップ画面の描画テストは動くようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611fc",
+      "text": "　　jest.mockをテストケースの中ではなくトップレベルに置かないと期待通りにモックされない、なぜ？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611fd",
+      "text": "　　複数のモックの挙動を切り替えてテストしたいのだが…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611fe",
+      "text": "\t>jest.mockをテストケースの中ではなくトップレベルに置かないと期待通りにモックされない、なぜ？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e00001611ff",
+      "text": "\t\t>[docs https://jestjs.io/docs/ja/manual-mocks#es-module-import%E3%82%92%E5%88%A9%E7%94%A8%E3%81%99%E3%82%8B]: ES module importsを使用している場合、通常はテストファイルの先頭でimport宣言を書くことが多いでしょう。 しかしモジュールがそれらを使用するのに先立ち、Jestにモックを使用するよう指示する必要があります。 このため、Jestは自動的にjest.mockコールを自動的にモジュールの先頭に(importを行う前に)移動します。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161200",
+      "text": "\t\t「先におかないといけないのでは？」と思ったがESLintが \"Import in body of module; reorder to top.\" と文句を言うので後に置いてた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161201",
+      "text": "\t\t後においても動くのでmockのタイミングでインポート済みのものを置き換えるのかなと思ってたがそういうことではないようだ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161202",
+      "text": "\tspyOnなら確実にそのタイミングでの差し替えを行うので、重ねてspyOnすることにしてみた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161203",
+      "text": "\t\tpreviousTalkIDが存在するかどうかでメニューの表示が異なる、というテストが一応動いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161204",
+      "text": "\t\tしかし(1)の部分、メニューが実際に存在しないのか、まだ非同期の再描画が終わってないのか判断がつかないと思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161205",
+      "text": "\t\t　タイムアウトするまで待てば判断つくけど、テストが遅くなるから嫌だし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161206",
+      "text": "\t　code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161207",
+      "text": "\t　   const { container } = render(<App />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161208",
+      "text": "     expect(container).toMatchSnapshot();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161209",
+      "text": "     fireEvent.click(screen.getByLabelText(\"menu\"));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016120a",
+      "text": "     expect(screen.queryByText(\"Re-enter to Last Talk\")).toBeNull();  // (1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016120b",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016120c",
+      "text": "     jest",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016120d",
+      "text": "       .spyOn(managePreviousTalkIDModule, \"getPreviousTalkID\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016120e",
+      "text": "       .mockResolvedValue(\"test\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016120f",
+      "text": "     render(<App />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161210",
+      "text": "     await waitFor(() => screen.getByText(\"Re-enter to Last Talk\"));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161211",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161212",
+      "text": "     expect(screen.queryByText(\"Re-enter to Last Talk\")).not.toBeNull();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161213",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161214",
+      "text": "[https://gyazo.com/84b751a483459c1c05459b425c3d973e]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161215",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161216",
+      "text": "[Reactのテストでactで包むのはrenderではなく状態更新]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161217",
+      "text": "[Promiseの結果で状態更新する場合、全体をactで包んでもダメ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161218",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e0000161219",
+      "text": "次回「useStateをモックで置き換えたらいいのでは？」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    },
+    {
+      "id": "603ca4b9aff09e000016121a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614587066,
+      "updated": 1614587066
+    }
+  ]
+}

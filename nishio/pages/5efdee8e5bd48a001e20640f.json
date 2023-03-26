@@ -1,0 +1,1422 @@
+{
+  "id": "5efdee8e5bd48a001e20640f",
+  "title": "メモ化再帰DPでTLEを避けるには",
+  "created": 1593699997,
+  "updated": 1600020104,
+  "lines": [
+    {
+      "id": "5efdee8e5bd48a001e20640f",
+      "text": "メモ化再帰DPでTLEを避けるには",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593699997,
+      "updated": 1593700014
+    },
+    {
+      "id": "5efdfb05aff09e00007d0f47",
+      "text": "　再帰呼び出しで実装するのが自然な問題がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703175,
+      "updated": 1593758846
+    },
+    {
+      "id": "5efdefb7aff09e0000819cfd",
+      "text": "　\t例えば、たどる順序が自明でない動的計画法を[メモ化再帰]呼び出しで実装するシチュエーション",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700279,
+      "updated": 1600020104
+    },
+    {
+      "id": "5efe2e3daff09e00007d0f74",
+      "text": "　Pythonは数値演算が重いので演算の多い動的計画法はTLEしやすい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593716286,
+      "updated": 1593759075
+    },
+    {
+      "id": "5efdefbdaff09e0000819cfe",
+      "text": "　PyPyだと関数呼び出しが遅いので再帰呼び出しを酷使するとTLEしやすい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700285,
+      "updated": 1593759080
+    },
+    {
+      "id": "5efdf0b5aff09e0000819cff",
+      "text": "　　[PyPyの関数呼び出しは遅い]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700534,
+      "updated": 1593700554
+    },
+    {
+      "id": "5efdf0b5aff09e0000819d00",
+      "text": "　普段はNumbaでAOTコンパイルして高速化してるのだけど…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700534,
+      "updated": 1593757766
+    },
+    {
+      "id": "5efed046aff09e00007d0f9d",
+      "text": "　 Numbaは関数内関数の再帰呼び出しをサポートしてない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593757766,
+      "updated": 1593757766
+    },
+    {
+      "id": "5efed024aff09e00007d0f9c",
+      "text": "　　関数外に置いてもAOTではできない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593757732,
+      "updated": 1593757806
+    },
+    {
+      "id": "5efdf0b6aff09e0000819d01",
+      "text": "　　JITならできるが実行フェーズにコンパイルするので速度上不利",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700534,
+      "updated": 1593757828
+    },
+    {
+      "id": "5efed003aff09e00007d0f9b",
+      "text": "　Cythonだと関数を「Cからしか呼ばれない」と明示してコンパイルできるので有効打になり得る？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593757699,
+      "updated": 1593758893
+    },
+    {
+      "id": "5efed4c3aff09e00007d0fa5",
+      "text": "　　→現時点で最速",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758915,
+      "updated": 1593758924
+    },
+    {
+      "id": "5efdfb0daff09e0000c0d394",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703181,
+      "updated": 1593703181
+    },
+    {
+      "id": "5efdfb0daff09e0000c0d395",
+      "text": "ターゲット問題としてグラフの最長パスを見つける[G - Longest Path https://atcoder.jp/contests/dp/tasks/dp_g]を使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593703181,
+      "updated": 1593757901
+    },
+    {
+      "id": "5efed0d1aff09e00007d0fa0",
+      "text": "　速度の比較にはAtCoderのサーバ上でのテストケース1_17, 1_01の実行速度を使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593757905,
+      "updated": 1593757958
+    },
+    {
+      "id": "5efed12aaff09e00007d0fa2",
+      "text": "　 1_01が一番大きいが、タイムアウトすると時間が分からないので一回り小さい1_17も併用した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593757995,
+      "updated": 1593758057
+    },
+    {
+      "id": "5efed171aff09e0000fab1ea",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758065,
+      "updated": 1593758065
+    },
+    {
+      "id": "5efdf130aff09e0000819d03",
+      "text": "table:実行時間まとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700656,
+      "updated": 1593757858
+    },
+    {
+      "id": "5efe8af2aff09e00007fc997",
+      "text": " 1_17\t1_01",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740018,
+      "updated": 1593740077
+    },
+    {
+      "id": "5efe8b10aff09e00007fc99e",
+      "text": " 653 ms\tTLE\tCode1 Python\t素朴なメモ化再帰",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740049,
+      "updated": 1593758143
+    },
+    {
+      "id": "5efe8b1eaff09e00007fc99f",
+      "text": " 422 ms\tTLE\tCode1 PyPy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740063,
+      "updated": 1593740130
+    },
+    {
+      "id": "5efe8aedaff09e00007fc995",
+      "text": "\t735 ms\tTLE\tCode2 Python\tメモ化 dict→list",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740014,
+      "updated": 1593758161
+    },
+    {
+      "id": "5efe8b8eaff09e00007fc9a3",
+      "text": "\t378 ms\t485 ms\tCode2 PyPy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740175,
+      "updated": 1593740198
+    },
+    {
+      "id": "5efe8be1aff09e00007fc9a5",
+      "text": "\t434 ms\t565 ms\tCode3 Python\t関数呼び出し前に計算済みかをチェック",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740257,
+      "updated": 1593758406
+    },
+    {
+      "id": "5efed29caff09e0000fab1f2",
+      "text": "\t498 ms\t352 ms\tCode3 PyPy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758365,
+      "updated": 1593758365
+    },
+    {
+      "id": "5efe8b81aff09e00007fc9a2",
+      "text": "\t169 ms\t223 ms\tCode4 Cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740161,
+      "updated": 1593740309
+    },
+    {
+      "id": "5efe8b78aff09e00007fc9a0",
+      "text": "\t142 ms\t177 ms\tCode5 Cython\tメモ化 array→Cの配列",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740153,
+      "updated": 1593758647
+    },
+    {
+      "id": "5efe984baff09e0000b77647",
+      "text": "\t148 ms\t164 ms (best)\tCode6 Cython\t探索終了条件分岐を再帰の外で先に済ませる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743436,
+      "updated": 1593759166
+    },
+    {
+      "id": "5efec7a7aff09e000063682e",
+      "text": "\t1209 ms\t1225 ms\tCode7 Numba\tJIT",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755559,
+      "updated": 1593760808
+    },
+    {
+      "id": "5efe9846aff09e0000b77645",
+      "text": " 295 ms\t368 ms\tCode8 Python\t深さ優先探索の帰りがけ順で処理",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743431,
+      "updated": 1593758793
+    },
+    {
+      "id": "5efec771aff09e000063682c",
+      "text": " 253 ms\t256 ms\tCode8 PyPy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755506,
+      "updated": 1593755619
+    },
+    {
+      "id": "5efec771aff09e000063682d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755506,
+      "updated": 1593755506
+    },
+    {
+      "id": "5efe9846aff09e0000b77646",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743431,
+      "updated": 1593758394
+    },
+    {
+      "id": "5efe8aedaff09e00007fc996",
+      "text": "Code1: 素朴なメモ化再帰",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740014,
+      "updated": 1593758131
+    },
+    {
+      "id": "5efed1e8aff09e0000fab1ec",
+      "text": "\tPython 653 ms TLE https://atcoder.jp/contests/dp/submissions/14906600",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758184,
+      "updated": 1593758185
+    },
+    {
+      "id": "5efed1e9aff09e0000fab1ed",
+      "text": " PyPy 422 ms TLE https://atcoder.jp/contests/dp/submissions/14906630",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758185,
+      "updated": 1593758185
+    },
+    {
+      "id": "5efdf131aff09e0000819d04",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700657,
+      "updated": 1593700722
+    },
+    {
+      "id": "5efdf172aff09e0000819d06",
+      "text": " from collections import defaultdict",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700722,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d07",
+      "text": " import sys",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d08",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d09",
+      "text": " sys.setrecursionlimit(10**6)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d0a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d0b",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d0c",
+      "text": " def solve(N, M, edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d0d",
+      "text": "     longest = {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d0e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d0f",
+      "text": "     def get_longest(start):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d10",
+      "text": "         if start in longest:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d11",
+      "text": "             return longest[start]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d12",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d13",
+      "text": "         next_edges = edges.get(start)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d14",
+      "text": "         if not next_edges:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d15",
+      "text": "             ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d16",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d17",
+      "text": "             ret = max(get_longest(v) for v in edges[start]) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d18",
+      "text": "         longest[start] = ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d19",
+      "text": "         return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d1a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d1b",
+      "text": "     return max(get_longest(v) for v in edges)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d1c",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d1d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d1e",
+      "text": " def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d1f",
+      "text": "     N, M = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d20",
+      "text": "     edges = defaultdict(set)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d21",
+      "text": "     for i in range(M):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d22",
+      "text": "         v1, v2 = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d23",
+      "text": "         edges[v1].add(v2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d24",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d25",
+      "text": "     print(solve(N, M, edges))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d26",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d27",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf172aff09e0000819d28",
+      "text": " main()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700723,
+      "updated": 1593700723
+    },
+    {
+      "id": "5efdf308aff09e0000819d32",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701129,
+      "updated": 1593701129
+    },
+    {
+      "id": "5efdf16faff09e0000819d05",
+      "text": "Code2: メモ化にdictを使ってることを疑問に思う人がいるかもしれないのでlistに変えたバージョン",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593700720,
+      "updated": 1593743350
+    },
+    {
+      "id": "5efdf339aff09e0000c0d38b",
+      "text": "\tPython  735 ms TLE  https://atcoder.jp/contests/dp/submissions/14907532",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701178,
+      "updated": 1593701595
+    },
+    {
+      "id": "5efdf373aff09e0000c0d38d",
+      "text": "\tPyPy 378 ms AC 1_01: 485 ms https://atcoder.jp/contests/dp/submissions/14907612",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701235,
+      "updated": 1593701588
+    },
+    {
+      "id": "5efed1faaff09e00007d0fa3",
+      "text": "\tこの感じだとPyPyがdictへのアクセスが苦手な可能性があるな(要検証)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758202,
+      "updated": 1593758255
+    },
+    {
+      "id": "5efdf2ebaff09e00007d0f42",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701099,
+      "updated": 1593701143
+    },
+    {
+      "id": "5efdf318aff09e0000c0d35c",
+      "text": " def solve(N, M, edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701176
+    },
+    {
+      "id": "5efdf318aff09e0000c0d369",
+      "text": "     longest = [-1] * (N + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d36a",
+      "text": "     for i in range(N + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d36b",
+      "text": "         if not edges[i]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d36c",
+      "text": "             longest[i] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d36d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d36e",
+      "text": "     def get_longest(start):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d36f",
+      "text": "         ret = longest[start]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d370",
+      "text": "         if ret != -1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d371",
+      "text": "             return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d372",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d373",
+      "text": "         next_edges = edges.get(start)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d374",
+      "text": "         if not next_edges:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d375",
+      "text": "             ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d376",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d377",
+      "text": "             ret = max(get_longest(v) for v in edges[start]) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d378",
+      "text": "         longest[start] = ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d379",
+      "text": "         return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d37a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d37b",
+      "text": "     return max(get_longest(v) for v in edges)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701144
+    },
+    {
+      "id": "5efdf318aff09e0000c0d37c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701144,
+      "updated": 1593701149
+    },
+    {
+      "id": "5efdf626aff09e00007d0f43",
+      "text": "Code3 関数呼び出し前に計算済みかどうかをチェックするバージョン",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701926,
+      "updated": 1593743371
+    },
+    {
+      "id": "5efed260aff09e0000fab1ef",
+      "text": "\tPython 434 ms / 565 ms https://atcoder.jp/contests/dp/submissions/14916958",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758305,
+      "updated": 1593758340
+    },
+    {
+      "id": "5efdf5dfaff09e0000c0d391",
+      "text": "\tPyPy 498 ms / 352 ms https://atcoder.jp/contests/dp/submissions/14907832",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701855,
+      "updated": 1593758349
+    },
+    {
+      "id": "5efdf5dfaff09e0000c0d392",
+      "text": " 関数呼び出しの回数をラスト1回分減らす",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701855,
+      "updated": 1593758472
+    },
+    {
+      "id": "5efed2d6aff09e00007d0fa4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593758423,
+      "updated": 1593758423
+    },
+    {
+      "id": "5efdf513aff09e0000c0d38e",
+      "text": "Code4 Cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701652,
+      "updated": 1593743379
+    },
+    {
+      "id": "5efe8c67aff09e00007fc9a6",
+      "text": "\tcode:cython",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740392,
+      "updated": 1593740398
+    },
+    {
+      "id": "5efe8c6daff09e00007fc9a7",
+      "text": "\t cdef get_longest(long start, dict edges, long[:] longest):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740398,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9a9",
+      "text": "      if longest[start] != -1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9aa",
+      "text": "          return longest[start]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9ab",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9ac",
+      "text": "      cdef list next_edges",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9ad",
+      "text": "      next_edges = edges.get(start)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9ae",
+      "text": "      if not next_edges:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9af",
+      "text": "          ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b0",
+      "text": "      else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b1",
+      "text": "          #ret = max(get_longest(v, edges, longest) for v in edges[start]) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b2",
+      "text": "          ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b3",
+      "text": "          for v in edges[start]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b4",
+      "text": "              x = get_longest(v, edges, longest) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b5",
+      "text": "              if x > ret:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b6",
+      "text": "                  ret = x",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b7",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b8",
+      "text": "      longest[start] = ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9b9",
+      "text": "      return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9ba",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9bb",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9bc",
+      "text": "  def solve(N, M, edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9bd",
+      "text": "      cdef array.array longest = pyarray.array('l', [-1] * (N + 1))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740400
+    },
+    {
+      "id": "5efe8c70aff09e00007fc9be",
+      "text": "      return max(get_longest(v, edges, longest) for v in edges)\t ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593740400,
+      "updated": 1593740403
+    },
+    {
+      "id": "5efdf515aff09e0000c0d390",
+      "text": "\tAC 169 ms / 223 ms https://atcoder.jp/contests/dp/submissions/14906046",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701653,
+      "updated": 1593758530
+    },
+    {
+      "id": "5efdf514aff09e0000c0d38f",
+      "text": "　関数内関数のままではcdefに出来なかったので外に出した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593701652,
+      "updated": 1593702150
+    },
+    {
+      "id": "5efe28f4aff09e00007d0f6b",
+      "text": "　　[Cythonでは関数内で関数定義ができない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593714933,
+      "updated": 1593714939
+    },
+    {
+      "id": "5efdf706aff09e00007d0f45",
+      "text": "　リストのアクセスが遅そうだったのでarrayに変えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593702150,
+      "updated": 1593702177
+    },
+    {
+      "id": "5efe2900aff09e00007d0f6c",
+      "text": "　 これは関係なさそう see [Cythonで添え字を型宣言しても速くない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593714945,
+      "updated": 1593758535
+    },
+    {
+      "id": "5efdf800aff09e00007d0f46",
+      "text": "　ジェネレータ内包が問題を起こしてたのでforループに書き換えた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593702400,
+      "updated": 1593741665
+    },
+    {
+      "id": "5efe9179aff09e000060155d",
+      "text": "　\t[Cythonとジェネレータ内包]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593741690,
+      "updated": 1593741704
+    },
+    {
+      "id": "5efe2909aff09e00007d0f6d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593714954,
+      "updated": 1593714955
+    },
+    {
+      "id": "5efe8f5aaff09e0000601559",
+      "text": "Code5 longestをCの配列としてグローバルに置く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593741147,
+      "updated": 1593743384
+    },
+    {
+      "id": "5efdf6eeaff09e00007d0f44",
+      "text": "\t142 ms / 177 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593702127,
+      "updated": 1593743419
+    },
+    {
+      "id": "5efe8f4aaff09e0000601557",
+      "text": "　リストでもarrayでもなくC配列が良かったので。関連: [Cythonで添え字を型宣言しても速くない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593741131,
+      "updated": 1593741267
+    },
+    {
+      "id": "5efe8f4baff09e0000601558",
+      "text": "　https://atcoder.jp/contests/dp/submissions/14913275",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593741131,
+      "updated": 1593742339
+    },
+    {
+      "id": "5efe9126aff09e000060155b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593741606,
+      "updated": 1593741606
+    },
+    {
+      "id": "5efe9799aff09e000060156d",
+      "text": "Code6 出て行く辺があるかどうかの条件分岐を再帰の外で先に済ませる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743257,
+      "updated": 1593743388
+    },
+    {
+      "id": "5efe979caff09e000060156e",
+      "text": "\t148 ms / 164 ms",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743260,
+      "updated": 1593743260
+    },
+    {
+      "id": "5efe978caff09e000060156b",
+      "text": "\thttps://atcoder.jp/contests/dp/submissions/14913765",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743244,
+      "updated": 1593743246
+    },
+    {
+      "id": "5efe9797aff09e000060156c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743256,
+      "updated": 1593743256
+    },
+    {
+      "id": "5efe2568aff09e00007d0f66",
+      "text": "Numba",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593714024,
+      "updated": 1593714037
+    },
+    {
+      "id": "5efe99ebaff09e00007d0f8c",
+      "text": "　速度はさておき何もしなくてもそのまま動くCythonと比べると、Numbaは動くようにするまでが大変",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593743851,
+      "updated": 1593743930
+    },
+    {
+      "id": "5efe9b41aff09e0000b77648",
+      "text": "\t\t`ret = max(get_longest(v) for v in edges[start]) + 1`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593744194,
+      "updated": 1593744213
+    },
+    {
+      "id": "5efe9b4caff09e0000b77649",
+      "text": "\t\t\t`The use of yield in a closure is unsupported.`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593744205,
+      "updated": 1593744214
+    },
+    {
+      "id": "5efe9cb3aff09e0000b7764b",
+      "text": "\t\thttps://gist.github.com/nishio/dd3013df3e88ef1afb0d41d5980a3882",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593744564,
+      "updated": 1593744855
+    },
+    {
+      "id": "5efe9cb4aff09e0000b7764c",
+      "text": "\t\t\t`Compilation is falling back to object mode WITH looplifting enabled because Function \"get_longest\" failed type inference due to: non-precise type pyobject`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593744564,
+      "updated": 1593744867
+    },
+    {
+      "id": "5efe9dbaaff09e00007d0f8e",
+      "text": "\t\t\t単純にnumba.jitをつけるアプローチではうまくいかない、型推論ができるオブジェクトを引数にする必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593744828,
+      "updated": 1593759272
+    },
+    {
+      "id": "5efe9de8aff09e0000b7764d",
+      "text": " 隣接リスト形式のグラフの扱いが難関",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593744872,
+      "updated": 1593752591
+    },
+    {
+      "id": "5efed639aff09e00007d0fa6",
+      "text": " 　Pythonで気楽に作るとdafaultdict(list)だが、dictもlistも適切でない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593759289,
+      "updated": 1593759332
+    },
+    {
+      "id": "5efed664aff09e00007d0fa7",
+      "text": " 　可変長なので雑にnp.arrayにすると空間がN * M",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593759332,
+      "updated": 1593759397
+    },
+    {
+      "id": "5efebc0eaff09e0000b77683",
+      "text": " 　整数列として渡してNumba世界で連結リストにするのが一番マシかなと思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593752591,
+      "updated": 1593752591
+    },
+    {
+      "id": "5efed6acaff09e00007d0fa8",
+      "text": " 　 今回の問題ではグラフの辺の最大数が決まってるのでそのサイズのnp.array を確保する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593759404,
+      "updated": 1593759453
+    },
+    {
+      "id": "5efebc0eaff09e0000b77684",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593752591,
+      "updated": 1593752591
+    },
+    {
+      "id": "5efebc4baff09e0000b77685",
+      "text": "Code7: Numba JIT",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593752652,
+      "updated": 1593758831
+    },
+    {
+      "id": "5efebbfaaff09e0000b7764f",
+      "text": "\t1209 ms / 1225 ms https://atcoder.jp/contests/dp/submissions/14915733",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593752571,
+      "updated": 1593766103
+    },
+    {
+      "id": "5efec81daff09e00007d0f96",
+      "text": "　今までの中で格段に遅い、よく通ったもんだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755677,
+      "updated": 1593755701
+    },
+    {
+      "id": "5efec83eaff09e00007d0f97",
+      "text": "　　しかし二つの問題にかかった時間の差は16msecで、一番速いCython実装と同じぐらい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755710,
+      "updated": 1593755758
+    },
+    {
+      "id": "5efec86eaff09e00007d0f98",
+      "text": "　　つまりJITであるせいで実行フェーズでコンパイルしてしまい時間を食っているが、コンパイル済みのものは高速ということ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755758,
+      "updated": 1593755807
+    },
+    {
+      "id": "5efec8a1aff09e00007d0f99",
+      "text": "　　僕が普段NumbaをAOTで使うのもこれが理由。コンパイルフェーズでAOTコンパイルできるなら実行フェーズでJITコンパイルする必要は皆無",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755811,
+      "updated": 1593755877
+    },
+    {
+      "id": "5efebe6daff09e00007d0f8f",
+      "text": " Numba AOTはコンパイル時にエラーになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753198,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efebef1aff09e0000fab1cf",
+      "text": " 　`Untyped global name 'get_longest': cannot determine Numba type of <class 'function'>`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753329,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efebf56aff09e00007d0f91",
+      "text": "  　これは再帰呼び出しだと人間が認識しているものが、Pythonにとっては「グローバル変数を取得してそれを呼ぶ」だから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753431,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efec053aff09e00007d0f94",
+      "text": "  　　関数定義の後に同じ名前で別のものに名前が再束縛されるかもしれないので、取得したグローバル変数の型が不明なのである。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753683,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efebfe0aff09e00007d0f93",
+      "text": "  　　とはいえこれは不便なので、例えばコンパイル時に「この関数内での同名変数のコールはこの関数自体のコールである」と人間が宣言することで再帰呼び出しを可能にするとかが、将来のNumbaには入るかもしれない、入るといいなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753568,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efed71daff09e00007d0fa9",
+      "text": "  　　JITではできてるんだからAOTできてもいいじゃんー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593759518,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efec0aeaff09e00007d0f95",
+      "text": " 　というわけで今のところ末尾再帰でない再帰関数をNumbaでAOTする方法は見つけられていない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753774,
+      "updated": 1593766137
+    },
+    {
+      "id": "5efebe6eaff09e00007d0f90",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593753198,
+      "updated": 1593753198
+    },
+    {
+      "id": "5efe2f6faff09e00007d0f76",
+      "text": "Code8: 深さ優先探索の帰りがけ順で処理をする案",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593716591,
+      "updated": 1593766071
+    },
+    {
+      "id": "5efec92daff09e00007d0f9a",
+      "text": "　そもそも再帰呼び出しを使わなくてもコールツリーを深さ優先で探索して帰りに処理をすれば良い、という発想",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755949,
+      "updated": 1593755995
+    },
+    {
+      "id": "5efe2f72aff09e00007d0f77",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593716594,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bcaff09e0000fab1d1",
+      "text": " def solve(N, M, edges):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d2",
+      "text": "     longest = {}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d4",
+      "text": "     stack = [v for v in edges]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d5",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d6",
+      "text": "     while stack:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d7",
+      "text": "         v = stack.pop()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d8",
+      "text": "         if v > 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1d9",
+      "text": "             if v in longest:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1da",
+      "text": "                 continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1db",
+      "text": "             next_edges = edges.get(v)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1dc",
+      "text": "             stack.append(-v)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1dd",
+      "text": "             if next_edges:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1de",
+      "text": "                 stack.extend(next_edges)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1df",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e0",
+      "text": "             next_edges = edges.get(-v)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e1",
+      "text": "             if not next_edges:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e2",
+      "text": "                 ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e3",
+      "text": "             else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e4",
+      "text": "                 ret = max(longest[x] for x in next_edges) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e5",
+      "text": "             longest[-v] = ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e6",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e7",
+      "text": "     return max(longest[v] for v in edges)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755325
+    },
+    {
+      "id": "5efec6bdaff09e0000fab1e8",
+      "text": "Python 295 ms / 368 ms https://atcoder.jp/contests/dp/submissions/14916269",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755325,
+      "updated": 1593755471
+    },
+    {
+      "id": "5efec6e7aff09e0000fab1e9",
+      "text": "PyPy 253 ms / 256 ms https://atcoder.jp/contests/dp/submissions/14916290",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755367,
+      "updated": 1593755451
+    },
+    {
+      "id": "5efec6baaff09e0000fab1d0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1593755323,
+      "updated": 1593755323
+    }
+  ]
+}

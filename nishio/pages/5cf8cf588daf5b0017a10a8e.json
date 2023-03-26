@@ -1,0 +1,589 @@
+{
+  "id": "5cf8cf588daf5b0017a10a8e",
+  "title": "TypeScriptのreturn忘れがnever問題を起こす例",
+  "created": 1559809883,
+  "updated": 1560943174,
+  "lines": [
+    {
+      "id": "5cf8cf588daf5b0017a10a8e",
+      "text": "TypeScriptのreturn忘れがnever問題を起こす例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559809883,
+      "updated": 1559809913
+    },
+    {
+      "id": "5cf8cf8daff09e00007c56b0",
+      "text": "[useHistory | useHooks https://usehooks.com/useHistory/]のJSで書かれたサンプルを[TypeScript]に翻訳していたら、`Type 'any' is not assignable to type 'never'`になった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559809934,
+      "updated": 1559809990
+    },
+    {
+      "id": "5cf8cfacaff09e00007c56b1",
+      "text": "原因は究極的には「網羅的でないswitch/case」で、その結果「returnされない経路がある」ことで返り値の型が T | undefined になり、それがReactのuseReducerの型推論過程で never になっている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559809965,
+      "updated": 1559811010
+    },
+    {
+      "id": "5cf8cff9aff09e00007c56b4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810041,
+      "updated": 1559810041
+    },
+    {
+      "id": "5cf8cff9aff09e00007c56b5",
+      "text": "最初の見え方はこれ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810041,
+      "updated": 1559810065
+    },
+    {
+      "id": "5cf8d011aff09e00007c56b6",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810065,
+      "updated": 1559810067
+    },
+    {
+      "id": "5cf8d013aff09e00007c56b7",
+      "text": "   const [state, dispatch] = useReducer(reducer, {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810067,
+      "updated": 1559810067
+    },
+    {
+      "id": "5cf8d013aff09e00007c56b8",
+      "text": "     ...initialState,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810067,
+      "updated": 1559810067
+    },
+    {
+      "id": "5cf8d013aff09e00007c56b9",
+      "text": "     present: initialPresent",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810067,
+      "updated": 1559810067
+    },
+    {
+      "id": "5cf8d013aff09e00007c56ba",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810067,
+      "updated": 1559810067
+    },
+    {
+      "id": "5cf8d013aff09e00007c56bb",
+      "text": "[https://gyazo.com/130dbfe2c6bdd3d09caa7c73e2ad78b6]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810067,
+      "updated": 1559810086
+    },
+    {
+      "id": "5cf8d025aff09e00007c56bc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810086,
+      "updated": 1559810086
+    },
+    {
+      "id": "5cf8d03caff09e00007c56bd",
+      "text": "presentがneverなんだと思うじゃろ。でも全部anyにしててもダメなのじゃ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810109,
+      "updated": 1559810144
+    },
+    {
+      "id": "5cf8d05faff09e00007c56bf",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810144,
+      "updated": 1559810145
+    },
+    {
+      "id": "5cf8d061aff09e00007c56c0",
+      "text": " const initialState = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810146,
+      "updated": 1559810146
+    },
+    {
+      "id": "5cf8d062aff09e00007c56c1",
+      "text": "   past: [] as any[],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810146,
+      "updated": 1559810149
+    },
+    {
+      "id": "5cf8d062aff09e00007c56c3",
+      "text": "   present: null as any,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810146,
+      "updated": 1559810149
+    },
+    {
+      "id": "5cf8d062aff09e00007c56c5",
+      "text": "   future: [] as any[]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810146,
+      "updated": 1559810150
+    },
+    {
+      "id": "5cf8d062aff09e00007c56c7",
+      "text": " }; ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810146,
+      "updated": 1559810152
+    },
+    {
+      "id": "5cf8cfd2aff09e00007c56b2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810002,
+      "updated": 1559810002
+    },
+    {
+      "id": "5cf8d09eaff09e00007c56c9",
+      "text": "謎の現象が起きた時には問題を分割する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810206,
+      "updated": 1559810212
+    },
+    {
+      "id": "5cf8d0a3aff09e00007c56cb",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810212,
+      "updated": 1559810213
+    },
+    {
+      "id": "5cf8d0a5aff09e00007c56cc",
+      "text": "   let x = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810213,
+      "updated": 1559810214
+    },
+    {
+      "id": "5cf8d0a5aff09e00007c56cd",
+      "text": "     ...initialState,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810214,
+      "updated": 1559810214
+    },
+    {
+      "id": "5cf8d0a5aff09e00007c56ce",
+      "text": "     present: initialPresent",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810214,
+      "updated": 1559810214
+    },
+    {
+      "id": "5cf8d0a5aff09e00007c56cf",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810214,
+      "updated": 1559810214
+    },
+    {
+      "id": "5cf8d0a5aff09e00007c56d0",
+      "text": "   const [state, dispatch] = useReducer(reducer, x);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810214,
+      "updated": 1559810214
+    },
+    {
+      "id": "5cf8d0a5aff09e00007c56d1",
+      "text": "この時エラーは`useReducer(reducer, x);`のxに対して表示される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810214,
+      "updated": 1559810238
+    },
+    {
+      "id": "5cf8d0beaff09e00007c56d2",
+      "text": "\t>Argument of type '{ present: any; past: any[]; future: any[]; }' is not assignable to parameter of type 'never'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810238,
+      "updated": 1559811028
+    },
+    {
+      "id": "5cf8d0beaff09e00007c56d3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810238,
+      "updated": 1559810238
+    },
+    {
+      "id": "5cf8d0a3aff09e00007c56ca",
+      "text": "なので現象は「useReducerの第二引数の型がneverであると推論されている」というもの。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810212,
+      "updated": 1559810284
+    },
+    {
+      "id": "5cf8d0ecaff09e00007c56d5",
+      "text": "useReducer周りの推論の振る舞いを調べてみる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810284,
+      "updated": 1559810364
+    },
+    {
+      "id": "5cf8d0ecaff09e00007c56d6",
+      "text": " `useReducer(null, null)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810284,
+      "updated": 1559810352
+    },
+    {
+      "id": "5cf8d12daff09e00007c56d7",
+      "text": " \t>Argument of type 'null' is not assignable to parameter of type 'Reducer<any, any>'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810350,
+      "updated": 1559810434
+    },
+    {
+      "id": "5cf8d0d1aff09e00007c56d4",
+      "text": "\t`useReducer(()=>1, null)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810258,
+      "updated": 1559810400
+    },
+    {
+      "id": "5cf8d161aff09e00007c56d9",
+      "text": "\t\t>Argument of type 'null' is not assignable to parameter of type 'number'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810402,
+      "updated": 1559810436
+    },
+    {
+      "id": "5cf8d15faff09e00007c56d8",
+      "text": "\t\tというわけで第一引数の返り値が第二引数の型だと推論されていると予想できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810400,
+      "updated": 1559810455
+    },
+    {
+      "id": "5cf8d197aff09e00007c56db",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810455,
+      "updated": 1559810555
+    },
+    {
+      "id": "5cf8d1fbaff09e00007c56dc",
+      "text": "ではこのケースでのreducerの型は何か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810555,
+      "updated": 1559810569
+    },
+    {
+      "id": "5cf8d208aff09e00007c56dd",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810569,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56de",
+      "text": " const reducer: (state: {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56df",
+      "text": "     past: any[];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e0",
+      "text": "     present: any;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e1",
+      "text": "     future: any[];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e2",
+      "text": " }, action: any) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e3",
+      "text": "     past: any[];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e4",
+      "text": "     present: any;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e5",
+      "text": "     future: any[];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d20aaff09e00007c56e6",
+      "text": " } | undefined",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810570,
+      "updated": 1559810570
+    },
+    {
+      "id": "5cf8d188aff09e00007c56da",
+      "text": "なぜかundefinedがついている(このあたりで察しがつく)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810441,
+      "updated": 1559810593
+    },
+    {
+      "id": "5cf8d21baff09e00007c56e8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810588,
+      "updated": 1559810588
+    },
+    {
+      "id": "5cf8d21baff09e00007c56e9",
+      "text": "reducerの実装ではswitch/caseで4通りに分岐して、それぞれの中でreturnしている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810588,
+      "updated": 1559810653
+    },
+    {
+      "id": "5cf8d25caff09e00007c56ea",
+      "text": "この4通りのケースしか存在しないことは、型システムは知らない。なのでどのケースにもマッチしないでswitch/caseを抜ける経路が存在すると考える。その結果、返り値の型にundefinedがつき、reducerの型推論の過程でそれがneverに化ける。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810653,
+      "updated": 1559810802
+    },
+    {
+      "id": "5cf8d2d4aff09e00007c56eb",
+      "text": "\t(この「reducerの型推論の過程でそれがneverに化ける」の過程を深掘りしても面白いかもしれないが今回はパス)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810772,
+      "updated": 1559810795
+    },
+    {
+      "id": "5cf8d212aff09e00007c56e7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810578,
+      "updated": 1559810578
+    },
+    {
+      "id": "5cf8d2ecaff09e00007c56ec",
+      "text": "なのでこの問題の解決法は以下の2通りある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810797,
+      "updated": 1559810865
+    },
+    {
+      "id": "5cf8d2fbaff09e00007c56ef",
+      "text": "\t手抜き: switch/caseの後ろでreturn state;して型を揃えてやる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810811,
+      "updated": 1559810837
+    },
+    {
+      "id": "5cf8d315aff09e00007c56f0",
+      "text": "\t真面目: action.typeが4種類の値しかとらないことを型で宣言してやる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810838,
+      "updated": 1559810856
+    },
+    {
+      "id": "5cf8d2fbaff09e00007c56ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810811,
+      "updated": 1559810811
+    },
+    {
+      "id": "5cf8d333aff09e00007c56f1",
+      "text": "僕は面倒になったので手抜きの実装をした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559810868,
+      "updated": 1559810874
+    },
+    {
+      "id": "5cf8d5abaff09e00007c56f3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811500,
+      "updated": 1559811500
+    },
+    {
+      "id": "5cf8d5abaff09e00007c56f4",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811500,
+      "updated": 1560943174
+    },
+    {
+      "id": "5d0a1a45aff09e00000780a0",
+      "text": "「reducerの型推論の過程でそれがneverに化ける」の過程",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1560943174,
+      "updated": 1560943174
+    },
+    {
+      "id": "5cf8d5abaff09e00007c56f5",
+      "text": "code: ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811500,
+      "updated": 1559811504
+    },
+    {
+      "id": "5cf8d5b0aff09e00007c56f7",
+      "text": "     function useReducer<R extends Reducer<any, any>>(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811505,
+      "updated": 1559811505
+    },
+    {
+      "id": "5cf8d5b1aff09e00007c56f8",
+      "text": "         reducer: R,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811505,
+      "updated": 1559811505
+    },
+    {
+      "id": "5cf8d5b1aff09e00007c56f9",
+      "text": "         initialState: ReducerState<R>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811505,
+      "updated": 1559811505
+    },
+    {
+      "id": "5cf8d5b1aff09e00007c56fa",
+      "text": "         initializer?: undefined",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811505,
+      "updated": 1559811505
+    },
+    {
+      "id": "5cf8d5b1aff09e00007c56fb",
+      "text": "     ): [ReducerState<R>, Dispatch<ReducerAction<R>>];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811505,
+      "updated": 1559811505
+    },
+    {
+      "id": "5cf8d5b2aff09e00007c56fc",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811506,
+      "updated": 1559811506
+    },
+    {
+      "id": "5cf8d5b3aff09e00007c56fd",
+      "text": "     type Reducer<S, A> = (prevState: S, action: A) => S;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811507,
+      "updated": 1559811539
+    },
+    {
+      "id": "5cf8d5c6aff09e00007c56fe",
+      "text": "     type ReducerState<R extends Reducer<any, any>> = R extends Reducer<infer S, any> ? S : never;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811527,
+      "updated": 1559811539
+    },
+    {
+      "id": "5cf8d5c6aff09e00007c5701",
+      "text": "reducerの型が (T, any) => (T | undefined)である場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811527,
+      "updated": 1559811842
+    },
+    {
+      "id": "5cf8d708aff09e00007c5703",
+      "text": "\tR = (T, any) => (T | undefined)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811848,
+      "updated": 1559811854
+    },
+    {
+      "id": "5cf8d70eaff09e00007c5704",
+      "text": "\tR extends Reducer<any, any>は成功する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811854,
+      "updated": 1559811896
+    },
+    {
+      "id": "5cf8d738aff09e00007c5705",
+      "text": "\t\tReducer<any, any> = (any, any) => (any)だから",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811897,
+      "updated": 1559811915
+    },
+    {
+      "id": "5cf8d74aaff09e00007c5707",
+      "text": "\t\t返り値のanyに(T | undefined)が入る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811915,
+      "updated": 1559811925
+    },
+    {
+      "id": "5cf8d754aff09e00007c5708",
+      "text": "\tR extends Reducer<infer S, any> ? S : never はSがanyになって成功しそうな気がするのだが...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811925,
+      "updated": 1559813676
+    },
+    {
+      "id": "5cf8ddd0aff09e0000cabbc5",
+      "text": "\t\tinferが\"any\"を答えることはないんだろうか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813585,
+      "updated": 1559813601
+    },
+    {
+      "id": "5cf8dde0aff09e0000cabbc6",
+      "text": "\t\t\tまあそれをありにしたら常にinferが成功するから条件式の意味がないか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559813601,
+      "updated": 1559813643
+    },
+    {
+      "id": "5cf8d7aaaff09e00007c5709",
+      "text": "\t\t\tinferの仕組み/仕様がわからないとなんともいえないな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559812011,
+      "updated": 1559813660
+    },
+    {
+      "id": "5cf8d892aff09e00007c570a",
+      "text": "\t\tinfer Sが失敗してneverを返すのだろうと思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559812242,
+      "updated": 1559812267
+    },
+    {
+      "id": "5cf8d6e6aff09e00007c5702",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559811815,
+      "updated": 1559811815
+    }
+  ]
+}

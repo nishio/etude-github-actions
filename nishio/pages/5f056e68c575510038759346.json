@@ -1,0 +1,351 @@
+{
+  "id": "5f056e68c575510038759346",
+  "title": "DP R",
+  "created": 1594191467,
+  "updated": 1594194469,
+  "lines": [
+    {
+      "id": "5f056e68c575510038759346",
+      "text": "DP R",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191467,
+      "updated": 1594191467
+    },
+    {
+      "id": "5f057a16aff09e0000d07c17",
+      "text": "[R - Walk https://atcoder.jp/contests/dp/tasks/dp_r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194455,
+      "updated": 1594194455
+    },
+    {
+      "id": "5f056e6aaff09e000038e9c5",
+      "text": "\t有向グラフの長さKのパスを数え上げる問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191467,
+      "updated": 1594193659
+    },
+    {
+      "id": "5f056e90aff09e000038e9c7",
+      "text": "\t素朴に考えれば長さk-1のパスの数から長さkの数を求めるDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191505,
+      "updated": 1594193659
+    },
+    {
+      "id": "5f056ec8aff09e000038e9c8",
+      "text": "\tだがKが最大10^18という問題条件から、K回繰り返しを行う方法では無理",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191561,
+      "updated": 1594194463
+    },
+    {
+      "id": "5f056f0aaff09e000038e9c9",
+      "text": "\t世の中的にはここで「行列の積」「[繰り返し二乗法]」と飛躍するんだけどもう少し噛み砕くと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191626,
+      "updated": 1594194469
+    },
+    {
+      "id": "5f056fa2aff09e000038e9ca",
+      "text": "\t「N回同じ処理をする必要があるがO(N)では遅い時にどうするか」という話",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191779,
+      "updated": 1594193670
+    },
+    {
+      "id": "5f057705aff09e0000d07c00",
+      "text": "\t\t二分木的な方法でlog Nにすれば良いよね、となる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193670,
+      "updated": 1594193670
+    },
+    {
+      "id": "5f057121aff09e000038e9cb",
+      "text": " \tNについての処理を N/2についての処理結果を使って高速に演算できればlog Nになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594192163,
+      "updated": 1594193672
+    },
+    {
+      "id": "5f05716faff09e000038e9cc",
+      "text": " これが今回の場合たまたま行列の掛け算になるだけの話",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594192239,
+      "updated": 1594192301
+    },
+    {
+      "id": "5f056e6daff09e000038e9c6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594191469,
+      "updated": 1594191469
+    },
+    {
+      "id": "5f0578a9aff09e000038e9cd",
+      "text": "　素朴に書くとこうなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194090,
+      "updated": 1594194096
+    },
+    {
+      "id": "5f0578b1aff09e000038e9ce",
+      "text": "　　これはWA",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194097,
+      "updated": 1594194103
+    },
+    {
+      "id": "5f0578bdaff09e000038e9d0",
+      "text": "　　なぜかというと要素が最大10^9のサイズ50の行列の掛け算は要素が64ビットの範囲を超えるから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194109,
+      "updated": 1594194354
+    },
+    {
+      "id": "5f0579b2aff09e0000d07c16",
+      "text": "　　\t掛け算してからmodしても手遅れ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194354,
+      "updated": 1594194355
+    },
+    {
+      "id": "5f057583aff09e0000d07bf3",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193283,
+      "updated": 1594193287
+    },
+    {
+      "id": "5f057587aff09e0000d07bf5",
+      "text": " def solve(N, K, X):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193287,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bf6",
+      "text": "     powK = np.eye(N, dtype=np.int64)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bf7",
+      "text": "     while K:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bf8",
+      "text": "         if K & 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bf9",
+      "text": "             powK = powK.dot(X)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bfa",
+      "text": "             powK %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bfb",
+      "text": "         X = X.dot(X)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bfc",
+      "text": "         X %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bfd",
+      "text": "         K //= 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bfe",
+      "text": "     return powK.sum() % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193646
+    },
+    {
+      "id": "5f0576edaff09e0000d07bff",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193646,
+      "updated": 1594193647
+    },
+    {
+      "id": "5f057583aff09e0000d07bf4",
+      "text": "　要素を掛け合わせるところまでならまだ60ビットなので、そこでmodをとってから足し合わせる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594193284,
+      "updated": 1594194405
+    },
+    {
+      "id": "5f057906aff09e0000d07c01",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194183,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c04",
+      "text": " def solve(N, K, X):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c05",
+      "text": "     def modmul(x, y):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c06",
+      "text": "         ret = np.zeros(x.shape, np.int64)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c07",
+      "text": "         for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c08",
+      "text": "             for j in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c09",
+      "text": "                 v = x[i, :] * y[:, j]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c0a",
+      "text": "                 v %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c0b",
+      "text": "                 ret[i, j] = v.sum() % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c0c",
+      "text": "         return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c0d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c0e",
+      "text": "     powK = np.eye(N, dtype=np.int64)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c0f",
+      "text": "     while K:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c10",
+      "text": "         if K & 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c11",
+      "text": "             powK = modmul(powK, X)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c12",
+      "text": "         X = modmul(X, X)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c13",
+      "text": "         K //= 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c14",
+      "text": "     return powK.sum() % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194336
+    },
+    {
+      "id": "5f05799faff09e0000d07c15",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194336,
+      "updated": 1594194337
+    },
+    {
+      "id": "5f057906aff09e0000d07c02",
+      "text": "https://atcoder.jp/contests/dp/submissions/15081435",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194183,
+      "updated": 1594194183
+    },
+    {
+      "id": "5f057907aff09e0000d07c03",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594194183,
+      "updated": 1594194183
+    }
+  ]
+}

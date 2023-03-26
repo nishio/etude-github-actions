@@ -1,0 +1,351 @@
+{
+  "id": "5e9d4c898fcffd00172f56e7",
+  "title": "TypeScriptで奇数型",
+  "created": 1587367051,
+  "updated": 1587368166,
+  "lines": [
+    {
+      "id": "5e9d4c898fcffd00172f56e7",
+      "text": "TypeScriptで奇数型",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367051,
+      "updated": 1587367069
+    },
+    {
+      "id": "5e9d4c9caff09e000035d839",
+      "text": "[TypeScriptの型]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367069,
+      "updated": 1587367076
+    },
+    {
+      "id": "5e9d4c9faff09e000035d83a",
+      "text": ">TypeScriptの型の情報で例えば「英数字のみからなるidを持つ」って定義できる？ [src https://twitter.com/wtnabe/status/1252119742069891073]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367071,
+      "updated": 1587367157
+    },
+    {
+      "id": "5e9d4ce4aff09e000035d83b",
+      "text": "ってのを見て、そういえばどうやるんだろうなと思って調べたのでメモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367141,
+      "updated": 1587367229
+    },
+    {
+      "id": "5e9d4d3daff09e000035d83d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367229,
+      "updated": 1587367229
+    },
+    {
+      "id": "5e9d4d3daff09e000035d83e",
+      "text": "この種のニーズって要するに[構造的型付け]のTypeScriptにおいて、データの構造としては既存のStringを使いつつ、値の範囲を制限して、その値の集合に別の名前をつけたい、Nominal Typingしたい、ということかと思う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367229,
+      "updated": 1587368166
+    },
+    {
+      "id": "5e9d4e42aff09e000035d840",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367491,
+      "updated": 1587367491
+    },
+    {
+      "id": "5e9d4e25aff09e000035d83f",
+      "text": "Nominal Typingで調べたらすぐ見つかった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367461,
+      "updated": 1587367471
+    },
+    {
+      "id": "5e9d4e02aff09e0000163033",
+      "text": "[Nominal Typing - TypeScript Deep Dive https://basarat.gitbook.io/typescript/main-1/nominaltyping]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367427,
+      "updated": 1587367444
+    },
+    {
+      "id": "5e9d4cfdaff09e000035d83c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367165,
+      "updated": 1587367165
+    },
+    {
+      "id": "5e9d4e50aff09e0000163034",
+      "text": "簡単に言えば型の区別のためのメンバを導入して構造的な互換性をなくせば良い、というシンプルなもの。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367504,
+      "updated": 1587367584
+    },
+    {
+      "id": "5e9d4ec4aff09e0000163036",
+      "text": "この解説を参考にして、奇数の型を作ってみた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367621,
+      "updated": 1587367836
+    },
+    {
+      "id": "5e9d4e54aff09e0000163035",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367508,
+      "updated": 1587367508
+    },
+    {
+      "id": "5e9d4eb8aff09e000035d841",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367609,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d843",
+      "text": " interface Odd extends Number {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d844",
+      "text": "   _OddBrand: boolean;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d845",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d846",
+      "text": " interface Even extends Number {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d847",
+      "text": "   _EvenBrand: boolean;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d848",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d849",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d84a",
+      "text": " var odd: Odd;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d84b",
+      "text": " var even: Even;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d84c",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d84d",
+      "text": " // Expected Type Errors",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d84e",
+      "text": " // odd = even;  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d84f",
+      "text": " // even = odd;  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d850",
+      "text": " // odd = 1;  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367762
+    },
+    {
+      "id": "5e9d4f65aff09e000035d860",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367781,
+      "updated": 1587367783
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d851",
+      "text": " const assertOdd = (x: number): Odd => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d852",
+      "text": "   if (x % 2 === 1) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d853",
+      "text": "     // @ts-ignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d854",
+      "text": "     x._oddBrand = true;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d855",
+      "text": "     // @ts-ignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d856",
+      "text": "     const ret: Odd = x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d857",
+      "text": "     return ret;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d858",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d859",
+      "text": "   throw AssertionError;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d85a",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4f39aff09e000035d85f",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367737,
+      "updated": 1587367738
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d85b",
+      "text": " var x = assertOdd(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d85c",
+      "text": " odd = x;  // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367714
+    },
+    {
+      "id": "5e9d4ebdaff09e000035d85d",
+      "text": " // even = x;  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367613,
+      "updated": 1587367613
+    },
+    {
+      "id": "5e9d4fa1aff09e0000163037",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367842,
+      "updated": 1587367870
+    },
+    {
+      "id": "5e9d4eb9aff09e000035d842",
+      "text": "人によっては「期待よりも厳しい」と感じるかも。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367609,
+      "updated": 1587367908
+    },
+    {
+      "id": "5e9d4fdbaff09e000016303a",
+      "text": "`odd = 1`は型エラーになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367908,
+      "updated": 1587367950
+    },
+    {
+      "id": "5e9d5013aff09e000016303b",
+      "text": "この例のように「number型だが、奇数であるの明らかだ」と思うならassertすれば良い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367955,
+      "updated": 1587368000
+    },
+    {
+      "id": "5e9d4fceaff09e0000163039",
+      "text": "このassertが間違っていた時には実行時にアサーションエラーになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587367887,
+      "updated": 1587368051
+    },
+    {
+      "id": "5e9d505baff09e000016303c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1587368027,
+      "updated": 1587368027
+    }
+  ]
+}

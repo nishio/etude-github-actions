@@ -1,0 +1,617 @@
+{
+  "id": "5e1eb6be8b34400017f525d2",
+  "title": "ReactN+TypeScript",
+  "created": 1579071168,
+  "updated": 1580890792,
+  "lines": [
+    {
+      "id": "5e1eb6be8b34400017f525d2",
+      "text": "ReactN+TypeScript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071168,
+      "updated": 1579103447
+    },
+    {
+      "id": "5e1ecca8aff09e00008f56f3",
+      "text": "[ReactN]を[TypeScript]で使うときにArgument of type '\"a\"' is not assignable to parameter of type 'never'.が出たのを、マニュアル読まずにフィーリングで直したら、実は直ってなかったので、正しい直し方をメモ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579076777,
+      "updated": 1579104100
+    },
+    {
+      "id": "5e3a7a9faff09e0000807c09",
+      "text": "[TypeScriptの型]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580890784,
+      "updated": 1580890792
+    },
+    {
+      "id": "5e1eb6c0aff09e00000d306d",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071168,
+      "updated": 1579071361
+    },
+    {
+      "id": "5e1eb781aff09e00000d306f",
+      "text": " import { useGlobal, setGlobal } from 'reactn';",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071361,
+      "updated": 1579071362
+    },
+    {
+      "id": "5e1eb781aff09e00000d3070",
+      "text": " const INITIAL_STATE = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071362,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3071",
+      "text": "   a: 1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3072",
+      "text": "   b: \"foo\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3073",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3074",
+      "text": " type TState = typeof INITIAL_STATE;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3075",
+      "text": " //type TState = {a: number; b: string;}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3076",
+      "text": " setGlobal(INITIAL_STATE);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3077",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3078",
+      "text": " const App: React.FC = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071372
+    },
+    {
+      "id": "5e1eb78aaff09e00000d3079",
+      "text": "   const a = useGlobal(\"a\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071377
+    },
+    {
+      "id": "5e1eb791aff09e00000d307b",
+      "text": "   // ERROR: Argument of type '\"a\"' is not assignable to parameter of type 'never'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071377,
+      "updated": 1579071388
+    },
+    {
+      "id": "5e1eb78aaff09e00000d307a",
+      "text": " ...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071372,
+      "updated": 1579071375
+    },
+    {
+      "id": "5e1eb77faff09e00000d306e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071360,
+      "updated": 1579071360
+    },
+    {
+      "id": "5e1ecdfeaff09e00008f56f4",
+      "text": "useGlobalに型指定を付けたらコンパイルエラーがなくなったのでそれで良いのかと思ったら、型がおかしくなっていて後から問題が起きた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579077119,
+      "updated": 1579077183
+    },
+    {
+      "id": "5e1eb7aaaff09e00000d307c",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071402,
+      "updated": 1579071402
+    },
+    {
+      "id": "5e1eb7aaaff09e00000d307d",
+      "text": "   const [a] = useGlobal<TState>(\"a\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071402,
+      "updated": 1579071662
+    },
+    {
+      "id": "5e1eb7c8aff09e00000d307f",
+      "text": "   // no compile error, it seems OK but...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071433,
+      "updated": 1579071468
+    },
+    {
+      "id": "5e1eb7ecaff09e00000d3080",
+      "text": "\t  // const a: string | number",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071469,
+      "updated": 1579071882
+    },
+    {
+      "id": "5e1eb8d5aff09e00000d3089",
+      "text": "\t  // So,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071702,
+      "updated": 1579071704
+    },
+    {
+      "id": "5e1eb830aff09e00000d3085",
+      "text": "\t  console.log(a + 1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071536,
+      "updated": 1579071537
+    },
+    {
+      "id": "5e1eb832aff09e00000d3086",
+      "text": "\t  // Operator '+' cannot be applied to types 'ReactText' and 'number'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071538,
+      "updated": 1579071709
+    },
+    {
+      "id": "5e1eb8ddaff09e00000d308b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071709,
+      "updated": 1579071709
+    },
+    {
+      "id": "5e1f351daff09e000066401e",
+      "text": "正しい直し方 https://github.com/CharlesStover/reactn/blob/master/README.md#typescript-support",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103518,
+      "updated": 1579104123
+    },
+    {
+      "id": "5e1f351eaff09e0000664020",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664021",
+      "text": " declare module 'reactn/default' {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664022",
+      "text": "   export interface State extends TState { }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664023",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664024",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664025",
+      "text": " const App: React.FC = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664026",
+      "text": "   const [a] = useGlobal(\"a\");  // OK, no generics needed",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e0000664027",
+      "text": "   console.log(a + 1);  // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103519,
+      "updated": 1579103519
+    },
+    {
+      "id": "5e1f351eaff09e000066401f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103518,
+      "updated": 1579103518
+    },
+    {
+      "id": "5e1eb98daff09e00000d309c",
+      "text": "the reason why `a: string | number`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071886,
+      "updated": 1579071907
+    },
+    {
+      "id": "5e1f35bdaff09e000066402c",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103677,
+      "updated": 1579103693
+    },
+    {
+      "id": "5e1f35cdaff09e000066402e",
+      "text": "\tuseGlobal<TState>(\"a\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103693,
+      "updated": 1579103696
+    },
+    {
+      "id": "5e1f35c7aff09e000066402d",
+      "text": " // return value: StateTuple<{",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103688,
+      "updated": 1579103701
+    },
+    {
+      "id": "5e1f35d5aff09e000066402f",
+      "text": " //   a: number;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103701,
+      "updated": 1579103701
+    },
+    {
+      "id": "5e1f35d5aff09e0000664030",
+      "text": " //   b: string;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103701,
+      "updated": 1579103701
+    },
+    {
+      "id": "5e1f35d5aff09e0000664031",
+      "text": " // }, \"a\" | \"b\">",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103701,
+      "updated": 1579103701
+    },
+    {
+      "id": "5e1f35d5aff09e0000664032",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103701,
+      "updated": 1579103701
+    },
+    {
+      "id": "5e1eb7adaff09e00000d307e",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071405,
+      "updated": 1579071779
+    },
+    {
+      "id": "5e1eb9afaff09e00000d309d",
+      "text": " useGlobal<G extends {} = State, Property extends keyof G = keyof G>(property: Property): StateTuple<G, Property>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071919,
+      "updated": 1579071949
+    },
+    {
+      "id": "5e1eb9c9aff09e00000d30a3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071945,
+      "updated": 1579103556
+    },
+    {
+      "id": "5e1eb923aff09e00000d308d",
+      "text": " export type StateTuple<G extends {}, P extends keyof G> = [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071780,
+      "updated": 1579071780
+    },
+    {
+      "id": "5e1eb924aff09e00000d308e",
+      "text": "   G[P],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071780,
+      "updated": 1579071780
+    },
+    {
+      "id": "5e1eb924aff09e00000d308f",
+      "text": "   Setter<G, P>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071780,
+      "updated": 1579071780
+    },
+    {
+      "id": "5e1eb924aff09e00000d3090",
+      "text": " ];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071780,
+      "updated": 1579071780
+    },
+    {
+      "id": "5e1eb95eaff09e00000d3092",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579071839,
+      "updated": 1579103514
+    },
+    {
+      "id": "5e1eba34aff09e00000d30a5",
+      "text": "この原因は型引数を2つとるgenericsに1つ指定するともう1つの型がかわることが原因。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579072053,
+      "updated": 1579103590
+    },
+    {
+      "id": "5e1f21a0aff09e00008f56f7",
+      "text": "型引数を指定しない場合は引数から型Keyが推論され、それは文字列のリテラルタイプになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579098529,
+      "updated": 1579098529
+    },
+    {
+      "id": "5e1f21a2aff09e00008f56f8",
+      "text": "一方Dictに型を渡した場合、 KeyはDictのkeyofになる。この場合、すべてのキーのユニオン型になる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579098531,
+      "updated": 1579098648
+    },
+    {
+      "id": "5e1ec046aff09e00000d30a8",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073606,
+      "updated": 1579073609
+    },
+    {
+      "id": "5e1ec084aff09e00000d30be",
+      "text": " interface DefaultDict {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073668,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30bf",
+      "text": "   a: number,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c0",
+      "text": "   b: string,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c1",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c2",
+      "text": " const dict: DefaultDict = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c3",
+      "text": "   a: 1,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c4",
+      "text": "   b: \"foo\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c5",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c6",
+      "text": " const bar: <",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c7",
+      "text": "   Dict extends {} = DefaultDict,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c8",
+      "text": "   Key extends keyof Dict = keyof Dict",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30c9",
+      "text": "   >(key: Key) => Key",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30ca",
+      "text": "   = (key) => key;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30cb",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30cc",
+      "text": " const a1 = bar(\"a\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30cd",
+      "text": " // const a1: \"a\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30ce",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30cf",
+      "text": " const a2 = bar<typeof dict>(\"a\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30d0",
+      "text": " // const a2: \"a\" | \"b\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30d1",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30d2",
+      "text": " const a3 = bar<DefaultDict>(\"a\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30d3",
+      "text": " // const a3: \"a\" | \"b\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073669
+    },
+    {
+      "id": "5e1ec085aff09e00000d30d4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073669,
+      "updated": 1579073670
+    },
+    {
+      "id": "5e1f35fbaff09e0000664039",
+      "text": "`StateTuple[0]`の`G[P]`でPがすべてのキーのユニオン型なので、`G[P]`はすべてのバリューのユニオン型になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103739,
+      "updated": 1579103846
+    },
+    {
+      "id": "5e1ec048aff09e00000d30aa",
+      "text": "code:ts ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579073609,
+      "updated": 1579103735
+    },
+    {
+      "id": "5e1f35f1aff09e0000664034",
+      "text": "  export type StateTuple<G extends {}, P extends keyof G> = [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103729,
+      "updated": 1579103730
+    },
+    {
+      "id": "5e1f35f1aff09e0000664035",
+      "text": "    G[P],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103730,
+      "updated": 1579103730
+    },
+    {
+      "id": "5e1f35f1aff09e0000664036",
+      "text": "    Setter<G, P>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103730,
+      "updated": 1579103730
+    },
+    {
+      "id": "5e1f35f1aff09e0000664037",
+      "text": "  ];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103730,
+      "updated": 1579103730
+    },
+    {
+      "id": "5e1f35f1aff09e0000664038",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579103730,
+      "updated": 1579103733
+    }
+  ]
+}

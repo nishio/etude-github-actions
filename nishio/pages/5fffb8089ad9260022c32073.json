@@ -1,0 +1,1240 @@
+{
+  "id": "5fffb8089ad9260022c32073",
+  "title": "Herokuで自然言語処理",
+  "created": 1610594315,
+  "updated": 1611141144,
+  "lines": [
+    {
+      "id": "5fffb8089ad9260022c32073",
+      "text": "Herokuで自然言語処理",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594315,
+      "updated": 1610600057
+    },
+    {
+      "id": "5fffcb63aff09e0000662872",
+      "text": "ローカルで実験していた自然言語処理のアルゴリズムをHeroku上でAPIサーバにする過程のメモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610599267,
+      "updated": 1610599348
+    },
+    {
+      "id": "5fffcbb4aff09e0000662873",
+      "text": "(Herokuでやるのが適切かどうかの考察はしてない → [APIサーバの置き場所考察])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610599348,
+      "updated": 1610599412
+    },
+    {
+      "id": "5fffce7eaff09e0000662885",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610600063,
+      "updated": 1610600063
+    },
+    {
+      "id": "5fffb89eaff09e0000470bd8",
+      "text": "\t前に似たことをやった時のメモ[Heroku+Flask]を参考にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594463,
+      "updated": 1610600091
+    },
+    {
+      "id": "5fffd2deaff09e0000662886",
+      "text": "\t　新しい作業ディレクトリを作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601184,
+      "updated": 1610601199
+    },
+    {
+      "id": "5fffd2efaff09e0000662887",
+      "text": "\t　　既存のリポジトリを使うかとか考えたこともあったけども、複雑なことをしてトラブルが起きた時に原因究明に時間がかかって不毛なのでなるべくシンプルにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601199,
+      "updated": 1610601275
+    },
+    {
+      "id": "5fffb89faff09e0000470bda",
+      "text": "\t　\t$ mkdir regroup-split-server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594464,
+      "updated": 1610601279
+    },
+    {
+      "id": "5fffb8eaaff09e0000470bdb",
+      "text": "　 \t$ cd regroup-split-server ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594539,
+      "updated": 1610601280
+    },
+    {
+      "id": "5fffd34eaff09e0000662888",
+      "text": "　 仮想環境を作ってVSCode上で作業する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601295,
+      "updated": 1610601346
+    },
+    {
+      "id": "5fffb8eaaff09e0000470bdc",
+      "text": "　 \t$ python3 -m venv venv",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594539,
+      "updated": 1610601347
+    },
+    {
+      "id": "5fffb8eaaff09e0000470bdd",
+      "text": "　\t\t$ code .",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594539,
+      "updated": 1610601350
+    },
+    {
+      "id": "5fffb8feaff09e0000470be1",
+      "text": "　\t\tView -> Terminal",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594559,
+      "updated": 1610601352
+    },
+    {
+      "id": "5fffb8eaaff09e0000470bdf",
+      "text": "　\t $ source venv/bin/activate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594539,
+      "updated": 1610601355
+    },
+    {
+      "id": "5fffd394aff09e0000662889",
+      "text": "　\tFlaskで最小限のサーバを作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601364,
+      "updated": 1610601386
+    },
+    {
+      "id": "5fffb91caff09e0000470be2",
+      "text": "　\t $ mkdir server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594588,
+      "updated": 1610601376
+    },
+    {
+      "id": "5fffb93faff09e0000470be3",
+      "text": "　  $ code server/__init__.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594623,
+      "updated": 1610601380
+    },
+    {
+      "id": "5fffd3e1aff09e0000d394cf",
+      "text": "　  \tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601441,
+      "updated": 1610601445
+    },
+    {
+      "id": "5fffd3e5aff09e0000d394d0",
+      "text": "　  \t from flask import Flask",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601445,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e05",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e06",
+      "text": "     app = Flask(__name__)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e07",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e08",
+      "text": "     def create_app():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e09",
+      "text": "         return app",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e0a",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e0b",
+      "text": "     @app.route('/')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e0c",
+      "text": "     def root():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffd3efaff09e00009e3e0d",
+      "text": "         return \"OK\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601455,
+      "updated": 1610601455
+    },
+    {
+      "id": "5fffb8eaaff09e0000470be0",
+      "text": "\t　\t$ pip install --upgrade pip",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594539,
+      "updated": 1610601388
+    },
+    {
+      "id": "5fffb89faff09e0000470bd9",
+      "text": "　\t\t$ pip install flask",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594463,
+      "updated": 1610601389
+    },
+    {
+      "id": "5fffd410aff09e000066288a",
+      "text": "　\t\t環境変数の設定をファイルで行うようにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601489,
+      "updated": 1610601518
+    },
+    {
+      "id": "5fffba76aff09e0000470be5",
+      "text": " \t\t\t$ code .env",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594935,
+      "updated": 1610601549
+    },
+    {
+      "id": "5fffd43aaff09e00009e3e0e",
+      "text": " \t\t\t\tcode:.env",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601531,
+      "updated": 1610602104
+    },
+    {
+      "id": "5fffd43baff09e00009e3e0f",
+      "text": "   \t\t FLASK_APP=server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601531,
+      "updated": 1610601549
+    },
+    {
+      "id": "5fffd43baff09e00009e3e10",
+      "text": "      FLASK_ENV=development",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601531,
+      "updated": 1610601549
+    },
+    {
+      "id": "5fffd43baff09e00009e3e11",
+      "text": " \t\t\t$ pip install python-dotenv",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601531,
+      "updated": 1610601549
+    },
+    {
+      "id": "5fffba8caff09e0000470be7",
+      "text": "\t\t\t$ flask run",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594956,
+      "updated": 1610601561
+    },
+    {
+      "id": "5fffd4a1aff09e000066288b",
+      "text": "\t\t\t　問題なく実行されることと http://127.0.0.1:5000/ を開いてOKが出ることを確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601633,
+      "updated": 1610601657
+    },
+    {
+      "id": "5fffd498aff09e00009e3e13",
+      "text": "\t\t\t$ git init",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601625,
+      "updated": 1610601782
+    },
+    {
+      "id": "5fffd598aff09e0000470c08",
+      "text": "\t\t\t$ code .gitignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601880,
+      "updated": 1610601888
+    },
+    {
+      "id": "5fffd598aff09e0000470c09",
+      "text": "  \t\tcode:.gitignore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601881,
+      "updated": 1610602099
+    },
+    {
+      "id": "5fffd598aff09e0000470c0a",
+      "text": "  \t\t venv/     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601881,
+      "updated": 1610601896
+    },
+    {
+      "id": "5fffd598aff09e0000470c0d",
+      "text": "     *.pyc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601881,
+      "updated": 1610601890
+    },
+    {
+      "id": "5fffd598aff09e0000470c0e",
+      "text": "     __pycache__/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601881,
+      "updated": 1610601890
+    },
+    {
+      "id": "5fffbbe8aff09e0000470bef",
+      "text": "\t\t\t\t$ git commit -m 'minimal Flask server'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595305,
+      "updated": 1610601900
+    },
+    {
+      "id": "600539feaff09e0000bfc7e8",
+      "text": "\t\t\t\t\t実際はVSCodeのSource ControlタブでCmd+Enterしてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610955263,
+      "updated": 1610955318
+    },
+    {
+      "id": "5fffbad1aff09e0000470bea",
+      "text": "\t\t[gunicorn]を加えてデプロイする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595026,
+      "updated": 1610601953
+    },
+    {
+      "id": "5fffd608aff09e000066288c",
+      "text": "\t\t　これは[FlaskのHTTPS化]も兼ねていて、現代のAPIサーバとしてはHTTPだけってわけにもいかないと思うので最小構成に含めてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610601993,
+      "updated": 1610602053
+    },
+    {
+      "id": "5fffbbe1aff09e0000470beb",
+      "text": "  \t$ pip install gunicorn",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595297,
+      "updated": 1610602066
+    },
+    {
+      "id": "5fffbbe1aff09e0000470bec",
+      "text": "   $ pip freeze > requirements.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595297,
+      "updated": 1610602066
+    },
+    {
+      "id": "5fffd655aff09e0000470c13",
+      "text": " \t $ code Procfile",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602069,
+      "updated": 1610602123
+    },
+    {
+      "id": "5fffd658aff09e0000470c14",
+      "text": " \t \tcode:Procfile",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602072,
+      "updated": 1610602094
+    },
+    {
+      "id": "5fffd669aff09e0000470c15",
+      "text": " \t \t web: gunicorn server:\"create_app()\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602090,
+      "updated": 1610602090
+    },
+    {
+      "id": "5fffd686aff09e0000470c16",
+      "text": "\t\t\t$ heroku create regroup-split-server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602118,
+      "updated": 1610602124
+    },
+    {
+      "id": "5fffbbe1aff09e0000470bee",
+      "text": "\t  $ git commit -m \"add gunicorn\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595297,
+      "updated": 1610602125
+    },
+    {
+      "id": "5fffba76aff09e0000470be4",
+      "text": "\t\t\t$ git push --set-upstream heroku master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594934,
+      "updated": 1610602127
+    },
+    {
+      "id": "5fffd69daff09e000066288d",
+      "text": "\t\t\t　ビルドログが出る。エラーになってないことを確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602141,
+      "updated": 1610602156
+    },
+    {
+      "id": "5fffbc28aff09e0000470bf1",
+      "text": "　\t\t$ heroku open",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595368,
+      "updated": 1610602158
+    },
+    {
+      "id": "5fffbc29aff09e0000470bf2",
+      "text": "\t\t　\tデプロイされたものをブラウザで開く。OKが表示されてるのを確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595369,
+      "updated": 1610602181
+    },
+    {
+      "id": "5fffd6c7aff09e000066288e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602183,
+      "updated": 1610602184
+    },
+    {
+      "id": "5fffbc01aff09e0000470bf0",
+      "text": "　このデプロイ用のリポジトリと、ローカルでの研究開発用のリポジトリをどうするかはまだどうするのがスッキリするかわかってない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595329,
+      "updated": 1610595889
+    },
+    {
+      "id": "5fffbe5aaff09e000066285a",
+      "text": "　　状況によっては切り離したくなると思うが、どう切り離したいか明確になるまでは一体でやろうと思っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595931,
+      "updated": 1610595993
+    },
+    {
+      "id": "5fffbf0eaff09e000066285d",
+      "text": "　　　リポジトリを分けた上でハードリンクでつないだこともあったが、良くないと思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596111,
+      "updated": 1610596138
+    },
+    {
+      "id": "5fffbf29aff09e000066285e",
+      "text": "　　　git submoduleかpipで繋ぐのがよさそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596138,
+      "updated": 1610596159
+    },
+    {
+      "id": "5ffff2daaff09e00009e3e14",
+      "text": "　　　\t[Resolving Application Dependencies with Git Submodules | Heroku Dev Center https://devcenter.heroku.com/articles/git-submodules]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610609370,
+      "updated": 1610609371
+    },
+    {
+      "id": "600134e8aff09e0000472f97",
+      "text": "\t\t\t\t[自分用pip]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610691817,
+      "updated": 1610691863
+    },
+    {
+      "id": "5ffff385aff09e00009e3e15",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610609542,
+      "updated": 1610691836
+    },
+    {
+      "id": "5fffbe99aff09e000066285c",
+      "text": "　　将来切り離しやすいようにフォルダはわけておく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595993,
+      "updated": 1610602208
+    },
+    {
+      "id": "5fffbe8aaff09e000066285b",
+      "text": "　　　$ mkdir server/regroup_split",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595978,
+      "updated": 1610602201
+    },
+    {
+      "id": "5fffbe06aff09e0000662858",
+      "text": "　　必要そうなファイルをコピー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595846,
+      "updated": 1610596653
+    },
+    {
+      "id": "5fffc12caff09e0000470bf3",
+      "text": "　　\tcode:deploy.sh",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596653,
+      "updated": 1610596669
+    },
+    {
+      "id": "5fffc12faff09e0000470bf5",
+      "text": "　　\t cp rich_tokenizer.py ../regroup-split-server/server/regroup_split/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596656,
+      "updated": 1610596656
+    },
+    {
+      "id": "5fffc130aff09e0000470bf6",
+      "text": "    cp regroup_split.py ../regroup-split-server/server/regroup_split/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596656,
+      "updated": 1610596656
+    },
+    {
+      "id": "5fffc130aff09e0000470bf7",
+      "text": "    cp TAIL_TOKENS_TO_REMOVE.txt ../regroup-split-server/server/regroup_split/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596656,
+      "updated": 1610596656
+    },
+    {
+      "id": "5fffc130aff09e0000470bf8",
+      "text": "    cp HEAD_TOKENS_TO_REMOVE.txt ../regroup-split-server/server/regroup_split/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596656,
+      "updated": 1610596656
+    },
+    {
+      "id": "5fffc130aff09e0000470bf9",
+      "text": "    cp test/simplelines1.txt ../regroup-split-server/server/regroup_split/test",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596656,
+      "updated": 1610596656
+    },
+    {
+      "id": "5fffc130aff09e0000470bfa",
+      "text": "    cp test/regression_test.json ../regroup-split-server/server/regroup_split/test",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596656,
+      "updated": 1610596656
+    },
+    {
+      "id": "5fffc131aff09e0000470bfb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596657,
+      "updated": 1610596672
+    },
+    {
+      "id": "5fffc12daff09e0000470bf4",
+      "text": "　　単体テストを走らせて、エラーが出ないから確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596653,
+      "updated": 1610602249
+    },
+    {
+      "id": "5fffc225aff09e0000470bfc",
+      "text": "　　\t`ModuleNotFoundError: No module named 'MeCab'`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596902,
+      "updated": 1610596903
+    },
+    {
+      "id": "5fffc0ccaff09e0000662860",
+      "text": "\t　　　[- $ pip install mecab]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596557,
+      "updated": 1610598426
+    },
+    {
+      "id": "5fffc81baff09e0000470c02",
+      "text": "\t　　　\tこれをしてはいけない see [mecab on heroku]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598428,
+      "updated": 1610598551
+    },
+    {
+      "id": "5fffc6b5aff09e0000470c00",
+      "text": "\t　　　$ pip install mecab-python3==0.996.5",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598070,
+      "updated": 1610598803
+    },
+    {
+      "id": "5fffc0baaff09e000066285f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596538,
+      "updated": 1610596538
+    },
+    {
+      "id": "5fffc263aff09e0000662861",
+      "text": "　　単体テストが通ったらそのテストをserver/__init__.pyから呼び出す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596964,
+      "updated": 1610602320
+    },
+    {
+      "id": "5fffd750aff09e000066288f",
+      "text": "　　　flask runしてローカルの開発サーバでテストが動くか確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602320,
+      "updated": 1610602330
+    },
+    {
+      "id": "5fffc2a2aff09e0000662863",
+      "text": "　　　デプロイした後よりローカルの開発サーバの方がエラーメッセージが読みやすいから",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597026,
+      "updated": 1610597054
+    },
+    {
+      "id": "5fffc34faff09e0000662864",
+      "text": "　　　よくある修正",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597200,
+      "updated": 1610597314
+    },
+    {
+      "id": "5fffc50eaff09e0000662867",
+      "text": "　　　　相対インポート `from .foo import bar`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597647,
+      "updated": 1610602352
+    },
+    {
+      "id": "5fffea25aff09e00006628a3",
+      "text": "　　　　　普段スクリプトとして実行して実験してるのだけど、サーバからインポートされてモジュールとして実行されるようになるのでインポートの振る舞いが変わる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610607141,
+      "updated": 1610607204
+    },
+    {
+      "id": "5fffea79aff09e00006628a5",
+      "text": "　　　　　普段から[IPythonで%run -m]するのが良いのかもな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610607225,
+      "updated": 1610607243
+    },
+    {
+      "id": "5fffc3c1aff09e0000662865",
+      "text": "　　　　データファイルのパス",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597314,
+      "updated": 1610597319
+    },
+    {
+      "id": "5fffc483aff09e0000662866",
+      "text": "　　　　　実行時のカレントディレクトリに依存した書き方をしてるとここでこける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597508,
+      "updated": 1610597527
+    },
+    {
+      "id": "5fffc4a5aff09e0000470bfe",
+      "text": "　　　　　\t`DIR = os.path.dirname(__file__)`を使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597541,
+      "updated": 1610602544
+    },
+    {
+      "id": "5fffd853aff09e0000470c18",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602579,
+      "updated": 1610602579
+    },
+    {
+      "id": "5fffc263aff09e0000662862",
+      "text": "　ローカルで動くようになったらherokuにpush",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610596964,
+      "updated": 1610597855
+    },
+    {
+      "id": "5fffc5dfaff09e0000662869",
+      "text": "　 $ pip freeze > requirements.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597856,
+      "updated": 1610597889
+    },
+    {
+      "id": "5fffd890aff09e0000662890",
+      "text": "　 　addとcommitも忘れないように",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602643,
+      "updated": 1610602655
+    },
+    {
+      "id": "5fffd89faff09e0000662891",
+      "text": "　 　installした時点でやっとくべきだったか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602655,
+      "updated": 1610602671
+    },
+    {
+      "id": "5fffc5ceaff09e0000662868",
+      "text": "\t\t$ git push",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597838,
+      "updated": 1610597893
+    },
+    {
+      "id": "5fffc6daaff09e0000470c01",
+      "text": "\t\t\tビルドエラー [mecab on heroku]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598106,
+      "updated": 1610602679
+    },
+    {
+      "id": "5fffc602aff09e0000470bff",
+      "text": "  ビルド成功後、heroku openして500エラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610597890,
+      "updated": 1610602689
+    },
+    {
+      "id": "5fffd8d1aff09e0000662892",
+      "text": "  　実行時のログを見る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602706,
+      "updated": 1610602715
+    },
+    {
+      "id": "5fffc997aff09e0000470c03",
+      "text": " 　 \t$ heroku logs --tail",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598808,
+      "updated": 1610602718
+    },
+    {
+      "id": "5fffc9a3aff09e0000470c04",
+      "text": "  \t`TypeError: 'dict_keys' object is not reversible`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598820,
+      "updated": 1610598821
+    },
+    {
+      "id": "5fffcae4aff09e0000662871",
+      "text": "  \t　herokuのPythonはデフォルトでは3.6",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610599140,
+      "updated": 1610599214
+    },
+    {
+      "id": "5fffc91baff09e000066286e",
+      "text": "\t  　>By default, newly created Python apps use the python-3.6.12 runtime. --- [Heroku Python Support | Heroku Dev Center https://devcenter.heroku.com/articles/python-support]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598683,
+      "updated": 1610599196
+    },
+    {
+      "id": "5fffc90baff09e000066286d",
+      "text": "\t\t\t実行バージョンを手元のものと揃える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598667,
+      "updated": 1610602750
+    },
+    {
+      "id": "5fffd8e6aff09e0000662893",
+      "text": "\t　\t\t$ echo python-3.8.7 > runtime.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602727,
+      "updated": 1610602752
+    },
+    {
+      "id": "5fffca18aff09e0000470c05",
+      "text": " 　heroku上でもテストケースが動くようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610598937,
+      "updated": 1610602817
+    },
+    {
+      "id": "5fffcad0aff09e0000662870",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610599120,
+      "updated": 1610599120
+    },
+    {
+      "id": "5fffd946aff09e0000662894",
+      "text": "　今まで端末で実行し、標準出力で結果を観察してた実験スクリプトに、サーバから値を渡された、処理した値を返すためのインターフェイスをつける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602823,
+      "updated": 1610606835
+    },
+    {
+      "id": "5fffd9b7aff09e0000662897",
+      "text": "　　今回のケースだと文字列を受け取ってトークン列のリストを返す感じ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602936,
+      "updated": 1610603019
+    },
+    {
+      "id": "5fffe6e6aff09e000066289a",
+      "text": "　　この時、リッチなオブジェクトを返すのか、jsonでシリアライズ可能なものを返すのが",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606310,
+      "updated": 1610606347
+    },
+    {
+      "id": "5fffe70baff09e000066289b",
+      "text": "　　　これ単体では用途次第って感じ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606347,
+      "updated": 1610606448
+    },
+    {
+      "id": "5fffe770aff09e000066289c",
+      "text": "　　　jsonでシリアライズ可能にする処理ってどこでも求められることだと思うからライブラリの側に入ってるのがいいかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606448,
+      "updated": 1610606448
+    },
+    {
+      "id": "5fffe774aff09e000066289d",
+      "text": "　　　適切なシリアライズは内部構造が変わると変化しうるし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606452,
+      "updated": 1610606468
+    },
+    {
+      "id": "5fffd94aaff09e0000662895",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610602826,
+      "updated": 1610606496
+    },
+    {
+      "id": "5fffe7a3aff09e0000470c1a",
+      "text": "\t\t def process_single_line(line):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606500
+    },
+    {
+      "id": "5fffe7a4aff09e0000470c1b",
+      "text": "       tokens = tokenize(line)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606500
+    },
+    {
+      "id": "5fffe7a4aff09e0000470c1c",
+      "text": "       calc_split_priority(tokens)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606500
+    },
+    {
+      "id": "5fffe7a4aff09e0000470c1d",
+      "text": "       return dict(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606500
+    },
+    {
+      "id": "5fffe7a4aff09e0000470c1e",
+      "text": "           tokens=concat_tokens(tokens, \" \"),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606500
+    },
+    {
+      "id": "5fffe7a4aff09e0000470c1f",
+      "text": "           split=[concat_tokens(ts) for ts in split(tokens)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606500
+    },
+    {
+      "id": "5fffe8f6aff09e0000470c28",
+      "text": "\tGET",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606838,
+      "updated": 1610606842
+    },
+    {
+      "id": "5fffe7a4aff09e0000470c20",
+      "text": "  code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606500,
+      "updated": 1610606840
+    },
+    {
+      "id": "5fffe7fcaff09e0000470c21",
+      "text": "   @app.route('/api/', methods=['GET'])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606588,
+      "updated": 1610606589
+    },
+    {
+      "id": "5fffe7fcaff09e0000470c22",
+      "text": "   def api():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606589,
+      "updated": 1610606589
+    },
+    {
+      "id": "5fffe7fcaff09e0000470c23",
+      "text": "       text = request.args[\"q\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606589,
+      "updated": 1610606589
+    },
+    {
+      "id": "5fffe7fcaff09e0000470c24",
+      "text": "       ret = regroup_split.process_single_line(text)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606589,
+      "updated": 1610606589
+    },
+    {
+      "id": "5fffe7fcaff09e0000470c25",
+      "text": "       return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606589,
+      "updated": 1610606589
+    },
+    {
+      "id": "5fffe7fcaff09e0000470c26",
+      "text": "  /api/?q=...でGETに渡して動作確認",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606589,
+      "updated": 1610606864
+    },
+    {
+      "id": "60000fecaff09e00006628b1",
+      "text": "  自動でJSONでシリアライズされる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610616812,
+      "updated": 1610616835
+    },
+    {
+      "id": "5fffe830aff09e0000470c27",
+      "text": " POST",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606640,
+      "updated": 1610606846
+    },
+    {
+      "id": "5fffe79daff09e0000470c19",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606494,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c2a",
+      "text": "\t\t @app.route('/api/', methods=['GET', 'POST'])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c2b",
+      "text": "   def api():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c2c",
+      "text": "       if request.method == \"GET\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c2d",
+      "text": "           text = request.args[\"q\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c2e",
+      "text": "       else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c2f",
+      "text": "           text = request.json[\"q\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c30",
+      "text": "       ret = regroup_split.process_single_line(text)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c31",
+      "text": "       return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606854
+    },
+    {
+      "id": "5fffe906aff09e0000470c32",
+      "text": "  $ curl -X POST -H \"Content-Type: application/json\" -d '{\"q\":\"test\"}' localhost:5000/api/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606854,
+      "updated": 1610606885
+    },
+    {
+      "id": "5fffe904aff09e0000470c29",
+      "text": "　　動作確認",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606853,
+      "updated": 1610606901
+    },
+    {
+      "id": "5fffed9daff09e00006628a6",
+      "text": "　　git pushしてheroku上でも動くことを確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610608030,
+      "updated": 1610608061
+    },
+    {
+      "id": "5fffe936aff09e00006628a0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606902,
+      "updated": 1610606902
+    },
+    {
+      "id": "5fffe937aff09e00006628a1",
+      "text": "　このAPIを呼び出すクライアントサイドを作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606904,
+      "updated": 1610952493
+    },
+    {
+      "id": "5fffe931aff09e000066289e",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610606897,
+      "updated": 1610952556
+    },
+    {
+      "id": "60052f6caff09e00002d3184",
+      "text": "\t\t import requests",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952556,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3185",
+      "text": "   import json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3186",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3187",
+      "text": "   API_URL = \"https://regroup-split-server.herokuapp.com/api/\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3188",
+      "text": "   sample_text = \"あー、そうか、付箋をたくさん作ってKJ法をするプロセスに慣れてない人は、そもそもの付箋を作るところでどの程度の情報の粒度にしたらいいかがピンとこないのか。そこのところをソフトウェアが支援することが必要だな\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "6005300daff09e00002d3199",
+      "text": "   payload = {\"q\": sample_text}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952717,
+      "updated": 1610952718
+    },
+    {
+      "id": "6005300eaff09e00002d319a",
+      "text": "   r = requests.post(API_URL, json=payload)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952718,
+      "updated": 1610952718
+    },
+    {
+      "id": "6005300eaff09e00002d319b",
+      "text": "   assert r.ok",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952718,
+      "updated": 1610952727
+    },
+    {
+      "id": "60052f6caff09e00002d318d",
+      "text": "   for s in r.json()[\"split\"]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d318e",
+      "text": "       print(s)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d318f",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3190",
+      "text": "   \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3191",
+      "text": "   Expected output:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3192",
+      "text": "   付箋をたくさん作る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3193",
+      "text": "   KJ法をするプロセスに慣れてない人",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3194",
+      "text": "   付箋を作るところでどの程度の情報の粒度",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3195",
+      "text": "   いいかがピンとこない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3196",
+      "text": "   ソフトウェアが支援することが必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3197",
+      "text": "   \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952557
+    },
+    {
+      "id": "60052f6caff09e00002d3198",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952557,
+      "updated": 1610952558
+    },
+    {
+      "id": "60052f68aff09e00002d3183",
+      "text": "\tJSから呼ぶ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610952552,
+      "updated": 1611039799
+    },
+    {
+      "id": "60068437aff09e0000bfc81d",
+      "text": "\t\t[Flask-CORS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611039799,
+      "updated": 1611039800
+    },
+    {
+      "id": "6006a1e4aff09e0000396046",
+      "text": "\t\tできた [✅最長行をワンクリックで刻む]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611047396,
+      "updated": 1617604725
+    },
+    {
+      "id": "60080f34aff09e000017b06f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611140916,
+      "updated": 1611140917
+    },
+    {
+      "id": "60080f35aff09e000017b070",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611140917,
+      "updated": 1611140919
+    },
+    {
+      "id": "60080f37aff09e000017b072",
+      "text": "[FlaskをHTTPSにする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611140919,
+      "updated": 1611141238
+    },
+    {
+      "id": "60080f36aff09e000017b071",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1611140919,
+      "updated": 1611140919
+    }
+  ]
+}

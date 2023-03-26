@@ -1,0 +1,645 @@
+{
+  "id": "6041fbfc2e200f001c51ec7e",
+  "title": "jest.spyOnで差し替わってなかった",
+  "created": 1614937085,
+  "updated": 1614994057,
+  "lines": [
+    {
+      "id": "6041fbfc2e200f001c51ec7e",
+      "text": "jest.spyOnで差し替わってなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937085,
+      "updated": 1614941316
+    },
+    {
+      "id": "60420c33aff09e0000390bd2",
+      "text": "jest.spyOnでReact.useStateを差し替える際に`import React, { useState } from \"react\";`してたせいで差し替わってなかった話",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614941235,
+      "updated": 1614941297
+    },
+    {
+      "id": "60420c49aff09e0000390bd3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614941257,
+      "updated": 1614941257
+    },
+    {
+      "id": "60421d94aff09e0000858f5d",
+      "text": "jest.spyOnで処理を差し替えられるのはテストを書く時にとても便利なのだけど、漠然とした「差し替える」ってイメージで使ってると差し替えたつもりで差し代わってないのでモジュールの仕組みをきちんと理解する必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614945685,
+      "updated": 1614945689
+    },
+    {
+      "id": "60421d92aff09e0000858f5b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614945683,
+      "updated": 1614945683
+    },
+    {
+      "id": "60421d93aff09e0000858f5c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614945683,
+      "updated": 1614945683
+    },
+    {
+      "id": "60420c8baff09e000002ff1a",
+      "text": "現象を再現するための短いコード",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614941323,
+      "updated": 1614941333
+    },
+    {
+      "id": "6041fbfdaff09e00000cced5",
+      "text": "code:MyComponent.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937086,
+      "updated": 1614937092
+    },
+    {
+      "id": "6041fc04aff09e00000cced7",
+      "text": " import React, { useState } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937092,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000cced8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000cced9",
+      "text": " export let setValue: React.Dispatch<React.SetStateAction<string>>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000cceda",
+      "text": " export const MyComponent = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000ccedb",
+      "text": "   const [value, _setValue] = useState(\"foo\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000ccedc",
+      "text": "   setValue = _setValue;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000ccedd",
+      "text": "   return <span>{value}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000ccede",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937093
+    },
+    {
+      "id": "6041fc05aff09e00000ccedf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937093,
+      "updated": 1614937094
+    },
+    {
+      "id": "6041fbfeaff09e00000cced6",
+      "text": "code:Foo.test.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937086,
+      "updated": 1614937452
+    },
+    {
+      "id": "6041fc0faff09e00000ccee1",
+      "text": " import React from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937103,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000ccee8",
+      "text": " import { MyComponent, setValue } from \"./MyComponent\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000ccee9",
+      "text": " import { render, screen } from \"@testing-library/react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000cceea",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000cceeb",
+      "text": " test(\"foo\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000cceec",
+      "text": "   render(<MyComponent />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000cceed",
+      "text": "   screen.getByText(\"foo\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000cceee",
+      "text": "   setValue(\"bar\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000cceef",
+      "text": "   screen.getByText(\"bar\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fd0caff09e00000ccef0",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937357,
+      "updated": 1614937357
+    },
+    {
+      "id": "6041fc28aff09e00000ccee7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937128,
+      "updated": 1614937129
+    },
+    {
+      "id": "6041fc58aff09e000002fef4",
+      "text": "この時、[jest-electron]を使っているとターミナル上では問題なくテストが通ったように見えるが、実はelectronのコンソールでは警告が出ている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937176,
+      "updated": 1614937409
+    },
+    {
+      "id": "6041fc09aff09e00000ccee0",
+      "text": "\tTerminal on VSCode",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937098,
+      "updated": 1614937425
+    },
+    {
+      "id": "6041fd51aff09e00000ccef5",
+      "text": "\t\t$ DEBUG_MODE=1 npm test -- Foo",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937426,
+      "updated": 1614937444
+    },
+    {
+      "id": "6041fd46aff09e00000ccef4",
+      "text": "\t\t[https://gyazo.com/98f7d6dc79ae9cb6b30e444b705f1285]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937414,
+      "updated": 1614937414
+    },
+    {
+      "id": "6041fd77aff09e00000ccef6",
+      "text": "\tElectron",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937463,
+      "updated": 1614937466
+    },
+    {
+      "id": "6041fd1eaff09e00000ccef2",
+      "text": "\t\t[https://gyazo.com/e60b0c9ba51f447e8bb6a4cfd6350dbb]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937375,
+      "updated": 1614937464
+    },
+    {
+      "id": "6041fd34aff09e00000ccef3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937396,
+      "updated": 1614937396
+    },
+    {
+      "id": "6041fd98aff09e000002fef5",
+      "text": "で、このReactの状態更新をactで包まないといけない問題を、useStateをモックで差し替えることで実現した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937497,
+      "updated": 1614938450
+    },
+    {
+      "id": "60420151aff09e00000ccf21",
+      "text": "see: [useStateを差し替える]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938450,
+      "updated": 1614938456
+    },
+    {
+      "id": "6041ff43aff09e00000ccf0f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937923,
+      "updated": 1614938723
+    },
+    {
+      "id": "6041ff43aff09e00000ccf10",
+      "text": "しかしこのケースで、警告は消えない。(実際にこれに気づいた時は、もっと大きくて複雑なシステムのテストをしていて、今までこの方法で警告が消えたケースあったのに、一部のケースだけ消えてない、と気づいた)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614937924,
+      "updated": 1614938726
+    },
+    {
+      "id": "604200a5aff09e000002ff0f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938277,
+      "updated": 1614938277
+    },
+    {
+      "id": "604200a5aff09e000002ff10",
+      "text": "何がいけないか？jest.spyOnでuseStateを差し替えたつもりが、差し変わる前のuseStateを使ってしまっている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938277,
+      "updated": 1614938779
+    },
+    {
+      "id": "604202e1aff09e00000ccf3a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938849,
+      "updated": 1614938849
+    },
+    {
+      "id": "604202e1aff09e00000ccf3b",
+      "text": "まずここでMyComponent.tsxが読まれる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938849,
+      "updated": 1614938899
+    },
+    {
+      "id": "60420135aff09e000002ff12",
+      "text": "code:Foo.test.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938422,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf2c",
+      "text": " import React from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf2d",
+      "text": " import { MyComponent, setValue } from \"./MyComponent\";  // HERE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938847
+    },
+    {
+      "id": "604202daaff09e00000ccf2e",
+      "text": " import { render, screen } from \"@testing-library/react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf2f",
+      "text": " import { mockUseState } from \"./mockUseState\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf30",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf31",
+      "text": " test(\"foo\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf32",
+      "text": "   const m = mockUseState();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf33",
+      "text": "   render(<MyComponent />);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf34",
+      "text": "   screen.getByText(\"foo\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf35",
+      "text": "   setValue(\"bar\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf36",
+      "text": "   screen.getByText(\"bar\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf37",
+      "text": "   m.mockRestore();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf38",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938842
+    },
+    {
+      "id": "604202daaff09e00000ccf39",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938842,
+      "updated": 1614938843
+    },
+    {
+      "id": "60420315aff09e000002ff13",
+      "text": "次に`(1)`で、MyComponentのスコープにuseStateへの参照が複製される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938902,
+      "updated": 1614940609
+    },
+    {
+      "id": "604202e9aff09e00000ccf3d",
+      "text": "code:MyComponent.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938857,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf3e",
+      "text": " import React, { useState } from \"react\";  // (1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614940601
+    },
+    {
+      "id": "604202f7aff09e00000ccf3f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf40",
+      "text": " export let setValue: React.Dispatch<React.SetStateAction<string>>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf41",
+      "text": " export const MyComponent = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf42",
+      "text": "   const [value, _setValue] = useState(\"foo\");  // (3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614940620
+    },
+    {
+      "id": "604202f7aff09e00000ccf43",
+      "text": "   setValue = _setValue;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf44",
+      "text": "   return <span>{value}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf45",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614938872
+    },
+    {
+      "id": "604202f7aff09e00000ccf46",
+      "text": "MyComponentはこの参照を使ってuseStateを呼び出す。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938872,
+      "updated": 1614940708
+    },
+    {
+      "id": "604202e7aff09e00000ccf3c",
+      "text": "この後でjest.spyOnでuseStateを差し替える`(2)`が、タイミングが遅い。MyComponentのuseStateは差し替え前のオブジェクトを指したままなので、呼び出し時に差し替えた新しい実装が呼ばれない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938855,
+      "updated": 1614940831
+    },
+    {
+      "id": "60420a6caff09e000002ff14",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614940781,
+      "updated": 1614940781
+    },
+    {
+      "id": "60420a6caff09e000002ff15",
+      "text": "[https://gyazo.com/4fed78d8022f240dcf8d20248f9c7c69]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614940781,
+      "updated": 1614940782
+    },
+    {
+      "id": "60420a6daff09e000002ff16",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614940782,
+      "updated": 1614940782
+    },
+    {
+      "id": "604208d7aff09e00000ccf47",
+      "text": "この問題を解決する手軽な方法は、`useState`ではなく`React.useState`で呼び出すこと。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614940376,
+      "updated": 1614940992
+    },
+    {
+      "id": "604208d8aff09e00000ccf48",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614940376,
+      "updated": 1614940376
+    },
+    {
+      "id": "604202aaaff09e00000ccf22",
+      "text": "code:MyComponent.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938794,
+      "updated": 1614938801
+    },
+    {
+      "id": "604202b1aff09e00000ccf23",
+      "text": " import React from \"react\";  // HERE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938801,
+      "updated": 1614938807
+    },
+    {
+      "id": "604202b1aff09e00000ccf24",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938802
+    },
+    {
+      "id": "604202b1aff09e00000ccf25",
+      "text": " export let setValue: React.Dispatch<React.SetStateAction<string>>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938802
+    },
+    {
+      "id": "604202b1aff09e00000ccf26",
+      "text": " export const MyComponent = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938802
+    },
+    {
+      "id": "604202b1aff09e00000ccf27",
+      "text": "   const [value, _setValue] = React.useState(\"foo\");  // HERE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938811
+    },
+    {
+      "id": "604202b1aff09e00000ccf28",
+      "text": "   setValue = _setValue;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938802
+    },
+    {
+      "id": "604202b1aff09e00000ccf29",
+      "text": "   return <span>{value}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938802
+    },
+    {
+      "id": "604202b1aff09e00000ccf2a",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938802
+    },
+    {
+      "id": "604202b1aff09e00000ccf2b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938802,
+      "updated": 1614938803
+    },
+    {
+      "id": "6042005aaff09e000002ff0d",
+      "text": "これなら呼び出しのタイミングで、React.setStateが指す値を解決するので、差し替えた新しい実装が呼ばれる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614938202,
+      "updated": 1614941072
+    },
+    {
+      "id": "60420c08aff09e000002ff18",
+      "text": "[https://gyazo.com/4fed78d8022f240dcf8d20248f9c7c69]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614941192,
+      "updated": 1614941192
+    },
+    {
+      "id": "60420c08aff09e000002ff19",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614941192,
+      "updated": 1614941192
+    },
+    {
+      "id": "60420b45aff09e000002ff17",
+      "text": "なおこういうミスを未然に防ぐためにもっと早い段階で実装の差し替えをする案がある。jest.mockで差し替えるとJestによる実行順序の変更でimportより先にJestのモック関数に差し代わる。その上で実装差し替えメソッドを呼べば参照が変わらないまま実装が変わる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614940997,
+      "updated": 1614994057
+    },
+    {
+      "id": "6042d962aff09e00002b8ca1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614993763,
+      "updated": 1614993763
+    }
+  ]
+}

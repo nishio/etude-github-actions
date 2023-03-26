@@ -1,0 +1,407 @@
+{
+  "id": "5e1fd4b79f5a570017ee7386",
+  "title": "TypeScriptでの辞書的オブジェクト",
+  "created": 1579144376,
+  "updated": 1584169315,
+  "lines": [
+    {
+      "id": "5e1ffb2daff09e0000664049",
+      "text": "TypeScriptでの辞書的オブジェクト",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154222,
+      "updated": 1584168363
+    },
+    {
+      "id": "5e6c7dccaff09e00009881de",
+      "text": "[TypeScript]での辞書的オブジェクトの扱いがわからなくて試行錯誤した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584168396,
+      "updated": 1584168424
+    },
+    {
+      "id": "5e1ffb91aff09e000066404f",
+      "text": "まずJavaScriptのMapとObjectを正しく区別することが大事",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154321,
+      "updated": 1584168444
+    },
+    {
+      "id": "5e6c77a5aff09e00009881cf",
+      "text": "\t[Map - JavaScript | MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584166821,
+      "updated": 1584166830
+    },
+    {
+      "id": "5e6c7c35aff09e00009881da",
+      "text": "\tMapとObjectはどちらもKey-Valueの辞書的振る舞いをする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167990,
+      "updated": 1584168113
+    },
+    {
+      "id": "5e6c76b0aff09e00009881ce",
+      "text": "\t特にPythonistaにとって混乱しやすい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584166577,
+      "updated": 1584168185
+    },
+    {
+      "id": "5e6c7cf9aff09e00009881db",
+      "text": "\t\tPythonでは`{}`が辞書。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584168185,
+      "updated": 1584168269
+    },
+    {
+      "id": "5e6c7d51aff09e00009881dd",
+      "text": "\t\tJavaScriptでは`{}`がObject",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584168274,
+      "updated": 1584168280
+    },
+    {
+      "id": "5e6c7d4caff09e00009881dc",
+      "text": "\t\tJavaScriptの`{}`はPythonでは`object`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584168269,
+      "updated": 1584168312
+    },
+    {
+      "id": "5e6c77d8aff09e00009881d0",
+      "text": "\tJavaScriptのMapの場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584166873,
+      "updated": 1584168475
+    },
+    {
+      "id": "5e6c7bd4aff09e00009881d7",
+      "text": "\t\t`const aMap = new Map<string, number>();`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167892,
+      "updated": 1584167894
+    },
+    {
+      "id": "5e6c7975aff09e00009881d1",
+      "text": "\t\t`aMap.set(\"a\", 1);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167286,
+      "updated": 1584167298
+    },
+    {
+      "id": "5e6c76adaff09e00009881c9",
+      "text": "\t\t`aMap.forEach((value: number, key: string) => {});`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584166574,
+      "updated": 1584167326
+    },
+    {
+      "id": "5e6c79a0aff09e00009881d3",
+      "text": "\tObjectの場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167328,
+      "updated": 1584168479
+    },
+    {
+      "id": "5e6c7aa9aff09e00009881d4",
+      "text": "\t\t`const obj = {} as { [key: string]: number };`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167593,
+      "updated": 1584167597
+    },
+    {
+      "id": "5e6c76adaff09e00009881cb",
+      "text": "\t\t`obj[\"a\"] = 1` or  `obj.a = 1`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584166574,
+      "updated": 1584167793
+    },
+    {
+      "id": "5e6c7b71aff09e00009881d5",
+      "text": "\t\t`Object.entries(obj).forEach(([key, value]) => {})`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167794,
+      "updated": 1584167817
+    },
+    {
+      "id": "5e6c7bdaaff09e00009881d8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167898,
+      "updated": 1584167898
+    },
+    {
+      "id": "5e6c7bdaaff09e00009881d9",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584167898,
+      "updated": 1584169312
+    },
+    {
+      "id": "5e6c8161aff09e00009881e1",
+      "text": "   const aMap = new Map<string, number>();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e2",
+      "text": "   if (aMap.get(\"a\") === undefined) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e3",
+      "text": "     aMap.set(\"a\", 1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e4",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e5",
+      "text": "   aMap.forEach((value: number, key: string) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e6",
+      "text": "     console.log(key, value);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e7",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881e9",
+      "text": "   const obj = {} as { [key: string]: number };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881ea",
+      "text": "   if (obj[\"a\"] === undefined) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881eb",
+      "text": "     obj[\"a\"] = 1;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881ec",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881ed",
+      "text": "   Object.entries(obj).forEach(([key, value]) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881ee",
+      "text": "     console.log(key, value);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881ef",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169313
+    },
+    {
+      "id": "5e6c8161aff09e00009881f0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584169313,
+      "updated": 1584169315
+    },
+    {
+      "id": "5e6c76adaff09e00009881cc",
+      "text": "-----試行錯誤",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1584166574,
+      "updated": 1584166987
+    },
+    {
+      "id": "5e1ffb31aff09e000066404e",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154226,
+      "updated": 1579154228
+    },
+    {
+      "id": "5e1ffb2daff09e000066404a",
+      "text": "\tArray.from(preset_tests.entries()).map(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154222,
+      "updated": 1579154229
+    },
+    {
+      "id": "5e1ffb2faff09e000066404c",
+      "text": "    ([key, value]: [string, any]) => <li><a href={\"#\" + key}>{key}: {value.title}</a></li>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154224,
+      "updated": 1579154224
+    },
+    {
+      "id": "5e1ffb2faff09e000066404d",
+      "text": "  );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154224,
+      "updated": 1579154224
+    },
+    {
+      "id": "5e1ffb2daff09e000066404b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154222,
+      "updated": 1579154222
+    },
+    {
+      "id": "5e1ffbd7aff09e0000664051",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579154398,
+      "updated": 1579154398
+    },
+    {
+      "id": "5e1fd4b79f5a570017ee7386",
+      "text": "Object.entries(map)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144376,
+      "updated": 1579144382
+    },
+    {
+      "id": "5e1fd562aff09e0000664048",
+      "text": "[TypeScript]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144546,
+      "updated": 1579144550
+    },
+    {
+      "id": "5e1fd55baff09e000066403a",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144539,
+      "updated": 1579144541
+    },
+    {
+      "id": "5e1fd55caff09e000066403c",
+      "text": " // const map: Map<string, {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e000066403d",
+      "text": " //   data: string;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e000066403e",
+      "text": " //   title: string;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e000066403f",
+      "text": " // }>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664040",
+      "text": " const x = Object.entries(map);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664041",
+      "text": " // const x: [string, any][]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664042",
+      "text": " const y = map.entries;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664043",
+      "text": " // const y: () => IterableIterator<[string, {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664044",
+      "text": " //   data: string;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664045",
+      "text": " //   title: string;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55daff09e0000664046",
+      "text": " // }]>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144541,
+      "updated": 1579144580
+    },
+    {
+      "id": "5e1fd55baff09e000066403b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579144539,
+      "updated": 1579144539
+    }
+  ]
+}

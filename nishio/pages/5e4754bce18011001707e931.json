@@ -1,0 +1,694 @@
+{
+  "id": "5e4754bce18011001707e931",
+  "title": "最小限にする作業の失敗例",
+  "created": 1581733056,
+  "updated": 1581834065,
+  "lines": [
+    {
+      "id": "5e4754bce18011001707e931",
+      "text": "最小限にする作業の失敗例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733056,
+      "updated": 1581834065
+    },
+    {
+      "id": "5e48de56aff09e0000e56228",
+      "text": "Type instantiation is excessively deep and possibly infinite.の原因を知るために最小限にしたかったが、枝葉をanyにするのはダメだった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581833815,
+      "updated": 1581833906
+    },
+    {
+      "id": "5e48de57aff09e0000e56229",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581833815,
+      "updated": 1581833815
+    },
+    {
+      "id": "5e4754c0aff09e0000ec83ff",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733057,
+      "updated": 1581733200
+    },
+    {
+      "id": "5e47554eaff09e0000ec8402",
+      "text": " type DIGIT = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733199,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8403",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8404",
+      "text": " type DIGITS = [DIGIT, []] | [DIGIT, DIGITS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8405",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8406",
+      "text": " type REVERSE<N extends DIGITS, S = []> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8407",
+      "text": "   N[1] extends DIGITS",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8408",
+      "text": "   ?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8409",
+      "text": "   // REVERSE<N[1], [N[0], S]>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec840a",
+      "text": "   { 0: REVERSE<N[1], [N[0], S]> }[N extends any ? 0 : 0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec840b",
+      "text": "   : [N[0], S]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec840c",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec840d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec840e",
+      "text": " type ADD<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec840f",
+      "text": "   N extends DIGITS, M extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8410",
+      "text": "   REV_N = REVERSE<N>, // この2行を消すと再現しなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8411",
+      "text": "   REV_M = REVERSE<M>, // ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8412",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8413",
+      "text": "     any",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8414",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8415",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8416",
+      "text": " type m_MUL<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8417",
+      "text": "   REV_N extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8418",
+      "text": "   REV_M extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8419",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec841a",
+      "text": "     {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec841b",
+      "text": "       0: ADD<any, any>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec841c",
+      "text": "       // Type instantiation is excessively deep and possibly infinite.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec841d",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec841e",
+      "text": "       1: [0, []]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec841f",
+      "text": "     }[REV_M[1] extends DIGITS ? 0 : 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8420",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733201
+    },
+    {
+      "id": "5e475551aff09e0000ec8421",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733201,
+      "updated": 1581733202
+    },
+    {
+      "id": "5e475885aff09e0000ec8422",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734022,
+      "updated": 1581734023
+    },
+    {
+      "id": "5e475887aff09e0000ec8423",
+      "text": " type DIGIT = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8424",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8425",
+      "text": " type DIGITS = [DIGIT, []] | [DIGIT, DIGITS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8426",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8427",
+      "text": " type REVERSE<N extends DIGITS, S = []> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8428",
+      "text": "   N[1] extends DIGITS",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8429",
+      "text": "   ?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec842a",
+      "text": "   // REVERSE<N[1], [N[0], S]>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec842b",
+      "text": "   { 0: REVERSE<N[1], [N[0], S]> }[N extends any ? 0 : 0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec842c",
+      "text": "   : [N[0], S]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec842d",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec842e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec842f",
+      "text": " type m_MUL<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8430",
+      "text": "   REV_M extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8431",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8432",
+      "text": "     REVERSE<REV_M> // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8433",
+      "text": "     // REVERSE<REV_M> // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8434",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734024
+    },
+    {
+      "id": "5e475888aff09e0000ec8435",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734024,
+      "updated": 1581734030
+    },
+    {
+      "id": "5e475932aff09e0000ec8436",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734195,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475934aff09e0000ec8437",
+      "text": " type DIGIT = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8438",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8439",
+      "text": " type DIGITS = [DIGIT, []] | [DIGIT, DIGITS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec843a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec843b",
+      "text": " type REVERSE<N extends DIGITS, S = []> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec843c",
+      "text": "   N[1] extends DIGITS",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec843d",
+      "text": "   ?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec843e",
+      "text": "   // REVERSE<N[1], [N[0], S]>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec843f",
+      "text": "   { 0: REVERSE<N[1], [N[0], S]> }[N extends any ? 0 : 0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8440",
+      "text": "   : [N[0], S]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8441",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8442",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8443",
+      "text": " type ADD<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8444",
+      "text": "   N extends DIGITS, M extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8445",
+      "text": "   REV_N = REVERSE<N>, // この2行を消すと再現しなくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8446",
+      "text": "   REV_M = REVERSE<M>, // ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8447",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8448",
+      "text": "     any",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8449",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec844a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec844b",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec844c",
+      "text": " type m_MUL<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec844d",
+      "text": "   REV_N extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec844e",
+      "text": "   REV_M extends DIGITS,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec844f",
+      "text": "   POWER extends DIGITS | [],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8450",
+      "text": "   > = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8451",
+      "text": "     {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8452",
+      "text": "       0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8453",
+      "text": "       ADD<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8454",
+      "text": "         REV_N,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8455",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8456",
+      "text": "         m_MUL<REV_N, [0, []], [0, []]>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8457",
+      "text": "       >",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec8458",
+      "text": "       // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734203
+    },
+    {
+      "id": "5e475935aff09e0000ec8459",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec845a",
+      "text": "       1: [0, []]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec845b",
+      "text": "     }[REV_M[1] extends DIGITS ? 0 : 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec845c",
+      "text": "   )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734197
+    },
+    {
+      "id": "5e475935aff09e0000ec845d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581734197,
+      "updated": 1581734199
+    },
+    {
+      "id": "5e475548aff09e0000ec8400",
+      "text": "[circularly references itself]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581733193,
+      "updated": 1581834924
+    },
+    {
+      "id": "5e48de44aff09e0000e56227",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581833797,
+      "updated": 1581833797
+    }
+  ]
+}

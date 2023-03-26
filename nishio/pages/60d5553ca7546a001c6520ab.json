@@ -1,0 +1,778 @@
+{
+  "id": "60d5553ca7546a001c6520ab",
+  "title": "Cypress",
+  "created": 1624593727,
+  "updated": 1624772737,
+  "lines": [
+    {
+      "id": "60d5553ca7546a001c6520ab",
+      "text": "Cypress",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624593727,
+      "updated": 1624593727
+    },
+    {
+      "id": "60d76b54aff09e0000813705",
+      "text": "ブラウザ上で動くテストフレームワーク",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730452,
+      "updated": 1624730542
+    },
+    {
+      "id": "60d76baeaff09e0000813707",
+      "text": "[jest]+[jsdom]でのテストと違って実際のブラウザを使うので、jsdomの実装による制限がない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730543,
+      "updated": 1624730842
+    },
+    {
+      "id": "60d76cbbaff09e000081370d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730812,
+      "updated": 1624730812
+    },
+    {
+      "id": "60d76683aff09e0000550ff0",
+      "text": "まとめ:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729219,
+      "updated": 1624729224
+    },
+    {
+      "id": "60d766d6aff09e0000550ffb",
+      "text": "\t同期非同期の区別は不要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729303,
+      "updated": 1624729304
+    },
+    {
+      "id": "60d76687aff09e0000550ff2",
+      "text": " \t今時のWebUIは非同期更新抜きには語れない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729224,
+      "updated": 1624729307
+    },
+    {
+      "id": "60d76689aff09e0000550ff3",
+      "text": " \tテストを書く人がテスト対象のどの操作が非同期か把握し適切なwaitを指定するのは負担高い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729226,
+      "updated": 1624729307
+    },
+    {
+      "id": "60d7668caff09e0000550ff4",
+      "text": " \tだからテスト記述を「デフォルトで4秒の間リトライを繰り返すコマンド」の組み合わせで記述する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729229,
+      "updated": 1624729307
+    },
+    {
+      "id": "60d76690aff09e0000550ff5",
+      "text": " \tこれで同期非同期の区別は不要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729233,
+      "updated": 1624729307
+    },
+    {
+      "id": "60d766a6aff09e0000550ff6",
+      "text": "\t宣言的に記述",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729254,
+      "updated": 1624729321
+    },
+    {
+      "id": "60d766a6aff09e0000550ff7",
+      "text": " \tテストケースは生のJSで手続き的に記述するのではなく、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729254,
+      "updated": 1624729455
+    },
+    {
+      "id": "60d766eeaff09e0000550ffc",
+      "text": " \tjQuery的なメソッドチェーンでコマンドとアサーションを繋ぐことで宣言的に記述する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729326,
+      "updated": 1624729455
+    },
+    {
+      "id": "60d766f1aff09e0000550ffd",
+      "text": " \tコードの見かけは同期的だが、同期的にテスト内容を構築して、その後それが非同期的に実行される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729329,
+      "updated": 1624729455
+    },
+    {
+      "id": "60d766adaff09e0000550ff9",
+      "text": " \tこれはつまり「同期的にPromiseのチェーンを作るけど、それがresolveされるのは後で非同期的」ってのと同じ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729261,
+      "updated": 1624729455
+    },
+    {
+      "id": "60d766f7aff09e0000550ffe",
+      "text": " \tなのでメソッドチェーンで表現できないことをやりたい時にはthenメソッドに関数を渡す形になる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729335,
+      "updated": 1624729455
+    },
+    {
+      "id": "60d767aeaff09e0000551009",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729519,
+      "updated": 1624729519
+    },
+    {
+      "id": "60d766adaff09e0000550ffa",
+      "text": "\tCypressはURL指定でサーバにアクセスしてそれに対してテストする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729261,
+      "updated": 1624729718
+    },
+    {
+      "id": "60d76876aff09e0000551010",
+      "text": "\t\t他のテストランナーでは特定のコンポーネントをrenderして、それに対してテストをする形があるが、Cypressではその機能はアルファ版だしjsdomを使うので僕の目的には合わない [doc https://docs.cypress.io/guides/component-testing/introduction]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729718,
+      "updated": 1624729920
+    },
+    {
+      "id": "60d76955aff09e0000813701",
+      "text": "  window.app.foobar的な形で露出してる値に対してはテストできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729941,
+      "updated": 1624730609
+    },
+    {
+      "id": "60d76984aff09e0000813702",
+      "text": "  　露出してない内部状態にアクセスする方法は、多分ないと思う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729988,
+      "updated": 1624730641
+    },
+    {
+      "id": "60d76c10aff09e0000813709",
+      "text": "  　　テスト側から見るとテスト対象はブラックボックス。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730641,
+      "updated": 1624730643
+    },
+    {
+      "id": "60d76bf4aff09e0000813708",
+      "text": "  　spyなどのツールはあるが露出してる値にしか使えないので少し制限が強い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730612,
+      "updated": 1624730729
+    },
+    {
+      "id": "60d76c77aff09e000081370a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730743,
+      "updated": 1624730743
+    },
+    {
+      "id": "60d76c77aff09e000081370b",
+      "text": "\tソースコード編集したら自動でテストが再実行される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730743,
+      "updated": 1624730952
+    },
+    {
+      "id": "60d76d48aff09e000081370f",
+      "text": "\t　テストにこけた時にそこから普通にchrome devtoolでinspectしたりできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730952,
+      "updated": 1624730955
+    },
+    {
+      "id": "60d76d4baff09e0000813710",
+      "text": "\t　もはや普通のブラウザを人間が操作して動作確認なんかしないでまずテストを書いた方が良いのではないか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624730955,
+      "updated": 1624730958
+    },
+    {
+      "id": "60d76788aff09e0000551001",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729480,
+      "updated": 1624730366
+    },
+    {
+      "id": "60d76790aff09e0000551003",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729489,
+      "updated": 1624729615
+    },
+    {
+      "id": "60d5bd94aff09e00009e88af",
+      "text": "JavaScript End to End Testing Framework https://www.cypress.io/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624620437,
+      "updated": 1624620654
+    },
+    {
+      "id": "60d5bd95aff09e00009e88b0",
+      "text": ">Cypress does not use [Selenium].",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624620437,
+      "updated": 1624620671
+    },
+    {
+      "id": "60d5be7faff09e00009e88b5",
+      "text": ">Whereas Selenium executes remote commands through the network, Cypress runs in the same run-loop as your application.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624620672,
+      "updated": 1624620715
+    },
+    {
+      "id": "60d5be7baff09e00009e88b4",
+      "text": "https://www.cypress.io/how-it-works/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624620667,
+      "updated": 1624620738
+    },
+    {
+      "id": "60d5be37aff09e00009e88b2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624620599,
+      "updated": 1624620599
+    },
+    {
+      "id": "60d60c71aff09e0000304f4b",
+      "text": "[https://docs.cypress.io/guides/core-concepts/introduction-to-cypress Introduction to Cypress | Cypress Documentation]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624640627,
+      "updated": 1624677787
+    },
+    {
+      "id": "60d60c71aff09e0000304f4c",
+      "text": ">This is the single most important guide",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624640627,
+      "updated": 1624677775
+    },
+    {
+      "id": "60d69d8faff09e0000c6465f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624677775,
+      "updated": 1624677775
+    },
+    {
+      "id": "60d69d9eaff09e0000c64661",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624677790,
+      "updated": 1624677790
+    },
+    {
+      "id": "60d69d9eaff09e0000c64662",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624677790,
+      "updated": 1624677790
+    },
+    {
+      "id": "60d5be37aff09e00009e88b3",
+      "text": "できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624620599,
+      "updated": 1624632524
+    },
+    {
+      "id": "60d5ec01aff09e0000c64636",
+      "text": "[https://gyazo.com/b39c9e4c072c6cb62a32e71ab249b5d4]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632322,
+      "updated": 1624632322
+    },
+    {
+      "id": "60d5ec01aff09e0000c64637",
+      "text": "できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632322,
+      "updated": 1624716619
+    },
+    {
+      "id": "60d70275aff09e0000b4c046",
+      "text": "　最初にマウントされたあとuseEffectでフォントサイズを更新している付箋について、その更新後のフォントサイズをテストすることができた。3回visitから繰り返してるのに1秒も掛からずに3つのテストが完了しててすごい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703606,
+      "updated": 1624703606
+    },
+    {
+      "id": "60d70276aff09e0000b4c047",
+      "text": " [wait(0)を削ると失敗する]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703606,
+      "updated": 1624772744
+    },
+    {
+      "id": "60d70283aff09e0000b4c048",
+      "text": "\t wait(0)がどういう役割をしているのかわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703620,
+      "updated": 1624716631
+    },
+    {
+      "id": "60d70220aff09e0000b4c042",
+      "text": "\t　['cy' is not defined]の解決のためにCypress用のeslintプラグインを入れたら「waitするのはやめろ」と言われるようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703521,
+      "updated": 1624717082
+    },
+    {
+      "id": "60d73b44aff09e0000a3f368",
+      "text": "\t　ドキュメントを見るとアサーションが失敗した時にはリトライが行われるように思えるが、なぜ期待した挙動にならないのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624718151,
+      "updated": 1624718186
+    },
+    {
+      "id": "60d702adaff09e0000b4c04a",
+      "text": "\t　　firstでエレメントを掴んだ後でその手前に別のエレメントが現れた時にリトライしてもfirstが指すものが変わらないのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703662,
+      "updated": 1624718189
+    },
+    {
+      "id": "60d70250aff09e0000b4c044",
+      "text": "　　　サンプルの早い段階で似たような話が書いてあった気がする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703568,
+      "updated": 1624718194
+    },
+    {
+      "id": "60d70220aff09e0000b4c043",
+      "text": "\tver. 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624703521,
+      "updated": 1624716654
+    },
+    {
+      "id": "60d73735aff09e0000a3f367",
+      "text": "\t　テスト用のIDをつけるようにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624717109,
+      "updated": 1624717127
+    },
+    {
+      "id": "60d7356eaff09e0000550fd9",
+      "text": "\t\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716655,
+      "updated": 1624716664
+    },
+    {
+      "id": "60d73570aff09e0000550fda",
+      "text": "\t\t /// <reference types=\"cypress\" />",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fdb",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fdc",
+      "text": "   describe('adjust font size', () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fdd",
+      "text": "     beforeEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fde",
+      "text": "       cy.visit('/')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fdf",
+      "text": "     })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fe0",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fe1",
+      "text": "     it('first fusen', () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fe2",
+      "text": "       cy.get('.fusen[data-testid=\">あ\"]').should(\"have.css\", \"font-size\", \"66px\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fe3",
+      "text": "     })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716657
+    },
+    {
+      "id": "60d73571aff09e0000550fe4",
+      "text": "   })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624716661
+    },
+    {
+      "id": "60d73571aff09e0000550feb",
+      "text": "\tanother patten",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716657,
+      "updated": 1624720242
+    },
+    {
+      "id": "60d74372aff09e0000c64663",
+      "text": "\t\tNG:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624720242,
+      "updated": 1624720244
+    },
+    {
+      "id": "60d74374aff09e0000c64664",
+      "text": "\t\t\t`cy.get('.fusen').eq(1).should(\"have.css\", \"font-size\", \"53px\")`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624720244,
+      "updated": 1624720269
+    },
+    {
+      "id": "60d743f8aff09e0000b9fc19",
+      "text": "\t\t\tTimed out retrying after 4000ms: Expected to find element: 1, but never found it. Queried from element: <div#hidden-fusen.fusen>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624720377,
+      "updated": 1624720378
+    },
+    {
+      "id": "60d7357daff09e0000550fed",
+      "text": "\t\tOK:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624716669,
+      "updated": 1624720260
+    },
+    {
+      "id": "60d74384aff09e0000c64666",
+      "text": "\t\t\t`cy.get('.fusen').should('have.length', 12).eq(1).should(\"have.css\", \"font-size\", \"53px\")`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624720260,
+      "updated": 1624720266
+    },
+    {
+      "id": "60d74392aff09e0000c64668",
+      "text": "\tリトライが行われるのは最後のコマンドだけである",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624720275,
+      "updated": 1624729637
+    },
+    {
+      "id": "60d76823aff09e000055100f",
+      "text": "\t\t>Cypress commands only retry the last command before the assertion",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729636,
+      "updated": 1624729638
+    },
+    {
+      "id": "60d74b2baff09e0000550fee",
+      "text": "\t\t\thttps://docs.cypress.io/guides/core-concepts/retry-ability#Only-the-last-command-is-retried",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624722220,
+      "updated": 1624729639
+    },
+    {
+      "id": "60d74b42aff09e0000550fef",
+      "text": "\t\tこれだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624722243,
+      "updated": 1624722789
+    },
+    {
+      "id": "60d74d64aff09e0000a3f369",
+      "text": "\t\t「リトライが行われるのは最後のコマンドだけである」を「チェーン全体がリトライされる」と勘違いしていたことが問題の原因",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624722789,
+      "updated": 1624729653
+    },
+    {
+      "id": "60d7681aaff09e000055100d",
+      "text": "\t\tコマンドが複数連続している時に最初のがリトライされない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729626,
+      "updated": 1624729654
+    },
+    {
+      "id": "60d7681aaff09e000055100e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624729626,
+      "updated": 1624729626
+    },
+    {
+      "id": "60d74d65aff09e0000a3f36a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624722790,
+      "updated": 1624722790
+    },
+    {
+      "id": "60d5ec1eaff09e0000c64638",
+      "text": "[https://docs.cypress.io/guides/references/assertions Assertions | Cypress Documentation]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632351,
+      "updated": 1624632418
+    },
+    {
+      "id": "60d5ec61aff09e000026267f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632418,
+      "updated": 1624632418
+    },
+    {
+      "id": "60d5ec5faff09e000026267e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632416,
+      "updated": 1624703552
+    },
+    {
+      "id": "60d5ecc4aff09e0000262680",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632516,
+      "updated": 1624703515
+    },
+    {
+      "id": "60d5ecc4aff09e0000262681",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632516,
+      "updated": 1624632516
+    },
+    {
+      "id": "60d5ecc4aff09e0000262682",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632516,
+      "updated": 1624632517
+    },
+    {
+      "id": "60d5ecc5aff09e0000262684",
+      "text": "[https://future-architect.github.io/articles/20210428a/ Cypress入門～初心者でも簡単にE2Eテストが作れる～ | フューチャー技術ブログ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262685",
+      "text": " [E2Eテスト]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262686",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262687",
+      "text": "[https://future-architect.github.io/articles/20210428b/ Cypress - 設定編 | フューチャー技術ブログ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262688",
+      "text": "\t設定でbaseUrlを指定することでテストコードにハードコードされないようにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262689",
+      "text": "\tmocha+chaiとjestでexpectなどがぶつかるのでtsconfigを分ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026268a",
+      "text": "\t頻出の操作パターンはコマンドとして定義することもできる、ただしTSで型エラーになるので型定義ファイルが必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026268b",
+      "text": "\t　🤔普通に関数にまとめたらいいのでは…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026268c",
+      "text": "\t　　わざわざ型定義してまでcyのメソッドにするメリットがわからない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026268d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026268e",
+      "text": "[https://future-architect.github.io/articles/20210428c/ 保守・拡張をしやすいカプセル化したCypress | フューチャー技術ブログ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026268f",
+      "text": "\t🤔カプセル化って言葉をどういう意味で使ってるのか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262690",
+      "text": "\t　データと手続きをまとめるという意味でもないし、アクセスを制限するという意味でもない、単に「まとめました」ということなのだろうか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262691",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262692",
+      "text": "[https://future-architect.github.io/articles/20210428d/ Cypress - 書きやすいテストの秘密と独自コマンドの実装 | フューチャー技術ブログ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262693",
+      "text": "\t@testing-library/cypress ある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262694",
+      "text": "\t>CypressはWebDriver系(Selenium)やChrome DevTool Protocol系（Puppeteer)のツールとAPIの粒度が異なります。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262695",
+      "text": "\tCypressのリトライポリシー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262696",
+      "text": "\t宣言的な書き方は、失敗した時のフィードバックが弱い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262697",
+      "text": " ログの出力はCypress.log",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262698",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e0000262699",
+      "text": "[https://www.gixo.jp/blog/16086/amp/ React + TypeScript + Cypress で始める E2E テスト - GiXo Ltd.]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026269a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026269b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026269c",
+      "text": "[ブラウザテスト]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc5aff09e000026269d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632518,
+      "updated": 1624632518
+    },
+    {
+      "id": "60d5ecc4aff09e0000262683",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624632517,
+      "updated": 1624632517
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "id": "5f22d9e246dd990024705937",
+  "title": "ループをNumpyに任せる",
+  "created": 1596119526,
+  "updated": 1596131544,
+  "lines": [
+    {
+      "id": "5f22d9e246dd990024705937",
+      "text": "ループをNumpyに任せる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119526,
+      "updated": 1596119582
+    },
+    {
+      "id": "5f22da1eaff09e000087d485",
+      "text": "Numpyを使う上ではループをNumpy側でやるかPython側でやるかが速度に大きく影響する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119583,
+      "updated": 1596119647
+    },
+    {
+      "id": "5f22da61aff09e000087d486",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119649,
+      "updated": 1596119656
+    },
+    {
+      "id": "5f22db59aff09e0000f13db8",
+      "text": "sum(xs) v.s. xs.sum(): xs.sum()が178倍早い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119898,
+      "updated": 1596119986
+    },
+    {
+      "id": "5f22dcdbaff09e000087d48a",
+      "text": "　sum(xs)ではPython側でnp.arrayを単なる汎用のiterableだとみなして合計している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596120284,
+      "updated": 1596120333
+    },
+    {
+      "id": "5f22dd03aff09e000087d48b",
+      "text": "　xs.sum()では、Numpy側が、np.arrayであることを理解して合計している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596120324,
+      "updated": 1596120378
+    },
+    {
+      "id": "5f22dd3baff09e000087d48c",
+      "text": "　後者の場合、値をPyFloatオブジェクトにするコストが丸ごと不要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596120379,
+      "updated": 1596120428
+    },
+    {
+      "id": "5f22d9e5aff09e0000f13d9f",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119526,
+      "updated": 1596119538
+    },
+    {
+      "id": "5f22d9f2aff09e0000f13da1",
+      "text": " In [3]: xs = np.arange(1000_000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119538,
+      "updated": 1596119538
+    },
+    {
+      "id": "5f22db4aaff09e0000f13db5",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119884,
+      "updated": 1596119884
+    },
+    {
+      "id": "5f22db4aaff09e0000f13db6",
+      "text": " In [4]: %timeit sum(xs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119884,
+      "updated": 1596119889
+    },
+    {
+      "id": "5f22db4aaff09e0000f13db7",
+      "text": " 80.5 ms ± 210 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119884,
+      "updated": 1596119884
+    },
+    {
+      "id": "5f22d9f2aff09e0000f13da2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119538,
+      "updated": 1596119538
+    },
+    {
+      "id": "5f22d9f2aff09e0000f13da3",
+      "text": " In [5]: %timeit xs.sum()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119538,
+      "updated": 1596119890
+    },
+    {
+      "id": "5f22d9f2aff09e0000f13da4",
+      "text": " 448 µs ± 4.18 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119538,
+      "updated": 1596119538
+    },
+    {
+      "id": "5f22d9f2aff09e0000f13da5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119538,
+      "updated": 1596119883
+    },
+    {
+      "id": "5f22dbb7aff09e000087d488",
+      "text": "添え字アクセスでのインクリメントと、ブロードキャストでのインクリメント、後者が205倍速い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119992,
+      "updated": 1596131544
+    },
+    {
+      "id": "5f22dbfcaff09e000087d489",
+      "text": "　(後者はベンチマークの都合でローカル変数になってるので少しフェアじゃない)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596120061,
+      "updated": 1596120096
+    },
+    {
+      "id": "5f22dc69aff09e00008acdde",
+      "text": "　[Broadcasting — NumPy v1.19 Manual https://numpy.org/doc/stable/user/basics.broadcasting.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596120170,
+      "updated": 1596120170
+    },
+    {
+      "id": "5f22db32aff09e0000f13da8",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119858,
+      "updated": 1596119863
+    },
+    {
+      "id": "5f22db36aff09e0000f13daa",
+      "text": " In [7]: %%timeit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119863,
+      "updated": 1596119863
+    },
+    {
+      "id": "5f22db36aff09e0000f13dab",
+      "text": "    ...: for i in range(1000_000):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119863,
+      "updated": 1596119863
+    },
+    {
+      "id": "5f22db36aff09e0000f13dac",
+      "text": "    ...:     xs[i] += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119863,
+      "updated": 1596119863
+    },
+    {
+      "id": "5f22db36aff09e0000f13dad",
+      "text": "    ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119863,
+      "updated": 1596119863
+    },
+    {
+      "id": "5f22db36aff09e0000f13dae",
+      "text": " 284 ms ± 1.88 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119863,
+      "updated": 1596119863
+    },
+    {
+      "id": "5f22db38aff09e0000f13daf",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119865,
+      "updated": 1596119865
+    },
+    {
+      "id": "5f22db39aff09e0000f13db0",
+      "text": " In [11]: %%timeit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119865,
+      "updated": 1596119874
+    },
+    {
+      "id": "5f22db42aff09e0000f13db1",
+      "text": "     ...: xs = np.arange(1000_000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119874,
+      "updated": 1596119874
+    },
+    {
+      "id": "5f22db42aff09e0000f13db2",
+      "text": "     ...: xs += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119874,
+      "updated": 1596119874
+    },
+    {
+      "id": "5f22db42aff09e0000f13db3",
+      "text": "     ...: ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119874,
+      "updated": 1596119874
+    },
+    {
+      "id": "5f22db42aff09e0000f13db4",
+      "text": " 1.38 ms ± 25.3 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119874,
+      "updated": 1596119874
+    },
+    {
+      "id": "5f22db32aff09e0000f13da9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1596119859,
+      "updated": 1596119859
+    }
+  ]
+}

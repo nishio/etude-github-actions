@@ -1,0 +1,533 @@
+{
+  "id": "602ccd76c04c740042ed93c6",
+  "title": "Reactのテストでactで包むのはrenderではなく状態更新",
+  "created": 1613548999,
+  "updated": 1613625438,
+  "lines": [
+    {
+      "id": "602ccd76c04c740042ed93c6",
+      "text": "Reactのテストでactで包むのはrenderではなく状態更新",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613548999,
+      "updated": 1613551228
+    },
+    {
+      "id": "602cd223aff09e00004edbe8",
+      "text": "[Jest] + [React Testing Library] で Reactで書かれたコンポーネントをテストするにあたって非同期の状態更新やレンダリングの振る舞いがわかりにくかったので小さいサンプルを作って確認した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550115,
+      "updated": 1613550207
+    },
+    {
+      "id": "602cd234aff09e00004edbe9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550133,
+      "updated": 1613550133
+    },
+    {
+      "id": "602cd280aff09e00001c6e84",
+      "text": "まず、Reactの`useState`で値を持って、それを表示するだけのコンポーネントを作る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550209,
+      "updated": 1613550569
+    },
+    {
+      "id": "602cd2f1aff09e00004edbea",
+      "text": "`props.exportSetValue`は`setValue`をテストコードの側に露出させるためのコールバック。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550322,
+      "updated": 1613550577
+    },
+    {
+      "id": "602ccdc7aff09e00004edbae",
+      "text": "code:MyComponent.tsx",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613548999,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd0aff09e00004edbb0",
+      "text": " import { useState } from \"react\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb1",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb2",
+      "text": " export const MyComponent = (props: {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb3",
+      "text": "   exportSetValue: (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb4",
+      "text": "     setValue: React.Dispatch<React.SetStateAction<number>>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb5",
+      "text": "   ) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb6",
+      "text": " }) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb7",
+      "text": "   const [value, setValue] = useState(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb8",
+      "text": "   props.exportSetValue(setValue);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbb9",
+      "text": "   return <span>{value}</span>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbba",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549009
+    },
+    {
+      "id": "602ccdd1aff09e00004edbbb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549009,
+      "updated": 1613549010
+    },
+    {
+      "id": "602cd30faff09e00001c6e85",
+      "text": "成功するテストケース1。冒頭の5行は`setValue`を取り出すためのもの。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550352,
+      "updated": 1613550580
+    },
+    {
+      "id": "602cd361aff09e00001c6e86",
+      "text": "テストシナリオは「レンダリングして、0が表示されてることを確認し、`setValue(1)`して、1が表示されていることを確認する」というもの。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550434,
+      "updated": 1613550583
+    },
+    {
+      "id": "602cd39baff09e00001c6e87",
+      "text": "注目するところは、(1)の`render`が`act`でラップされておらず、 (2)の`setValue`が`act`でラップされているところ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550492,
+      "updated": 1613550594
+    },
+    {
+      "id": "602cd069aff09e00004edbbc",
+      "text": "code:test.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549673,
+      "updated": 1613549722
+    },
+    {
+      "id": "602cd094aff09e00004edbbd",
+      "text": " test(\"MyComponent1\", () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549716,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbbe",
+      "text": "   type TSetState = React.Dispatch<React.SetStateAction<number>>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbbf",
+      "text": "   let setValue: TSetState | undefined;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc0",
+      "text": "   const exportSetValue = (s: TSetState) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc1",
+      "text": "     setValue = s;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc2",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc4",
+      "text": "   render(<MyComponent exportSetValue={exportSetValue} />);  // (1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549743
+    },
+    {
+      "id": "602cd094aff09e00004edbc5",
+      "text": "   expect(screen.getByText(\"0\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc6",
+      "text": "   expect(setValue).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc7",
+      "text": "   act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbc8",
+      "text": "     setValue!(1);  // (2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549745
+    },
+    {
+      "id": "602cd094aff09e00004edbc9",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbca",
+      "text": "   expect(screen.queryByText(\"0\")).toBeNull();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbcb",
+      "text": "   expect(screen.getByText(\"1\")).toBeTruthy();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd094aff09e00004edbcc",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549717,
+      "updated": 1613549717
+    },
+    {
+      "id": "602cd40caff09e00004edbeb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550604,
+      "updated": 1613550604
+    },
+    {
+      "id": "602cd413aff09e00004edbec",
+      "text": "[act() https://ja.reactjs.org/docs/testing-recipes.html#act]の解説には下記のようなサンプルコードが書いてあるが、ものすごくミスリーディング。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550696
+    },
+    {
+      "id": "602cd413aff09e00004edbed",
+      "text": "\tcode:sample.ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd413aff09e00004edbee",
+      "text": "\t act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd413aff09e00004edbef",
+      "text": "    // render components",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd413aff09e00004edbf0",
+      "text": "  });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd413aff09e00004edbf1",
+      "text": "  // make assertions",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd440aff09e00001c6e88",
+      "text": "解説文章を読むと一応ユーザイベントもレンダーもユニットである、とは書いてある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550656,
+      "updated": 1613550764
+    },
+    {
+      "id": "602cd413aff09e00004edbf2",
+      "text": "\t>UI テストを記述する際、[* レンダー、ユーザイベント、データの取得といったタスク]はユーザインターフェースへのインタラクションの「ユニット (unit)」であると考えることができます。react-dom/test-utils が提供する act() というヘルパーは、あなたが何らかのアサーションを行う前に、これらの「ユニット」に関連する更新がすべて処理され、DOM に反映されていることを保証します。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd413aff09e00004edbf3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550612,
+      "updated": 1613550612
+    },
+    {
+      "id": "602cd4b1aff09e00001c6e89",
+      "text": "`setValue`が`act`でラップされていない場合に出る警告はもっとまともなことが書いてある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550770,
+      "updated": 1613550856
+    },
+    {
+      "id": "602cd519aff09e00004edbf4",
+      "text": "\t>When testing, code that causes React state updates should be wrapped into act(...)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550873,
+      "updated": 1613550876
+    },
+    {
+      "id": "602cd522aff09e00004edbf5",
+      "text": "\t\t「Reactの状態更新を引き起こすコードは`act`でラップせよ」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550882,
+      "updated": 1613550945
+    },
+    {
+      "id": "602cd56baff09e00001c6e8a",
+      "text": "\t\t今回の例でなぜ`render`をラップしないで良いかというと、それが状態更新を引き起こさないからだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550955,
+      "updated": 1613551068
+    },
+    {
+      "id": "602cd58eaff09e00001c6e8b",
+      "text": "\t\tこの警告メッセージに含まれるサンプルコードではactの中身のコメントが`// render components`ではなく`/* fire events that update state */`になっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550990,
+      "updated": 1613551078
+    },
+    {
+      "id": "602cd5e7aff09e00001c6e8c",
+      "text": "\t\t　ドキュメントの側もこちらにあわせるべきでは？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551080,
+      "updated": 1613551104
+    },
+    {
+      "id": "602cd52baff09e00004edbf6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613550892,
+      "updated": 1613550892
+    },
+    {
+      "id": "602df857aff09e0000a78cdd",
+      "text": "full warning:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613625431,
+      "updated": 1613625438
+    },
+    {
+      "id": "602cd15caff09e00004edbd6",
+      "text": "code:output",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549916,
+      "updated": 1613550896
+    },
+    {
+      "id": "602cd160aff09e00004edbd7",
+      "text": " Warning: An update to MyComponent inside a test was not wrapped in act(...).",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbd8",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbd9",
+      "text": "     When testing, code that causes React state updates should be wrapped into act(...):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbda",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbdb",
+      "text": "     act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbdc",
+      "text": "       /* fire events that update state */",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbdd",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbde",
+      "text": "     /* assert on the output */",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbdf",
+      "text": "     ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbe0",
+      "text": "     This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbe1",
+      "text": "         at MyComponent (/Users/nishio/keicho-webclient/src/MyComponent.tsx:8:29)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbe2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbe3",
+      "text": "       52 |   // act(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549934
+    },
+    {
+      "id": "602cd161aff09e00004edbe5",
+      "text": "     > 53 |   setValue!(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbe6",
+      "text": "          |   ^",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549921
+    },
+    {
+      "id": "602cd161aff09e00004edbe7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613549921,
+      "updated": 1613549925
+    },
+    {
+      "id": "602cd689aff09e00001c6e8d",
+      "text": "ここから本題になるのだけど別のページに分ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613551241,
+      "updated": 1613551257
+    },
+    {
+      "id": "602ce1f6aff09e000089c4ac",
+      "text": "[Promiseの結果で状態更新する場合、全体をactで包んでもダメ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1613554167,
+      "updated": 1613554168
+    }
+  ]
+}

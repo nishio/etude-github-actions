@@ -1,0 +1,113 @@
+{
+  "id": "635f702be9bdc60023f0705b",
+  "title": "Reset VRAM on Google Colab",
+  "created": 1667199022,
+  "updated": 1667201474,
+  "lines": [
+    {
+      "id": "635f702be9bdc60023f0705b",
+      "text": "Reset VRAM on Google Colab",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199022,
+      "updated": 1667199047
+    },
+    {
+      "id": "635f7095aff09e000043898b",
+      "text": "Google Colabでビデオメモリをたくさん使うような処理をしていて、1回目は上手く行ったけど、2回目はメモリが足りなくてエラーになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199125,
+      "updated": 1667199167
+    },
+    {
+      "id": "635f70c0aff09e000043898d",
+      "text": "これは「必要のないインスタンスがビデオメモリをつかんだまま生きていること」が原因。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199168,
+      "updated": 1667199346
+    },
+    {
+      "id": "635f718aaff09e000043898f",
+      "text": "　1回目の実行の時にはXをやる時にまだYが作られていなかった、2回目の実行の時には1回目で作られたYが残ったままXを実行する、ということ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199370,
+      "updated": 1667199431
+    },
+    {
+      "id": "635f7171aff09e000043898e",
+      "text": "　Colabの環境が過去に作られたグローバル変数を掴み続けるのでGCされないわけだ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199346,
+      "updated": 1667199367
+    },
+    {
+      "id": "635f7095aff09e000043898c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199125,
+      "updated": 1667199125
+    },
+    {
+      "id": "635f71c8aff09e0000438990",
+      "text": "そこで明示的に解放する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199432,
+      "updated": 1667199437
+    },
+    {
+      "id": "635f702caff09e00007c22ca",
+      "text": "code:py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199022,
+      "updated": 1667199026
+    },
+    {
+      "id": "635f702eaff09e00007c22cc",
+      "text": " from numba import cuda",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199022,
+      "updated": 1667199023
+    },
+    {
+      "id": "635f702eaff09e00007c22cd",
+      "text": " device = cuda.get_current_device() ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199023,
+      "updated": 1667199023
+    },
+    {
+      "id": "635f702eaff09e00007c22ce",
+      "text": " device.reset()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199023,
+      "updated": 1667199023
+    },
+    {
+      "id": "635f702daff09e00007c22cb",
+      "text": "[https://stackoverflow.com/questions/71371756/can-i-clear-up-gpu-vram-in-colab google colaboratory - Can i clear up gpu vram in colab - Stack Overflow]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199022,
+      "updated": 1667199036
+    },
+    {
+      "id": "635f703baff09e00007c22d0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199036,
+      "updated": 1667199036
+    },
+    {
+      "id": "635f79bcaff09e0000438991",
+      "text": "これでいいのかは未検証",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667201469,
+      "updated": 1667201474
+    },
+    {
+      "id": "635f7039aff09e00007c22cf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1667199034,
+      "updated": 1667199034
+    }
+  ]
+}

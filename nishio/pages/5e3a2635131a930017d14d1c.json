@@ -1,0 +1,253 @@
+{
+  "id": "5e3a2635131a930017d14d1c",
+  "title": "TypeScriptは型を再帰的に定義できない？",
+  "created": 1580869176,
+  "updated": 1581659211,
+  "lines": [
+    {
+      "id": "5e3a2635131a930017d14d1c",
+      "text": "TypeScriptは型を再帰的に定義できない？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869176,
+      "updated": 1580869455
+    },
+    {
+      "id": "5e3a6882aff09e000007ce00",
+      "text": "[TypeScriptの型]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580886147,
+      "updated": 1580886152
+    },
+    {
+      "id": "5e463249aff09e000078a9d1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658698,
+      "updated": 1581658698
+    },
+    {
+      "id": "5e46324caff09e000078a9d4",
+      "text": "まとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658700,
+      "updated": 1581658710
+    },
+    {
+      "id": "5e463255aff09e000078a9d5",
+      "text": "\tinterfaceのような名前のついた型ではツリーの定義などは前からできた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658710,
+      "updated": 1581658797
+    },
+    {
+      "id": "5e46325faff09e000078a9d6",
+      "text": "\t3.7からtype aliasでも一部のケースで出来るようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658719,
+      "updated": 1581658722
+    },
+    {
+      "id": "5e463262aff09e000078a9d7",
+      "text": "\tしかし今回やりたかったような方法での再起的定義はできない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658722,
+      "updated": 1581658727
+    },
+    {
+      "id": "5e463267aff09e000078a9d8",
+      "text": "\tそれをinterfaceにすることもできない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658727,
+      "updated": 1581658732
+    },
+    {
+      "id": "5e463249aff09e000078a9d2",
+      "text": "\t解決 [TypeScriptの型で自然数を作る]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658698,
+      "updated": 1581659211
+    },
+    {
+      "id": "5e46324aaff09e000078a9d3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581658698,
+      "updated": 1581658698
+    },
+    {
+      "id": "5e3a2680aff09e0000e75bd3",
+      "text": "足し算したかっただけなんだけど…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869248,
+      "updated": 1580869284
+    },
+    {
+      "id": "5e3a2647aff09e0000e75bc6",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869191,
+      "updated": 1580869199
+    },
+    {
+      "id": "5e3a264faff09e0000e75bc8",
+      "text": " type N0 = [];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bc9",
+      "text": " type succ<N> = [any, N];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bca",
+      "text": " type N1 = succ<N0>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bcb",
+      "text": " type N2 = succ<N1>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bcc",
+      "text": " type N3 = succ<N2>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bcd",
+      "text": " type pred<N> = N extends [any, infer R] ? R : never;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bce",
+      "text": " type NEQUAL<Na, Nb> = Na extends Nb ? any : never;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bcf",
+      "text": " type testNEQUAL = NEQUAL<pred<N2>, succ<N0>>  // any",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bd0",
+      "text": " type add<Na, Nb> = Nb extends N0 ? Na : add<succ<Na>, pred<Nb>>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bd1",
+      "text": " // Type alias 'add' circularly references itself.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869200
+    },
+    {
+      "id": "5e3a2650aff09e0000e75bd2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869200,
+      "updated": 1580869202
+    },
+    {
+      "id": "5e3a27c6aff09e0000e75bd4",
+      "text": "https://stackoverflow.com/questions/36966444/how-to-create-a-circularly-referenced-type-in-typescript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869575,
+      "updated": 1580869575
+    },
+    {
+      "id": "5e3a27c7aff09e0000e75bd5",
+      "text": "https://github.com/microsoft/TypeScript/pull/33050",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869575,
+      "updated": 1580869634
+    },
+    {
+      "id": "5e3a2c33aff09e0000e75bd7",
+      "text": "[TypeScript] 3.7で",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870708,
+      "updated": 1580885378
+    },
+    {
+      "id": "5e3a2c8baff09e0000e75bd8",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870796,
+      "updated": 1580870803
+    },
+    {
+      "id": "5e3a2c92aff09e0000e75bd9",
+      "text": " type ValueOrArray<T> = T | Array<ValueOrArray<T>>;  // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870803,
+      "updated": 1580870808
+    },
+    {
+      "id": "5e3a2c93aff09e0000e75bda",
+      "text": "\ttype ValueOrArray<T> = T | ValueOrArray<Array<T>>;  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870803,
+      "updated": 1580870838
+    },
+    {
+      "id": "5e3a2cb0aff09e0000e75bdb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870832,
+      "updated": 1580870838
+    },
+    {
+      "id": "5e3a2d24aff09e0000e75bdc",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870948,
+      "updated": 1580870952
+    },
+    {
+      "id": "5e3a2d28aff09e0000e75bdd",
+      "text": " type add<Na, Nb> = Nb extends N0 ? Na : add2<Na, Nb>;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870952,
+      "updated": 1580870952
+    },
+    {
+      "id": "5e3a2d28aff09e0000e75bde",
+      "text": " interface add2<Na, Nb> extends add<succ<Na>, pred<Nb>> { };  // NG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870952,
+      "updated": 1580871017
+    },
+    {
+      "id": "5e3a2d28aff09e0000e75bdf",
+      "text": " // An interface can only extend an object type or intersection of object types with statically known members.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580870952,
+      "updated": 1580870976
+    },
+    {
+      "id": "5e3a264baff09e0000e75bc7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1580869195,
+      "updated": 1580869195
+    }
+  ]
+}

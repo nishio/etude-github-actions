@@ -1,0 +1,197 @@
+{
+  "id": "5ce1f7d817fe6b00171adc53",
+  "title": "VSCode: \"読み取り専用のエディタは編集できません\"の解決法",
+  "created": 1558312933,
+  "updated": 1558321637,
+  "lines": [
+    {
+      "id": "5ce1f7d817fe6b00171adc53",
+      "text": "VSCode: \"読み取り専用のエディタは編集できません\"の解決法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558312933,
+      "updated": 1558321366
+    },
+    {
+      "id": "5ce21536aff09e00009c7fca",
+      "text": "高校でVisual StudioでC++を学んでいて、復習のために自宅のMacに開発環境を作りたい、という話を聞いた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320439,
+      "updated": 1558320484
+    },
+    {
+      "id": "5ce1f950aff09e00009c7fc6",
+      "text": "[C++の開発環境をVisual Studio Codeのみで構築する | クラインのIT備忘壺 https://klein-itblog.com/mac-cplusplus-development/?fbclid=IwAR29XwpqmTBmCDJXmStbNeo5jCzPlvcxQFj4_9Uki67x2hUwTusB7BKn7Vc]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558313297,
+      "updated": 1558313297
+    },
+    {
+      "id": "5ce1f96baff09e00009c7fc8",
+      "text": "Visual Studio Codeと、その拡張機能のCode Runnerを使うことで手軽に開発環境を作ることができる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558313324,
+      "updated": 1558320607
+    },
+    {
+      "id": "5ce215bdaff09e00009c7fcb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320573,
+      "updated": 1558320574
+    },
+    {
+      "id": "5ce215e0aff09e00009c7fcc",
+      "text": "ところがこれを使って作ったプログラムに入力をしようとすると「読み取り専用のエディタは編集できません」というエラーメッセージが表示される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320608,
+      "updated": 1558320796
+    },
+    {
+      "id": "5ce2169baff09e00009c7fcd",
+      "text": "これはデフォルトの設定では以下のような仕組みだから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320796,
+      "updated": 1558320972
+    },
+    {
+      "id": "5ce21741aff09e00009c7fcf",
+      "text": "\tプログラムを実行する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320962,
+      "updated": 1558320964
+    },
+    {
+      "id": "5ce21743aff09e00009c7fd0",
+      "text": "\t→その結果を読み取り専用で表示する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320964,
+      "updated": 1558320968
+    },
+    {
+      "id": "5ce2174faff09e00009c7fd1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320975,
+      "updated": 1558320975
+    },
+    {
+      "id": "5ce216beaff09e00009c7fce",
+      "text": "「入力を受け取るプログラム」を動かすには下記の双方向のやり取りが必要。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558320830,
+      "updated": 1558321446
+    },
+    {
+      "id": "5ce218e0aff09e00009c7fd8",
+      "text": "\tユーザのキー操作を受け取る→プログラムに入力",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321376,
+      "updated": 1558321392
+    },
+    {
+      "id": "5ce218e4aff09e00009c7fd9",
+      "text": "\tプログラムの出力→画面に表示してユーザに見せる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321380,
+      "updated": 1558321396
+    },
+    {
+      "id": "5ce21927aff09e00009c7fdc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321448,
+      "updated": 1558321448
+    },
+    {
+      "id": "5ce218e9aff09e00009c7fda",
+      "text": "このユーザのキー操作を受け取ったり画面に表示したりするプログラムを、しばしば「ターミナル」と呼ぶ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321385,
+      "updated": 1558321506
+    },
+    {
+      "id": "5ce21928aff09e00009c7fdd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321448,
+      "updated": 1558321448
+    },
+    {
+      "id": "5ce21865aff09e00009c7fd4",
+      "text": "プログラムの中でstdin, stdoutなどの単語を目にすると思う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321254,
+      "updated": 1558321550
+    },
+    {
+      "id": "5ce2198daff09e00009c7fdf",
+      "text": "\tこれはstandard input, standard outputの略。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321550,
+      "updated": 1558321550
+    },
+    {
+      "id": "5ce2198eaff09e00009c7fe0",
+      "text": "\t日本語でいうと「標準入力」「標準出力」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321550,
+      "updated": 1558321560
+    },
+    {
+      "id": "5ce21998aff09e00009c7fe1",
+      "text": "\t参考: [標準ストリーム - Wikipedia https://ja.wikipedia.org/wiki/%E6%A8%99%E6%BA%96%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321560,
+      "updated": 1558321563
+    },
+    {
+      "id": "5ce21967aff09e00009c7fde",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321511,
+      "updated": 1558321511
+    },
+    {
+      "id": "5ce21883aff09e00009c7fd7",
+      "text": "これをターミナルと接続することで、双方向のやり取りができるようになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321283,
+      "updated": 1558321637
+    },
+    {
+      "id": "5ce219a4aff09e00009c7fe2",
+      "text": "\tターミナルがユーザのキー操作を受け取り、あなたが書いたプログラムのstdinに入力する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321573,
+      "updated": 1558321589
+    },
+    {
+      "id": "5ce219a8aff09e00009c7fe3",
+      "text": "\tあなたがstdoutに出力したものが、ターミナルに表示される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321577,
+      "updated": 1558321593
+    },
+    {
+      "id": "5ce219bbaff09e00009c7fe4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558321595,
+      "updated": 1558321595
+    },
+    {
+      "id": "5ce1f96baff09e00009c7fc9",
+      "text": "設定方法はこちら: [Cannot edit in read-only editor VS Code - Stack Overflow https://stackoverflow.com/questions/54856374/cannot-edit-in-read-only-editor-vs-code?fbclid=IwAR1vkc88bCXyukgOmUVtgOXK2tpNe_L_pWEJLywjdwNfA8z0x-9jvcTzIl8]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558313324,
+      "updated": 1558321355
+    },
+    {
+      "id": "5ce1f951aff09e00009c7fc7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1558313297,
+      "updated": 1558313297
+    }
+  ]
+}

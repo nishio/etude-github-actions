@@ -1,0 +1,309 @@
+{
+  "id": "5bd6d729b5333c0014586b48",
+  "title": "視点移動ができない",
+  "created": 1531884747,
+  "updated": 1531891234,
+  "lines": [
+    {
+      "id": "5bd6d729aff09e000076a50a",
+      "text": "視点移動ができない",
+      "created": 1531884747,
+      "updated": 1531884752,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a50b",
+      "text": "テレポートポータルと呼ばれる球体を設置し、それをトリガーしたらそこへジャンプするようにした",
+      "created": 1531890169,
+      "updated": 1531890170,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a50c",
+      "text": "code:cs",
+      "created": 1531884752,
+      "updated": 1531884754,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a50d",
+      "text": " GameObject.Find(\"OVRCameraRig\").transform.position = obj.transform.position;",
+      "created": 1531884754,
+      "updated": 1531884760,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a50e",
+      "text": "PC上では視点が移動できるがOculus上では視点が移動できない",
+      "created": 1531884753,
+      "updated": 1531884776,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a50f",
+      "text": "",
+      "created": 1531890182,
+      "updated": 1531890182,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a510",
+      "text": "OVRCameraRigを直接動かすのがいけないのかと思ってMeCubeというキューブの子にOVRCameraRigを指定したが、やはり動かない。",
+      "created": 1531890159,
+      "updated": 1531890231,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a511",
+      "text": "",
+      "created": 1531890231,
+      "updated": 1531890231,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a512",
+      "text": "面白いバグ",
+      "created": 1531890231,
+      "updated": 1531890234,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a513",
+      "text": "[https://youtu.be/LwDUS8wMFAE]",
+      "created": 1531890251,
+      "updated": 1531890251,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a514",
+      "text": " MeCubeをトリガーした際に、スライド扱いされてレイキャストの[hitPoint]に対象物の位置が移動することによって、MeCubeが動き、それに合わせてカメラも動いている",
+      "created": 1531890327,
+      "updated": 1531890327,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a515",
+      "text": " ということはMeCubeを動かすことによってカメラを動かすこと自体は期待通りに動いている",
+      "created": 1531890325,
+      "updated": 1531890345,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a516",
+      "text": "",
+      "created": 1531890345,
+      "updated": 1531890345,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a517",
+      "text": "code:cs",
+      "created": 1531890345,
+      "updated": 1531890370,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a518",
+      "text": " RaycastHit hit;",
+      "created": 1531890370,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a519",
+      "text": " if (Physics.Raycast(ray, out hit, _MaxDistance))",
+      "created": 1531890370,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a51a",
+      "text": " {",
+      "created": 1531890370,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a51b",
+      "text": "     // ヒットしたオブジェクトを取得",
+      "created": 1531890370,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a51c",
+      "text": "     GameObject obj = hit.collider.gameObject;",
+      "created": 1531890370,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a51d",
+      "text": "     obj.GetComponent<Renderer>().material.color = Color.green;",
+      "created": 1531890370,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a51e",
+      "text": "     if (obj.CompareTag(\"Button\"))",
+      "created": 1531890557,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a51f",
+      "text": "     {",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a520",
+      "text": "     \t   ...",
+      "created": 1531890410,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a521",
+      "text": "     }",
+      "created": 1531890414,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a522",
+      "text": "     else if(obj.CompareTag(\"Teleport\"))",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a523",
+      "text": "     {",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a524",
+      "text": "         obj.GetComponent<Renderer>().material.color = Color.blue;",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a525",
+      "text": "         if (PCInput.Down())",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a526",
+      "text": "         {",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a527",
+      "text": "             obj.GetComponent<Renderer>().material.color = Color.red;",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a528",
+      "text": "             //GameObject.Find(\"OVRCameraRig\").transform.position = obj.transform.position;",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a529",
+      "text": "             GameObject.Find(\"MeCube\").transform.position = obj.transform.position;",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a52a",
+      "text": "         }",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a52b",
+      "text": "     }",
+      "created": 1531890389,
+      "updated": 1531890567,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a52c",
+      "text": "",
+      "created": 1531890389,
+      "updated": 1531890511,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a52d",
+      "text": "\tそもそもPC上ではobj.CompareTag(\"Teleport\")がTrueになって、ホバー時には青になる。Oculus上で緑になること自体が変。",
+      "created": 1531890260,
+      "updated": 1531890615,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a52e",
+      "text": " しかしそんな「タグの挙動がPCとAndroidで違う」なんてことありえるか？？？",
+      "created": 1531890778,
+      "updated": 1531890795,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a52f",
+      "text": " 一度TeleportをTereportって名前で作って削除したいるのがいけないのか？",
+      "created": 1531890795,
+      "updated": 1531890905,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a530",
+      "text": " Unityを再起動してみる",
+      "created": 1531890837,
+      "updated": 1531890911,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a531",
+      "text": " 直った！",
+      "created": 1531890911,
+      "updated": 1531891213,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a532",
+      "text": "\t[タグを削除した後はUnityを再起動する]",
+      "created": 1531891219,
+      "updated": 1531891234,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a533",
+      "text": "#解決済み",
+      "created": 1531884776,
+      "updated": 1531891218,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a534",
+      "text": "",
+      "created": 1531884763,
+      "updated": 1531884763,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

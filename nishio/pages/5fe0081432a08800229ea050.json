@@ -1,0 +1,260 @@
+{
+  "id": "5fe0081432a08800229ea050",
+  "title": "長方形区間カウント",
+  "created": 1608517652,
+  "updated": 1609861234,
+  "lines": [
+    {
+      "id": "5fe0081432a08800229ea050",
+      "text": "長方形区間カウント",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517652,
+      "updated": 1608517652
+    },
+    {
+      "id": "5fe00814aff09e0000c606d7",
+      "text": "点(x, y)がN個ある時に長方形区間[$ 0 \\le x < T_x, 0 \\le y < T_y]の点の数を数える問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517652,
+      "updated": 1608518181
+    },
+    {
+      "id": "5fe009a3aff09e0000d79b49",
+      "text": "　[$ 0 \\le x, y < M]とする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608518051,
+      "updated": 1608518099
+    },
+    {
+      "id": "5fe00972aff09e0000c606e6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608518002,
+      "updated": 1608518002
+    },
+    {
+      "id": "5fe008e4aff09e0000c606e3",
+      "text": "特に各点[$ (x_i, y_i) ]について [$ \\sum_j[x_j < x_i][y_j < y_i] ]を計算する場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517861,
+      "updated": 1608523927
+    },
+    {
+      "id": "5fe0096daff09e0000c606e5",
+      "text": "\t素朴にループで書くとO(N^2)なのでNが大きい時に工夫が必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517998,
+      "updated": 1608518205
+    },
+    {
+      "id": "5fe00a2faff09e0000c606e7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608518192,
+      "updated": 1608518192
+    },
+    {
+      "id": "5fe00a2faff09e0000c606e8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608518192,
+      "updated": 1608518192
+    },
+    {
+      "id": "5fe00814aff09e0000c606da",
+      "text": "　[二次元の片方を時間軸にする]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517652,
+      "updated": 1608517668
+    },
+    {
+      "id": "5fe020a2aff09e0000d79b51",
+      "text": " 　xでソートしてそれを時間軸にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523938,
+      "updated": 1608523939
+    },
+    {
+      "id": "5fe00814aff09e0000c606db",
+      "text": "　[フェニック木]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517652,
+      "updated": 1608517669
+    },
+    {
+      "id": "5fe020a6aff09e0000d79b52",
+      "text": "　　yを定義域にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523943,
+      "updated": 1608523949
+    },
+    {
+      "id": "5fe00814aff09e0000c606dd",
+      "text": "　x < x0がすべて追加されている状態でy < y0を満たすものの数が分かれば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517652,
+      "updated": 1608523966
+    },
+    {
+      "id": "5fe00814aff09e0000c606de",
+      "text": " 　定義域をy、値域を出現回数とすればsumで求まる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517652,
+      "updated": 1608523997
+    },
+    {
+      "id": "5fe0200caff09e000095a46f",
+      "text": "　同じxの点がある場合、事前にxでグループ化して、sumをし終わってからaddする必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523788,
+      "updated": 1608523855
+    },
+    {
+      "id": "5fe0081aaff09e0000c606df",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517658,
+      "updated": 1608523686
+    },
+    {
+      "id": "5fe01fa5aff09e000095a45d",
+      "text": " # grouping",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a45e",
+      "text": " from collections import defaultdict",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a45f",
+      "text": " P2 = defaultdict(list)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a460",
+      "text": " for i in range(M):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a461",
+      "text": "     x, y = PS[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a462",
+      "text": "     P2[y - 1].append(x - 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a463",
+      "text": "\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523758
+    },
+    {
+      "id": "5fe01fa6aff09e000095a464",
+      "text": " bit_init(H + 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a465",
+      "text": " for y in range(0, y0):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608524446
+    },
+    {
+      "id": "5fe01fa6aff09e000095a467",
+      "text": "     ret += bit_sum(x0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523781
+    },
+    {
+      "id": "5fe01fa6aff09e000095a46c",
+      "text": "     for x in P2[y]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523755
+    },
+    {
+      "id": "5fe01fa6aff09e000095a46d",
+      "text": "         bit_add(x, 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608524008
+    },
+    {
+      "id": "5fe01fa6aff09e000095a46e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608523686,
+      "updated": 1608523687
+    },
+    {
+      "id": "5fe02273aff09e0000d79b53",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608524407,
+      "updated": 1608524407
+    },
+    {
+      "id": "5fe0081aaff09e0000c606e0",
+      "text": " [ABC186F]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517658,
+      "updated": 1608524414
+    },
+    {
+      "id": "5fe0081baff09e0000c606e1",
+      "text": "　　範囲内の個数ではなく、ブロックされている列の個数を知りたいのでbit_addではなくbit_setした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608517659,
+      "updated": 1608524464
+    },
+    {
+      "id": "5ff4884caff09e0000174a8a",
+      "text": "　[二次元累積和]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609861197,
+      "updated": 1609861208
+    },
+    {
+      "id": "5ff48859aff09e0000174a8b",
+      "text": "　　https://algo-logic.info/submatrix-sum-queries/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1609861210,
+      "updated": 1609861234
+    },
+    {
+      "id": "5fe43e08aff09e0000e638cd",
+      "text": "[長方形クエリ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608793608,
+      "updated": 1608793612
+    },
+    {
+      "id": "5fe43e09aff09e0000e638ce",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1608793610,
+      "updated": 1608793610
+    }
+  ]
+}

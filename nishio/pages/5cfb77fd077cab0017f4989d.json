@@ -1,0 +1,253 @@
+{
+  "id": "5cfb77fd077cab0017f4989d",
+  "title": "状態遷移図の学習",
+  "created": 1559984129,
+  "updated": 1559996333,
+  "lines": [
+    {
+      "id": "5cfb77fd077cab0017f4989d",
+      "text": "状態遷移図の学習",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984129,
+      "updated": 1559984129
+    },
+    {
+      "id": "5cfb7801aff09e0000fccd25",
+      "text": "S状態N入力の[状態遷移図]を学習するのにどの程度の規模のニューラルネットワークが必要か。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984129,
+      "updated": 1559995031
+    },
+    {
+      "id": "5cfb795caff09e0000fccd35",
+      "text": "当初「O(S^2)のサイズの中間層2枚が必要」と思っていたが、だいぶ小さいもので学習できたので限界を探ってみた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984477,
+      "updated": 1559986237
+    },
+    {
+      "id": "5cfb7a96aff09e0000fccd36",
+      "text": "入力はS次元のone-hotとN次元のone-hotをconcatしたもの。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984790,
+      "updated": 1559984872
+    },
+    {
+      "id": "5cfb7ae7aff09e0000fccd39",
+      "text": "出力は新しい状態S次元のone-hot。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984872,
+      "updated": 1559984872
+    },
+    {
+      "id": "5cfb7ae9aff09e0000fccd3a",
+      "text": "状態遷移表はランダムに生成する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984873,
+      "updated": 1559984918
+    },
+    {
+      "id": "5cfb7b15aff09e0000fccd3b",
+      "text": "\t現実にはもっと構造があって圧縮が効きやすい。ランダムは一番難しい問題。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984918,
+      "updated": 1559984918
+    },
+    {
+      "id": "5cfb8093aff09e0000fccd40",
+      "text": "\tS * N通りの入力について1つのSが決まる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559986324,
+      "updated": 1559986340
+    },
+    {
+      "id": "5cfb7918aff09e0000fccd33",
+      "text": "活性化関数はReLU",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984409,
+      "updated": 1559984929
+    },
+    {
+      "id": "5cfb7b21aff09e0000fccd3c",
+      "text": "early_stopping=Falseとする。Trueだと学習が始まる前にstopしてしまうため。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984929,
+      "updated": 1559984943
+    },
+    {
+      "id": "5cfb781aaff09e0000fccd27",
+      "text": "中間層のサイズを小さい方から試していき、S * N通りの入力全てを正解できたサイズを表にした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984155,
+      "updated": 1559986376
+    },
+    {
+      "id": "5cfb80b2aff09e0000fccd41",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559986355,
+      "updated": 1559986355
+    },
+    {
+      "id": "5cfb783eaff09e0000fccd29",
+      "text": "table:全パターン正解に必要な中間層の数",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984191,
+      "updated": 1559984457
+    },
+    {
+      "id": "5cfb786daff09e0000fccd2c",
+      "text": " ↓S\\N→\t3\t10\t30\t100",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984237,
+      "updated": 1559984283
+    },
+    {
+      "id": "5cfb789baff09e0000fccd2d",
+      "text": " 3\t4\t8\t8\t8",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984284,
+      "updated": 1559984314
+    },
+    {
+      "id": "5cfb78a5aff09e0000fccd2e",
+      "text": " 6\t8\t8\t16\t24",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984294,
+      "updated": 1559984330
+    },
+    {
+      "id": "5cfb78a6aff09e0000fccd2f",
+      "text": " 10\t8\t16\t24\t36",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984294,
+      "updated": 1559984347
+    },
+    {
+      "id": "5cfb78a7aff09e0000fccd30",
+      "text": " 13\t8\t16\t32\t60",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984295,
+      "updated": 1559984383
+    },
+    {
+      "id": "5cfb78a7aff09e0000fccd31",
+      "text": " 16\t8\t8\t36\t60",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984296,
+      "updated": 1559984382
+    },
+    {
+      "id": "5cfb78a8aff09e0000fccd32",
+      "text": " 20\t8\t8\t32\t90",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984296,
+      "updated": 1559984397
+    },
+    {
+      "id": "5cfb7f1aaff09e0000fccd3e",
+      "text": " 40\t16\t28\t60\t135",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559985947,
+      "updated": 1559985989
+    },
+    {
+      "id": "5cfb7f4baff09e0000fccd3f",
+      "text": " 60\t16\t28\t90\t135",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559985995,
+      "updated": 1559986024
+    },
+    {
+      "id": "5cfb7852aff09e0000fccd2b",
+      "text": "実験(S=20まで): https://gist.github.com/nishio/8d2dd6511df11c0aa78b542c7563b2a8",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984210,
+      "updated": 1559985943
+    },
+    {
+      "id": "5cfb7803aff09e0000fccd26",
+      "text": "追加実験(S=40, 60): https://gist.github.com/nishio/905160abc7766fcf239e6c7854465172",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559984132,
+      "updated": 1559986033
+    },
+    {
+      "id": "5cfb7f09aff09e0000fccd3d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559985929,
+      "updated": 1559985929
+    },
+    {
+      "id": "5cfb8c12aff09e0000fccd43",
+      "text": "この実験結果を見て「え、なんでこんなに中間層少なくてOKなの？バグってない？」と思ったのだけども、",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559989266,
+      "updated": 1559989760
+    },
+    {
+      "id": "5cfb8e0aaff09e0000fccd44",
+      "text": "そもそも状態遷移図はS*Nのone-hotで入力を入れるなら中間層すらなしで実現できる。(図2)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559989770,
+      "updated": 1559993449
+    },
+    {
+      "id": "5cfb8e42aff09e0000fccd45",
+      "text": "この問題は「中間層を置くことでone-hotのS*Nを2-hotのS+Nに置き換えるとしたら中間層のサイズはいくつ必要か」と言える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559989827,
+      "updated": 1559993480
+    },
+    {
+      "id": "5cfb926baff09e0000fccd46",
+      "text": "で、これが思った以上に圧縮される。 see [恒等写像を学習する]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559990892,
+      "updated": 1559990905
+    },
+    {
+      "id": "5cfb8c0daff09e00004f3758",
+      "text": "[https://gyazo.com/d70cfab3fd55d1a5ea810e2f5c25eb15]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559989261,
+      "updated": 1559989262
+    },
+    {
+      "id": "5cfb8c0eaff09e00004f375a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559989262,
+      "updated": 1559994974
+    },
+    {
+      "id": "5cfba25daff09e0000960f5d",
+      "text": "というわけで思ったより小さく単純な多層パーセプトロンで状態遷移図を表現することができる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559994974,
+      "updated": 1559994994
+    },
+    {
+      "id": "5cfba260aff09e0000960f5e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559994976,
+      "updated": 1559994976
+    },
+    {
+      "id": "5cfba79eaff09e0000960f67",
+      "text": "連想: [状態のベクトル空間への埋め込み]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559996319,
+      "updated": 1559996333
+    },
+    {
+      "id": "5cfba7a0aff09e0000960f68",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559996320,
+      "updated": 1559996320
+    }
+  ]
+}

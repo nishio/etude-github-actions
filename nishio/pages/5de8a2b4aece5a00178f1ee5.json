@@ -1,0 +1,183 @@
+{
+  "id": "5de8a2b4aece5a00178f1ee5",
+  "title": "まとめて保存",
+  "created": 1575527095,
+  "updated": 1575527182,
+  "lines": [
+    {
+      "id": "5de8a2b4aece5a00178f1ee5",
+      "text": "まとめて保存",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527095,
+      "updated": 1575527095
+    },
+    {
+      "id": "5de8a2b6aff09e0000ad1bcf",
+      "text": "\t問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527095,
+      "updated": 1575527142
+    },
+    {
+      "id": "5de8a2e5aff09e0000ad1be4",
+      "text": "\t\tiPadで書いたものをPCで見ている場合に、複数パスを選択して移動すると1パスずつ移動と再描画が行われる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527142,
+      "updated": 1575527142
+    },
+    {
+      "id": "5de8a2b6aff09e0000ad1bd1",
+      "text": "\t原因",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527095,
+      "updated": 1575527146
+    },
+    {
+      "id": "5de8a2eaaff09e0000ad1be5",
+      "text": "\t\tuseEffectでstate.itemsの変化をトリガーとしてsaveToServerしていた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527146,
+      "updated": 1575527146
+    },
+    {
+      "id": "5de8a2d1aff09e0000ad1be1",
+      "text": "\t対処",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527122,
+      "updated": 1575527148
+    },
+    {
+      "id": "5de8a2ecaff09e0000ad1be6",
+      "text": "\t\tuseEffectでフラグが立ってなければsetTimeout、フラグを立てる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527148,
+      "updated": 1575527161
+    },
+    {
+      "id": "5de8a2f6aff09e0000ad1be7",
+      "text": "  フラグが立っていれば何もせずにスルー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527158,
+      "updated": 1575527162
+    },
+    {
+      "id": "5de8a2f6aff09e0000ad1be8",
+      "text": "  setTimeoutがfireしたタイミングでsaveToServer",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527158,
+      "updated": 1575527167
+    },
+    {
+      "id": "5de8a2d1aff09e0000ad1be2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527122,
+      "updated": 1575527122
+    },
+    {
+      "id": "5de8a2bbaff09e0000ad1bd2",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527100,
+      "updated": 1575527110
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bd4",
+      "text": " let toSave = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bd5",
+      "text": " useEffect(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bd6",
+      "text": "   if (toSave) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bd7",
+      "text": "     // do nothing",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bd8",
+      "text": "   } else {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bd9",
+      "text": "     toSave = true;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bda",
+      "text": "     setTimeout(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bdb",
+      "text": "       toSave = false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bdc",
+      "text": "       saveToServer(isReadOnly, state, mapname)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bdd",
+      "text": "     }, 100)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bde",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527117
+    },
+    {
+      "id": "5de8a2c6aff09e0000ad1bdf",
+      "text": " }, [state.items]); ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527110,
+      "updated": 1575527120
+    },
+    {
+      "id": "5de8a2c3aff09e0000ad1bd3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527107,
+      "updated": 1575527107
+    },
+    {
+      "id": "5de8a306aff09e0000ad1be9",
+      "text": "[pRegroup-done-2019]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575527174,
+      "updated": 1580046375
+    }
+  ]
+}

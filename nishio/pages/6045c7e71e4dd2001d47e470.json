@@ -1,0 +1,974 @@
+{
+  "id": "6045c7e71e4dd2001d47e470",
+  "title": "requestAnimationFrame + jest-electron = unstable behavoir",
+  "created": 1615185896,
+  "updated": 1624268645,
+  "lines": [
+    {
+      "id": "6045c7e71e4dd2001d47e470",
+      "text": "requestAnimationFrame + jest-electron = unstable behavoir",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185896,
+      "updated": 1615186530
+    },
+    {
+      "id": "6045d56caff09e0000cc46eb",
+      "text": "`requestAnimationFrame` + `jest-electron` causes unstable behavoir includes crush of elecron.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189356,
+      "updated": 1624268645
+    },
+    {
+      "id": "6045d579aff09e0000068950",
+      "text": "To replace `requestAnimationFrame` with `setTimeout` solves the problem for now.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189369,
+      "updated": 1615189518
+    },
+    {
+      "id": "6045d60eaff09e0000068952",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189518,
+      "updated": 1615189518
+    },
+    {
+      "id": "6045d618aff09e0000068953",
+      "text": "solution",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e0000068954",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e0000068955",
+      "text": " beforeEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e0000068956",
+      "text": "   jest.spyOn(window, \"requestAnimationFrame\").mockImplementation(callback => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e0000068957",
+      "text": "     return setTimeout(callback, 0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e0000068958",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e0000068959",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e000006895a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e000006895b",
+      "text": " afterEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e000006895c",
+      "text": "   window.requestAnimationFrame.mockRestore();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e000006895d",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d618aff09e000006895f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189528,
+      "updated": 1615189528
+    },
+    {
+      "id": "6045d579aff09e0000068951",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189369,
+      "updated": 1615189369
+    },
+    {
+      "id": "6045d56caff09e0000cc46ec",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189356,
+      "updated": 1615189368
+    },
+    {
+      "id": "6045c7f2aff09e00000688c9",
+      "text": " OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185907,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7e8aff09e00000688bc",
+      "text": "  code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185896,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688be",
+      "text": "   test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185903,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688bf",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c0",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c1",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c2",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c3",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c4",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c5",
+      "text": "     _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c6",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c7",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186017
+    },
+    {
+      "id": "6045c7efaff09e00000688c8",
+      "text": "\tresolved / `Timeout - Async callback was not invoked within the 5000`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185904,
+      "updated": 1615186038
+    },
+    {
+      "id": "6045c7eeaff09e00000688bd",
+      "text": "\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615185902,
+      "updated": 1615186049
+    },
+    {
+      "id": "6045c881aff09e00000688cb",
+      "text": "\t\t test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688cc",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688cd",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688ce",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688cf",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d0",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d1",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d2",
+      "text": "     requestAnimationFrame(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d3",
+      "text": "       _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d4",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d5",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d6",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186050
+    },
+    {
+      "id": "6045c882aff09e00000688d7",
+      "text": " OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186050,
+      "updated": 1615186075
+    },
+    {
+      "id": "6045c89baff09e00000688d9",
+      "text": " \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186075,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688da",
+      "text": " \t test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688db",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688dc",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688dd",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688de",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688df",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e0",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e1",
+      "text": "     requestAnimationFrame(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e2",
+      "text": "       _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e3",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e4",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e5",
+      "text": "     console.log(\"ok\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186077
+    },
+    {
+      "id": "6045c89daff09e00000688e6",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186077,
+      "updated": 1615186079
+    },
+    {
+      "id": "6045c89faff09e00000688e7",
+      "text": " resolved / Timeout",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186079,
+      "updated": 1615186135
+    },
+    {
+      "id": "6045c8d7aff09e00000688e8",
+      "text": " \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186136,
+      "updated": 1615186138
+    },
+    {
+      "id": "6045c8d9aff09e00000688e9",
+      "text": " \t test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186138,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688ea",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688eb",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688ec",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688ed",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688ee",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688ef",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f0",
+      "text": "     requestAnimationFrame(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f1",
+      "text": "       _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f2",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f3",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f4",
+      "text": "     expect(1).toBe(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f5",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186145
+    },
+    {
+      "id": "6045c8e1aff09e00000688f6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186145,
+      "updated": 1615186198
+    },
+    {
+      "id": "6045c95eaff09e0000068908",
+      "text": "\tUnstable Behavoir: Fails as expected, crush, or Timeout",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186271,
+      "updated": 1615186601
+    },
+    {
+      "id": "6045c93faff09e00000688f9",
+      "text": " \tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186240,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c941aff09e00000688fa",
+      "text": " \t test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e00000688fb",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e00000688fc",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e00000688fd",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e00000688fe",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e00000688ff",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068900",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068901",
+      "text": "     requestAnimationFrame(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068902",
+      "text": "       _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068903",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068904",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068905",
+      "text": "     expect(1).toBe(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c942aff09e0000068906",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186242,
+      "updated": 1615186272
+    },
+    {
+      "id": "6045c916aff09e00000688f7",
+      "text": " \t[https://gyazo.com/47e1e651a4c2e60de8a19a2cb62d3914]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186198,
+      "updated": 1615186275
+    },
+    {
+      "id": "6045c919aff09e00000688f8",
+      "text": "\t\tTimeout",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186201,
+      "updated": 1615186344
+    },
+    {
+      "id": "6045c9a7aff09e000006890a",
+      "text": "\t\t\t[https://gyazo.com/cac5a7eb56b179ee58794b7c2f4c2490]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186343,
+      "updated": 1615186345
+    },
+    {
+      "id": "6045c99baff09e0000068909",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186332,
+      "updated": 1615186332
+    },
+    {
+      "id": "6045d137aff09e000006891b",
+      "text": "change requestAnimationFrame to setTimeout",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188279,
+      "updated": 1615188294
+    },
+    {
+      "id": "6045c87daff09e00000688ca",
+      "text": "\tOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615186046,
+      "updated": 1615188237
+    },
+    {
+      "id": "6045d10daff09e000006890d",
+      "text": "\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188237,
+      "updated": 1615188240
+    },
+    {
+      "id": "6045d110aff09e000006890e",
+      "text": "\t\t test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e000006890f",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068910",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068911",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068912",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068913",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068914",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068915",
+      "text": "     setTimeout(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068916",
+      "text": "       _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068917",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068918",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e0000068919",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188241
+    },
+    {
+      "id": "6045d111aff09e000006891a",
+      "text": "\tOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188241,
+      "updated": 1615188299
+    },
+    {
+      "id": "6045d14baff09e000006891c",
+      "text": "\t\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188299,
+      "updated": 1615188301
+    },
+    {
+      "id": "6045d14daff09e000006891d",
+      "text": "\t\t test(\"promise\", async () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188301,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e000006891e",
+      "text": "     let _resolve: (arg: unknown) => void;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e000006891f",
+      "text": "     const p = new Promise(res => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068920",
+      "text": "       _resolve = res;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068921",
+      "text": "     }).then(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068922",
+      "text": "       console.log(\"resolved\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068923",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068924",
+      "text": "     setTimeout(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068925",
+      "text": "       _resolve!(0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068926",
+      "text": "     });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068927",
+      "text": "     await p;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068928",
+      "text": "     expect(1).toBe(1);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e0000068929",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188302
+    },
+    {
+      "id": "6045d14daff09e000006892a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188302,
+      "updated": 1615188303
+    },
+    {
+      "id": "6045d1deaff09e000006892b",
+      "text": "solution",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188446,
+      "updated": 1615188448
+    },
+    {
+      "id": "6045d1e1aff09e000006892c",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188449,
+      "updated": 1615188451
+    },
+    {
+      "id": "6045d1e3aff09e000006892d",
+      "text": " beforeEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188451,
+      "updated": 1615189249
+    },
+    {
+      "id": "6045d542aff09e000006894b",
+      "text": "   jest.spyOn(window, \"requestAnimationFrame\").mockImplementation(callback => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189314,
+      "updated": 1615189315
+    },
+    {
+      "id": "6045d543aff09e000006894c",
+      "text": "     return setTimeout(callback, 0);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189315,
+      "updated": 1615189315
+    },
+    {
+      "id": "6045d543aff09e000006894d",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189315,
+      "updated": 1615189315
+    },
+    {
+      "id": "6045d500aff09e0000068942",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189249,
+      "updated": 1615189313
+    },
+    {
+      "id": "6045d1e3aff09e0000068930",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188452,
+      "updated": 1615188452
+    },
+    {
+      "id": "6045d1e3aff09e0000068931",
+      "text": " afterEach(() => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188452,
+      "updated": 1615188452
+    },
+    {
+      "id": "6045d1e3aff09e0000068932",
+      "text": "   window.requestAnimationFrame.mockRestore();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188452,
+      "updated": 1615188452
+    },
+    {
+      "id": "6045d1e3aff09e0000068933",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188452,
+      "updated": 1615188452
+    },
+    {
+      "id": "6045d10daff09e000006890b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615188237,
+      "updated": 1615189361
+    },
+    {
+      "id": "6045d56faff09e000006894f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1615189360,
+      "updated": 1615189360
+    }
+  ]
+}

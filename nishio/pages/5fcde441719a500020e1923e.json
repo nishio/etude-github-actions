@@ -1,0 +1,582 @@
+{
+  "id": "5fcde441719a500020e1923e",
+  "title": "ARC110D",
+  "created": 1607328835,
+  "updated": 1607356034,
+  "lines": [
+    {
+      "id": "5fcde441719a500020e1923e",
+      "text": "ARC110D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde467aff09e0000c07a15",
+      "text": "[https://gyazo.com/829c06c94c53cc49c05c234e5f3445c5]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328871,
+      "updated": 1607328874
+    },
+    {
+      "id": "5fcde469aff09e0000c07a16",
+      "text": "[D - Binomial Coefficient is Fun https://atcoder.jp/contests/arc110/tasks/arc110_d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328874,
+      "updated": 1607328886
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad0",
+      "text": " 考えたこと",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328890
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad2",
+      "text": " 　N=2000だとO(N^2)なら大丈夫そう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad3",
+      "text": " 　M=10^9だと「最初のがxで残りがM-x」みたいな動的計画法は無理そう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad4",
+      "text": " 　[ホッケースティック恒等式]を眺める→違いそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad5",
+      "text": " 　BがAより小さくなると0になるので無視して良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad6",
+      "text": " 　2000個の箱に残り[$ R = M - \\sum A_i]を分配する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad7",
+      "text": "　　個別の事象は[$ \\binom{2000 + R}{R} ]ぐらいあるので個別に計算して足し合わせるのは間に合わない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad8",
+      "text": "　　　→なんらかの式変形で束ねて計算できるはず",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ad9",
+      "text": "　　[二項係数の公式]を眺める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6adb",
+      "text": "\t\t[Vandermondeの恒等式]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6adc",
+      "text": "\t\t[$ \\sum_{i=0}^k \\binom{n}{i}\\binom{m}{k - i} = \\binom{n+m}{k} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6add",
+      "text": "　　　二項係数の積を一つの二項係数にしてて目的に近い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ade",
+      "text": "　　　下の値を足したら一定というのも目的に近い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6adf",
+      "text": "　　　上の値が変わるので直接は使えない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae0",
+      "text": "　　　これの亜種のような式があるはずだ→探そう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae1",
+      "text": "　　得たい[$ f(A,B,K) = \\sum_i \\binom{A + i}{i}\\binom{B + K - i}{K - i} ]を素朴に計算するコードを書いて観察",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae2",
+      "text": "　　\ttable::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae3",
+      "text": "　　\t 1\t1\t1\t4\t4C1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae4",
+      "text": "　　\t 1\t1\t2\t10\t5C2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae5",
+      "text": "　　\t 1\t1\t3\t20\t6C3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae6",
+      "text": "\t\t\t→[$ f(A,B,K) = \\binom{A + B + K + 1}{K} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae7",
+      "text": "\t\t3項の場合",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae8",
+      "text": " \t\t[$ \\sum_{ij} \\binom{A_1 + i}{i} \\binom{A_2 + j}{j} \\binom{A_3 + (R - i - j))}{R - i - j}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6ae9",
+      "text": " \t\t[$ = \\sum_{i+j} \\binom{A_1 + A_2 + (i+j) + 1 }{i+j} \\binom{A_3 + (R - (i + j)))}{R - (i + j)}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aea",
+      "text": " \t\t[$ = \\sum_{k} \\binom{A_1 + A_2 + k + 1 }{k} \\binom{A_3 + (R - k))}{R - k}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aeb",
+      "text": " \t\t[$ = \\binom{A_1 + A_2 + 1 + A_3 + R + 1}{R}]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aec",
+      "text": " \t一般に",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aed",
+      "text": "\t\t[$ \\sum A_i + (N - 1) (1 + R)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aee",
+      "text": "\t\t　これは誤り see 追記A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aef",
+      "text": "　　この式でサンプル1を計算すると8になったが、途中の計算が雑なので怪しい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af0",
+      "text": "　　　R以下の全パターンを出す必要があるはずなのにR=1の式で計算してるし",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af1",
+      "text": "　　そもそもRは10^9ぐらいになりえるので二項係数の計算が無理っぽい？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af2",
+      "text": "　\t　これは誤り see 追記B",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af4",
+      "text": "　公式解説",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af5",
+      "text": "　　[$ S = \\sum A_i ]として [$ \\binom{N+M}{S+N} ]が答え",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af6",
+      "text": "　　R=M-Sなので[$ \\binom{N+M}{S+N} =  \\binom{N+M}{N+M-R} = \\binom{N+M}{R} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af7",
+      "text": "　　なぜこうなるのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af8",
+      "text": "　　　公式解説が自然言語で説明しているのは要するに下記の式",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6af9",
+      "text": "\t\t\t[$ \\sum_i \\binom{i}{A}\\binom{N-i-1}{B} = \\binom{N}{A+B+1} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6afa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6afb",
+      "text": "　　追記B",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6afc",
+      "text": "　　 二項係数の計算",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6afd",
+      "text": "　　　ついつい「高速に計算するために二項係数テーブルを作る」ってやりがち",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6afe",
+      "text": "　　　 ライブラリ作ったので…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6aff",
+      "text": "　　　なのだけど、今回のように二項係数の上が10^9、下が10^6の場合には[$ C(n,m) = P(n,m) (m!)^{-1}]でやるべきだった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b00",
+      "text": "　　　 この計算はO(m)にできるから",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b01",
+      "text": "　　　 サイズnのテーブルを作るより速い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b02",
+      "text": "　　　 [巨大なnについての二項係数]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b03",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607355540
+    },
+    {
+      "id": "5fcde442aff09e00006f6b13",
+      "text": "　　追記A",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b14",
+      "text": "\t \t一般に",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b15",
+      "text": "\t\t\t[$ \\sum A_i + (N - 1) (1 + R)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b16",
+      "text": "\t\t\t　これは誤り",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b17",
+      "text": " 　\t[$ X= \\sum A_i + (N - 1) + R]が正しい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b18",
+      "text": " 　　\t[$ R = M - \\sum A_i]なので [$ X = M + N - 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b19",
+      "text": " 　　\t　あれ、1合わないな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b1a",
+      "text": " 　　この式は「振り分ける値」がちょうどRの場合だけを計算している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b1b",
+      "text": " 　　求める値は[$ \\sum_{r=0}^R \\binom{S + N + r - 1}{r} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b1c",
+      "text": "\t\t\t\t[ホッケースティック恒等式]を使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b1d",
+      "text": "    [$ \\sum_{i=0}^k \\binom{n+i}{i} = \\binom{n+k+1}{k} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b1e",
+      "text": "   これで1増えて、求める値は[$ \\binom{S + N + R }{R} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b1f",
+      "text": "   [$ \\binom{S + N + R }{R} = \\binom{S + N + R }{S + N} = \\binom{N + M}{S + N} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b20",
+      "text": "   これで公式解説と同じ式に帰着した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b21",
+      "text": "　→解説AC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b22",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b23",
+      "text": "　[形式的べき級数]に帰着して解くこともできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607351574
+    },
+    {
+      "id": "5fcde442aff09e00006f6b24",
+      "text": "　　[ARC110D_FPS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607351585
+    },
+    {
+      "id": "5fce3d21aff09e000092a290",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607351586,
+      "updated": 1607351586
+    },
+    {
+      "id": "5fcde442aff09e00006f6b29",
+      "text": "　[OEIS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b2a",
+      "text": "　 https://twitter.com/yuruhiya/status/1335222719160315904?s=21",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b2b",
+      "text": "　　今回は肉眼で判断してたけど終わってからOEIS使ったら楽チンだったので今度からそうする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde442aff09e00006f6b2c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328835,
+      "updated": 1607328835
+    },
+    {
+      "id": "5fcde4b3aff09e00009c2d43",
+      "text": "\t「実験的に作った数列からの一般項の予想」をやらない道筋",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328948,
+      "updated": 1607352325
+    },
+    {
+      "id": "5fce4005aff09e000092a291",
+      "text": "\t\t[重複組合せの畳み込み]だと解釈すれば素直に式変形できた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607352325,
+      "updated": 1607352325
+    },
+    {
+      "id": "5fcde4fbaff09e00009c2d44",
+      "text": "\t\t整理した: [ARC110D_nonFPS]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607329020,
+      "updated": 1607356034
+    },
+    {
+      "id": "5fce400eaff09e000092a292",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607352334,
+      "updated": 1607352334
+    },
+    {
+      "id": "5fcde44aaff09e0000c07a13",
+      "text": "from [ARC110]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328843,
+      "updated": 1607328843
+    },
+    {
+      "id": "5fcde44aaff09e0000c07a14",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1607328843,
+      "updated": 1607328843
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "id": "5a13c4b36f11630014d702f9",
+  "title": "SVMで確率推定",
+  "created": 1511244983,
+  "updated": 1537181221,
+  "lines": [
+    {
+      "id": "5a13c4b36f11630014d702f9",
+      "text": "SVMで確率推定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511244983,
+      "updated": 1511246253
+    },
+    {
+      "id": "5a13c4b8aff09e0000128770",
+      "text": "\t[SVM]は、計算した値f(x)が正か負かで識別する[二値分類]アルゴリズム",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511244984,
+      "updated": 1537171240
+    },
+    {
+      "id": "5a13c4baaff09e0000128772",
+      "text": " 本質的に[確率モデル]ではない。しかし[LIBSVM]や[sklearn]などでは確率推測が実装されている。これはどういう仕組みか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511244986,
+      "updated": 1537171245
+    },
+    {
+      "id": "5a13c4d0aff09e0000128773",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511245009,
+      "updated": 1511246262
+    },
+    {
+      "id": "5a13c4d2aff09e0000128774",
+      "text": " [A Note on Platt’s Probabilistic Outputs for Support Vector Machines https://www.csie.ntu.edu.tw/~cjlin/papers/plattprob.pdf]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511245010,
+      "updated": 1511245079
+    },
+    {
+      "id": "5a13c4b9aff09e0000128771",
+      "text": "\tPlatt(2000)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511244986,
+      "updated": 1511245224
+    },
+    {
+      "id": "5a13c5a8aff09e0000128777",
+      "text": "  [https://gyazo.com/2d12317f6e5d60ce9fe55a6ac142962a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511245224,
+      "updated": 1511247814
+    },
+    {
+      "id": "5a13cd93aff09e0000128787",
+      "text": "  ラベルを予測するのではなく、確率を知りたいっていう応用がしばしばあるので、Plattが「シグモイドで近似したらいいのでは」と提案しましたよ、という話。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511247252,
+      "updated": 1511247333
+    },
+    {
+      "id": "5a13c5aaaff09e0000128778",
+      "text": " A, Bはパラメータであり、対数尤度最大化をすることで求める",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511245227,
+      "updated": 1511246310
+    },
+    {
+      "id": "5a13c5a2aff09e0000128776",
+      "text": "  つまり「SVMの出力値をsignに入れるのではなく、その値を説明変数として[ロジスティック回帰]を学習」に相当",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511245219,
+      "updated": 1537181221
+    },
+    {
+      "id": "5a13ca2faff09e000012877d",
+      "text": " 5-foldのクロスバリデーション",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246383,
+      "updated": 1511246462
+    },
+    {
+      "id": "5a13ca7eaff09e000012877f",
+      "text": "  (4/5のデータでSVMを学習して、残りの1/5に対してf(x)を求め、そのf(x)と正解の関係をロジスティック回帰で学習)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246462,
+      "updated": 1511246462
+    },
+    {
+      "id": "5a13ca46aff09e000012877e",
+      "text": " SVMできれいに分かれてしまう場合などは、当然ロジスティック回帰がステップ関数になってしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246406,
+      "updated": 1511246842
+    },
+    {
+      "id": "5a13c964aff09e000012877c",
+      "text": "  そこでスムージングなどを掛けている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246180,
+      "updated": 1511246841
+    },
+    {
+      "id": "5a13cc2baff09e0000128781",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246891,
+      "updated": 1511246891
+    },
+    {
+      "id": "5a13cc0baff09e0000128780",
+      "text": "\tScikit-Learnのpredict_probaを使う上での注意点",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246859,
+      "updated": 1537171163
+    },
+    {
+      "id": "5a13cc37aff09e0000128783",
+      "text": "  「確率値を返さないアルゴリズムにロジスティック回帰を重ねて確率値を返させている」ということを理解する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246904,
+      "updated": 1511247156
+    },
+    {
+      "id": "5a13cf58aff09e0000128788",
+      "text": "  4/5のデータで5回SVMを学習するわけなので、まあざっくり4～5倍くらい時間がかかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511247705,
+      "updated": 1511247738
+    },
+    {
+      "id": "5a13cc5baff09e0000128784",
+      "text": "  確率値を返すようにすることで、SVMの識別精度は上がらない。それを目的とした仕組みではない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511246939,
+      "updated": 1511247140
+    },
+    {
+      "id": "5a13ccedaff09e0000128786",
+      "text": "  パラメータが適切に選ばれているなら、同程度の精度になる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1511247086,
+      "updated": 1511247132
+    },
+    {
+      "id": "5b9f5f16aff09e0000f3714a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537171222,
+      "updated": 1537171222
+    },
+    {
+      "id": "5b9f5f15aff09e0000f37149",
+      "text": "#機械学習",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537171222,
+      "updated": 1537171227
+    },
+    {
+      "id": "5b9f5f19aff09e0000f3714b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537171225,
+      "updated": 1537171225
+    }
+  ]
+}

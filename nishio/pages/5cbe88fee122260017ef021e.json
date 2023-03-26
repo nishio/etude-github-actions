@@ -1,0 +1,904 @@
+{
+  "id": "5cbe88fee122260017ef021e",
+  "title": "「名前的型システムと構造的型システムの違い」加筆案",
+  "created": 1555990790,
+  "updated": 1624584891,
+  "lines": [
+    {
+      "id": "5cbe88fee122260017ef021e",
+      "text": "「名前的型システムと構造的型システムの違い」加筆案",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1555990790,
+      "updated": 1556369847
+    },
+    {
+      "id": "5cc40e2daff09e0000f40b52",
+      "text": "いきさつ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352557,
+      "updated": 1556352589
+    },
+    {
+      "id": "5cc40e4daff09e0000f40b54",
+      "text": "\tTypeScriptの勉強会で「[コーディングを支える技術]で型の勉強をしてます」と言われた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352589,
+      "updated": 1579339550
+    },
+    {
+      "id": "5e22cf1eaff09e0000f7d41a",
+      "text": "\t確認してみたところコーディングを支える技術には「名前的型システムと構造的型システムの違い」について書かれていなかった。これを加筆したいが媒体の都合で大幅な加筆は難しいのでここにドラフトを置く。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1579339550,
+      "updated": 1589087347
+    },
+    {
+      "id": "5cc40e45aff09e0000f40b53",
+      "text": "\t加筆する対象は第8章「型」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352581,
+      "updated": 1556352703
+    },
+    {
+      "id": "60d53274aff09e000026c2e6",
+      "text": "\t[コーディングを支える技術加筆案]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624584821,
+      "updated": 1624584844
+    },
+    {
+      "id": "60d5328caff09e000026c2e7",
+      "text": "\t　[名前的型と構造的型の勘違いによる実話]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1624584845,
+      "updated": 1624584891
+    },
+    {
+      "id": "5cc40e99aff09e0000f40b55",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352666,
+      "updated": 1556352666
+    },
+    {
+      "id": "5cc40ec1aff09e0000f40b56",
+      "text": "おさらい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352706,
+      "updated": 1556352709
+    },
+    {
+      "id": "5cc3f9ccaff09e0000f40b4a",
+      "text": "[https://gyazo.com/df9ab60204aa68fff5318dccb0c6a6da]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556347341,
+      "updated": 1556352552
+    },
+    {
+      "id": "5cc40e27aff09e0000a26aae",
+      "text": "\tメモリに0と1が並んでいるだけでは、それが整数なのか浮動小数点数なのかわからない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352552,
+      "updated": 1556352736
+    },
+    {
+      "id": "5cc40ee1aff09e0000f40b57",
+      "text": "\tそこで`int n;`などと宣言することで「これは整数だよ」という情報を変数につけるのが静的型付け",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352737,
+      "updated": 1556352866
+    },
+    {
+      "id": "5cc40f30aff09e0000f40b58",
+      "text": "\t「この値は整数だよ」という情報を値につけるのが動的型付け",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352816,
+      "updated": 1556352913
+    },
+    {
+      "id": "5cc3f9cdaff09e0000f40b4b",
+      "text": "\t\t(余談: 「これは型付けではない、動的検査と呼ぶべきだ」と考える人もいるが、読者が目にする確率の高い用語を優先している。参考: [動的型付けは動的検査])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556347341,
+      "updated": 1579340291
+    },
+    {
+      "id": "5cc40f9baff09e0000f40b59",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556352923,
+      "updated": 1556352923
+    },
+    {
+      "id": "5cc4107daff09e0000f40b5a",
+      "text": "P.129 「動的型付け > メリットとデメリット」ではこう書いた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556353149,
+      "updated": 1556353221
+    },
+    {
+      "id": "5cc3f9d8aff09e0000f40b4f",
+      "text": "\t>このような方法で値の種類を扱うことで、従来の静的型付け言語ではできなかったような柔軟な処理ができるようになりました。実行時まで型を決めないことや、実行時に型が変わることが可能になったのです。しかし、これはデメリットでもありました。静的型付け言語は、コンパイル時に型が決まり、コンパイル時に型の整合性がチェックされました。この型チェックのおかげで、一部のバグには実行する前に気付くことができました。しかし動的型付け言語ではそれができなくなってしまいました。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556347353,
+      "updated": 1556353224
+    },
+    {
+      "id": "5cc3f9d8aff09e0000f40b50",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556347353,
+      "updated": 1556347353
+    },
+    {
+      "id": "5cc410cdaff09e0000f40b5b",
+      "text": "このデメリットを解決したいというニーズが高まった。特にJavaScriptでそのニーズが強かった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556353230,
+      "updated": 1556353745
+    },
+    {
+      "id": "5cc411abaff09e0000f40b5d",
+      "text": "\tFlashが衰退したことによって、ブラウザ上で高度なユーザー体験を提供するニーズがJavaScriptで解決されるようになり、JavaScriptで大規模なプログラムが書かれるようになった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556353452,
+      "updated": 1556353762
+    },
+    {
+      "id": "5cc412e4aff09e0000f40b5f",
+      "text": "\tJavaScriptの多くはユーザの手元のブラウザ上で実行される。そのため、プログラマの手元で実行されるプログラムに比べて、問題が起きた時に事後的に情報を収集して問題を解決することが難しい。事前に問題に気づきたい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556353764,
+      "updated": 1556412930
+    },
+    {
+      "id": "5cc4134faff09e0000f40b61",
+      "text": "\tブラウザ上で動くJavaScriptは、グラフィカルな表示をし、ユーザからの入力を受け付けることが多い。ユーザはプログラマの予想外の操作をすることも多い。また人間とのやり取りを含む手順はテストの自動化が難しい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556353871,
+      "updated": 1556354065
+    },
+    {
+      "id": "5cc410ceaff09e0000f40b5c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556353230,
+      "updated": 1556353230
+    },
+    {
+      "id": "5cc41419aff09e0000f40b63",
+      "text": "このデメリットを解消するアプローチは2つある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354073,
+      "updated": 1556354089
+    },
+    {
+      "id": "5cc41424aff09e0000f40b64",
+      "text": "\tA: 既存の言語に、処理に影響を与えない形で型の情報を付け加えて、それを使って静的検査をする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354084,
+      "updated": 1556354231
+    },
+    {
+      "id": "5cc41444aff09e0000f40b65",
+      "text": "\tB: 静的型付けの言語でプログラムを記述し、それを動的型付けの言語に変換する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354116,
+      "updated": 1556354233
+    },
+    {
+      "id": "5cc41444aff09e0000f40b66",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354116,
+      "updated": 1556354116
+    },
+    {
+      "id": "5cc41499aff09e0000f40b67",
+      "text": "Aのアプローチ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354201,
+      "updated": 1556354275
+    },
+    {
+      "id": "5cc414e3aff09e0000f40b6d",
+      "text": "\t例えば動的型付け言語のPythonでは2015年に型検査が標準ライブラリとして提供された。言語自体は動的型付けのままだが、型の情報を付け加えることができ、その情報に矛盾する扱いがあった場合に警告する仕組みだ。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354275,
+      "updated": 1556369939
+    },
+    {
+      "id": "5cc414eaaff09e0000f40b6f",
+      "text": "\tJavaScriptにおいては2009年にリリースされたGoogle Closure Compilerがこのアプローチを採用した。JavaScriptとしての実行に影響のないコメントの形で関数の引数や返り値の型を宣言する。コンパイラはコメントが付与されたソースコードを読んで、型検査を行う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354282,
+      "updated": 1556354586
+    },
+    {
+      "id": "5cc4161aaff09e0000f40b72",
+      "text": "\t\t(GoogleがどんなサービスにGoogle Closure Compilerを使っていたかわかれば加筆する)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354586,
+      "updated": 1556354722
+    },
+    {
+      "id": "5cc446c1aff09e0000f40be6",
+      "text": "\t\t\tGmail, Google Calendar, Google Maps, Google Docs",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556367041,
+      "updated": 1556367056
+    },
+    {
+      "id": "5cc414a9aff09e0000f40b69",
+      "text": "\t\t例えばサイボウズのkintoneの実装には、2012年時点で10万行のJavaScriptのコードがあった。これに対する型検査はGoogle Closure Compilerが使われていた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354218,
+      "updated": 1556354811
+    },
+    {
+      "id": "5cc4164aaff09e0000f40b73",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354642,
+      "updated": 1556354786
+    },
+    {
+      "id": "5cc414a9aff09e0000f40b6a",
+      "text": "Bのアプローチ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354218,
+      "updated": 1556355061
+    },
+    {
+      "id": "5cc417f4aff09e0000f40b77",
+      "text": "\t2005年にHaxeがリリースされた。2011年にGoogleによってDartがリリースされた。翌2012年にはMicrosoftによってTypeScriptがリリースされた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556355061,
+      "updated": 1556355835
+    },
+    {
+      "id": "5cc41dc5aff09e0000f40b86",
+      "text": "\tこの3つ以外にもたくさんの言語が作られたが、ここでは説明しない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356549,
+      "updated": 1556356639
+    },
+    {
+      "id": "5cc4fd44aff09e00004e9c09",
+      "text": "\t\tメジャーなDartとTypeScriptですら統計手法によって順位が逆転するので。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556413764,
+      "updated": 1556413800
+    },
+    {
+      "id": "5cc41d22aff09e0000f40b7f",
+      "text": "  \tTIOBEプログラミング言語ランキング(検索エンジンヒット数の統計)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356386,
+      "updated": 1556413802
+    },
+    {
+      "id": "5cc41d20aff09e0000f40b7d",
+      "text": "   \t2014年時点",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356385,
+      "updated": 1556413802
+    },
+    {
+      "id": "5cc41d20aff09e0000f40b7e",
+      "text": "   \t\tJavaScript 2%, Dart 0.3%",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356385,
+      "updated": 1556413802
+    },
+    {
+      "id": "5cc414a9aff09e0000f40b6b",
+      "text": "   \t2019年時点",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556354218,
+      "updated": 1556413802
+    },
+    {
+      "id": "5cc41c62aff09e0000f40b7a",
+      "text": "   \t\tJavaScript 3%, Dart 0.5%, TypeScript 0.2%, Haxeは50位以下のため%不明",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356195,
+      "updated": 1556413802
+    },
+    {
+      "id": "5cc41c8faff09e0000f40b7b",
+      "text": " \t\t[GitHub上での活動量での統計 https://www.benfrederickson.com/ranking-programming-languages-by-github-users/]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356239,
+      "updated": 1556413804
+    },
+    {
+      "id": "5cc4fbe1aff09e00004e9c04",
+      "text": " \t\t\tJavaScript 23%, TypeScript 4%, Dartはランク外",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556413410,
+      "updated": 1556413804
+    },
+    {
+      "id": "5cc4fcfcaff09e00004e9c06",
+      "text": " \t\t[Stack Overflow Trends(StackOverflowでの質問数の統計) https://insights.stackoverflow.com/trends?tags=typescript%2Cdart]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556413692,
+      "updated": 1556413806
+    },
+    {
+      "id": "5cc4fd02aff09e00004e9c07",
+      "text": " \t\t\t[https://gyazo.com/b802e536503898b1cf8f4d767468c63b]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556413698,
+      "updated": 1556413806
+    },
+    {
+      "id": "5cc4fd05aff09e00004e9c08",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556413702,
+      "updated": 1556413702
+    },
+    {
+      "id": "5cc41c0daff09e0000f40b79",
+      "text": "[* 「静的型付け」は一枚岩ではない]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356110,
+      "updated": 1556365293
+    },
+    {
+      "id": "5cc41da8aff09e0000f40b80",
+      "text": "「静的型付けの言語でプログラムを記述し、それをJavaScriptに変換する」の「静的型付け」の部分は、言語によって異なる。Dartは2011年にリリースされたが、2018年に型の仕組みを変えて再リリースされた。また「静的型付け」という言葉で「Javaみたいな型付けの仕組み」と連想されやすいが、これは必ずしも正しくない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356520,
+      "updated": 1556370065
+    },
+    {
+      "id": "5cc43d96aff09e0000f40b89",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556364695,
+      "updated": 1556364703
+    },
+    {
+      "id": "5cc43dafaff09e0000f40b8a",
+      "text": "2014年にこの本を書いた時には「動的型付け v.s. 静的型付け」のシンプルな構図で説明できた。2019年現在、かつて「静的型付け」の一言で済まされていた概念が、より細かく分かれていく過渡期にある。Pythonのように、動的型付け言語が事後的に静的型検査を手に入れる例もある。そして「静的型付け」の中に、新たな対立構図「名前的(nominal) v.s. 構造的(structural)」が生まれている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556364719,
+      "updated": 1556365064
+    },
+    {
+      "id": "5cc41dafaff09e0000f40b83",
+      "text": "[https://gyazo.com/e0eb641c58a9fa6f52db6e11fcbdecb1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556356527,
+      "updated": 1556364390
+    },
+    {
+      "id": "5cc43f0daff09e0000f40b8d",
+      "text": "\t(2014年時点に構造的型の言語がなかったわけではなくて、OCamlとかScalaとかがあった。しかしOCamlを使う人はML系言語の型システムについては当然よく知っていて、Javaと混同したりはしなかった。Scalaを使う人はJavaの型システムに不満があって、あえてScalaを選んでいた。今のような「Webのフロントエンドを実装しよう」というシチュエーションの人がDartとTypeScriptを目の前にしてどちらを選ぼうと悩む状況ではなかった。この2つの言語の型システムを「静的型付け」と呼んで同一視すると混乱する。分けて語るための語彙を持つ必要が生まれている。)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365070,
+      "updated": 1579339808
+    },
+    {
+      "id": "5cc4529faff09e0000f40c00",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556370079,
+      "updated": 1556370079
+    },
+    {
+      "id": "5cc43f52aff09e0000f40b8e",
+      "text": "[* 名前的型システムと構造的型システムの違い]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365139,
+      "updated": 1556365301
+    },
+    {
+      "id": "5cc4402aaff09e0000f40b98",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365355,
+      "updated": 1556365355
+    },
+    {
+      "id": "5cc43f52aff09e0000f40b90",
+      "text": "型Aが求められている文脈で型Bを使うことができるのはどのような場合か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365139,
+      "updated": 1556365353
+    },
+    {
+      "id": "5cc43ff9aff09e0000f40b92",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365306,
+      "updated": 1556365306
+    },
+    {
+      "id": "5cc4402baff09e0000f40b99",
+      "text": "例えば型Aの変数xに型Bのオブジェクトを代入できるのはどういう場合か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365356,
+      "updated": 1556365383
+    },
+    {
+      "id": "5cc43ff9aff09e0000f40b93",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365306,
+      "updated": 1556365389
+    },
+    {
+      "id": "5cc4404caff09e0000f40b9a",
+      "text": " A x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365389,
+      "updated": 1556365392
+    },
+    {
+      "id": "5cc44050aff09e0000f40b9b",
+      "text": " B y = new B();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365392,
+      "updated": 1556365401
+    },
+    {
+      "id": "5cc44058aff09e0000f40b9c",
+      "text": " x = y;  // OK? NG?",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365401,
+      "updated": 1556365411
+    },
+    {
+      "id": "5cc43ff9aff09e0000f40b94",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365306,
+      "updated": 1556365306
+    },
+    {
+      "id": "5cc43ff9aff09e0000f40b95",
+      "text": "\t(言語にあらかじめ用意されている型には暗黙の型変換など特殊なルールが追加されていることがあるので、ユーザ定義の型に限定した方が良いかも。例えばDart 2.1以降は`double z = 1;`がOK、それ以前はNGだった。こういう挙動の差はここでの本題ではない)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365306,
+      "updated": 1589087650
+    },
+    {
+      "id": "5cc43ff9aff09e0000f40b96",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365306,
+      "updated": 1556365306
+    },
+    {
+      "id": "5cc444b7aff09e0000f40bc2",
+      "text": "名前的型システム(nominal type system)の言語では、型には名前がついている。たとえ構造がまったく同じでも、名前が違えば違う型である。下記のコードでは、T1とT2は構造がまったく同じなのに、代入するとエラーになる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366519,
+      "updated": 1556367482
+    },
+    {
+      "id": "5cc4431daff09e0000f40bb2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366109,
+      "updated": 1556366109
+    },
+    {
+      "id": "5cc442d6aff09e0000f40ba3",
+      "text": "code:Dart",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366038,
+      "updated": 1556366106
+    },
+    {
+      "id": "5cc442dcaff09e0000f40ba4",
+      "text": " class T1 {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366044,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40ba5",
+      "text": "   num x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40ba6",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40ba7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40ba8",
+      "text": " class T2 {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40ba9",
+      "text": "   num x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40baa",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40bab",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40bac",
+      "text": " void main() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40bad",
+      "text": "   T1 a;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366405
+    },
+    {
+      "id": "5cc442f0aff09e0000f40bae",
+      "text": "   T2 b = new T2();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc442f0aff09e0000f40baf",
+      "text": "   a = b;  // ERROR: A value of type 'T2' can't be assigned to a variable of type 'T1'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366097
+    },
+    {
+      "id": "5cc442f0aff09e0000f40bb0",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366065,
+      "updated": 1556366065
+    },
+    {
+      "id": "5cc441e3aff09e0000f40ba1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365796,
+      "updated": 1556366049
+    },
+    {
+      "id": "5cc44551aff09e0000f40be2",
+      "text": "この種の型システムでは、明示的に「型T2は型T1の部分型(subtype)だ」と宣言することで、T1が求められる文脈でT2を使うことができるようになる。下記のコードではextendsが部分型の宣言にあたる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366673,
+      "updated": 1579339886
+    },
+    {
+      "id": "5cc44521aff09e0000f40bc6",
+      "text": "code:Dart",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366626,
+      "updated": 1556366636
+    },
+    {
+      "id": "5cc44529aff09e0000f40bd4",
+      "text": " class T1 {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366634,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bd5",
+      "text": "   num x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bd6",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bd7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bd8",
+      "text": " class T2 extends T1{  // 明示的に「T2はT1の部分型」と宣言した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366729
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bd9",
+      "text": "   num x;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bda",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bdb",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bdc",
+      "text": " void main() {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bdd",
+      "text": "   T1 a;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366642
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bde",
+      "text": "   T2 b = new T2();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40bdf",
+      "text": "   a = b;  // OKになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366732
+    },
+    {
+      "id": "5cc4452eaff09e0000f40be0",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc4452eaff09e0000f40be1",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366639,
+      "updated": 1556366639
+    },
+    {
+      "id": "5cc444f9aff09e0000f40bc4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366585,
+      "updated": 1556366585
+    },
+    {
+      "id": "5cc444f9aff09e0000f40bc5",
+      "text": "一方で、構造的型システム(structural type system)の言語では、型がどういう構造を持っているかで判断をする。型には名前がついているとは限らないし、たとえ名前が違っても、構造が同じならば互換性があるものとして扱われる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366585,
+      "updated": 1556366833
+    },
+    {
+      "id": "5cc445aeaff09e0000f40be4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366767,
+      "updated": 1556366836
+    },
+    {
+      "id": "5cc44447aff09e0000f40bb3",
+      "text": "code:TypeScript",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366407,
+      "updated": 1556366414
+    },
+    {
+      "id": "5cc44450aff09e0000f40bb4",
+      "text": " type T1 = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bb5",
+      "text": "     x : number",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bb6",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bb7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bb8",
+      "text": " type T2 = {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bb9",
+      "text": "     x : number",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bba",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bbb",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bbc",
+      "text": " let a:T1;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bbd",
+      "text": " let b:T2 = {x: 1};",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366416
+    },
+    {
+      "id": "5cc44450aff09e0000f40bbe",
+      "text": " a = b; // OK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366416,
+      "updated": 1556366419
+    },
+    {
+      "id": "5cc441e3aff09e0000f40ba2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556365796,
+      "updated": 1556365796
+    },
+    {
+      "id": "5cc444adaff09e0000f40bbf",
+      "text": "このコードの`let b:T2 = {x: 1}`の、`{x: 1}`の部分は名前のないオブジェクト型である。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366510,
+      "updated": 1556366884
+    },
+    {
+      "id": "5cc44623aff09e0000f40be5",
+      "text": "これはT1ともT2とも同じ形をしているので、エラーになることなく代入できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366884,
+      "updated": 1556366903
+    },
+    {
+      "id": "5cc444aeaff09e0000f40bc0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366510,
+      "updated": 1556366510
+    },
+    {
+      "id": "5cc444aeaff09e0000f40bc1",
+      "text": "1985年に生まれたC++や1995年に生まれたJavaは名前的型システムを採用していた。この2つの言語はとてもメジャーになったので、`extends`や`implements`で部分型関係の宣言をすることに慣れ親しんだ人も多いだろう。一方、型理論の研究においては構造的型システムの方が主流だった。その結果、JavaScriptを生成するための静的型付け言語を設計する際に、Javaなどを参考に名前的型システムを採用した言語と、型理論を参考に構造的型システムを採用する言語が混在することになってしまった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556366510,
+      "updated": 1589087782
+    },
+    {
+      "id": "5cc44917aff09e0000f40be8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556367640,
+      "updated": 1556367640
+    },
+    {
+      "id": "5cc44917aff09e0000f40be9",
+      "text": "\t(名前的型システムには、部分型かどうかの判定処理が軽いメリットがあった。しかしJava誕生から25年も経つ現在、コンピュータの性能も大きく進歩したため、名前的型システムを選ぶ理由にはならないのではないか。それよりも、Javaに慣れ親しんだ人がたくさんいる、という歴史的経緯が大きいのではないか。)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556367640,
+      "updated": 1556368767
+    },
+    {
+      "id": "5cc44c9aaff09e0000f40bec",
+      "text": "\t\t(この辺りはあまり確定的なことが言えないから削っても良いかも)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556368538,
+      "updated": 1556368781
+    },
+    {
+      "id": "5cc44b7aaff09e0000f40beb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556368251,
+      "updated": 1556368251
+    },
+    {
+      "id": "5cc44da2aff09e0000f40bef",
+      "text": "\t(Javaは2004年にジェネリクス(総称型)の機能を採用した。これは名前的型だったJavaが構造的型とのハイブリッドに進む方向なのだが、それをページを割いて説明するかどうかは要検討)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556368803,
+      "updated": 1556457252
+    },
+    {
+      "id": "5cc44da3aff09e0000f40bf0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556368803,
+      "updated": 1556368803
+    },
+    {
+      "id": "5cc44da3aff09e0000f40bf1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556368803,
+      "updated": 1556368803
+    },
+    {
+      "id": "5cc5a68faff09e00001d8df5",
+      "text": "[「名前的型システムと構造的型システムの違い」加筆案メモ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1556457104,
+      "updated": 1579340151
+    }
+  ]
+}

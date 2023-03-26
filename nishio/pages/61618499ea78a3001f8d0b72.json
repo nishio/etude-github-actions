@@ -1,0 +1,1359 @@
+{
+  "id": "61618499ea78a3001f8d0b72",
+  "title": "Minecraft JE1.17でリソースパックを作るBlock編",
+  "created": 1633780891,
+  "updated": 1640936329,
+  "lines": [
+    {
+      "id": "61618499ea78a3001f8d0b72",
+      "text": "Minecraft JE1.17でリソースパックを作るBlock編",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633780891,
+      "updated": 1633780891
+    },
+    {
+      "id": "6165524faff09e0000645906",
+      "text": "まとめ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030159,
+      "updated": 1634030164
+    },
+    {
+      "id": "61655246aff09e0000645900",
+      "text": "　ブロックの形状を変えるのは難しい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030151,
+      "updated": 1634030152
+    },
+    {
+      "id": "61655247aff09e0000645901",
+      "text": "　　色々な仕様が影響して複雑",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030152,
+      "updated": 1634030152
+    },
+    {
+      "id": "61655288aff09e000095ae3f",
+      "text": "　　\t周辺ブロックの面カリング、向きの有無、照明に対する影響、など",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030217,
+      "updated": 1634030250
+    },
+    {
+      "id": "61655247aff09e0000645902",
+      "text": "　　当たり判定のない物でよいなら、手持ちのアイテムとして作り額縁に入れるのが良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030152,
+      "updated": 1634030152
+    },
+    {
+      "id": "61655247aff09e0000645903",
+      "text": "　　　ただし、上に立てない、物を乗せたりもできない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030152,
+      "updated": 1634030263
+    },
+    {
+      "id": "61655247aff09e0000645904",
+      "text": "　　　例:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030152,
+      "updated": 1634030281
+    },
+    {
+      "id": "61624b1aaff09e00009f82ac",
+      "text": "\t\t\t\t[https://gyazo.com/f6a27ae86f21dc4eb021e61dca6c03b0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633831707,
+      "updated": 1634030286
+    },
+    {
+      "id": "6161e287aff09e00009f82a8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804936,
+      "updated": 1633831710
+    },
+    {
+      "id": "6161e28baff09e00009f82aa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804940,
+      "updated": 1633804940
+    },
+    {
+      "id": "6161e28baff09e00009f82ab",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804940,
+      "updated": 1633804940
+    },
+    {
+      "id": "6161e287aff09e00009f82a9",
+      "text": "---試行錯誤ログ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804936,
+      "updated": 1634030388
+    },
+    {
+      "id": "616184dcaff09e00009f8285",
+      "text": "[https://gyazo.com/fb204414fc85b8e822aca3dba10445f5]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633780956,
+      "updated": 1633780998
+    },
+    {
+      "id": "61618506aff09e00009f8286",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633780998,
+      "updated": 1633780998
+    },
+    {
+      "id": "616185a7aff09e0000368154",
+      "text": "実際のブロックがある位置から上下左右1マスの3×3×3の範囲に直方体を置くことができる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633781159,
+      "updated": 1633781306
+    },
+    {
+      "id": "6161865caff09e0000368157",
+      "text": "　「高さ3にできる」と思い込んでて「あれ？伸ばせないな？」と思ったが下に1マス上に1マスで高さ3になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633781341,
+      "updated": 1633781397
+    },
+    {
+      "id": "6161863aaff09e0000368155",
+      "text": "　直方体は22.5度の倍数でのみ回転できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633781307,
+      "updated": 1633781401
+    },
+    {
+      "id": "6161849baff09e00009f8284",
+      "text": "　元が立方体であるモデルを差し替えた場合、表示がおかしくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633780891,
+      "updated": 1633781453
+    },
+    {
+      "id": "616186cdaff09e0000368158",
+      "text": "　　キリン(?)の足元の地面が消えている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633781453,
+      "updated": 1633781468
+    },
+    {
+      "id": "616186dbaff09e0000368159",
+      "text": "　　これはおそらくブロックが隣接している時に隣接面を描画しない最適化が入っているのだろう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633781468,
+      "updated": 1633781504
+    },
+    {
+      "id": "61618654aff09e0000368156",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633781332,
+      "updated": 1633781332
+    },
+    {
+      "id": "616190d2aff09e00009f8287",
+      "text": "[https://gyazo.com/01d14822b4a4315f290cb4d31805e87a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633784018,
+      "updated": 1633784032
+    },
+    {
+      "id": "616190e0aff09e00009f8288",
+      "text": "　(いいタイミングでクリーパーが来たからF2連打したのだがチャット欄が映ってしまった)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633784032,
+      "updated": 1633784133
+    },
+    {
+      "id": "61619145aff09e000036815b",
+      "text": "　ブロックを宙に浮かせて他のブロックと隣接させないことで見た目をまともにすることはできた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633784133,
+      "updated": 1633784205
+    },
+    {
+      "id": "6161918eaff09e000036815c",
+      "text": "　ただし現状は元々のブロックの位置に当たり判定と影の表示面があるので上に乗ると変",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633784206,
+      "updated": 1633784264
+    },
+    {
+      "id": "616191c9aff09e000036815d",
+      "text": "　　制御する方法はあるはずだが…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633784265,
+      "updated": 1633784278
+    },
+    {
+      "id": "6161e183aff09e00009f829f",
+      "text": "　　\tDiscordできいたとこによるとないらしい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804676,
+      "updated": 1633804705
+    },
+    {
+      "id": "61619116aff09e000036815a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633784087,
+      "updated": 1633784087
+    },
+    {
+      "id": "6161d414aff09e00009f829c",
+      "text": ">ブロックが隣接している時に隣接面を描画しない最適化",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801237,
+      "updated": 1633801238
+    },
+    {
+      "id": "6161d2aaaff09e00009f8289",
+      "text": " code:assets/minecraft/models/block/cube.json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800875,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2e3aff09e00009f829b",
+      "text": " \t{",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800931,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f828b",
+      "text": "     \"parent\": \"block/block\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f828c",
+      "text": "     \"elements\": [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f828d",
+      "text": "         {   \"from\": [ 0, 0, 0 ],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f828e",
+      "text": "             \"to\": [ 16, 16, 16 ],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f828f",
+      "text": "             \"faces\": {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8290",
+      "text": "                 \"down\":  { \"texture\": \"#down\", \"cullface\": \"down\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8291",
+      "text": "                 \"up\":    { \"texture\": \"#up\", \"cullface\": \"up\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8292",
+      "text": "                 \"north\": { \"texture\": \"#north\", \"cullface\": \"north\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8293",
+      "text": "                 \"south\": { \"texture\": \"#south\", \"cullface\": \"south\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8294",
+      "text": "                 \"west\":  { \"texture\": \"#west\", \"cullface\": \"west\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8295",
+      "text": "                 \"east\":  { \"texture\": \"#east\", \"cullface\": \"east\" }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8296",
+      "text": "             }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8297",
+      "text": "         }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8298",
+      "text": "     ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f8299",
+      "text": " \t}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633801246
+    },
+    {
+      "id": "6161d2acaff09e00009f829a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633800877,
+      "updated": 1633800877
+    },
+    {
+      "id": "6161d5e9aff09e0000368162",
+      "text": "Discordで聞いたこの問題を解決するための方法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801705,
+      "updated": 1633801720
+    },
+    {
+      "id": "6161d581aff09e000036815f",
+      "text": "　他のブロックのcullfaceを発動しないモデルをベースにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801601,
+      "updated": 1633801634
+    },
+    {
+      "id": "6161d5a2aff09e0000368160",
+      "text": "　不可視のアーマースタンドのヘッドスロットに入れる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801634,
+      "updated": 1633804766
+    },
+    {
+      "id": "6161d606aff09e0000368163",
+      "text": "　不可視のフレームに入れる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801734,
+      "updated": 1633801753
+    },
+    {
+      "id": "6161e1d8aff09e00009f82a1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804760,
+      "updated": 1633804761
+    },
+    {
+      "id": "6161e1d9aff09e00009f82a2",
+      "text": "他のブロックのcullfaceを発動しないモデル",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804762,
+      "updated": 1633804762
+    },
+    {
+      "id": "6161e1deaff09e00009f82a3",
+      "text": "　ガラス、感圧板、花など",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804767,
+      "updated": 1633804768
+    },
+    {
+      "id": "6161e1deaff09e00009f82a4",
+      "text": "\t花は木材ブロックの上に置けないからガラスか感圧版か…他に何があるのかな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804767,
+      "updated": 1633804771
+    },
+    {
+      "id": "6161e1e3aff09e00009f82a5",
+      "text": "　何が発動しないのかのリストなどはないようだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804772,
+      "updated": 1633804772
+    },
+    {
+      "id": "6161d6fdaff09e0000368165",
+      "text": "　lecternも下の面を消してしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801982,
+      "updated": 1633802006
+    },
+    {
+      "id": "6161d716aff09e0000368166",
+      "text": "　　どのオブジェクトが隣の面を消すかはハードコードされてるっぽい？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633802006,
+      "updated": 1633802038
+    },
+    {
+      "id": "6161d82faff09e0000368168",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633802291,
+      "updated": 1633802291
+    },
+    {
+      "id": "6161d833aff09e0000368169",
+      "text": "ガラスを置き換えてしまうのは微妙なので感圧板かな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633802291,
+      "updated": 1633802320
+    },
+    {
+      "id": "6161d850aff09e000036816b",
+      "text": " とか考えるとどのオブジェクトを潰すかとか振る舞いがどうかとか考えるのめんどくさいからMODでオブジェクトを追加しようぜとなるのがよくわかって来た",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633802320,
+      "updated": 1633802365
+    },
+    {
+      "id": "6161e04baff09e0000368174",
+      "text": " 限られた枠しかないのが面倒だな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804364,
+      "updated": 1633804375
+    },
+    {
+      "id": "6161d57faff09e000036815e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633801599,
+      "updated": 1633801599
+    },
+    {
+      "id": "6161db99aff09e000036816c",
+      "text": "ブロックと違ってアイテムはパラメータによるモデルの切り替えがある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633803161,
+      "updated": 1633803222
+    },
+    {
+      "id": "6161dbd6aff09e000036816e",
+      "text": "　なんでブロックにないんだよ…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633803222,
+      "updated": 1633803238
+    },
+    {
+      "id": "6161dbe6aff09e000036816f",
+      "text": "　なのでアイテムとして作ってワールドに配置する時には不可視のフレームを使うという手がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633803239,
+      "updated": 1633803311
+    },
+    {
+      "id": "6161e1f9aff09e0000368176",
+      "text": "　　これなら枠は無尽蔵になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804794,
+      "updated": 1633804802
+    },
+    {
+      "id": "6161dc2faff09e0000368171",
+      "text": "　　しかしまあ、フレームはブロックにくっついてしか存在できないので…うーむ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633803312,
+      "updated": 1633803362
+    },
+    {
+      "id": "6161dc63aff09e0000368172",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633803363,
+      "updated": 1633803364
+    },
+    {
+      "id": "6161e03aaff09e0000368173",
+      "text": "まあ一番マシそうな感圧版にしておくか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804346,
+      "updated": 1633804390
+    },
+    {
+      "id": "6161e066aff09e0000368175",
+      "text": "　うーわ、感圧版には「置かれた向き」の属性がないので一定の向きにしか置けない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804390,
+      "updated": 1633804418
+    },
+    {
+      "id": "6161dbfeaff09e0000368170",
+      "text": "\t[https://gyazo.com/044628ff5bc595c784fa338c266de4c3]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633803263,
+      "updated": 1633804538
+    },
+    {
+      "id": "6161e0faaff09e00009f829e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804538,
+      "updated": 1633804538
+    },
+    {
+      "id": "6161e216aff09e0000368177",
+      "text": "あと、すごい持ち方してるなw",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804822,
+      "updated": 1633804858
+    },
+    {
+      "id": "6161e239aff09e00009f82a6",
+      "text": "\t[https://gyazo.com/a99f24c058312fdf4a14f14f29be5458]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804858,
+      "updated": 1633804860
+    },
+    {
+      "id": "6161e23baff09e00009f82a7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804860,
+      "updated": 1633804860
+    },
+    {
+      "id": "616670d6aff09e00009f82bc",
+      "text": "[https://www.youtube.com/watch?v=aaJ8XgMAOno]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634103511,
+      "updated": 1634103512
+    },
+    {
+      "id": "616670d8aff09e00009f82be",
+      "text": "Itemにすることにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634103512,
+      "updated": 1634103522
+    },
+    {
+      "id": "616670d6aff09e00009f82bd",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634103511,
+      "updated": 1634103511
+    },
+    {
+      "id": "61624bfcaff09e0000368179",
+      "text": "持ち方は[Blockbench]の右上の「Display」から変更できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633831933,
+      "updated": 1640936329
+    },
+    {
+      "id": "61655347aff09e00003d0ee3",
+      "text": "　本当はこんな持ち方をすると指の力がものすごく必要なのだが、腕を掲げて待つ機能がないので仕方ない。両手で持つと膝で蹴りながら歩いてしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030408,
+      "updated": 1634030408
+    },
+    {
+      "id": "6161e21aaff09e0000368178",
+      "text": " [https://gyazo.com/fc1b39e9d7bf910b08a69551deb9ffb2]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633804827,
+      "updated": 1634030414
+    },
+    {
+      "id": "61624c75aff09e000036817a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832053,
+      "updated": 1633832053
+    },
+    {
+      "id": "61624c75aff09e000036817b",
+      "text": "額縁に入れた時の見た目も調整する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832053,
+      "updated": 1633832073
+    },
+    {
+      "id": "6162492baff09e0000f6eb56",
+      "text": "[https://gyazo.com/e8b8b41b49bcfdd9524e23630647b5a5]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633831212,
+      "updated": 1633831230
+    },
+    {
+      "id": "6162493eaff09e0000f6eb57",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633831230,
+      "updated": 1633831230
+    },
+    {
+      "id": "61624c8baff09e000036817c",
+      "text": "やっと許容できる見た目になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832076,
+      "updated": 1633832086
+    },
+    {
+      "id": "61624aecaff09e0000f6eb58",
+      "text": "　[https://gyazo.com/f6a27ae86f21dc4eb021e61dca6c03b0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633831660,
+      "updated": 1633832093
+    },
+    {
+      "id": "61624c9eaff09e000036817d",
+      "text": "　奥にある小さいマウスパッドのようなものが1/2サイズに縮小した額縁",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832095,
+      "updated": 1633832129
+    },
+    {
+      "id": "61624cc5aff09e000036817e",
+      "text": "　　不可視にするという案があったが見えないものがあるのはそれはそれで罠になりそうだから物を置いた時に隠れるサイズにしてみた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832133,
+      "updated": 1634030445
+    },
+    {
+      "id": "61624d4faff09e0000368180",
+      "text": "　　額縁に入れた物は、入れた後で45度ずつ回転できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832272,
+      "updated": 1633832321
+    },
+    {
+      "id": "61624cf5aff09e000036817f",
+      "text": "　　MacBook自体はブロックではなくアイテムにした(石の斧)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633832181,
+      "updated": 1634030460
+    },
+    {
+      "id": "61626153aff09e00009f82ae",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837398,
+      "updated": 1633837398
+    },
+    {
+      "id": "616261d1aff09e0000368181",
+      "text": "石の斧などの既存のモデルを直接書き換えるのではなく、macbook.jsonを継承させている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837522,
+      "updated": 1633837555
+    },
+    {
+      "id": "616261f2aff09e0000368182",
+      "text": "　Blockbenchで編集する場合に「 MacBookを編集したいからmacbook.jsonを開く」となって自然",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837555,
+      "updated": 1633837620
+    },
+    {
+      "id": "61626223aff09e0000368183",
+      "text": "　　「えーと、MacBookは石の斧だから…」みたいなのは良くない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837604,
+      "updated": 1633837636
+    },
+    {
+      "id": "6165539aaff09e00003d0eed",
+      "text": "code:cybozu/assets/minecraft/models/item/stone_axe.json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030491,
+      "updated": 1634030491
+    },
+    {
+      "id": "6165539aaff09e00003d0eee",
+      "text": " {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030491,
+      "updated": 1634030491
+    },
+    {
+      "id": "6165539aaff09e00003d0eef",
+      "text": "   \"parent\": \"item/macbook\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030491,
+      "updated": 1634030491
+    },
+    {
+      "id": "6165539aaff09e00003d0ef0",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030491,
+      "updated": 1634030491
+    },
+    {
+      "id": "61655395aff09e00003d0eec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030486,
+      "updated": 1634030487
+    },
+    {
+      "id": "61626246aff09e0000368184",
+      "text": "　Q: 参照を`\"minecraft:item/macbook\"`や`\"cybozu:item/macbook\"`にしなくて良いのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837638,
+      "updated": 1633837724
+    },
+    {
+      "id": "6162629baff09e0000368185",
+      "text": "　　A: 今のところそれで問題なく動いている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837724,
+      "updated": 1633961172
+    },
+    {
+      "id": "61644523aff09e00005eefd4",
+      "text": "　　　複数のリソースパックが混在するときには、意図しない干渉を防ぐために名前空間を分けるとよい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961252,
+      "updated": 1633961285
+    },
+    {
+      "id": "61644545aff09e00005eefd5",
+      "text": "　　　今回のケースではこのリソースパックを再配布するわけではなく、むしろ1つのパックにまとめた上でサーバリソースパックとする、だから内部で名前空間分けてもめんどくさいだけ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961285,
+      "updated": 1633961343
+    },
+    {
+      "id": "6162615aaff09e00009f82b4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837405,
+      "updated": 1633837405
+    },
+    {
+      "id": "6162797baff09e0000f6eb5c",
+      "text": "透明テーブル",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633843580,
+      "updated": 1633843591
+    },
+    {
+      "id": "61626158aff09e00009f82b0",
+      "text": "\t[https://gyazo.com/18c3cc10a2fe794141708d0d59904e06]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633837402,
+      "updated": 1633843592
+    },
+    {
+      "id": "61627976aff09e0000f6eb5b",
+      "text": "　最初cobblestoneを置き換えたが、天板が透明にならなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633843575,
+      "updated": 1633844031
+    },
+    {
+      "id": "61627b3faff09e0000f33fa3",
+      "text": "　　glassを置き換えたら透明になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633844031,
+      "updated": 1633844040
+    },
+    {
+      "id": "61627b48aff09e0000f33fa4",
+      "text": "　　テスクチャの透明度を考慮するかどうかのフラグがあると見える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633844040,
+      "updated": 1633844070
+    },
+    {
+      "id": "616445b5aff09e00005eefd8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961398,
+      "updated": 1633961416
+    },
+    {
+      "id": "6162860eaff09e0000f6eb6b",
+      "text": "Minecraftに座れる丸椅子を導入するにはどうすればいいか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846798,
+      "updated": 1633846803
+    },
+    {
+      "id": "6162860faff09e0000f6eb6c",
+      "text": "\tGSitで座れるのはブロックだけ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846799,
+      "updated": 1633846805
+    },
+    {
+      "id": "61628615aff09e0000f6eb6e",
+      "text": "\tブロックのモデルをリソースパックで置き換えても隣接ブロックの面のカリングが発生して見栄えがおかしくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846805,
+      "updated": 1633846809
+    },
+    {
+      "id": "61628619aff09e0000f6eb6f",
+      "text": "\t実際のオブジェクトと表示位置をずらすのは当たり判定の位置を変更できないのでダメ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846809,
+      "updated": 1633846809
+    },
+    {
+      "id": "6162861aaff09e0000f6eb70",
+      "text": "\t解",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846811,
+      "updated": 1633846832
+    },
+    {
+      "id": "6162862faff09e0000f6eb7c",
+      "text": "\t\t床材を限定する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846831,
+      "updated": 1633846835
+    },
+    {
+      "id": "61628632aff09e0000f6eb7d",
+      "text": "\t\t床材の上面のカリングをオフにすれば上にブロックを乗せても大丈夫",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846835,
+      "updated": 1633846835
+    },
+    {
+      "id": "61628625aff09e0000f6eb71",
+      "text": "\t まずオフィスの床っぽい素材を作って、それを引いたところだけ椅子が置ける",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846822,
+      "updated": 1633846836
+    },
+    {
+      "id": "61628625aff09e0000f6eb76",
+      "text": " 別解",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846822,
+      "updated": 1633846828
+    },
+    {
+      "id": "6162862baff09e0000f6eb7b",
+      "text": " \tブロックの基底モデルを変更して上面のカリングをオフにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846828,
+      "updated": 1633846843
+    },
+    {
+      "id": "6162863baff09e0000f6eb7e",
+      "text": " \tしかしこれは地中のブロック全ての上面がレンダリングされる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846843,
+      "updated": 1633846843
+    },
+    {
+      "id": "616553dfaff09e00003d0ef1",
+      "text": " 追記",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030559,
+      "updated": 1634030563
+    },
+    {
+      "id": "616553e3aff09e00003d0ef2",
+      "text": " 　最終的に照明との兼ね合いで「ハーフブロックの上付き時のモデルを置き換え」という結論になった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030564,
+      "updated": 1634030601
+    },
+    {
+      "id": "6162860faff09e0000f6eb6d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846799,
+      "updated": 1633847083
+    },
+    {
+      "id": "61655411aff09e00003d0ef3",
+      "text": "床材限定の試行錯誤:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634030610,
+      "updated": 1634030625
+    },
+    {
+      "id": "61628674aff09e0000f33fa5",
+      "text": "天然に存在しないコンクリートブロック、parentで全面カリングのあるcube_allを参照しているが、ここを差し替える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846901,
+      "updated": 1633847099
+    },
+    {
+      "id": "61628381aff09e0000f6eb5d",
+      "text": "code:assets/minecraft/models/block/gray_concrete.json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846145,
+      "updated": 1633846173
+    },
+    {
+      "id": "61628386aff09e0000f6eb64",
+      "text": " {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846151,
+      "updated": 1633846151
+    },
+    {
+      "id": "61628387aff09e0000f6eb65",
+      "text": "   \"parent\": \"minecraft:block/cube_all\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846151,
+      "updated": 1633846151
+    },
+    {
+      "id": "61628387aff09e0000f6eb66",
+      "text": "   \"textures\": {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846151,
+      "updated": 1633846151
+    },
+    {
+      "id": "61628387aff09e0000f6eb67",
+      "text": "     \"all\": \"minecraft:block/gray_concrete\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846151,
+      "updated": 1633846151
+    },
+    {
+      "id": "61628387aff09e0000f6eb68",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846151,
+      "updated": 1633846151
+    },
+    {
+      "id": "61628387aff09e0000f6eb69",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846151,
+      "updated": 1633846151
+    },
+    {
+      "id": "61628740aff09e0000f6eb7f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847105,
+      "updated": 1633847107
+    },
+    {
+      "id": "61628752aff09e0000f33fa6",
+      "text": "上面のカリングを行わないブロック",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847123,
+      "updated": 1633847139
+    },
+    {
+      "id": "61628743aff09e0000f6eb81",
+      "text": "code:json",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847107,
+      "updated": 1633847116
+    },
+    {
+      "id": "61628746aff09e0000f6eb82",
+      "text": " {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb83",
+      "text": "   \"parent\": \"block/block\",",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb84",
+      "text": "   \"elements\": [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb85",
+      "text": "     {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb86",
+      "text": "       \"from\": [0, 0, 0],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb87",
+      "text": "       \"to\": [16, 16, 16],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb88",
+      "text": "       \"faces\": {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb89",
+      "text": "         \"down\": { \"texture\": \"#all\", \"cullface\": \"down\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb8a",
+      "text": "         \"up\": { \"texture\": \"#all\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb8b",
+      "text": "         \"north\": { \"texture\": \"#all\", \"cullface\": \"north\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb8c",
+      "text": "         \"south\": { \"texture\": \"#all\", \"cullface\": \"south\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb8d",
+      "text": "         \"west\": { \"texture\": \"#all\", \"cullface\": \"west\" },",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb8e",
+      "text": "         \"east\": { \"texture\": \"#all\", \"cullface\": \"east\" }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb8f",
+      "text": "       }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb90",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb91",
+      "text": "   ],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb92",
+      "text": "   \"textures\": {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb93",
+      "text": "     \"particle\": \"#all\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb94",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb95",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847111
+    },
+    {
+      "id": "61628747aff09e0000f6eb96",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847111,
+      "updated": 1633847112
+    },
+    {
+      "id": "61628740aff09e0000f6eb80",
+      "text": "右や左の椅子では足元に穴が空いてるが、コンクリートの上に置かれた真ん中の椅子では大丈夫",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847105,
+      "updated": 1633847189
+    },
+    {
+      "id": "61628382aff09e0000f6eb5e",
+      "text": "[https://gyazo.com/2dbb6fbc9512d31a81300cb62f0dbe35]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846146,
+      "updated": 1633846742
+    },
+    {
+      "id": "616285d6aff09e0000f6eb6a",
+      "text": "だが、なんか色が違うな…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633846742,
+      "updated": 1633847201
+    },
+    {
+      "id": "616287a1aff09e0000f33fa9",
+      "text": " あっ、そうか、ブロックと隣接してる扱いだから照明が0なのか！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847201,
+      "updated": 1633847228
+    },
+    {
+      "id": "61628aa8aff09e0000f6eb98",
+      "text": " 上付きスラブなら足元が暗くならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847977,
+      "updated": 1633847977
+    },
+    {
+      "id": "6162879aaff09e0000f33fa7",
+      "text": "\t[https://gyazo.com/7e48e11b5a4e971a7368b9a319a95c50]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847194,
+      "updated": 1633847969
+    },
+    {
+      "id": "61628aa1aff09e0000f6eb97",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633847969,
+      "updated": 1633847969
+    },
+    {
+      "id": "61628d45aff09e00003dfea9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633848646,
+      "updated": 1633848646
+    },
+    {
+      "id": "61628d57aff09e00003dfeaa",
+      "text": "[https://gyazo.com/a9568e02e7146f87f7aa19236f210969]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633848664,
+      "updated": 1633848667
+    },
+    {
+      "id": "61628d5aaff09e00003dfeab",
+      "text": "[https://gyazo.com/29ad883c9626a0252ab290d04fba3a30]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633848667,
+      "updated": 1633848752
+    },
+    {
+      "id": "61628dafaff09e00003dfeac",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633848752,
+      "updated": 1633848752
+    },
+    {
+      "id": "616445bdaff09e00005eefd9",
+      "text": "ローカルのリソースパックのファイルを更新してF3+Tでリロードしてテストし、完成したらzipでまとめてサーバリソースパックにする、という開発フローを取っている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961405,
+      "updated": 1633961406
+    },
+    {
+      "id": "616445efaff09e00005eefdb",
+      "text": "　サーバリソースパックの更新プロセス",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961456,
+      "updated": 1633961537
+    },
+    {
+      "id": "616445fbaff09e00005eefdc",
+      "text": "　　設定ファイルを書き換える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961468,
+      "updated": 1633961473
+    },
+    {
+      "id": "61644602aff09e00005eefdd",
+      "text": "　　サーバを再起動する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961474,
+      "updated": 1633961484
+    },
+    {
+      "id": "6164460baff09e00005eefde",
+      "text": "　　クライアントが接続し直すと「サーバリソースパックを受け入れるか？」と聞かれる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961484,
+      "updated": 1633961501
+    },
+    {
+      "id": "6164461caff09e00005eefdf",
+      "text": "　　Proceedを選ぶがここではリソースパックがロードされない(え？)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961501,
+      "updated": 1633961531
+    },
+    {
+      "id": "6164462aaff09e00005eefe0",
+      "text": "　　次に接続したときにリソースパックのダウンロードと適用が行われる(なんでだよ)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961514,
+      "updated": 1633961567
+    },
+    {
+      "id": "6164465eaff09e00005eefe1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961567,
+      "updated": 1633961569
+    },
+    {
+      "id": "61644664aff09e00005eefe2",
+      "text": "[https://gyazo.com/51059e841f25cd90ec23016ec290a156]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961573,
+      "updated": 1633961671
+    },
+    {
+      "id": "616446c7aff09e0000ebca23",
+      "text": "元ネタ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961671,
+      "updated": 1633962148
+    },
+    {
+      "id": "616448a4aff09e0000ebca24",
+      "text": "[https://gyazo.com/d9ec23684a555ac1a7ea64b7fbafc747]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633962148,
+      "updated": 1633962150
+    },
+    {
+      "id": "616448a6aff09e0000ebca25",
+      "text": "[https://cybozushiki.cybozu.co.jp/articles/m001002.html カフェにBARに公園も！ サイボウズの日本橋オフィスが実用性と居心地を見事に兼ね備えていてすごい | サイボウズ式]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633962150,
+      "updated": 1633962159
+    },
+    {
+      "id": "6164492caff09e0000ebca28",
+      "text": "\t組み合わせて使えるように設計したから贅沢に3画面使って作業できます",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633962285,
+      "updated": 1633962286
+    },
+    {
+      "id": "616448afaff09e0000ebca26",
+      "text": "\t[https://gyazo.com/4d8ccf80f89415d429453c114f5e5de7]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633962159,
+      "updated": 1633962274
+    },
+    {
+      "id": "61644922aff09e0000ebca27",
+      "text": "\tテクスチャを作るのが面倒という理由でキーボードは全員HHKB無刻印",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633962274,
+      "updated": 1633962296
+    },
+    {
+      "id": "616446a8aff09e0000ebca22",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961640,
+      "updated": 1633961640
+    },
+    {
+      "id": "616445bdaff09e00005eefda",
+      "text": "https://twitter.com/nishio/status/1447569969806405643?s=20",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633961406,
+      "updated": 1633973965
+    },
+    {
+      "id": "616476ccaff09e0000ebca2b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633973965,
+      "updated": 1633973965
+    },
+    {
+      "id": "616476abaff09e0000ebca29",
+      "text": "https://twitter.com/nishio/status/1447585160761798666?s=20",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633973932,
+      "updated": 1633973932
+    },
+    {
+      "id": "616476acaff09e0000ebca2a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1633973932,
+      "updated": 1633973932
+    },
+    {
+      "id": "61667423aff09e00009f82bf",
+      "text": "https://twitter.com/nishio/status/1448145564302860297",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634104356,
+      "updated": 1634104379
+    },
+    {
+      "id": "6166743baff09e00009f82c0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634104379,
+      "updated": 1634104379
+    }
+  ]
+}

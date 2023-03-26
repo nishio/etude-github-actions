@@ -1,0 +1,330 @@
+{
+  "id": "60f46493aca341001c33e31e",
+  "title": "React+TypeScriptで正しいイベントの型を知る",
+  "created": 1626629270,
+  "updated": 1626642378,
+  "lines": [
+    {
+      "id": "60f46493aca341001c33e31e",
+      "text": "React+TypeScriptで正しいイベントの型を知る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629270,
+      "updated": 1626629310
+    },
+    {
+      "id": "60f46560aff09e00002e5f4c",
+      "text": "イベントの型を正しく付けることは大事なのだけど、何が正しい型なのかわからなくて雑に付けてしまいがち(過去の自分の失敗談)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629473,
+      "updated": 1626630906
+    },
+    {
+      "id": "60f46592aff09e00002e5f4d",
+      "text": "正しいイベントの型を覚えたりする必要はなくて「明らかに正しくないvoidなどの型にして、TypeScriptが正解を教えてくれるのでそれを使う」ってだけで良い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629523,
+      "updated": 1626630949
+    },
+    {
+      "id": "60f464beaff09e00002e5f4b",
+      "text": "[https://gyazo.com/b69ada33003d39d9ef432c8a51b40987]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629310,
+      "updated": 1626629445
+    },
+    {
+      "id": "60f46545aff09e0000b5774d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629445,
+      "updated": 1626629445
+    },
+    {
+      "id": "60f46735aff09e00002e5f4e",
+      "text": "文脈",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629945,
+      "updated": 1626629946
+    },
+    {
+      "id": "60f4675eaff09e0000b5774e",
+      "text": ">[qnighy https://twitter.com/qnighy/status/1416745698918244356] e.​target間違って使われがち問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629983,
+      "updated": 1626630012
+    },
+    {
+      "id": "60f46785aff09e0000b5774f",
+      "text": "> [https://gyazo.com/afa6e2820782a7cef3293d9afb83dc32]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630022,
+      "updated": 1626630024
+    },
+    {
+      "id": "60f46788aff09e0000b57750",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630024,
+      "updated": 1626630024
+    },
+    {
+      "id": "60f46738aff09e00002e5f4f",
+      "text": "[nishio https://twitter.com/nishio/status/1416805618686435328] これ最近fooに直接eを渡した上で補完候補見て「ん？currentTarget？知らない子だな、でも期待した型がついてるからこれでいいか、後で調べよ」と思って調べてなかったことを思い出した。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626629946,
+      "updated": 1626630055
+    },
+    {
+      "id": "60f4679baff09e0000b57751",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630044,
+      "updated": 1626630153
+    },
+    {
+      "id": "60f467deaff09e0000b57753",
+      "text": " const onDragStart = (event: React.DragEvent<HTMLDivElement>) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630111,
+      "updated": 1626630111
+    },
+    {
+      "id": "60f467dfaff09e0000b57754",
+      "text": "     event.target.clientHeight // あれ？ないな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630111,
+      "updated": 1626630120
+    },
+    {
+      "id": "60f467e7aff09e0000b57757",
+      "text": "     event.currentTarget // これか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630120,
+      "updated": 1626630125
+    },
+    {
+      "id": "60f467dfaff09e0000b57755",
+      "text": "という流れ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630111,
+      "updated": 1626630127
+    },
+    {
+      "id": "60f467ddaff09e0000b57752",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630110,
+      "updated": 1626630110
+    },
+    {
+      "id": "60f46858aff09e00002e5f51",
+      "text": "型情報",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630233,
+      "updated": 1626630237
+    },
+    {
+      "id": "60f4680faff09e0000b57758",
+      "text": "`event.target: EventTarget`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630160,
+      "updated": 1626630246
+    },
+    {
+      "id": "60f46830aff09e0000b5775a",
+      "text": "`event.currentTarget: EventTarget & HTMLDivElement`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630192,
+      "updated": 1626630225
+    },
+    {
+      "id": "60f46818aff09e0000b57759",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630169,
+      "updated": 1626630169
+    },
+    {
+      "id": "60f46874aff09e0000b5775d",
+      "text": "MDN",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630260,
+      "updated": 1626630261
+    },
+    {
+      "id": "60f46875aff09e0000b5775e",
+      "text": "\t[Event.currentTarget https://developer.mozilla.org/ja/docs/Web/API/Event/currentTarget]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630261,
+      "updated": 1626630287
+    },
+    {
+      "id": "60f4687faff09e0000b5775f",
+      "text": "\t >イベントは DOM を横断するので、イベントの現在のターゲットを識別します。イベントが発生した要素を特定する event.target とは対照的に、常にイベントハンドラがアタッチされた要素を参照します。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630271,
+      "updated": 1626630288
+    },
+    {
+      "id": "60f46891aff09e0000b57760",
+      "text": "\t[Event.target https://developer.mozilla.org/ja/docs/Web/API/Event/target]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630290,
+      "updated": 1626630309
+    },
+    {
+      "id": "60f4689aaff09e0000b57762",
+      "text": " \t>イベントを発生させたオブジェクトへの参照です。 イベントハンドラーがバブリング、またはキャプチャフェーズの間に呼び出されたとき、event.currentTarget とは異なります。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630298,
+      "updated": 1626630311
+    },
+    {
+      "id": "60f46891aff09e0000b57761",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630290,
+      "updated": 1626630290
+    },
+    {
+      "id": "60f46866aff09e0000b5775b",
+      "text": "あー、なるほど。targetは子要素のどれにもなり得るがcurrentTargetはイベントハンドラのついてるDOM要素になるわけか。だから`event: React.DragEvent<HTMLDivElement>`の型引数による「`HTMLDivElement`だ」って情報が、targetには影響せずcurrentTargetにはついたわけね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630247,
+      "updated": 1626630382
+    },
+    {
+      "id": "60f46872aff09e0000b5775c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630259,
+      "updated": 1626630259
+    },
+    {
+      "id": "60f468efaff09e0000b57763",
+      "text": "これって「eventの型を正しく付けていることによって無意識に落とし穴から守られた」ということなのだけど、最初にTypeScript+Reactで見様見真似でプロトタイプ作った時はeventの型を正しくつけてなかったと思う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630383,
+      "updated": 1626630486
+    },
+    {
+      "id": "60f46901aff09e0000b57765",
+      "text": "implicit anyだと警告されて明示的にanyにしたりevent: Eventってしたり。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630402,
+      "updated": 1626630402
+    },
+    {
+      "id": "60f46962aff09e0000b57768",
+      "text": "[https://gyazo.com/db8b07cad53478a411b439df60485031]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630498,
+      "updated": 1626630498
+    },
+    {
+      "id": "60f46965aff09e0000b57769",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630502,
+      "updated": 1626630502
+    },
+    {
+      "id": "60f468f6aff09e0000b57764",
+      "text": "「implicit any」になるということはつまり「型情報が推測できないから人間がきちんとつけてね、変なのつけても検知できないよ」ということであり、実は一番きちんとやらなきゃいけないところなのに、雑に型をつけてしまい、その結果イベントハンドラの中身の実装で型の支援が得られなかったりする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630391,
+      "updated": 1626630768
+    },
+    {
+      "id": "60f4695caff09e0000b57767",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630492,
+      "updated": 1626630681
+    },
+    {
+      "id": "60f46a19aff09e0000b5776b",
+      "text": "   const onDragStart = (event: Event /* NG: 適切な型ではないが警告されない */) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630682,
+      "updated": 1626642378
+    },
+    {
+      "id": "60f46a1aaff09e0000b5776c",
+      "text": "     console.log(event.currentTarget.clientHeight); // ここでエラーになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630682,
+      "updated": 1626630746
+    },
+    {
+      "id": "60f46a1aaff09e0000b5776e",
+      "text": "     // Object is possibly 'null'.  Event.currentTarget: EventTarget | null",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630682,
+      "updated": 1626630682
+    },
+    {
+      "id": "60f46a1aaff09e0000b5776f",
+      "text": "     // Property 'clientHeight' does not exist on type 'EventTarget'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630682,
+      "updated": 1626630682
+    },
+    {
+      "id": "60f46a1aaff09e0000b57770",
+      "text": "   };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630682,
+      "updated": 1626630682
+    },
+    {
+      "id": "60f46a1aaff09e0000b57771",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630682,
+      "updated": 1626630782
+    },
+    {
+      "id": "60f46a94aff09e0000b57772",
+      "text": "React+TypeScriptで正しいイベントの型を知る(このページ)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630805,
+      "updated": 1626630838
+    },
+    {
+      "id": "60f46a94aff09e0000b57774",
+      "text": "このテクニックに気づいてから正しい型をつけることが楽チンになったのだけど、こういうことってどこで学ぶのか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626630805,
+      "updated": 1626630805
+    },
+    {
+      "id": "60f46b58aff09e0000b57775",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626631001,
+      "updated": 1626631001
+    },
+    {
+      "id": "60f46b58aff09e0000b57776",
+      "text": "[TypeScript]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626631001,
+      "updated": 1626631005
+    },
+    {
+      "id": "60f46b59aff09e0000b57777",
+      "text": "[React]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626631002,
+      "updated": 1626631010
+    },
+    {
+      "id": "60f46b60aff09e0000b57778",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1626631009,
+      "updated": 1626631009
+    }
+  ]
+}

@@ -1,0 +1,470 @@
+{
+  "id": "5ffd3bbb5da0a5001c78a847",
+  "title": "辺の深さ優先探索",
+  "created": 1610431833,
+  "updated": 1610433511,
+  "lines": [
+    {
+      "id": "5ffd3bbb5da0a5001c78a847",
+      "text": "辺の深さ優先探索",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431833,
+      "updated": 1610431833
+    },
+    {
+      "id": "5ffd3d59aff09e00006e817a",
+      "text": "[https://gyazo.com/1957f5e7122ed77931ef8d0dbf313033]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431833,
+      "updated": 1610431862
+    },
+    {
+      "id": "5ffd3d75aff09e00003dc8b1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431862,
+      "updated": 1610431862
+    },
+    {
+      "id": "5ffd4034aff09e00006e818e",
+      "text": "[ARC111]D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432564,
+      "updated": 1610432568
+    },
+    {
+      "id": "5ffd3d79aff09e00003dc8b2",
+      "text": "　無向グラフが与えられて、強連結成分になるように辺に向き付けをしたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431865,
+      "updated": 1610431942
+    },
+    {
+      "id": "5ffd3dc6aff09e00003dc8b3",
+      "text": "　1は頂点の深さ優先探索、これだと通らない辺がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431943,
+      "updated": 1610431962
+    },
+    {
+      "id": "5ffd3dd9aff09e00003dc8b4",
+      "text": "　3が正しい辺の深さ優先探索",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431962,
+      "updated": 1610431982
+    },
+    {
+      "id": "5ffd3deeaff09e00003dc8b5",
+      "text": "　2はうっかり間違えたもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431982,
+      "updated": 1610431991
+    },
+    {
+      "id": "5ffd40a5aff09e00003dc8b7",
+      "text": "　　将来訪問する辺をスタックに積むタイミングで塗ってしまった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432684,
+      "updated": 1610432714
+    },
+    {
+      "id": "5ffd3e70aff09e00003dc8b6",
+      "text": "　　Cの頂点から出る辺がなくなっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432117,
+      "updated": 1610432132
+    },
+    {
+      "id": "5ffd3d75aff09e00003dc8b0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610431862,
+      "updated": 1610431862
+    },
+    {
+      "id": "5ffd4000aff09e00006e817b",
+      "text": "\t3",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432513,
+      "updated": 1610432514
+    },
+    {
+      "id": "5ffd4002aff09e00006e817d",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432515,
+      "updated": 1610432517
+    },
+    {
+      "id": "5ffd4000aff09e00006e817c",
+      "text": "   for v1, v2 in edgelist:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432513,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e817e",
+      "text": "       if (v1, v2) not in answer:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e817f",
+      "text": "           answer[(v1, v2)] = \"->\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8180",
+      "text": "           answer[(v2, v1)] = \"<-\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8181",
+      "text": "\t\t\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432530
+    },
+    {
+      "id": "5ffd4005aff09e00006e8182",
+      "text": "           def visit(e):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8183",
+      "text": "               (v1, v2) = e",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8184",
+      "text": "               for v3 in edges[v2]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8185",
+      "text": "                   if v3 == v1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8186",
+      "text": "                       continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8187",
+      "text": "                   if (v2, v3) in answer:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8188",
+      "text": "                       continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e8189",
+      "text": "                   answer[(v2, v3)] = \"->\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e818a",
+      "text": "                   answer[(v3, v2)] = \"<-\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e818b",
+      "text": "                   visit((v2, v3))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e818c",
+      "text": "           visit((v1, v2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432528
+    },
+    {
+      "id": "5ffd4005aff09e00006e818d",
+      "text": "\t2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432518,
+      "updated": 1610432645
+    },
+    {
+      "id": "5ffd4085aff09e00006e8190",
+      "text": " \tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432645,
+      "updated": 1610432651
+    },
+    {
+      "id": "5ffd4088aff09e00006e8191",
+      "text": "  \tfor v1, v2 in edgelist:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432649,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a0",
+      "text": "       if (v1, v2) not in answer:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a1",
+      "text": "           answer[(v1, v2)] = \"->\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a2",
+      "text": "           answer[(v2, v1)] = \"<-\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a3",
+      "text": "           stack = [(v1, v2)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a4",
+      "text": "           while stack:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a5",
+      "text": "               v1, v2 = stack.pop()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a6",
+      "text": "               for v3 in edges[v2]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a7",
+      "text": "                   if v3 == v1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a8",
+      "text": "                       continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81a9",
+      "text": "                   if (v2, v3) in answer:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81aa",
+      "text": "                       continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81ab",
+      "text": "                   answer[(v2, v3)] = \"->\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81ac",
+      "text": "                   answer[(v3, v2)] = \"<-\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81ad",
+      "text": "                   stack.append((v2, v3))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610432883
+    },
+    {
+      "id": "5ffd4172aff09e00006e81ae",
+      "text": "\t2を再帰呼び出しなしで実装したもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432883,
+      "updated": 1610433077
+    },
+    {
+      "id": "5ffd424eaff09e00003dc8b8",
+      "text": "\t　塗るタイミングを実際に辺をたどったタイミングにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433103,
+      "updated": 1610433116
+    },
+    {
+      "id": "5ffd425baff09e00003dc8b9",
+      "text": "\t　既に塗った辺がスタックに入ってることがあるので、塗られてないことをチェックしてから塗る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433116,
+      "updated": 1610433168
+    },
+    {
+      "id": "5ffd4218aff09e00006e81af",
+      "text": "\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433048,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b0",
+      "text": "\t\t for v1, v2 in edgelist:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b1",
+      "text": "       if (v1, v2) not in answer:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b2",
+      "text": "           stack = [(v1, v2)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b3",
+      "text": "           while stack:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b4",
+      "text": "               v1, v2 = stack.pop()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b5",
+      "text": "               if (v1, v2) in answer:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b6",
+      "text": "                   continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b7",
+      "text": "               answer[(v1, v2)] = \"->\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b8",
+      "text": "               answer[(v2, v1)] = \"<-\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81b9",
+      "text": "               for v3 in edges[v2]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81ba",
+      "text": "                   if v3 == v1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81bb",
+      "text": "                       continue",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433052
+    },
+    {
+      "id": "5ffd421caff09e00006e81bc",
+      "text": "                   stack.append((v2, v3))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433245
+    },
+    {
+      "id": "5ffd421caff09e00006e81bf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433052,
+      "updated": 1610433054
+    },
+    {
+      "id": "5ffd403eaff09e00006e818f",
+      "text": "[深さ優先探索]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610432575,
+      "updated": 1610433511
+    },
+    {
+      "id": "5ffd43e6aff09e00006e81c0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610433511,
+      "updated": 1610433511
+    }
+  ]
+}

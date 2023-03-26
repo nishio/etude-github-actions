@@ -1,0 +1,435 @@
+{
+  "id": "5def2dc1b3441c0017eb19f5",
+  "title": "TypeScriptで対話的に実装",
+  "created": 1575955908,
+  "updated": 1582699657,
+  "lines": [
+    {
+      "id": "5def2dc1b3441c0017eb19f5",
+      "text": "TypeScriptで対話的に実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955908,
+      "updated": 1575955916
+    },
+    {
+      "id": "5def2dd1aff09e000025a829",
+      "text": "良いやり方かどうかはさておき、手順をメモしておく",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955921,
+      "updated": 1575955976
+    },
+    {
+      "id": "5def2e08aff09e000025a82d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955976,
+      "updated": 1575955976
+    },
+    {
+      "id": "5def2e08aff09e000025a82e",
+      "text": "\t選択範囲をJSONに吐き出す実装をしたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955976,
+      "updated": 1575955987
+    },
+    {
+      "id": "5def2e13aff09e000025a82f",
+      "text": "\t対話的に色々試してからどう実装するか決めたい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955987,
+      "updated": 1575956006
+    },
+    {
+      "id": "5def2e2aaff09e000025a830",
+      "text": "\t選択範囲はどこにあるか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956011,
+      "updated": 1575956016
+    },
+    {
+      "id": "5def2e45aff09e000025a832",
+      "text": "\t\t`const App = (props: any) => {...}`の中で",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956037,
+      "updated": 1575956056
+    },
+    {
+      "id": "5def2e30aff09e000025a831",
+      "text": "\t\t\t`let [selection, setSelection] = useState<PaperItem[]>([]);`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956016,
+      "updated": 1575956056
+    },
+    {
+      "id": "5def2de3aff09e000025a82c",
+      "text": "\t\t関数のローカルスコープなので露出してない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955939,
+      "updated": 1575956057
+    },
+    {
+      "id": "5def2e54aff09e000025a833",
+      "text": "\t\t`window.debug.selection = selection;`で露出させる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956053,
+      "updated": 1575956083
+    },
+    {
+      "id": "5def2e73aff09e000025a834",
+      "text": "\t\t\t関連: [TypeScriptでwindowに新しいプロパティを足す]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956083,
+      "updated": 1575956179
+    },
+    {
+      "id": "5def2ed3aff09e000025a835",
+      "text": "\t\t\tいちいち宣言しなくても良いように型をanyにしたwindow.debugを用意してある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956179,
+      "updated": 1575956197
+    },
+    {
+      "id": "5e561478aff09e0000fe719d",
+      "text": "\t\t\t@ts-ignoreでもいい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1582699641,
+      "updated": 1582699657
+    },
+    {
+      "id": "5def2dd9aff09e000025a82b",
+      "text": "\tオブジェクトをプレーンなオブジェクトに変換するコードはどこにあるか",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955930,
+      "updated": 1575956228
+    },
+    {
+      "id": "5def2ef0aff09e000025a836",
+      "text": "\t\t`const stateItemToFirestore = (x: StateItem) => {...}`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956208,
+      "updated": 1575956252
+    },
+    {
+      "id": "5def2dd6aff09e000025a82a",
+      "text": "\t\tこれも関数定義の後で`window.debug.stateItemToFirestore = stateItemToFirestore`...",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575955927,
+      "updated": 1575956334
+    },
+    {
+      "id": "5def2f6daff09e000025a838",
+      "text": "\t\t\tしようと思ったがNG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956334,
+      "updated": 1575956339
+    },
+    {
+      "id": "5def2f72aff09e000025a839",
+      "text": "\t\t\t\twindow.debugを作るコードよりもこの関数定義のコードの方が先に走るため",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956339,
+      "updated": 1575956390
+    },
+    {
+      "id": "5def2f3aaff09e000025a837",
+      "text": "\t\t`export stateItemToFirestore`する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956284,
+      "updated": 1575956481
+    },
+    {
+      "id": "5def2fddaff09e000025a83c",
+      "text": "\t\t\twindow.debugを作っているコードの側で、それをimportして露出させる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956445,
+      "updated": 1575956483
+    },
+    {
+      "id": "5def2ffbaff09e000025a83e",
+      "text": "\t\t[オブジェクトを露出させる方法に関する考察]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956476,
+      "updated": 1575959079
+    },
+    {
+      "id": "5def316faff09e000025a846",
+      "text": "\t続き",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956848,
+      "updated": 1575956862
+    },
+    {
+      "id": "5def317eaff09e000025a847",
+      "text": "\t\t`window.debug.stateItemToFirestore(window.debug.selection)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956862,
+      "updated": 1575956905
+    },
+    {
+      "id": "5def31aaaff09e000025a848",
+      "text": "\t\t\tエラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956906,
+      "updated": 1575956908
+    },
+    {
+      "id": "5def31acaff09e000025a849",
+      "text": "\t\t`window.debug.stateItemToFirestore(window.debug.selection[0])`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956909,
+      "updated": 1575956928
+    },
+    {
+      "id": "5def31c2aff09e000025a84a",
+      "text": "\t\t\tエラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956930,
+      "updated": 1575956932
+    },
+    {
+      "id": "5def31c3aff09e000025a84b",
+      "text": "\t\t`window.debug.stateItemToFirestore(window.debug.selection[0]).item`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956932,
+      "updated": 1575956949
+    },
+    {
+      "id": "5def3159aff09e000025a845",
+      "text": "\t\t\tOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956826,
+      "updated": 1575956951
+    },
+    {
+      "id": "5def31d7aff09e000025a84d",
+      "text": "\t\tこれは呼び出す時に引数の型を間違えている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956952,
+      "updated": 1575957022
+    },
+    {
+      "id": "5def321eaff09e000025a84e",
+      "text": "\t\t\tTypeScriptとして記述してたら型エラーで理由がわかった？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957022,
+      "updated": 1575957025
+    },
+    {
+      "id": "5def3222aff09e000025a84f",
+      "text": "\t\t\t→NO、`window.debug:any`に入れた時点で型情報は失われている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957026,
+      "updated": 1575957050
+    },
+    {
+      "id": "5def31d7aff09e000025a84c",
+      "text": "\t\t`JSON.stringify(...)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575956951,
+      "updated": 1575957104
+    },
+    {
+      "id": "5def326aaff09e000025a850",
+      "text": "\t\t\t目的の文字列が得られた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957099,
+      "updated": 1575957111
+    },
+    {
+      "id": "5def329caff09e000025a855",
+      "text": "\t\t次はこれをMapに戻す方法を考える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957149,
+      "updated": 1575957160
+    },
+    {
+      "id": "5def329caff09e000025a856",
+      "text": "\t`updateStateItem`がexportされているのでそれを露出する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957149,
+      "updated": 1575957596
+    },
+    {
+      "id": "5def345caff09e000025a857",
+      "text": "\t\t→単純に読んでエラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957596,
+      "updated": 1575957665
+    },
+    {
+      "id": "5def34a0aff09e000025a858",
+      "text": "\t`firestoreToStateItem`が必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957665,
+      "updated": 1575957709
+    },
+    {
+      "id": "5def34ccaff09e000025a859",
+      "text": "\t\tできた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957709,
+      "updated": 1575957769
+    },
+    {
+      "id": "5def3508aff09e000025a85a",
+      "text": "\t\t[https://gyazo.com/5eb6bca96b3a751c15a074ec1a180cfc]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957769,
+      "updated": 1575957773
+    },
+    {
+      "id": "5def350aaff09e000025a85b",
+      "text": "\tTypeScriptのコードにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957770,
+      "updated": 1575959915
+    },
+    {
+      "id": "5def3d6baff09e000025a862",
+      "text": "\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959915,
+      "updated": 1575959917
+    },
+    {
+      "id": "5def3d6faff09e000025a864",
+      "text": "\t\texport const exportSelectedItemsAsJSON = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959920,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a866",
+      "text": "    const r = selectedItems.map((x) =>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a867",
+      "text": "      stateItemToFirestore(x.item)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a868",
+      "text": "    );",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a869",
+      "text": "    return JSON.stringify(r);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a86a",
+      "text": "  };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a86b",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a86c",
+      "text": "  export const importItemsFromJSON = (json: string) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a86d",
+      "text": "    const xs = JSON.parse(json);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a86e",
+      "text": "    xs.forEach((x: object) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a86f",
+      "text": "      updateStateItem(null, firestoreToStateItem(x))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a870",
+      "text": "    })",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d7aaff09e000025a871",
+      "text": "  };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959931,
+      "updated": 1575959931
+    },
+    {
+      "id": "5def3d6faff09e000025a865",
+      "text": "\tこれで期待通りに動く: `debug.importItemsFromJSON(debug.exportSelectedItemsAsJSON())`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959920,
+      "updated": 1575959965
+    },
+    {
+      "id": "5def3276aff09e000025a853",
+      "text": "\tでも`debug.exportSelectedItemsAsJSON()`でコンソールに表示されたJSONをコピペしても壊れてしまう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575957111,
+      "updated": 1575960056
+    },
+    {
+      "id": "5def3e0eaff09e000025a873",
+      "text": "\t\tまあ開発者コンソールでJSONが正しくパースされなくても仕方ない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575960078,
+      "updated": 1575960102
+    },
+    {
+      "id": "5def3e26aff09e000025a874",
+      "text": "\t`localStorage[\"tmp\"] = debug.exportSelectedItemsAsJSON()`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575960102,
+      "updated": 1575960384
+    },
+    {
+      "id": "5def3f3faff09e000025a875",
+      "text": "\t別ウィンドウで`debug.importItemsFromJSON(localStorage[\"tmp\"])`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575960384,
+      "updated": 1575960404
+    },
+    {
+      "id": "5def3f55aff09e000025a876",
+      "text": "\t正しく動いた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575960405,
+      "updated": 1575960408
+    },
+    {
+      "id": "5def3d61aff09e000025a860",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1575959906,
+      "updated": 1575959906
+    }
+  ]
+}

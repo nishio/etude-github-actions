@@ -1,0 +1,2374 @@
+{
+  "id": "5ef03221db29f40023c1698c",
+  "title": "テストドリブンで変形26進法の実装",
+  "created": 1592799881,
+  "updated": 1617130810,
+  "lines": [
+    {
+      "id": "5ef03221db29f40023c1698c",
+      "text": "テストドリブンで変形26進法の実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592800981
+    },
+    {
+      "id": "5ef036d9aff09e00003b81f8",
+      "text": "1, 2, 3, ..., 26, 27, 28, ... を a, b, c, ..., z, aa, ab, ...に変換する問題が出題された",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800985,
+      "updated": 1592801663
+    },
+    {
+      "id": "5ef032dcaff09e00003b80ba",
+      "text": "https://atcoder.jp/contests/abc171/tasks/abc171_c",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799964,
+      "updated": 1592799964
+    },
+    {
+      "id": "5ef036c6aff09e00003b81f5",
+      "text": "\ta-z以外に空白文字が出てくるのだから当然26進数ではないし、空白文字が途中に出てこないのだから27進数でもないわけなのだが、Twitterを見てると26進数だと思い込んだせいでエンバグした人が多そうな気配",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800967,
+      "updated": 1617130371
+    },
+    {
+      "id": "5ef036c7aff09e00003b81f7",
+      "text": "\t僕は、あやふやな「26進数に違いない」という「解釈」に基づくのではなく、テストケースとその成功失敗という「事実」に基づいて開発した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800968,
+      "updated": 1592801736
+    },
+    {
+      "id": "5ef039bcaff09e0000ac26cf",
+      "text": "\tこのテストドリブンの話はわりとも面白い気がするので忘れる前にまとめてみよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801724,
+      "updated": 1592801748
+    },
+    {
+      "id": "5ef0370faff09e00003b81fa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801040,
+      "updated": 1592801040
+    },
+    {
+      "id": "5ef03718aff09e0000ac26bd",
+      "text": "完成形",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801048,
+      "updated": 1592801051
+    },
+    {
+      "id": "5ef03288aff09e00003b80ae",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80af",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b0",
+      "text": "     q = N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b1",
+      "text": "     ret = \"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b2",
+      "text": "     while True:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b3",
+      "text": "         q, r = divmod(q - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b4",
+      "text": "         ret = ascii_lowercase[r] + ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b5",
+      "text": "         if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b6",
+      "text": "             print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b7",
+      "text": "             return",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592799881
+    },
+    {
+      "id": "5ef03289aff09e00003b80b8",
+      "text": "最初からこのコードを書いたわけではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799881,
+      "updated": 1592801786
+    },
+    {
+      "id": "5ef039daaff09e0000ac26d0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801754,
+      "updated": 1592801754
+    },
+    {
+      "id": "5ef0371daff09e0000ac26be",
+      "text": "最初は「この問題、テストしやすいからテストドリブンしよう」と思ったので[doctest]を呼び出すスニペットを貼った",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801053,
+      "updated": 1617130398
+    },
+    {
+      "id": "5ef0328daff09e00003b80b9",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799885,
+      "updated": 1592799995
+    },
+    {
+      "id": "5ef032fbaff09e00003b80bc",
+      "text": " from string import ascii_lowercase",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80bd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80be",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80bf",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c0",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c1",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c4",
+      "text": " def main():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c5",
+      "text": "     N = int(input())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c6",
+      "text": "     solve(N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80c9",
+      "text": " def _test():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80ca",
+      "text": "     import doctest",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80cb",
+      "text": "     doctest.testmod()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80cc",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80cd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80ce",
+      "text": " if __name__ == \"__main__\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80cf",
+      "text": "     import sys",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d0",
+      "text": "     argv = sys.argv",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d1",
+      "text": "     if len(sys.argv) == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d2",
+      "text": "         # no option",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d3",
+      "text": "         main()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d4",
+      "text": "     elif sys.argv[1] == \"-t\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d5",
+      "text": "         _test()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d6",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d7",
+      "text": "         input = open(sys.argv[1]).buffer.readline",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799996
+    },
+    {
+      "id": "5ef032fbaff09e00003b80d8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592799996,
+      "updated": 1592799997
+    },
+    {
+      "id": "5ef0375faff09e0000ac26bf",
+      "text": "まずテストケースを書く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801120,
+      "updated": 1592801125
+    },
+    {
+      "id": "5ef03341aff09e00003b80e8",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800065,
+      "updated": 1592800067
+    },
+    {
+      "id": "5ef03343aff09e00003b80e9",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800067,
+      "updated": 1592800067
+    },
+    {
+      "id": "5ef03343aff09e00003b80ea",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800067,
+      "updated": 1592800067
+    },
+    {
+      "id": "5ef03343aff09e00003b80eb",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800067,
+      "updated": 1592800067
+    },
+    {
+      "id": "5ef03343aff09e00003b80ec",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800067,
+      "updated": 1592800067
+    },
+    {
+      "id": "5ef03343aff09e00003b80ed",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800067,
+      "updated": 1592800067
+    },
+    {
+      "id": "5ef03343aff09e00003b80ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800067,
+      "updated": 1592800068
+    },
+    {
+      "id": "5ef03337aff09e00003b80d9",
+      "text": "当然テストはフェイルする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800055,
+      "updated": 1592801138
+    },
+    {
+      "id": "5ef03337aff09e00003b80da",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800055,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80db",
+      "text": " $ python3 c2.py -t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80dc",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80dd",
+      "text": " File \"c2.py\", line 6, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80de",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80df",
+      "text": "     solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e0",
+      "text": " Expected:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e1",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e2",
+      "text": " Got nothing",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e3",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e4",
+      "text": " 1 items had failures:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e5",
+      "text": "    1 of   1 in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e6",
+      "text": " ***Test Failed*** 1 failures.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800058
+    },
+    {
+      "id": "5ef03339aff09e00003b80e7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800058,
+      "updated": 1592800059
+    },
+    {
+      "id": "5ef03362aff09e00003b80ef",
+      "text": "テストに通るコードを書く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800099,
+      "updated": 1592801154
+    },
+    {
+      "id": "5ef03363aff09e00003b80f0",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800099,
+      "updated": 1592800100
+    },
+    {
+      "id": "5ef03364aff09e00003b80f2",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800101
+    },
+    {
+      "id": "5ef03365aff09e00003b80f3",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800101
+    },
+    {
+      "id": "5ef03365aff09e00003b80f4",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800101
+    },
+    {
+      "id": "5ef03365aff09e00003b80f5",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800101
+    },
+    {
+      "id": "5ef03365aff09e00003b80f6",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800101
+    },
+    {
+      "id": "5ef03365aff09e00003b80f7",
+      "text": "     print(ascii_lowercase[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800101
+    },
+    {
+      "id": "5ef03365aff09e00003b80f8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800101,
+      "updated": 1592800105
+    },
+    {
+      "id": "5ef03784aff09e0000ac26c1",
+      "text": "テストを実行してOKなのを確認する(doctestはOKの時に何も表示しない)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801157,
+      "updated": 1592801191
+    },
+    {
+      "id": "5ef037a9aff09e0000ac26c2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801193,
+      "updated": 1592801193
+    },
+    {
+      "id": "5ef033b5aff09e00003b8107",
+      "text": "テストケースを追加する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800181,
+      "updated": 1592801200
+    },
+    {
+      "id": "5ef03386aff09e00003b80fa",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800134,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03388aff09e00003b80fc",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03389aff09e00003b80fd",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03389aff09e00003b80fe",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03389aff09e00003b80ff",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03389aff09e00003b8100",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03389aff09e00003b8101",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800137
+    },
+    {
+      "id": "5ef03389aff09e00003b8102",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800137,
+      "updated": 1592800146
+    },
+    {
+      "id": "5ef03389aff09e00003b8103",
+      "text": "     print(ascii_lowercase[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800146,
+      "updated": 1592800146
+    },
+    {
+      "id": "5ef03468aff09e00003b8136",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800361,
+      "updated": 1592800363
+    },
+    {
+      "id": "5ef0346baff09e00003b8137",
+      "text": "当然テストはフェイルする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800363,
+      "updated": 1592801857
+    },
+    {
+      "id": "5ef037bfaff09e0000ac26c3",
+      "text": "どういうフェイルをするかをみる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801215,
+      "updated": 1592801860
+    },
+    {
+      "id": "5ef037c7aff09e0000ac26c4",
+      "text": "26個しかない文字列の27番目を読んで`IndexError: string index out of range`になってる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801223,
+      "updated": 1592801262
+    },
+    {
+      "id": "5ef03386aff09e00003b80fb",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800134,
+      "updated": 1592800195
+    },
+    {
+      "id": "5ef033b8aff09e00003b8108",
+      "text": " $ python3 c2.py -t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8109",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b810a",
+      "text": " File \"c2.py\", line 8, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b810b",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b810c",
+      "text": "     solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b810d",
+      "text": " Exception raised:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b810e",
+      "text": "     Traceback (most recent call last):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b810f",
+      "text": "       File \".../doctest.py\", line 1329, in __run",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800804
+    },
+    {
+      "id": "5ef033b8aff09e00003b8110",
+      "text": "         compileflags, 1), test.globs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8111",
+      "text": "       File \"<doctest __main__.solve[1]>\", line 1, in <module>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8112",
+      "text": "         solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8113",
+      "text": "       File \"c2.py\", line 11, in solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8114",
+      "text": "         print(ascii_lowercase[N - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8115",
+      "text": "     IndexError: string index out of range",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8116",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8117",
+      "text": " 1 items had failures:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8118",
+      "text": "    1 of   2 in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b8119",
+      "text": " ***Test Failed*** 1 failures.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800184
+    },
+    {
+      "id": "5ef033b8aff09e00003b811a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800184,
+      "updated": 1592800201
+    },
+    {
+      "id": "5ef037f1aff09e00003b81fb",
+      "text": "ならばとりあえず26で割った商とあまりを計算しよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801266,
+      "updated": 1592801341
+    },
+    {
+      "id": "5ef03401aff09e00003b812a",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800257,
+      "updated": 1592800261
+    },
+    {
+      "id": "5ef03405aff09e00003b812c",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800261,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b812d",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b812e",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b812f",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b8130",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b8131",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b8132",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b8133",
+      "text": "     q, r = divmod(N - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b8134",
+      "text": "     print(ascii_lowercase[r])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800262
+    },
+    {
+      "id": "5ef03405aff09e00003b8135",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800262,
+      "updated": 1592800263
+    },
+    {
+      "id": "5ef03401aff09e00003b812b",
+      "text": "エラーメッセージは変わって、実行時エラーではなく、出力した値がおかしいとのこと。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800257,
+      "updated": 1592801875
+    },
+    {
+      "id": "5ef03849aff09e0000ac26c5",
+      "text": "これを直していこう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801354,
+      "updated": 1592801358
+    },
+    {
+      "id": "5ef033f6aff09e00003b811b",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800246,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b811c",
+      "text": " $ python3 c2.py -t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b811d",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b811e",
+      "text": " File \"c2.py\", line 8, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b811f",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8120",
+      "text": "     solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8121",
+      "text": " Expected:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8122",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8123",
+      "text": " Got:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8124",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8125",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8126",
+      "text": " 1 items had failures:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8127",
+      "text": "    1 of   2 in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8128",
+      "text": " ***Test Failed*** 1 failures.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800249
+    },
+    {
+      "id": "5ef033f9aff09e00003b8129",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800249,
+      "updated": 1592800251
+    },
+    {
+      "id": "5ef03851aff09e0000ac26c6",
+      "text": "さっき計算した商を使ってないので、とりあえず使ってみる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801361,
+      "updated": 1592801377
+    },
+    {
+      "id": "5ef033abaff09e00003b8105",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800171,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8139",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b813a",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b813b",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b813c",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b813d",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b813e",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b813f",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8140",
+      "text": "     q, r = divmod(N - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8141",
+      "text": "     ret = ascii_lowercase[r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8142",
+      "text": "     if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8143",
+      "text": "         print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8144",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8145",
+      "text": "         print(ascii_lowercase[q] + ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800378
+    },
+    {
+      "id": "5ef0347aaff09e00003b8146",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800378,
+      "updated": 1592800379
+    },
+    {
+      "id": "5ef03868aff09e0000ac26c7",
+      "text": "aaとなるべきなのにbaになってるというフェイル(伏線1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801384,
+      "updated": 1617130699
+    },
+    {
+      "id": "5ef03487aff09e00003b8147",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800392,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8148",
+      "text": " $ python3 c2.py -t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8149",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b814a",
+      "text": " File \"c2.py\", line 8, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b814b",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b814c",
+      "text": "     solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b814d",
+      "text": " Expected:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b814e",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b814f",
+      "text": " Got:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8150",
+      "text": "     ba",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8151",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8152",
+      "text": " 1 items had failures:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8153",
+      "text": "    1 of   2 in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef0348aaff09e00003b8154",
+      "text": " ***Test Failed*** 1 failures.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800394,
+      "updated": 1592800394
+    },
+    {
+      "id": "5ef03478aff09e00003b8138",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800376,
+      "updated": 1592800376
+    },
+    {
+      "id": "5ef03883aff09e0000ac26c8",
+      "text": "1減らしてつじつまを合わせた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801411,
+      "updated": 1592801905
+    },
+    {
+      "id": "5ef0349faff09e00003b8155",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800416,
+      "updated": 1592800417
+    },
+    {
+      "id": "5ef034a1aff09e00003b8157",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800417,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8158",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8159",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b815a",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b815b",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b815c",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b815d",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b815e",
+      "text": "     q, r = divmod(N - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b815f",
+      "text": "     ret = ascii_lowercase[r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8160",
+      "text": "     if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8161",
+      "text": "         print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8162",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8163",
+      "text": "         print(ascii_lowercase[q - 1] + ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef034a2aff09e00003b8164",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592800418
+    },
+    {
+      "id": "5ef03894aff09e0000ac26c9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801428,
+      "updated": 1592801428
+    },
+    {
+      "id": "5ef034a2aff09e00003b8165",
+      "text": "テストOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800418,
+      "updated": 1592801430
+    },
+    {
+      "id": "5ef0349faff09e00003b8156",
+      "text": "新しいテストケースを追加する。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800416,
+      "updated": 1592801910
+    },
+    {
+      "id": "5ef034efaff09e00003b817b",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800495,
+      "updated": 1592800498
+    },
+    {
+      "id": "5ef034f1aff09e00003b817c",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800498,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b817e",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b817f",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8180",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8181",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8182",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8183",
+      "text": "     >>> solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8184",
+      "text": "     aaa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8185",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8186",
+      "text": "     q, r = divmod(N - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8187",
+      "text": "     ret = ascii_lowercase[r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8188",
+      "text": "     if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b8189",
+      "text": "         print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b818a",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b818b",
+      "text": "         print(ascii_lowercase[q - 1] + ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800499
+    },
+    {
+      "id": "5ef034f3aff09e00003b818c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800499,
+      "updated": 1592800500
+    },
+    {
+      "id": "5ef034f1aff09e00003b817d",
+      "text": "当然フェイルする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800498,
+      "updated": 1592801457
+    },
+    {
+      "id": "5ef038b1aff09e0000ac26ca",
+      "text": "この`IndexError: string index out of range`ってエラーメッセージはさっき見たやつだな、同じように修正しよう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801457,
+      "updated": 1592801502
+    },
+    {
+      "id": "5ef034dfaff09e00003b8166",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800480,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8168",
+      "text": " $ python3 c2.py -t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8169",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b816a",
+      "text": " File \"c2.py\", line 10, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b816b",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b816c",
+      "text": "     solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b816d",
+      "text": " Exception raised:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b816e",
+      "text": "     Traceback (most recent call last):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b816f",
+      "text": "       File \".../doctest.py\", line 1329, in __run",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800818
+    },
+    {
+      "id": "5ef034e5aff09e00003b8170",
+      "text": "         compileflags, 1), test.globs)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8171",
+      "text": "       File \"<doctest __main__.solve[2]>\", line 1, in <module>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8172",
+      "text": "         solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8173",
+      "text": "       File \"c2.py\", line 18, in solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8174",
+      "text": "         print(ascii_lowercase[q - 1] + ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8175",
+      "text": "     IndexError: string index out of range",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8176",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8177",
+      "text": " 1 items had failures:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8178",
+      "text": "    1 of   3 in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b8179",
+      "text": " ***Test Failed*** 1 failures.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800485
+    },
+    {
+      "id": "5ef034e5aff09e00003b817a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800485,
+      "updated": 1592800486
+    },
+    {
+      "id": "5ef038e9aff09e00003b81fc",
+      "text": "さっき書いたコードをコピペして同じように修正した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801513,
+      "updated": 1592801531
+    },
+    {
+      "id": "5ef034e3aff09e00003b8167",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800483,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b818e",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b818f",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8190",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8191",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8192",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8193",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8194",
+      "text": "     >>> solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8195",
+      "text": "     aaa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8196",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8197",
+      "text": "     q, r = divmod(N - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8198",
+      "text": "     ret = ascii_lowercase[r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b8199",
+      "text": "     if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b819a",
+      "text": "         print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b819b",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b819c",
+      "text": "         q, r = divmod(q - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b819d",
+      "text": "         ret = ascii_lowercase[r] + ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b819e",
+      "text": "         if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b819f",
+      "text": "             print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b81a0",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b81a1",
+      "text": "             q, r = divmod(q - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b81a2",
+      "text": "             ret = ascii_lowercase[r] + ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef0355faff09e00003b81a3",
+      "text": "             print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592800608
+    },
+    {
+      "id": "5ef038ffaff09e0000ac26cb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801535,
+      "updated": 1592801535
+    },
+    {
+      "id": "5ef0355faff09e00003b81a4",
+      "text": "テストOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800608,
+      "updated": 1592801538
+    },
+    {
+      "id": "5ef035a4aff09e00003b81a5",
+      "text": "4桁目以降も同じことが続くのでループを使って書き直そう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800676,
+      "updated": 1592801924
+    },
+    {
+      "id": "5ef035a4aff09e00003b81a6",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800676,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81a7",
+      "text": " def solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81a8",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81a9",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81aa",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81ab",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81ac",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81ad",
+      "text": "     >>> solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81ae",
+      "text": "     aaa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81af",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b0",
+      "text": "     q = N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b1",
+      "text": "     while True:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b2",
+      "text": "         q, r = divmod(q - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b3",
+      "text": "         ret = ascii_lowercase[r]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b4",
+      "text": "         if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b5",
+      "text": "             print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b6",
+      "text": "             break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800679
+    },
+    {
+      "id": "5ef035a7aff09e00003b81b7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800679,
+      "updated": 1592800680
+    },
+    {
+      "id": "5ef03925aff09e0000ac26cc",
+      "text": "書き直してテストしたらフェイル",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801573,
+      "updated": 1592801579
+    },
+    {
+      "id": "5ef035b3aff09e00003b81b8",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800692,
+      "updated": 1592800693
+    },
+    {
+      "id": "5ef035b5aff09e00003b81b9",
+      "text": " $ python3 c2.py -t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81ba",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81bb",
+      "text": " File \"c2.py\", line 8, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81bc",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81bd",
+      "text": "     solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81be",
+      "text": " Expected:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81bf",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c0",
+      "text": " Got:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c1",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c2",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c3",
+      "text": " File \"c2.py\", line 10, in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c4",
+      "text": " Failed example:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c5",
+      "text": "     solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c6",
+      "text": " Expected:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c7",
+      "text": "     aaa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c8",
+      "text": " Got:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81c9",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81ca",
+      "text": " **********************************************************************",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81cb",
+      "text": " 1 items had failures:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81cc",
+      "text": "    2 of   3 in __main__.solve",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef035b5aff09e00003b81cd",
+      "text": " ***Test Failed*** 2 failures.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800694,
+      "updated": 1592800694
+    },
+    {
+      "id": "5ef0355caff09e00003b818d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800605,
+      "updated": 1592800605
+    },
+    {
+      "id": "5ef03939aff09e0000ac26cd",
+      "text": "文字列を伸ばしていくのを忘れていた。修正する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801593,
+      "updated": 1592801607
+    },
+    {
+      "id": "5ef035e7aff09e00003b81ce",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800744,
+      "updated": 1592800746
+    },
+    {
+      "id": "5ef035e9aff09e00003b81d0",
+      "text": "\tdef solve(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800746,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e2",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e3",
+      "text": "     >>> solve(1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e4",
+      "text": "     a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e5",
+      "text": "     >>> solve(27)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e6",
+      "text": "     aa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e7",
+      "text": "     >>> solve(703)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e8",
+      "text": "     aaa",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81e9",
+      "text": "     \"\"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81ea",
+      "text": "     q = N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81eb",
+      "text": "     ret = \"\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81ec",
+      "text": "     while True:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81ed",
+      "text": "         q, r = divmod(q - 1, 26)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81ee",
+      "text": "         ret = ascii_lowercase[r] + ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81ef",
+      "text": "         if q == 0:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81f0",
+      "text": "             print(ret)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81f1",
+      "text": "             break",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800750
+    },
+    {
+      "id": "5ef035edaff09e00003b81f2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800750,
+      "updated": 1592800751
+    },
+    {
+      "id": "5ef035efaff09e00003b81f3",
+      "text": "テストOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800751,
+      "updated": 1592801614
+    },
+    {
+      "id": "5ef03954aff09e0000ac26ce",
+      "text": "これで提出した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592801620,
+      "updated": 1592801628
+    },
+    {
+      "id": "5ef035e8aff09e00003b81cf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592800744,
+      "updated": 1592800744
+    },
+    {
+      "id": "5ef03c9caff09e0000424e60",
+      "text": "余談",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592802461,
+      "updated": 1592802463
+    },
+    {
+      "id": "5ef03c9eaff09e0000424e62",
+      "text": "　途中(伏線1)でbaになったが、あれが正しい26進法",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592802463,
+      "updated": 1617130725
+    },
+    {
+      "id": "5ef03cc5aff09e0000424e63",
+      "text": "　　10進法でも初めて二桁になる数は00ではなく10だよね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592802502,
+      "updated": 1592802544
+    },
+    {
+      "id": "5ef03cefaff09e0000424e64",
+      "text": "　　今回の問題はbaではなくaaにならなければいけないので26進数とは違う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592802544,
+      "updated": 1592802870
+    },
+    {
+      "id": "5ef03de7aff09e0000424e65",
+      "text": "　　Twitterを見てると、N進法ライブラリを作ろうとしたり、「正しく26進法を実装できなかった」と嘆いてたりする人がいるが、そもそもこの問題が求めてるのは26進法ではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592802794,
+      "updated": 1592802851
+    },
+    {
+      "id": "606374f9aff09e000037e4b9",
+      "text": "　　解釈が歪んでいる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1617130745,
+      "updated": 1617130752
+    },
+    {
+      "id": "60637508aff09e000037e4ba",
+      "text": "　テストドリブンな[事実に基づく開発]をしたら、解釈による歪みが入りにくい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1617130761,
+      "updated": 1617130810
+    },
+    {
+      "id": "5ef03c9eaff09e0000424e61",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592802463,
+      "updated": 1592802463
+    }
+  ]
+}

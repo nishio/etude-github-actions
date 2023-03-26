@@ -1,0 +1,351 @@
+{
+  "id": "5fa90c37e2beee0023b201d4",
+  "title": "PAST3I",
+  "created": 1604914232,
+  "updated": 1604914232,
+  "lines": [
+    {
+      "id": "5fa90c37e2beee0023b201d4",
+      "text": "PAST3I",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e350",
+      "text": "from [第三回 アルゴリズム実技検定]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e351",
+      "text": "PAST3I",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e352",
+      "text": "\t正方行列に対して、転置、行交換、列交換、特定の升目の値を表示、などのコマンドを繰り返し実行する問題。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e353",
+      "text": "\t問題条件で、行列の大きさが最大で10万になるので、素朴に行列を持つのは選択肢として有り得ないのがわかる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e354",
+      "text": "\t最初に考えたアルゴリズムは「表示命令から時間軸逆順にたどれば、ひとつのマスのことだけ考えれば良いから楽」",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e355",
+      "text": "\t\tしかしタイムリミット超過して、これではダメだと気づく。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e356",
+      "text": "\t\t十分にシンプルなプログラムだったので、そのアルゴリズムのまま高速化することでは解決できないと気づけた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e357",
+      "text": "\tおそらく「コマンド列が最長の10万で、半分くらい表示命令だった時に12億回程度のステップが必要」ってことだろう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e358",
+      "text": "\t\tそう考えてそれをテストケースに追加。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e359",
+      "text": "\t行列を「今の行、列が、元々はどの行、列か」と言う情報に分解して持つことにする。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e35a",
+      "text": "\t\t[転置は1ビットのフラグ]があれば良い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e35b",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e35c",
+      "text": " if 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e35d",
+      "text": "     N = int(input())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e35e",
+      "text": "     Q = int(input())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e35f",
+      "text": "     queries = []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e360",
+      "text": "     for i in range(Q):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e361",
+      "text": "         queries.append([int(x) for x in input().split()])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e362",
+      "text": " else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e363",
+      "text": "     N = 100000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e364",
+      "text": "     queries = [",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e365",
+      "text": "         [2, 1, 2],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e366",
+      "text": "         [4, 1, 2]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e367",
+      "text": "     ] * 10000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e368",
+      "text": "     queries.append([4, 1, 2])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e369",
+      "text": "     Q = len(queries)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e36a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e36b",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e36c",
+      "text": " isTransposed = False",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e36d",
+      "text": " xs = list(range(N + 1))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e36e",
+      "text": " ys = list(range(N + 1))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e36f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e370",
+      "text": " for q in queries:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e371",
+      "text": "     f = q[0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e372",
+      "text": "     if f == 4:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e373",
+      "text": "         i, j = q[1:]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e374",
+      "text": "         if isTransposed:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e375",
+      "text": "             i, j = j, i",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e376",
+      "text": "         print(N * (xs[i] - 1) + ys[j] - 1)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e377",
+      "text": "     elif f == 3:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e378",
+      "text": "         isTransposed = not isTransposed",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e379",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e37a",
+      "text": "         i, j = q[1:]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e37b",
+      "text": "         if (f == 1) ^ isTransposed:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e37c",
+      "text": "             xs[i], xs[j] = xs[j], xs[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e37d",
+      "text": "         else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e37e",
+      "text": "             ys[i], ys[j] = ys[j], ys[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    },
+    {
+      "id": "5fa90c37aff09e000059e37f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1604914232,
+      "updated": 1604914232
+    }
+  ]
+}

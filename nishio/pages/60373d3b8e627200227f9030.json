@@ -1,0 +1,295 @@
+{
+  "id": "60373d3b8e627200227f9030",
+  "title": "MouseMoveを間引いてSentry",
+  "created": 1614232906,
+  "updated": 1614763794,
+  "lines": [
+    {
+      "id": "60373d3b8e627200227f9030",
+      "text": "MouseMoveを間引いてSentry",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614232906,
+      "updated": 1614232929
+    },
+    {
+      "id": "60373ddfaff09e00003ca3e4",
+      "text": "Regroupのテスト自動化をする上で「ドラッグして囲う」というユーザの操作を記録し再現したい。しかしMouseMove系のイベントは大量に出るのですべて記録したくはない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233056,
+      "updated": 1614233164
+    },
+    {
+      "id": "60373dcdaff09e0000045670",
+      "text": "[https://gyazo.com/e228c23fff2d61bc95430876234ac701]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233037,
+      "updated": 1614233037
+    },
+    {
+      "id": "60373ea2aff09e00003ca3e5",
+      "text": "そこで「直前がMouseMove系のイベントであり、かつ500ms以内なら記録しない」とやることにした。記録先はリングバッファになっていて直近の100件だけが保持される。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233250,
+      "updated": 1614233334
+    },
+    {
+      "id": "60373e75aff09e0000045671",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233205,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004568c",
+      "text": " export const push = (data: IHasType) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004568d",
+      "text": "   if (data.type === \"Drag\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233217
+    },
+    {
+      "id": "60373e7baff09e0000045693",
+      "text": "     if (prevEvent?.type === \"Drag\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e0000045694",
+      "text": "       if (Date.now() - prevEventTime < 500) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e0000045695",
+      "text": "         prevEventTime = Date.now();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e0000045696",
+      "text": "         prevEvent = data;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e0000045697",
+      "text": "         return;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e0000045698",
+      "text": "       }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e0000045699",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004569a",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004569b",
+      "text": "   prevEventTime = Date.now();",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004569c",
+      "text": "   prevEvent = data;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004569d",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233226
+    },
+    {
+      "id": "60373e7baff09e000004569e",
+      "text": "   const json = JSON.stringify(data);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e000004569f",
+      "text": "   if (ringBuffer.length < MAX_RECORD_NUM) {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e00000456a0",
+      "text": "     ringBuffer.push(json);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e00000456a1",
+      "text": "   } else {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e00000456a2",
+      "text": "     ringBuffer[index] = json;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e00000456a3",
+      "text": "     index = (index + 1) % MAX_RECORD_NUM;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e00000456a4",
+      "text": "   }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373e7baff09e00000456a5",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233211
+    },
+    {
+      "id": "60373fc4aff09e00000456a7",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233540,
+      "updated": 1614233540
+    },
+    {
+      "id": "60373fc5aff09e00000456a8",
+      "text": " export const get = () => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233541,
+      "updated": 1614233541
+    },
+    {
+      "id": "60373fc5aff09e00000456a9",
+      "text": "   return ringBuffer.slice(index).concat(ringBuffer.slice(0, index));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233541,
+      "updated": 1614233541
+    },
+    {
+      "id": "60373fc5aff09e00000456aa",
+      "text": " };",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233541,
+      "updated": 1614233541
+    },
+    {
+      "id": "60373e7baff09e00000456a6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233211,
+      "updated": 1614233338
+    },
+    {
+      "id": "60373efbaff09e00003ca3e6",
+      "text": "メニューに「Sentryに送る」を付けた。Sentry上で下記のように取得できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233340,
+      "updated": 1614233392
+    },
+    {
+      "id": "60373d7faff09e000004566d",
+      "text": "[https://gyazo.com/6f055b05a6732fabdb59455fcb1476d2]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614232959,
+      "updated": 1614232962
+    },
+    {
+      "id": "60373dbfaff09e000004566f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233023,
+      "updated": 1614233023
+    },
+    {
+      "id": "60373f35aff09e00003ca3e7",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233397,
+      "updated": 1614233436
+    },
+    {
+      "id": "603f55bdaff09e00001bf10f",
+      "text": "追記",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614763453,
+      "updated": 1614763482
+    },
+    {
+      "id": "603f55d9aff09e0000a60aa0",
+      "text": "　せっかく作ったのだけど、テストする時のデフォルトのキャンバスサイズが小さかったので手で数値をいじってて「あれ？これだったら最初から手打ちで良かったのでは？」となった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614763482,
+      "updated": 1614763552
+    },
+    {
+      "id": "603f5621aff09e0000a60aa1",
+      "text": "　まあ、これをやることでどんなイベントがどんな順で起きてるのか理解したからやりやすくなったのだとも言える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614763553,
+      "updated": 1614763599
+    },
+    {
+      "id": "603f564faff09e0000a60aa2",
+      "text": "　Sentryに送ることは開発環境以外の場所で起こった問題を記録できるメリットがあるが、開発環境ではconsole.logで直接観察するのの方が操作してすぐに観察できていい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614763600,
+      "updated": 1614763723
+    },
+    {
+      "id": "603f56caaff09e0000a60aa3",
+      "text": "　イベントハンドラでconsole.logするとmove系イベントが大量になるから、その意味では今回の時間で間引く方法は良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614763723,
+      "updated": 1614763794
+    },
+    {
+      "id": "60373f42aff09e00003ca3e8",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1614233411,
+      "updated": 1614233411
+    }
+  ]
+}

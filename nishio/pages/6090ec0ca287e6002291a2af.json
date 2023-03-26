@@ -1,0 +1,1044 @@
+{
+  "id": "6090ec0ca287e6002291a2af",
+  "title": "Hatena2013-05-26",
+  "created": 1369494000,
+  "updated": 1369494000,
+  "lines": [
+    {
+      "id": "6090ec30aff09e00003de586",
+      "text": "Hatena2013-05-26",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de587",
+      "text": "code:hatena",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de588",
+      "text": " <body>",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de589",
+      "text": " *1369574725*文字列の解析2",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de58a",
+      "text": " 「<a href='http://d.hatena.ne.jp/nishiohirokazu/20130510/1368196109'>文字列の解析</a>」の続編です。今回は正規表現のところまで行きます。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de58b",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de58c",
+      "text": " ** 状態",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de58d",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de58e",
+      "text": " 前回作ったのは、「0～9の文字」が続いているところを切り出すだけの、とても簡単な文字列解析でした。しかしそれでも、「0～9以外文字」の文字が現れた時に行う処理は、それが「0～9の文字が続いている範囲」の前なのか後なのかによって異なりました。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de58f",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de590",
+      "text": " 今後もっと複雑な文字列解析をする前に、まず、前回作った処理を図にして整理してみましょう。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de591",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de592",
+      "text": " [f:id:nishiohirokazu:20130526221750p:image]",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de593",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de594",
+      "text": " 前回の処理には「0～9の文字が続いている範囲の前」と「0～9の文字が続いている範囲の後」の2通りの状態がありました。この図では「0～9の文字が続いている範囲の前」が「状態0」、「0～9の文字が続いている範囲の後」が「状態1」で表現されています。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de595",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de596",
+      "text": " (脚注：この種のものを表現する言葉は、決定性有限オートマトン(Deterministic finite automaton, DFA)や有限状態機械(Finite state machine, FSM)など、色々ありますが、ここではイメージが湧きやすいだろうという理由で状態遷移図と呼んでいます。また、プログラムの流れと近くて理解しやすいだろうという理由で、始状態や終状態をUMLの記法を流用して表現しています。)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de597",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de598",
+      "text": " ** もっと複雑な文字列解析",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de599",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de59a",
+      "text": " 浮動小数点数を切り出す処理を書いてみましょう。今回、浮動小数点数は",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de59b",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de59c",
+      "text": " - 「0～9の文字」が1個以上続いて",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de59d",
+      "text": " - それから「ピリオド」が来て",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de59e",
+      "text": " - 「0～9の文字」が1個以上続く",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de59f",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a0",
+      "text": " というパターンだという仕様にします。このパターンを切り出すプログラムを書いてみましょう。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a1",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a2",
+      "text": " (脚注：プログラミング言語やロケールによっては「.123」が浮動小数点の表現としてOKだったり、「123.」がOKだったり、小数点がピリオドではなくカンマだったりしますが、ここでの話にはあまり関係がないので単純化しています。)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a3",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a4",
+      "text": " まずは状態遷移図を書いてみましょう。今回は4通りの状態が必要になります。「0～9を探している(それ以外の文字を読み飛ばしている)状態」「0～9が1個以上見つかった状態」「その後にピリオドが来た状態」「その後に0～9が1個以上見つかった状態」の4つです。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a5",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a6",
+      "text": " [f:id:nishiohirokazu:20130526221749p:image]",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a7",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a8",
+      "text": " これをソースコードに直すとこうなります。状態を表すのにstateという変数を導入しています。1文字読んで、いまのstateの値によって分岐して、それから文字の種類によって、結果(result)に追加したり、他の状態へ遷移したり、resultをリセットしたりしています。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5a9",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5aa",
+      "text": " >|python|",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ab",
+      "text": " def find_float(string):",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ac",
+      "text": "     result = ''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ad",
+      "text": "     state = 0",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ae",
+      "text": "     for char in string:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5af",
+      "text": "         print 'state=%r, char=%r, result=%r' % (state, char, result)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b0",
+      "text": "         if state == 0:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b1",
+      "text": "             if char in '0123456789':",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b2",
+      "text": "                 result += char",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b3",
+      "text": "                 state = 1",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b4",
+      "text": "         elif state == 1:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b5",
+      "text": "             if char == '.':",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b6",
+      "text": "                 result += char",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b7",
+      "text": "                 state = 2",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b8",
+      "text": "             elif char in '0123456789':",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5b9",
+      "text": "                 result += char",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ba",
+      "text": "             else:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5bb",
+      "text": "                 result = ''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5bc",
+      "text": "                 state = 0",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5bd",
+      "text": "         elif state == 2:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5be",
+      "text": "             if char in '0123456789':",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5bf",
+      "text": "                 result += char",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c0",
+      "text": "                 state = 3",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c1",
+      "text": "             else:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c2",
+      "text": "                 result = ''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c3",
+      "text": "                 state = 0",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c4",
+      "text": "         elif state == 3:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c5",
+      "text": "             if char in '0123456789':",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c6",
+      "text": "                 result += char",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c7",
+      "text": "             else:",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c8",
+      "text": "                 return result",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5c9",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ca",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5cb",
+      "text": " print find_float(\"a0b12.c34.56d\")",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5cc",
+      "text": " ||<",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5cd",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ce",
+      "text": " 実行結果はこうなります。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5cf",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d0",
+      "text": " >||",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d1",
+      "text": " state=0, char='a', result=''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d2",
+      "text": " state=0, char='0', result=''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d3",
+      "text": " state=1, char='b', result='0'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d4",
+      "text": " state=0, char='1', result=''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d5",
+      "text": " state=1, char='2', result='1'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d6",
+      "text": " state=1, char='.', result='12'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d7",
+      "text": " state=2, char='c', result='12.'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d8",
+      "text": " state=0, char='3', result=''",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5d9",
+      "text": " state=1, char='4', result='3'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5da",
+      "text": " state=1, char='.', result='34'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5db",
+      "text": " state=2, char='5', result='34.'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5dc",
+      "text": " state=3, char='6', result='34.5'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5dd",
+      "text": " state=3, char='d', result='34.56'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5de",
+      "text": " 34.56",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5df",
+      "text": " ||<",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e0",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e1",
+      "text": " ちゃんと期待通りに切り出せていることがわかりますね。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e2",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e3",
+      "text": " ** 正規表現",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e4",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e5",
+      "text": " こんな簡単なパターンを切り出すだけなのに、実装は結構大変ですね。もっと楽にならないのでしょうか？どういうパターンを切り出したいのかを宣言したら、コンピュータがうまいことやってくれないかな？",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e6",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e7",
+      "text": " 実はPythonの正規表現ライブラリre(*)を使うと先ほどのコードはこんなに短くなります。このコード中の「\\d+\\.\\d+」の部分が「数字が1個以上続いて、それからピリオドが来て、その後数字が1個以上続く」というパターンを表現しています。これが正規表現です。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e8",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5e9",
+      "text": " (脚注：reはRegular Expressionの略)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ea",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5eb",
+      "text": " >|python|",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ec",
+      "text": " import re",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ed",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ee",
+      "text": " def find_float(string):",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ef",
+      "text": "     return re.search('\\d+\\.\\d+', string).group()",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f0",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f1",
+      "text": " print find_float(\"123a.b.314.159c25d\")",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f2",
+      "text": " ||<",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f3",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f4",
+      "text": " 与えられた文字列から「正規表現で表現されたパターン」の文字列を探し出すようなプログラムのことを、これ以降は正規表現エンジンと呼ぶことにします。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f5",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f6",
+      "text": " 現代では多くの言語が正規表現エンジンを搭載しています。PythonやJavaのように文字列で正規表現を記述する言語も、PerlやJavaScriptのように言語処理系に正規表現を記述するための文法が用意されている言語もあります。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f7",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f8",
+      "text": " >||",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5f9",
+      "text": " JavaScript(Node.js)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5fa",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5fb",
+      "text": " > /\\d+/.exec('abc123def')[0]",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5fc",
+      "text": " '123'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5fd",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5fe",
+      "text": " Python",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de5ff",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de600",
+      "text": " >>> import re",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de601",
+      "text": " >>> re.search('\\d+', 'abc123def').group()",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de602",
+      "text": " '123'",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de603",
+      "text": " ||<",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de604",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de605",
+      "text": " <hr>",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de606",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de607",
+      "text": " 拙著「<a href=\"http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X&linkCode=as2&tag=nishiohirokaz-22\">コーディングを支える技術</a>」の読者から頂いた質問など対して、こんな感じで補足記事を書いて行きたいと思っています。質問・感想はおきがねなくどうぞ。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de608",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de609",
+      "text": " この解説は拙著の第3章と第4章の間に新しい章として入るのが適当かなと思います。その章のこの後の話の流れとしては",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de60a",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de60b",
+      "text": " - 正規表現の歴史",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de60c",
+      "text": " - 正規言語の話、和集合、結合、クリーネ閉包を図で表現",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de60d",
+      "text": " - ネストしたカッコを正規表現で切り出せるか？",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de60e",
+      "text": " - PCREの話, 正規言語の範囲を踏み出している話",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de60f",
+      "text": " - 文脈自由文法",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de610",
+      "text": " - どうやる？(再帰下降パーサ, yacc)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de611",
+      "text": " - どう表現する？(BNF)",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de612",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de613",
+      "text": " という感じかな。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de614",
+      "text": " ",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de615",
+      "text": " 拙著に関する他のエントリーは「<a href='http://nhiro.org/langbook/'>「コーディングを支える技術」著者公式ページ</a>」からたどれるようにします。",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de616",
+      "text": " <iframe src=\"http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X\" style=\"width:120px;height:240px;\" scrolling=\"no\" marginwidth=\"0\" marginheight=\"0\" frameborder=\"0\"></iframe>",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de617",
+      "text": " </body>",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de618",
+      "text": "",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec30aff09e00003de619",
+      "text": "[はてなダイアリー 2013-05-26 https://nishiohirokazu.hatenadiary.org/archive/2013/05/26]",
+      "created": 1369494000,
+      "updated": 1369494000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

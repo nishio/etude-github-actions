@@ -1,0 +1,274 @@
+{
+  "id": "5f0471c2794444001e35f23e",
+  "title": "DP O",
+  "created": 1594127608,
+  "updated": 1594128318,
+  "lines": [
+    {
+      "id": "5f0471c2794444001e35f23e",
+      "text": "DP O",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127608,
+      "updated": 1594127608
+    },
+    {
+      "id": "5f0474f7aff09e00009fec78",
+      "text": "[O - Matching https://atcoder.jp/contests/dp/tasks/dp_o]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127608,
+      "updated": 1594127857
+    },
+    {
+      "id": "5f0475f1aff09e00001fd13c",
+      "text": "\t21個のものの順列のうち、特定の条件を満たすものを数え上げる問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127858,
+      "updated": 1594127934
+    },
+    {
+      "id": "5f04763faff09e00003aab1a",
+      "text": "\t先頭を一つ決めて、残りの20個の順列を考える場合に「使えるもの」が21通りある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127935,
+      "updated": 1594127994
+    },
+    {
+      "id": "5f047680aff09e00003aab1b",
+      "text": "\t　というわけで「使えるもの」を定義域とし、条件を満たすものの個数を値とするDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594128001,
+      "updated": 1594128040
+    },
+    {
+      "id": "5f0476a9aff09e00003aab1c",
+      "text": "\t　「使えるもの」は高々21個の集合の部分集合なので2^21、およそ10^7",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594128042,
+      "updated": 1594128091
+    },
+    {
+      "id": "5f0476fcaff09e00003aab1e",
+      "text": "\t　小さい集合の部分集合を列挙するのはビット演算を使うと速い(生Pythonではそれほどでもないが)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594128125,
+      "updated": 1594128222
+    },
+    {
+      "id": "5f04775faff09e00003aab1f",
+      "text": "\t　[bitDP]と呼ぶ人もいるのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594128223,
+      "updated": 1594128244
+    },
+    {
+      "id": "5f047777aff09e00003aab20",
+      "text": "\t生PythonではTLEしそうだったが、PyPyなら AC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594128247,
+      "updated": 1594128318
+    },
+    {
+      "id": "5f0474f7aff09e00009fec79",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127608,
+      "updated": 1594127610
+    },
+    {
+      "id": "5f0474faaff09e00009fec7b",
+      "text": " def solve(N, data):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec7c",
+      "text": "     FULLBIT = (1 << N) - 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec7d",
+      "text": "     memo = [-1] * (1 << N)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec7e",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec7f",
+      "text": "     def f(cursor, available):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec80",
+      "text": "         if cursor == N:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec81",
+      "text": "             return 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec82",
+      "text": "         ret = memo[available]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec83",
+      "text": "         if ret != -1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec84",
+      "text": "             return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec85",
+      "text": "         ret = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec86",
+      "text": "         j = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec87",
+      "text": "         m = available",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec88",
+      "text": "         while m:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec89",
+      "text": "             if m & 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec8a",
+      "text": "                 # available woman",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec8b",
+      "text": "                 if data[cursor * N + j]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec8c",
+      "text": "                     # acceptable",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec8d",
+      "text": "                     ret += f(cursor + 1, available ^ (1 << j))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec8e",
+      "text": "             j += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec8f",
+      "text": "             m //= 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec90",
+      "text": "         ret %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec91",
+      "text": "         memo[available] = ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec92",
+      "text": "         return ret",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec93",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec94",
+      "text": "     return f(0, FULLBIT)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127611
+    },
+    {
+      "id": "5f0474fbaff09e00009fec95",
+      "text": "https://atcoder.jp/contests/dp/submissions/15068618",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127611,
+      "updated": 1594127675
+    },
+    {
+      "id": "5f0474f7aff09e00009fec7a",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594127608,
+      "updated": 1594127608
+    }
+  ]
+}

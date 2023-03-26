@@ -1,0 +1,309 @@
+{
+  "id": "5bd6d728b5333c0014586b2c",
+  "title": "セーブとロード",
+  "created": 1530855336,
+  "updated": 1531292269,
+  "lines": [
+    {
+      "id": "5bd6d728aff09e000076a41e",
+      "text": "セーブとロード",
+      "created": 1530855336,
+      "updated": 1530855337,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a41f",
+      "text": "\tUnityの標準的な機能として[PlayerPrefs]というロード・セーブの機能がある",
+      "created": 1530855337,
+      "updated": 1530855426,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a420",
+      "text": "  これは整数や文字列などの基本的な型だけを受け付ける",
+      "created": 1530855426,
+      "updated": 1530855456,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a421",
+      "text": " 標準的な機能として[JSONUtility]もある",
+      "created": 1530855444,
+      "updated": 1531289568,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a422",
+      "text": " なので複雑な型はJSONUtility.ToJson()で文字列にしてPlayerPrefsで保存するのがよい",
+      "created": 1530855442,
+      "updated": 1531289588,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a423",
+      "text": " しかしJsonUtilには罠がある",
+      "created": 1530855484,
+      "updated": 1530855492,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a424",
+      "text": "  UnityのJSONUtilityでList<Vector3>をシリアライズしても{}になる",
+      "created": 1530855508,
+      "updated": 1530855512,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a425",
+      "text": "  \tJSONとしてValidなのでFromUtility<List<Vector3>>で読み書きできてしまうが、中身が空なのでヌル参照エラー",
+      "created": 1530855517,
+      "updated": 1530855606,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a426",
+      "text": "  そもそもListどころかArrayもシリアライズできない",
+      "created": 1530855508,
+      "updated": 1530855514,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a427",
+      "text": "  仕様です",
+      "created": 1530855614,
+      "updated": 1530855675,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a428",
+      "text": "  直接Arrayをシリアライズすることはできないが、Arrayをフィールドに持つクラスのインスタンスはシリアライズできる",
+      "created": 1530855508,
+      "updated": 1530855683,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a429",
+      "text": "  Vector3[]をフィールドに持つクラスFooのJsonUtil.ToJsonは成功するが、それをJsonUtil.FromJson<Foo>しようとするとコンパイルエラー。Fooへの変換方法をコンパイラが理解できないため。",
+      "created": 1530855683,
+      "updated": 1530855731,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a42a",
+      "text": "   あらかじめ作っておいたFooのインスタンスfooに対してJsonUtil.FromJsonOverwrite(json, foo)なら成功する",
+      "created": 1530855700,
+      "updated": 1530855732,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a42b",
+      "text": "\t情報を仲介するプロキシクラスを作って、プロパティのgetter/setterで情報を集めたり分配したりすればよいかなと思ったが、シリアライズ時にgetter/setterが呼ばれないようなので明示的に呼ぶことにした",
+      "created": 1530855700,
+      "updated": 1531292266,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a42c",
+      "text": "code:cs",
+      "created": 1531292266,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a42d",
+      "text": " public class SlidePositionProxy : MonoBehaviour {",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a42e",
+      "text": "     public void BeforeGet()",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a42f",
+      "text": "     {",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a430",
+      "text": "         Debug.Log(\"BeforeGet\");",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a431",
+      "text": "         var slides = GameObject.Find(\"MotherMonolith\").GetComponent<MakeSlides>().slides;",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a432",
+      "text": "         Debug.Log(slides.Count);",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a433",
+      "text": "         var positions = new Vector3[slides.Count];",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a434",
+      "text": "         for (int i = 0; i < slides.Count; i++)",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a435",
+      "text": "         {",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a436",
+      "text": "             positions[i] = slides[i].transform.position;",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a437",
+      "text": "         }",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a438",
+      "text": "         Positions = positions;",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a439",
+      "text": "     }",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a43a",
+      "text": "     public void AfterSet()",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a43b",
+      "text": "     {",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a43c",
+      "text": "         Debug.Log(\"AfterSet\");",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a43d",
+      "text": "         var slides = GameObject.Find(\"MotherMonolith\").GetComponent<MakeSlides>().slides;",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a43e",
+      "text": "         for (int i = 0; i < slides.Count; i++)",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a43f",
+      "text": "         {",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a440",
+      "text": "             slides[i].transform.position = Positions[i];",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a441",
+      "text": "         }",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a442",
+      "text": "     }",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a443",
+      "text": " ",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a444",
+      "text": "     [SerializeField]",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a445",
+      "text": "     public Vector3[] Positions;",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a446",
+      "text": " }",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a447",
+      "text": " ",
+      "created": 1531292269,
+      "updated": 1531292269,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d728aff09e000076a448",
+      "text": "",
+      "created": 1531292212,
+      "updated": 1531292212,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

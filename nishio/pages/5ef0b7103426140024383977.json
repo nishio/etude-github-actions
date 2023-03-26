@@ -1,0 +1,407 @@
+{
+  "id": "5ef0b7103426140024383977",
+  "title": "numbaに複雑な型を渡す",
+  "created": 1592833814,
+  "updated": 1592901154,
+  "lines": [
+    {
+      "id": "5ef0b7103426140024383977",
+      "text": "numbaに複雑な型を渡す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592833814,
+      "updated": 1592833821
+    },
+    {
+      "id": "5ef0b75baff09e0000cb7802",
+      "text": "素直にnp.arrayにできるならそれが楽でいいのだけど、実用上は「キーが整数である辞書で、値は可変長のリスト。リストの要素は2整数のタプル」みたいな複雑な型のことがあり(実話)これをnp.arrayに詰め込もうとしてエンバグするのは不毛。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592833883,
+      "updated": 1592834066
+    },
+    {
+      "id": "5ef0b8a7aff09e0000b1f2db",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834216,
+      "updated": 1592834216
+    },
+    {
+      "id": "5ef0b8b2aff09e0000cb7806",
+      "text": "この型は、生のPythonの辞書やリストのままではnumbaでうまく扱えないのだが、typed.Dictとtyped.Listを使えば実現できる。問題はこれを関数に渡す時に関数の型シグニチャがどうなるか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834226,
+      "updated": 1592834308
+    },
+    {
+      "id": "5ef0b904aff09e0000cb7807",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834308,
+      "updated": 1592834308
+    },
+    {
+      "id": "5ef0b923aff09e0000b1f2df",
+      "text": "numba.typeofで調べると",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834340,
+      "updated": 1592834347
+    },
+    {
+      "id": "5ef0b917aff09e0000b1f2dd",
+      "text": "\t`DictType[int64,ListType[UniTuple(int64 x 2)]]`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834328,
+      "updated": 1592901154
+    },
+    {
+      "id": "5ef0b917aff09e0000b1f2de",
+      "text": "と表示されるが、これをそのまま型シグニチャに書くと動かない。修正点は",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834328,
+      "updated": 1592834381
+    },
+    {
+      "id": "5ef0b94daff09e0000cb7809",
+      "text": "　`UniTuple(int64 x 2)` → `UniTuple(int64, 2)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834382,
+      "updated": 1592834405
+    },
+    {
+      "id": "5ef0b948aff09e0000cb7808",
+      "text": "\t`XXXType[xxx]` → `XXXType(xxx)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834377,
+      "updated": 1592834430
+    },
+    {
+      "id": "5ef0b97faff09e0000b1f2e0",
+      "text": "(たぶんこれ、パーサを作らないでevalで解決してる。だからPython的文法にする必要がある)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834432,
+      "updated": 1592834548
+    },
+    {
+      "id": "5ef1be1eaff09e0000b1f319",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901150,
+      "updated": 1592901150
+    },
+    {
+      "id": "5ef1bde6aff09e0000b1f317",
+      "text": "文字列にせず、typeofで推定させる手もある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901095,
+      "updated": 1592901147
+    },
+    {
+      "id": "5ef0b9f3aff09e0000cb780e",
+      "text": " code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834548,
+      "updated": 1592901149
+    },
+    {
+      "id": "5ef1bdcaaff09e0000b1f314",
+      "text": "  @nb.jit(nb.typeof((1.0,1.0))(nb.double),nopython=True)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901066,
+      "updated": 1592901149
+    },
+    {
+      "id": "5ef1bdcaaff09e0000b1f315",
+      "text": "  def f(a):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901066,
+      "updated": 1592901149
+    },
+    {
+      "id": "5ef1bdcaaff09e0000b1f316",
+      "text": "    return a,a",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901066,
+      "updated": 1592901149
+    },
+    {
+      "id": "5ef1bdc9aff09e0000b1f312",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901065,
+      "updated": 1592901065
+    },
+    {
+      "id": "5ef0b9d6aff09e0000cb780d",
+      "text": "これで当初の目的である複雑な型の値をnumbaコンパイル済みの関数に渡すことができた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834519,
+      "updated": 1592834583
+    },
+    {
+      "id": "5ef0dc50aff09e0000cb780f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592843346,
+      "updated": 1592843346
+    },
+    {
+      "id": "5ef0dc51aff09e0000cb7810",
+      "text": "追加: atcoderのnumbaは0.48と古いのでtyped.Listが引数を取れないようだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592843346,
+      "updated": 1592843383
+    },
+    {
+      "id": "5ef1bdbeaff09e0000b1f310",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901055,
+      "updated": 1592901055
+    },
+    {
+      "id": "5ef0b87caff09e0000b1f2ba",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834173,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b892aff09e0000b1f2bb",
+      "text": " import sys",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2bc",
+      "text": " import numba",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2bd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2be",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2bf",
+      "text": " def foo(x):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c0",
+      "text": "     for k in x:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c1",
+      "text": "         print(\"k:\", k)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c2",
+      "text": "         for a, b in x[k]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c3",
+      "text": "             print(a, b)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c5",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c6",
+      "text": " if sys.argv[-1] == \"-c\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c7",
+      "text": "     # numba compile",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c8",
+      "text": "     print(\"compiling\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2c9",
+      "text": "     from numba.pycc import CC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2ca",
+      "text": "     cc = CC('my_module')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2cb",
+      "text": "     cc.export(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2cc",
+      "text": "         'foo', 'void(DictType(int64,ListType(UniTuple(int64,2))))')(foo)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2cd",
+      "text": "     cc.compile()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2ce",
+      "text": "     exit()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2cf",
+      "text": " else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d0",
+      "text": "     x = numba.typed.Dict()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d1",
+      "text": "     x[1] = numba.typed.List([(1, 2), (3, 4)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d2",
+      "text": "     x[100] = numba.typed.List([(100, 200)])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d3",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d4",
+      "text": "     if sys.argv[-1] == \"-p\":",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d5",
+      "text": "         print(numba.typeof(x))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d6",
+      "text": "         # => DictType[int64,ListType[UniTuple(int64 x 2)]]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d7",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d8",
+      "text": "         from my_module import foo",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2d9",
+      "text": "         foo(x)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834195
+    },
+    {
+      "id": "5ef0b893aff09e0000b1f2da",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834195,
+      "updated": 1592834196
+    },
+    {
+      "id": "5ef0b814aff09e0000cb7805",
+      "text": "[numba]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592834068,
+      "updated": 1592834596
+    },
+    {
+      "id": "5ef0b76aaff09e0000cb7803",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592833899,
+      "updated": 1592833899
+    }
+  ]
+}

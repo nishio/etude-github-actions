@@ -1,0 +1,1548 @@
+{
+  "id": "6090ec03a287e6002291a090",
+  "title": "Hatena2010-04-07",
+  "created": 1270566000,
+  "updated": 1270566000,
+  "lines": [
+    {
+      "id": "6090ec27aff09e00003d55d7",
+      "text": "Hatena2010-04-07",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55d8",
+      "text": "code:hatena",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55d9",
+      "text": " <body>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55da",
+      "text": " *1270609167*IRCログを貼付け",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55db",
+      "text": " nishio: @admin_requiredなビューにアクセスしたときに",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55dc",
+      "text": " >||",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55dd",
+      "text": " google.appengine.ext.db.KindError",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55de",
+      "text": " KindError: No implementation for kind 'main_user'",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55df",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e0",
+      "text": " が出ることがあるのですが再現する方法がまだ見つかってません。特に何も修正していなくても久しぶりにアクセスすると出るように見えて、「いまどういうユーザとしてログインしているのか」を表示するためのビューが叩かれた後で同じURLにアクセスするとエラーにならずに見えるので、セッションのexpirationに関係する挙動かなと疑っています。問題の行は",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e1",
+      "text": " >||",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e2",
+      "text": " File \"…/kay/auth/backends/datastore.py\", line 42, in get_user",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e3",
+      "text": " return db.get(request.session['_user'])",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e4",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e5",
+      "text": " です。本番サーバでも同じ現象がおきます。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e6",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e7",
+      "text": " セッションのexpirationにしては早い。なにかをしてしまったときにセッションがおかしくなるのだろうか。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e8",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55e9",
+      "text": " _tmatsuo: nishio: ありがとうございます。ちょっと心当たりがあるので調べてみます。ローカルで runserver 後にまず /_ah/admin にアクセス -> アプリにアクセスとかやると起こったりするような気がしている。Model の衝突を避けるために appname_modelname という風に kind を上書きしてるんですが、それが諸悪の元ですww もうデフォルトでは Off にしてしまおうかなと思っていますが。ちなみに settings.ADD_APP_PREFIX_TO_KIND を False にするとこの挙動をしなくなるのでそのエラーは出なくなると思います。ただし今までのデータにはアクセスできなくなるので注意してください",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55ea",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55eb",
+      "text": " <hr>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55ec",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55ed",
+      "text": " nishio: うーむ。main_userとuserの両方にアクセスできるならBulk Updateとかで簡単に移行できるのでしょうけど、たぶん同時にはアクセス出来ないんですよね、settingsで決まっているし。実は手元の挙動では@admin_requiredな/adminにアクセスして、成功すると、次の/adminへのアクセスで確実に発生して@no_sessionではない/login_infoにアクセスして、それから/adminにアクセスするとたぶん100%成功するんですよ。なので/adminの中からAjaxで/login_infoにGETを投げればいいんじゃないかなーという全く本質的じゃないワークアラウンドを考えています。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55ee",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55ef",
+      "text": " <hr>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f0",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f1",
+      "text": " nishio: あれー、一晩寝たら昨日と挙動が違う…（ぇ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f2",
+      "text": " nishio: エラーが起きなくなってしまった…",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f3",
+      "text": " mopemope: お、session？",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f4",
+      "text": " nishio: @admin_requiredなビューにアクセスしたときに",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f5",
+      "text": " >||",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f6",
+      "text": " google.appengine.ext.db.KindError",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f7",
+      "text": " KindError: No implementation for kind 'main_user'",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f8",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55f9",
+      "text": " が",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55fa",
+      "text": " >||",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55fb",
+      "text": " /kay/auth/backends/datastore.py\", line 42, in get_user",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55fc",
+      "text": " return db.get(request.session['_user'])",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55fd",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55fe",
+      "text": " ででるという問題です。ログを何処かに貼りつけようかな。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d55ff",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5600",
+      "text": " <hr>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5601",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5602",
+      "text": " mopemope: ごった煮なってるのかな。これに似た話？？ http://code.google.com/p/googleappengine/issues/detail?id=1133",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5603",
+      "text": " nishio: リンク先を読んでいるナウ。Kindを検索するときのキーがバイト列であるべきなのにユニコードだったせいで見つからなかったということですね、なるほど。エラーメッセージが%sで表示されているからunicodeになってても分からない。とりあえずlogging.debug(type(kind))とか挟んで再現するのを待つかな…",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5604",
+      "text": " mopemope: ソース全く見てないけど、たぶんその辺が怪しいのかなと。VPNつなぐのでオチ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5605",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5606",
+      "text": " <hr>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5607",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5608",
+      "text": " nishio: エラーになる時にはtypeがunicode、エラーにならないときにはclass_for_kindがそもそも呼ばれていない。普段の操作をしているとclass_for_kindがそもそも呼ばれないのでunicodeなのが正しいのかおかしいのか確認できない。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5609",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d560a",
+      "text": " nishio: うーん、正しい時もエラーの時もrequest.session['_user']はdatastore_types.Key.from_path(u'main_user', 144L, _app=u'foobar')。unicodeなのは同じ。_kind_mapのキーがstrなのでclass_for_kindにunicodeを渡してはいけない。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d560b",
+      "text": " mopemope: 動いたり動かなかったりってのがよくわからんな",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d560c",
+      "text": " nishio: そう。なんかキャッシュされてるのだろうか。動いたり動かなかったりする要素が見つからない。とりあえずclass_for_kindの冒頭で「kindがunicodeだったらstrに変換」ってするだけで問題は解決するけど、別の大きな問題を悪質化させてしまうだろうなぁ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d560d",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d560e",
+      "text": " <hr>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d560f",
+      "text": " _tmatsuo: kay.auth.backends.datastore.DatastoreBackend の __init__ 一行目にimport_string(settings.AUTH_USER_MODEL)を入れれば大丈夫な気がする。Python の dict の key は unicode/str どちらでもアクセス可能みたいなので、問題は別のところにあるぽいです。key により db.get しているので、それ以前に Model 定義を import しておく必要があっただけの話だと思われます。サーバー側で現象が起きるケースと起きないケースとある件ですが、ログイン画面を通って、ログイン処理をした server instance 上ではそのプロセス内で main.models.User が import されています。このインスタンスが生きている間は大丈夫(エラーは起きない)で、このインスタンスがメモリから追い出されると、問題になっているエラーが出るというわけです。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5610",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5611",
+      "text": " *1270612447*Werkzeugすごいなー",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5612",
+      "text": " ここしばらくJinja2+WerkzeugなKay-frameworkを使っていて「Jinja2のパワフルさは痛感したけど、Werkzeugの良さがいまいちわからないなぁ」と思っていたのだが前言撤回。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5613",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5614",
+      "text": " エラー画面から該当部分のソースを読んだり、各関数のフレームの中で対話的に実行したりできるんだって！",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5615",
+      "text": " <img src=\"http://gyazo.com/20cecc673865c414e55ba5bb0a1b4dca.png\">",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5616",
+      "text": " 今までlogging.debugなどを突っ込んでprintデバッグしていたけど、そんなことしなくてもエラーメッセージが出たらすぐにその場でコードや各変数の値、メソッドを読んだ返り値、などなどを調べて回ることができる！",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5617",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5618",
+      "text": " 例えていうなら殺人事件で、断末魔の悲鳴だけから犯人を探すのと、現場や死体を鑑識が色々調べてくれるのとぐらい違う！今朝までは次のアプリをDjango+appenginepatchで作るか、Kayで作るか考えていたけど、もう僕はKay一択でいいや！",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5619",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d561a",
+      "text": " *1270620957*Pythonの辞書にunicodeとstrで同一の文字列を入れたらどうなるか",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d561b",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d561c",
+      "text": " In [1]: {u\"a\": 1, \"a\": 2}",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d561d",
+      "text": " Out[1]: {u'a': 2}",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d561e",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d561f",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5620",
+      "text": " ほう、なるほど。これは",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5621",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5622",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5623",
+      "text": " In [2]: u\"a\" == \"a\"",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5624",
+      "text": " Out[2]: True",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5625",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5626",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5627",
+      "text": " なのでu\"a\"と\"a\"が同一視されているんだな。もちろん",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5628",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5629",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d562a",
+      "text": " In [3]: u\"a\" is \"a\"",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d562b",
+      "text": " Out[3]: False",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d562c",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d562d",
+      "text": " なのだけど、isで「同じキーか」のチェックをしたのでは",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d562e",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d562f",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5630",
+      "text": " In [4]: (1, 2) is (1, 2)",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5631",
+      "text": " Out[4]: False",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5632",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5633",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5634",
+      "text": " とタプルが区別されてしまって嬉しくない。言語を設計するうえで割と悩ましいところだよね。このバイト列とユニコード文字列の自動変換は色々なわかりにくいバグの原因になるのでPython3.0からは取り除かれた。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5635",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5636",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5637",
+      "text": " >>> b\"a\" == \"a\"",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5638",
+      "text": " False",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5639",
+      "text": " >>> {b\"a\": 1, \"a\": 2}",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d563a",
+      "text": " {b'a': 1, 'a': 2}",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d563b",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d563c",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d563d",
+      "text": " *1270634477*こんなかまってちゃんは嫌だ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d563e",
+      "text": " ブラウザで次のページへのリンクを押そうとしたらちょうど見計らったかのようにDockからSkypeのアイコンがジャンプしてきたせいで押してしまったじゃないか！",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d563f",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5640",
+      "text": " *1270639662*おかたづけ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5641",
+      "text": " kayをつかって2つ目のアプリを作ろうと思ったらkayをどこに置いたかわからなくなった。~/tools/にない。~/cur/にあった。動かすとリンクが切れて困るらしいのでmvしてからln -sしておいた。置き場所とか片付け方とか、いい方法ないんだろうか。自分の机が片付けられないのだから無理か。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5642",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5643",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5644",
+      "text": " コンピュータのいいところは、散らかっていても検索出来るところだ！",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5645",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5646",
+      "text": " *1270648462*DjangoやKayを使って新しいアプリを作る方法の自分用メモ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5647",
+      "text": " 何事も始める時が一番腰が重いものであり、腰を軽くするためには考えずに作業出来る必要があり、その為には手順を記録してなんども修正して洗練させる必要がある、だからとりあえず記録。DjangoやKayを使ってウェブアプリを作る方法",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5648",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5649",
+      "text": " *** サービス名称を決める",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d564a",
+      "text": " - 他人に話してみる。「ダサッ」とか「え、何々って意味？(誤解)」とか言われたら考え直す。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d564b",
+      "text": " - ドメインが取れるかどうかを調べる。Google App Engineならその名前のアプリを作れるか調べる。取れないなら考えなおす。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d564c",
+      "text": " - ドメインを取る。アプリの名前をとる。作ってから取れなくなってたらガッカリするから。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d564d",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d564e",
+      "text": " *** プロジェクトフォルダを作る",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d564f",
+      "text": " 僕はBitbucketでホスティングされているプライベートのMercurialのリポジトリの中に作る。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5650",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5651",
+      "text": " *** フォルダの中でstartprojectする",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5652",
+      "text": " RATIONALE: ここで作られるフォルダのルートにはapp.yaml, settings.pyなどのファイルが複数おかれて散らかるし、それらのファイルとそのプロジェクトの「ウェブアプリではない何か」とが混在しておかれるのはややこしいから。いずれGAEにアップロードする必要のない資料とか画像とかスクリプトとかができてくるから。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5653",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5654",
+      "text": " *** startapp coreする",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5655",
+      "text": " RATIONALE: appが単一である時の「適当な名前」は以前までmainにしてたが、これはmanage.pyと2文字目まで同一なのでcdなどで移動するときにmai[TAB]の4文字打たなければ行けない。coreならc[TAB]でいい。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5656",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5657",
+      "text": " *** hg addとhg commitをする",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5658",
+      "text": " RATIONALE: この後の操作でファイルのコピー位置を間違えることがある",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5659",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d565a",
+      "text": " *** app.yamlを書き換え",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d565b",
+      "text": " applicationとversionあたりを。後でstaticを使うならついでに:",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d565c",
+      "text": " >||",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d565d",
+      "text": " - url: /static",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d565e",
+      "text": "   static_dir: static",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d565f",
+      "text": "   expiration: 3000d",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5660",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5661",
+      "text": " *** settings.pyを書き換え",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5662",
+      "text": " 特にINSTALLED_APPSとAPP_MOUNT_POINTSとSECRET_KEYを。APP_MOUNT_POINTSを指定し忘れて404とかなったりする。authやsessionを使う予定があるなら今のうちにやっとく。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5663",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5664",
+      "text": " INSTALLED_APPS = (",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5665",
+      "text": "   'kay.sessions',",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5666",
+      "text": "   'kay.auth',",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5667",
+      "text": "   \"core\",",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5668",
+      "text": " )",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5669",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d566a",
+      "text": " APP_MOUNT_POINTS = {",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d566b",
+      "text": "     \"core\": \"/\"",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d566c",
+      "text": " }",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d566d",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d566e",
+      "text": " MIDDLEWARE_CLASSES = (",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d566f",
+      "text": "   'kay.sessions.middleware.SessionMiddleware',",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5670",
+      "text": "   'kay.auth.middleware.AuthenticationMiddleware',",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5671",
+      "text": " )",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5672",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5673",
+      "text": " AUTH_USER_BACKEND = 'kay.auth.backends.datastore.DatastoreBackend'",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5674",
+      "text": " AUTH_USER_MODEL = 'core.models.User'",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5675",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5676",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5677",
+      "text": " AUTHにこの設定を入れたならmodels.pyにこれが必要",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5678",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5679",
+      "text": " from kay.auth.models import DatastoreUser",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d567a",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d567b",
+      "text": " class User(DatastoreUser):",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d567c",
+      "text": "     pass",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d567d",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d567e",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d567f",
+      "text": " *** GoogleAppEngineLauncherにドラッグドロップし、サーバを起動してブラウザで見えることを確認",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5680",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5681",
+      "text": " *** staticフォルダを作ってYUI reset-font-gridとJQueryUIとを入れる",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5682",
+      "text": " <a href='http://developer.yahoo.com/yui/'>YUI Library</a>、<a href='http://jquery.com/'>jQuery: The Write Less, Do More, JavaScript Library</a>。<a href='http://code.google.com/apis/ajaxlibs/documentation/'>Developer's Guide - Google AJAX Libraries API - Google Code</a>を使うという選択肢もあるみたい。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5683",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5684",
+      "text": " *** .hgignoreの無視リストにYUIとJQueryを入れる",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5685",
+      "text": " *** Google Analyticsで新しいプロフィールを作る",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5686",
+      "text": " *** template/_base.htmlを作る",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5687",
+      "text": " - 既存のアプリからコピーしてきてtemplate/_base.htmlを作る。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5688",
+      "text": " - Google Analiticsのトラックコードを書き換える。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5689",
+      "text": " - タイトルを書き換える",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d568a",
+      "text": " - template/index.htmlを{% extends \"core/_base.html\" %}にする",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d568b",
+      "text": " - R: テンプレートの継承ツリーは(何も継承しないテンプレート)→(_base: タイトル、Analitics、ヘッダなどの「見せるための準備」はあるが中身のないテンプレート)→(index: トップバナー、カラム、末尾の連絡先などの一揃いついたテンプレート)としてある。これはログイン情報の表示にiframeを使っていたときにCSSとかは同じようについているけどタイトルがないページが欲しくて作ったものなので、全部のページに同じようにヘッダとフッタがついてよければこれをする必要はないかも。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d568c",
+      "text": " *** README.txtを作る",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d568d",
+      "text": " プロジェクトフォルダのルートにREADME.txtを置く。何を作ろうとしたのか、何をする必要があるか、などを書き連ねる。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d568e",
+      "text": " - R: とりあえずこれを書き連ねてない状態で中断して暫く間が開くと「何するつもりだったんだっけ…」となるので。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d568f",
+      "text": " - 実行可能なことは□(TODO)を前置する。終わったら■に書き換える。うっかり□を書いたものでも、実行不可能だと思ったら-に書き換える。「なになにはどう実装する？」はTODOじゃない。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5690",
+      "text": " *** データベース保存場所の変更",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5691",
+      "text": " Macの場合、開発サーバのデータベース保存場所をプロジェクトフォルダの中に指定しておく。ランチャーのEdit-Application Settingsで--datastore_path=/...projdir.../database_projnameとか。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5692",
+      "text": " - デフォルトだと/varの中に作られて、マシン再起動の時に消されるようなので。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5693",
+      "text": " *** 作りたいところから作る。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5694",
+      "text": " まあ大体はmodel.pyを書かないとなにもできないわけだけど、今回は一番重要なブックマークレットから作り始めた。前回も冷静に考えるとコンテンツを作り出すスクリプトから作ったなぁ。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5695",
+      "text": " - 未実装の部分には必ず raise NotImplementedErrorを書く。書かないで困るのは自分。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5696",
+      "text": " - Emacsの話。modelsやviewsを書く際には、新しく作る方のmodels.pyを開いてから、別のアプリで作ったmodels.pyも開く。動的略語補完でdb.Iとかからdb.IntegerPropertyと補完されるので「db.IntegetPropertyと書いてしまってエラーになる」なんて時間のロスを防げる",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5697",
+      "text": " *** CSS",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5698",
+      "text": " >|python|",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d5699",
+      "text": " def css(request):",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d569a",
+      "text": "   r = render_to_response(",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d569b",
+      "text": "     'core/style.css', dict())",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d569c",
+      "text": "   r.content_type = \"text/css\"",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d569d",
+      "text": "   return r",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d569e",
+      "text": " ||<",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d569f",
+      "text": " *** 認証",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a0",
+      "text": "  認証は多少普通と違うからといって1から自分で作ろうとしたこともなんどもあったけど結局は既存の物に吸収されたので、今後はなるべく自分で作らない。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a1",
+      "text": " *** /admin",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a2",
+      "text": " /adminをつくる。公開する前にちゃんと@admin_requiedすること。ad hocなコード(付け替えやなんかのキックなど)はここへ。そのうち肥大化してくるので別ファイルに切り出す。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a3",
+      "text": " *** utils.pyなど",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a4",
+      "text": " 欲しいページ、欲しい機能を実装していくとおそらくview.pyが真っ先に肥大化する。ある程度以上のサイズになると脳内でどこに何があったか思い出せなくなってくるのでかぶっているコードをどんどんくくりだして短くする。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a5",
+      "text": " *** tests.py",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a6",
+      "text": "  ページの種類が3枚以上になったあたりで「何かを修正した後に全部の機能をテストしてない」という状態になるからテストケースを書き始める。さもないと「新しい機能をつけてupdateしたんだが、ふと気がついたらわずか1行の修正が足りないせいでこっちの機能が壊れてるじゃん！」という自体が起きて心臓に悪い。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a7",
+      "text": " - ローカルの開発環境で自分が操作して挙動を眺めているのは「手作業によるテスト」だと自覚すること。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a8",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56a9",
+      "text": " *1270656170*[CSS}ブロック要素のセンタリング",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56aa",
+      "text": " margin-left:auto; margin-right:auto;する。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ab",
+      "text": " ",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ac",
+      "text": " *1270669400*[GAE]マシンを再起動したら開発サーバのデータが消えた件",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ad",
+      "text": " あ、ここに書かれているのと同じ挙動かも。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56ae",
+      "text": " http://d.hatena.ne.jp/naskin/20100219/1266584289",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56af",
+      "text": " データを保存する場所を変えればいいのか。",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56b0",
+      "text": " </body>",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56b1",
+      "text": "",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec27aff09e00003d56b2",
+      "text": "[はてなダイアリー 2010-04-07 https://nishiohirokazu.hatenadiary.org/archive/2010/04/07]",
+      "created": 1270566000,
+      "updated": 1270566000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

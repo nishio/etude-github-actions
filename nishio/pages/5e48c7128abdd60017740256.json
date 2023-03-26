@@ -1,0 +1,239 @@
+{
+  "id": "5e48c7128abdd60017740256",
+  "title": "変なexcessively deepの最小限の例",
+  "created": 1581827860,
+  "updated": 1581828847,
+  "lines": [
+    {
+      "id": "5e48c7128abdd60017740256",
+      "text": "変なexcessively deepの最小限の例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827860,
+      "updated": 1581828847
+    },
+    {
+      "id": "5e48c89baff09e0000c10fef",
+      "text": "Type instantiation is excessively deep and possibly infiniteの最小限の例",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828252,
+      "updated": 1581828316
+    },
+    {
+      "id": "5e48c94aaff09e0000c10ff2",
+      "text": "リストの先頭が順次削られていくので有限回で確実に終了するがTypeScriptがそれを理解できない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828427,
+      "updated": 1581828555
+    },
+    {
+      "id": "5e48c8dcaff09e0000c10ff0",
+      "text": "\tF単体ではTypeScriptもexcessively deepとは判断しない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828317,
+      "updated": 1581828677
+    },
+    {
+      "id": "5e48c9d2aff09e0000c10ff3",
+      "text": "\tGで同じことをやってからFに渡している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828562,
+      "updated": 1581828654
+    },
+    {
+      "id": "5e48ca47aff09e0000c10ff4",
+      "text": "\t\tここでexcessively deepと判断される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828680,
+      "updated": 1581828697
+    },
+    {
+      "id": "5e48ca82aff09e0000c10ff5",
+      "text": "\t\t実際にはFに渡す前に`[0, []]`になるのでさほど深くならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828738,
+      "updated": 1581828821
+    },
+    {
+      "id": "5e48cadcaff09e0000c10ff6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828828,
+      "updated": 1581828828
+    },
+    {
+      "id": "5e48c714aff09e0000c10fc5",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827861,
+      "updated": 1581827865
+    },
+    {
+      "id": "5e48c717aff09e0000c10fc7",
+      "text": " type LIST = [0, []] | [0, LIST]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827865,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fde",
+      "text": " type F<N extends LIST> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fdf",
+      "text": "   {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe0",
+      "text": "     0: F<N[1] extends LIST ? N[1] : never>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe1",
+      "text": "     1: [0, []]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe2",
+      "text": "   }[N[1] extends LIST ? 0 : 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe3",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe5",
+      "text": " type G<N extends LIST> = (",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe6",
+      "text": "   F<",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe7",
+      "text": "     {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe8",
+      "text": "       0: G<N[1] extends LIST ? N[1] : never>,",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fe9",
+      "text": "       1: [0, []]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fea",
+      "text": "     }[N[1] extends LIST ? 0 : 1]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10feb",
+      "text": "   >",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fec",
+      "text": " )",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828201
+    },
+    {
+      "id": "5e48c869aff09e0000c10fed",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828201,
+      "updated": 1581828203
+    },
+    {
+      "id": "5e48c715aff09e0000c10fc6",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827862,
+      "updated": 1581827862
+    },
+    {
+      "id": "5e48c730aff09e0000c10fd8",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827888,
+      "updated": 1581827889
+    },
+    {
+      "id": "5e48c746aff09e0000c10fdc",
+      "text": "\tType instantiation is excessively deep and possibly infinite.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827911,
+      "updated": 1581827912
+    },
+    {
+      "id": "5e48c74baff09e0000c10fdd",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827916,
+      "updated": 1581827916
+    },
+    {
+      "id": "5e48c731aff09e0000c10fda",
+      "text": " Type '{ 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: ...[((((((((((({ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[...[(((((((((((N[1] extends LIST ? N[1] : never)[1] extends LIST ? (N[1] extends LIST ? N[1] : never)[1] : never)[1] extends LIST ? ((N[1] extends LIST ...' does not satisfy the constraint 'LIST'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827889,
+      "updated": 1581828213
+    },
+    {
+      "id": "5e48c874aff09e0000c10fee",
+      "text": "  Type '{ 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: { 0: ...[((((((((((({ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[{ 0: ...[...[(((((((((((N[1] extends LIST ? N[1] : never)[1] extends LIST ? (N[1] extends LIST ? N[1] : never)[1] : never)[1] extends LIST ? ((N[1] extends LIST ...' is not assignable to type '[0, LIST]'.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581828213,
+      "updated": 1581828213
+    },
+    {
+      "id": "5e48c730aff09e0000c10fd9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1581827888,
+      "updated": 1581827888
+    }
+  ]
+}

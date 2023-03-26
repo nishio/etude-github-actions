@@ -1,0 +1,183 @@
+{
+  "id": "5c177847a5676a0014319e0f",
+  "title": "ScrapboxのprivateプロジェクトのAPIを叩く",
+  "created": 1545041994,
+  "updated": 1620059315,
+  "lines": [
+    {
+      "id": "5c177847a5676a0014319e0f",
+      "text": "ScrapboxのprivateプロジェクトのAPIを叩く",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545041994,
+      "updated": 1545042004
+    },
+    {
+      "id": "5c177854aff09e0000f701c8",
+      "text": "publicプロジェクトのAPIは単純にGETすればデータが得られるが、privateプロジェクトでそれをやると401になる。(当たり前)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042004,
+      "updated": 1545042520
+    },
+    {
+      "id": "5c177879aff09e0000f701ca",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042041,
+      "updated": 1545042041
+    },
+    {
+      "id": "5c177879aff09e0000f701cb",
+      "text": "ログイン状態でprivateプロジェクトにアクセスすると、クッキーに認証情報がセットされる。これを使う。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042041,
+      "updated": 1545042532
+    },
+    {
+      "id": "5c1779c4aff09e0000f701d2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042372,
+      "updated": 1545042372
+    },
+    {
+      "id": "5c177925aff09e0000f701cd",
+      "text": "このクッキーは[Secure]で[HttpOnly]なのでdocument.cookieを見てもわからない。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042214,
+      "updated": 1545042813
+    },
+    {
+      "id": "5c177920aff09e0000f701cc",
+      "text": ">To prevent cross-site scripting (XSS) attacks, HttpOnly cookies are inaccessible to JavaScript's Document.cookie API",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042210,
+      "updated": 1545042213
+    },
+    {
+      "id": "5c177858aff09e0000f701c9",
+      "text": "\t[HTTP cookies | MDN https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042009,
+      "updated": 1545042330
+    },
+    {
+      "id": "5c17799aaff09e0000f701d1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042330,
+      "updated": 1545042331
+    },
+    {
+      "id": "5c177987aff09e0000f701ce",
+      "text": "Chrome Devtoolsだとここで見れる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042312,
+      "updated": 1545042319
+    },
+    {
+      "id": "5c177987aff09e0000f701cf",
+      "text": "\t[https://gyazo.com/ce08d69ca4712edf038c17fb9f8f2bd2]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042312,
+      "updated": 1545042320
+    },
+    {
+      "id": "5c177989aff09e0000f701d0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042313,
+      "updated": 1545042313
+    },
+    {
+      "id": "5c1779c6aff09e0000f701d3",
+      "text": "具体的には\"connect.sid\"という名前で認証情報が入っている。これを例えば[requests]に渡せば良い。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042375,
+      "updated": 1545042474
+    },
+    {
+      "id": "5c1779efaff09e0000f701d5",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042416,
+      "updated": 1545042421
+    },
+    {
+      "id": "5c1779f1aff09e0000f701d6",
+      "text": " cookies={\"connect.sid\": \"...\"}",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042417,
+      "updated": 1545042441
+    },
+    {
+      "id": "5c177a0faff09e0000f701d7",
+      "text": " r = requests.get(\"https://scrapbox.io/api/pages/...\", cookies=cookies) ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042447,
+      "updated": 1545042467
+    },
+    {
+      "id": "5c1779c8aff09e0000f701d4",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042377,
+      "updated": 1545042377
+    },
+    {
+      "id": "5c177a70aff09e0000f701da",
+      "text": "このconnect.sidは2018年の今時点で2020年までexpiresしないやつなので当面アクセスできる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042544,
+      "updated": 1545042589
+    },
+    {
+      "id": "5c177a9daff09e0000f701dc",
+      "text": "もしうっかりこの情報を漏らしてしまった場合にリセットする方法があるかどうかは知らないので気をつける必要がある。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042589,
+      "updated": 1545042624
+    },
+    {
+      "id": "5c177a70aff09e0000f701db",
+      "text": "\tログアウトしてログインし直したら変わってた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042544,
+      "updated": 1620059315
+    },
+    {
+      "id": "6090247caff09e0000458a7c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1620059260,
+      "updated": 1620059260
+    },
+    {
+      "id": "5c177a31aff09e0000f701d8",
+      "text": "thanks moriyoshi",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042482,
+      "updated": 1545042485
+    },
+    {
+      "id": "5c177a32aff09e0000f701d9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042482,
+      "updated": 1545042482
+    },
+    {
+      "id": "5c177c34aff09e00007081fa",
+      "text": "[ScrapboxAPI] [Scrapbox]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042997,
+      "updated": 1545043012
+    },
+    {
+      "id": "5c177c35aff09e00007081fb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1545042997,
+      "updated": 1545042997
+    }
+  ]
+}

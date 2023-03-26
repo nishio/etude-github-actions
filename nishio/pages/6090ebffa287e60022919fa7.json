@@ -1,0 +1,743 @@
+{
+  "id": "6090ebffa287e60022919fa7",
+  "title": "Hatena2009-06-04",
+  "created": 1244041200,
+  "updated": 1244041200,
+  "lines": [
+    {
+      "id": "6090ec23aff09e00003d1dbe",
+      "text": "Hatena2009-06-04",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dbf",
+      "text": "code:hatena",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc0",
+      "text": " <body>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc1",
+      "text": " *1244111079*完全最小ハッシュ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc2",
+      "text": " 前回「<a href='http://d.hatena.ne.jp/nishiohirokazu/20090602/1243912419'>算数は苦手なので</a>」で局面が全部で何通りあるかを人間が計算するのは面倒だからプログラムを書いたという話をした。で、「局面からなるべく小さい範囲の整数へencode/decodeする*C言語的な意味でのfunction*を作る」をやろうとしていたのだが、これは要するに完全最小ハッシュだね。頭の中でこの二つがつながっていなかった。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc3",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc4",
+      "text": " で、AndとOrとChoiceとResource#takeに関しては何も難しいところがないのだけどもUnorderedが難しい。というのも、Andを*, Orを+で表現すると、Unordered(X + Y)は生成時にUnordered(X) + X * Y + Unordered(Y)に書き換えられていて、単に数を数えるだけならこれで十分なのだけどもエンコードをしようと思った場合はX * Yの部分が「一つ目の引数がXで二つ目がYだった場合」とその逆とがあるのを正規化するコードが必要になるわけだ。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc5",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc6",
+      "text": " あー、Andに正規化コードを吐くオプションを付け加えてその問題を解決しようとしたがそれではダメなのか。Unorderedを展開した結果は別の特別なOrじゃないといけないのか。分岐のためのフラグを二つとって、3通りに場合分けするノードが必要なのか。しかしそのノード自体がまたAndやUnorderedの中に入ったらどうするのか。むー。Orと同じようにくくりだす必要があるな。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc7",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc8",
+      "text": " 整理しよう。Orが最も外になるようにくくりだす必要があるのはなぜだったか。それは同一のリソースからResource#takeが行われる場合、片方でtakeされたかどうかがもう片方の取れる選択肢に影響を与えるからだ。だからAnd(Or(r.take(), X), Y)のようなときにはOr(And(r.take(), Y), And(X, Y))に展開してしまって、Orの分岐の時点でdeepcopyしたコンテキストを渡すことでパラレルワールド化する。で、最後に足し合わせる。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dc9",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dca",
+      "text": " あ、そうか、Orの条件分岐を与えられたフラグだけでやろうとするから(X, Y)と(Y, X)が別の部分に分かれてしまって問題になるのか。Orにもオプションをつけてやればいいのか。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dcb",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dcc",
+      "text": " <hr>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dcd",
+      "text": " >|python|",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dce",
+      "text": "     x = Choice(3, \"foo\")",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dcf",
+      "text": "     y = Choice(5, \"bar\")",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd0",
+      "text": "     rule = Unordered(Or(x, y, \"is_bar\"))",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd1",
+      "text": " ||<",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd2",
+      "text": " これが",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd3",
+      "text": " >|python|",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd4",
+      "text": " Or(",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd5",
+      "text": "     And(Choice(3), Choice(5)), ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd6",
+      "text": "     Or(",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd7",
+      "text": "         Unordered(Choice(3)), ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd8",
+      "text": "         Unordered(Choice(5))))",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dd9",
+      "text": " ||<",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dda",
+      "text": " こうなって",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1ddb",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1ddc",
+      "text": " (長いので削除)",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1ddd",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dde",
+      "text": " こうなる。いっぱい中間結果を入れる変数が生成されているけど、gccが頑張って消してくれるはずだから気にしない。foo_0, foo_1, bar_0, bar_1, is_bar_0, is_bar_1の6つの引数をとって、or2の値を返せばOK。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1ddf",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de0",
+      "text": " で、デコーダの方は渡された整数をor2に入れてから",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de1",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de2",
+      "text": " (長いので削除)",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de3",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de4",
+      "text": " ん、とりあえずxor = Falseあたりがちょっと間違っているな。encodeで分岐の前に二つのフラグからxorの値を計算しているのと同様に、decodeでは分岐の後でxorの値を使って二つのフラグの値を計算しないと行けないんだな。となるといまxorは一時的な変数だから固定の名前でいいやってやってるけどネストする可能性があるからユニークな名前をつける必要があるわけか。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de5",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de6",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de7",
+      "text": " むー。カオスだ。いったん依存関係のグラフを作ってからコードに落とすべきだったのかもなぁ。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de8",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1de9",
+      "text": " <hr>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dea",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1deb",
+      "text": " 与えた引数をエンコードしてデコードするテストが走り始めた。ぼこぼこ落とし穴がある。一つ一つパズルを解いていく感じ。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dec",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1ded",
+      "text": " <hr>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dee",
+      "text": " えーと。エラーになるうちはまだいい。最後まで走って答えが違うとかやばい。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1def",
+      "text": " {'bar_1': 3, 'bar_0': 2, 'is_bar_1': True, 'is_bar_0': True}をエンコードして{'or2': 10}になった。えっと、これはあってるんだよな。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df0",
+      "text": " >||",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df1",
+      "text": " □",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df2",
+      "text": " □□",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df3",
+      "text": " □□□",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df4",
+      "text": " □□■",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df5",
+      "text": " □□",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df6",
+      "text": " ||<",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df7",
+      "text": " うん、0-originだから10番目だな。これをデコードするときになんで間違ってるのか。出力されたデコーダの該当部分のコード",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df8",
+      "text": " >|python|",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1df9",
+      "text": " is_bar_0 = False",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dfa",
+      "text": " if or2 < 21:",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dfb",
+      "text": "     is_bar_xor = True",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dfc",
+      "text": "     or1 = or2",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dfd",
+      "text": "     if or1 < 15:",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dfe",
+      "text": "         is_bar_0 = True",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1dff",
+      "text": "         unordered1 = or1",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e00",
+      "text": "         n = 5",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e01",
+      "text": "         choice1_0 = 0",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e02",
+      "text": "         while unordered1 >= n:",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e03",
+      "text": "             unordered1 -= n",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e04",
+      "text": "             choice1_0 += 1",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e05",
+      "text": "         choice1_1 = unordered1",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e06",
+      "text": "         bar_0 = choice1_0",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e07",
+      "text": "         bar_1 = choice1_1",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e08",
+      "text": " ||<",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e09",
+      "text": " ぶは、出力しているデコーダが全然間違っているw　nをデクリメントしないと行けないよね。む、それでも結果があわない。ああ、bar_0 = choice1_0はbar_0 = choice1_0 + choice1_1が正解か。違う。choice1_1 = unordered1がchoice1_1 = unordered1 + choice1_0になるのが正解か。そうだ。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e0a",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e0b",
+      "text": " <hr>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e0c",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e0d",
+      "text": " 次何すればいいんだ。And(Or(Choice, Choice))のテストをしてUnordered(Or(Choice, Choice))のテストをしたからResource#takeのテストが足りないんだな。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e0e",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e0f",
+      "text": " <hr>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e10",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e11",
+      "text": " それのテストも通ったのでよろこんでキリンを処理しようとしたら",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e12",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e13",
+      "text": " >||",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e14",
+      "text": "     if kirin_is_mochigoma_1:",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e15",
+      "text": "         ,  = _0, _1",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e16",
+      "text": "     else:",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e17",
+      "text": "         ,  = _1, _0",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e18",
+      "text": "     take0 = kirin",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e19",
+      "text": " ||<",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e1a",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e1b",
+      "text": " うへえ。項書き換えの結果「Unorderedで変換された」マークのついているAndは直下に持っているのが別のAndだからvar_name属性が空っぽだ。どうすんだこれ。 > Or(And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))), Or(Unordered(And(Take(Resource(X)), Choice(2))), Unordered(And(Choice(1), Choice(2)))))",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e1c",
+      "text": " ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e1d",
+      "text": " あー、そうかー、直下のノードに対応している変数名だけがUnorderedでコピーされているわけでは名うて、子孫ノード全体のをコピーしているんだった。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e1e",
+      "text": " >|python|",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e1f",
+      "text": "         self.vars = [(typ, name + suffix, comment) ",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e20",
+      "text": "                      for (typ, name, comment) in rule.vars",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e21",
+      "text": "                      for suffix in [\"_0\", \"_1\"]]",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e22",
+      "text": " ||<",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e23",
+      "text": " だからここで復元する対象もこれを使えばいいのか。",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e24",
+      "text": " </body>",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e25",
+      "text": "",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec23aff09e00003d1e26",
+      "text": "[はてなダイアリー 2009-06-04 https://nishiohirokazu.hatenadiary.org/archive/2009/06/04]",
+      "created": 1244041200,
+      "updated": 1244041200,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

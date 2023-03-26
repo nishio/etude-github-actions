@@ -1,0 +1,456 @@
+{
+  "id": "624ebcb6ab24700023e79ec2",
+  "title": "Scrapboxの記法を維持して形態素解析",
+  "created": 1649327288,
+  "updated": 1649408494,
+  "lines": [
+    {
+      "id": "624ebce1aff09e0000e0325b",
+      "text": "Scrapboxの記法を維持して形態素解析",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327330,
+      "updated": 1649327348
+    },
+    {
+      "id": "624ebcb6ab24700023e79ec2",
+      "text": "2022-04-07",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327288,
+      "updated": 1649327288
+    },
+    {
+      "id": "624ebcb8aff09e0000b0305d",
+      "text": "[https://gyazo.com/05d8ee0d4c4a5f47ace96e804e2cb77a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327288,
+      "updated": 1649327290
+    },
+    {
+      "id": "624ebcb9aff09e0000b0305e",
+      "text": "[mecabで入力の一部を分割しない]を使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327290,
+      "updated": 1649327359
+    },
+    {
+      "id": "624ebcffaff09e0000e0325d",
+      "text": "　ただしScrapboxの場合は保護したい記法が複数あるので前処理を正規表現での置換で済ませるのは困難",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327360,
+      "updated": 1649327445
+    },
+    {
+      "id": "624ebd56aff09e0000e0325e",
+      "text": "　今回は前処理部分だけ[Deno]で[scrapbox-parser]を使って行うことにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327446,
+      "updated": 1649327545
+    },
+    {
+      "id": "624ff908aff09e0000923b61",
+      "text": "code:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408265,
+      "updated": 1649408296
+    },
+    {
+      "id": "624ff928aff09e0000923b67",
+      "text": " data.pages.forEach((page: ScrapboxPage) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408296,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b68",
+      "text": "   const text = page.lines.map((line: ScrapboxLine) => line.text).join(\"\\n\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b69",
+      "text": "   const blocks = parse(text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b6a",
+      "text": "   const mecab = [] as string[];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b6b",
+      "text": "   blocks.forEach((block) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b6c",
+      "text": "     if (block.type === \"line\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b6d",
+      "text": "       const indent = \" \".repeat(block.indent);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b6e",
+      "text": "       mecab.push(`[${indent}]\\tSCRAPBOX_INDENT`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b6f",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b70",
+      "text": "       let trailing_space = \"\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b71",
+      "text": "       block.nodes.forEach((node) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b72",
+      "text": "         if (node.type === \"plain\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408312
+    },
+    {
+      "id": "624ff928aff09e0000923b74",
+      "text": "           const m = node.text.match(/(.*?)(\\s*)$/);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b75",
+      "text": "           mecab.push(m![1]);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b76",
+      "text": "           trailing_space = m![2];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b77",
+      "text": "         } else if (node.type === \"link\" || node.type === \"icon\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b78",
+      "text": "           const tag = node.type === \"link\" ? \"SCRAPBOX_LINK\" : \"SCRAPBOX_ICON\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b79",
+      "text": "           mecab.push(`${trailing_space}${node.raw}\\t${tag}`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b7a",
+      "text": "           trailing_space = \"\";",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b7b",
+      "text": "         }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b7c",
+      "text": "       });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b7d",
+      "text": "       mecab.push(\"[NEWLINE]\\tNEWLINE\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b7e",
+      "text": "     }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b7f",
+      "text": "   });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b80",
+      "text": "   page.mecab = mecab.join(\"\\n\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff928aff09e0000923b81",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408297,
+      "updated": 1649408297
+    },
+    {
+      "id": "624ff908aff09e0000923b62",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408265,
+      "updated": 1649408265
+    },
+    {
+      "id": "624ff908aff09e0000923b63",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408265,
+      "updated": 1649408265
+    },
+    {
+      "id": "624ff909aff09e0000923b64",
+      "text": "---",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408265,
+      "updated": 1649408302
+    },
+    {
+      "id": "624ff909aff09e0000923b66",
+      "text": "old version",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408265,
+      "updated": 1649408269
+    },
+    {
+      "id": "624ebcccaff09e0000b0305f",
+      "text": "\tcode:ts",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327309,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebdd9aff09e0000a36b9a",
+      "text": "\t const blocks = parse(text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36b9b",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36b9c",
+      "text": "  const mecab = [] as string[];",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36b9d",
+      "text": "  blocks.forEach((block) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36b9e",
+      "text": "    if (block.type === \"line\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36b9f",
+      "text": "      const indent = \" \".repeat(block.indent);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba0",
+      "text": "      mecab.push(`[${indent}]\\tSCRAPBOX_INDENT`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba1",
+      "text": "      block.nodes.forEach((node) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba2",
+      "text": "        console.log(node);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba3",
+      "text": "        if (node.type === \"plain\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba4",
+      "text": "          mecab.push(node.text);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba5",
+      "text": "        } else if (node.type === \"link\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba6",
+      "text": "          mecab.push(`${node.raw}\\tSCRAPBOX_LINK`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba7",
+      "text": "        } else if (node.type === \"icon\") {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba8",
+      "text": "          mecab.push(`${node.raw}\\tSCRAPBOX_ICON`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36ba9",
+      "text": "        }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36baa",
+      "text": "      });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36bab",
+      "text": "      mecab.push(\"[NEWLINE]\\tNEWLINE\");",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36bac",
+      "text": "    }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36bad",
+      "text": "  });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649327578
+    },
+    {
+      "id": "624ebddaaff09e0000a36bae",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649408357
+    },
+    {
+      "id": "624ff995aff09e0000923b85",
+      "text": "\terror `tokenizer.cpp(368) [new_node->feature]`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408405,
+      "updated": 1649408408
+    },
+    {
+      "id": "624ebddaaff09e0000a36baf",
+      "text": "　下流のMeCabの仕様によりリンク記法やアイコン記法の直前のテキストが空白文字で終わってはいけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649327578,
+      "updated": 1649408455
+    },
+    {
+      "id": "624ff9e4aff09e00000190ae",
+      "text": "　\t[https://eieito.hatenablog.com/entry/2021/09/24/090000 mecabの制約付き解析（部分解析）のエラー - エイエイレトリック]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408484,
+      "updated": 1649408484
+    },
+    {
+      "id": "624ff9e4aff09e00000190af",
+      "text": "  \t>制約ありテキスト列の 直前 に 半角スペース があるときだけ起こるエラーです。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408484,
+      "updated": 1649408484
+    },
+    {
+      "id": "624ff9c7aff09e00000190ad",
+      "text": "　　単に削ると復元できなくなるので、今回はその空白文字を記法の側に追加することにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1649408455,
+      "updated": 1649408480
+    }
+  ]
+}

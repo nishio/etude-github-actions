@@ -1,0 +1,659 @@
+{
+  "id": "5ba39a24e0c7f40013f34e37",
+  "title": "Cloud Firestore",
+  "created": 1537448486,
+  "updated": 1557738180,
+  "lines": [
+    {
+      "id": "5ba39a24e0c7f40013f34e37",
+      "text": "Cloud Firestore",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448486,
+      "updated": 1537448486
+    },
+    {
+      "id": "5ba39b16aff09e0000987bf6",
+      "text": "[Regroup]のバックエンド",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448726,
+      "updated": 1591168038
+    },
+    {
+      "id": "5ba39a26aff09e0000987bf0",
+      "text": "\t旧KJ法ツールでは[Google Realtime API]を使っていたが2019年1月に終了予定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448486,
+      "updated": 1537448742
+    },
+    {
+      "id": "5ba39a7eaff09e0000987bf2",
+      "text": " [Firebase]にしようかなと思って調査したらCloud [Firestore]がベータリリースしてた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448574,
+      "updated": 1557727856
+    },
+    {
+      "id": "5ba39b2daff09e0000987bf7",
+      "text": " \tデータモデル的にしっくり来そうなのでこっちにすることにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448750,
+      "updated": 1537448752
+    },
+    {
+      "id": "5ba39abeaff09e0000987bf3",
+      "text": " Scrapboxをバックエンドにする案はやめた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448638,
+      "updated": 1537448672
+    },
+    {
+      "id": "5ba39af6aff09e0000987bf5",
+      "text": " \tScrapboxはやはり人間とのインターフェイスであって、機械的なデータを置くべきではない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448695,
+      "updated": 1537448708
+    },
+    {
+      "id": "5ba39ae0aff09e0000987bf4",
+      "text": " \t[Scrapboxからのインポート]はできるようにする予定",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448672,
+      "updated": 1542379889
+    },
+    {
+      "id": "5ba39a2eaff09e0000987bf1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1537448494,
+      "updated": 1537448494
+    },
+    {
+      "id": "5cd90ab7aff09e0000538855",
+      "text": "\t「コレクション」の中に「ドキュメント」がある仕組み",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727927,
+      "updated": 1557727945
+    },
+    {
+      "id": "5cd90adeaff09e0000538857",
+      "text": "\t\tドキュメントはJSONだと思えば良い(+データ型がいくつか追加されてる)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727967,
+      "updated": 1557727989
+    },
+    {
+      "id": "5cd90a57aff09e000053883a",
+      "text": "\t\tドキュメントは1MBまで",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727946
+    },
+    {
+      "id": "5cd90acaaff09e0000538856",
+      "text": "\t\tドキュメントの中にまたコレクションを入れることはできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727947,
+      "updated": 1557727961
+    },
+    {
+      "id": "5cd90b02aff09e0000538859",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557728002,
+      "updated": 1557728012
+    },
+    {
+      "id": "5cd90a57aff09e000053883b",
+      "text": " [サポートされているデータ型  |  Firebase https://firebase.google.com/docs/firestore/manage-data/data-types?hl=ja]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053883c",
+      "text": "  ドキュメントの中にマップや配列、参照が入れられる　",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053883d",
+      "text": "  テキスト",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053883e",
+      "text": "  \t>UTF-8 表現の最初の 1,500 バイトのみがクエリによって考慮されます。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90b0faff09e000053885b",
+      "text": "  \t単独フィールドに対するインデックスは自動で生成されるが長文テキストはインデックスが無意味なので明示的に除外したほうがよい（課金的な意味で）",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557728015,
+      "updated": 1557728040
+    },
+    {
+      "id": "5cd90b10aff09e000053885c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557728016,
+      "updated": 1557728029
+    },
+    {
+      "id": "5cd90a57aff09e000053883f",
+      "text": " doc(\"...\").set(...)で上書き(なければ作成)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538840",
+      "text": " \tmerge: trueを指定するとマージ [ref https://firebase.google.com/docs/firestore/manage-data/add-data?hl=ja]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538841",
+      "text": "\t\tcollectionsRef.doc(\"hoge\").set(...)でID指定で作成できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538842",
+      "text": "\t\tcollectionRef.add(...)でID自動生成で追加できる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557736650
+    },
+    {
+      "id": "5cd90a57aff09e0000538843",
+      "text": "\t\t\tref = collections.doc() してから ref.set(data)が良さそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538844",
+      "text": "\t\t\t{timestamp: firebase.firestore.FieldValue.serverTimestamp()}を入れておくと良さげ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538845",
+      "text": "\t\t\t\tオフラインで書くことがあるからcreatedは手元のタイムスタンプを入れたほうが良さげ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd931feaff09e0000538884",
+      "text": "\t\t書き込み命令はPromiseを返して、完了時にthenが呼ばれる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557737982,
+      "updated": 1557737999
+    },
+    {
+      "id": "5cd9320eaff09e0000538886",
+      "text": "\t\t\tオフラインで書き込みをするとオンラインに戻ってサーバに書き込めた時点でthenが呼ばれる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557737999,
+      "updated": 1557738021
+    },
+    {
+      "id": "5cd93225aff09e0000538887",
+      "text": "\t\t\tなのでこれをウォッチして「書き込み済み」マークを表示するのが良さそう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557738021,
+      "updated": 1557738036
+    },
+    {
+      "id": "5cd93234aff09e0000538888",
+      "text": "\t\t\tそれと別にsnapshot.metadata.hasPendingWritesで未完了の書き込みの有無がわかる ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557738036,
+      "updated": 1557738159
+    },
+    {
+      "id": "5cd932c4aff09e0000538889",
+      "text": "\t\t\t\t[Cloud Firestore でリアルタイム アップデートを入手する  |  Firebase https://firebase.google.com/docs/firestore/query-data/listen]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557738180,
+      "updated": 1557738180
+    },
+    {
+      "id": "5cd90a57aff09e0000538846",
+      "text": "  docRef.updateもあるぞ？merge:trueと何が違うんだ？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538847",
+      "text": " 存在しないドキュメントをgetしてもエラーにはならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538848",
+      "text": " \t空のオブジェクトが帰ってくる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557728209
+    },
+    {
+      "id": "5cd90a57aff09e0000538849",
+      "text": "  doc.exists() => false",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053884a",
+      "text": " `.onSnapshot(function(querySnapshot) {`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053884b",
+      "text": " \t更新をlistenする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053884c",
+      "text": "\t一括書き込み [src https://firebase.google.com/docs/firestore/manage-data/transactions]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90be9aff09e000053885f",
+      "text": "\t\t一度に500件",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557728234,
+      "updated": 1557728237
+    },
+    {
+      "id": "5cd90a57aff09e000053884d",
+      "text": "\t\tbatch = db.batch()に対して操作をしてからbatch.commit()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e000053884e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90bd8aff09e000053885d",
+      "text": "\t[全文検索  |  Firebase https://firebase.google.com/docs/firestore/solutions/search?hl=ja]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557728217,
+      "updated": 1557728217
+    },
+    {
+      "id": "5cd90bd9aff09e000053885e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557728218,
+      "updated": 1557728219
+    },
+    {
+      "id": "5cd91f21aff09e000053886a",
+      "text": "\tオフラインの永続性",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733154,
+      "updated": 1557733179
+    },
+    {
+      "id": "5cd91f33aff09e000053886d",
+      "text": "\t\t[オフライン データを有効にする  |  Firebase https://firebase.google.com/docs/firestore/manage-data/enable-offline]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733172,
+      "updated": 1557733172
+    },
+    {
+      "id": "5cd91f24aff09e000053886c",
+      "text": "\t\t>ユーザーが同じ Cloud Firestore データベースを参照する複数のブラウザタブを開き、オフラインの永続性が有効になっている場合、Cloud Firestore は最初のタブでのみ正しく動作します。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733157,
+      "updated": 1557733173
+    },
+    {
+      "id": "5cd91f21aff09e000053886b",
+      "text": "\t\tそれはうっかりミスで複数タブ開いてデータをとばしそうで怖いな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733154,
+      "updated": 1557733205
+    },
+    {
+      "id": "5cd91fa3aff09e000053886f",
+      "text": "\t\tサンプルコードを見ると一応検出できるっぽいので、ユーザに警告すべきだな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733284,
+      "updated": 1557733298
+    },
+    {
+      "id": "5cd91f3eaff09e000053886e",
+      "text": "\t\tWifiを切って書き込んだものがWifi再接続後にサーバに保存されるのを確認した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733183,
+      "updated": 1557737592
+    },
+    {
+      "id": "5cd93078aff09e0000538880",
+      "text": "\t\t\t接続があってもなくてもsnapshot.metadataはfromCache: false",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557737592,
+      "updated": 1557737691
+    },
+    {
+      "id": "5cd930d0aff09e0000538882",
+      "text": "\t\t\t一方でブラウザをリロードした時にはfromCache: trueである",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557737680,
+      "updated": 1557737682
+    },
+    {
+      "id": "5cd931d3aff09e0000538883",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557737939,
+      "updated": 1557737939
+    },
+    {
+      "id": "5cd90a57aff09e000053884f",
+      "text": "\tPython API",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd91413aff09e0000538861",
+      "text": "\t\t[Cloud Firestore を使ってみる  |  Firebase https://firebase.google.com/docs/firestore/quickstart] のPythonのところを見る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557730324,
+      "updated": 1557730367
+    },
+    {
+      "id": "5cd9141faff09e0000538864",
+      "text": "\t\t`cred = credentials.ApplicationDefault()`が成功するためには [認証の開始  |  認証  |  Google Cloud https://cloud.google.com/docs/authentication/getting-started] を読んでJSONのダウンロードと環境変数の設定が必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557730336,
+      "updated": 1557730405
+    },
+    {
+      "id": "5cd91467aff09e0000538867",
+      "text": "\t\tPythonでは`collection.doc()`ではなく`collection.document()`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557730407,
+      "updated": 1557730662
+    },
+    {
+      "id": "5cd9144faff09e0000538866",
+      "text": "\t\tDocRef#getは`document.DocumentSnapshot`を返す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557730384,
+      "updated": 1557732572
+    },
+    {
+      "id": "5cd91be0aff09e0000b8e90b",
+      "text": "\t\t\t.to_dict()で辞書になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732320,
+      "updated": 1557732363
+    },
+    {
+      "id": "5cd91ce1aff09e0000b8e90c",
+      "text": "\t\t`db.collection(\"...\").get()`が「すべてのドキュメントを返す」と書いてあって、マジかと思ったがジェネレータが作成されるので安心",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732577,
+      "updated": 1557732650
+    },
+    {
+      "id": "5cd91d29aff09e0000b8e90d",
+      "text": "\t\t\t`DeprecationWarning: 'Collection.get' is deprecated:  please use 'Collection.stream' instead.`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732650,
+      "updated": 1557732651
+    },
+    {
+      "id": "5cd91d2daff09e0000b8e90e",
+      "text": "\t\t\t`xs.__next__() # => document.DocumentSnapshot`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732653,
+      "updated": 1557732668
+    },
+    {
+      "id": "5cd91d4faff09e0000b8e910",
+      "text": "\t\t条件をつける時にはwhereを使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732687,
+      "updated": 1557732699
+    },
+    {
+      "id": "5cd91e36aff09e0000b8e911",
+      "text": "\t\t\tcode:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732919,
+      "updated": 1557732930
+    },
+    {
+      "id": "5cd91e3caff09e0000b8e912",
+      "text": "\t\t\t In [25]: [d.to_dict()[\"text\"] for d in db.collection(\"pieces\").where(\"text\", \"<\", \"t\").stream()]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732925,
+      "updated": 1557732925
+    },
+    {
+      "id": "5cd91e3daff09e0000b8e913",
+      "text": "    Out[25]: []",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732925,
+      "updated": 1557732925
+    },
+    {
+      "id": "5cd91e3daff09e0000b8e914",
+      "text": "    ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732925,
+      "updated": 1557732925
+    },
+    {
+      "id": "5cd91e3daff09e0000b8e915",
+      "text": "    In [26]: [d.to_dict()[\"text\"] for d in db.collection(\"pieces\").where(\"text\", \">\", \"t\").stream()]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732925,
+      "updated": 1557732925
+    },
+    {
+      "id": "5cd91e3daff09e0000b8e916",
+      "text": "    Out[26]: ['test']",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557732925,
+      "updated": 1557732925
+    },
+    {
+      "id": "5cd90a57aff09e0000538850",
+      "text": "\t\thttps://googleapis.github.io/google-cloud-python/latest/firestore/client.html",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd91ed6aff09e0000538868",
+      "text": "\tWeb JS API",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733078,
+      "updated": 1557733084
+    },
+    {
+      "id": "5cd92448aff09e0000538871",
+      "text": "\t\t[Firebase を JavaScript プロジェクトに追加する  |  Firebase https://firebase.google.com/docs/web/setup]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734473,
+      "updated": 1557734474
+    },
+    {
+      "id": "5cd91edbaff09e0000538869",
+      "text": "\t\t\tまずscriptタグでいくつかのJSを読み、それから設定する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557733084,
+      "updated": 1557734474
+    },
+    {
+      "id": "5cd92338aff09e0000b8e917",
+      "text": " \t\tローカルファイルシステムから開いたのでは動かないJSがあるそうだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734201,
+      "updated": 1557734483
+    },
+    {
+      "id": "5cd92453aff09e0000538872",
+      "text": " \t\t\tfirebase-toolsでサーブする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734483,
+      "updated": 1557734485
+    },
+    {
+      "id": "5cd92351aff09e0000b8e918",
+      "text": " \t\t\tPythonのhttp.serverでも良いと思うがまずは言われた通りにしてみることにした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734225,
+      "updated": 1557734476
+    },
+    {
+      "id": "5cd9258eaff09e0000538873",
+      "text": " \t\t\t>Error: Cannot understand what targets to deploy. Check that you specified valid targets if you used the --only or --except flag. Otherwise, check your firebase.json to ensure that your project is initialized for the desired features.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734799,
+      "updated": 1557734801
+    },
+    {
+      "id": "5cd92591aff09e0000538874",
+      "text": "    うーむ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734801,
+      "updated": 1557734807
+    },
+    {
+      "id": "5cd92597aff09e0000538875",
+      "text": "    $ python3 -m http.server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734807,
+      "updated": 1557735432
+    },
+    {
+      "id": "5cd92808aff09e0000538876",
+      "text": "    \tで特に問題なさそうだ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735432,
+      "updated": 1557735437
+    },
+    {
+      "id": "5cd92369aff09e0000b8e919",
+      "text": " \t\t\tリリース時には [Firebase Hosting  |  Firebase https://firebase.google.com/docs/hosting/index] を使うのが手軽そう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557734249,
+      "updated": 1557734476
+    },
+    {
+      "id": "5cd92812aff09e0000538877",
+      "text": "\t\t[Cloud Firestore を使ってみる  |  Firebase https://firebase.google.com/docs/firestore/quickstart]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735443,
+      "updated": 1557735754
+    },
+    {
+      "id": "5cd92815aff09e0000538878",
+      "text": "\t\t\tJSの場合、setやgetはPromiseを返してくる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735446,
+      "updated": 1557735470
+    },
+    {
+      "id": "5cd9282faff09e0000538879",
+      "text": "\t\t\tcode:js",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735471,
+      "updated": 1557735731
+    },
+    {
+      "id": "5cd92933aff09e000053887a",
+      "text": "\t\t\t db.collection(\"pieces\").get().then((querySnapshot) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735732,
+      "updated": 1557735732
+    },
+    {
+      "id": "5cd92934aff09e000053887b",
+      "text": "        querySnapshot.forEach((doc) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735732,
+      "updated": 1557735732
+    },
+    {
+      "id": "5cd92934aff09e000053887c",
+      "text": "            console.log(`${doc.id} => ${doc.data()[\"text\"]}`);",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735732,
+      "updated": 1557735732
+    },
+    {
+      "id": "5cd92934aff09e000053887d",
+      "text": "        });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735732,
+      "updated": 1557735732
+    },
+    {
+      "id": "5cd92934aff09e000053887e",
+      "text": "    });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557735732,
+      "updated": 1557735732
+    },
+    {
+      "id": "5cd92f18aff09e000053887f",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557737240,
+      "updated": 1557737240
+    },
+    {
+      "id": "5cd913e4aff09e0000538860",
+      "text": "\tREST API",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557730276,
+      "updated": 1557730335
+    },
+    {
+      "id": "5cd90a57aff09e0000538852",
+      "text": "\t\thttps://firebase.google.com/docs/firestore/reference/rest/v1beta1/projects.databases.documents/createDocument",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    },
+    {
+      "id": "5cd90a57aff09e0000538853",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1557727831,
+      "updated": 1557727831
+    }
+  ]
+}

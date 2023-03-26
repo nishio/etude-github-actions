@@ -1,0 +1,974 @@
+{
+  "id": "5eecb69736238e00388111cd",
+  "title": "ABC170_F",
+  "created": 1592571545,
+  "updated": 1592902667,
+  "lines": [
+    {
+      "id": "5eecb69736238e00388111cd",
+      "text": "ABC170_F",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571545,
+      "updated": 1592571549
+    },
+    {
+      "id": "5eecb69daff09e0000cddf3b",
+      "text": "[atcoder] [F - Pond Skater https://atcoder.jp/contests/abc170/tasks/abc170_f]  [ABC170]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571550,
+      "updated": 1592665666
+    },
+    {
+      "id": "5eecba46aff09e000064cbb7",
+      "text": "\t解説の通り位置と向きを頂点として[ダイクストラ法] #長方形グラフ探索",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592572486,
+      "updated": 1592901312
+    },
+    {
+      "id": "5eee24d2aff09e00003d97d4",
+      "text": " 1コストでKマス進めるのに1歩ずつ進むのを疑問に思って解説を無視してみたが、ダメだった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592665352
+    },
+    {
+      "id": "5eee2507aff09e0000d5911e",
+      "text": " 　探索の1ステップでKマス進むとTLEになるため、1マスずつ探索する必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665352,
+      "updated": 1592665352
+    },
+    {
+      "id": "5eee24d2aff09e00003d97d5",
+      "text": " 1マスずつ進む場合、直前に進んだ向きと同じ向きかどうかでコストが変わるので頂点が向きを持つ必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592665396
+    },
+    {
+      "id": "5eeeb1d8aff09e0000cc9e03",
+      "text": " グラフを作ってからダイクストラするのではたぶん遅いので、作りながらやる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592701401,
+      "updated": 1592701440
+    },
+    {
+      "id": "5eee24d2aff09e00003d97d6",
+      "text": " コストは1/K単位になる。浮動小数点数だと誤差が心配なので整数部と分子の2つの整数で持つ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592701462
+    },
+    {
+      "id": "5eee24d2aff09e00003d97d7",
+      "text": " 上記の実装をした段階で8TLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592670457
+    },
+    {
+      "id": "5eee38f9aff09e00009b9dbf",
+      "text": " \tまめな高速化が面倒なので[numba]に初挑戦、事前にコンパイルするスタイル",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592670457,
+      "updated": 1592670457
+    },
+    {
+      "id": "5eee24d2aff09e00003d97d8",
+      "text": " \t\tinputは型不明で使えないので読んでからコンパイルした関数に渡す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592670464
+    },
+    {
+      "id": "5eee24d2aff09e00003d97d9",
+      "text": " \t\t地図データは番兵付きで通行可能boolの配列にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592670471
+    },
+    {
+      "id": "5eee3906aff09e00009b9dc0",
+      "text": " \t\t\t衝突チェックと範囲内チェックが一本化できる　see[番兵付きの一次元配列]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592670471,
+      "updated": 1592670471
+    },
+    {
+      "id": "5eee24d2aff09e00003d97da",
+      "text": " \t\tnumbaでdefaultdictは使えない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592670478
+    },
+    {
+      "id": "5eee390eaff09e00009b9dc1",
+      "text": " \t\t\tdictにしたがgetがらみで型エラーが起きる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592670478,
+      "updated": 1592670481
+    },
+    {
+      "id": "5eee3910aff09e00009b9dc2",
+      "text": " \t\t\tそもそもタプルをキーにすると型エラーなので整数にパックする必要がある",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592670481,
+      "updated": 1592670483
+    },
+    {
+      "id": "5eee3913aff09e00009b9dc3",
+      "text": " \t\t\tじゃあ素直に配列使おう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592670483,
+      "updated": 1592670483
+    },
+    {
+      "id": "5eee24d2aff09e00003d97db",
+      "text": " 通常は90度ターンだけで良いが、初手だけは真後ろに進む可能性があることを見落としていて2WA",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665298,
+      "updated": 1592670490
+    },
+    {
+      "id": "5eee391aaff09e00009b9dc4",
+      "text": " \t初回だけ5番目の向きにしたが、始状態を90度回転した2つにすればよかっただけかも",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592670490,
+      "updated": 1592670491
+    },
+    {
+      "id": "5eee24bcaff09e00003d97d1",
+      "text": "その他",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665277,
+      "updated": 1592666037
+    },
+    {
+      "id": "5eee27b5aff09e0000d5911f",
+      "text": "　TLEの時の消費時間は実行完了前に打ち切られているので参考にならない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592666038,
+      "updated": 1592666071
+    },
+    {
+      "id": "5eee24bcaff09e00003d97d2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665277,
+      "updated": 1592665277
+    },
+    {
+      "id": "5eee24bcaff09e00003d97d3",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592665277,
+      "updated": 1592665280
+    },
+    {
+      "id": "5eecba46aff09e000064cbb8",
+      "text": "解説によれば[ダイクストラ法]とのこと。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592572486,
+      "updated": 1592572502
+    },
+    {
+      "id": "5eecba55aff09e000064cbb9",
+      "text": "\t明示的に頂点と辺を構築するとコスト高そうなので、必要に応じてその場で構築することにした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592572502,
+      "updated": 1592902423
+    },
+    {
+      "id": "5ef1c319aff09e0000b1f31e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902425,
+      "updated": 1592902425
+    },
+    {
+      "id": "5eecba96aff09e000064cbbb",
+      "text": "一度コストの和ではなくパスを構成する辺の数を返してしまいWA",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592572566,
+      "updated": 1592902431
+    },
+    {
+      "id": "5ef1c31eaff09e0000b1f31f",
+      "text": "\t直してTLE https://atcoder.jp/contests/abc170/submissions/14474187",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902431,
+      "updated": 1592902434
+    },
+    {
+      "id": "5eecbaebaff09e000097d13f",
+      "text": "\tPyPy3で3314 ms、タイムリミットを1割ほど超過している(誤解A)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592572651,
+      "updated": 1592902473
+    },
+    {
+      "id": "5eecbe2faff09e000064cbbd",
+      "text": "\tとりあえず全部mainで包んで[line_profiler]したが、のっぺりと遅いのでどうしたものやら。他の人のコードを読んでみよう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592573496,
+      "updated": 1592902447
+    },
+    {
+      "id": "5eecbbcdaff09e000097d141",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592572877,
+      "updated": 1592572877
+    },
+    {
+      "id": "5eecb6ffaff09e0000cddf3e",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571647,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb704aff09e0000cddf40",
+      "text": " if sys.argv[-1] == 'ONLINE_JUDGE':",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb704aff09e0000cddf41",
+      "text": "     from numba.pycc import CC",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb704aff09e0000cddf42",
+      "text": "     cc = CC('my_module')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592575097
+    },
+    {
+      "id": "5eecb704aff09e0000cddf43",
+      "text": "     cc.export('main', '(b1[:],i8,i8,i8,i8,i8)')(main)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb704aff09e0000cddf44",
+      "text": "     cc.compile()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb704aff09e0000cddf45",
+      "text": "     exit()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb704aff09e0000cddf46",
+      "text": " from my_module import main",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571652,
+      "updated": 1592571652
+    },
+    {
+      "id": "5eecb6ffaff09e0000cddf3f",
+      "text": "https://atcoder.jp/contests/abc170/submissions/14405996",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571648,
+      "updated": 1592571666
+    },
+    {
+      "id": "5eecc214aff09e000064cbbf",
+      "text": "なんと。 [numba]で事前にコンパイルしてる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592574485,
+      "updated": 1592578532
+    },
+    {
+      "id": "5eecc263aff09e000064cbc2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592574564,
+      "updated": 1592574776
+    },
+    {
+      "id": "5eecc33caff09e000064cbc4",
+      "text": "今、直進していけるところまでは進んでる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592574780,
+      "updated": 1592902541
+    },
+    {
+      "id": "5ef1c362aff09e0000b1f320",
+      "text": "\tそれだと面積100万以下の制約がついてるのに、1歩進むコードがその何百倍もの回数呼ばれてしまう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902498,
+      "updated": 1592902498
+    },
+    {
+      "id": "5eecc219aff09e000064cbc1",
+      "text": "\t`    49  20156497   22145363.0      1.1     11.3                  nx += dx`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592574490,
+      "updated": 1592902502
+    },
+    {
+      "id": "5ef1c36aaff09e0000b1f321",
+      "text": "\t解説に「位置と向きを頂点」にすると書いてあったが理由が分からなくて無視してた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902507,
+      "updated": 1592902551
+    },
+    {
+      "id": "5ef1c38faff09e0000b1f323",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902543,
+      "updated": 1592902553
+    },
+    {
+      "id": "5eecb712aff09e0000cddf47",
+      "text": "こんな状態で1割程度遅いだけとは思えないな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592571666,
+      "updated": 1592579383
+    },
+    {
+      "id": "5eecd4ddaff09e00008b9a31",
+      "text": "\t>PyPy3で3314 ms、タイムリミットを1割ほど超過している。(誤解A)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592579294,
+      "updated": 1592902572
+    },
+    {
+      "id": "5eecd4eaaff09e00008b9a34",
+      "text": "\t→これはTLEしてちょっとのところで打ち切られてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592579306,
+      "updated": 1592902568
+    },
+    {
+      "id": "5ef1c3a7aff09e0000b1f325",
+      "text": "\t\t実際にはどれくらい縮める必要があるのかはここからは読み取れない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902568,
+      "updated": 1592902568
+    },
+    {
+      "id": "5eecd4eaaff09e00008b9a35",
+      "text": "\tサーバで2174 msのものを手元で走らせてみたら14.450sだった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592579306,
+      "updated": 1592902578
+    },
+    {
+      "id": "5ef1c3b1aff09e0000b1f326",
+      "text": "\t\t7倍遅いので、手元で21秒で終わるようにしないといけないのか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902578,
+      "updated": 1592902578
+    },
+    {
+      "id": "5eecd505aff09e00008b9a36",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592579333,
+      "updated": 1592579333
+    },
+    {
+      "id": "5eedb4d6aff09e0000ce4f02",
+      "text": "向き変更時の距離の更新が間違ってたバグを直してサブミット、WA",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592636630,
+      "updated": 1592636892
+    },
+    {
+      "id": "5eedb5dcaff09e000081ebea",
+      "text": " killer01が手元で18秒、killer02が36秒なのでどっちみちTLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592636892,
+      "updated": 1592636936
+    },
+    {
+      "id": "5eedb608aff09e000081ebeb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592636937,
+      "updated": 1592636937
+    },
+    {
+      "id": "5eedb64baff09e000081ebec",
+      "text": "WAの原因は距離が2つの数のタプルになったのに到達不能の判定が1つの数との比較のままだったから。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592637004,
+      "updated": 1592637051
+    },
+    {
+      "id": "5eedb6fcaff09e000081ebed",
+      "text": "　killer04が24秒",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592637181,
+      "updated": 1592637195
+    },
+    {
+      "id": "5eedb70baff09e000081ebee",
+      "text": "　うーん、やっぱり[TLE https://atcoder.jp/contests/abc170/submissions/14488691]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592637195,
+      "updated": 1592637552
+    },
+    {
+      "id": "5eedb7e6aff09e000081ebef",
+      "text": "　killer_03.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592637414,
+      "updated": 1592638361
+    },
+    {
+      "id": "5eedbbe9aff09e0000ce4f05",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638441,
+      "updated": 1592638447
+    },
+    {
+      "id": "5eedbb98aff09e0000ce4f04",
+      "text": "\t7.3          (d, frac), (frm, direction) = heappop(queue) ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638361,
+      "updated": 1592638447
+    },
+    {
+      "id": "5eedb5c9aff09e000081ebe9",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592636873,
+      "updated": 1592638479
+    },
+    {
+      "id": "5eedbc0eaff09e0000ce4f20",
+      "text": "\t8.5          for dir in range(4):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638479,
+      "updated": 1592638479
+    },
+    {
+      "id": "5eedbc07aff09e0000ce4f06",
+      "text": " 6.0              if dir == direction:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638471,
+      "updated": 1592638594
+    },
+    {
+      "id": "5eedbc7faff09e0000ce4f25",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638591,
+      "updated": 1592638591
+    },
+    {
+      "id": "5eedbc33aff09e0000ce4f21",
+      "text": " 5.3              if nx < 1 or H < nx or ny < 1 or W < ny:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638516,
+      "updated": 1592638518
+    },
+    {
+      "id": "5eedbc07aff09e0000ce4f10",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638471,
+      "updated": 1592638523
+    },
+    {
+      "id": "5eedbc3baff09e0000ce4f22",
+      "text": " 7.7              dp(nx, ny, mapdata[nx - 1][ny - 1])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638523,
+      "updated": 1592638525
+    },
+    {
+      "id": "5eedbc07aff09e0000ce4f13",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638471,
+      "updated": 1592638531
+    },
+    {
+      "id": "5eedbc43aff09e0000ce4f23",
+      "text": " 5.4              if mapdata[nx - 1][ny - 1] == leaf:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638531,
+      "updated": 1592638533
+    },
+    {
+      "id": "5eedbc07aff09e0000ce4f14",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638471,
+      "updated": 1592638539
+    },
+    {
+      "id": "5eedbc4aaff09e0000ce4f24",
+      "text": " 5.7              if distances[to] > newdist:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638539,
+      "updated": 1592638540
+    },
+    {
+      "id": "5eedbc07aff09e0000ce4f1a",
+      "text": "デバッグプリントの消し忘れはコメントアウトする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638471,
+      "updated": 1592638689
+    },
+    {
+      "id": "5eedc131aff09e000081ebfb",
+      "text": "　デバッグモード以外ではデバッグ出力しない設計にしてたんだけど、引数の評価は行われちゃう",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592639797,
+      "updated": 1592902605
+    },
+    {
+      "id": "5ef1c3ccaff09e0000b1f327",
+      "text": "　[デバッグプリントのコメントアウト]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902605,
+      "updated": 1592902606
+    },
+    {
+      "id": "5eedc041aff09e000081ebfa",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592639556,
+      "updated": 1592639556
+    },
+    {
+      "id": "5eedbce1aff09e000081ebf1",
+      "text": "4方向から今向いてる方向を取り除いたものを実行してるけど、このループは砕いた方がいいかも。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592638689,
+      "updated": 1592902620
+    },
+    {
+      "id": "5ef1c3dcaff09e0000b1f328",
+      "text": "\tx,yの片方は更新しなくてよくなる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902620,
+      "updated": 1592902622
+    },
+    {
+      "id": "5ef1c3deaff09e0000b1f329",
+      "text": "\t画面内外チェックのコストも半分になる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902622,
+      "updated": 1592902625
+    },
+    {
+      "id": "5ef1c3e0aff09e0000b1f32a",
+      "text": "\t\t(追記: ループアンローリングしたので1/4になった)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902625,
+      "updated": 1592902628
+    },
+    {
+      "id": "5eedbf36aff09e000081ebf9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592639289,
+      "updated": 1592639289
+    },
+    {
+      "id": "5eedbe7faff09e000081ebf4",
+      "text": "トータル実行時間が80秒から27秒になった。サブミットしてみよう。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592639104,
+      "updated": 1592639202
+    },
+    {
+      "id": "5eedbee1aff09e000081ebf8",
+      "text": "　あっ、またWAになってしまった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592639202,
+      "updated": 1592639296
+    },
+    {
+      "id": "5eedc187aff09e000081ebfc",
+      "text": "　ループアンローリングした時にcontinueを対処し忘れて後半が実行されないバグ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592639881,
+      "updated": 1592639910
+    },
+    {
+      "id": "5eedc23baff09e000081ebfd",
+      "text": "　直してサブミット、8件TLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592640065,
+      "updated": 1592640070
+    },
+    {
+      "id": "5eedc316aff09e000081ebfe",
+      "text": "　　タプルを整数に置き換えるかな…と思ってるけど、計測なしに憶測で高速化してはいけない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592640283,
+      "updated": 1592902647
+    },
+    {
+      "id": "5eedc332aff09e000081ebff",
+      "text": "\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592640306,
+      "updated": 1592902653
+    },
+    {
+      "id": "5eedc499aff09e000097d144",
+      "text": " \t 11.1          (d, frac), (frm, direction) = heappop(queue)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592640665,
+      "updated": 1592902655
+    },
+    {
+      "id": "5eedc49aaff09e000097d145",
+      "text": "\t\tうーん、まあ、そうですよね…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592640666,
+      "updated": 1592902660
+    },
+    {
+      "id": "5eedcc66aff09e000081ec01",
+      "text": "\t\tこの辺を直していくの、あんまりやる気が起きないなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642666,
+      "updated": 1592902661
+    },
+    {
+      "id": "5eedcc74aff09e000081ec02",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642676,
+      "updated": 1592642676
+    },
+    {
+      "id": "5eedcc74aff09e000081ec03",
+      "text": "[numba]を試そう！",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642676,
+      "updated": 1592901435
+    },
+    {
+      "id": "5ef1c40aaff09e0000b1f32b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592902667,
+      "updated": 1592902667
+    },
+    {
+      "id": "5eedcc7eaff09e000081ec04",
+      "text": "inputは型が不明と言われるのでmainの外で読み込んでから渡す",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642687,
+      "updated": 1592642767
+    },
+    {
+      "id": "5eedcccfaff09e000081ec05",
+      "text": "　`Untyped global name 'input': cannot determine Numba type of <class 'builtin_function_or_method'>`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642767,
+      "updated": 1592643714
+    },
+    {
+      "id": "5eedccd2aff09e000081ec06",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642771,
+      "updated": 1592642786
+    },
+    {
+      "id": "5eedcce3aff09e000081ec07",
+      "text": "マップはどうやって渡してるかな？ああ、なるほど、番兵付きの一次元配列にするのか。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592642787,
+      "updated": 1592642831
+    },
+    {
+      "id": "5eedce8daff09e0000515be9",
+      "text": "\t[番兵付きの一次元配列]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592643213,
+      "updated": 1592643350
+    },
+    {
+      "id": "5eedcf16aff09e0000515bea",
+      "text": "\t`b1[:]`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592643350,
+      "updated": 1592643402
+    },
+    {
+      "id": "5eedcf44aff09e0000515beb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592643397,
+      "updated": 1592643397
+    },
+    {
+      "id": "5eedd493aff09e000081ec1a",
+      "text": "Untyped global name 'defaultdict': cannot determine Numba type of <class 'numba.core.ir.UndefinedType'>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644756,
+      "updated": 1592644756
+    },
+    {
+      "id": "5eedd496aff09e000081ec1c",
+      "text": "　グローバルでインポートした値が使えない？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644758,
+      "updated": 1592644772
+    },
+    {
+      "id": "5eedd4a3aff09e000081ec1e",
+      "text": "　関数内でインポートする？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644772,
+      "updated": 1592644778
+    },
+    {
+      "id": "5eedd493aff09e000081ec1b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644756,
+      "updated": 1592644780
+    },
+    {
+      "id": "5eedd02baff09e0000515bf0",
+      "text": "`Use of unsupported opcode (IMPORT_NAME) found`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592643627,
+      "updated": 1592643717
+    },
+    {
+      "id": "5eedd02faff09e0000515bf1",
+      "text": "\tうーむ、関数内でのインポートはできないのか、defaultdictはさておきheapqを自前で実装するのはやりたくないなぁ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592643631,
+      "updated": 1592644732
+    },
+    {
+      "id": "5eedd0bfaff09e000081ec0b",
+      "text": "　　あれ？使ってはいるな？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592643807,
+      "updated": 1592644698
+    },
+    {
+      "id": "5eedd4adaff09e000081ec1f",
+      "text": "　　heapqはできる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644782,
+      "updated": 1592644792
+    },
+    {
+      "id": "5eedd4b8aff09e000081ec20",
+      "text": "　　defaultdictだけがダメなのか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644792,
+      "updated": 1592645809
+    },
+    {
+      "id": "5eedd48daff09e000081ec16",
+      "text": "\t[Supported NumPy features — Numba 0.50.0.dev0+236.g64fbf2b-py3.7-linux-x86_64.egg documentation https://numba.pydata.org/numba-doc/dev/reference/numpysupported.html]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644750,
+      "updated": 1592645558
+    },
+    {
+      "id": "5eedd47eaff09e000081ec0f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592644734,
+      "updated": 1592644734
+    },
+    {
+      "id": "5ef1bfd4aff09e0000b1f31a",
+      "text": "結局タプルをキーにするのはダメ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901589,
+      "updated": 1592901602
+    },
+    {
+      "id": "5ef1bfe1aff09e0000b1f31c",
+      "text": "っぽい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901602,
+      "updated": 1592901602
+    },
+    {
+      "id": "5ef1bfd4aff09e0000b1f31b",
+      "text": " `No implementation of function Function(<built-in function setitem>) found for signature:`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901589,
+      "updated": 1592901607
+    },
+    {
+      "id": "5eedd8b4aff09e00009b9d98",
+      "text": " `>>> setitem(DictType[Tuple(UniTuple(int64 x 2), int64),UniTuple(int64 x 2)], Tuple(UniTuple(int64 x 2), Literal[int](0)), none)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592645813,
+      "updated": 1592901604
+    },
+    {
+      "id": "5eedd8b4aff09e00009b9d9a",
+      "text": "\tintとstrだけってみた気がする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592645813,
+      "updated": 1592901633
+    },
+    {
+      "id": "5eeddabcaff09e000081ec21",
+      "text": "\tそれを直して、minの引数をリストにした。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592646332,
+      "updated": 1592901635
+    },
+    {
+      "id": "5ef1c009aff09e0000b1f31d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592901642,
+      "updated": 1592901642
+    },
+    {
+      "id": "5eede151aff09e000081ec24",
+      "text": "defaultdictをやめたことによるキーエラーはコンパイルした状況ではどこで起きたか分からないので、Pythonモードで実行",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592648017,
+      "updated": 1592901641
+    },
+    {
+      "id": "5eeddcf9aff09e000081ec23",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592646905,
+      "updated": 1592646905
+    },
+    {
+      "id": "5eede40eaff09e00009b9d9b",
+      "text": "`'NoneType' object has no attribute 'args'`という謎のエラー",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592648719,
+      "updated": 1592901476
+    },
+    {
+      "id": "5eede40faff09e00009b9d9c",
+      "text": "\t本体のバグでした",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592648720,
+      "updated": 1592901516
+    },
+    {
+      "id": "5eee11bbaff09e00009b9db2",
+      "text": "\t\thttps://github.com/numba/numba/issues/5896",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592660411,
+      "updated": 1592901517
+    },
+    {
+      "id": "5eee11bbaff09e00009b9db3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592660412,
+      "updated": 1592660412
+    },
+    {
+      "id": "5eee11bcaff09e00009b9db4",
+      "text": "辞書からのgetで型がおかしくなるっぽいので、辞書からのgetをしないようにリストで実装し直した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592660412,
+      "updated": 1592660919
+    },
+    {
+      "id": "5eee13b7aff09e0000d5911a",
+      "text": " TLEなし2WAまで来た",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592660919,
+      "updated": 1592901525
+    },
+    {
+      "id": "5eee0de8aff09e00009b9daf",
+      "text": " \tkiller_04.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592659433,
+      "updated": 1592901525
+    },
+    {
+      "id": "5eee1463aff09e00009b9db6",
+      "text": " \trand_1000_03.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592661091,
+      "updated": 1592901525
+    },
+    {
+      "id": "5eee1462aff09e00009b9db5",
+      "text": " この2件に関して正しい答えより1多く答えている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592661091,
+      "updated": 1592901525
+    },
+    {
+      "id": "5eee210baff09e0000d5911d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592664332,
+      "updated": 1592664332
+    },
+    {
+      "id": "5eee20c7aff09e0000d5911b",
+      "text": "高速化の過程で90度のターンしかしなくなったことにより、初手が真後ろの盤面において1つ多く答えていた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592664267,
+      "updated": 1592664347
+    },
+    {
+      "id": "5eee215caff09e00003d97d0",
+      "text": "\tAC 881ms https://atcoder.jp/contests/abc170/submissions/14505545",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592664412,
+      "updated": 1592901544
+    },
+    {
+      "id": "5eee215aaff09e00003d97cf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592664410,
+      "updated": 1592664410
+    },
+    {
+      "id": "5eeef241aff09e00000e0c51",
+      "text": "初回だけ5番目の向きにしたが、始状態を90度回転した2つにすればよかっただけかも",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592717890,
+      "updated": 1592717902
+    },
+    {
+      "id": "5eeef24eaff09e00000e0c53",
+      "text": "\tAC 844 ms https://atcoder.jp/contests/abc170/submissions/14516254",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592717903,
+      "updated": 1592901546
+    },
+    {
+      "id": "5eeef24eaff09e00000e0c52",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592717902,
+      "updated": 1592717902
+    }
+  ]
+}

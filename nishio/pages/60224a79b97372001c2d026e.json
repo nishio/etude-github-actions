@@ -1,0 +1,316 @@
+{
+  "id": "60224a79b97372001c2d026e",
+  "title": "終わりのデザイン能動学習",
+  "created": 1612860039,
+  "updated": 1612877929,
+  "lines": [
+    {
+      "id": "60224a79b97372001c2d026e",
+      "text": "終わりのデザイン能動学習",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612860039,
+      "updated": 1612860042
+    },
+    {
+      "id": "60224a8aaff09e00003af3e9",
+      "text": "[終わりのデザイン]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612860043,
+      "updated": 1612860049
+    },
+    {
+      "id": "60224a8daff09e00003af3ea",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612860045,
+      "updated": 1612860045
+    },
+    {
+      "id": "60224b1aaff09e00003af3ec",
+      "text": "「ここは終わるのに良いところですか？」の質問を出すのに適当かどうかを環境を引数とする二値分類で判定する路線。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612860187,
+      "updated": 1612860229
+    },
+    {
+      "id": "60224b44aff09e00003af3ee",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612860229,
+      "updated": 1612860229
+    },
+    {
+      "id": "60225613aff09e00003af3f0",
+      "text": "過去ログから各時点の環境をdeepcopyで複製して、それを引数にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862996,
+      "updated": 1612863043
+    },
+    {
+      "id": "6022557aaff09e0000dfb3ab",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862842,
+      "updated": 1612862843
+    },
+    {
+      "id": "6022557baff09e0000dfb3ac",
+      "text": " def get_unknowns():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3ad",
+      "text": "     IS_SINGLE = True",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3ae",
+      "text": "     if IS_SINGLE:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3af",
+      "text": "         TARGETS = [f\"{CACHEDIR}/y3mJfH67rbHpvTp9yfY6.json\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b0",
+      "text": "     else:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b1",
+      "text": "         TARGETS = glob.glob(f\"{CACHEDIR}/*.json\")",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b3",
+      "text": "     for path in TARGETS:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b4",
+      "text": "         environment.init_for_web(\"test\", is_local=True)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b5",
+      "text": "         testenv = load(\"test\", local=True)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b6",
+      "text": "         data = open(path).read()",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b7",
+      "text": "         replay_env = Env(name=\"replay\", is_local=True).fromJSON(data)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b8",
+      "text": "         testenv.keyphrase_extraction_type = \"replay\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3b9",
+      "text": "         testenv.replay_env = replay_env",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3ba",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3bb",
+      "text": "         for i, (user, text) in enumerate(replay_env.log):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3bc",
+      "text": "             if user == 1:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3bd",
+      "text": "                 r = keicho.connect_web(\"\", \"test\", text, testenv)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3be",
+      "text": "                 r = json.loads(r)[\"text\"]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3bf",
+      "text": "                 yield deepcopy(testenv)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862844
+    },
+    {
+      "id": "6022557caff09e0000dfb3c0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862844,
+      "updated": 1612862845
+    },
+    {
+      "id": "60225647aff09e00003af3f1",
+      "text": "能動学習の質問が出るようになった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612863047,
+      "updated": 1612863055
+    },
+    {
+      "id": "60225071aff09e00003af3ef",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612861557,
+      "updated": 1612862823
+    },
+    {
+      "id": "60225567aff09e0000dfb3a6",
+      "text": " 0: あなたはこの会話で何が起きて欲しいですか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862824,
+      "updated": 1612862824
+    },
+    {
+      "id": "60225568aff09e0000dfb3a7",
+      "text": " 1: 今の時点で解説を書くか、先にフィードバックボタンを実装するか、どうしようかなと考えてるので話して整理したい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862824,
+      "updated": 1612862824
+    },
+    {
+      "id": "60225568aff09e0000dfb3a8",
+      "text": " 0: ここは終わるのに良いところですか？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862824,
+      "updated": 1612862824
+    },
+    {
+      "id": "60225568aff09e0000dfb3a9",
+      "text": " score: 0.5000",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862824,
+      "updated": 1612862824
+    },
+    {
+      "id": "60225568aff09e0000dfb3aa",
+      "text": " negative(z), neutral(x), positive(c), quit(q)>",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612862824,
+      "updated": 1612862824
+    },
+    {
+      "id": "60224b1caff09e00003af3ed",
+      "text": "これはもちろん「この段階で『ここは終わるのに良いところですか？』は良くない」のでnegative",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612860188,
+      "updated": 1612863100
+    },
+    {
+      "id": "60225654aff09e00003af3f2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612863060,
+      "updated": 1612863060
+    },
+    {
+      "id": "60228fd1aff09e00008a2bda",
+      "text": "やってみて",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877777,
+      "updated": 1612877779
+    },
+    {
+      "id": "60228fd3aff09e00008a2bdc",
+      "text": "　現状あんまり良くない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877779,
+      "updated": 1612877789
+    },
+    {
+      "id": "60228fddaff09e00008a2bdd",
+      "text": "　なぜか考察",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877789,
+      "updated": 1612877794
+    },
+    {
+      "id": "60228fe2aff09e00008a2bde",
+      "text": "　　そもそも何を特徴量にすれば良いかがわからないため、現状は能動学習でもランダムと変わらない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877795,
+      "updated": 1612877827
+    },
+    {
+      "id": "60229003aff09e00008a2bdf",
+      "text": "　　対話の流れを見て「このタイミングで終わらせて良いか」を判断するので、ランダムに提示されると手間が掛かる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877827,
+      "updated": 1612877897
+    },
+    {
+      "id": "60228fd3aff09e00008a2bdb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877779,
+      "updated": 1612877779
+    },
+    {
+      "id": "60229068aff09e00008a2be0",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1612877929,
+      "updated": 1612877929
+    }
+  ]
+}

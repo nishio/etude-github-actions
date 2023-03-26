@@ -1,0 +1,267 @@
+{
+  "id": "632acb5b221b64001f527a83",
+  "title": "UNetModel",
+  "created": 1663748957,
+  "updated": 1663749695,
+  "lines": [
+    {
+      "id": "632acb5b221b64001f527a83",
+      "text": "UNetModel",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663748957,
+      "updated": 1663748960
+    },
+    {
+      "id": "632acb60aff09e000034662f",
+      "text": "`class UNetModel(nn.Module)`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663748960,
+      "updated": 1663748965
+    },
+    {
+      "id": "632acb8daff09e0000346632",
+      "text": " The full UNet model with attention and timestep embedding.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749010
+    },
+    {
+      "id": "632acb8daff09e0000346633",
+      "text": " :param in_channels: channels in the input Tensor.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749075
+    },
+    {
+      "id": "632acb8daff09e0000346634",
+      "text": " :param model_channels: base channel count for the model.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749075
+    },
+    {
+      "id": "632acb8daff09e0000346635",
+      "text": " :param out_channels: channels in the output Tensor.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749075
+    },
+    {
+      "id": "632acbd3aff09e000034664d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749076,
+      "updated": 1663749076
+    },
+    {
+      "id": "632acb8daff09e0000346636",
+      "text": " :param num_res_blocks: number of residual blocks per downsample.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749077
+    },
+    {
+      "id": "632acbd6aff09e000034664e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749078,
+      "updated": 1663749078
+    },
+    {
+      "id": "632acbd6aff09e000034664f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749078,
+      "updated": 1663749078
+    },
+    {
+      "id": "632acb8daff09e0000346637",
+      "text": "    :param attention_resolutions: a collection of downsample rates at which",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346638",
+      "text": "        attention will take place. May be a set, list, or tuple.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346639",
+      "text": "        For example, if this contains 4, then at 4x downsampling, attention",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034663a",
+      "text": "        will be used.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034663b",
+      "text": "    :param dropout: the dropout probability.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034663c",
+      "text": "    :param channel_mult: channel multiplier for each level of the UNet.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034663d",
+      "text": "    :param conv_resample: if True, use learned convolutions for upsampling and",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034663e",
+      "text": "        downsampling.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034663f",
+      "text": "    :param dims: determines if the signal is 1D, 2D, or 3D.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346640",
+      "text": "    :param num_classes: if specified (as an int), then this model will be",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346641",
+      "text": "        class-conditional with `num_classes` classes.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346642",
+      "text": "    :param use_checkpoint: use gradient checkpointing to reduce memory usage.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346643",
+      "text": "    :param num_heads: the number of attention heads in each attention layer.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346644",
+      "text": "    :param num_heads_channels: if specified, ignore num_heads and instead use",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346645",
+      "text": "                               a fixed channel width per attention head.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346646",
+      "text": "    :param num_heads_upsample: works with num_heads to set a different number",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346647",
+      "text": "                               of heads for upsampling. Deprecated.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346648",
+      "text": "    :param use_scale_shift_norm: use a FiLM-like conditioning mechanism.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e0000346649",
+      "text": "    :param resblock_updown: use residual blocks for up/downsampling.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034664a",
+      "text": "    :param use_new_attention_order: use a different attention pattern for potentially",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034664b",
+      "text": "                                    increased efficiency.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb8daff09e000034664c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749005,
+      "updated": 1663749005
+    },
+    {
+      "id": "632acb60aff09e0000346630",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663748960,
+      "updated": 1663748960
+    },
+    {
+      "id": "632ace24aff09e0000346650",
+      "text": "Residual neural network(2016)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749669,
+      "updated": 1663749694
+    },
+    {
+      "id": "632ace3daff09e0000346653",
+      "text": "\t[Residual neural network - Wikipedia https://en.wikipedia.org/wiki/Residual_neural_network]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749694,
+      "updated": 1663749695
+    },
+    {
+      "id": "632ace25aff09e0000346652",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749669,
+      "updated": 1663749669
+    },
+    {
+      "id": "632ace25aff09e0000346651",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1663749669,
+      "updated": 1663749669
+    }
+  ]
+}

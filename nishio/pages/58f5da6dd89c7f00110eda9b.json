@@ -1,0 +1,610 @@
+{
+  "id": "58f5da6dd89c7f00110eda9b",
+  "title": "np.dot, np.tensordot, np.matmulの違い",
+  "created": 1492507247,
+  "updated": 1551164085,
+  "lines": [
+    {
+      "id": "58f5da6dd89c7f00110eda9b",
+      "text": "np.dot, np.tensordot, np.matmulの違い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507247,
+      "updated": 1492507265
+    },
+    {
+      "id": "58f5da81aff09e000038d1b1",
+      "text": "[np.einsum]という表現力の高いメソッドを知ったので、np.dot, np.tensordot, np.matmulをそれぞれnp.einsumで表現することで違いを確認してみる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507265,
+      "updated": 1536052586
+    },
+    {
+      "id": "5906cd40aff09e0000776f72",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1493617984,
+      "updated": 1493617984
+    },
+    {
+      "id": "58f5daa5aff09e000038d1b3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507302,
+      "updated": 1492507302
+    },
+    {
+      "id": "58f5daa5aff09e000038d1b2",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507302,
+      "updated": 1492507309
+    },
+    {
+      "id": "58f5daafaff09e000038d1b5",
+      "text": " import numpy as np",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507311,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1b6",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1b7",
+      "text": " def same_matrix(A, B):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1b8",
+      "text": "     return (A.shape == B.shape) and all(A.flatten() == B.flatten())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1b9",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1ba",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1bb",
+      "text": " # 3-dim",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1bc",
+      "text": " T1 = np.arange(27).reshape(3, 3, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1bd",
+      "text": " T2 = np.arange(27).reshape(3, 3, 3) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1be",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1bf",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c0",
+      "text": "     np.einsum('ijk,jkl->il', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c1",
+      "text": "     np.tensordot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c2",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c3",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c4",
+      "text": "     np.einsum('ijk,lkm->ijlm', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c5",
+      "text": "     np.dot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c6",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c7",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c8",
+      "text": "     np.einsum('ijk,ikm->ijm', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dabcaff09e000038d1c9",
+      "text": "     np.matmul(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507325
+    },
+    {
+      "id": "58f5dac5aff09e000038d1cb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507334,
+      "updated": 1492507334
+    },
+    {
+      "id": "58f5dabcaff09e000038d1ca",
+      "text": "ついでに4次元と2次元の時もやってみた。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507325,
+      "updated": 1492507345
+    },
+    {
+      "id": "58f5dacdaff09e000038d1cc",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507342,
+      "updated": 1492507350
+    },
+    {
+      "id": "58f5dad6aff09e000038d1cd",
+      "text": " # 4-dim",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507351,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1ce",
+      "text": " T1 = np.arange(81).reshape(3, 3, 3, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1cf",
+      "text": " T2 = np.arange(81).reshape(3, 3, 3, 3) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d1",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d2",
+      "text": "     np.einsum('ijkl,klmn->ijmn', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d3",
+      "text": "     np.tensordot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d5",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d6",
+      "text": "     np.einsum('ijkl,mnlo->ijkmno', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d7",
+      "text": "     np.dot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1d9",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1da",
+      "text": "     np.einsum('ijkl,ijlm->ijkm', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1db",
+      "text": "     np.matmul(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5dae1aff09e000038d1dc",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507362
+    },
+    {
+      "id": "58f5daedaff09e000038d1ed",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507374,
+      "updated": 1492507374
+    },
+    {
+      "id": "58f5dae1aff09e000038d1dd",
+      "text": " # 2-dim",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507362,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1de",
+      "text": " T1 = np.arange(9).reshape(3, 3)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1df",
+      "text": " T2 = np.arange(9).reshape(3, 3) + 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e0",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e1",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e2",
+      "text": "     np.einsum('ij,ij->', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e3",
+      "text": "     np.tensordot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e4",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e5",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e6",
+      "text": "     np.einsum('ij,jk->ik', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e7",
+      "text": "     np.dot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e8",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1e9",
+      "text": " assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1ea",
+      "text": "     np.einsum('ij,jk->ik', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5daeaaff09e000038d1eb",
+      "text": "     np.matmul(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492507371
+    },
+    {
+      "id": "58f5dd96aff09e000063b2fc",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492508054,
+      "updated": 1492508054
+    },
+    {
+      "id": "58f5dbf0aff09e000063b2d5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507632,
+      "updated": 1492507632
+    },
+    {
+      "id": "58f5daeaaff09e000038d1ec",
+      "text": "[*** 解説編]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507371,
+      "updated": 1492508050
+    },
+    {
+      "id": "58f5dd94aff09e000063b2fb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492508053,
+      "updated": 1492508053
+    },
+    {
+      "id": "58f5dbf2aff09e000063b2d6",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507634,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2e2",
+      "text": "  assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2e3",
+      "text": "      np.einsum('ijk,jkl->il', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2e4",
+      "text": "      np.tensordot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dc06aff09e000063b2f1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507655,
+      "updated": 1492507655
+    },
+    {
+      "id": "58f5dc01aff09e000063b2f0",
+      "text": "tensordorはT1の後ろ2つとT2の前2つを潰す。なのでijkのjkとjklのjkが潰されてilが残る。いくつ潰すかはオプションで指定できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507650,
+      "updated": 1492507725
+    },
+    {
+      "id": "58f5dc1eaff09e000063b2f2",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507679,
+      "updated": 1492507679
+    },
+    {
+      "id": "58f5dc00aff09e000063b2ef",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507648,
+      "updated": 1492508271
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2e6",
+      "text": "  assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2e7",
+      "text": "      np.einsum('ijk,lkm->ijlm', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2e8",
+      "text": "      np.dot(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dc56aff09e000063b2f5",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507734,
+      "updated": 1492507734
+    },
+    {
+      "id": "58f5dc58aff09e000063b2f6",
+      "text": "dotはT1の最後の1つと、T2の最後から2番目を潰す。なのでijkのkとlkmのkが潰されてijlmが残る。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507737,
+      "updated": 1492507771
+    },
+    {
+      "id": "58f5dc4faff09e000063b2f3",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507728,
+      "updated": 1492507728
+    },
+    {
+      "id": "58f5dc50aff09e000063b2f4",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507729,
+      "updated": 1492507731
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2ea",
+      "text": "  assert same_matrix(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2eb",
+      "text": "      np.einsum('ijk,ikm->ijm', T1, T2),",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507642
+    },
+    {
+      "id": "58f5dbf9aff09e000063b2ec",
+      "text": "      np.matmul(T1, T2))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507642,
+      "updated": 1492507776
+    },
+    {
+      "id": "58f5dcb3aff09e000063b2f9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507827,
+      "updated": 1492507827
+    },
+    {
+      "id": "58f5dc82aff09e000063b2f7",
+      "text": "matmulは2次のテンソルの掛算を想定している。なのでこれはまず「jkとkmを掛けてjmを作る(jk,km->jm)」が基礎にあって、その上で「行列の1つのマスにi個の値が積まれている」という扱いがされて、結果的にijk,ikm->ijmになっている。なおiの部分ではよしなにブロードキャストもするので`np.matmul(np.ones((2, 1, 3, 4)), np.ones((1, 5, 4, 6)))`はvalidである。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507778,
+      "updated": 1551164085
+    },
+    {
+      "id": "58f5daaaaff09e000038d1b4",
+      "text": "#NumPy",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1492507306,
+      "updated": 1492507382
+    }
+  ]
+}

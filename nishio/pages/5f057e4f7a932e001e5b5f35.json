@@ -1,0 +1,456 @@
+{
+  "id": "5f057e4f7a932e001e5b5f35",
+  "title": "DP S",
+  "created": 1594198594,
+  "updated": 1603710755,
+  "lines": [
+    {
+      "id": "5f057e4f7a932e001e5b5f35",
+      "text": "DP S",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198594,
+      "updated": 1594198594
+    },
+    {
+      "id": "5f058a41aff09e0000d07c19",
+      "text": "[S - Digit Sum https://atcoder.jp/contests/dp/tasks/dp_s]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198594,
+      "updated": 1594198638
+    },
+    {
+      "id": "5f058a6eaff09e0000d07c30",
+      "text": "\tある数K以下の自然数で、条件を満たすものがいくつあるか、という問題",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198638,
+      "updated": 1594199722
+    },
+    {
+      "id": "5f058eaaaff09e0000986b50",
+      "text": "\t　素朴にK個の数を調べることはKがやたらでかいのでできない前提",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594199722,
+      "updated": 1594199902
+    },
+    {
+      "id": "5f058ed1aff09e0000986b51",
+      "text": "\t　[桁DP]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594199761,
+      "updated": 1594199771
+    },
+    {
+      "id": "5f058edeaff09e0000986b52",
+      "text": "\t >桁DPはもらうDPよりも配るDPの方が圧倒的に書きやすい",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594199775,
+      "updated": 1594199831
+    },
+    {
+      "id": "5f058f17aff09e0000fab1f7",
+      "text": "\t \t[EDPC解説 M～T - kyopro_friends’ diary https://kyopro-friends.hatenablog.com/entry/2019/01/12/231035]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594199831,
+      "updated": 1594199863
+    },
+    {
+      "id": "5f058f38aff09e0000fab1f8",
+      "text": "　　　なるほど、以前試してバグらせた時はもらう実装でやってた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594199865,
+      "updated": 1603708237
+    },
+    {
+      "id": "5f06849caff09e000055fbfb",
+      "text": "　まずはシンプルに「K以下の自然数の個数を数え上げる」をDPで考える",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594262685,
+      "updated": 1594262730
+    },
+    {
+      "id": "5f0684abaff09e000055fbfd",
+      "text": "　　[https://gyazo.com/c9063ac33df020121c1f8d9ce839578a]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594262699,
+      "updated": 1594262699
+    },
+    {
+      "id": "5f06849eaff09e000055fbfc",
+      "text": "　　57以下の自然数の数を数えている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594262686,
+      "updated": 1594262801
+    },
+    {
+      "id": "5f068511aff09e000055fbff",
+      "text": "　　　ゼロを含むので「57未満が57個、イコールが1個」となっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594262801,
+      "updated": 1594262838
+    },
+    {
+      "id": "5f068507aff09e000055fbfe",
+      "text": "　　「先頭i桁」を定義域とし、そこまでで「K以下である数」「イコールKである数」の個数を値とするDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594262791,
+      "updated": 1594263264
+    },
+    {
+      "id": "5f06868daff09e000055fc00",
+      "text": "　　 ところで「イコールKである数」は常に1なのだからテーブルで持つ必要はないよね",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594263182,
+      "updated": 1594263297
+    },
+    {
+      "id": "5f068702aff09e000055fc01",
+      "text": "　　 解説などではテーブルで持ってるものが多くて、その方が複雑な問題だと実装の都合が良いことがあるのかな",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594263299,
+      "updated": 1594263341
+    },
+    {
+      "id": "5f06872daff09e000055fc02",
+      "text": "　　 今回の問題では追加の条件「Dで割り切れる」のチェックのためにDで割ったあまりごとに数え分けているが、僕の実装では「イコールK」にはテーブルを用意しなかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594263341,
+      "updated": 1594263420
+    },
+    {
+      "id": "5f96ac98aff09e0000e45cb9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710104,
+      "updated": 1603710104
+    },
+    {
+      "id": "5f96ac98aff09e0000e45cba",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710104,
+      "updated": 1603710108
+    },
+    {
+      "id": "5f96ac9baff09e0000e45cbc",
+      "text": " def solve(N, D):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710108,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cbd",
+      "text": "     less = [0] * D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cbe",
+      "text": "     equal = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cbf",
+      "text": "     for digit in N:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc0",
+      "text": "         new_less = [0] * D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc1",
+      "text": "         for new_digit in range(10):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc2",
+      "text": "             for d in range(D):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc3",
+      "text": "                 new_less[(d + new_digit) % D] += less[d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc4",
+      "text": "             if new_digit < digit:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc5",
+      "text": "                 new_less[(equal + new_digit) % D] += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc6",
+      "text": "         for d in range(D):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710754
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cc9",
+      "text": "             new_less[d] %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cca",
+      "text": "         less = new_less",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96af23aff09e00005aeaa9",
+      "text": "         equal += digit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710755,
+      "updated": 1603710755
+    },
+    {
+      "id": "5f96af23aff09e00005aeaaa",
+      "text": "         equal %= D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710755,
+      "updated": 1603710755
+    },
+    {
+      "id": "5f96aca4aff09e0000e45ccb",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45ccc",
+      "text": "     ret = less[0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45ccd",
+      "text": "     ret -= 1  # for x = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cce",
+      "text": "     if equal == 0:  # for x = N",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45ccf",
+      "text": "         ret += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cd0",
+      "text": "     return ret % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710116
+    },
+    {
+      "id": "5f96aca4aff09e0000e45cd1",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710116,
+      "updated": 1603710117
+    },
+    {
+      "id": "5f96ac98aff09e0000e45cbb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1603710104,
+      "updated": 1603710104
+    },
+    {
+      "id": "5f059832aff09e0000986b53",
+      "text": "old version",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594202163,
+      "updated": 1603710102
+    },
+    {
+      "id": "5f058a41aff09e0000d07c1a",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198594,
+      "updated": 1594198597
+    },
+    {
+      "id": "5f058a44aff09e0000d07c1d",
+      "text": " def solve(K, D):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198597,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c1e",
+      "text": "     K = [x - ord(\"0\") for x in K]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c1f",
+      "text": "     N = len(K)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c20",
+      "text": "     less = [[0] * D for i in range(N + 1)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c21",
+      "text": "     border = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c22",
+      "text": "     for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c23",
+      "text": "         for j in range(10):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c24",
+      "text": "             for d in range(D):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c25",
+      "text": "                 less[i][(d + j) % D] += less[i - 1][d]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c26",
+      "text": "                 less[i][(d + j) % D] %= MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c27",
+      "text": "             if j < K[i]:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c28",
+      "text": "                 less[i][(border + j) % D] += 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c29",
+      "text": "         border += K[i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c2a",
+      "text": "         border %= D",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c2b",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c2c",
+      "text": "     ret = less[N - 1][0] - 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c2d",
+      "text": "     ret += (border == 0)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c2e",
+      "text": "     return ret % MOD",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198626
+    },
+    {
+      "id": "5f058a62aff09e0000d07c2f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198626,
+      "updated": 1594198627
+    },
+    {
+      "id": "5f058a41aff09e0000d07c1b",
+      "text": "https://atcoder.jp/contests/dp/submissions/15082801",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198594,
+      "updated": 1594198594
+    },
+    {
+      "id": "5f058a41aff09e0000d07c1c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1594198594,
+      "updated": 1594198594
+    }
+  ]
+}

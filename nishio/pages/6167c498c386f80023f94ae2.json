@@ -1,0 +1,190 @@
+{
+  "id": "6167c498c386f80023f94ae2",
+  "title": "HerokuでHTTPSをHTTPに転送",
+  "created": 1634190490,
+  "updated": 1634191199,
+  "lines": [
+    {
+      "id": "6167c498c386f80023f94ae2",
+      "text": "HerokuでHTTPSをHTTPに転送",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634190490,
+      "updated": 1634190510
+    },
+    {
+      "id": "6167c4adaff09e00008636b8",
+      "text": "Webhookを受け取ってちょっとした処理をやりたかった",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634190510,
+      "updated": 1634191124
+    },
+    {
+      "id": "6167c713aff09e00002ab56e",
+      "text": "\tその処理をするサーバXでHTTPSのサーバを立ち上げるのは証明書の管理がめんどくさいからやりたくない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191124,
+      "updated": 1634191135
+    },
+    {
+      "id": "6167c71faff09e00002ab56f",
+      "text": "\tHerokuで受け取ってHTTPでサーバXに転送した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191135,
+      "updated": 1634191146
+    },
+    {
+      "id": "6167c742aff09e0000273b2e",
+      "text": "\t(やってから思ったけどLambdaでも良かったかも)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191171,
+      "updated": 1634191185
+    },
+    {
+      "id": "6167c570aff09e0000273b2d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634190704,
+      "updated": 1634190704
+    },
+    {
+      "id": "6167c6f8aff09e00002ab55c",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191097,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab55e",
+      "text": " from flask import Flask, request",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab55f",
+      "text": " import requests",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab560",
+      "text": " app = Flask(__name__)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab561",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab562",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab563",
+      "text": " def create_app():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab564",
+      "text": "     return app",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab565",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab566",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab567",
+      "text": " @app.route('/', methods=['GET', 'POST'])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab568",
+      "text": " def root():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab569",
+      "text": "     if request.is_json:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab56a",
+      "text": "         print(request.json)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191101
+    },
+    {
+      "id": "6167c6fdaff09e00002ab56b",
+      "text": "         requests.post(\"http://...../\", json=request.json)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191109
+    },
+    {
+      "id": "6167c6fdaff09e00002ab56c",
+      "text": "     return \"OK\" ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191101,
+      "updated": 1634191117
+    },
+    {
+      "id": "6167c6f9aff09e00002ab55d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191098,
+      "updated": 1634191098
+    },
+    {
+      "id": "6167c756aff09e0000273b2f",
+      "text": "関連",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191191,
+      "updated": 1634191193
+    },
+    {
+      "id": "6167c758aff09e0000273b31",
+      "text": "　[Heroku+Flask]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191193,
+      "updated": 1634191199
+    },
+    {
+      "id": "6167c758aff09e0000273b30",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634191193,
+      "updated": 1634191193
+    }
+  ]
+}

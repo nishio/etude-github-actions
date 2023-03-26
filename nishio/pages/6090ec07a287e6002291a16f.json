@@ -1,0 +1,533 @@
+{
+  "id": "6090ec07a287e6002291a16f",
+  "title": "Hatena2011-04-20",
+  "created": 1303225200,
+  "updated": 1303225200,
+  "lines": [
+    {
+      "id": "6090ec2baff09e00003d8b56",
+      "text": "Hatena2011-04-20",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b57",
+      "text": "code:hatena",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b58",
+      "text": " <body>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b59",
+      "text": " *1303300536*もっとよいGitチートシート",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b5a",
+      "text": " 世の中にGitのチートシートはいくつかあるけど「Gitを知らない人に渡して最初に読んでもらうのに適したもの」が見つからない。チートシートじゃなくてチュートリアルと呼ぶべきかもしれないけど、とにかく印刷してA4で1枚になるくらいの資料が必要だ。Gitに触れた技術者が軒並み同じ落とし穴でコケるのは正しい状態ではない。「Gitには、indexっていう『コミットする前にワークツリーで行った変更のうちのどの部分をコミットするか整理するための場所』があるんだよ」とか「git revertはsvn revertと違っていきなりリポジトリに変更を加えるから気をつけて」とか最初に言ってもらえればもっとスムーズに進めたはずだ。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b5b",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b5c",
+      "text": " というわけでどういうチートシートが必要かに関して考えてみる。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b5d",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b5e",
+      "text": " ** 登場人物",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b5f",
+      "text": " http://www.ndpsoftware.com/git-cheatsheet.html",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b60",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b61",
+      "text": " このチートシートがいいなと思ったのは「stash」「workspace」「index」「local repo」「remote repo」という登場人物がはっきりしている点。indexの存在を説明せずに「とりあえずaddしてcommitしろ、もしくはcommit -a」なんて書いてあるチートシートで理解が出来るはずがない。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b62",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b63",
+      "text": " 一方でこのチートシートの良くない点が次:",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b64",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b65",
+      "text": " ** 変更がどこに起きるか",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b66",
+      "text": " 各々のコマンドで、どこが変更されるか。svn revertのつもりでgit revertをして悲劇が起こるのは「どこが変更されるか」に関してのユーザの認識と現実にミスマッチがあるからに他ならない。で、何も変更されないコマンド、例えばgit statusとgit diffを間違えて逆に覚えていても悲劇は起きない。だから強調すべきなのは「このコマンドは何を変えるか」なんだ。「何かを参考にして何かを変える」を矢印で表現するのは悪く無いと思う。しかし、だったら矢印の根元は変わっちゃ駄目だろ、と。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b67",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b68",
+      "text": " ** 変更をどうやってundoするか",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b69",
+      "text": " いっそgit undoで何でもundoできればいいのに。まあそれはさておき、問題が複雑になる原因は「失敗をした！」ってときにundoする方法がわからなくて、試行錯誤した結果さらに間違えて「二段重ねの失敗」に進化してしまった場合がほとんど。git revertとかね。ならば各操作にはundoの仕方を併記するべきじゃないか。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b6a",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b6b",
+      "text": " >||",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b6c",
+      "text": " git init, git clone ⇔ rm -r .git",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b6d",
+      "text": " git add <file> ⇔ git rm --cached <file>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b6e",
+      "text": " git commit ⇔ git reset HEAD^, 直前でなければrebase -i",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b6f",
+      "text": " ||<",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b70",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b71",
+      "text": " みたいな感じ。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b72",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b73",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b74",
+      "text": " ** レベルわけ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b75",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b76",
+      "text": " http://www.textdrop.net/doc/git-cheat-sheet-ja/",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b77",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b78",
+      "text": " bisect, fsch, gcはそんなに重要？rebaseやcherry-pickよりも？このチートシートはもちろん「初めて使うユーザ」をターゲットにしていないのかも知れない。今ここで考えているのは「初めて使うユーザ」をターゲットにしたチートシートなので、そういう人がどこに躓くか、に基づいてコマンドを選ぶべき。git revertでさえ、そもそも載せなくていいんじゃないの、と思わない？？",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b79",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b7a",
+      "text": " 僕の考えたレベル分け",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b7b",
+      "text": " - レベル0: clone",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b7c",
+      "text": " - レベル1: 操作: init, add, commit, 情報: status, diff, log, show",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b7d",
+      "text": " - レベル2: reset, rebase, branch, checkout, tag, タグとはなにか、ブランチとはなにか、HEADとは何か",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b7e",
+      "text": " - レベル3: format-patch, am",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b7f",
+      "text": " - レベル4: push, fetch, merge, originとは何か ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b80",
+      "text": " - レベル5: それ以外",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b81",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b82",
+      "text": " ** まとめ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b83",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b84",
+      "text": " とにかく「初めてGitを使うユーザ」が落とし穴に落ちないようにするための、A4一枚くらいの解説が必要だと思う。しかし一人で創り上げられる気がしないのでご意見ご感想(あと自分はここでつまずいた、という体験談)など、なんでもフィードバック頂ければ幸いです！",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b85",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b86",
+      "text": " ** フィードバック",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b87",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b88",
+      "text": " 僕は「Gitを使う」を主に自分のソースコードの管理に使うイメージでいたので「リモートリポジトリを考え始める前にまずはローカルだろう」とcloneをレベル4にしていたのだけども、現実的にはその手前に「ソースコードの管理はどうでもいいから最新版をチェックアウト(svn的な意味で)したい」というニーズがあるのかもね。というわけでcloneをレベル0にしてみた。",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b89",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b8a",
+      "text": " ** マインドマップ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b8b",
+      "text": " ",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b8c",
+      "text": " f:id:nishiohirokazu:20110421173917j:image",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b8d",
+      "text": " </body>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b8e",
+      "text": " <comments>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b8f",
+      "text": " <comment>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b90",
+      "text": " <username>Akira51</username>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b91",
+      "text": " <body>git とsvnのもつ機能が違うとは知りませんでした。</body>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b92",
+      "text": " <timestamp>1303345659</timestamp>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b93",
+      "text": " </comment>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b94",
+      "text": " <comment>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b95",
+      "text": " <username>tokuhirom</username>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b96",
+      "text": " <body>fsch ってもしかして fsck の typo でしょうか</body>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b97",
+      "text": " <timestamp>1303364810</timestamp>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b98",
+      "text": " </comment>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b99",
+      "text": " <comment>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b9a",
+      "text": " <username>fuga</username>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b9b",
+      "text": " <body>レベル分けは http://gitref.org/ が近い気がします。</body>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b9c",
+      "text": " <timestamp>1303574714</timestamp>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b9d",
+      "text": " </comment>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b9e",
+      "text": " </comments>",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8b9f",
+      "text": "",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8ba0",
+      "text": "[はてなダイアリー 2011-04-20 https://nishiohirokazu.hatenadiary.org/archive/2011/04/20]",
+      "created": 1303225200,
+      "updated": 1303225200,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

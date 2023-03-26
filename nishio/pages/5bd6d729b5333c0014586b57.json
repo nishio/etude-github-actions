@@ -1,0 +1,617 @@
+{
+  "id": "5bd6d729b5333c0014586b57",
+  "title": "リファクタリング20180726",
+  "created": 1532585126,
+  "updated": 1532609961,
+  "lines": [
+    {
+      "id": "5bd6d729aff09e000076a58c",
+      "text": "リファクタリング20180726",
+      "created": 1532585126,
+      "updated": 1532604541,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a58d",
+      "text": " 当初スライドはGameObjectだった",
+      "created": 1532585126,
+      "updated": 1532585135,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a58e",
+      "text": "  `AttayList<GameObject> slides`で管理されていた",
+      "created": 1532585288,
+      "updated": 1532609871,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a58f",
+      "text": "  物理演算を実装するにあたって更新ベクトルを `Dictionary<GameObject, Vector3> updateVec`で作った",
+      "created": 1532585133,
+      "updated": 1532609871,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a590",
+      "text": "  赤枠ハイライトのために赤枠オブジェクト `GameObject highlighter` と、それがハイライトすべき対象を指し示す `GameObject to_highlight` を作った",
+      "created": 1532585170,
+      "updated": 1532609871,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a591",
+      "text": "  複数選択可能にしたことでハイライト対象が複数になった",
+      "created": 1532585211,
+      "updated": 1532609871,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a592",
+      "text": "  赤枠オブジェクトがスライドの個数と同量発生する",
+      "created": 1532585223,
+      "updated": 1532609871,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a593",
+      "text": "\tそろそろきな臭いのでリファクタリングする",
+      "created": 1532585129,
+      "updated": 1532585343,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a594",
+      "text": "",
+      "created": 1532585329,
+      "updated": 1532585329,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a595",
+      "text": "\t`public class Slide`を作る",
+      "created": 1532585329,
+      "updated": 1532585375,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a596",
+      "text": " MonoBehaviourを継承しないことにした",
+      "created": 1532585368,
+      "updated": 1532585386,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a597",
+      "text": "  正解かどうかはわからない",
+      "created": 1532585386,
+      "updated": 1532585396,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a598",
+      "text": " これがスライド自体のGameObjectとハイライト用の赤枠GameObjectの2つを生成",
+      "created": 1532585396,
+      "updated": 1532585423,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a599",
+      "text": " GameObjectに\"Slide\"タグを付与",
+      "created": 1532585423,
+      "updated": 1532585534,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a59a",
+      "text": " 物理演算の更新ベクトルはSlideのメンバに。 ",
+      "created": 1532585534,
+      "updated": 1532585548,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a59b",
+      "text": " レイキャストのヒット対象はGameObjectが取れてくるが、この設計ではそのGameObjectからSlideオブジェクトを得たい",
+      "created": 1532585961,
+      "updated": 1532585999,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a59c",
+      "text": "  なんかより良い設計がありそうな気がするが…",
+      "created": 1532585999,
+      "updated": 1532586010,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a59d",
+      "text": "\t\tこんなのを作ってAddComponentした",
+      "created": 1532588472,
+      "updated": 1532588525,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a59e",
+      "text": "  code:cs",
+      "created": 1532588525,
+      "updated": 1532588526,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a59f",
+      "text": "   public class GetSlide : MonoBehaviour",
+      "created": 1532588526,
+      "updated": 1532588527,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a0",
+      "text": "   {",
+      "created": 1532588527,
+      "updated": 1532588527,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a1",
+      "text": "       public Slide slide;",
+      "created": 1532588527,
+      "updated": 1532588527,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a2",
+      "text": "   }",
+      "created": 1532588527,
+      "updated": 1532588527,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a3",
+      "text": "\t\tSlide自体をAddComponentする選択肢はなかった",
+      "created": 1532588527,
+      "updated": 1532609934,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a4",
+      "text": "  \tAddComponentは型引数を取ってインスタンス化するため",
+      "created": 1532609934,
+      "updated": 1532609959,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a5",
+      "text": "",
+      "created": 1532609959,
+      "updated": 1532609961,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a6",
+      "text": " スライドの管理をしていたMakeSlide.csの中のエラーは全部解消した",
+      "created": 1532585980,
+      "updated": 1532585981,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a7",
+      "text": " LaserPointer.csの中のエラーを確認",
+      "created": 1532585635,
+      "updated": 1532585646,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a8",
+      "text": " \t複数選択を実装したときに突貫工事で作られた`Dictionary<GameObject, bool> is_selected = null;`が問題。",
+      "created": 1532585318,
+      "updated": 1532585658,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5a9",
+      "text": "  これは小手先で直すよりも今回のリファクタリングでしっかり吸収されるべき",
+      "created": 1532585658,
+      "updated": 1532585732,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5aa",
+      "text": "  なので、まずは複数選択関連の処理を丸ごとコメントアウトしてコンパイルを通す。",
+      "created": 1532585732,
+      "updated": 1532585748,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ab",
+      "text": "\t実行時エラー: highlighterが単一オブジェクトとして存在していると思って呼びに行ってNullPointerException",
+      "created": 1532585689,
+      "updated": 1532588727,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ac",
+      "text": " \tもはや使われない単一オブジェクト用のメンバは削るべき",
+      "created": 1532588727,
+      "updated": 1532588738,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ad",
+      "text": "  コンパイルエラーによって直すべきところが明確になる",
+      "created": 1532588739,
+      "updated": 1532589462,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ae",
+      "text": " 従来の単一選択のコードを単純に置き換えるなら`obj.GetComponent<GetSlide>().slide.highlited = true;`",
+      "created": 1532589462,
+      "updated": 1532589617,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5af",
+      "text": "  だがそんなスライドの内部構造がレーザーポインター側に露出しているのはおかしいので単一選択用のメソッドを用意してそれを呼ぶようにする",
+      "created": 1532589520,
+      "updated": 1532589536,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b0",
+      "text": " ハイライトの色を変えるコードはいったんコメントアウト",
+      "created": 1532589536,
+      "updated": 1532589614,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b1",
+      "text": "",
+      "created": 1532591473,
+      "updated": 1532591473,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b2",
+      "text": "\tハイライト赤枠の縮尺などで若干手間取ったが、単一選択は元通り動くようになった",
+      "created": 1532585609,
+      "updated": 1532591500,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b3",
+      "text": "\t複数選択は、単に今回のオブジェクト統合の変更に追従させるだけではなくしっかり考えるべき",
+      "created": 1532591518,
+      "updated": 1532591608,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b4",
+      "text": " 選択状態に「単一選択」しかないところに後付けで「複数選択」を足したのでこんなことになっている",
+      "created": 1532591608,
+      "updated": 1532591672,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b5",
+      "text": " code:cs",
+      "created": 1532591672,
+      "updated": 1532591674,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b6",
+      "text": "  GameObject selected;",
+      "created": 1532591674,
+      "updated": 1532591687,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b7",
+      "text": "  Dictionary<GameObject, bool> is_selected = null;",
+      "created": 1532591675,
+      "updated": 1532591679,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b8",
+      "text": "\tselectedがnot nullの時には単一選択、is_selectedがnot nullの時には複数選択、という状況。",
+      "created": 1532591681,
+      "updated": 1532591732,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5b9",
+      "text": "\tとりあえず現状どういうコンパイルエラーが起きるのか確認しようとコメントアウトを戻してみたら、単にSlideとGameObjectの違いだけだったので簡単に治った",
+      "created": 1532591734,
+      "updated": 1532591916,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ba",
+      "text": " 予想外に、あっさり動くぞ",
+      "created": 1532591916,
+      "updated": 1532591959,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5bb",
+      "text": " 複数選択時にハイライトがされない(もとから)",
+      "created": 1532591959,
+      "updated": 1532591977,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5bc",
+      "text": " \t`is_selected[y] = true;`してるところで`s.highlited = true;`したらあっさり動いた",
+      "created": 1532592188,
+      "updated": 1532592525,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5bd",
+      "text": "  選択解除時に元に戻らないなどを修正",
+      "created": 1532592528,
+      "updated": 1532592645,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5be",
+      "text": "  移動時にis_selectedを確認して選択されているものだけを動かしているので、これをhighlightedなものだけ動かすように変更したら見た目と挙動が一致してよいかもしれない",
+      "created": 1532592541,
+      "updated": 1532592587,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5bf",
+      "text": "  \tis_selectedを削除して問題なく動いている",
+      "created": 1532592636,
+      "updated": 1532594303,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c0",
+      "text": "",
+      "created": 1532591734,
+      "updated": 1532591734,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c1",
+      "text": " ハイライト色の変更",
+      "created": 1532594406,
+      "updated": 1532594406,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c2",
+      "text": "  以前は単一選択しかなかったので、単一のオブジェクトのマテリアルを変更するだけだった",
+      "created": 1532594407,
+      "updated": 1532594422,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c3",
+      "text": "  複数選択時に色を変更するか？",
+      "created": 1532594422,
+      "updated": 1532594429,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c4",
+      "text": "  \tマテリアルを共通化すべきか？",
+      "created": 1532594429,
+      "updated": 1532594447,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c5",
+      "text": "  確認したらそもそも単一選択時にレーザーポインターをテレポートポータルに一定以上近づけた場合にだけ色が変わる",
+      "created": 1532594448,
+      "updated": 1532594878,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c6",
+      "text": "  単一選択時にハイライトの色を変えるメソッドを追加したが、これ将来的に複数選択時に呼んで「色が変わらないぞ」とか言いそうだな…",
+      "created": 1532594882,
+      "updated": 1532594944,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c7",
+      "text": "",
+      "created": 1532591675,
+      "updated": 1532591681,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c8",
+      "text": "\t単一選択時のドラッグの挙動が絶対位置移動",
+      "created": 1532591476,
+      "updated": 1532595129,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5c9",
+      "text": " \t複数選択の方は実装が新しいのでクオータニオンで変換している",
+      "created": 1532595109,
+      "updated": 1532595126,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ca",
+      "text": "\t\t挙動の共通化、複数選択ハイライトの常時表示、複数選択モードで1つだけ選ばれた場合に単一選択モードにフォールバック",
+      "created": 1532597792,
+      "updated": 1532598374,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5cb",
+      "text": "  常時ハイライトをして速度的に大丈夫か？",
+      "created": 1532598374,
+      "updated": 1532598863,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5cc",
+      "text": "  \t物理演算なしで57FPS、発生中が37で、終了後が48ぐらい",
+      "created": 1532598863,
+      "updated": 1532598936,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5cd",
+      "text": "   常時ハイライトをしたら38ぐらい",
+      "created": 1532598936,
+      "updated": 1532599309,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5ce",
+      "text": "   Unity Editor 上での話なので実機だとどうなのかわからないけど…まあ減少比率的には即座にダメというほどではなさそう",
+      "created": 1532599309,
+      "updated": 1532599437,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5cf",
+      "text": "",
+      "created": 1532600856,
+      "updated": 1532600856,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d0",
+      "text": "\t\t究極的にはこの2行の差",
+      "created": 1532599438,
+      "updated": 1532601370,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d1",
+      "text": "  single `selected.transform.position = ray.origin + ray.direction * distance;`",
+      "created": 1532601370,
+      "updated": 1532601437,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d2",
+      "text": "\t\tmultiple `x.transform.position = diff * (start_positions[x.gameObject] - eye) + eye;`",
+      "created": 1532598352,
+      "updated": 1532601441,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d3",
+      "text": "   `Quaternion diff = Quaternion.FromToRotation(start_direction, ray.direction);`",
+      "created": 1532601381,
+      "updated": 1532601450,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d4",
+      "text": "\t\tあっ、まだGameObjectをキーにしたDictionaryがいた",
+      "created": 1532601443,
+      "updated": 1532602490,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d5",
+      "text": "  \t`Dictionary<GameObject, Vector3> start_positions = new Dictionary<GameObject, Vector3>();`",
+      "created": 1532601538,
+      "updated": 1532601545,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d6",
+      "text": "\t\tSlideオブジェクトにdrag_start_positionってメンバを持たせよう",
+      "created": 1532601531,
+      "updated": 1532601591,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d7",
+      "text": "   startDraggingとendDraggingを作って、保留されてた「複数ドラッグ時に単一ドラッグ時と同様に物理演算オフ」も兼ねた",
+      "created": 1532601591,
+      "updated": 1532602465,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d8",
+      "text": "",
+      "created": 1532604499,
+      "updated": 1532604499,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5d9",
+      "text": "\tまあすんなり動かないこともある",
+      "created": 1532602399,
+      "updated": 1532604510,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5da",
+      "text": " \t雰囲気的に物理演算に何か不調が起こってそう",
+      "created": 1532604510,
+      "updated": 1532604519,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5db",
+      "text": "  非選択状態でなぜかColliderがdisabledされている",
+      "created": 1532604519,
+      "updated": 1532604660,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5dc",
+      "text": "  disableしそうなところをコメントアウトしていく",
+      "created": 1532604907,
+      "updated": 1532605043,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5dd",
+      "text": "  startDraggingの中のをコメントアウトしたら、Colliderはdisableされなくなったが、一歩進んでやはり止まる",
+      "created": 1532605043,
+      "updated": 1532605084,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5de",
+      "text": "  ああ、なるほど。複数選択の対象確定時に、当初はマウスダウンで対象探索を開始していたのでハイライト対象にすると同時にドラッグ開始をしていたが、常時ハイライトすることにしたためマウスダウンをしてないのにドラッグ開始されてしまうバグ",
+      "created": 1532605084,
+      "updated": 1532605244,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5df",
+      "text": "",
+      "created": 1532606827,
+      "updated": 1532606827,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5e0",
+      "text": "\t単一ドラッグ開始時にgetSlideが引数nullで呼ばれている",
+      "created": 1532605244,
+      "updated": 1532606855,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5e1",
+      "text": " \tうーむ、これは時間帯的に、今日解決しようとしない方が早く解決しそうだ。次回のタスクにしよう",
+      "created": 1532606855,
+      "updated": 1532607967,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "5bd6d729aff09e000076a5e2",
+      "text": "",
+      "created": 1532604501,
+      "updated": 1532604501,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

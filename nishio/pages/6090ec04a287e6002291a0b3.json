@@ -1,0 +1,1149 @@
+{
+  "id": "6090ec04a287e6002291a0b3",
+  "title": "Hatena2010-05-17",
+  "created": 1274022000,
+  "updated": 1274022000,
+  "lines": [
+    {
+      "id": "6090ec28aff09e00003d5f05",
+      "text": "Hatena2010-05-17",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f06",
+      "text": "code:hatena",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f07",
+      "text": " <body>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f08",
+      "text": " *1274104221*[Haskell]設計設計設計、すこし実装",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f09",
+      "text": " とりあえずいきなり作ろうとしているゲーム全体の作成に着手したら、細かい実装上の「あれってどうするんだ？」に気をとられて全体の設計が疎かになると思ったのでゲームは3目並べにした。ゲームがなんであっても再利用できるようなライブラリが作りたいわけだから正しいはず。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f0a",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f0b",
+      "text": " typeとdataとnewtypeとclassとinstance。モナドよりこっちの方が重要な気がするぞ！",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f0c",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f0d",
+      "text": " 「HaskellのclassはJavaのinterfaceだ」という理解で7割くらいは正しいと思う。ゲームのデータを持つオブジェクトは、以前Pythonで殴りがいたときにはただのdictだったのだけど、Haskellでしっかり型を宣言しようと思うとそんなぬるい事は許されない。というわけでとりあえずJava脳でGame interface(Java語)を作ってみた。として着手を意味するPlayってinterface(Java語)も作ってみた。特に中に入れるべきメソッドが思いつかなかったのでとりあえずどっちも文字列化できて欲しいよね、とto_strってメソッドを両方に宣言する。Multiple declarations of `Main.to_str'と怒られる。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f0e",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f0f",
+      "text": " そう、これが「HaskellのclassはJavaのinterfaceだ」という理解の正しくないポイントなんだよな。Javaのinterfaceで宣言したメソッドの名前のスコープはインスタンス単位だ。でもHaskellの方はそうじゃない。トップレベルスコープの関数だ。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f10",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f11",
+      "text": " もう一つ、Javaだとクラスやインスタンスの中でメソッドとかいう関数のようなものを定義すると、なんかオブジェクトがthisって名前に束縛されてから呼ばれるわけじゃない？an_obj.a_method(an_arg)って呼ぶとa_methodの中でthisっていう決め打ちの変数にアクセスすることでan_objにアクセスできる。Pythonの場合、an_obj.a_method(an_arg)って呼ぶと、a_methodの第一引数にan_objが渡される。Haskellはさらに、a_methodがそもそもan_objと無関係にトップレベルの関数なので、an_objは引数で渡してやる必要がある。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f12",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f13",
+      "text": " >|java|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f14",
+      "text": " // Java風",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f15",
+      "text": " class Foo {",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f16",
+      "text": "   int a_method(int an_arg){",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f17",
+      "text": "     ... (なぜかthisが使える)",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f18",
+      "text": "   }",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f19",
+      "text": " }",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f1a",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f1b",
+      "text": " Foo an_obj = new Foo();",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f1c",
+      "text": " an_obj.a_method(an_arg);",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f1d",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f1e",
+      "text": " >|python|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f1f",
+      "text": " # Python風",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f20",
+      "text": " class Foo:",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f21",
+      "text": "   def a_method(self, an_arg):",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f22",
+      "text": "     ... (selfが使える)",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f23",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f24",
+      "text": " an_obj = Foo()",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f25",
+      "text": " an_obj.a_method(an_arg)",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f26",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f27",
+      "text": " >|haskell|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f28",
+      "text": " -- Haskell風",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f29",
+      "text": " a_method :: (Foo a) => a -> Int -> Int",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f2a",
+      "text": " a_method an_obj an_arg = ... (もちろんan_objが使える)",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f2b",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f2c",
+      "text": " an_obj = MakeFoo ...",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f2d",
+      "text": " result = a_method an_obj 1",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f2e",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f2f",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f30",
+      "text": " Haskellのケースを「メソッド」って呼ぶのは変。だってclass Fooに属しているわけではないのだもの。Fooの型の引数を第一引数に渡せることが保証されているだけ。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f31",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f32",
+      "text": " 第一引数である必然性は全くないのだけど少しうれしい。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f33",
+      "text": " >|python|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f34",
+      "text": " # Python",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f35",
+      "text": " f = an_obj.a_method",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f36",
+      "text": " f(an_arg) # ちゃんとa_method(an_obj, an_arg)になる",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f37",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f38",
+      "text": " >|haskell|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f39",
+      "text": " -- Haskell",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f3a",
+      "text": " f = a_method an_obj",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f3b",
+      "text": " f an_arg -- ちゃんと a_method an_obj an_argになる",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f3c",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f3d",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f3e",
+      "text": " などということを考えたり設計したり、入れ物を作ったりで、中身はまだ3目並べの表示しかやってない。でさ、結局to_strは「Gameのto_str」「Playのto_str」というもんじゃなくて「トップレベルのto_str」なんだから、それはGameとかPlayってクラスじゃなくて「表示できる」ってクラスになるべきだよね。そしてそれはShowクラスとshowだ。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f3f",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f40",
+      "text": " >|haskell|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f41",
+      "text": " --「クラス Game のインスタンスであるような型 a のそれぞれに対して、",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f42",
+      "text": " -- possible_hands は (Play b) => a -> [b] という型をもつ」",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f43",
+      "text": " class Game a where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f44",
+      "text": "     -- ゲームの局面を受け取って選択可能な手のリストを返す",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f45",
+      "text": "     possible_hands :: (Play b) => a -> [b]",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f46",
+      "text": "     -- ゲームと着手を受け取って、更新した新しいゲームを返す",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f47",
+      "text": "     step_game :: (Play b) => a -> b -> a",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f48",
+      "text": "     -- ゲームを受け取ってゲームが終わったかどうかと、誰が勝ったのかを返す",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f49",
+      "text": "     check_is_finished :: a -> (Bool, Int)",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f4a",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f4b",
+      "text": " -- T3 := Tic Tac Toe    ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f4c",
+      "text": " newtype T3Game = MakeT3Game {value :: [Int]}",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f4d",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f4e",
+      "text": " instance Game T3Game",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f4f",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f50",
+      "text": " -- 「 T3Game 型はクラス Show のインスタンスで、ここに show を定義する。」",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f51",
+      "text": " instance Show T3Game where ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f52",
+      "text": "     show xs = unlines $ map unwords $ (map (\\f -> f cs) [(take 3), (take 3.drop 3), (take 3.drop 6)]) ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f53",
+      "text": "         where cs = map int2cell $ value xs",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f54",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f55",
+      "text": " int2cell 0 = \".\"",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f56",
+      "text": " int2cell 1 = \"x\"",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f57",
+      "text": " int2cell 2 = \"o\"           ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f58",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f59",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f5a",
+      "text": " class Play a",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f5b",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f5c",
+      "text": " class Player a where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f5d",
+      "text": "     -- ゲームと着手可能な選択肢を受け取って一つ選択する",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f5e",
+      "text": "     think :: (Game b, Play c) => a -> b -> [c] -> c",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f5f",
+      "text": "     ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f60",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f61",
+      "text": " main = putStr $ show $ MakeT3Game [0,0,0,0,0,1,0,0,2]",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f62",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f63",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f64",
+      "text": " *1274105783*[Haskell] ... is a rigid type variable bound by ...",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f65",
+      "text": " なんでこれがエラーになるのかわからないのは、まだなにか理解出来ていことがあるってことなんだろうな。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f66",
+      "text": " >|haskell|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f67",
+      "text": " class Foo a where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f68",
+      "text": "     foobar :: (Bar b) => a -> b",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f69",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f6a",
+      "text": " class Bar a",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f6b",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f6c",
+      "text": " newtype AFoo = MakeAFoo {foo_value :: Int}",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f6d",
+      "text": " newtype ABar = MakeABar {bar_value :: Int}",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f6e",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f6f",
+      "text": " instance Foo AFoo where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f70",
+      "text": "     foobar x = MakeABar $ foo_value x",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f71",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f72",
+      "text": " instance Bar ABar",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f73",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f74",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f75",
+      "text": " >||",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f76",
+      "text": "     Couldn't match expected type `b' against inferred type `ABar'",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f77",
+      "text": "       `b' is a rigid type variable bound by",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f78",
+      "text": "           the type signature for `foobar' at tmp.hs:6:19",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f79",
+      "text": "     In the expression: MakeABar $ foo_value x",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f7a",
+      "text": "     In the definition of `foobar': foobar x = MakeABar $ foo_value x",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f7b",
+      "text": "     In the definition for method `foobar'",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f7c",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f7d",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f7e",
+      "text": " ああ、なるほど。「(Bar b) => 」は「bがBarのインスタンスの *いずれか* である」という意味ではなく「Barのインスタンスである *任意の* bである」という意味になるので、具体的なBarのインスタンスABarを返してはいけない。なぜなら別のBarのインスタンスAnotherBarしかとらない関数にfoobarの返り値を渡すことが型推論上はvalidなのに、実行時に型が違ってエラーが起きてしまう。",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f7f",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f80",
+      "text": " >|haskell|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f81",
+      "text": " class Foo a where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f82",
+      "text": "     foobar :: (Num b) => a -> b",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f83",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f84",
+      "text": " newtype AFoo = MakeAFoo {foo_value :: Int}",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f85",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f86",
+      "text": " instance Foo AFoo where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f87",
+      "text": "     foobar x = 1",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f88",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f89",
+      "text": " これはOK。なんで？ああ、リテラルの1の型が(Num a) => aなのか？",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f8a",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f8b",
+      "text": " >|haskell|",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f8c",
+      "text": " class Foo a where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f8d",
+      "text": "     foobar :: (Show b) => a -> b",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f8e",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f8f",
+      "text": " newtype AFoo = MakeAFoo {foo_value :: Int}",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f90",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f91",
+      "text": " instance Foo AFoo where",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f92",
+      "text": "     foobar x = \"1\"",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f93",
+      "text": " ||<",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f94",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f95",
+      "text": " これは期待通りrigid type variableのエラーになる",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f96",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f97",
+      "text": " ",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f98",
+      "text": " で、どうやって解決するんだ？",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f99",
+      "text": " </body>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f9a",
+      "text": " <comments>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f9b",
+      "text": " <comment>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f9c",
+      "text": " <username>け</username>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f9d",
+      "text": " <body>(Bar b) => a -> b とかくと、関数の戻り値の型について多相的な関数を作るという意味になりますが、本当にそれがやりたいことなんですか？<br>JavaとかC++でいうと、関数オーバーロードを引数の型でなく戻り値の型で判断するみたいなものですよ<br>そういうことをしているライブラリはあるにはありますが（Text.Regex.Posix の (=~) とか）、普通は戻り値の型を多相的にする必要はあまりないと思います</body>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f9e",
+      "text": " <timestamp>1274143885</timestamp>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5f9f",
+      "text": " </comment>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa0",
+      "text": " <comment>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa1",
+      "text": " <username>nishiohirokazu</username>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa2",
+      "text": " <body>戻り値の型が特定の具体的なクラスではなく、あるインターフェイスを継承した(特定のメソッドを持つことが保証された)クラスのいずれかである、というケースはJavaではよくあると思います。Haskellではあまりやられないと言うことは、同じニーズが別の方法で解決出来るということかと思います。</body>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa3",
+      "text": " <timestamp>1274152465</timestamp>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa4",
+      "text": " </comment>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa5",
+      "text": " </comments>",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa6",
+      "text": "",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec28aff09e00003d5fa7",
+      "text": "[はてなダイアリー 2010-05-17 https://nishiohirokazu.hatenadiary.org/archive/2010/05/17]",
+      "created": 1274022000,
+      "updated": 1274022000,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}

@@ -1,0 +1,708 @@
+{
+  "id": "5cf935c60324d40017d0cced",
+  "title": "Heroku+Flask",
+  "created": 1559836107,
+  "updated": 1634184029,
+  "lines": [
+    {
+      "id": "5cf935c60324d40017d0cced",
+      "text": "Heroku+Flask",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1559836107,
+      "updated": 1559836107
+    },
+    {
+      "id": "5f6047b3aff09e0000f5be72",
+      "text": "2020-09-15: 機械学習や自然言語処理なんかのAPIサーバをherokuで動かしたい時のための作業メモ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600145331,
+      "updated": 1634180493
+    },
+    {
+      "id": "6167aa3faff09e0000b32934",
+      "text": "\t2021-01-18: [Herokuで自然言語処理]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183743,
+      "updated": 1634183761
+    },
+    {
+      "id": "5f6047b8aff09e0000f5be73",
+      "text": " 2021-10-14: [FastAPI]という選択肢もあるので要検討(今回はFastAPIをちょっと試してからFlaskに戻った)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600145336,
+      "updated": 1634180514
+    },
+    {
+      "id": "61679c99aff09e0000b32932",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634180250,
+      "updated": 1634180250
+    },
+    {
+      "id": "5f6044ccaff09e0000f5be68",
+      "text": "まず最小限のサーバを作ってローカルで動かす",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144588,
+      "updated": 1600144609
+    },
+    {
+      "id": "5f601741aff09e00000805a9",
+      "text": " $ python3 -m venv venv",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600132929,
+      "updated": 1600133803
+    },
+    {
+      "id": "5f6017f0aff09e00000135fd",
+      "text": " $ source venv/bin/activate",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133104,
+      "updated": 1600133511
+    },
+    {
+      "id": "5f601970aff09e000001361e",
+      "text": "\tcreate \"server/__init__.py\" and write minimal server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133488,
+      "updated": 1600134046
+    },
+    {
+      "id": "5f601921aff09e00000135ff",
+      "text": "  code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133409,
+      "updated": 1600138707
+    },
+    {
+      "id": "5f602dd3aff09e00000805b1",
+      "text": "   from flask import Flask",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138707,
+      "updated": 1600138914
+    },
+    {
+      "id": "5f602e9caff09e000001364b",
+      "text": "\t\t\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138918
+    },
+    {
+      "id": "5f602e9caff09e000001364d",
+      "text": "   app = Flask(__name__)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138914
+    },
+    {
+      "id": "5f602e9caff09e000001364f",
+      "text": "\t\t\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138924
+    },
+    {
+      "id": "5f602e9caff09e0000013650",
+      "text": "   def create_app():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138914
+    },
+    {
+      "id": "5f602e9caff09e0000013651",
+      "text": "       return app",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138914
+    },
+    {
+      "id": "5f602e9caff09e0000013652",
+      "text": "\t\t\t",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138926
+    },
+    {
+      "id": "5f602eaeaff09e000001366b",
+      "text": "   @app.route('/')",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138926,
+      "updated": 1600144140
+    },
+    {
+      "id": "5f602e9caff09e0000013660",
+      "text": "   def root():",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138914
+    },
+    {
+      "id": "5f602e9caff09e0000013661",
+      "text": "       return \"OK\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138914
+    },
+    {
+      "id": "5f60424baff09e0000f5be63",
+      "text": "  最小限のサーバ実装",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600143947,
+      "updated": 1600144267
+    },
+    {
+      "id": "5f60438baff09e0000013670",
+      "text": "  昔の記憶なのか `if __name__ == \"__main__\"`でapp.runしちゃう癖があったのだがFlaskの公式チュートリアルでも、もうそれはやってない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144267,
+      "updated": 1600144549
+    },
+    {
+      "id": "5f6043daaff09e0000f5be64",
+      "text": "   環境変数で起動すべきモジュールを指定し、flask runで起動するスタイル",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144347,
+      "updated": 1600144549
+    },
+    {
+      "id": "5f60442aaff09e0000f5be65",
+      "text": " 　  [heroku側の解説 https://devcenter.heroku.com/articles/flask-memcache]でもそうしてる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144427,
+      "updated": 1600144549
+    },
+    {
+      "id": "5f604477aff09e0000f5be67",
+      "text": " 　  環境変数を設定するのが面倒に思うかもしれないが、dotenvを使えば良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144503,
+      "updated": 1600144549
+    },
+    {
+      "id": "5f604790aff09e00000805d4",
+      "text": " 　  公式解説では[Flask Blueprint]を使ってるけどそれは最小限の時には必要ないと判断した",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600145297,
+      "updated": 1634180538
+    },
+    {
+      "id": "5f604433aff09e0000f5be66",
+      "text": "   create_appは後でgunicornから呼ぶのに使う",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144435,
+      "updated": 1600144549
+    },
+    {
+      "id": "5f602e9caff09e0000013662",
+      "text": "\t$ python server/__init__.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600138908,
+      "updated": 1600138993
+    },
+    {
+      "id": "5fffb9d6aff09e0000486ac2",
+      "text": "\t\t`ModuleNotFoundError: No module named 'flask'`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594774,
+      "updated": 1610594779
+    },
+    {
+      "id": "5fffbaaeaff09e0000486ac6",
+      "text": "\t\t\t$ pip install --upgrade pip",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594990,
+      "updated": 1610594992
+    },
+    {
+      "id": "5fffb9dbaff09e0000486ac3",
+      "text": "\t\t\t$ pip install flask",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594779,
+      "updated": 1610594784
+    },
+    {
+      "id": "5f601922aff09e0000013601",
+      "text": "\t\tOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133410,
+      "updated": 1600133534
+    },
+    {
+      "id": "5f60199eaff09e000001361f",
+      "text": "\t$ flask run",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133535,
+      "updated": 1600133608
+    },
+    {
+      "id": "5f6019e9aff09e0000013620",
+      "text": "\t\t環境変数が設定されてないのでNG",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133610,
+      "updated": 1600144573
+    },
+    {
+      "id": "5f6019eaaff09e0000013621",
+      "text": "\t\t>Error: Could not locate a Flask application. You did not provide the \"FLASK_APP\" environment variable, and a \"wsgi.py\" or \"app.py\" module was not found in the current directory.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133610,
+      "updated": 1600133627
+    },
+    {
+      "id": "5f601961aff09e000001361c",
+      "text": "\tcreate \".env\" file",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133474,
+      "updated": 1600133662
+    },
+    {
+      "id": "5fffba14aff09e0000486ac4",
+      "text": "\t\t$ code .env",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594836,
+      "updated": 1610594839
+    },
+    {
+      "id": "5f601a1eaff09e0000013622",
+      "text": "\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133663,
+      "updated": 1600133690
+    },
+    {
+      "id": "5f601a3aaff09e0000013623",
+      "text": "\t\t FLASK_APP=server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133690,
+      "updated": 1600138738
+    },
+    {
+      "id": "5f601a3aaff09e0000013624",
+      "text": "   FLASK_ENV=development",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133690,
+      "updated": 1600133690
+    },
+    {
+      "id": "5f601961aff09e000001361d",
+      "text": "\t$ pip install python-dotenv",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133474,
+      "updated": 1600133728
+    },
+    {
+      "id": "5f601a60aff09e0000013625",
+      "text": "\t$ flask run",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133729,
+      "updated": 1600133746
+    },
+    {
+      "id": "5f601a72aff09e0000013627",
+      "text": "\t\tOK",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133746,
+      "updated": 1600133747
+    },
+    {
+      "id": "5fffba47aff09e0000486ac5",
+      "text": "\t\tブラウザで http://127.0.0.1:5000/ を見ればOKと表示される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610594887,
+      "updated": 1634180582
+    },
+    {
+      "id": "5f601bcfaff09e0000013637",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134095,
+      "updated": 1600134095
+    },
+    {
+      "id": "5f6044e7aff09e0000f5be69",
+      "text": "herokuにデプロイする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144615,
+      "updated": 1600144624
+    },
+    {
+      "id": "5f601a73aff09e0000013628",
+      "text": " $ git init",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133747,
+      "updated": 1600134091
+    },
+    {
+      "id": "5f601aaeaff09e0000013629",
+      "text": "\tcreate \".gitignore\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133807,
+      "updated": 1600133815
+    },
+    {
+      "id": "5f601ab7aff09e000001362a",
+      "text": "\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133815,
+      "updated": 1600133818
+    },
+    {
+      "id": "5f601abaaff09e000001362b",
+      "text": "\t\t venv/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600133818,
+      "updated": 1600134021
+    },
+    {
+      "id": "5f601b85aff09e000001362d",
+      "text": "   .env",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134021,
+      "updated": 1600134021
+    },
+    {
+      "id": "5f601b85aff09e000001362e",
+      "text": "   ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134021,
+      "updated": 1600134021
+    },
+    {
+      "id": "5f601b85aff09e000001362f",
+      "text": "   *.pyc",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134021,
+      "updated": 1600134021
+    },
+    {
+      "id": "5f601b85aff09e0000013630",
+      "text": "   __pycache__/",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134021,
+      "updated": 1600134021
+    },
+    {
+      "id": "5fffbb06aff09e0000486ac7",
+      "text": "\t\t.env ignoreしちゃうの？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595078,
+      "updated": 1634180749
+    },
+    {
+      "id": "5fffbc94aff09e0000486ac8",
+      "text": "\t\t\tignoreしなければ後で行う $ heroku config:set FLASK_APP=server が不要になる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610595477,
+      "updated": 1634180741
+    },
+    {
+      "id": "61679e1faff09e0000273b2a",
+      "text": "\t\t\tこれは.envに公開してはいけないAPIキーなどを置いて公開リポジトリにpushしてしまうよくある事故を避けるため",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634180639,
+      "updated": 1634180758
+    },
+    {
+      "id": "5f60173eaff09e00000805a6",
+      "text": "\t$ git add .",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600132927,
+      "updated": 1600134025
+    },
+    {
+      "id": "5f601b77aff09e000001362c",
+      "text": "\t$ git commit -m 'minimal Flask server'",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134008,
+      "updated": 1600134035
+    },
+    {
+      "id": "5f601bcdaff09e0000013636",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134094,
+      "updated": 1600134094
+    },
+    {
+      "id": "5f601b94aff09e0000013631",
+      "text": "\t$ heroku create foo-server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134037,
+      "updated": 1600134093
+    },
+    {
+      "id": "61679eefaff09e0000273b2b",
+      "text": "\t　これはローカルのコンソールからappをcreateしているが、既にブラウザなどから使ってある場合はブラウザに解説が出ている通り下記で良い",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634180847,
+      "updated": 1634180964
+    },
+    {
+      "id": "61679f4faff09e00002ab553",
+      "text": "\t　\t$ heroku git:remote -a foo-server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634180944,
+      "updated": 1634180949
+    },
+    {
+      "id": "5f601bccaff09e0000013635",
+      "text": "\t$ git remote",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134093,
+      "updated": 1600134148
+    },
+    {
+      "id": "5f601c03aff09e0000013638",
+      "text": " \t> heroku",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134148,
+      "updated": 1600134151
+    },
+    {
+      "id": "61679fceaff09e0000273b2c",
+      "text": "\tここでpushしてみる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634181070,
+      "updated": 1634181166
+    },
+    {
+      "id": "5f601c03aff09e0000013639",
+      "text": " \t$ git push --set-upstream heroku master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134148,
+      "updated": 1634181072
+    },
+    {
+      "id": "6167a028aff09e00002ab554",
+      "text": " \tpushはできるがビルドで失敗する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634181161,
+      "updated": 1634181161
+    },
+    {
+      "id": "5f601ca8aff09e0000013641",
+      "text": "\t$ pip install gunicorn",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134313,
+      "updated": 1600144731
+    },
+    {
+      "id": "5f601cabaff09e0000013642",
+      "text": "\t$ pip freeze > requirements.txt",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134315,
+      "updated": 1600134333
+    },
+    {
+      "id": "5f601b94aff09e0000013632",
+      "text": "\tcreate \"Procfile\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134037,
+      "updated": 1600134493
+    },
+    {
+      "id": "5f601d5eaff09e0000013643",
+      "text": "\t\tcode::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134495,
+      "updated": 1600134497
+    },
+    {
+      "id": "5f601d60aff09e0000013644",
+      "text": "\t\t web: gunicorn server:\"create_app()\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134497,
+      "updated": 1600135292
+    },
+    {
+      "id": "5f601d62aff09e0000013645",
+      "text": "\t\tname \"server\" points the module on \"./server\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134498,
+      "updated": 1600134528
+    },
+    {
+      "id": "5f601f4aaff09e00000805aa",
+      "text": "\t$ heroku config:set FLASK_APP=server",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134986,
+      "updated": 1600134987
+    },
+    {
+      "id": "5f601d62aff09e0000013646",
+      "text": "\tadd and commit",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134498,
+      "updated": 1600134641
+    },
+    {
+      "id": "5f601df1aff09e0000013648",
+      "text": "\t$ git push heroku master",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134641,
+      "updated": 1600134651
+    },
+    {
+      "id": "5f601dfbaff09e0000013649",
+      "text": "\t\tビルドに成功するのを確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600134652,
+      "updated": 1600144725
+    },
+    {
+      "id": "5f604555aff09e0000f5be6a",
+      "text": "\t$ heroku open",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144725,
+      "updated": 1600144736
+    },
+    {
+      "id": "5f604560aff09e0000013671",
+      "text": "\t\tブラウザで開いてOKと表示されるのを確認する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144736,
+      "updated": 1600144754
+    },
+    {
+      "id": "5f604574aff09e0000f5be6b",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144757,
+      "updated": 1600144757
+    },
+    {
+      "id": "5f60462caff09e0000f5be6c",
+      "text": "必要なAPIを実装する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144940,
+      "updated": 1600144949
+    },
+    {
+      "id": "5f604636aff09e0000f5be6d",
+      "text": "　pushしたときのビルドログと、アクセスしたときのエラーログを見る",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600144951,
+      "updated": 1600145005
+    },
+    {
+      "id": "5f60466daff09e0000f5be6f",
+      "text": "　　$ heroku logs --tail",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600145006,
+      "updated": 1600145023
+    },
+    {
+      "id": "5f60467faff09e0000013672",
+      "text": "　　必要なファイルを含め忘れててアクセス時に実行時エラーになってたり",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600145024,
+      "updated": 1600145116
+    },
+    {
+      "id": "5f60469daff09e0000f5be70",
+      "text": "　　ビルド時にエラーになってたり: [mecabがno such file or directory: /usr/local/etc/mecabrc https://medium.com/@jiraffestaff/mecabrc-%E3%81%8C%E8%A6%8B%E3%81%A4%E3%81%8B%E3%82%89%E3%81%AA%E3%81%84%E3%81%A8%E3%81%84%E3%81%86%E3%82%A8%E3%83%A9%E3%83%BC-b3e278e9ed07]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600145053,
+      "updated": 1600145162
+    },
+    {
+      "id": "6167a80baff09e00002ab555",
+      "text": "\t`By default, a route only answers to GET requests.`[doc https://flask.palletsprojects.com/en/2.0.x/quickstart/#http-methods]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183180,
+      "updated": 1634183220
+    },
+    {
+      "id": "6167a80caff09e00002ab556",
+      "text": "\t\t`@app.route('/', methods=['GET', 'POST'])`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183180,
+      "updated": 1634183284
+    },
+    {
+      "id": "6167aac4aff09e00002ab559",
+      "text": "\tJSON",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183877,
+      "updated": 1634183982
+    },
+    {
+      "id": "6167ab2eaff09e00002ab55a",
+      "text": "\t\t`property json: Optional[Any]` [doc: Incoming Request Data https://flask.palletsprojects.com/en/2.0.x/api/#incoming-request-data]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183983,
+      "updated": 1634184029
+    },
+    {
+      "id": "6167ab2faff09e00002ab55b",
+      "text": "  \t>The parsed JSON data if mimetype indicates JSON (application/json, see is_json).",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183984,
+      "updated": 1634183992
+    },
+    {
+      "id": "5f603bd0aff09e000001366f",
+      "text": "　他のオリジンから呼ぶなら: [Flask-CORS]が必要",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600142288,
+      "updated": 1600145170
+    },
+    {
+      "id": "5f602f1aaff09e000001366c",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600139035,
+      "updated": 1600139035
+    },
+    {
+      "id": "5f602f1aaff09e000001366d",
+      "text": "\"No web processes running\"",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600139035,
+      "updated": 1610096045
+    },
+    {
+      "id": "5ff81dabaff09e0000f92ce8",
+      "text": "\tProcfileのファイル名をtypoしてた",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610096044,
+      "updated": 1610098455
+    },
+    {
+      "id": "5ff82718aff09e0000551379",
+      "text": "\tビルド自体は通ってしまう…",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610098457,
+      "updated": 1610098464
+    },
+    {
+      "id": "5ff81dcaaff09e0000f92cec",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1610096075,
+      "updated": 1610096076
+    },
+    {
+      "id": "6167aa89aff09e00002ab557",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183817,
+      "updated": 1634183817
+    },
+    {
+      "id": "5f602f1baff09e000001366e",
+      "text": "----old memo",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1600139035,
+      "updated": 1600139038
+    },
+    {
+      "id": "6167aa8baff09e00002ab558",
+      "text": "[Heroku+Flask 2019-6-07 memo]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1634183820,
+      "updated": 1634183857
+    }
+  ]
+}

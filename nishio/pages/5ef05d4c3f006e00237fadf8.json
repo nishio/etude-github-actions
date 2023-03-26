@@ -1,0 +1,253 @@
+{
+  "id": "5ef05d4c3f006e00237fadf8",
+  "title": "ABC169 F",
+  "created": 1592810834,
+  "updated": 1592811848,
+  "lines": [
+    {
+      "id": "5ef05d4c3f006e00237fadf8",
+      "text": "ABC169 F",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810834,
+      "updated": 1592810834
+    },
+    {
+      "id": "5ef05eceaff09e00001ff6f7",
+      "text": "サイズ3000の数値の列Aが与えられる。そのすべての部分列Tについて、Tの部分列であって、要素の和が与えられたSであるようなものの個数を数え上げよ、という問題。[https://atcoder.jp/contests/abc169/tasks/abc169_f 問題]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811214,
+      "updated": 1592811601
+    },
+    {
+      "id": "5ef05fa5aff09e00003b8221",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811429,
+      "updated": 1592811429
+    },
+    {
+      "id": "5ef05fb6aff09e00001ff6f8",
+      "text": "すべての部分集合について考えると2の3000乗なのでもちろん無理。小さいサンプルデータについてDPで考える。2,2,4とS=4について。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811446,
+      "updated": 1592811619
+    },
+    {
+      "id": "5ef05fa5aff09e00003b8222",
+      "text": "[https://gyazo.com/6d14a1c740a68c6be7f9b2814efabf15]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811429,
+      "updated": 1592811551
+    },
+    {
+      "id": "5ef0601faff09e00003b8223",
+      "text": "2,2で4になる経路と、4が1個で4になる経路がある。それぞれの経路の太さがどう決まるか考える。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811551,
+      "updated": 1592811668
+    },
+    {
+      "id": "5ef06094aff09e00001ff6f9",
+      "text": "[https://gyazo.com/3a85007b49caba15b0f55fc8d63688f0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811668,
+      "updated": 1592811705
+    },
+    {
+      "id": "5ef060b8aff09e00003b8224",
+      "text": "素朴にコードにする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811705,
+      "updated": 1592811742
+    },
+    {
+      "id": "5ef05d51aff09e00003b8206",
+      "text": "code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810834,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8208",
+      "text": " import numpy as np",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8209",
+      "text": " P = 998244353",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b820a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b820b",
+      "text": " # N = 10",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b820c",
+      "text": " # S = 10",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b820d",
+      "text": " # AS = list(map(int, \"3 1 4 1 5 9 2 6 5 3\".split()))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b820e",
+      "text": " N, S = map(int, input().split())",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b820f",
+      "text": " AS = list(map(int, input().split()))",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8210",
+      "text": " DP = np.zeros((S + 1, N + 1), dtype=np.int64)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8211",
+      "text": " DP[0, 0] = 1",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8212",
+      "text": " # print(DP)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8213",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8214",
+      "text": " for i in range(N):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8215",
+      "text": "     for j in range(S + 1):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8216",
+      "text": "         v = DP[j, i] * 2",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8217",
+      "text": "         if AS[i] <= j:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8218",
+      "text": "             v += DP[j - AS[i], i]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b8219",
+      "text": "         DP[j, i + 1] = v % P",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b821a",
+      "text": " ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b821b",
+      "text": " # print(DP)",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b821c",
+      "text": " print(DP[S, N])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592810837
+    },
+    {
+      "id": "5ef05d54aff09e00003b821d",
+      "text": "サンプルデータに正解したのでサブミットしたが13 TLE",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592810837,
+      "updated": 1592811763
+    },
+    {
+      "id": "5ef060f8aff09e00001ff6fa",
+      "text": "jについてループを回さずにnumpyでまとめて計算することが可能だとは思うけど、考えるのが面倒なので[numba]で解決",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811769,
+      "updated": 1592811846
+    },
+    {
+      "id": "5ef06147aff09e00003b8225",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811848,
+      "updated": 1592811848
+    },
+    {
+      "id": "5ef05e86aff09e00003b8220",
+      "text": "AC https://atcoder.jp/contests/abc169/submissions/14608435",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811142,
+      "updated": 1592811153
+    },
+    {
+      "id": "5ef05e82aff09e00003b821f",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1592811138,
+      "updated": 1592811138
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "id": "6073f74d89a01a001c102293",
+  "title": "Firestoreで一覧取得を禁止する",
+  "created": 1618212692,
+  "updated": 1618213489,
+  "lines": [
+    {
+      "id": "6073f74d89a01a001c102293",
+      "text": "Firestoreで一覧取得を禁止する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212692,
+      "updated": 1618212705
+    },
+    {
+      "id": "6073f84caff09e0000b7af64",
+      "text": "[Firestore]のセキュリティルールは最初はこうなっている",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212940,
+      "updated": 1618213230
+    },
+    {
+      "id": "6073f762aff09e0000b7af61",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212707,
+      "updated": 1618212859
+    },
+    {
+      "id": "6073f7cfaff09e0000adf1f6",
+      "text": " match /{document=**} {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212816,
+      "updated": 1618212872
+    },
+    {
+      "id": "6073f7f8aff09e0000adf1f7",
+      "text": "   allow read, write;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212857,
+      "updated": 1618212872
+    },
+    {
+      "id": "6073f7f8aff09e0000adf1f8",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212857,
+      "updated": 1618212872
+    },
+    {
+      "id": "6073f7f8aff09e0000adf1fb",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212857,
+      "updated": 1618212857
+    },
+    {
+      "id": "6073f896aff09e0000b7af65",
+      "text": "このread権限はgetとlistに分けられる。このlist権限を制限すれば一覧の取得を禁止できる。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213014,
+      "updated": 1618213086
+    },
+    {
+      "id": "6073f8ddaff09e0000b7af66",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213086,
+      "updated": 1618213093
+    },
+    {
+      "id": "6073f8e4aff09e0000adf1fc",
+      "text": " match /{document=**} {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213093,
+      "updated": 1618213093
+    },
+    {
+      "id": "6073f8e4aff09e0000adf1fd",
+      "text": "   allow get;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213093,
+      "updated": 1618213106
+    },
+    {
+      "id": "6073f8edaff09e0000adf201",
+      "text": "   allow list: if false;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213102,
+      "updated": 1618213110
+    },
+    {
+      "id": "6073f8e9aff09e0000adf200",
+      "text": "   allow write;",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213098,
+      "updated": 1618213099
+    },
+    {
+      "id": "6073f8e4aff09e0000adf1fe",
+      "text": " }",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213093,
+      "updated": 1618213093
+    },
+    {
+      "id": "6073f8e4aff09e0000adf1ff",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213093,
+      "updated": 1618213093
+    },
+    {
+      "id": "6073fa29aff09e0000adf20f",
+      "text": "セキュリティを絞る前は下記のコードが成功していたが、絞ると期待通りエラーになる",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213418,
+      "updated": 1618213489
+    },
+    {
+      "id": "6073f9e0aff09e0000adf206",
+      "text": "code::",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213345,
+      "updated": 1618213367
+    },
+    {
+      "id": "6073f9faaff09e0000adf209",
+      "text": " firebase.firestore().collection(\"collection_foo\").get().then((qs) => {",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213370,
+      "updated": 1618213452
+    },
+    {
+      "id": "6073fa0aaff09e0000adf20d",
+      "text": "   qs.forEach((d) => console.log(d.id));",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213386,
+      "updated": 1618213411
+    },
+    {
+      "id": "6073fa0aaff09e0000adf20e",
+      "text": " });",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213386,
+      "updated": 1618213413
+    },
+    {
+      "id": "6073f9f7aff09e0000adf208",
+      "text": " // Uncaught (in promise) FirebaseError: Missing or insufficient permissions.",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213367,
+      "updated": 1618213369
+    },
+    {
+      "id": "6073f9e1aff09e0000adf207",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213345,
+      "updated": 1618213345
+    },
+    {
+      "id": "6073f76baff09e0000b7af62",
+      "text": "doc https://firebase.google.com/docs/firestore/security/rules-structure",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618212718,
+      "updated": 1618213224
+    },
+    {
+      "id": "6073f9acaff09e0000adf203",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213293,
+      "updated": 1618213293
+    },
+    {
+      "id": "6073f9acaff09e0000adf204",
+      "text": "[Capability URL]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213293,
+      "updated": 1618213296
+    },
+    {
+      "id": "6073f9adaff09e0000adf205",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1618213294,
+      "updated": 1618213294
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "id": "5dbc65b82a639600174a36d1",
+  "title": "BERTの文ベクトル",
+  "created": 1572627899,
+  "updated": 1572939690,
+  "lines": [
+    {
+      "id": "5dbc65b82a639600174a36d1",
+      "text": "BERTの文ベクトル",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572627899,
+      "updated": 1572629289
+    },
+    {
+      "id": "5dbc6fc3aff09e0000d4c2a6",
+      "text": "BERTを使って文章のベクトル埋め込みを得る場合に、first tokenのhidden stateを使うことが良いのか悪いのかという議論。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572630467,
+      "updated": 1572630498
+    },
+    {
+      "id": "5dbc6fe8aff09e0000d4c2a9",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572630505,
+      "updated": 1572630505
+    },
+    {
+      "id": "5dbc65ffaff09e0000d4c28e",
+      "text": "\tcreate_pretraining_data.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572627967,
+      "updated": 1572628310
+    },
+    {
+      "id": "5dbc6756aff09e0000d4c294",
+      "text": "\t\tL271でおよそ0.5の確率でランダムな文を選んで2文目にする",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628310,
+      "updated": 1572628313
+    },
+    {
+      "id": "5dbc65c0aff09e0000d4c28c",
+      "text": "\t\t\t[src https://github.com/google-research/bert/blob/0fce551b55caabcfba52c61e18f34b541aef186a/create_pretraining_data.py#L271]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572627904,
+      "updated": 1572628315
+    },
+    {
+      "id": "5dbc65f4aff09e0000d4c28d",
+      "text": " \tL130, L139で、ランダムな文であるかどうかはnext_sentence_labelsって名前で書き出される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572627956,
+      "updated": 1572628332
+    },
+    {
+      "id": "5dbc6669aff09e0000d4c290",
+      "text": " \t\t[src https://github.com/google-research/bert/blob/0fce551b55caabcfba52c61e18f34b541aef186a/create_pretraining_data.py#L139]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628073,
+      "updated": 1572628306
+    },
+    {
+      "id": "5dbc674baff09e0000d4c293",
+      "text": "\trun_pretraining.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628299,
+      "updated": 1572628370
+    },
+    {
+      "id": "5dbc6792aff09e0000d4c296",
+      "text": "\t\tL144でmodel.get_pooled_output()とnext_sentence_labelsからlossを計算している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628370,
+      "updated": 1572628384
+    },
+    {
+      "id": "5dbc673baff09e0000d4c292",
+      "text": "\t\t\t[src https://github.com/google-research/bert/blob/e13c1f3459cc254f7abbabfc5a286a3304d573e4/run_pretraining.py#L144]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628283,
+      "updated": 1572628385
+    },
+    {
+      "id": "5dbc6854aff09e0000d4c299",
+      "text": "\t\t\t具体的にはL285からのget_next_sentence_outputで計算している",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628564,
+      "updated": 1572628600
+    },
+    {
+      "id": "5dbc6871aff09e0000d4c29a",
+      "text": "\t\t\t\thidden_size次元から2次元へのweight matrixと2次元のbiasがあって、入力に掛けて足してsoftmax",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628594,
+      "updated": 1572628756
+    },
+    {
+      "id": "5dbc684faff09e0000d4c298",
+      "text": "\t\t\t\t[src https://github.com/google-research/bert/blob/e13c1f3459cc254f7abbabfc5a286a3304d573e4/run_pretraining.py#L285]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628559,
+      "updated": 1572628592
+    },
+    {
+      "id": "5dbc684daff09e0000d4c297",
+      "text": "\tmodeling.py",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628557,
+      "updated": 1572628870
+    },
+    {
+      "id": "5dbc6985aff09e0000d4c29d",
+      "text": "\t\tこのmodel.get_pooled_output()はfirst tokenのhidden stateにdenseを1回掛けたもの",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628870,
+      "updated": 1572629056
+    },
+    {
+      "id": "5dbc6989aff09e0000d4c29e",
+      "text": "\t\t\t[src https://github.com/google-research/bert/blob/master/modeling.py#L225]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628873,
+      "updated": 1572629063
+    },
+    {
+      "id": "5dbc6982aff09e0000d4c29c",
+      "text": "\tpre-trainingの段階で2つの文が並びの文かランダムな文かの識別問題を解く際に、この768次元のpooled_outputだけを用いることで、このpooled_outputに「それを識別するための情報」が濃縮される",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572628867,
+      "updated": 1572630635
+    },
+    {
+      "id": "5dbc6cf0aff09e0000d4c2a0",
+      "text": "\t\t2つの文が並びの文かランダムな文かを識別するためには「その文がどういう話題か」を抽出して、2つの文の話題が同一であるかどうかを判断することになる、なのでこの識別を解くことで「話題ベクトル」が抽出する",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572629744,
+      "updated": 1572629894
+    },
+    {
+      "id": "5dbc6d86aff09e0000d4c2a1",
+      "text": "\t\tしかしこのネットワーク設計では、その「話題ベクトル」がpooled_outputに来る保証がない",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572629895,
+      "updated": 1572630616
+    },
+    {
+      "id": "5dbc6d9faff09e0000d4c2a2",
+      "text": "\t\t\t下位のネットワークで話題がつながっているかどうかの識別を済ませてしまい、pooled_outputに「Yes/No」だけが来ることも可能",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572629919,
+      "updated": 1572630613
+    },
+    {
+      "id": "5dbc6dd3aff09e0000d4c2a3",
+      "text": "\t\t\tこれは下位のネットワークが両方の文を参照することができる注意機構を持っていることが原因",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572629971,
+      "updated": 1572630063
+    },
+    {
+      "id": "5dbc7012aff09e0000d4c2aa",
+      "text": "\t\t\t文の埋め込みが欲しいのであれば、pre-trainingの段階でそれぞれの文は相手を見られない状態で学習し、それぞれの文のpooled_outputの内積を計算して識別に使うべきであった。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572630546,
+      "updated": 1572630703
+    },
+    {
+      "id": "5dbc6e2faff09e0000d4c2a5",
+      "text": "\t\t\t[https://gyazo.com/3975480429dadf600bc752de564248bd]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572630064,
+      "updated": 1572630528
+    },
+    {
+      "id": "5dbc6fb8aff09e00009eddb8",
+      "text": "\t\t\tこれなら内積で類似度を計算するのが適当であるようなベクトルがpooled_outputに出てくるはず",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572630456,
+      "updated": 1572630971
+    },
+    {
+      "id": "5dbc6e1eaff09e0000d4c2a4",
+      "text": "\t\t\tpre-trainingの段階で右の構造で学習すればよかったのだが、pre-trainingをやり直すのが高コストなので、右の構造で連続文識別問題を改めて解くことでfine-tuningするのがいいかも",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572630046,
+      "updated": 1572631552
+    },
+    {
+      "id": "5dbc7363aff09e0000d4c2ab",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572631396,
+      "updated": 1572631396
+    },
+    {
+      "id": "5dc11fc2aff09e0000baacca",
+      "text": "-----",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572937666,
+      "updated": 1572937668
+    },
+    {
+      "id": "5dc11fc4aff09e0000baaccc",
+      "text": "\tそもそも文のベクトルが必要か？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572937668,
+      "updated": 1572937676
+    },
+    {
+      "id": "5dc11fcbaff09e0000baaccd",
+      "text": "\t\t本当に欲しいのは複数の文からなる文章のベクトルなのでは？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572937676,
+      "updated": 1572937697
+    },
+    {
+      "id": "5dc11fe0aff09e0000baacce",
+      "text": "\t\tもう1枚自己注意の層を重ねたらいい？",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572937697,
+      "updated": 1572939688
+    },
+    {
+      "id": "5dc12002aff09e0000baacd0",
+      "text": "\t\t「文のベクトルを作ろう」とか考えずに、使いたい目的に合わせてfine-tuningしたら良いのでは",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572937731,
+      "updated": 1572937731
+    },
+    {
+      "id": "5dc12000aff09e0000baaccf",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1572937728,
+      "updated": 1572939690
+    }
+  ]
+}

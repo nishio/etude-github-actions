@@ -1,0 +1,225 @@
+{
+  "id": "5f8b15c41a96c7001e7fc808",
+  "title": "bitDP",
+  "created": 1602950600,
+  "updated": 1615646059,
+  "lines": [
+    {
+      "id": "5f8b15c41a96c7001e7fc808",
+      "text": "bitDP",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950600,
+      "updated": 1602950600
+    },
+    {
+      "id": "5f8b15c8aff09e0000bc837d",
+      "text": "集合を定義域とする[動的計画法]をやる際の実装テクニック。[$ O(N2^N)]。 N=24で[$ 4\\times 10^8]くらい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950600,
+      "updated": 1615646059
+    },
+    {
+      "id": "5f8b1646aff09e0000c5de08",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950726,
+      "updated": 1602950726
+    },
+    {
+      "id": "5f8b1646aff09e0000c5de07",
+      "text": "ある集合Sについての値を計算する前に、集合Sから要素を一つ取り除いたものについての値が確定して欲しい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950726,
+      "updated": 1602950726
+    },
+    {
+      "id": "5f8b1648aff09e0000c5de09",
+      "text": "つまり「要素を一つ取り除いたもの」という関係を有向辺とみなしたグラフをトポロジカルソートしてその順に計算したい。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950728,
+      "updated": 1602950868
+    },
+    {
+      "id": "5f8b16d8aff09e0000c5de0a",
+      "text": "この時、集合の「要素iを含む」と、整数の「i番目のビットが1」を対応づけると、整数の自然な順序がグラフのトポロジカルソートにもなっている。",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950873,
+      "updated": 1602950972
+    },
+    {
+      "id": "5f8b173caff09e0000c5de0d",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950972,
+      "updated": 1602950972
+    },
+    {
+      "id": "5f8b173caff09e0000c5de0e",
+      "text": "`mask = 1 << i`として",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950972,
+      "updated": 1602950999
+    },
+    {
+      "id": "5f8b1756aff09e0000c5de0f",
+      "text": "　[$ i \\in S]: `S & mask`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602950999,
+      "updated": 1602951021
+    },
+    {
+      "id": "5f8b1806aff09e0000c5de10",
+      "text": "　　その時の[$ S / i]: `S ^ mask`",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951174,
+      "updated": 1602951179
+    },
+    {
+      "id": "5f8b1773aff09e0000bc837e",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951028,
+      "updated": 1602951028
+    },
+    {
+      "id": "5f8b184caff09e0000bc8393",
+      "text": "例: [巡回セールスマン問題][$ m(S,v) = \\min_{u \\in S} \\{ m(S / u, u) + d(u, v) \\} ]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951245,
+      "updated": 1602951470
+    },
+    {
+      "id": "5f8b1821aff09e0000bc837f",
+      "text": " code:python",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951201,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8381",
+      "text": "  def solve_tsp(num_vertex, distance):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8382",
+      "text": "      import sys",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8383",
+      "text": "      INF = sys.maxsize",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8384",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8385",
+      "text": "      SIZE = 2 ** num_vertex",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8386",
+      "text": "      memo = [[INF] * num_vertex for _i in range(SIZE)]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8387",
+      "text": "  ",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8388",
+      "text": "      memo[0][0] = 0",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8389",
+      "text": "      for subset in range(1, SIZE):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc838a",
+      "text": "          for v in range(num_vertex):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc838b",
+      "text": "              for u in range(num_vertex):",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc838c",
+      "text": "                  mask = 1 << u",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc838d",
+      "text": "                  if subset & mask:",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc838e",
+      "text": "                      memo[subset][v] = min(",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc838f",
+      "text": "                          memo[subset][v],",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8390",
+      "text": "                          memo[subset ^ mask][u] + distance[u][v])",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951418
+    },
+    {
+      "id": "5f8b1823aff09e0000bc8391",
+      "text": "      return memo[-1][0]",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951203,
+      "updated": 1602951244
+    },
+    {
+      "id": "5f8b1821aff09e0000bc8380",
+      "text": "",
+      "userId": "582e63d27c56960011aff09e",
+      "created": 1602951201,
+      "updated": 1602951201
+    }
+  ]
+}

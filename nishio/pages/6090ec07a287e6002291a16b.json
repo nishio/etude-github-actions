@@ -1,0 +1,1023 @@
+{
+  "id": "6090ec07a287e6002291a16b",
+  "title": "Hatena2011-04-13",
+  "created": 1302620400,
+  "updated": 1302620400,
+  "lines": [
+    {
+      "id": "6090ec2baff09e00003d89f1",
+      "text": "Hatena2011-04-13",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f2",
+      "text": "code:hatena",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f3",
+      "text": " <body>",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f4",
+      "text": " *1302662414*TeX用のプリプロセッサを作ってみた",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f5",
+      "text": " TeXのnewcommand, renewcommandのスコープがどうも納得できなくて、同じことを思った人が過去にいないはずがないのですでにどっかで公開されてるんじゃないかと思ったのだけど、すぐに見つけられなくて作るほうが早そうだったのでプリプロセッサを作ってしまった。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f6",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f7",
+      "text": " <img src=\"http://gyazo.com/c8246fa8c2e5af852f5868dda4654ff1.png\">",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f8",
+      "text": " (注: \\Gaussと\\invは\\newcommandされてる)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89f9",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89fa",
+      "text": " 使ってみて思ったこと",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89fb",
+      "text": " - 文字列のreplaceで置き換えているので\\Sとか定義すると\\Sigmaの前半にマッチしてしまう。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89fc",
+      "text": " -- →プログラミング言語だとトークンに刻んであるから短い変数名を使っても「ぴったり一致する短い名前」としかコンフリクトしないから、スコープを限定すれば1文字変数を使ってもまあ実害がない。でも文字列マッチだと短い名前はその文字列を含む名前を全てシャドーしてしまう。きちんとトークンに刻んでから、完全一致のみで置き換えるべき",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89fd",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89fe",
+      "text": " - 引数を取るマクロが欲しい！",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d89ff",
+      "text": " -- →これを文字列マッチなんかでやるとカッコのネストで破滅することが眼に見えているのでちゃんとパースする必要がある",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a00",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a01",
+      "text": " - 今、根元のスコープから順に置換していってるけど、これは適切なの？",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a02",
+      "text": " -- →置換したものがさらに置換されるケースを考えて、一番近くにあるルールが一番最後に適用されるのが正しいと考えてこの設計にしたが…",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a03",
+      "text": " --- A: そもそも置換したものをさらに置換するとかすると理解が難しくなるからやめようよ案。変数の解決だって内側から見ていって見つかったらそこで終了じゃないか。(名前の解決だよ派)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a04",
+      "text": " --- B: ユースケース「外側で\\x→\\bm xが定義されていて、内側でphix→\\bm \\phi(\\x)を定義する」を考えると、内側から順に適用するべきだ案。さもないと外側で定義したルールを再利用したルールを作る際に\\bm xをもう一度書く必要が出てきてしまう(関数の適用なんだから近い側から順次適用が必要だよ派)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a05",
+      "text": " --- !B: それはルール定義のタイミングでルールの本体にその時点で定義されているルールを適用すればいいんだよ派",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a06",
+      "text": " --- C: (当初の案) ユースケース「外側でEx→\\mathbb{E}(x)を定義して、内側の文脈でxが\\hat{x}に変わったらx→\\hat{x}で『継承＆オーバーライド』したい」を考えて外側から…",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a07",
+      "text": " --- !C: それは引数を取るマクロで解決すべき問題。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a08",
+      "text": " -- Bが正解なのかなぁ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a09",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a0a",
+      "text": " このプロトタイプは1ポモドーロで作れたけど、特に「解決の順番」はちゃんと考えないと破滅を引き起こしそうですな。あとパーサ。そこを考えてしっかりつくり直すと時間かかるかもなぁ。この目的ですでに誰か作ってある程度のユーザに使われてバグが潰されたものがあるなら、これはポイっと捨ててそっちに乗り換えた方がいいと思う。あるんじゃないのかなー。ないのかなー。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a0b",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a0c",
+      "text": " <hr>",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a0d",
+      "text": " 肝心のソースコードを貼り付けるの忘れてた。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a0e",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a0f",
+      "text": " https://gist.github.com/916838",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a10",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a11",
+      "text": " *1302698997*TeX用のパーサを書いてみた",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a12",
+      "text": " 帰りの電車を、確実に座れるところまで反対方向に進んでから帰ってくるって少し遠回りして、パーサを実装してみた。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a13",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a14",
+      "text": " 残念ながらネットワーク接続がなかったので、PLYを入れてみるとかTeXの文法についての形式的な定義を調べるとかできないので気合とフィーリングで適当に。まあテストケースは全部通るように作ったけど、漏れがあるかもねぇ。一応{}によるグルーピングと、それの\\でのエスケープまではサポートしてある。",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a15",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a16",
+      "text": " >|python|",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a17",
+      "text": " \"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a18",
+      "text": " texparse.py: parse TeX",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a19",
+      "text": " \"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a1a",
+      "text": " from string import ascii_letters",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a1b",
+      "text": " SPACES = \" \\t\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a1c",
+      "text": " def spaces(s, i):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a1d",
+      "text": "     r\"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a1e",
+      "text": "     >>> spaces(\"  a\", 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a1f",
+      "text": "     ('  ', 2)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a20",
+      "text": "     \"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a21",
+      "text": "     start = i",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a22",
+      "text": "     while s[i] in SPACES:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a23",
+      "text": "         i += 1",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a24",
+      "text": "     return (s[start:i], i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a25",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a26",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a27",
+      "text": " def term(s, i):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a28",
+      "text": "     r\"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a29",
+      "text": "     >>> term(\"aaa\", 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a2a",
+      "text": "     ('aaa', 3)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a2b",
+      "text": "     >>> term(\"aaa  \", 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a2c",
+      "text": "     ('aaa', 3)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a2d",
+      "text": "     >>> term(r\"aaa\\aaa\", 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a2e",
+      "text": "     ('aaa', 3)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a2f",
+      "text": "     >>> term(r\"\\aaa aaa\", 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a30",
+      "text": "     ('\\\\aaa', 4)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a31",
+      "text": "     >>> term(r\"\\{aaa\", 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a32",
+      "text": "     ('{', 2)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a33",
+      "text": "     \"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a34",
+      "text": "     start = i",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a35",
+      "text": "     escaped = False # T when \\ appeared",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a36",
+      "text": "     while i < len(s):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a37",
+      "text": "         if s[i] in SPACES:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a38",
+      "text": "             break",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a39",
+      "text": "         elif s[i] in \"{}\":",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a3a",
+      "text": "             if escaped:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a3b",
+      "text": "                 return (s[i], i + 1)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a3c",
+      "text": "             break",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a3d",
+      "text": "         elif s[i] == \"\\\\\":",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a3e",
+      "text": "             if i != start:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a3f",
+      "text": "                 break",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a40",
+      "text": "             escaped = True",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a41",
+      "text": "         elif s[i] in ascii_letters:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a42",
+      "text": "             if escaped: escaped = False",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a43",
+      "text": "         else:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a44",
+      "text": "             if i != start: break",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a45",
+      "text": "             i += 1",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a46",
+      "text": "             break",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a47",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a48",
+      "text": "         i += 1",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a49",
+      "text": "     return (s[start:i], i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a4a",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a4b",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a4c",
+      "text": " def brace(s, i):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a4d",
+      "text": "     assert s[i] == \"{\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a4e",
+      "text": "     tokens, i = parse_tokens(s, i + 1)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a4f",
+      "text": "     return (tokens, i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a50",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a51",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a52",
+      "text": " def parse_tokens(s, i):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a53",
+      "text": "     tokens = []",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a54",
+      "text": "     while i < len(s):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a55",
+      "text": "         if s[i] in SPACES:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a56",
+      "text": "             tok, i = spaces(s, i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a57",
+      "text": "             tokens.append(tok)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a58",
+      "text": "         elif s[i] == \"{\":",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a59",
+      "text": "             tok, i = brace(s, i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a5a",
+      "text": "             tokens.append(tok)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a5b",
+      "text": "         elif s[i] == \"}\":",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a5c",
+      "text": "             i += 1",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a5d",
+      "text": "             break",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a5e",
+      "text": "         else:",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a5f",
+      "text": "             tok, i = term(s, i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a60",
+      "text": "             tokens.append(tok)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a61",
+      "text": "             ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a62",
+      "text": "     return (tokens, i)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a63",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a64",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a65",
+      "text": " def parse(s, i=0):",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a66",
+      "text": "     r\"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a67",
+      "text": "     >>> parse(\"hoge\")",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a68",
+      "text": "     ['hoge']",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a69",
+      "text": "     >>> parse(r\"\\ho\\ge\")",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a6a",
+      "text": "     ['\\\\ho', '\\\\ge']",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a6b",
+      "text": "     >>> parse(r\"  \\hoge\")",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a6c",
+      "text": "     ['  ', '\\\\hoge']",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a6d",
+      "text": "     >>> parse(r\"a{ho ge}ga\")",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a6e",
+      "text": "     ['a', ['ho', ' ', 'ge'], 'ga']",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a6f",
+      "text": "     >>> parse(r\"\\{aaa\\}\")",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a70",
+      "text": "     ['{', 'aaa', '}']",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a71",
+      "text": "     >>> parse(r\"\\frac{x^2}{2} + x\")",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a72",
+      "text": "     ['\\\\frac', ['x', '^', '2'], ['2'], ' ', '+', ' ', 'x']",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a73",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a74",
+      "text": "     \"\"\"",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a75",
+      "text": "     tokens, i = parse_tokens(s, 0)",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a76",
+      "text": "     return tokens",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a77",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a78",
+      "text": " def _test():",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a79",
+      "text": "     import doctest",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a7a",
+      "text": "     doctest.testmod()",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a7b",
+      "text": " ",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a7c",
+      "text": " if __name__ == \"__main__\":",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a7d",
+      "text": "     _test()",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a7e",
+      "text": " ||<",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a7f",
+      "text": " </body>",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a80",
+      "text": "",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    },
+    {
+      "id": "6090ec2baff09e00003d8a81",
+      "text": "[はてなダイアリー 2011-04-13 https://nishiohirokazu.hatenadiary.org/archive/2011/04/13]",
+      "created": 1302620400,
+      "updated": 1302620400,
+      "userId": "582e63d27c56960011aff09e"
+    }
+  ]
+}
