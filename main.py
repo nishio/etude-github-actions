@@ -3,11 +3,14 @@ import json
 from urllib.parse import quote
 import aiohttp
 from collections import namedtuple
+import os
 
 TitlePage = namedtuple("TitlePage", ["id", "title", "created", "updated"])
 
 project = "nishio"
+os.makedirs(f"./{project}/stats", exist_ok=True)
 dist_stats = f"./{project}/stats/pages.json"
+os.makedirs(f"./{project}/pages", exist_ok=True)
 dist_data = "./data.json"
 
 URL_TEMPLATE = f"https://scrapbox.io/api/pages/{project}"
@@ -36,12 +39,15 @@ async def main():
                         page["created"], page["updated"]) for page in pages]
     titles.sort(key=lambda x: x.created)
 
-    write_json(dist_stats, {
+    stat = {
         "projectName": project,
         "count": page_num,
         "pages": [title._asdict() for title in titles]
-    })
-
+    }
+    os.makedirs(f"./{project}/stats", exist_ok=True)
+    with open(dist_stats, "w") as file:
+        json.dump(stat, file, ensure_ascii=False, indent=2)
+    return
     skip = 100
     detail_pages = []
     for i in range(0, len(titles), skip):
@@ -72,13 +78,24 @@ async def main():
         print("write success")
 
 
-def write_json(path, data):
-    try:
-        with open(path, "w") as file:
-            json.dump(data, file)
-        return "Written to " + path
-    except Exception as e:
-        return str(e)
+def foo():
+
+    detail_pages_read = []
+
+    with open(dist_data, "r") as file:
+        for line in file:
+            json_line = line.rstrip(",\n")
+            page_data = json.loads(json_line)
+            detail_pages_read.append(page_data)
+
+    print("Read success")
+    return detail_pages_read
 
 
-asyncio.run(main())
+def write_pages(pages):
+    for page in pages:
+        with open(f"./{project}/pages/{page['id']}.json", "w") as file:
+            json.dump(page, file, ensure_ascii=False, indent=2)
+    print("write success")
+
+# asyncio.run(main())
