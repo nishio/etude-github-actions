@@ -1,0 +1,110 @@
+Hatena2016-01-08
+code:hatena
+ <body>
+ *1452237521* Use iPhone tethering for internet while connecting to the venue's LAN with Windows.
+ If there is an IRC server on the LAN at the venue and you want to connect to it, but the network from the hotel to the outside is poor, it may be more comfortable to connect to the Internet by tethering your iPhone or other device to the USB port. How can I do both?
+ 
+ Well, I guess "configure routing" is the correct answer, but I wondered how to do it on Windows, so I searched and researched and made a note of how to do it.
+ 
+ First, let's display the current routing table. I have removed the irrelevant parts. The LAN of the venue is 192.168.200.0/24 and the chat server stands at 192.168.200.5.
+ >||
+ >route print
+ 
+ IPv4 Route Table
+ ===========================================================================
+ Active Route:
+ Network Destination Netmask Gateway Interface Metric
+           0.0.0.0          0.0.0.0    192.168.200.1   192.168.200.99     25
+           0.0.0.0          0.0.0.0      172.20.10.1      172.20.10.7     20
+     192.168.200.0 255.255.255.0 On link 192.168.200.99 281
+    192.168.200.99 255.255.255.255 On link 192.168.200.99 281
+   192.168.200.255 255.255.255.255 On link 192.168.200.99 281
+ ||<
+ 
+ It seems to me that you just need to delete the top line, so do the following.
+ 
+ >||
+ > route DELETE 0.0.0.0 MASK 0.0.0.0 192.168.200.1
+  OK!
+ ||<
+ 
+ I printed it again and it was deleted. I ran tracert to see if it was behaving as I expected.
+ 
+ >||
+ > tracert 8.8.8.8
+ 
+ Tracing route to google-public-dns-a.google.com [8.8.8.8
+ Maximum number of hops through: 30
+ 
+   1     1 ms    <1 ms    <1 ms  172.20.10.1
+ (以下略)
+ 
+ > tracert 192.168.200.5
+ 
+ Tracing route to 192.168.200.5. Maximum number of hops through is 30
+ 
+   1     2 ms     1 ms     6 ms  192.168.200.5
+ 
+ Tracing is complete.
+ ||<
+ 
+ To make sure I did it right, I should have verified the "accessing 8.8.8.8 goes through 192.168.200.1" before deleting it.
+ 
+ <hr>
+ Continued. Next day.
+ 
+ It's back to normal.
+ >||
+ IPv4 Route Table
+ ===========================================================================
+ Active Route:
+ Network Destination Netmask Gateway Interface Metric
+           0.0.0.0          0.0.0.0    192.168.200.1   192.168.200.99     25
+           0.0.0.0          0.0.0.0      172.20.10.1      172.20.10.7     20
+ ||<
+ 
+ I noticed this because of the strange disconnections.
+ >||
+ ~$ git clone https://github.com/miyo/geister_server.java.git
+ Cloning into 'geister_server.java'...
+ fatal: unable to access 'https://github.com/miyo/geister_server.java.git/': Failed to connect to github.com port 443: Connection refused
+ 
+ ~$ git clone https://github.com/miyo/geister_server.java.git
+ Cloning into 'geister_server.java'...
+ error: RPC failed; result=6, HTTP code = 0
+ fatal: The remote end hung up unexpectedly
+ ||<
+ 
+ 
+ Oh, that's right, it's going right by the iPhone.
+ >||
+ > tracert github.com
+ 
+ Tracing route to github.com [192.30.252.130
+ Maximum number of hops through: 30
+ 
+   1     2 ms    <1 ms    <1 ms  172.20.10.1
+ ||<
+ 
+ 
+ I DELETE the route and the error message changed.
+ 
+ >||
+ ~$ git clone https://github.com/miyo/geister_server.java.git
+ Cloning into 'geister_server.java'...
+ fatal: unable to access 'https://github.com/miyo/geister_server.java.git/': Could not resolve host: github.com
+ 
+ ~$ git clone https://github.com/miyo/geister_server.java.git
+ Cloning into 'geister_server.java'...
+ fatal: unable to access 'https://github.com/miyo/geister_server.java.git/': Could not resolve host: github.com
+ ||<
+ 
+ Hmmm, what should I do? Not being able to resolve the name doesn't seem to be the root of the problem.
+ >||
+ ~$ git clone https://192.30.252.129/miyo/geister_server.java.git
+ Cloning into 'geister_server.java'...
+ fatal: unable to access 'https://192.30.252.129/miyo/geister_server.java.git/': Failed to connect to 192.30.252.129 port 443: Connection timed out
+ ||<
+ </body>
+
+[Hatena Diary 2016-01-08 https://nishiohirokazu.hatenadiary.org/archive/2016/01/08]

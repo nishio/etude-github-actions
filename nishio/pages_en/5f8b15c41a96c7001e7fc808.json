@@ -1,0 +1,30 @@
+bitDP
+An implementation technique for doing [dynamic programming] where the set is the domain of definition. [$ O(N2^N)]. N=24 is about [$ 4\times 10^8].
+
+Before computing a value for a set S, we want the value for a set S with one element removed from it to be determined.
+In other words, I want to topologically sort a graph that considers the relation "one element removed" as a directed edge and compute it in that order.
+If we map "contains element i" of the set to "the i-th bit is 1" of the integers, then the natural ordering of the integers is also the topological sorting of the graph.
+
+`mask = 1 << i`として
+　[$ i \in S]: `S & mask`
+　　その時の[$ S / i]: `S ^ mask`
+
+例: [巡回セールスマン問題][$ m(S,v) = \min_{u \in S} \{ m(S / u, u) + d(u, v) \} ]
+ code:python
+  def solve_tsp(num_vertex, distance):
+      import sys
+      INF = sys.maxsize
+  
+      SIZE = 2 ** num_vertex
+      memo = [[INF] * num_vertex for _i in range(SIZE)]
+  
+      memo[0][0] = 0
+      for subset in range(1, SIZE):
+          for v in range(num_vertex):
+              for u in range(num_vertex):
+                  mask = 1 << u
+                  if subset & mask:
+                      memo[subset][v] = min(
+                          memo[subset][v],
+                          memo[subset ^ mask][u] + distance[u][v])
+      return memo[-1][0]

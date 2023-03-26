@@ -1,0 +1,20 @@
+DP D
+[D - Knapsack 1 https://atcoder.jp/contests/dp/tasks/dp_d]
+	The problem of maximizing value below a specified weight limit
+　[Knapsack]
+　DP with weight as the domain of definition and maximum value at that weight as the value.
+
+	PyPy 166 ms
+	`for j in range(W - weight + 1)`の+1を忘れて最大重量の場合を更新し忘れるミス
+code:python
+ def solve(N, W, WV):
+     values = [0] * (W + 1)
+     for i in range(N):
+         next_values = values[:]
+         weight, value = WV[i]
+         for j in range(W - weight + 1):
+             next_values[j + weight] = max(
+                 values[j + weight],
+                 values[j] + value)
+         values = next_values
+     return max(values)

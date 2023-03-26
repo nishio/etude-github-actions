@@ -1,0 +1,85 @@
+caddi2018_b
+[https://gyazo.com/cb838b2af7700f03a0a0700e26823b26]
+
+[D - Harlequin https://atcoder.jp/contests/caddi2018/tasks/caddi2018_b]
+	[https://gyazo.com/14c0d417ffb75a7c07f2587309541ae6]
+　Thoughts.
+　　Game of taking 0 or 1 from multiple piles
+　　When all mountains are less than 1, the turner wins.
+　　When there is only one 2, you lose if you take it from there.
+　　　If there is a 1 in any pile other than that pile, you win if you take all of them and turn them over to your opponent.
+　　　If you don't have it, you lose.
+　　If there are only two 2s
+　　　If you take it, you will lose and you will lose as well.
+　　　　If there is a 1 in any pile other than that pile, you win if you take all of them and turn them over to your opponent.
+   　If you don't have it, you lose.
+  If there is only one 3
+  　If there's a 1 in the other pile, take 3 and you lose.
+  It's time to verify with code as I'm finding it difficult to do so with natural language.
+　Thought 2
+　 think the opposite way
+　 　Reverse operation "select one or more from ai and increase by 1".
+　 A: Loses when ai is all 0's
+　  Consider a reverse operation from this state
+　 B: When ai is 0 or 1, you win because you can take all 1's and attribute them to A
+　 　Consider a reverse operation from this state
+　 　ai will be 0 to 2, but if there is no 2, then there is more than one 2 since it is included in B
+　 　But B is the winning state, so the opponent tries to avoid transitioning to it.
+　 　Transition only when the situation becomes unavoidable.
+　 C: There is only one 2, losing because it can only transition to B.
+　　　Consider a reverse operation from this state
+　　　One 2 or 3 and the rest 0 or 1
+　　D: When there is only one 2 and the rest are 0 or 1, the transition to C is possible, so it wins.
+　　　I'm starting to get confused.
+　　To summarize so far, the following attributes are likely to be affected
+　　　What is the largest number
+　　　Is it one or more than one?
+　　　Are there any other numbers?
+　　When the largest number is x, one, and no other number, you win if x is odd
+　　　When there are other numbers than that, the rest of the problem becomes similar.
+　　　　If x is even, the game is the same because "if x is 0, you lose".
+　　　　When the number is odd, the game is reversed.
+　　When there is more than one largest number, you can leave one, cut all of them, or just one...
+　　 I feel like I'm not giving it enough thought.
+　　　If I have to leave one and cut it down to get to the losing phase, I'll do it, this phase is a win.
+　　　If it's going to be a win-win situation, you're going to try to avoid that as much as possible.
+　　　　What kind of move is that?
+　　　　What happens when you cut all the big numbers?
+　　　Oh, I should have thought of when there is more than one largest number and no other.
+　　　　When there are x 1's
+　　　　　Losing phase if one piece is left to be cut off.
+　　　　　Take it all and win.
+　　　　When there are x number of 2
+　　　　　If you take all of them, the opponent wins the phase, so you don't do it.
+　　　　　If you leave one and cut it down, it becomes a problem for the rest because the maximum value is 1 even, there are x-1 1's, so you take them all and the other side wins, which you also don't do.
+　　　　　If x is 3 or more, leave 2 pieces and cut them down, the opponent can only do one of the above, so the opponent loses
+　　　　　If x is 2, I lose.
+　　　　When there are x number of 3
+　　　　　If x is 2, you win by scraping all of them.
+　　　　　If x is greater than or equal to 3
+　　　　　　If you leave one piece and cut it down, it becomes a "2 is x-1" problem.
+　　I'm starting to understand a lot more.
+　　　Sorting by number of pieces and whether the top is even or odd, and whether the tied first place is one, two, or more, results in "0 is a winner or loser" for the problem with the top removed.
+　　　It's just sorted and processed linearly, so it's not too late.
+　　　But I don't think this consideration can be done in real time during the contest, and since it's being done by a human, there could be an overlooked route or something.
+　　　What is the best way to do it in real time? Maybe make a solver, solve small problems, and discover patterns from there.
+　公式解説
+　　It was attributed to a much simpler form.
+　　>One way to arrive at this conclusion during the contest is to write a program that solves a small case by (memoized) recursion, or to formulate a hypothesis by experimenting with paper-and-pencil solving for the N = 2 case.
+　　Well, that's what happens.
+　Thought 3
+　 In the first place, since the decision to take or not to take from each mountain does not interfere at all with the other mountains, it would have been better to consider each mountain to be a partial problem first.
+　 This is the reason why odd numbers win in a single mountain in the first place.
+　 　[https://gyazo.com/cb838b2af7700f03a0a0700e26823b26]
+　　山二個の場合
+　　　[https://gyazo.com/76f0d3348647f5f619903d283eb35839]
+　　If the losing state is a circle, the winning state that can transition to a circle is a square, and the state that can only transition to a square is a circle
+　　　[https://gyazo.com/3389c6ac2c5426f784be4d9dfd140782]
+　　Ah, I see, we can hypothesize that when everything is even, we lose.
+　　[paint state transition diagram with winners and losers].
+　　If you think of it as a combination of subproblems, one mountain at a time, you lose if everything goes to 0
+　　　You have the option of advancing one move or not.
+　　　When the opponent advances one move, we can maintain evenness by doing the same thing.
+
+
+[対戦系問題]

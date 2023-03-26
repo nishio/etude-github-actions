@@ -1,0 +1,69 @@
+Hatena2012-02-18
+code:hatena
+ <body>
+ *1329526827*githubでfork元の変更を取り込む
+ >>
+ I forked someone's repository on github, and they made an update before I started tinkering with it. I wanted to apply the difference to my forked repository as well, but can I do that via webUI, or do I pull the other person's in my working copy and then push it to my repository...(from my tweet)
+ <<
+ 
+ I looked for a while to see if I could do it with WebUI, but I couldn't find it, so I did it as follows: I put the name of the person who created the fork source at "taro".
+ >||
+ $ git clone <myrepos>
+ $ git remote add taro <taro's repos>
+ $ git pull taro master
+ ||<
+ I don't have write access to taro's repository, so when I do the work, I can push it to my own repository and then submit a pull request to taro. Triangle.
+ 
+ <hr>
+ 
+ p.s. I hadn't done the editing on my end yet this time, but I'm sure that if I work on master in the future, there will be conflicts when I pull. I hadn't noticed. (thanks @voluntas, @ssci, @okuryu)
+ 
+ It would be better to split the pull into fetch and merge, and only succeed with the fetch that cannot fail first.
+ >||
+ $ git fetch taro
+ $ git merge taro/master
+ ||<
+ 
+ Or you could do a git checkout -b <work branch> and work there in the first place, and rebase -i master when there is an update in the main branch.
+ 
+ >||
+ $ git checkout -b <work branch>
+ ...
+ $ git pull taro master
+ $ git rebase -i master
+ ||<
+ 
+ As I was talking with Mr. Hoshino of the lab recently, compared to merging between branches, rebase allows merging at a fine granularity using -i, so it is less likely to cause difficult conflicts.
+ 
+ *1329575393* Leverage memo on environment construction
+ I was talking on Skype about how I'm not good at building environments, and I learned a lot of things, so I leveraged notes.
+ 
+ - It is easier to create from scratch in a VM because there is no need to worry.
+ - Package management system with good OS affinity = also good at disruption
+ - I'll try to get things back to normal in a withering way.
+ - . /configure --prefix=$HOME/opt/hogehoge-1.0.0 and so on. I want to punch people when I see them building without thinking about it and not adding options to . /configure without thinking about it, I want to punch them in the face.
+ - I can't do sudo make install out of the blue!
+ - I only use python in virtualenv, so I don't put it in the normal path.
+ - stow is a tool to make symlink work
+ 
+ I didn't know STOW. Also, I didn't think anything of it. /configure and then sudo make install... sorry...
+ </body>
+ <comments>
+ <comment>
+ <username>sora_h</username>
+ <body><br>Since the culture of pull requests is to pull from a separate branch rather than master, I think that pulling from a working branch is the best option from many perspectives. <br><br>If you want to do it on master, git pull --rebase or something...</body>
+ <timestamp>1329561658</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I didn't know there was such an option > --rebase</body>
+ <timestamp>1329574245</timestamp>
+ </comment>
+ <comment>
+ <username>sora_h</username>
+ <body>>. /configure --prefix=$HOME/opt/hogehoge-1.0.0 and so on. If you see someone who builds without thinking about . /configure without thinking about it makes me want to punch people who build without options<br><br>I know<br><br>Linux: build with package managers whenever possible, and manually make install (ebuild for Gentoo) for software not in the package manager to make uninstallation easier. ) <br>OS X: Use homebrew as a package manager and *NIX tools are usually installed with homebrew (again, it's easy to write a Formula for the package, so if it doesn't exist, write it)<br>Windows: No.<br><br>That's how I do it. <br><br>I do it like that. The exception to this is projects I'm participating in, which I build without using the package manager. <br>(Ruby is prefixed with ~/rubies/<version>) </body>.
+ <timestamp>1329608846</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-02-18 https://nishiohirokazu.hatenadiary.org/archive/2012/02/18]

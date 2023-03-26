@@ -1,0 +1,129 @@
+Hatena2007-11-20
+code:hatena
+ <body>
+ *1195513073* Programming Process
+ Get up in the morning.
+ http://ja.doukaku.org/comment/4258/
+ I saw the "I see, I didn't know you had that kind of idea! So I coded it.
+ I should have recorded the process (see http://d.hatena.ne.jp/higepon/20071108/1194495170).
+ In the meantime, I wrote it in a Python interactive shell, so I'll just paste that in its entirety.
+ Comments beginning with # in the middle are comments written later
+ 
+ >|python|
+ >>> def divid(n, s):
+ 	from itertools import cycle
+ 	print cycle(3)
+ 
+ 	
+ >>> divid(3, "")
+ Traceback (most recent call last):
+   File "<pyshell#110>", line 1, in <module>
+     divid(3, "")
+   File "<pyshell#109>", line 3, in divid
+     print cycle(3)
+ TypeError: 'int' object is not iterable
+ # cycle takes a list-like (iterable), not a number.
+ >>> from itertools import cycle
+ >>> cycle(range(3))
+ <itertools.cycle object at 0x0270AAA8>
+ # (0, 1, 2, 0, 1, 2...) An infinite list generator that repeats
+ >>> zip(_, "hoge")
+ [(0, 'h'), (1, 'o'), (2, 'g'), (0, 'e')]
+ # zip to match the shorter one
+ >>> def divid(n, s):
+ 	from itertools import cycle
+ 	print zip(cycle(range(n)), s)
+ 
+ 
+ # I've got the parts for now, so I'll put them in the function.
+ >>> from collections import defaultdict
+ >>> defaultdict(list)
+ defaultdict(<type 'list'>, {})
+ # I almost used defaultdict but realized I don't need it.
+ >>> xs = [(0, 'h'), (1, 'o'), (2, 'g'), (0, 'e')]
+ # Name the zip result xs.
+ >>> [x for x in xs is x[0] == 0]
+ Traceback (most recent call last):
+   File "<pyshell#119>", line 1, in <module>
+     [x for x in xs is x[0] == 0]
+ NameError: name 'x' is not defined
+ # I wrote "is" when I should have written "if".
+ >>> [x for x in xs if x[0] == 0]
+ [(0, 'h'), (0, 'e')]
+ # List comprehension to retrieve only 0 things
+ >>> [c for i, c in xs if i == 0]
+ ['h', 'e']
+ # Use tuple-unpacking because [0] is too much work.
+ >>> "".join(c for i, c in xs if i == 0)
+ 'he'
+ # join to connect. The second part is ready.
+ >>> def divid(n, s):
+ 	from itertools import cycle
+ 	print ["".join(c for i, c in xs if i == 0)zip(cycle(range(n)), s)
+ 	       
+ SyntaxError: invalid syntax
+ # Paste error
+ >>> def divid(n, s):
+ 	from itertools import cycle
+ 	xs = zip(cycle(range(n)), s)
+ 	print ["".join(c for i, c in xs if i == j)
+ 	       for j in range(n)]
+ 
+ 	
+ >>> divid(3, "1234567890")
+ ['1470', '258', '369']
+ >>> def divid(n, s):
+ 	from itertools import cycle
+ 	xs = zip(cycle(range(n)), s)
+ 	return ["".join(c for i, c in xs if i == j)
+ 	       for j in range(n)]
+ 
+ >>> divid(3, "1234567890")
+ ['1470', '258', '369']
+ >>> 
+ ||<
+ 
+ *1195521986*Day Trip Mystery Tour
+ 
+ Daily Military Tour
+ Go to a different army every day! But which army is a secret! You might not be able to go home!
+ 
+ *1195572207*Laboratory Tour
+ id:yoshioriさんと身元保証人のid:higayasuoさんがラボに<del datetime="2007-11-21T00:23:27+09:00">面接</del><ins datetime="2007-11-21T00:23:27+09:00">見学</ins>にいらっしゃった。
+ 
+ I heard many interesting stories.
+ 
+ - Fluent interfaces and method chains are two different things.
+ -- http://d.hatena.ne.jp/higayasuo/20071025#1193319054
+ - FluentInterface
+ -- http://capsctrl.que.jp/kdmsnr/wiki/bliki/?FluentInterface
+ - CodeReposで弾さんを添削
+ -- http://coderepos.org/share/log/lang/perl/Encode/trunk?rev=1864
+ - CodeReposでjQueryを勉強
+ -- http://coderepos.org/share/log/websites/coderepos.org/trac/share/js/TracUtils.js?rev=1864
+ - We concluded that jQuery is wonderful.
+ - JavaはLL
+ - All but me are erotic.
+ 
+ What else? I'll write when I think of something else.
+ 
+ *1195580880*Sleepy
+ damn, I'm sleepy
+ 
+ *1195580930*未踏合宿の成果
+ I discovered that a large super ball I bought at a mess at an unexplored camp was just the thing for massaging the pads of my feet.
+ </body>
+ <comments>
+ <comment>
+ <username>jbking</username>
+ <body>I'd like to record the process, so I'll send it to http://www.screencast-o-matic.com/とか調べていました. It would be nice if there was something that could record audio and post it to some video site. I'd love to have something that can record the process and even post it to some video site. </body>.
+ <timestamp>1195628961</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I think the real problem is that it's too slow to see...<br>I wish I could write while talking about what I'm thinking. </body>
+ <timestamp>1195835226</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2007-11-20 https://nishiohirokazu.hatenadiary.org/archive/2007/11/20]

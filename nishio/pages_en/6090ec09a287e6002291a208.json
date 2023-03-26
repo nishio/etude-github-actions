@@ -1,0 +1,64 @@
+Hatena2012-03-28
+code:hatena
+ <body>
+ *1332921643* Organizing a Tangled Environment
+ For some reason, I thought python 2.6 was being invoked when python 2.7 is in the system...
+ >||
+ $ echo $PATH
+ /opt/local/Library/Frameworks/Python.framework/Versions/2.6/bin:/opt/local/bin:/opt/local/sbin:/Users/nishio/tools/ImageMagick-6.5.3/bin:/Users/nishio/bin:/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/local/bin:/opt/local/bin:/Applications/Adobe Flex Builder 3/sdks/3.0.0/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin
+ ||<
+ 
+ Why is this happening? I looked at the bash_profile and saw
+ 
+ >||
+ ##
+ # Your previous /Users/nishio/.bash_profile file was backed up as /Users/nishio/.bash_profile.macports-saved_2010-05-14_at_18:54:24
+ ##
+ 
+ # MacPorts Installer addition on 2010-05-14_at_18:54:24: adding an appropriate PATH variable for use with MacPorts.
+ export PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.6/bin:/opt/local/bin:/opt/local/sbin:$PATH
+ # Finished adapting your PATH environment variable for use with MacPorts.
+ ||<
+ 
+ Oh my gosh, MacPorts edited itself before I knew it.
+ 
+ So I removed 2.6 from my PATH.
+ 
+ >||
+ virtualenvwrapper.sh: Could not find Python module virtualenvwrapper.hook_loader using VIRTUALENVWRAPPER_PYTHON=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/python. Is the PATH set properly?
+ ||<
+ 
+ What?
+ I mean, is this just a matter of re-installing virtualenv to 2.7?
+ 
+ easy_install-2.7 says "I've already got virtualenv", but it's mocked up here in virtualenvwrapper.sh.
+ >||
+ 
+ # Set up virtualenvwrapper properly
+ virtualenvwrapper_initialize () {
+     virtualenvwrapper_verify_workon_home -q || return 1
+     # Test for the virtualenvwrapper package we need so we can report
+     # an installation problem.
+     "$VIRTUALENVWRAPPER_PYTHON" -c "import virtualenvwrapper.hook_loader" >/dev/null 2>&1
+     if [ $? -ne 0 ]
+     then
+         echo "virtualenvwrapper.sh: Could not find Python module virtualenvwrapper.hook_loader using VIRTUALENVWRAPPER_PYTHON=$VIRTUALENVWRAPPER_PYTHON. Is the PATH set properly?" 1>&2
+         return 1
+     fi
+     virtualenvwrapper_run_hook "initialize"
+ }
+ ||<
+ 
+ Hmmm... I guess I'll just put it on hold for now until I need virtualenv and simply comment it out of the bash_profile...
+ 
+ おまけ。port installedの出力
+ >||
+   python27 @2.7.1_3
+   python27 @2.7.2_0
+   python27 @2.7.2_1
+   python27 @2.7.2_2 (active)
+ ||<
+ How did this happen...I wonder if I can delete the old one...scared
+ </body>
+
+[Hatena Diary 2012-03-28 https://nishiohirokazu.hatenadiary.org/archive/2012/03/28]
