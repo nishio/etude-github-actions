@@ -1,17 +1,27 @@
+import langdetect
+import requests
 import asyncio
 import json
 from urllib.parse import quote
 import aiohttp
 from collections import namedtuple
 import os
+import re
+from tqdm import tqdm
+import dotenv
+dotenv.load_dotenv()
+DEEPL_KEY = os.getenv("DEEPL_KEY")
 
 TitlePage = namedtuple("TitlePage", ["id", "title", "created", "updated"])
 
 project = "nishio"
 os.makedirs(f"./{project}/stats", exist_ok=True)
 dist_stats = f"./{project}/stats/pages.json"
-os.makedirs(f"./{project}/pages", exist_ok=True)
-dist_data = "./data.json"
+PAGES_DIR = f"./{project}/pages"
+os.makedirs(PAGES_DIR, exist_ok=True)
+ENGLISH_DIR = f"./{project}/pages_en"
+os.makedirs(ENGLISH_DIR, exist_ok=True)
+cache_data = "./cache.json"
 
 URL_TEMPLATE = f"https://scrapbox.io/api/pages/{project}"
 LIMIT_PARAM = 1000
@@ -47,7 +57,7 @@ async def main():
     os.makedirs(f"./{project}/stats", exist_ok=True)
     with open(dist_stats, "w") as file:
         json.dump(stat, file, ensure_ascii=False, indent=2)
-    return
+
     skip = 100
     detail_pages = []
     for i in range(0, len(titles), skip):
@@ -72,30 +82,77 @@ async def main():
             })
         print(f"Finish fetching {i} - {i + skip} pages.")
 
-    with open(dist_data, "w") as file:
-        for page in detail_pages:
-            file.write(json.dumps(page) + ",\n")
-        print("write success")
-
-
-def foo():
-
-    detail_pages_read = []
-
-    with open(dist_data, "r") as file:
-        for line in file:
-            json_line = line.rstrip(",\n")
-            page_data = json.loads(json_line)
-            detail_pages_read.append(page_data)
-
-    print("Read success")
-    return detail_pages_read
-
-
-def write_pages(pages):
-    for page in pages:
+    for page in detail_pages:
         with open(f"./{project}/pages/{page['id']}.json", "w") as file:
             json.dump(page, file, ensure_ascii=False, indent=2)
     print("write success")
 
-# asyncio.run(main())
+
+def split_indent(line):
+    indent, tail = re.match("^([ \t]*)(.*)", line).groups()
+    tail = tail.rstrip()  # remove trailing spaces
+    return indent, tail
+
+
+def call_deepl(ja):
+    url = "https://api.deepl.com/v2/translate"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    data = {
+        "auth_key": DEEPL_KEY,
+        "text": ja,
+        "source_lang": "JA",
+        "target_lang": "EN",
+    }
+    response = requests.post(url, headers=headers, data=data)
+    response.raise_for_status()
+    result = response.json()
+    translated_text = result["translations"][0]["text"]
+    return translated_text
+
+
+def translate():
+    total = 0
+    no_cache = 0
+    # load cache from file
+    cache = json.load(open(cache_data, "r"))
+    target = os.listdir(PAGES_DIR)
+    # target = target[:300]
+    for name in tqdm(target):
+        with open(os.path.join(PAGES_DIR, name), "r") as file:
+            data = json.load(file)
+            result_lines = []
+            for line in tqdm(data["lines"]):
+                text = line["text"]
+                indent, body = split_indent(text)
+                if not body:
+                    result_lines.append(text)
+                    continue
+                total += len(bytes(body, "utf-8"))
+                # print(line)
+                try:
+                    lang = langdetect.detect(body)
+                    if langdetect.detect(body) != "ja":
+                        result_lines.append(text)
+                        continue
+                except langdetect.lang_detect_exception.LangDetectException:
+                    result_lines.append(text)
+                    continue
+                if body not in cache:
+                    no_cache += len(bytes(body, "utf-8"))
+                    en = call_deepl(body)
+                    cache[body] = en
+                result_lines.append(indent + cache[body])
+        # output to file
+        with open(os.path.join(ENGLISH_DIR, name), "w") as file:
+            file.write("\n".join(result_lines))
+        # output cache to file
+        with open(cache_data, "w") as file:
+            json.dump(cache, file, ensure_ascii=False, indent=2)
+    print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
+
+
+if __name__ == "__main__":
+    pass
+    # asyncio.run(main())
+    # translate()
+    pass
