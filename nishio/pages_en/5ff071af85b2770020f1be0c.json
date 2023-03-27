@@ -1,0 +1,261 @@
+ABC187
+[AtCoder Beginner Contest 187 - AtCoder https://atcoder.jp/contests/abc187]
+
+All questions were correct, I didn't realize I TLE'd E and went on to F. I realized when I submitted F and was in a hurry, but I easily AC'd F and was able to focus on correcting E.
+[https://gyazo.com/eab26e86c59d96c42f2f735705d61531]
+
+Yay, I turned blue, a happy miscalculation since I thought I was waiting for an ARC since I wasn't growing much at ABC! It's a great way to start the year!
+[https://gyazo.com/8422dc9634d556b4a3f836342ce7133f]
+
+[C - 1-SAT https://atcoder.jp/contests/abc187/tasks/abc187_c]
+	[https://gyazo.com/752614ec90e766bb6abb49f28fa2dfdf]
+　You can collect the positive and negative terms, respectively, and if something is included in both the positive and the negative, you can output it.
+　I used a hash table because I couldn't find it in time if the place I was looking for was linear.
+	code:python
+	 def main():
+      posi = set()
+      nega = set()
+      N = int(input())
+      for _i in range(N):
+          s = input().strip().decode('ascii')
+          if s[0] == "!":
+              nega.add(s[1:])
+          else:
+              posi.add(s)
+      
+      for s in posi:
+          if s in nega:
+              print(s)
+              return
+      print("satisfiable")
+	Tweet
+		Someone interpreted it as a 26th decimal (lost the source).
+			code::
+				>>> (26 ** 11) - 1
+   	3670344486987775
+   	>>> (3670344486987775).bit_length()
+   	52
+  	I was worried, but I guess 64-bit integers are safe.
+
+[D - Choose Me https://atcoder.jp/contests/abc187/tasks/abc187_d]
+	[https://gyazo.com/c04eb163ab65fe9a2655d14d2a4becc7]
+ When not speaking, Ai to the other camp; when speaking, Ai+Bi to our camp
+ That is, the difference in votes obtained with nothing done is [$ \sum A_i]
+ I want to make this negative.
+ One speech reduces 2 * Ai + Bi
+ →Sort by this value and take from the largest to the smallest, ending when the value is negative.
+ [Greedy method of choosing in order of benefit].
+ code:python
+  def main():
+      N = int(input())
+      sumA = 0
+      diff = []
+      for _i in range(N):
+          a, b = map(int, input().split())
+          sumA += a
+          diff.append(2 * a + b)
+  
+      diff.sort()
+      ret = 0
+      while sumA >= 0:
+          ret += 1
+          d = diff.pop()
+          sumA -= d
+      print(ret)
+　Twitter
+　 Seems like a lot of people made the mistake of taking them in the order of most voters.
+　 反例: [src https://twitter.com/1024Sub/status/1345371007318560768] 
+　 >(Takahashi:Aoki) respectively `[(9:1), (1:8), (1:3)]`
+
+
+[E - Through Path https://atcoder.jp/contests/abc187/tasks/abc187_e]
+	[https://gyazo.com/143ba6f9b2afebb4b79a2b4f6ba8faeb]
+　Thoughts.
+　　A naive implementation would update about half the vertex values for each query.
+　　　2 * 10^5 vertices, 2 * 10^5 queries, so this won't make it.
+　　[Converted to rooted tree since the graph is a tree].
+　　I noticed that one side of the query is "add all descendant vertices below a certain vertex together".
+　　I guess I could take the approach of keeping it in the middle with the difference and calculating the sum at the end.
+　　　The other one can be done by updating the two locations backwards.
+　　　[RangeAddは二つのPointAdd]の発想だ
+　　　[https://gyazo.com/0cafc8e96777af5b8bb542646f17aa2c]
+　Implement and try with sample code
+　　Since b is the parent of a and vice versa, there are four different cases
+　I submitted it and it was a TLE, but I didn't realize it was a TLE and went on to F.
+　　AC by converting the last part of the summation from a recursive call to a loop.
+	code:python
+	 def main():
+      from collections import defaultdict
+      N = int(input())
+      edges = defaultdict(list)
+      AS = []
+      BS = []
+      for _i in range(N - 1):
+          a, b = map(int, input().split())
+          a -= 1
+          b -= 1
+          AS.append(a)
+          BS.append(b)
+          edges[a].append(b)
+          edges[b].append(a)
+  
+      root = 0
+      children, parents = graph_to_tree(N, edges, root)
+      veterx_diff = [0] * N
+  
+      Q = int(input())
+      for _q in range(Q):
+          t, e, x = map(int, input().split())
+          e -= 1
+          a = AS[e]
+          b = BS[e]
+          if t == 1:
+              if parents[a] == b:
+                  veterx_diff[a] += x
+              else:
+                  veterx_diff[root] += x
+                  veterx_diff[b] -= x
+          else:
+              if parents[a] == b:
+                  veterx_diff[root] += x
+                  veterx_diff[a] -= x
+              else:
+                  veterx_diff[b] += x
+  
+      finish = [0] * N
+  
+      stack = [(root, 0)]
+      while stack:
+          v, x = stack.pop()
+          x += veterx_diff[v]
+          finish[v] += x
+          for c in children[v]:
+              stack.append((c, x))
+  
+      print(*finish, sep="\n")
+
+[F - Close Group https://atcoder.jp/contests/abc187/tasks/abc187_f]
+	[https://gyazo.com/d4bea7af88ebfdf425299335ae05b889]
+ Thoughts.
+ 　Number of complete graphs?
+ 　It is non-trivial what to do with vertices belonging to multiple complete graphs
+ 　N <= 18, 2^18 == 262144, M <= 153, 2^N * M is about 4 * 10^7
+ 　[Constraints with 18 vertices]
+ 　2^M is impossible.
+ 　Let's implement it naively first and observe.
+ mounting
+ 　If it is possible to belong to some complete graph, the approach is to search in favor of belonging, and if it is equal to a known solution, it will not be a good solution, so the search is stopped.
+ 　I implemented it naively and the sample passed, so I submitted it to see how much of a TLE it would be and got AC.
+ 　I'm implementing it in PyPy with recursive calls and it's 92msec, so I can afford it.
+	code:python
+	 def main():
+      N, M = map(int, input().split())
+      edges = set()
+      for _i in range(M):
+          edges.add(tuple(map(int, input().split())))
+  
+      ccs = [[1]]  # Connected Components
+      ret = 18
+  
+      def visit(pos):
+          nonlocal ret
+          if pos == N + 1:
+              if len(ccs) < ret:
+                  ret = len(ccs)
+              return
+          if len(ccs) >= ret:
+              return
+  
+          for cc in ccs:
+              if all((v, pos) in edges for v in cc):
+                  # can join the cc
+                  cc.append(pos)
+                  visit(pos + 1)
+                  cc.pop()
+  
+          # create new cc
+          ccs.append([pos])
+          visit(pos + 1)
+          ccs.pop()
+  
+      visit(2)
+      print(ret)
+　公式解説
+　　O(3^N).
+　　　It's the same principle as [the sum of the number of subsets of subsets of subsets] is 3^N.
+　　　For each subset, I'm taking the min for that subset.
+	Tweet
+		"F problem is almost the same problem as EDPC U" [src https://twitter.com/kyopro_friends/status/1345366167750205446?s=20]
+ 　　[DP U]
+　　"Taking the counterpart and considering the complementary graph, we got [chromatic number]" [src https://twitter.com/_onsen_manjuuu/status/1345364392402014208?s=21].
+　　I'm wondering if ABC187's F just happens to have no test cases to drop, or if this is enough, since I easily AC'd it with a recursive call to PyPy, which is reputed to be slow, with a full search of the branches and pruning. I can't think of any case to drop it at the moment.
+　　I just realized it's the fastest in Python.
+　　　[https://gyazo.com/a9cd5fa4c24664885f7ee963d90e3789]
+　　I don't understand why it's the fastest, even though it's not even really fast (it's at the level of checking for edges by linearly licking a list of edges to see if it's a perfect graph or not).
+		Let me try to verbalize a bit more about Python's fastest implementation. First, let vertex 1 be a connected component. For vertex 2, we check if it can join an existing connected component. We want to minimize the number of connected components, +0 if it can join, +1 if it cannot, so we search for the one that can join first.
+		A depth-first search divides all vertices into connected components to obtain a lower bound of L on the number of solutions. Since the number of connected components is non-decreasing as the search proceeds, the search can be terminated when the number of connected components reaches L, since there is no better solution beyond that point in the subsequent search.
+		This is all we do. When the input is a complete graph, there are two choices for each vertex: to include or not to include in the connected component, and the search prioritizes those that are included, so it is easy to reach "all in one". When there are no edges in the input, there is no choice for each vertex, so the search ends easily here, too.
+		What looks bad at first glance is when the graph is a complete bipartite graph, and after 1-9 become discrete connected components, there are 9 options to put 10. If you search without pruning, you end up with 9! But once you get there with depth-first search, all the rest are censored out, so it takes about 18 searches to get there. This is due to the fact that we know the lower limit of the solution.
+			9! = 362880, which is 1000 times smaller than 3 ** 18 = 387420489.
+	It was weird to do a linear search for the presence or absence of an edge and be the fastest, so I made it so that O(1) properly shows the presence or absence of an edge: [76ms https://atcoder.jp/contests/abc187/submissions/19177293]
+		I experimented with outputting the cost of a randomly edged graph with probability p, with the decision of whether or not to have an edge as cost 1.
+		153 times when p is 0 or 1, and when p is about 0.6 to 0.8, it exceeds 100,000
+		The highest cost in this range of 1000 trials was 0.8 2252973
+		7838954 for 10000 times.
+			code::
+ 			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0]
+    [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1]
+    [0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0]
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+　　　I made a mistake and generated the self side by mistake, but it has no effect on solving this problem, so you can ignore it.
+　　I filled in the first half with 1 and looked up 10,000 items and found one with a cost of 11750699.
+　　	code::
+　　[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1]
+    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0]
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+		32590993
+			code::
+			 [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1]
+    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

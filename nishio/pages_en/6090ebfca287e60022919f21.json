@@ -1,0 +1,209 @@
+Hatena2009-01-23
+code:hatena
+ <body>
+ *1232662308*What's New In Python3.0 日本語版 
+ <a href='http://text.world.coocan.jp/TSNET/?What%27sNewInPython3.0'>What'sNewInPython3.0 - TSNETWiki on TextWorld</a>
+ >>
+ 本文はGuido van Rossumの"What's New In Python 3.0"( http://docs.python.org/3.0/whatsnew/3.0.html )の全訳です。
+ <<
+ Excellent (applause)
+ 
+ <hr>
+ I'm going to write down my concerns here and give you feedback when I have some of it together.
+ 
+ <hr>
+ 
+ >>
+ （In Python, keywords are used for names that specify arguments (keyword arguments) and are rarely used as reserved words as in other languages. (It is rarely used as a reserved word, as in other languages.)
+ <<
+ 
+ I think "erroneous" is an overstatement. It makes sense to refer to the Reference Manual for word definitions.
+ http://docs.python.org/reference/lexical_analysis.html#identifiers-and-keywords
+ 
+ >>
+ The following identifiers are used as reserved words, or keywords of the language
+ <<
+ 
+ So in Python, "reserved words" and "keywords" mean the same thing. The heading itself is Identifiers and Keywords.
+ 
+ But of course "keyword" is also used for "keyword argument" and is a source of confusion, so I think I can translate "keyword" in the reserved word sense as "reserved word". Or "keyword (reserved word)" or "reserved word (keyword)".
+ 
+ >>
+ The 'long integer' repr does not have an 'L' after it. Thus, unconditionally, a code that removes that character would instead truncate the last digit. (Repr means the output in the repr function, as well as the character representation of the object. repr = representation)
+ <<
+ 
+ In short, the string representation of "long" no longer has a trailing L, so code that removes the last character (without checking whether it is an L or not) with repr(x)[:-1] or the like will result in a display with a missing 1 position. If you want to remove the last L, you should do repr(x).rstrip("L"), but I guess there are many cases where this is not done.
+ 
+ Oh, when I wrote "use str", I didn't mean that you should use str in Python 3.0, but that you can use str in 2.* as well to get strings without L.
+ 
+ <hr>
+ >>
+ In particular, the use of the map function, which causes side effects on the calling function, is a bad idea. The correct conversion is to use an ordinary loop (since it would be useless to create a list anyway)
+ <<
+ 
+ Let's see, the original text is
+ >>
+ Particularly tricky is map() invoked for the side effects of the function; the correct transformation is to use a regular for loop (since creating a list would just be wasteful).
+ <<
+ Therefore, "using a map function to cause a side effect to a called function" is a mistranslation. The original English sentence itself is not very friendly because the reader has to know what "side effect" is to be conveyed. In short, map(print, [1, 2, 3]) is a tricky thing to write, so you should just write
+ >|python|
+ for x in [1, 2, 3]:
+     print(x)
+ ||<
+ I say that it is better to write "None, None, None". The former is useless because it will temporarily generate a list [None, None, None], and the latter will generate a list [None, None, None].
+ 
+ 
+ The original explanation is not correct, though. Using a function that has side-effects and the resulting list is useless are independent of each other. I think it should be noted that in 2.*, the above code using map and the code using for have the same behavior, but in 3.0, they don't. In other words, map now returns an iterator. In other words, since the map now returns an iterator, the function evaluation is delayed until the result is needed. However, the above tricky code does not need the result of the map, so it keeps running without the side effect that should have occurred.
+ 
+ 
+ If I were to translate it, I would write it like this:
+ >>
+ Particularly tricky is the use of map() to cause side effects of functions with side effects. This should be changed to a normal for statement.
+ <<
+ The problem is that when I translate, people say, "The original text is bad," or "This is hard to understand, so you should give a code example," and the finished product is something else.
+ 
+ <hr>
+ 
+ >>
+ ! ==" now returns the opposite of "===" unless "===" returns NotImplemented?
+ <<
+ 
+ This is "unless you throw a NotImplemented exception". I thought that if I returned it, it would be considered True, so ! = False, I thought, but I was wrong. I guess it's confusing with NotImplementedError, but it's not the same thing at all.
+ 
+ >|python|
+ """                                                                                                               
+ >>> Return() != Return()                                                                                          
+ True                                                                                                              
+ >>> ReturnError() != ReturnError()                                                                                
+ False                                                                                                             
+ >>> Raise() != Raise()                                                                                            
+ Traceback (most recent call last):                                                                                
+     ...                                                                                                           
+ NotImplementedError                                                                                               
+ """
+ 
+ class Return(object):
+     def __eq__(self, v):
+         return NotImplemented
+ 
+ class ReturnError(object):
+     def __eq__(self, v):
+         return NotImplementedError
+ 
+ class Raise(object):
+     def __eq__(self, v):
+         raise NotImplementedError
+ 
+ def _test():
+     import doctest
+     doctest.testmod()
+ 
+ _test()
+ ||<
+ 
+ <hr>
+ The special syntax of the old print statement is obsolete and replaced by the print function (and keyword arguments). The reason why there is a space in the example under "Example:" that is not in the original is perhaps because it would be caught by the Wiki notation if written as is?
+ 
+ <hr>
+ >>
+ The sorted built-in function and list.sort method can no longer take 'cmp' as an argument. Instead, they pass a keyword argument (comparison function) named 'key'.
+ <<
+ 
+ Oops, "Pass (the comparison function) to the keyword argument named 'key'." is a snake. See <a href='http://labs.cybozu.co.jp/blog/nishio/2007/05/python24.html'>Yasukazu Nishio's blog @ Cybozu Labs: Fast sorting in Python 2.4 or later</a>. To explain briefly, the idea of "customizing the sorting method by passing a comparison function" is not very computationally efficient, so the policy is to pass a "function to create a list of values to be sorted" (<a href='http://en.wikipedia.org/wiki/ Schwartzian_transform'>Schwartzian transform - Wikipedia, the free encyclopedia</a>).
+ 
+ To give an example, when the list to be sorted is large, instead of writing xs.sort(cmp=lambda x, y: cmp(x.lower(), y.lower())) for case-insensitive sorting, it is orders of magnitude faster to use xs.sort(key=lambda x:x.lower()) or It is an order of magnitude faster to use xs.sort(key=str.lower), which works the same way.
+ 
+ <hr>
+ >>
+ All text is Unicode. However, encoded Unicode is represented as binary data. （Python handles Unicode in the form of UTF-8.)
+ <<
+ 
+ Uh... handling Unicode in the form of UTF-8...
+ 
+ http://svn.python.org/projects/python/trunk/Include/unicodeobject.h
+ >|c|
+ /* Setting Py_UNICODE_WIDE enables UCS-4 storage.  Otherwise, Unicode
+    strings are stored as UCS-2 (with limited support for UTF-16) */
+ ||<
+ 
+ Hmmm...I knew it...there's no way I would have used UTF-8.
+ I don't really want to talk about character codes, but UTF-8 is a byte string, so it is a bytes type, which is incompatible with the Unicode text described here and cannot be combined.
+ A: Unicode string, B: UTF-8 byte string, C: ascii byte string If the default encoding for automatic conversion of byte strings to Unicode, which is written in site.py, is ascii, then A + C works fine and A + B A + C works fine, and A + B also works fine in cultures that use only ascii characters in effect. However, if Japanese characters are included in the string, there is a possibility that bytes that are not in the ascii range may be included, resulting in a UnicodeDecodeError.
+ >|python|
+ >>> u"" + "a"
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in <module>
+ UnicodeDecodeError: 'ascii' codec can't decode byte 0xe3 in position 0: ordinal not in range(128)
+ ||<
+ The root of all evil is that "Unicode strings and UTF-8 (and other byte strings) are different things, but they are often confused and it is easy to write codes that combine them as they are, and since they are automatically converted, they do not cause errors and furthermore seem to behave correctly in the ascii sphere. This is the root of the problem. If you make a mistake and write a code that concatenates a Unicode string with a UTF-8 byte sequence, you will immediately see a TypeError.
+ >|python|
+ >>> "" + "あ".encode("utf-8")
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in <module>
+ TypeError: Can't convert 'bytes' object to str implicitly
+ ||<
+ 
+ <hr>
+ 
+ >>
+ A common pattern in Python 2.x modules is that along with modules implemented in pure Python, for example the pickle and cPickle modules, there are optional extensions implemented in C in the fast version. In Python 3.0, the fast version is considered an implementation detail of the pure Python version. The pickle and cPickle module pairs received this treatment.
+ <<
+ 
+ Let's see.
+ 
+ >>
+ A common pattern in Python 2.x is to have one version of a module implemented in pure Python, with an optional accelerated version implemented as a C extension; for example, pickle and cPickle. This places the burden of importing the accelerated version and falling back on the pure Python version on each user of these modules. In Python 3.0, the accelerated versions are considered implementation details of the pure Python versions. Users should always import the standard version, which attempts to import the accelerated version and falls back to the pure Python version.
+ <<
+ 
+ This is:
+ 
+ In Python 2.x, there was often a pattern like pickle and cPickle, where there was a module implemented in pure Python, and depending on the environment, there was also an accelerated version implemented as a C extension. In Python 3.0, the existence of an accelerated version is considered an implementation detail that should be hidden from the user. Users should always import the standard version. The standard version will attempt to import the accelerated version internally, and if it cannot import it, it will use the pure Python version.
+ 
+ cPickle and pickle have already undergone such changes, profile will do so in Python 3.1, and StringIO is already a class in the io module.
+ 
+ 「In Python 3.0, the accelerated versions are considered implementation details of the pure Python versions.」っておかしいよね。実装の一部としてC拡張を含んでいる時点でそれはpure Python版とは呼べない。原文が間違っている(また言ってる)
+ 
+ <hr>
+ >>
+ The reason for the deletion was that string.letters and its ilk had local dependent behavior. And it is a bad idea for a global "constant" so attractively named)
+ <<
+ 
+ Maybe I was caught by global, but I think it's too much to change the locale to local. See <a href='http://e-words.jp/w/E383ADE382B1E383BCE383AB.html'>What is locale [locale] - meaning and explanation in IT Dictionary</a>. What is being said here is that even though I think the constant lower_letters is "lowercase," is the all-caps "c" lowercase? Should the Cyrillic lowercase "н" be included? What about the Greek letter "pi"? That's the question. That's why the name ascii was changed to include it.
+ 
+ <hr>
+ >>
+ In this case, the main exception is stored in the __cause__ attribute of the secondary exception. When an unhandled exception crosses the chain of __cause__ and __context__ attributes and outputs a separate traceback (for each component in the chain it crosses), the traceback is output with the top-level exception first
+ <<
+ 
+ >>
+ In this case, the primary exception is stored on the __cause__ attribute of the secondary exception. The traceback printed when an unhandled exception occurs walks the chain of __cause__ and __context__ attributes and prints a separate traceback for each component of the chain, with the primary exception at the top.
+ <<
+ 
+ If you catch an exception (hereafter: temporary exception), and while processing it in the except clause, another exception is inadvertently thrown, the second exception (hereafter: secondary exception) will be placed in the __context__ attribute, and the first exception in the __cause__ attribute when you explicitly throw the exception again. But:
+ 
+ The traceback that is displayed when an unhandled exception occurs follows the chain of __cause__ and __context__ and displays a separate traceback for each component in the chain, with the temporary exception at the top.
+ 
+ That is to say. It's odd that the subject is the traceback. Is it my understanding that "The traceback printed when an unhandled exception occurs" is the subject and "walks" and "prints" are the SVO and VO adverbs of the verb.
+ 
+ When an unhandled exception occurs, follow the chain of __cause__ and __context__ and display tracebacks separated by component of the chain, with the temporary exception at the top.
+ 
+ It would be more natural to use The subject is ambiguous, just like in Japanese.
+ 
+ *1232697188*家事
+ <DEL>My phone might be missing. It was there when I went to the head office on Monday. If I had acted normally, it should be somewhere at home, but after thinking about it, I bought a bicycle in Kinshicho on my way home and rode it home, so I can't say it was normal.
+ - □ Go to docomo store and ask them to stop
+ - □ Go to the police and report it lost? </del>
+ It was in his jacket pocket!
+ 
+ - Find out how to print online.
+ -- ■ Printing out documents
+ - Find out how to send by Sagawa Express with cash on delivery.
+ -- <del>□</del> Pack it up and take it to a convenience store
+ -- Seven-Eleven is only Kuroneko Yamato. Ministop and Sunkus K are Yu-pack. Where can I go to pick it up? <a href='http://map.e-map.co.jp/standard/12214010/'>Sagawa Express - Nearest Store Locator -</a>. Hm, it's not a convenience store, it's a liquor store or a produce store. It's like <a href='http://gyazo.com/fbf9ed11b6580db4622fa8c7a2a69111.png'>a liquor store in town</a>.
+ - □ Call the hospital and make an appointment
+ 
+ <hr>
+ I thought I had looked all over my bag and the floor and couldn't find it, but I wasn't looking in my jacket pockets. I realized when I was searching the floor of my closet that it might have fallen out of the pocket of my jeans when I put them on the hanger.
+ </body>
+
+[Hatena Diary 2009-01-23 https://nishiohirokazu.hatenadiary.org/archive/2009/01/23]

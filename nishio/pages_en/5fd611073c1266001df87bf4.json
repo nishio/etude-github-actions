@@ -1,0 +1,92 @@
+ABC185
+[https://gyazo.com/b71472b5270bf5ca1c9e21467bebad27]
+
+[AtCoder Beginner Contest 185 - AtCoder https://atcoder.jp/contests/abc185]
+This is the third consecutive time ABC has answered all questions correctly!
+[https://gyazo.com/61d08bf0000ee4058a1266ff1229539d]
+[https://gyazo.com/486e32a283d62265b907410eadf2c1ae]
+
+A
+	I submitted it without testing it and got a syntax error due to missing parentheses, I thought it was easy and cut too many corners, sorry.
+	code:python
+	 print(min(list(map(int, input().split()))))
+
+[C - Duodecim Ferra https://atcoder.jp/contests/abc185/tasks/abc185_c][C - Duodecim Ferra https://atcoder.jp/contests/abc185/tasks/abc185_c]
+	Combination of 11 cutting locations to be selected from L-1 possible cutting locations
+	code:python
+	 def main():
+      L = int(input())
+      print(comb(L - 1, 12 - 1))
+　According to the official explanation, it was an "I said the answer was less than 2^63, but I didn't say the numerator was" type trap [overflow trap].
+　　I'm a Python user, so I solved it without worrying about anything.
+
+[D - Stamp https://atcoder.jp/contests/abc185/tasks/abc185_d]
+	Smaller than the maximum possible stamp size will not result in a better score.
+	Calculate score to find maximum stamp size
+　Maximum stamp size is minimum gap size
+　It doesn't say that the input is sorted, so sort it (I noticed a minus in the test at hand).
+　I put a guard in front and back to get the gap size.
+　When the difference of coordinates is 2, the size of the gap is 1
+　求めるスコアは[$ \sum_i \lceil D_i / k \rceil ]
+	code:python
+	 def main():
+      N, M = map(int, input().split())
+      AS = list(map(int, input().split()))
+      AS.append(0)
+      AS.append(N + 1)
+      AS.sort()
+      DS = []
+      for i in range(M + 1):
+          d = AS[i + 1] - AS[i]
+          if d > 1:
+              DS.append(d - 1)
+      if not DS:
+          print(0)
+          return
+      k = min(DS)
+      ret = 0
+      for d in DS:
+          ret += (d - 1) // k + 1
+      print(ret)
+
+[F - Range Xor Query https://atcoder.jp/contests/abc185/tasks/abc185_f]
+	Just use segmented trees.
+　According to the official description, [phoenix trees] would be fine.
+
+[E - Sequence Matching https://atcoder.jp/contests/abc185/tasks/abc185_e]
+	I had a hard time, but when one of them had zero letters left, I had to delete it, so I did a DP with the number of letters left and solved it with O(NM).
+	Thoughts.
+	　O(N^3) is no good since N=1000, O(N^2logN) and O(N^2) are OK
+	　Do you only take it from the long side?
+	　　I wouldn't be so sure about that.
+	　When the number of remaining characters reaches (x, 0), all that remains is to delete x characters.
+	　I drew a diagram of what's fixed by this rule, and I could see straightforward dynamic programming.
+	　[https://gyazo.com/b71472b5270bf5ca1c9e21467bebad27]
+
+	code:python
+	 def solve(N, M, AS, BS):
+      if M > N:
+          N, M = M, N
+          AS, BS = BS, AS
+  
+      table = list(range(N + 1))
+      for m in range(1, M + 1):
+          newtable = [0] * (N + 1)
+          prev = newtable[0] = m
+          for n in range(1, N + 1):
+              if AS[-n] == BS[-m]:
+                  d = 0
+              else:
+                  d = 1
+  
+              prev = newtable[n] = min(
+                  prev + 1,
+                  table[n - 1] + d,
+                  table[n] + 1
+              )
+          table = newtable
+      return table[-1]
+  
+　Twitterを見てると[Longest Common Substring]の話をしてる人が多い
+　　https://twitter.com/cloudman_p/status/1338139231093280768?s=21
+　関連: [編集距離]

@@ -1,0 +1,318 @@
+Hatena2012-04-16
+code:hatena
+ <body>
+ *1334548800*git config --add receive.denyCurrentBranch ignoreはどう危険なのか
+ How is it dangerous to do git config --add receive.denyCurrentBranch ignore? In a nutshell, it causes "one person's implementation to be unintentionally deleted and committed by another person. If this is not dangerous, what is?
+ 
+ First, let's create a local experimental repository named "f" and put the README. The contents are empty for now.
+ 
+ >||
+ $ git init f
+ Initialized empty Git repository in /Users/nishio/tmp//f/.git/
+ $ cd f
+ f$ touch README
+ f$ git add README
+ f$ git commit -m "initial"
+ [master (root-commit) ce6d7d5] initial
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 README
+ ||<
+ 
+ Next, I try to clone the repository with the name "g".
+ 
+ >||
+ f$ cd ..
+ $ git clone f g
+ Cloning into g...
+ done.
+ ||<
+ 
+ Done. Next, let's edit README in the g work tree and push to f. I add "hoge" to README, commit, and push.
+ 
+ >||
+ $ cd g
+ g$ cat >> README
+ hoge
+ g$ git add README
+ g$ git commit -m "modify on g"
+ [master 93295fc] modify on g
+  1 files changed, 1 insertions(+), 0 deletions(-)
+ g$ git push
+ Counting objects: 5, done.
+ Writing objects: 100% (3/3), 256 bytes, done.
+ Total 3 (delta 0), reused 0 (delta 0)
+ Unpacking objects: 100% (3/3), done.
+ remote: error: refusing to update checked out branch: refs/heads/master
+ remote: error: By default, updating the current branch in a non-bare repository
+ remote: error: is denied, because it will make the index and work tree inconsistent
+ remote: error: with what you pushed, and will require 'git reset --hard' to match
+ remote: error: the work tree to HEAD.
+ remote: error:
+ remote: error: You can set 'receive.denyCurrentBranch' configuration variable to
+ remote: error: 'ignore' or 'warn' in the remote repository to allow pushing into
+ remote: error: its current branch; however, this is not recommended unless you
+ remote: error: arranged to update its work tree to match what you pushed in some
+ remote: error: other way.
+ remote: error:
+ remote: error: To squelch this message and still keep the default behaviour, set
+ remote: error: 'receive.denyCurrentBranch' configuration variable to 'refuse'.
+ To /Users/nishio/tmp/gittest/f
+  ! [remote rejected] master -> master (branch is currently checked out)
+ error: failed to push some refs to '/Users/nishio/tmp/gittest/f'
+ ||<
+ 
+ When pushing, I get an error saying "You can't push a branch that is currently checked out in a non-bare (has a worktree) repository because the index and worktree will be inconsistent. Because the index and worktree will be inconsistent" and it is an error.
+ 
+ I heard that there is a website that explains how to "git config --add receive.denyCurrentBranch ignore, although it is a bit risky" in such a situation. Let's experience what happens when you do that. In repository f, do git config --add receive.denyCurrentBranch ignore.
+ 
+ >||
+ g$ cd ../f
+ f$ git config --add receive.denyCurrentBranch ignore
+ ||<
+ 
+ When I go back to repository g and push, this time it succeeds easily.
+ >||
+ f$ cd ../g
+ g$ git push
+ Counting objects: 5, done.
+ Writing objects: 100% (3/3), 256 bytes, done.
+ Total 3 (delta 0), reused 0 (delta 0)
+ Unpacking objects: 100% (3/3), done.
+ To /Users/nishio/tmp/gittest/f
+    ce6d7d5..93295fc  master -> master
+ ||<
+ 
+ In this state, for Mr. f, "Mr. g has rewritten the master branch without his knowledge. The logs show that Mr. g rewrote the branch, but the README in the work tree is still "empty" before Mr. g rewrote it. But the README in the work tree is still "empty" before g-san rewrote it. Let's "append" "fuga" to it and commit.
+ 
+ >||
+ g$ cd ../f
+ f$ git log --oneline
+ 93295fc modify on g
+ ce6d7d5 initial
+ f$ cat >> README
+ fuga
+ f$ git add README
+ f$ git commit -m "modify on f"
+ [master 14a82ca] modify on f
+  1 files changed, 1 insertions(+), 1 deletions(-)
+ ||<
+ 
+ Those with discerning eyes may have noticed. It is labeled "1 deletions(-)".
+ 
+ Now let's see what has been done with the current commit.
+ >||
+ f$ git show
+ commit 14a82ca87ba5dd536492b9758582179104de09bd
+ Author: NISHIO Hirokazu <nishio.hirokazu@gmail.com>
+ Date:   Mon Apr 16 12:35:11 2012 +0900
+ 
+     modify on f
+ 
+ diff --git a/README b/README
+ index 2262de0..9128c3e 100644
+ --- a/README
+ +++ b/README
+ @@ -1 +1 @@
+ -hoge
+ +fuga
+ ||<
+ 
+ Mr. f's commit is "delete the modifications made by Mr. g and add your own modifications". Maybe after a while.
+ 
+ f "Hey, g, have you gotten the corrections you asked for last time yet?"
+ G "Yeah, I committed a long time ago."
+ F "It ain't fixed! Here!"
+ g "That can't be right...what the hell, you deleted my modification."
+ F "Eh, that can't be... it's true... no, I didn't mean to turn it off."
+ g "Did it just disappear on its own? git scary."
+ 
+ The real fear is the existence of sites that spread bad know-how while saying "It's a little risky. What is really scary is the existence of sites that spread bad know-how while saying "It's a little risky.
+ 
+ ** What then?
+ 
+ The most straightforward way is to prepare a bare branch on github, bitbucket, or create your own, but let's consider what to do from a terrible situation like this, where you clone from a non-bare repository, and both of you are working on the master. Let's see what we can do.
+ 
+ First of all, let's say that in g, you made some changes again, and you added the word piyo.
+ >||
+ g$ cat >> README 
+ piyo
+ g$ git add README 
+ g$ git commit
+ Waiting for Emacs...
+ [master 29cfa4a] modify on g (piyo)
+  1 files changed, 1 insertions(+), 0 deletions(-)
+ ||<
+ 
+ To tell the truth, it is preferable to "create a branch and work in it before making changes", but it is not too late to create a branch that means "add piyo".
+ >||
+ g$ git checkout -b add_feature_piyo
+ Switched to a new branch 'add_feature_piyo'
+ ||<
+ 
+ Then, only that branch is pushed to origin (the clone source, in this case f).
+ >||
+ g$ git push origin add_feature_piyo
+ Counting objects: 9, done.
+ Delta compression using up to 2 threads.
+ Compressing objects: 100% (3/3), done.
+ Writing objects: 100% (9/9), 678 bytes, done.
+ Total 9 (delta 0), reused 0 (delta 0)
+ Unpacking objects: 100% (9/9), done.
+ To /Users/nishio/tmp/gittest/f
+  * [new branch]      add_feature_piyo -> add_feature_piyo
+ ||<
+ 
+ Then, on f's side, the changes in g appear as a new branch, and f can merge from there at a convenient time when f's work is finished.
+ >||
+ g$ cd ../f
+ f$ git branch
+   add_feature_piyo
+ * master
+ f$ git merge add_feature_piyo
+ Auto-merging README
+ CONFLICT (content): Merge conflict in README
+ Automatic merge failed; fix conflicts and then commit the result.
+ f$ cat README 
+ <<<<<<< HEAD
+ fuga
+ =======
+ hoge
+ piyo
+ >>>>>>> add_feature_piyo
+ ||<
+ 
+ The README looks like this, so what we want to do now is to adopt both changes, so let's edit the README to do that.
+ 
+ >||
+ f$ emacsclient README # 編集している 
+ Waiting for Emacs...
+ f$ cat README 
+ fuga
+ hoge
+ piyo
+ ||<
+ 
+ Then just add this file and commit as usual. By the way, if you do commit -v, you can see the diff of what you are about to commit. In this case, git commit -v will show you that hoge and piyo were added, as shown below.
+ 
+ >||
+ Merge branch 'add_feature_piyo'
+ 
+ Conflicts:
+ 	README
+ #
+ # It looks like you may be committing a merge.
+ # If this is not correct, please remove the file
+ #	.git/MERGE_HEAD
+ # and try again.
+ 
+ 
+ # Please enter the commit message for your changes. Lines starting
+ # with '#' will be ignored, and an empty message aborts the commit.
+ # On branch master
+ # Changes to be committed:
+ #
+ #	modified:   README
+ #
+ diff --git a/README b/README
+ index 9128c3e..05a9867 100644
+ --- a/README
+ +++ b/README
+ @@ -1 +1,3 @@
+  fuga
+ +hoge
+ +piyo
+ ||<
+ 
+ *1334576656*A diary refactoring Alloy's illustration logic.
+ This is a diary that I tried to keep because I am doing something similar in Col and Row separately, and I thought it might be possible to put them together.
+ I was told that it might be difficult because Col and Row have individual nexts, but I couldn't figure out how to make Col -> Color by fixing only Row in Col -> Row -> Color. After much agonizing, I thought, "Just make it Col -> Color -> Row!" I came up with this solution.
+ 
+ In addition, it was troublesome to distinguish between Col and Row, so I made both Int.
+ 
+ >||
+ one sig Root{
+   cell: Int -> Color -> Int
+ }{
+   all x: cell.univ.univ | in_ten[x]
+   all y: univ.(univ.cell) | in_ten[y]
+   let ten = {x: Int | in_ten[x]}{
+     all x, y: ten{
+       one x.cell.y
+     }
+   }
+ }
+ 
+ pred in_ten(x: Int){
+   one x
+   0 <= x and x < 10  // notice: for 5 Int required
+ }
+ ||<
+ 
+ In this way, rowHint and colHint can now immediately create a seq Color and enter a common process.
+ 
+ >||
+ pred hint(line: seq Color, sizes: seq Int){
+   some heads: seq Int {
+     #heads = #sizes
+     sorted[get_heads[line], heads]
+     all i: sizes.inds {
+       let start = heads[i], end = get_end[start, sizes[i]] {
+         one line[end]
+         all_black[line, start, end]
+         next_is_not_black[line, end]
+       }
+     }
+   }
+ }
+ pred colHint (i: Int, sizes: seq Int) {
+   hint[getCol[i], sizes]
+ }
+ pred rowHint (i: Int, sizes: seq Int) {
+   hint[getRow[i], sizes]
+ }
+ ||<
+ 
+ So, unfortunately, this refactored version is about twice as slow as the original, although the code clone is gone. Mmmm. Is this because the original was for 10 and could limit the number of Col and Row to 10, whereas this one is now Int, so the range is now -16 to 15?
+ >||
+ # Original
+ 33381 vars. 2200 primary vars. 92568 clauses. 854ms.
+ ... is consistent. 415ms.
+ # Refactored
+ 73481 vars. 4608 primary vars. 219033 clauses. 1426ms.
+ ...is consistent. 858ms.
+ ||<
+ 
+ Hmmm, looks like. I made a muddy sig SmallInt and limited it to 10 and it shrank a lot.
+ >||
+ 30402 vars. 2848 primary vars. 75273 clauses. 888ms.
+ ... is consistent. 1307ms.
+ ||<
+ Typical changes are shown below. Of course, several modifications were necessary for type consistency.
+ >|diff|
+ +sig SmallInt{}
+ +fun from_int (i: Int): SmallInt {
+ +  {x: SmallInt | #(x.prevs) = i}
+ +}
+ +
+ +fun to_int (x: SmallInt): Int {
+ +  #(x.prevs)
+ +}
+ +
+  pred hint(line: seq Color, sizes: seq Int){
+ -  some heads: seq Int {
+ +  some heads: seq SmallInt {
+ ||<
+ 
+ I was using 6 nested "some" in my previous code, but in bonotake's code, there is only one, and as I just did, reducing the search range of "some" seems to greatly reduce the generated CNFs and execution time.
+ 
+ Source code from: https://github.com/nishio/learning_alloy/tree/master/illust_logic
+ </body>
+ <comments>
+ <comment>
+ <username>Mr. Gitter</username>
+ <body>It really helps that articles like this are being released to the world. <BR><BR>I shudder to think that I didn't come here before I came across Bad Know-How! <BR><BR>Thanks. </body>
+ <timestamp>1386653258</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-04-16 https://nishiohirokazu.hatenadiary.org/archive/2012/04/16]

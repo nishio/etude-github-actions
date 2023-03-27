@@ -1,0 +1,158 @@
+Hatena2012-09-06
+code:hatena
+ <body>
+ *1346930683*loggingでの出力はdoctestを妨げない
+ Oh, now the logging.debug message is displayed in the console and doctest succeeds unaffected. I did not know that.
+ 
+ PS: Oops, I thought it was designed not to interfere, but that's not the case, it's simply that logging.debug is showing up in the standard error output > If stream is not specified, sys.stderr is used.
+ 
+ >|python|
+ """
+ >>> foo()
+ 1
+ """
+ import logging
+ logging.basicConfig(level=logging.DEBUG)
+ 
+ 
+ def foo():
+     logging.debug("enter foo")
+     print 1
+     logging.debug("exit foo")
+ 
+ 
+ def _test():
+     import doctest
+     doctest.testmod()
+ 
+ 
+ if __name__ == "__main__":
+     _test()
+ ||<
+ 
+ *1346933870*Test content with debug output turned on only during testing.
+ I'm using the with syntax to attach a temporary log handler for the duration of the test. ().push() as described in doctest, nothing is displayed, but with TemporaryLogHandler(__name__), the log will be output.
+ 
+ >|python|
+ """
+ >>> Counter().push()
+ 
+ >>> from templog import TemporaryLogHandler
+ >>> with TemporaryLogHandler(__name__):
+ ...     Counter().push()
+ current value: 0
+ value changed to: 1
+ """
+ import logging
+ logger = logging.getLogger(__name__)
+ 
+ 
+ class Counter(object):
+     def __init__(self):
+         self.__value = 0
+ 
+     def push(self):
+         logger.debug("current value: %s", self.__value)
+         self.__value += 1
+         logger.debug("value changed to: %s", self.__value)
+ 
+ 
+ def _test():
+     import doctest
+     doctest.testmod()
+ 
+ 
+ if __name__ == "__main__":
+     _test()
+ ||<
+ 
+ 
+ The implementation is as follows: StreamHandler outputs the log output to stdout, and doctest tests it. Of course, if you want to do unit testing, you can test the value of the output to cStringIO.
+ >|python|
+ import sys
+ 
+ class TemporaryLogHandler(object):
+     def __init__(self, logger_name):
+         self.logger_name = logger_name
+ 
+     def __enter__(self):
+         self.handler = logging.StreamHandler(sys.stdout)
+         self.handler.setLevel(logging.DEBUG)
+         logger = logging.getLogger(self.logger_name)
+         self.old_level = logger.level
+         logger.setLevel(logging.DEBUG)
+         logger.addHandler(self.handler)
+ 
+     def __exit__(self, *args):
+         logger = logging.getLogger(self.logger_name)
+         logger.removeHandler(self.handler)
+         logger.setLevel(self.old_level)
+ ||<
+ 
+ In this situation, even if another log is submitted, that log will be picked up by the handler and the test will fail, so it might be better to submit the output for testing to a logger for testing.
+ 
+ *1346938523*"Programming without Symbols in Python" (unfinished)
+ It was seven years ago that Mr. Takesako achieved the feat of symbol-free programming in Perl. (see <a href='http://namazu.org/~takesako/diary/?date=20050831'>ppencode</a>)
+ 
+ And Oxy achieved symbol-only programming in Ruby (<a href='http://mono.kmc.gr.jp/~oxy/d/?date=20050901#p01'>rrencode</a>)
+ 
+ As recently as seven years ago, I was asked, "Can't you program in Python without symbols?" I was young at the time (I was only 20 when I rounded up). I was young at the time (I was only 20 years old when I rounded up), and I brushed it off with, "Oh no, it's impossible.
+ 
+ Seven years have passed since then, and although the Python syntax has not changed much, my way of thinking has. It is a bad idea to say "it's impossible" to a user's request; even if 100% of the problem is impossible to achieve, it is possible to solve 80% of the problem. It is better to say, "It is impossible to achieve 100% for this reason, but it is possible if you loosen this condition. In the latter case, 80% of the value has been created, but in the former case, no matter how correct the reason is, nothing has been created.
+ 
+ 
+ Now, what to loosen?
+ 
+ In Python, unlike Ruby, parentheses are required for all function calls. So it becomes very painful when parentheses are prohibited. Also, if you want to create an iterable object without commas, you have to choose between strings and generators, but the former requires quotation marks, and the latter requires parentheses, colons, line breaks, and indentation. Using a string would not be much fun, and I don't want to require a colon just for the sake of a generator. So let's make "only lowercase alphabets, parentheses, and commas" the goal. No whitespace or line breaks are needed.
+ 
+ The completed Python script is shown here. The 80-character line break and the comment on the last line, which are included for visibility, can be removed without affecting execution.
+ >|python|
+ print(bytearray(len(repr(x))for(x)in(repr((repr((str(list(str(((),)))),())),)),(
+ repr)((repr((repr(str(help)),())),)),str(list(str(id))),str(list(str(id))),str((
+ list)((repr((repr((repr((str((str)(help)),())),())),)),))),str(object(),),repr((
+ repr((str(list(str(((),)))),())),)),repr((repr((repr(str(help)),())),)),repr(str
+ (list(repr(str(set()))))),repr(((repr)(repr((repr)(str(help)))),)),str(list(str(
+ buffer))),repr(str(list(repr(str(((),())))))),repr((repr((repr((str(str(help)),(
+ ))),())),)),repr((str(abs),())),str(object()),repr(((str)(object(),),())),repr((
+ repr((repr(repr(str(abs))),())),())),repr((repr((str(eval),())),)),str(object())
+ ,repr((repr((str(object()),())),())),repr(repr((repr(str(int)),()))),str((list)(
+ repr(str(((),))))),repr((repr((str(object()),())),())),str(object(),),str(list((
+ str(str(help)),))),repr((repr(((repr)((repr(str(abs)),())),())),())),repr((repr(
+ str(help)),)),repr((repr((str(list(str(((),)))),())),)),repr((repr((repr((repr((
+ str)(abs)),())),())),())),repr((str(str(help)),)),str(object()),repr((repr((str(
+ list(str(((),)))),())),)),str(list(str(buffer))),repr((repr(repr(str(list(str(((
+ ),)))))),)),repr(repr(repr(str(list(str(((),))))))),repr((repr(repr(repr((str)((
+ help))))),)),repr((repr((repr(str(help)),())),)),str(list(str(eval))),str(list((
+ str)(abs))))))  # "Happy Hacking!" using [a-z(),] only. (C) 2012 NISHIO Hirokazu
+ ||<
+ 
+ python2.7で実行すると「Happy Hacking! (C) 2012 NISHIO Hirokazu」と表示される。
+ >||
+ $ python2.7
+ Python 2.7.3 (default, Apr 19 2012, 00:55:09)
+ [GCC 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2335.15.00)] on darwin
+ Type "help", "copyright", "credits" or "license" for more information.
+ >>> print(bytearray(len(repr(x))for(x)in(repr((repr((str(list(str(((),)))),())),)),(
+ ... repr)((repr((repr(str(help)),())),)),str(list(str(id))),str(list(str(id))),str((
+ ... list)((repr((repr((repr((str((str)(help)),())),())),)),))),str(object(),),repr((
+ ... repr((str(list(str(((),)))),())),)),repr((repr((repr(str(help)),())),)),repr(str
+ ... (list(repr(str(set()))))),repr(((repr)(repr((repr)(str(help)))),)),str(list(str(
+ ... buffer))),repr(str(list(repr(str(((),())))))),repr((repr((repr((str(str(help)),(
+ ... ))),())),)),repr((str(abs),())),str(object()),repr(((str)(object(),),())),repr((
+ ... repr((repr(repr(str(abs))),())),())),repr((repr((str(eval),())),)),str(object())
+ ... ,repr((repr((str(object()),())),())),repr(repr((repr(str(int)),()))),str((list)(
+ ... repr(str(((),))))),repr((repr((str(object()),())),())),str(object(),),str(list((
+ ... str(str(help)),))),repr((repr(((repr)((repr(str(abs)),())),())),())),repr((repr(
+ ... str(help)),)),repr((repr((str(list(str(((),)))),())),)),repr((repr((repr((repr((
+ ... str)(abs)),())),())),())),repr((str(str(help)),)),str(object()),repr((repr((str(
+ ... list(str(((),)))),())),)),str(list(str(buffer))),repr((repr(repr(str(list(str(((
+ ... ),)))))),)),repr(repr(repr(str(list(str(((),))))))),repr((repr(repr(repr((str)((
+ ... help))))),)),repr((repr((repr(str(help)),())),)),str(list(str(eval))),str(list((
+ ... str)(abs))))))  # "Happy Hacking!" using [a-z(),] only. (C) 2012 NISHIO Hirokazu
+ Happy Hacking! (C) 2012 NISHIO Hirokazu
+ ||<
+ 
+ This is the limit of what I can do at the moment. But that's okay. There is no point in worrying about what I can't do.
+ </body>
+
+[Hatena Diary 2012-09-06 https://nishiohirokazu.hatenadiary.org/archive/2012/09/06]

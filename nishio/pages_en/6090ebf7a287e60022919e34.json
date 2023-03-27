@@ -1,0 +1,196 @@
+Hatena2008-04-30
+code:hatena
+ <body>
+ *1209548398*Thanks for the introduction~!
+ http://yoshiori.org/blog/2008/04/jython.php
+ 
+ 
+ >>
+ The fact that it is neither a Python book nor a Java book but a Jython book is amazing!
+ <<
+ 
+ I am relieved to hear you say so. It was a bit like an Eclipse book and a bit like an object-oriented book.
+ 
+ *1209558689*[Python]SocketServerでソケットの再利用
+ >|python|
+ SocketServer.ThreadingTCPServer.allow_reuse_address = True
+ ||<
+ 
+ If you write "s.allow_reuse_address = True", SO_REUSEADDR will be added when creating the socket internally, so when you start the server again immediately after quitting the server, you will not get angry at "Addres already used". I wrote the above because I wanted to reuse all instances, but if you want to reuse only a specific instance, you can use "s.allow_reuse_address = True" for that instance s.
+ 
+ 
+ I lost several minutes in total because I had to wait 30 seconds several times before I understood it and waited 30 seconds for it to become reusable.
+ 
+ *1209560307*[TopCoder]明日20:00からSRM400
+ I haven't studied much; I think I'll concentrate on making sure I solve the 250 point problems. If I don't know a library I should know, I'll look it up on the spot.
+ 
+ 
+ Also, those who say "TopCoder is hard because it is an overseas event and the time zone is late at night" should realize that they are not even checking when the next event is coming up because they are not motivated to participate in TopCoder at all. If it's just one person who is not motivated, it's still harmless, but if it's just one person who is not motivated, it's detrimental to others.
+ 
+ 
+ And so the next event will be held at 8:00 p.m., a time when "you have to be careful not to eat too much dinner and get sleepy".
+ 
+ http://www.topcoder.com/tc?module=MatchDetails&rd=12172
+ 
+ >>
+ Total Prize Purse of $5,000 !!!
+ (snip)
+ The first and second place competitors in each division two room will receive 60% and 40% of the room award, respectively.
+ <<
+ 
+ Oh wow?
+ 
+ Let me explain. The next SRM400 has a $5,000 prize from British Telecom. I used to think that it was none of my business, but I guess not. Those who are just starting out or have not yet reached a rating of 1400 will play in a "second group" called DIV 2, which will receive 30% of the total prize money. Then, 20 players will be randomly assigned to each room, and the first and second place players in each room will get the prize money. Even if it is random, there is a 10% chance of getting the prize money. w
+ 
+ Of course, the total prize money is not that big, so it is likely to be around 1,000~1,500 yen for the first place in the room in DIV2, but it is cool to receive the prize money regardless of the amount (oh).
+ 
+ <<
+ 
+ *1209561695*献本
+ At any rate, one of the six Jython books sent to the author was mailed via the lab bookshelf, and the other five were mailed to students without money. I don't have a single copy. Well, I'm sure they will be back on the lab bookshelf soon. So, it will be a while before the third donation is made. I am afraid I can't do anything without stock.
+ 
+ Just to summarize our current thinking, we may send the book donation to those who meet both of the two conditions below. Even those who do not satisfy both conditions may receive a book donation. It's just a "may be sent".
+ 
+ - Student or minor
+ - Annual income less than 3 million yen
+ 
+ If you want one, please email me at my email address with your name, address, zip code, etc. Well, but I don't know when the next stock will be available, so if you want to get it quickly, it would be better to buy it on Amazon. I think this is mainly for students who want to read the book, but 3000 yen is too expensive....
+ 
+ Should we donate it to a library or something along with it?
+ 
+ *1209567897*蛾
+ There is a large, healthy moth in the house that may have come in attached to my bag (tears).
+ 
+ *1209568354*[cpp]What I learned today.
+ I wasn't going to study, but when TopCoder comes around, I tend to study, one of the three virtues of programmers: self-esteem.
+ 
+ - boost::optional
+ -- like Haskell's Maybe, but in C++!
+ -- This makes it much easier!
+ -- http://www.kmonos.net/alang/boost/classes/optional.html
+ 
+ - boost::tokenizer
+ -- This is useful, and it should be, but the mold looks amazing.
+ -- It should be easy to take two characters out of a given string, and so on.
+ -- http://www.kmonos.net/alang/boost/classes/tokenizer.html
+ 
+ 
+ - I think I probably need to be able to use MAP.
+ 
+ 
+ -----
+ 
+ >|cpp|
+ template<class T, size_t N>
+ size_t len(T (&)[N]){
+   return N;
+ };
+ 
+ ||<
+ 
+ This is what is possible.
+ 
+ >|cpp|
+ template<typename T1, typename T2, size_t N>
+ map<T1, T2> mapzip(T1(&)[N] keys, T2(&)[N] values){
+   map<T1, T2> m;
+   for(size_t i=0; i<N; i++){
+     m[keys[i]] = values[i]; 
+   }
+   return m;
+ };
+ ||<
+ 
+ I was hoping to be able to do this as well, but it seems I need to understand typename, (&)[N], etc.
+ 
+ -----
+ 
+ >|cpp|
+ template<class T1, class T2>
+ map<T1, T2> mapzip(T1 keys[], T2 values[], size_t N){
+   map<T1, T2> m;
+   for(size_t i=0; i<N; i++){
+     m[keys[i]] = values[i]; 
+   }
+   return m;
+ };
+ 
+ int main() {
+   int xs[] = {1, 2, 3}, ys[] = {10, 20, 30};
+   map<int, int> m = mapzip(xs, ys, 3); 
+   print_map(m.begin(), m.end());
+ }
+ ||<
+ 
+ Compromise.
+ I was going to make one that I could call print_map(m) but it doesn't work.
+ 
+ -----
+ 
+ print_mapできた。
+ 
+ >|cpp|
+ template<typename K, typename V>
+   void print_map2(map<K, V> m){
+   cout << "{";
+   for(typename map<K, V>::iterator it=m.begin(); it != m.end(); ++it){
+     if(it != m.begin()) cout << ", ";
+     cout << (*it).first << ":" << (*it).second;
+   }
+   cout << "}" << endl;
+ }
+ ||<
+ 
+ 「for(typename」が重要。
+ 
+ -----
+ 
+ I was also able to mapzip.
+ 
+ >|cpp|
+ template<class T1, class T2, size_t N>
+ map<T1, T2> mapzip(const T1(&keys)[N], const T2(&values)[N]){
+   map<T1, T2> m;
+   for(size_t i=0; i<len(keys); i++){
+     m[keys[i]] = values[i]; 
+   }
+   return m;
+ };
+ 
+ int main() {
+   int xs[] = {1, 2, 3}, ys[] = {10, 20, 30};
+   map<int, int> m = mapzip(xs, ys); 
+   print_map2(m);
+ }
+ ||<
+ The variable name was to be entered after the &.
+ </body>
+ <comments>
+ <comment>
+ <username>sakaguchi</username>
+ <body>Oh<br>When did you finish it? <BR>Congratulations! <BR><BR>Well, then, as I promised sometime ago, I would like to have a signed book...<BR>Of course, I will pay for it! </body>
+ <timestamp>1209567112</timestamp>
+ </comment>
+ <comment>
+ <username>jbking</username>
+ <body>I would like to know how to reliably send from Amazon to Egypt. </body>
+ <timestamp>1209575737</timestamp>
+ </comment>
+ <comment>
+ <username>herumi</username>
+ <body>template<typename K, typename V><br>  void print_map2(const map<K, V>& m){ // 中身をいじらないなら常にconst参照で渡すこと．<br><br>  cout << ”{”;<br>  for(typename map<K, V>::const_iterator it=m.begin(); it != m.end(); ++it){ // その結果ここもconst<br>    if(it != m.begin()) cout << ”, ”;<br>      cout << it->first << ’:’ << it->second; // の方がtype数少ない<br>  }<br>  cout << ”}” << endl;<br>}</body>
+ <timestamp>1209592081</timestamp>
+ </comment>
+ <comment>
+ <username>moira</username>
+ <body>If you search for "TopCoder" in Google Calendar, you can check the schedule of SRM. (The time difference is also automatically calculated.)</body>
+ <timestamp>1209599018</timestamp>
+ </comment>
+ <comment>
+ <username>setomits</username>
+ <body>I am sorry to comment on an old entry. <BR>If there is no connection to the server that started it, it is OK, but if there is even one connection, it still gets angry? </body>
+ <timestamp>1251855498</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-30 https://nishiohirokazu.hatenadiary.org/archive/2008/04/30]

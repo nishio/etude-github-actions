@@ -1,0 +1,31 @@
+Zerofill's Linked List
+An array is given. I want to scan from the front. I want to delete.
+
+要件
+　If the original sequence is of length N, but the deleted one is of length M, it must be possible to scan it with O(M).
+　　The method of assigning dummy values and skipping readings is not acceptable.
+　Deletion must be O(1)
+　　Packing the elements is not an option.
+　　PythonのリストのremoveはNG
+
+
+Prepare a zero-filled array next, prev of the same size as the given array
+[https://gyazo.com/b47c0b5b99311be04ae196ae96bd02bd]
+
+When to delete
+[https://gyazo.com/585a271028f339d5297727f2368c2dbf]
+	code:python
+  prev[pos + 1 + next[pos]] += prev[pos] + 1
+  next[pos - 1 - prev[pos]] += next[pos] + 1
+
+In short, [a two-way linked list].
+If constructed simply, the initial value would be `next[pos] = pos + 1`, but by having only the difference from that value, it can be initialized with a zero fill.
+If you only do deletions, this is fine because you don't need to have absolute addresses. If you also do insertions, a regular two-way list is better.
+
+The first element is the guard. It should not be deleted.
+We have not yet considered what would happen if it were deleted.
+
+Random access in index at creation is O(1)
+
+[delete only list].
+[Linked list].

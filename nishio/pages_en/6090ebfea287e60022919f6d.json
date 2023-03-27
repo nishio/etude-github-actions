@@ -1,0 +1,52 @@
+Hatena2009-04-09
+code:hatena
+ <body>
+ *1239251617*ContextFreeArtとNodeBox
+ I wrote what I wrote in <a href='http://d.hatena.ne.jp/nishiohirokazu/20090403/1238707279'>Context Free Art - Yasukazu Nishio's Hatena Diary</a> in NodeBox as well.
+ >|python|
+ def circle():
+     oval(0, 0, 1, 1)
+ 
+ scale(200)
+ translate(1, 1)
+ 
+ def egg(level=0):
+     if level == 8: return
+     circle()
+ 
+     push()
+     fill(1, 1, 1)
+     scale(0.9)
+     circle()
+     fill(0, 0, 0)
+     pop()
+ 
+     push()
+     translate(0.3, 0)
+     scale(0.6)
+     rotate(10)
+     egg(level + 1)
+     pop()
+ 
+     push()
+     translate(-0.3, 0)
+     scale(0.6)
+     rotate(10)
+     egg(level + 1)
+     pop()
+ 
+ egg()
+ ||<
+ 
+ <img src="http://gyazo.com/98e0281d6332e155395b8f2a296ecca7.png">
+ 
+ Is <a href='http://d.hatena.ne.jp/nishiohirokazu/20090403/1238742197'>Context Free Art suitable for educational use? - As I wrote in <a href=''>Yasukazu Nishio's Hatena Diary</a>, "Recurrence call termination conditions" and "context push and pop for rotation, scale, color, etc." have been explicitly added.
+ 
+ 
+ Also, if you look at the drawing, you will see that a part of the arm is hidden, unlike the original. If you draw in a simple recursive call, depth priority is given, i.e., first draw the entire right arm and then start drawing the left arm, but ContextFreeArt does not draw on the spot, but stores the information "what should be drawn where" and finally draws them together in shallow order of the recursive call. This is the advantage of "not only drawing directly on the canvas and making a recall call, but also sorting by Z-order and then drawing again automatically. If I want to implement this, I need to get and store information about "what the current scale, rotation, and translation are"... I couldn't find such a function in a quick glance at NodeBox's help. If there were such a function, the end condition of the recurrence could be a "if the scale is less than a certain value" cutoff.
+ 
+ 
+ TODO: If I feel like it, I'll draw the same thing in Inkscape and Processing.
+ </body>
+
+[Hatena Diary 2009-04-09 https://nishiohirokazu.hatenadiary.org/archive/2009/04/09]

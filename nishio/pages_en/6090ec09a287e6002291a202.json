@@ -1,0 +1,56 @@
+Hatena2012-03-13
+code:hatena
+ <body>
+ *1331605896* Talk about trouble caused by not visualizing spaces at the end of lines.
+ The title is a spoiler.
+ 
+ >||
+ IOError: [Errno 2] No such file or directory: ' ' 
+ ||<
+ 
+ I put a breakpoint in pdb to check things out and got a mysterious error saying
+ 
+ >||
+ (Pdb) sys.argv 
+ [... '--compiler_flags=--js=deps.js', ' ']
+ ||<
+ 
+ What a mysterious blank in sys.argv! Why? Oh, I looked at the Makefile and there is a single-byte space after the backslash at the end of the line!
+ 
+ >||
+ $(CLOSURE_BIN)/build/closurebuilder.py \
+   (中略) \
+   -f --warning_level=VERBOSE -f --jscomp_warning=visibility \
+   --compiler_flags="--js=deps.js" \ ←ここに半角スペースがある
+   --compiler_flags="--externs=$(EXTERNS)/jquery-1.7.js" \
+ ||<
+ 
+ That was the end of it. So, we added the following to .emacs.el
+ 
+ >|lisp|
+ ;; 行末の空白をめだたせる M-x delete-trailing-whitespaceで削除出来る
+ (when (boundp 'show-trailing-whitespace) (setq-default show-trailing-whitespace t))
+ ||<
+ 
+ I wrote "I am very happy with the quality of the product.
+ 
+ *1331629235* Prevent multiple invocation of shell scripts.
+ At first, he wrote
+ >||
+ lockfile build.lock
+ ...
+ rm -f build.lock
+ ||<
+ 
+ But lockfile retries infinitely by default when it fails. Just for the heck of it $ for i in {1..100}; do . /foo.sh; done; so I have a queue of 100 people.
+ 
+ What I wanted to do was "exit without continuing if already started", so I set the number of retries to 0 with -r 0.
+ 
+ >||
+ lockfile -r 0 build.lock || exit 1
+ ...
+ rm -f build.lock
+ ||<
+ </body>
+
+[Hatena Diary 2012-03-13 https://nishiohirokazu.hatenadiary.org/archive/2012/03/13]

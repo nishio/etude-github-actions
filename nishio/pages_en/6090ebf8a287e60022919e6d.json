@@ -1,0 +1,161 @@
+Hatena2008-07-05
+code:hatena
+ <body>
+ *1215216155*[TopCoder]Single Round Match 408 Div1 250pt
+ I'll try to solve the past questions for Div 1 (the first army that you have to have a high rating to join). I can't join the first army yet.
+ 
+ Problem: There are several candles. We light the candles during the night, one on the first day and two on the second day; after one day of lighting, the candles shrink by one inch. Given the vector of the length of the candles, answer how many days they can be kept lit.
+ http://www.topcoder.com/stat?c=problem_statement&pm=8467&rd=12180
+ 
+ For example, if it is {2, 2, 2}, first you light it on day 1, then it becomes {1, 2, 2}, then on day 2 you light 2 candles that are still 2 inches long and it becomes {1, 1, 1}, then on day 3 you light all the candles, so 3 days. If you accidentally light the candle you lit on the first day on the second day, it will become {0, 1, 2} and you will not be able to light three candles on the third day.
+ 
+ 
+ In short, we just need to light them in order from the longest one.
+ >|cpp|
+   int numberOfNights(vector <int> candles) {
+     int N = candles.size();
+     for(int i=1; i<N+1; ++i){
+       //cout << "candles: "; iter_print(candles.begin(), candles.end());
+       sort(candles.begin(), candles.end(), greater<int>());
+       //cout << "candles(sorted): "; iter_print(candles.begin(), candles.end());
+       for(int j=0; j<i; j++){
+ 	if(candles[j] == 0) return i - 1;
+         candles[j]--;
+       }
+     }
+     return N;
+   }
+ ||<
+ I thought the first army would be more difficult, but it was a letdown. 500 pts to solve.
+ 
+ *1215220358*[TopCoder]Single Round Match 408 Div1 500pt
+ Difficult. I managed to SUBMIT but got 190 points. And don't fail the system test. Ah, as usual, I exceeded the processing time.
+ 
+ 
+ I think I'll go home and write about the problem or something later.
+ 
+ 
+ 追記{
+ http://www.topcoder.com/stat?c=problem_statement&pm=8462&rd=12180
+ Roughly explained, "There is a game board with an undirected graph without loops, and you can place several balls in each square. If there is a square with more than one ball, you can take two balls from it and place one ball in the adjacent square. I am the first player to place a ball. You want to place as many balls as possible, but you lose if a ball is placed in a specific square indicated by the target. It is like "Find the maximum number of balls you can place in a square without losing.
+ 
+ For example, if target is 1 on a 0-1-2 board, the number of balls that can be placed is {1, 0, 1}, for a total of 2. When the target is 2, the number of balls is 3 ({3, 0, 0}). 2 balls from 0 can be placed on 1, but never on 2.
+ 
+ I'm hungry, so I'll write an explanation of the meaning of "an acyclic, undirected graph" and the fact that in this problem we should consider a tree with target as the root, when I've eaten and feel like it.
+ }
+ 
+ >|cpp|
+   vector<int> dist;
+   int N;
+   vector<string> *gr; // graph
+   vector<vector<int> > tree;
+ 
+   void spawn(int t){
+     int next = dist[t] + 1;
+     string line((*gr)[t]);
+     for(int i=0; i<N; i++){
+       if(line[i] == 'N') continue;
+       if(dist[i] == 0 || dist[i] > next){
+ 	dist[i] = next;
+ 	tree[t] += i;
+ 	spawn(i);
+       }
+     }
+   }
+ 
+   int calc_max(int pos, int ulimit){
+     vector<int> xs(tree[pos]); // children
+     if(tree[pos].empty()){
+       return ulimit;
+     }
+     int max = 0;
+     size_t M = xs.size();
+     
+     for(size_t i=0; i<M; i++){
+       int max_ = 0;
+       for(size_t j=0; j<M; j++){
+ 	if(i == j){
+ 	  max_ += calc_max(xs[j], ulimit * 2 + 1);
+ 	}else{
+ 	  max_ += calc_max(xs[j], 1);
+ 	}
+       }
+       if(max_ > max) max = max_;
+     }
+     //cout << "max:" << pos << ", " << ulimit << " = " << max << endl;
+     return max;
+   }
+ 
+ public:
+   int maximumCandy(vector <string> graph, int target) {
+     N = graph.size();
+     gr = &graph;
+     dist.clear();
+     dist.resize(N);
+     tree.clear();
+     tree.resize(N);
+     dist[target] = 1;
+     spawn(target); // calc distance from target (plus 1, to use 0 as 'not calc.d yet')
+     // fail if the graph has two or more components
+     // fail if dist > 31, 2 ** (32 - 1) is greater than 2,000,000,000
+     for(int i=0; i<N; i++){
+       if(dist[i] == 0) return -1;
+       if(dist[i] > 31) return -1;
+       dist[i]--;
+     }
+ 
+     //for(int i=0; i<N; i++){
+     //  cout << "tree[i]: "; iter_print(tree[i].begin(), tree[i].end());
+     //}
+     
+     return calc_max(target, 0);
+   }
+ ||<
+ 
+ I timed it...it took 20.8 seconds. I guess I have to get this down to 2 seconds.
+ 
+ At first, I made a pointer in calc_max to not copy the xs that I was copying because it was too much trouble. it shrunk to 6.8 seconds. Now, where to go next?
+ 
+ Do you want to break the double loop in calc_max?
+ 
+ >|cpp|
+ // before
+     for(size_t i=0; i<M; i++){
+       int max_ = 0;
+       for(size_t j=0; j<M; j++){
+ 	if(i == j){
+ 	  max_ += calc_max((*xs)[j], ulimit * 2 + 1);
+ 	}else{
+ 	  max_ += calc_max((*xs)[j], 1);
+ 	}
+       }
+       if(max_ > max) max = max_;
+     }
+ //after
+     vector<int> children_max(M);
+     for(size_t i=0; i<M; i++){
+       children_max[i] = calc_max((*xs)[i], 1);
+     }
+     for(size_t i=0; i<M; i++){
+       int max_ = 0;
+       max_ = calc_max((*xs)[i], ulimit * 2 + 1) - children_max[i];
+       if(max_ > max) max = max_;
+     }
+     return accumulate(children_max.begin(), children_max.end(), max);
+ ||<
+ 
+ ok, I got 0.50 seconds. submit & test. woohoo, now I'm stuck on another test. I looked at the graph, and it's one long, thin line. Oh, even when there is only one candidate, the above code calls twice, so I have to calculate 2 ** 30.
+ 
+ >|cpp|
+     if(xs->size() == 1){
+       return calc_max((*xs)[0], ulimit * 2 + 1);
+     }
+ ||<
+ 
+ After making up for this, I finally passed all the tests. I guess with my current ability, even if I go to the first team, I'm not sure if I can solve 250 problems or not.
+ 
+ 
+ Lesson learned this time: functions that are called again should not call themselves more than once if possible.
+ </body>
+
+[Hatena Diary 2008-07-05 https://nishiohirokazu.hatenadiary.org/archive/2008/07/05]

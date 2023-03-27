@@ -1,0 +1,32 @@
+Hatena2011-11-16
+code:hatena
+ <body>
+ *1321431043* Meaning of Kalman gain matrix
+ Highlights from yesterday's in-house machine learning study session, Kalman gain matrix (eq. 13.92) in PRML P.357
+ [tex: K_n = P_{n-1}C^T(CP_{n-1}C^T + \Sigma)^{-1}]
+ Summarize before I forget about the meaning of
+ 
+ Let us consider the case when Σ is close to 0, that is, when the variance of the output probability is small. Small variance of output probability means that the sensor is excellent and hardly generates any noise. In that case
+ 
+ [tex: K_n \simeq P_{n-1}C^T(CP_{n-1}C^T)^{-1} = P_{n-1}C^T{(C^T)}^{-1}{(P_{n-1})}^{-1}C^{-1} = C^{-1}]
+ 
+ [tex: \mu_n = A\mu_{n-1} + K_n (x_n - CA\mu_{n-1}) \simeq A\mu_{n-1} + C^{-1} (x_n - CA\mu_{n-1}) = C^{-1} x_n]
+ 
+ [tex: V_n = (I - K_nC) P_{n-1} \simeq 0]
+ 
+ Given that the prior distribution of Zn (before Xn was observed) was eq. 13.87, this is a good example of "We were guessing by multiplying the previous guess by A, but let's throw that away now and trust the value we got back from the observed data multiplied by C^-1! That's more reliable!" That's what I mean.
+ 
+ On the other hand, what about when Σ is very large, that is, when the output probability is full of noise? Noisy output probability means, in essence, that "we tried to observe the true value Zn, but the sensor is so inept that the obtained Xn is full of noise. In that case
+ 
+ [tex: K_n = P_{n-1}C^T(VERYLARGE)^{-1} \simeq P_{n-1}C^T0 = 0]
+ 
+ [tex: \mu_n = A\mu_{n-1} + K_n (x_n - CA\mu_{n-1}) \simeq A\mu_{n-1}]
+ 
+ [tex: V_n = (I - K_nC) P_{n-1} \simeq P_{n-1}]
+ 
+ In other words, "The observed value is so full of noise that it is completely unreliable! Let's stop worrying about them and guess that the current value is the last guess multiplied by A! That's what I'm saying.
+ 
+ This time, "Let's throw away the previous forecast and trust the observed values" and "Let's throw away the observed values and trust the previous forecast" are two extremes, and for practical purposes, a moderately blended forecasting strategy is correct. What should we do about the ratio of the blend? The Kalman gain matrix calculates it from the transition probability and output probability parameters and tells us.
+ </body>
+
+[Hatena Diary 2011-11-16 https://nishiohirokazu.hatenadiary.org/archive/2011/11/16]

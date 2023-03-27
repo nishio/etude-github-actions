@@ -1,0 +1,73 @@
+Hatena2013-04-24
+code:hatena
+ <body>
+ *1366736980* Life game made in FPGA!
+ <iframe width="560" height="315" src="http://www.youtube.com/embed/LGOcRXNXB78?rel=0" frameborder="0" allowfullscreen></iframe>
+ 
+ ** Video content
+ - Randomly initialized (see <a href='http://ja.wikipedia.org/wiki/%E7%B7%9A%E5%BD%A2%E5%B8%B0%E9%82%84%E3%82%B7%E3%83%95%E3%83%88%E3%83%AC%E3%82%B 8%E3%82%B9%E3%82%BF'>Linear feedback shift register - Wikipedia</a>)
+ - Execute for a while (High-speed mode: 3msec per step; since the VGA 60Hz screen updates at 17msec, it is calculated that 5 steps are advanced for each screen update)
+ - Clear screen, go to slow mode (256 times slower)
+ - Press the button to place the R pentomino
+ - Let him run for a while.
+ - Change to high speed mode
+ 
+ ** Implementation
+ - Increment address for read/write
+ - Push the data read into a 323-bit shift register with 2 lines + 3 square sentences (see <a href='http://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%95%E3%83%88%E3%83%AC%E3%82%B8%E3%82% B9%E3%82%BF'>Shift register - Wikipedia</a>)
+ - Bundle the 9 bits 0, 1, 2, 160, 161, 162, 320, 321, 322 of the shift register to form an address and read 1 bit from the 512-bit ROM in which the rules of the game of life are hard-coded
+ - Write the read value to VRAM
+ I thought I could do it with one clock each, but then I had a bug where the screen flowed (probably because the address calculation was not done in time and it was written to one off), so now I am running it with two clocks each.
+ 
+ So now 8 clocks per pixel * 160x120 pixels / 50MHz means 3msec for one screen update. It could be much shorter if we try harder.
+ 
+ The resources consumed were 459 logic elements (3%) and 57912 bits of memory (11%). There is room for about 9 times more, so we could go as far as doubling the resolution and quadrupling the number of pixels, but how to solve this problem: <a href='http://d.hatena.ne.jp/nishiohirokazu/20130420/1366462179'>DE Diary of trying to use FPGA's chip internal RAM for VRAM in <a href=''>DE0</a> and it didn't work.
+ 
+ ** Source code
+ Source code written by a Verilog HDL amateur is here: https://github.com/nishio/fpga/blob/master/lifegame.v
+ 
+ By the way, I just found out that Verilog HDL also has a for statement. (What?
+ 
+ **追記
+ 
+ It is indeed terrible, so I rewrote the simple shift register using a for statement. 512 rows of rule tables can't be managed.
+ 
+ **追記
+ You don't have to do this about the shift register implementation.
+ >|verilog|
+ for(i = 0; i < 322; i = i + 1) begin
+ 	buffer[i + 1] <= buffer[i];
+ end
+ ||<
+ 
+ You pointed out that this one line is fine (thanks @natutan!).
+ >|verilog|
+ buffer[1:322] <= buffer[0:321];
+ ||<
+ 
+ Yes...I knew it was possible to do that, but why didn't I think of it...? Maybe my brain still thinks of it like an array in C language. That's why I couldn't come up with the idea that "an array with 323 elements" can be shifted by one element with a single assignment statement.
+ </body>
+ <comments>
+ <comment>
+ <username>eldesh</username>
+ <body>論理圧縮出来なければ、とりあえず<br><br>always @(posedge rule_clk) begin<br>  case(neighbors)<br>    9'b000_000_111: wdata = 1'b1;<br>    9'b000_001_011: wdata = 1'b1;<br>    9'b000_001_101: wdata = 1'b1;<br>    ...<br><br>    default       : wdata = 1'b0;<br>  endcase<br><br>これだけでも大分短くはなりますね。<br>それと、<br><br>  9'b111_111_0XX: wdata = 1'b0;<br>/* 不要になる<br>  9'b111_111_001: wdata = 1'b0;<br>  9'b111_111_010: wdata = 1'b0;<br>  9'b111_111_011: wdata = 1'b0;<br> */<br><br>みたいなことで頑張れる部分が多少ありそうです。</body>
+ <timestamp>1366766870</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see, it certainly shrinks a lot just by setting 0 to default! <br>Compressing with indefinite values seems like it would be a very difficult puzzle by itself. </body>
+ <timestamp>1366770536</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <BODY>It's hard to do if you're aiming for the shortest possible time, but if you want to do it easily, maybe you could just do a 0 when 5 1s appear, regardless of the remaining bits, or something like that. <BR>Oh, but 0s are put together in default in the first place, so you have to think about putting 1s together. It's still a difficult puzzle. </body>
+ <timestamp>1366770921</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>For now, I used x to represent 1, regardless of what is in the middle if there are 3 around it. 85 lines shrunk. </body>
+ <timestamp>1366807734</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-04-24 https://nishiohirokazu.hatenadiary.org/archive/2013/04/24]

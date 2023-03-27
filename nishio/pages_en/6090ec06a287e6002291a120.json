@@ -1,0 +1,30 @@
+Hatena2010-11-30
+code:hatena
+ <body>
+ *1291111219* "__HUGE" is unresolved -> was caused by mixing /MT and /MD
+ I got a compile error "__HUGE" is unresolved" and googled it in English because I couldn't find a clear solution in Japanese.
+ 
+ >>
+ If you mix statically linked libraries /MT or /MTd with dynamically linked libraries on the same project, this error results. To fix this, check whether all the incldued libraries in the Project are built with the same CRT Runtime option.
+ 
+ <<
+ 
+ <a href="http://connect.microsoft.com/VisualStudio/feedback/details/100539/linker-error-2001-unresolved-external-symbol-huge">Linker error 2001 - unresolved external symbol __HUGE | Microsoft Connect</a>
+ 
+ The problem was easily solved. In other words, the DLL I was using was /MT, but the project setting was /MD. By the way, you can change it in Properties -> C/C++ -> Code Generation. I'm sure that writing this in Japanese here will save someone's time and increase the sum total of happiness!
+ 
+ *What is 1291111296*4277075694?
+ I was writing code in the Windows environment when I discovered that for some reason a certain variable had a mysterious value of 4277075694. What is this? I checked and found that it is 0xFEEEFEEE in hexadecimal notation, which means that the area after HeapFree() is called is filled with this value.
+ 
+ >||
+ 0xBAADF00D : 3131961357 : HeapAllocした領域
+ 0xFDFDFDFDFD : 4261281277 : 2 bytes before and after malloc'd area
+ 0xCDCDCDCD : 3452816845 : mallocした領域
+ 0xDDDDDDDD : 3722304989 : freeした領域
+ 0xFEEEFEEE : 4277075694 : HeapFreeした領域
+ ||<
+ 
+ For more information, here is a clear table that you can look at: <a href="http://www.nobugs.org/developer/win32/debug_crt_heap.html">Win32 Debug CRT Heap Internals</a >
+ </body>
+
+[Hatena Diary 2010-11-30 https://nishiohirokazu.hatenadiary.org/archive/2010/11/30]

@@ -1,0 +1,111 @@
+Hatena2012-07-11
+code:hatena
+ <body>
+ *1341977825*Fixed zsh git prompt not displaying anything when detached head
+ https://github.com/nishio/dotfiles/commit/096e2ac718ef8fc25252dc4d6ea0664764c732a4
+ 
+ *1341981173* I also tried to show the git prompt in zsh that it is rebasing.
+ https://github.com/nishio/dotfiles/commit/42ddca1cff1716f806f052067fc49ea241aba0d4
+ 
+ I couldn't figure out how to manipulate strings and paths in zsh, so I implemented it in python. If you have a better way, please pull request.
+ 
+ 
+ **追記
+ 時々
+ >>
+ git_is_rebasing:local:1: not valid in this context: not-rebasing 
+ <<
+ The message "I'm not sure under what circumstances this message appears. I have not confirmed under what circumstances this message appears, but it appears when you enter a submodule that you have added to a submodule.
+ 
+ **追記
+ Fixed.
+ https://github.com/nishio/dotfiles/commit/16534c0597904fdfaf694c0675ecf276384b5642
+ 
+ *1341982791*Examine how zsh git prompts relate to submodules.
+ - submodule内にuntracked fileがあるとき→親ではmodified
+ >||
+ #	modified:   childrepos (untracked content)
+ ||<
+ - それをaddすると→modifiled
+ >||
+ #	modified:   childrepos (modified content)
+ ||<
+ - それをcommitすると→modifiled
+ >||
+ #	modified:   childrepos (new commits)
+ ||<
+ - submoduleのあるレポジトリをcloneした時→working directory clean
+ Oops, this is not good. I still can't realize that the submodule is empty.
+ How do I determine if a git submodule init is necessary?
+ Determine if .git is in each directory in .gitmodule?
+ 
+ *1341994635*Mystery why Closure Compiler error output is SJIS for some reason.
+ (PS: This seems to be caused by the default encoding of Java6 for Mac being SJIS, not a Closure Compiler issue...)
+ 
+ I am having trouble with the character encoding of both my terminal and the source code being UTF-8, but for some reason the error output when I compile it is SJIS. What could be the cause?
+ 
+ First, check the assumptions. Both the terminal and the source code are in UTF-8. By the way, OS is Mac(Lion).
+ >||
+ tmp$ echo $LANG
+ ja_JP.UTF-8
+ tmp$ cat tmp.js
+ var x = "Hello"; y;.
+ tmp$ nkf -g tmp.js
+ UTF-8
+ ||<
+ 
+ When I compile this, the standard error output is garbled. I checked the character encoding and found that it was SJIS. (I replaced strange characters with "x" because it would be complicated if the article was corrupted.)
+ 
+ >||
+ tmp$ java -jar ../common/compiler.jar tmp.js > stdout.txt 2> stderr.txt
+ tmp$ cat stderr.txt
+ tmp.js:1: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+ var x = "????x???"; y;
+                  ^
+ 
+ 0 error(s), 1 warning(s)
+ 
+ tmp$ nkf -g stderr.txt
+ Shift_JIS
+ ||<
+ 
+ I wondered if specifying charset would fix the problem, but the character encoding in the error output was still SJIS. Instead, the compiled code that appeared on the standard output became UTF-8.
+ 
+ >||
+ tmp$ java -jar ../common/compiler.jar --charset=utf8 tmp.js > stdout2.txt 2> stderr2.txt
+ tmp$ nkf -g stderr2.txt
+ Shift_JIS
+ tmp$ nkf -g stdout.txt
+ ASCII
+ tmp$ nkf -g stdout2.txt
+ UTF-8
+ ||<
+ 
+ **追記
+ 
+ This seems to be a good coping strategy for now.
+ >||
+ $ java -Dfile.encoding=utf8 -jar ../common/compiler.jar tmp.js > stdout2.txt
+ tmp.js:1: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+ var x = "Hello"; y;.
+                  ^
+ 
+ 0 error(s), 1 warning(s)
+ ||<
+ 
+ I wonder if the environment in which the jar was created is, for example, Windows, where the terminal is SJIS, and SJIS is embedded at compile time as the default encoding for standard error output.
+ </body>
+ <comments>
+ <comment>
+ <username>syohex</username>
+ <body>If you write something like this, you can achieve this using only a shell script. <br><br>https://gist.github.com/3102755</body>
+ <timestamp>1342154749</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you! I didn't know there was such an option! > git rev-parse --show-toplevel</body>
+ <timestamp>1342171445</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-07-11 https://nishiohirokazu.hatenadiary.org/archive/2012/07/11]

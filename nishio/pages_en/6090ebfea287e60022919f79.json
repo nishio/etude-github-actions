@@ -1,0 +1,205 @@
+Hatena2009-04-21
+code:hatena
+ <body>
+ *1240292482* Sore back
+ I was looking for a book and lifting my luggage up and down when I felt a severe pain in my lower back. It took me 22 minutes to make a wet towel and come back. After a night of cooling and applying Ammeltz, I was able to walk again. But I don't have the confidence to leave my room and go shopping. I am on the bed for now because they say it is important to cool it down and rest.
+ 
+ *1240301871*退屈
+ I can't get anything done because it is painful to keep my upper body in an upright position. I can't wait for the time when I can interact with a machine by plugging a cable directly into my brain.
+ 
+ *1240305920*[erlang] Example of assigning the same variable twice without error
+ >|erlang|
+ 1> N = 1.
+ 1
+ 2> N = 2.
+ ** exception error: no match of right hand side value 2
+ 3> N = 1.
+ 1
+ ||<
+ 
+ I looked at the error message and confirmed that "if the values are the same, it's not an error, right?" and I was right, so I wrote it down.
+ 
+ Oh, it was written correctly when I went on to the next chapter.
+ >>
+ The "=" sign in Erlang does not imply assignment, but rather a pattern matching process.
+ <<
+ http://erlangworld.web.fc2.com/first_step/pmatching.html
+ 
+ It said exactly the same thing. If it's the same value, no problem.
+ <hr>
+ 
+ >|erlang|
+ 5> 1 = X.
+ * 1: variable 'X' is unbound
+ ||<
+ 
+ Oh, you can't do this?
+ 
+ >|erlang|
+ 14> X = Y, Y = 1.
+ * 1: variable 'Y' is unbound
+ ||<
+ 
+ Oh, you can't do that either?
+ 
+ *1240307051*[erlang] 勉強中
+ >|erlang|
+ 16> 16#FF.
+ 255
+ 17> 2#10100.
+ 20
+ ||<
+ 
+ Heh, this is useful.
+ 
+ >|erlang|
+ 18> 4 / 2.
+ 2.0
+ ||<
+ 
+ Hmmm.
+ 
+ >|erlang|
+ 20> list_to_integer("HOGE").
+ ** exception error: bad argument
+      in function  list_to_integer/1
+         called as list_to_integer("HOGE")
+ 21> list_to_integer("HOGE", 36).
+ ** exception error: undefined shell command list_to_integer/2
+ 22> erlang:list_to_integer("HOGE", 36).
+ 824846
+ ||<
+ 
+ >|erlang|
+ 25> rd(point, {x, y}).
+ point
+ 27> X = #point{x=1}.
+ #point{x = 1,y = undefined}
+ 29> X#point.x.
+ 1
+ 30> X#point.y.
+ undefined
+ 31> X#point.y == undefined.
+ true
+ ||<
+ 
+ *1240310587*[erlang]Fibonacci for now.
+ >|erlang|
+ -module(tmp).
+ -export([fib/1]).
+ 
+ fib(1) -> 1;
+ fib(2) -> 1;
+ fib(X) -> fib(X - 2) + fib(X - 1).
+ ||<
+ 
+ >||
+ 4> c(tmp).
+ {ok,tmp}
+ 5> tmp:fib(5).
+ 5
+ 6> tmp:fib(6).
+ 8
+ ||<
+ 
+ >|erlang|
+ -module(tmp).
+ -export([fib/1]).
+ 
+ fib(1) -> [1];
+ fib(2) -> [1, 1];
+ fib(X) -> 
+    Result = fib(X - 1), 
+    [Prev1 | [Prev2 | _]] = Result,
+    [Prev1 + Prev2 | Result]. 
+ ||<
+ 
+ >||
+ 8> c(tmp).
+ {ok,tmp}
+ 9> tmp:fib(6).
+ [8,5,3,2,1,1]
+ ||<
+ 
+ *1240317375*目下の問題
+ Not long ago, the problem was "I'm hungry but there's nothing to eat," but I went to a convenience store to fight off the pain, so I won't be starving for the foreseeable future. Rather, the pectoralis major muscle in my left hand that kept supporting my head to prevent my brain from starving for information has become very painful. I can't wait for the time when I can make my room weightless.
+ 
+ 
+ Also, my buttocks are frostbitten from the continuous ice cold.
+ 
+ *1240320150*[erlang]random:uniform(N)の返り値の範囲
+ I was looking into using random numbers in Erlang and noticed that the return value of random:uniform(N) ranges from 1 to N, not from 0 to N-1.
+ 
+ *1240320927*[erlang]Stumbling Points
+ - I accidentally got dragged into a switch and wrote something like case X -> ... But there's no need to put "case" there.
+ - The line immediately before the end of the last case must not end in ;.
+ - io:format("~p~n", NewScore)って書いて「exception exit: {badarg,[{io,format,...」というエラー。正解はio:format("~p~n", [NewScore])
+ - I'd write something like io.format.
+ - There is another period on the line after end.
+ 
+ *1240328830*[SpaMon]Minimum Game2
+ RemoveBit, Crack, Float, Jump, Reverse
+ 
+ Put 4 bits. First hand RB is probably right. I think the back hand is Jump, maybe Float.
+ 
+ <hr>
+ 
+ The number of states for bit placement in the regular game is 400M, and the minimal game is about 700. it would be interesting to try to read off the 700 possible initial placements. The problem is that if both sides have bad hands, the game will loop endlessly.
+ 
+ You can use RemoveBit to delete enemy bits, Crack to always trigger, Float to 3 choices, Jump to first 5 choices and 2 choices after that, Reverse to not trigger except for the last player, and so on.
+ 
+ [RB >1 2][C 2 1][F 1 2][J 2][R]
+ 
+ I think RB is one of those "cut down the bits of the enemy on RB" options.
+ 
+ [RB 1][C 2 1][F >1 2][J 2][R]
+ 
+ 8:8, The choices here are left, don't trigger, or right. I would avoid moving to the left because the back hand can use the RB, but I don't see an immediate death line, so let's read it.
+ 
+ [RB 1][F 1 >2][C 2 1][J 2][R]
+ 
+ 8:6. the back hand has three choices here as well. Go back to the front and remove the RB bit (A) on the line
+ 
+ [F 1 2][RB][C 2 1][J >2][R]
+ 
+ 4:2. hmmm, if I don't do anything at this point, F moves to the right and activates C, I'll die. jump to C, I'll die. Losing the back hand. Back to (A), erasing the C bit instead of the RB bit.
+ 
+ [F 1 2][RB >1][C 2][J 2][R]
+ 
+ As 1, I know that if I fly to C with J, I will lose, so I need to eliminate one of them. 2 choices. eliminate C and see.
+ 
+ [F 1 2][RB 1][C][J >2][R]
+ 
+ There is no particular advantage to jumping, so I won't jump. 1 of F has 3 choices (B). First, move left and copy R.
+ 
+ [RB 1][C][J 2][F 1 <2][R]
+ 
+ The reading diverges because I'm not too happy no matter how it moves. Pending. Suppose that (b) moves to the right.
+ 
+ [RB 1][F 1 >2][C][J 2][R]
+ 
+ C triggers 8:4. 2 copies RB back to the left, and if the RB bit is not deleted, then 1 deletes the 2 in F and 1 wins. Therefore, delete the RB bit.
+ 
+ [F >1 2][RB][C][J 2][R]
+ 
+ 1 moves F to the right, but cannot stay there, and then loses himself by moving it to the left. So, there is no right. What happens if you move it to the left?
+ 
+ [RB][C][J 2][F 1 <2][R]
+ 
+ Hmmm, this is a thousand-day move. I guess I should read the case of the move to the left in (b).
+ 
+ [RB 1][C][J 2][F 1 <2][R]
+ 
+ I don't see an option for 1 to move it to the right because this one is more favorable to 1 for the RB bit remaining.
+ 
+ Hmmm. It's getting ridiculous for a human to be reading it. But I'll have to do something about the thousand-day hand to read it programmatically.
+ </body>
+ <comments>
+ <comment>
+ <username>shou</username>
+ <body>体大切にしてNE!</body>
+ <timestamp>1240364747</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-04-21 https://nishiohirokazu.hatenadiary.org/archive/2009/04/21]

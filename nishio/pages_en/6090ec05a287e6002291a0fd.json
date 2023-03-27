@@ -1,0 +1,89 @@
+Hatena2010-08-29
+code:hatena
+ <body>
+ *1283096041*Pretty Print 4
+ Ah.
+ >|lisp|
+ (Interactive (Expr (BoolOp (And) (Call (Name 'callable' (Load)) (Name 'x' 
+   (Load))) (Call (Name 'callable' (Load)) (Name 'x' (Load))))))
+ ||<
+ I was trying to figure out what to fix in the prettyprint library, but it turned out that I was just using the library incorrectly. I wanted to do "if it fits on one line, use one line; if not, break lines and indent the second and subsequent lines," so I wrote it as shown below,
+ 
+ >|python|
+         return pp.union(
+             pp.concat(
+                 pp.Text(head),
+                 pp.spread(child), # <- ここが間違い
+                 pp.Text(")")),
+             pp.concat(
+                 pp.Text(head),
+                 pp.Nest(1, 
+                         pp.concat(
+                           pp.LINE, 
+                           pp.stack(child),
+                           pp.Text(")")))))
+ ||<
+ 
+ If a "may break line" mark is mixed in each child element of pp.spread(child), it will be opened. This needs to be enclosed in FLATTERN to limit it to one line only.
+ 
+ 出力結果:
+ 
+ >|lisp|
+ (Interactive 
+   (Expr 
+     (BoolOp 
+       (And)
+       (Call (Name 'callable' (Load)) (Name 'x' (Load)))
+       (Call (Name 'callable' (Load)) (Name 'x' (Load))))))
+ ||<
+ 
+ Mmmmmm, yes, this is the kind of output I wanted.
+ 
+ The train will be arriving soon, so let's clean up the mess.
+ 
+ *1283096157*Pretty Print 5
+ Changed a little the way parameters that are not child nodes are displayed. Instead of (Name 'x' (Load)), it is now (Name (id: 'x') (Load)).
+ 
+ >|lisp|
+ >>> for i in range(10):
+ ...     x, y = y, x + y
+ ...     print x,
+ ... 
+ ===== AST =====
+ (Interactive 
+   (For 
+     (Name (id: 'i') (Store))
+     (Call (Name (id: 'range') (Load)) (Num (n: 10)))
+     (Assign 
+       (Tuple (Name (id: 'x') (Store)) (Name (id: 'y') (Store)) (Store))
+       (Tuple 
+         (Name (id: 'y') (Load))
+         (BinOp (Name (id: 'x') (Load)) (Add) (Name (id: 'y') (Load)))
+         (Load)))
+     (Print (nl: False) (Name (id: 'x') (Load)))))
+ ||<
+ 
+ *1283096543*Pretty Print 6
+ It took about 5 seconds for n=18, but I was making a stupid mistake.
+ 
+ http://gist.github.com/556393
+ 
+ 0.2 seconds for n=18 and 1 second for n=30.
+ 
+ I removed most of the recursive calls.
+ 
+ http://gist.github.com/556394
+ 
+ >||
+ before
+  107607/1    0.406    0.000    0.905    0.905 prettyprint.py:181(be)
+ after
+   24465/1    0.331    0.000    0.883    0.883 prettyprint.py:188(be)
+ ||<
+ 
+ I've seen a lot fewer calls, but not much faster.
+ 
+ It took a second or so for a code that was supposed to be a simple benchmark, and I thought it was no good, but when I used it for its original purpose, it was fast enough and looked as good as expected. I guess I should not be too concerned about tuning this place and just quickly release it to the public.
+ </body>
+
+[Hatena Diary 2010-08-29 https://nishiohirokazu.hatenadiary.org/archive/2010/08/29]

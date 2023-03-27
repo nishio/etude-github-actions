@@ -1,0 +1,159 @@
+Hatena2008-03-19
+code:hatena
+ <body>
+ *1205887737*温度
+ I thought it was warm, but it's still cold.
+ Cold hands and feet, chest pain
+ 
+ *1205898311*[Mac] \r\n newlines to be combined into \n
+ I followed the tree myself and thought maybe nkf. dos2unix seems to be fine.
+ >||
+ $ sudo port install dos2unix
+ $ export PATH=$PATH:/opt/local/bin
+ $ find . -name "*.py" -exec dos2unix {} \;
+ ||<
+ The -exec in -find executes the command with the path of the found file in the {} position. It said to indicate the end of the command with a ;;. \I wonder if it's a ;; because if you don't escape it, it's considered a delimiter of the main command itself.
+ 
+ coji++
+ 
+ *1205900463*[Mac]Where's the Python library?
+ >||
+ >>> import logging
+ >>> logging
+ <module 'logging' from '/System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/logging/__init__.py'>
+ ||<
+ /System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/だって。
+ 
+ I thought I'd bookmark it since I can't remember it and it's too much trouble to use Finder's ^CmdG to move it every time, but I guess Finder doesn't have a function to bookmark a folder. I can't find it.
+ 
+ >||
+ $ ln -s /System/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/ pythonlibdir
+ $ open pythonlibdir
+ ||<
+ 
+ OK. Now I can open the specific folder in Finder. I guess the advantage of Mac is that it is rooted in UNIX, so you can use UNIX-like solutions.
+ 
+ *1205905018*[Mac]How do I get the key status?
+ Alone.
+ I don't see how a program that doesn't have the focus on itself can get the key status.
+ 
+ -----
+ http://developer.apple.com/documentation/Cocoa/Conceptual/EventOverview/HandlingKeyEvents/chapter_6_section_1.html#//apple_ref/doc/uid/10000060i-CH7-SW1
+ Is this it?
+ 
+ -----
+ CarbonEvents.hを読んでいる。
+ 
+ -----
+ I got sleepy and gave up.
+ 
+ *1205909204*[Python]Pythonのif文を式にする
+ I was listening to Mr. Mitsunari talk about C++ perverted code, and I wanted to do something perverted, so I let my lust get the better of me.
+ 
+ >|python|
+ >>> class IF(object):
+     def __call__(self, cond):
+         class Cond(object):
+             def then(self, f):
+                 if cond:
+                     class Result(object):
+                         __call__ = f
+                         def else_(self, _): return f
+                     return Result()
+                 return self
+             def else_(self, f):
+                 return f
+         return Cond()
+ 
+    
+ >>> if_ = IF()
+ >>> if_(1 == 1).then(lambda: "True").else_(lambda: "False")()
+ 'True'
+ >>> if_(1 == 2).then(lambda: "True").else_(lambda: "False")()
+ 'False'
+ ||<
+ 
+ No, you can never write code like this! (Oh!
+ 
+ *1205915488*[Mac]Grapher
+ I think it's fun to have all sorts of things in there by default. I think you can turn them off only when they get in the way. Once you turn them off, you will start running away from new experiences because "it's too much trouble to put them in.
+ 
+ Grapher is interesting.
+ 
+ f:id:nishiohirokazu:20080319172158j:image
+ 
+ *1205915616*growl+find_name_error.py
+ http://www.ustream.tv/recorded/mSEuvLtA35Ze.omWwevfSbF2pLttiKm7
+ 
+ I tried to make a video, but I can't read the code.
+ It seems that it is possible to assign a sound in the Growl settings, so I don't want to put in a sound mechanism for Mac on the find_name_error side or something like that.
+ 
+ Also, there's that thing with the Windows balloon. I know how to do it, but it's too much trouble to register icons. I'm going to have to get rid of Windows now...
+ 
+ *1205923818*[Mac][Gauche]
+ I added Gauche.
+ >|scheme|
+ gosh> (define-syntax bar (syntax-rules ()
+ 	((bar x y z) (if x y z))))
+ #<undef>
+ gosh> bar
+ #<macro bar>
+ gosh> (bar (p #t) (p 1) (p 2))
+ #t
+ 1
+ 1
+ ||<
+ 
+ Hmmm.
+ 
+ >|scheme|
+ gosh> (define-syntax (chain (syntax-rules ()
+ 	((chain x ()) x) 
+ 	((chain x y)(chain ((car y) x) (cdr y))))))
+ *** ERROR: Compile Error: syntax-error: malformed define-syntax:
+ ||<
+ 
+ No good.
+ (chain 1 '(inc inc inc))が(chain (inc 1) '(inc inc)), (chain (inc (inc 1)) '(inc)), (chain (inc (inc (inc 1))) '()), (inc (inc (inc 1)))と変形されるのをやりたかったんだけどな。
+ 
+ *1205924311*QuickSilver + Python
+ http://quicksilver.infogami.com/PyObjCPluginsUniversalDev
+ 
+ >>
+ It's possible to create Quicksilver plug-ins using PyObjC and py2app 
+ <<
+ 
+ Read later.
+ 
+ *1205952770*Kimemeru ni Potan
+ f:id:nishiohirokazu:20080320035245j:image
+ </body>
+ <comments>
+ <comment>
+ <username>setomits</username>
+ <body>/usr/lib/python2.5 で OK ですよ！</body>
+ <timestamp>1205904190</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, really! </body>
+ <timestamp>1205909270</timestamp>
+ </comment>
+ <comment>
+ <username>setomits</username>
+ <body>Slightly off topic, but while we are on the subject of open, <br>http://matatabi.homeip.net/setting/dot_apprc<br> or <br>http://matatabi.homeip.net/blog/setomits/1314<br  </body>
+ <timestamp>1205912014</timestamp>
+ </comment>
+ <comment>
+ <username>hayamiz</username>
+ <body>微妙に違いますが、こんなマクロなら書いたことがあります。<br><br>(define-syntax >><br>  (syntax-rules ()<br>    ((_ obj slot1)<br>     (slot1 obj))<br>    ((_ obj slot1 slot2 ...)<br>     (>> (slot1 obj) slot2 ...))))<br><br>gosh> (macroexpand ’(>> 1 inc inc inc))<br>(inc (inc (inc 1)))<br><br>マクロを使う場合、 ’(foo bar) は (quote (foo bar)) というS式として扱われるので、’なしで書くのが普通みたいですよ。</body>
+ <timestamp>1205936639</timestamp>
+ </comment>
+ <comment>
+ <username>yhara</username>
+ <body>> gosh> (define-syntax (chain (syntax-rules ()<br>開きカッコが一個多いような？</body>
+ <timestamp>1205942913</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-19 https://nishiohirokazu.hatenadiary.org/archive/2008/03/19]

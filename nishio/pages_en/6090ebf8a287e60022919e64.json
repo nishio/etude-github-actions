@@ -1,0 +1,525 @@
+Hatena2008-06-26
+code:hatena
+ <body>
+ *1214442108*It's so...cold!
+ 
+ It was my fault for thinking it was summer and sleeping with the windows open and only a terrycloth blanket.
+ 
+ *1214483990*明日からPython温泉
+ http://www.hosen.co.jp/A11_3.htm#3
+ 
+ It looks like "Yonemiya," doesn't it? I was in tears when the transfer guide said "there is no such station"!
+ 
+ >||
+ ■押上   
+ ｜ 　地下鉄 都営浅草線(西馬込行)  7.8km   3・6号車
+ ｜ 　09:33～09:49 [16分] 
+ ｜ 210 yen
+ ◇新橋　[7分待ち]   
+ ｜ 　ＪＲ 東海道本線（東日本）(熱海行)  4.9km   
+ ｜ 　09:56～10:00 [4分] 
+ ｜ 1,890 yen
+ ◇品川　[7分待ち]   
+ ｜ 　特急 踊り子107号(伊豆急下田行)  99.0km   
+ ｜ 　10:07～11:26 [79分] 
+ ｜ 　↓　指定席1,410円
+ ■来宮   
+ ||<
+ 
+ I'm going to go with this, but it may be later.
+ 
+ *1214499822*[TopCoder]Single Round Match 407
+ It's been quite a while and I forgot C++ orz
+ I wondered how to write it, but I didn't have time to look it up, so I wrote it in a foolish for statement.
+ 
+ 
+ Now, after participating in TopCoder, I learn to write explanations of the problem statements, while exposing the code I wrote in the matches, and fixing it nicely until I am satisfied (for me).
+ 
+ <img src="http://gyazo.com/5dbf57896a0b240e6f1ac3021192b572.png">
+ 
+ The first problem I solved this time was a 500-point problem. The question was, "Find the total salary of all employees since the salary of an employee with no subordinates is 1, the salary of an employee with subordinates is the sum of the subordinates' salaries, and the salary of an employee who has subordinates gives information on who is subordinate to whom." Since the size of the number of employees is small enough, I thought it would be OK to calculate "Mr. A's salary is the sum of his subordinates' salaries" as it is in the recurrence call.
+ 
+ >|cpp|
+ class CorporationSalary {
+ public:
+   vector<string> gxs;
+   vector<long long> salary;
+   long long totalSalary(vector <string> xs) {
+     size_t N = xs.size();
+     gxs = xs;
+     salary = vector<long long>(N);
+     long long total = 0LL;
+     for(size_t i=0; i<N; i++){
+       total += calc(i);
+     }
+     return total;
+   }
+ 
+   long long calc(size_t i){
+     if(salary[i] != 0) return salary[i];
+     size_t N = gxs.size();
+     long long sum = 0LL;
+     bool has_child = false;
+     for(size_t j=0; j<N; j++){
+       if(gxs[i][j] == 'Y'){
+ 	sum += calc(j);
+ 	has_child = true;
+       }
+     }
+     if(has_child){
+       salary[i] = sum;
+       return sum;
+     }else{
+       salary[i] = 1;
+       return 1;
+     }
+   }
+ }
+ ||<
+ 
+ I'll try to rewrite it a bit.
+ 
+ >|cpp|
+ typedef long long LL;
+ class CorporationSalary {
+ public:
+   LL totalSalary(vector <string> relations) {
+     N = relations.size();
+     relations_ = relations;
+     salary = vector<LL>(N);
+     LL total = 0LL;
+     for(size_t i=0; i<N; i++){
+       total += calc(i);
+     }
+     return total;
+   }
+ private:
+   size_t N;
+   vector<string> relations_;
+   vector<LL> salary;
+   LL calc(size_t i){
+     // already calc'ed
+     if(salary[i] != 0) return salary[i];
+ 
+     LL sum = 0LL;
+     bool has_child = false;
+     for(size_t j=0; j<N; j++){
+       if(relations_[i][j] == 'Y'){
+ 	sum += calc(j);
+ 	has_child = true;
+       }
+     }
+     if(has_child){
+       salary[i] = sum;
+       return sum;
+     }else{
+       salary[i] = 1;
+       return 1;
+     }
+   }
+ }
+ ||<
+ 
+ What I didn't like initially was that I copied the "employee relationship" argument into a public field. At first I thought "shared_ptr!" and then I tried to pass it by reference because I didn't have time to look it up, and I wasn't sure of the syntax either way.
+ 
+ For example, in the code below, the copy constructor is called twice.
+ >|cpp|
+ class MyValue {
+ public:
+   MyValue(){
+     cout << "cstr" << endl;
+   }
+   MyValue(const MyValue &x){
+     cout << "copy" << endl;
+   }
+   ~MyValue(){
+     cout << "dstr" << endl;
+   }
+ };
+ 
+ class MyClass {
+ public:
+   void foo(MyValue x){
+     bar(x);
+   }
+ private:
+   void bar(MyValue x){
+     
+   }
+ };
+ 
+ int main(){
+   MyValue v;
+   MyClass c;
+   c.foo(v);
+ }
+ ||<
+ 
+ I can't help it as long as the game rules say "vector<int> is passed by value" at least once, but I don't want to be foolish enough to copy it every time when I call it again and again after that.
+ 
+ >|diff|
+  private:
+ -   void bar(MyValue x){
+ +   void bar(MyValue &x){
+      
+    }
+ ||<
+ 
+ Now it is no longer copied. I'm happy and satisfied.
+ 
+ >|diff|
+  private:
+ -   void bar(MyValue &x){
+ +   void bar(const MyValue &x){
+      
+    }
+ ||<
+ 
+ This time I put const because I know it won't be changed. I think it is better to do this when writing the actual code. If I make a mistake and try to change it, the compiler will get mad at me. Konosuke Matsushita is said to have said, "It is nice to be angry, and if you are unhappy about being angry, it is a waste of time, so I will not get angry.
+ 
+ 
+ Okay, so far we've reviewed what we've studied before. I want to use boost::shared_ptr. I think it makes for better code. http://www.kmonos.net/alang/boost/classes/shared_ptr.html
+ 
+ >|cpp|
+ typedef boost::shared_ptr<MyValue> MyValuePtr;
+ class MyClass {
+ public:
+   void foo(MyValue x){
+     p = MyValuePtr(&x);
+     bar();
+   }
+ private:
+   MyValuePtr p;
+   void bar(){
+     
+   }
+ };
+ -----
+ 実行結果
+ cstr
+ copy
+ dstr
+ dstr
+ a.out(5453) malloc: *** error for object 0xbffff9df: Non-aligned pointer being freed
+ *** set a breakpoint in malloc_error_break to debug
+ dstr
+ ||<
+ 
+ Oops, no. I see... the way it's written, it's free when it leaves the scope of foo, and then it's free again when it leaves the scope of main and c is freed. I mean, if it doesn't have to be a smart pointer, why not just use a regular pointer?
+ 
+ >|cpp|
+ class MyValue {
+ public:
+   MyValue():v(42){
+     cout << "cstr" << endl;
+   }
+   MyValue(const MyValue &x):v(x.v){
+     cout << "copy" << endl;
+   }
+   ~MyValue(){
+     cout << "dstr" << endl;
+   }
+   int v;
+ };
+ 
+ 
+ class MyClass {
+ public:
+   void foo(MyValue x){
+     p = &x;
+     bar();
+   }
+ private:
+   MyValue *p;
+   void bar(){
+     cout << (*p).v << endl;
+   }
+ };
+ -----
+ 出力結果
+ cstr
+ copy
+ 42
+ dstr
+ dstr
+ ||<
+ 
+ What the heck, that's all right. The fact that this doesn't come out easily shows how little I understand pointers.
+ 
+ 
+ System testing is over.
+ <img src="http://gyazo.com/c315efc97bece408b04cbea9ead89dfc.png">
+ Even though none of us ended up solving it, it was frustrating to have someone shoot down a 1,000-point problem.
+ 
+ Now, leaving aside the rewriting of the answers to the 500-point questions with pointers, the next question is the 1000-point question.
+ There is a long, narrow corridor-like series of squares that costs money to pass through, with two rules. Find out the cheapest way to get from one end to the other with the fewest number of moves, and answer the pair of least cost and least number of moves. There may be no answer. Rule 1: Each square has a "square price. One can proceed to the next square by paying the price. However, if the price of a square is -1, it is forbidden to enter. Rule 2: There are several warp gates on the map. If a person is in a square that has an entrance to a warp gate, he or she can warp to the exit. When they do so, they must pay a warp fee. The warp fee goes up by 1 for each warp. In this case, you cannot enter the -1 square."
+ I tried to explain it in a concise way, peeling away the rigor, but still, here's what it looks like.
+ 
+ 
+ First, the code as posted.
+ >|cpp|
+ class CheapestRoute {
+ public:
+   vector <int> routePrice(vector <int> cellPrice, vector <int> enterCell, vector <int> exitCell, int teleportPrice) {
+     vector<int> position;
+     position.push_back(0);
+     vector<int> cost;
+     cost.push_back(0);
+     vector<int> num_warp;
+     num_warp.push_back(0);
+ 
+     vector<int> candidate_step;
+     vector<int> candidate_cost;
+     vector<int> next_pos;
+     vector<int> next_cost;
+     vector<int> next_warp;
+     int min_cost = 1 << 30;
+     cout << min_cost << endl;
+ 
+     size_t N = cellPrice.size();
+     size_t GOAL = N - 1;
+     cout << "GOAL:" << GOAL  << endl;
+     int step = 0;
+     while(!position.empty()){
+       //cout << "---------------" << endl;
+       for(size_t i=0; i < position.size(); i++){
+ 	int p = position[i];
+ 	int c = cost[i];
+ 	//	cout << "p:" << p << "c:" << c  << endl;
+ 	if(p == GOAL){
+ 	  candidate_cost.push_back(c);
+ 	  candidate_step.push_back(step);
+ 	  if(c < min_cost){
+ 	    min_cost = c;
+ 	  }
+ 	  continue;
+ 	}
+ 	if(c >= min_cost) continue;
+ 
+ 	// if next cell is not -1, you can walk into it
+ 	if(cellPrice[p + 1] != -1){
+ 	  next_pos.push_back(p + 1);
+ 	  next_cost.push_back(c + cellPrice[p + 1]);
+ 	  next_warp.push_back(num_warp[i]);
+ 	}
+ 	
+ 	// if you can enter
+ 	int exit = 0;
+ 	for(size_t j=0; j < enterCell.size(); j++){
+ 	  if(enterCell[j] == p){
+ 	    exit = exitCell[j];
+ 	    if(cellPrice[exit] == -1) continue;
+ 	    int w = num_warp[i];
+ 	    next_pos.push_back(exit);
+ 	    next_cost.push_back(c + teleportPrice + w);
+ 	    next_warp.push_back(w + 1);
+ 	  }
+ 	}
+ 
+       }
+       position = next_pos;
+       cost = next_cost;
+       num_warp = next_warp;
+       next_pos.clear();
+       next_cost.clear();
+       next_warp.clear();
+       step++;
+     }
+ 
+     cout << "hoge" << endl;
+     vector<int> result;
+     if(candidate_step.empty()) return result;
+     cout << candidate_step[0] << endl;
+     int min_step = 1 << 30;
+     for(size_t i=0; i<candidate_step.size(); i++){
+       int c = candidate_cost[i];
+       int s = candidate_step[i];
+       //cout << c << ", ";
+       //cout << s << endl;
+       if(c == min_cost){
+ 	if(s < min_step){
+ 	  min_step = s;
+ 	}
+       }
+     }
+     result.push_back(min_cost);
+     result.push_back(min_step);
+     return result;
+   }
+ }
+ ||<
+ 
+ Ah, Anzai-sensei, I want to use tuples... Ruby's struct is OK, so I'll use struct for now... I mean, I'll try to use class.
+ 
+ >|cpp|
+ class State {
+ public:
+   State():position(0),cost(0),warp(0){}
+   size_t position;
+   int cost;
+   int warp;
+ };
+ 
+ class Candidate {
+ public:
+   int step;
+   int cost;
+ };
+ 
+ class CheapestRoute {
+ public:
+   vector <int> routePrice(vector <int> cellPrice, vector <int> enterCell, vector <int> exitCell, int teleportPrice) {
+     State start;
+     vector<State> states;
+     states.push_back(start);
+     vector<State> next_states;
+     vector<Candidate> candidates;
+ 
+     int min_cost = 1 << 30;
+     size_t N = cellPrice.size();
+     size_t GOAL = N - 1;
+ 
+     int step = 0;
+     while(!states.empty()){
+       for(size_t i=0; i < states.size(); i++){
+ 	State cur(states[i]);
+ 	size_t p = cur.position;
+ 	int c = cur.cost;
+ 	if(p == GOAL){
+ 	  Candidate cand;
+ 	  cand.cost = c;
+ 	  cand.step = step;
+ 	  if(c < min_cost){
+ 	    min_cost = c;
+ 	  }
+ 	  candidates.push_back(cand);
+ 	  continue;
+ 	}
+ 	if(c >= min_cost) continue;
+ 
+ 	// if next cell is not -1, you can walk into it
+ 	if(cellPrice[p + 1] != -1){
+ 	  State next(cur);
+ 	  next.position++;
+ 	  next.cost += cellPrice[p + 1];
+ 	  next_states.push_back(next);
+ 	}
+ 	
+ 	// if you can enter
+ 	int exit = 0;
+ 	for(size_t j=0; j < enterCell.size(); j++){
+ 	  if(enterCell[j] == p){
+ 	    exit = exitCell[j];
+ 	    if(cellPrice[exit] == -1) continue;
+ 	    State next(cur);
+ 	    next.position = exit;
+ 	    next.cost += teleportPrice + cur.warp;
+ 	    next.warp++;
+ 	    next_states.push_back(next);
+ 	  }
+ 	}
+ 
+       }
+       states = next_states;
+       next_states.clear();
+       step++;
+     }
+ 
+     vector<int> result;
+     if(candidates.empty()) return result;
+     int min_step = 1 << 30;
+     for(size_t i=0; i<candidates.size(); i++){
+       int c = candidates[i].cost;
+       int s = candidates[i].step;
+       if(c == min_cost){
+ 	if(s < min_step){
+ 	  min_step = s;
+ 	}
+       }
+     }
+     result.push_back(min_cost);
+     result.push_back(min_step);
+     return result;
+   }
+ }
+ ||<
+ 
+ It's much easier to read. I don't see the point of having classes if everything is public, though.
+ 
+ 
+ I also think that 1 << 30 is too much, so
+ 
+ >|cpp|
+ #define __STDC_LIMIT_MACROS
+ #include<iostream>
+ using namespace std;
+ 
+ #include<boost/cstdint.hpp>
+ (中略)
+ using namespace boost;
+ 
+ 
+ (中略)
+     int32_t min_cost = INT32_MAX;
+ ||<
+ 
+ I didn't know that #define __STDC_LIMIT_MACROS was required to use INT32_MAX.
+ 
+ 
+ Then also use boost/assign.
+ >|diff|
+ -    result.push_back(min_cost);
+ -    result.push_back(min_step);
+ +    result += min_cost, min_step;
+ ||<
+ 
+ If I assign it, it will be copied and it will be a waste, so I'll try to make it swap.
+ >|diff|
+ -      states = next_states;
+ +      states.swap(next_states);
+ ||<
+ 
+ This is another useless copy. What shall we do?
+ >|cpp|
+ for(size_t i=0; i < states.size(); i++){
+   State cur(states[i]);
+ ||<
+ 
+ Like this?
+ >|cpp|
+ for(vector<State>::iterator cur = states.begin(), end = states.end(); cur != end; ++i){
+ ||<
+ 
+ No, I can't turn it into an iterator because I'll need i when I do the warp calculations later.
+ 
+ >|cpp|
+ for(size_t i=0; i < states.size(); i++){
+   State *cur = &(states[i]);
+   size_t p = cur->position;
+   int c = cur->cost;
+ ||<
+ 
+ I wonder if it's like this. I feel like &(states[i]) is a bit too wild.
+ 
+ 
+ Oh, my rating has been updated...I only solved one question but it went up.
+ <img src="http://gyazo.com/48964bc9e3c28891941a1d0ec22ad6ea.png">
+ 
+ -----
+ 
+ Now, why did the 1000 point problem FAIL?
+ First, input something like this: {0, 0, -1}, {0, 1}, {1, 0}, and if the goal is reached, the score is used to footnote the goal, but if the problem cannot be reached, as in this example, it continues to warp and loop infinitely. If a cell can be reached at cost n, there is no need to search ahead even if it is reached by a method with cost greater than n. Because it can't be the least cost. Is that really true? No, it's not. The cost of warp changes depending on the number of times you warp, so it's not a simple matter of saying that. For example, let's say the last step is a path that can only be reached by warp, and the cost of warp is 0, and the cost of warp is 4 if you walk, and 3 times if you warp. The correct answer is to walk and fly at cost 0, not to fly 4 times. Hmmm, that's a tough one.
+ 
+ In the meantime, let's try to make it CONTINUE if both the cost and the number of warps are greater than before and see if it passes the test.
+ 
+ Nope, it still falls one. And the trap is that the minimum cost I answered is wrong. It's a case of trimming too much when you trim the upper branches, I'm sure. Hmmm, what could be wrong?
+ </body>
+ <comments>
+ <comment>
+ <username>poohtarou</username>
+ <body>Although I am from Shizuoka, I had never heard of Raikyu station...........................orz</body>.
+ <timestamp>1214547325</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-06-26 https://nishiohirokazu.hatenadiary.org/archive/2008/06/26]

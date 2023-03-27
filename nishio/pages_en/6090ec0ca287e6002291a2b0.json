@@ -1,0 +1,225 @@
+Hatena2013-05-31
+code:hatena
+ <body>
+ *1370000103* Recursive calls without recursive calls
+ In my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", in Chapter 5, "Functions", I explained on p. 50 that "a program using recursive calls can be written without using them. We decided to explain this matter here as a supplementary article.
+ 
+ Target the simple recursive call example (total function) on p. 53. This is a simple example with 8 lines, excluding blank lines and comments. Let's remove the recursive call from this code without changing its behavior. Those with strong arms should try implementing it themselves before continuing.
+ 
+ ** Notes for those who are up to the challenge
+ 
+ In this subject, the process to be performed while making recursive calls was "addition of elements". The result of addition is the same even if the order is changed. Therefore, even if you inadvertently change the order of calculation, you will not notice the mistake from the result. For example, if you change depth-first search to width-first search, [1, [2, 3], 4] will be added in the order 1, 4, 2, 3, instead of the original order 1, 2, 3, 4. In fact, in this case, it would be simpler to change the code to width-first search. However, this does not satisfy the intent.
+ 
+ Also, in this case, we can put the result in a place where it can be read and written by all functions. This is equivalent to changing the result from a local variable in the original code to a global variable. Since this would leave out the consideration of "how to return the value," we will deduct points for this.
+ 
+ Finally, since the original code was written in Python, I implemented it in Python at first. However, Python does not have goto, so the code became tricky, for example, substituting while. This was not good for the sake of explanation, so I rewrote it in a language with goto (C++). I recommend readers to try it in a language with goto.
+ 
+ ** Porting to C++
+ 
+ First of all, I ported the sample code on p. 50 to C++11 as verbatim as possible.
+ 
+ >|cpp|
+ int total(const many& xs){
+   int result = 0;
+   for(const boost::any& x : xs){
+     if(is_integer(x)){
+       result += any_cast<int>(x);
+     }else{
+       result += total(any_cast<many>(x));
+     }
+   }
+   return result;
+ }
+ ||<
+ 
+ The definition of is_integer and boost/any.hpp, which is used in C++ to create "type-neutral lists" similar to Python lists, are not in the scope of this article. If requested, it will be discussed separately.
+ 
+ ** foreachの除去
+ 
+ Now, this code uses the foreach syntax "for x in xs" or "BOOST_FOREACH". Since this is a "loop for each element of a given list" syntax, it is difficult to interrupt and resume. So, we first rewrote this into a regular for statement.
+ 
+ >|python|
+ int total2(const many& xs){
+   int i;
+   boost::any x;
+   int result = 0;
+ 
+   for(i = 0; i < xs.size(); i++){
+     x = xs[i];
+     if(is_integer(x)){
+       result += any_cast<int>(x);
+     }else{
+       result += total2(any_cast<many>(x)); // 次はこれを書き換える
+     }
+   }
+   return result;
+ }
+ ||<
+ 
+ I see that there are four local variables in this function: xs, i, x, and result.
+ 
+ Now, the next step is to eliminate the "call to self" in this function.
+ 
+ 
+ ** Create a stack
+ 
+ Read p. 48. The stack was used to achieve "save the value so that it can be restored to its original value later.
+ In the book, the stack was used to store the "return address," but here it is used to store local variables.
+ 
+ ((Footnote: Do you want to make a column or show how the stack is stacked when you actually make a function call in C on x86? Touch on the call convention?))
+ 
+ When you are buying a program normally, you do not manage this "stack" by yourself ((unless you use assembly language, of course)), but this time you want to achieve "the same thing as a function call" without using a real function call, so you decide to manage it by yourself.
+ 
+ However, it is not that big a deal. We will create an empty std::stack and store the data in it.
+ 
+ Also, create a variable for the return value from the function.
+ 
+ >|cpp|
+ typedef std::tuple<many, int, boost::any, int> frame_t;
+ std::stack<frame_t> stack;
+ 
+ int function_result;
+ ||<
+ 
+ *** what values should be stored in the stack
+ 
+ The values to be stored on the stack are the four local variables xs, i, x, and result of this function. So in the previous code, "typedef std::tuple<many, int, boost::any, int> frame_t;" creates a type for the four values.
+ 
+ Did anyone else think, "x doesn't need to be saved?" That is correct. However, that would be an optimization using the unique circumstance of this function that "x is never read back after returning from a function call", right?
+ 
+ 
+ ** What is a "function call"?
+ 
+ Now let's consider what a "function call" does next.
+ 
+ - 1: Save the current local variable on the stack so that you can return to it later.
+ - 2: Rewrite argument xs
+ - 3: Jump to the beginning of the function
+ 
+ These are the three things we need to do. ((Should I add that it is the caller's job to rewrite the argument xs, depending on the call convention?))
+ 
+ So first, create a label for the jump at the beginning of the function.
+ 
+ >|cpp|
+ int total3(many& xs){
+  ENTRYPOINT:
+   int i;
+   boost::any x;
+   int result = 0;
+ ||<
+ 
+ The function call then looks like this
+ 
+ >|cpp|
+     if(is_integer(x)){
+       result += any_cast<int>(x);
+     }else{
+       // 1: Store the current local variable on the stack
+       stack.push(make_tuple(xs, i, x, result));
+       // 2: Rewrite argument xs
+       xs = any_cast<many>(x);
+       // 3: Jump to the beginning of the function
+       goto ENTRYPOINT;
+ ||<
+ 
+ ** return value
+ 
+ What should I do when the loop ends? In the original code, I did return result;. What is this?
+ 
+ - 4: Place the return value in the "place to put the return value". (This is determined by human call convention, and if you are writing C++ on x86, it will be the EAX register. In this case, I created a variable called function_result)
+ - 5: Jump immediately after function call
+ 
+ These are the two things you need to do.
+ 
+ First, you need to make a label for the jump...
+ >|cpp|
+       goto ENTRYPOINT;
+ 
+     RETURNPOINT: // 6: return from the called function returns here
+ ||<
+ 
+ Make a jump there at the end of the function.
+ >|cpp|
+     // 4: Save the return value in a predefined location
+     function_result = result;
+     // 5: Return to immediately after function call (6 above)
+     goto RETURNPOINT;
+ ||<
+ 
+ ** What to do after you come back
+ 
+ What should I do after returning from a function call?
+ 
+ - 7: Restore values stored in the stack
+ - 8: Using function return values
+ 
+ These are the two things you need to do.
+ In case you have forgotten in all the long talk, what I was trying to do was to realize "result += total(...);" without any function call. I need to call the function and then add the return value to the local variable "result".
+ 
+ >|cpp|
+     RETURNPOINT: // 6: return from the called function returns here
+       // 7: Restore values stored in the stack
+       frame_t f = stack.top();
+       stack.pop();
+       xs = std::get<0>(f);
+       i = std::get<1>(f);
+       x = std::get<2>(f);
+       result = std::get<3>(f);
+ 
+       // 8: Using function return values
+       result += function_result;
+ ||<
+ 
+ ** 全体
+ 
+ The entire source code is here.
+ 
+ https://github.com/nishio/learn_language/blob/master/langbook/extra/recursive/recursive.cpp
+ 
+ In my environment (Mac OS X 10.7.5), I can run it like this.
+ 
+ >||
+ $ clang++ -std=c++11 -stdlib=libc++ -Wall -DVERBOSE recursive.cpp && ./a.out
+ ||<
+ 
+ It is working as expected, but this is my first C++11 programming, so if you find anything wrong, please feel free to point it out to me.
+ 
+ ** Q&A
+ 
+ *** Why do we want to eliminate recursive calls?
+ 
+ You asked, "Why do you want to get rid of recursive calls?" In my book, in order to understand "how the syntax we normally use as a matter of course works behind the scenes," I have written in Chapter 4
+ 
+ - Achieve the same behavior without using the else clause of an if statement (p. 32)
+ - Achieve the same behavior without using a while statement (p. 36)
+ - Achieve the same behavior without using a for statement (p. 37)
+ 
+ This is a sequel to that explanation. This is a sequel to that; since I explained "how functions work" in Chapter 5, I tried to do this too "to achieve the same behavior without using function calls".
+ 
+ Come to think of it, I once did "Realizing 'Instance Creation' and 'Inheritance' without using classes" a long time ago. It might be good to explain this again. (thanks: id:thujikun)
+ 
+ *** I thought tail recursion optimization doesn't use stacks?
+ 
+ You asked, "If the tail call is optimized or if it doesn't use the stack." Yes, it does.
+ 
+ In this article we wrote
+ 
+ >>
+ Did anyone else think, "x doesn't need to be saved?" That is correct. However, that would be an optimization using the unique circumstance of this function that "x is never read back after returning from a function call", right?
+ <<
+ 
+ The code in question uses several variables after the function call. So it was necessary to put them on the stack so that they could be restored. On the other hand, the tail call has a function call at the "end of the function," so there are no variables to be used after the function call. Therefore, there are no variables to stack.
+ 
+ In this target code, we can optimize "x is not used, so we don't have to pile it up", but this goes further to "nothing is used, so we don't have to pile up anything", which is the optimization of the tail call. (thanks: id:bouzuya)
+ 
+ <hr>
+ 
+ I would like to write a supplemental article to the questions I received from readers of my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write a supplementary article like this. Please feel free to ask any questions or comments.
+ 
+ I think it would be appropriate to insert this explanation around p. 56 of Chapter 5 "Functions" of my book.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2013-05-31 https://nishiohirokazu.hatenadiary.org/archive/2013/05/31]

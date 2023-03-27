@@ -1,0 +1,45 @@
+Hatena2013-02-05
+code:hatena
+ <body>
+ *1360067888* Water bought after the earthquake...
+ The expiration date of the bottled water I bought after the earthquake was February 7, 2013!
+ 
+ So I'll use the one I have now and buy a new one.
+ 
+ I hear this is number one in reputation.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B0019JNU5I" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ But 105mg/L is a bit hard? This one says it's super soft water at 11mg/L.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B0076JNXX4" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1360071049*リモートのEmacsでもC-upでbackward-paragraphしたい→必要なのはTerminal.appの設定だった
+ I wanted to align the behavior around key bindings between Carbon Emacs at hand and remote Emacs through Terminal.app on the Mac. If the behavior is different, it would be a waste of time and effort to switch heads every time.
+ 
+ In my Carbon Emacs, C-up (Ctrl+up arrow) is bound to "backward-paragraph", and when I do describe-key (F1 k), it shows <C-up> runs the command backward-paragraph. This doesn't work through the terminal for some reason, so I thought "Oh, C-up is not bound to backward-paragraph in Emacs over there.
+ 
+ I thought so and tried to bind it with global-set-key.
+ 
+ >|lisp|
+ (global-set-key [C-up] 'backward-paragrah)
+ ||<
+ 
+ But this does not work. Why is that? I tried describe-key and found that even when I press C-up, the explanation about <up> appears. So the problem is not in Emacs, but in the terminal.
+ 
+ こちらの記事が参考になった: <a href='http://unix.stackexchange.com/questions/47312/control-and-up-down-keys-in-terminal-for-use-by-emacs'>Control and up/down keys in terminal for use by emacs - Unix and Linux</a>
+ 
+ A rough translation. The terminal only knows about characters, not keys. So keys that do not correspond to characters must be converted to escape sequences and sent. You can choose any escape sequence as long as it does not clash with other escape sequences. Unfortunately, it is not standardized. \e[1;5A} and \e[1;5B} are popular choices. You can use input-decode-map to return the escape sequence to the key.
+ 
+ I had not been aware of this before, but looking at the terminal settings screen, it is true that F1 has a key-to-escape sequence correspondence like "\033OP"、and Emacs sees this \033OP and determines that the F1 key was pressed. So I added C-up and C-down here. I wrote the escape sequence in the editor and copied and pasted it because I had trouble entering the escape sequence directly in the input field. The escape character was expressed as ⌘033 to match other commands.
+ 
+ [f:id:nishiohirokazu:20130205222818p:image]
+ 
+ This is what I wrote in emacs.el. The escape character here is ⌘e.
+ >|lisp|
+ (define-key input-decode-map "\e[1;5A" [C-up])
+ (define-key input-decode-map "\e[1;5B" [C-down])
+ ||<
+ 
+ It worked as expected. I'm so happy, so happy. Eeeee.
+ </body>
+
+[Hatena Diary 2013-02-05 https://nishiohirokazu.hatenadiary.org/archive/2013/02/05]

@@ -1,0 +1,92 @@
+Hatena2009-07-27
+code:hatena
+ <body>
+ *1248668816* How to improve your eyesight
+ <a href='http://okyuu.com/ja/special/engineer06-yoshiori'>Programming from the Age of 25: "I Learned While Crying" - The Engineering Life of Kaori Shoji - Feature: No okyuu, No Life [okyuu.com]</a>.
+ >>
+ Blue lenses are easy on the eyes. They are good for looking at displays for long periods of time. My eyes have really improved since I switched to these glasses, and after about two years, the "glasses, etc." item was removed from the requirements for my driver's license.
+ <<
+ 
+ ！！！
+ I too want a pair of glasses with blue lenses!
+ 
+ *1248688399*虹
+ f:id:nishiohirokazu:20090727185022j:image
+ 
+ It was so clear that when I saw the sub-rainbow, I mistakenly thought, "Oh, it's faded like that already.
+ 
+ *1248694494*今日の電子工作
+ No crafting.
+ 
+ 100 decibels = 10 bells = 10^10 times. 1dBu = 0.775V, 1dBV = 1V.
+ When decibels are used as a unit of gain in amplifiers, the amplification ratio where 1mV is 1000 times (30 decibels) 1V is called 60 decibels (because the square of the voltage ratio is the power ratio).
+ 
+ - Line -20dBu to +4dBu approx.
+ - Microphone jack -70dBV to -20dBV approx.
+ 
+ -<a href='http://www.mech.tohoku-gakuin.ac.jp/rde/contents/course/mechatronics/analog.html'>Basics of Analog Circuits</a>
+ -<a href='http://openeeg.sourceforge.net/doc/modeeg/modeeg.html'>The ModularEEG</a>
+ -<a href='http://ja.wikipedia.org/wiki/%E3%83%84%E3%82%A7%E3%83%8A%E3%83%BC%E3%83%80%E3%82%A4%E3%82%AA%E3%83%BC%E3%83%89'>ツェナーダイオード - Wikipedia</a>
+ - <a href='http://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%AB%E3%82%BF%E5%9B%9E%E8%B7%AF'>フィルタ回路 - Wikipedia</a>
+ - <a href='http://nagasm.suac.net/ASL/brain/'>Heart Beat Sensor</a>
+ - <a href='http://blog.goo.ne.jp/amichang/e/0f682f1c35a95b18f146a696d5791059'>Owase and the EEG machine - 3 day monk</a>
+ - <a href='http://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AB%E3%83%95%E3%82%A1%E6%B3%A2'>アルファ波 - Wikipedia</a>
+ - <a href='http://en.wikipedia.org/wiki/Event-related_potential'>Event-related potential - Wikipedia, the free encyclopedia</a>
+ 
+ I wrote the schematic!
+ f:id:nishiohirokazu:20090727220558j:image
+ 
+ The electrode is placed on the head with the switch (a) closed. I read somewhere that "the DC component is not present for several minutes after the electrodes are attached," and since the circuit in the latter half is clearly designed to "prevent the flow of current between the electrodes as much as possible," I thought that I should short-circuit the electrodes when they are attached in order to let the DC component escape. I wrote it as it is.
+ 
+ B is intended to be a static protection circuit. I put a zener diode between the electrodes to see what I could do to release the high voltage that is temporarily applied when the electrodes come off and fall off or touch something charged.
+ 
+ In the ModularEEG schematic, there's a capacitor between the two electrodes around here. If you want to say, "I relax and my alpha waves increase! I can throw away all the high-frequency components here, since I only need about 30 Hz at most. I'll add it in too.
+ 
+ c (not written but all the rest) is the "instrumentation amplifier" described in the "Basics of Analog Circuits" page. When I first saw the ModularEEG schematic, I thought, "I don't understand this complicated thing! But when I understood it, I realized that the instrumentation amplifier is surrounded by squares to make it easier to understand.
+ 
+ In the ModularEEG circuit, it appears that the instrumentation amplifier itself does not amplify the signal that much, but the big amplifier after that amplifies it as much as possible, and then Butterworth + bessel filter again discards the high-frequency component.
+ 
+ I think there is probably an IC sold that has an instrumentation amplifier in it, because the instrumentation amplifier is enclosed in a square in the ModularEEG circuit and it says IC, etc. I should probably get that, too.
+ 
+ <a href='http://focus.tij.co.jp/jp/docs/prod/folders/print/ina103.html'>Audio Amplifiers - Microphone Preamps - INA103 - TI</a> or <a href='http://www. analog.com/jp/audiovideo-products/audio-signal-processors/ssm2019/products/product.html'>SSM2019 | Audio Preamp, Self-contained | Audio Signal Processors | Audio/Video | Analog Devices</a> or something like that. rf. <a href='http://www.geocities.jp/princecasals/audio/recording/micpre2.html'>micpre p48v</a>
+ 
+ 改良版
+ f:id:nishiohirokazu:20090727230235j:image
+ 
+ Is this what a level shift circuit looks like?
+ f:id:nishiohirokazu:20090727232143j:image
+ 
+ The zener diodes should be in series, not parallel, since they are bare in the triangular direction.
+ 
+ I also wonder if I can connect a diode in the opposite direction between the output and Vcc to prevent the digital circuit side from breaking beyond 5V.
+ 
+ Huh? I mean, why do we need an instrumentation amplifier? It's not like it's going to carry a lot of current because it's a normal amplifier connected right after. If you're using an instrumentation amp because you need symmetry, then amplifying it with another amp afterwards would mess it up... Conversely, SSM2019 at least says up to 60dB on the datasheet, so you don't need the JRC5532.
+ 
+ f:id:nishiohirokazu:20090728015341j:image
+ f:id:nishiohirokazu:20090728022211j:image
+ f:id:nishiohirokazu:20090728023445j:image
+ He pointed out that I shouldn't do +2.5V and then *20dB. I thought I had to get another amp, but the JRC5532 has two amps in one chip!
+ 
+ f:id:nishiohirokazu:20090728030123j:image
+ What do you mean by +2.5V and then squeezing it with volume.
+ 
+ f:id:nishiohirokazu:20090728032335j:image
+ 
+ They say that the AVR itself contains a protective diode so you don't have to put it on yourself.
+ 
+ *1248721029*今後の電子工作
+ - Put off EEG sensor for about a week until SSM2019 arrives.
+ - I bought a small universal board for 80 yen, and organized the parts that are now placed in various places on the breadboard. I'll buy a small universal board for 80 yen and organize all the parts on the breadboard.
+ - The heart rate sensor is ready to be tested if a mechanism that clips to the ear is made. Make it quickly.
+ - LED Matrix Wiring
+ - Buy single core wire and 1kΩ and 100kΩ
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>It doesn't suit you, so you should stop(ry)</body>.
+ <timestamp>1248669822</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-07-27 https://nishiohirokazu.hatenadiary.org/archive/2009/07/27]

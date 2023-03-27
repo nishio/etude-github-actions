@@ -1,0 +1,55 @@
+Hatena2009-09-03
+code:hatena
+ <body>
+ *1251969588*[最中限]最中限API version 2
+ About a day before yesterday, I gave a presentation on version 1 at a programming symposium and found various problems, so I made a revised version 2.
+ http://www.nishiohirokazu.org/files/prosym_2009s.pdf
+ Also, the previous ML was lost because it was set up to disappear without flow, so I created a new one with Google Group.
+ http://groups.google.com/group/saichugen
+ 
+ 
+ Now I just need to make a game win/loss indicator or something...
+ 
+ *1251973515* Sample of the most limited CGI
+ Just put out the cards in your hand in order of size.
+ 
+ >|python|
+ #!/usr/bin/env python
+ 
+ import cgi
+ import cgitb
+ cgitb.enable()
+ print "Content-Type: text/html"
+ print
+ 
+ form = cgi.FieldStorage()
+ query = form["query"].value
+ if query == "available":
+     if form["version"].value == "2":
+         print "2OK"
+     else:
+         print "NG"
+ elif query == "play":
+     hand = [
+         int(item) 
+         for item in form["hand"].value.split(".")]
+     played = form["played"].value
+     if played == "__":
+         played_cards = [[], [], []]
+     else:
+         played_cards = [
+             [int(item) for item in packed_cards.split(".")]
+             for packed_cards in played.split("_")]
+     seat_id = form["seat_id"].value
+     hand.sort()
+     print hand[-1] # return largest item
+ elif query == "finish":
+     print "OK"
+ else:
+     print "Saichugen Sample AI"
+     import os
+     print os.environ["QUERY_STRING"]
+ ||<
+ </body>
+
+[Hatena Diary 2009-09-03 https://nishiohirokazu.hatenadiary.org/archive/2009/09/03]

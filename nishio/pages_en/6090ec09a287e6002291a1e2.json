@@ -1,0 +1,220 @@
+Hatena2011-12-16
+code:hatena
+ <body>
+ *1324015670* Reading papers containing mathematical formulas more efficiently.
+ The productivity of intellectual work depends on the design of how to do it. I think it is possible to improve productivity in the task of "reading a paper full of mathematical formulas" by designing a good way of doing it, instead of "just reading it as hard as I can. With this in mind, I decided to try it while observing myself.
+ 
+ 読む論文はCRF(条件付き確率場)についての次の二つ: <a href='http://scholar.google.com/scholar?cluster=14553887910606988646&hl=en&as_sdt=0,5&sciodt=0,5'>Lafferty: Conditional random fields: Probabilistic... - Google Scholar</a>と<a href='http://scholar.google.com/scholar?cluster=1077892667424999194&hl=en&as_sdt=0,5&sciodt=0,5'>Sutton: An introduction to conditional random fields... - Google Scholar</a>
+ 
+ First, clarify the objectives. The objective must be something that can be objectively measured to see if it has been achieved. In other words, "to understand CRF" is not enough. The goal should be "to implement the CRF, make a video visualizing the learning process, and post it on the blog.
+ 
+ Next, consider how long the task will take. Time tagging. 25 minutes is a chunk (pomodoro), and how many chunks can you accomplish it in? I have no idea; it seems unlikely that I could do it in 7 pomodoros. This means that either the task is too big or you are too far from the goal of the task to have a complete picture of the task. Large tasks cannot be accomplished in a single bound. All you can do is take one step toward the goal. So we will do a task that can be done in 25 minutes and that will bring us closer to the goal.
+ 
+ Photo-reading suggests that after clarifying the purpose of reading the target book, the reader should read and research the chapter titles, figure captions, etc. The argument is that before reading a book in earnest, one should gather information on the subject to be read and then decide whether one should really read it or not. In fact, in the process of selecting the above two papers for this experiment, Sutton's team performed this task in order to determine whether or not they should be read. What we learned from it:.
+ - Sutton believes that the relationship between CRF and HMM is similar to the relationship between logistic regression and naïve Bayes
+ - Discriminative (CRF, logistic regression) and generative (HMM, Naive Bayes) models
+ - 系列データが対象(linear-chain CRF, HMM)
+ - I heard that there is also one for general graphs, but that is not necessary for my purpose this time, so I will not go through it.
+ - It contains a description of parameter estimation and inference for each
+ - There is a chapter on implementation issues, which seems important.
+ - The second half of the article talks about Skip-Chain CRF, but this is not necessary for my purpose this time.
+ Similarly, Lafferty only briefly looks at chapter titles
+ - They say there's a label bias problem, and it looks like they created CRF to solve it.
+ - There's a chapter depicting how to do parameter estimation.
+ 
+ At any rate, it seems to have lowered the psychological hurdle by allowing me to grasp a rough map rather than suddenly reading from the top. Paul R. Seelye, a photo-reading expert, later claims that it is difficult to validate that "you can send information to your subconscious by blurring the focus of your eyes" and "even if you don't feel like you are reading, you are reading it correctly and can retrieve it when you need it". But, there is no mention of whether or not this is valid for papers containing mathematical formulas. I don't think it is valid for mathematical formulas, since I assume that photoreading is based on the assumption that "important things are written many times. But, well, it takes less than a minute to photoread 38 pages, so I'll just do it.
+ 
+ What's next? Oh, I just realized, and just in case you haven't noticed, normally around here I'd have already chosen "read normally from the top of my head". This time, you're also implicitly setting a goal to "achieve results without any serious reading. So, what's next? The suggestion from the photo-reader is to "look for keywords." You can't suddenly swallow a complex system, so you need to chop it into bits and pieces of knowledge. Photo-reading suggests just looking for keywords and listing them, but I'm going to connect this to the KJ method, so I'm going to write keywords on sticky notes. The maximum time is 25 minutes, and if I feel that I have had enough during the process, I will stop. I'm measuring the time required and will use it as a goal to challenge myself when I read another paper in the future. Let's begin!
+ 
+ <hr>
+ 
+ Twenty-five minutes elapsed. Well, 25 minutes is more than enough time to extract keywords from a 38-page paper if it is natural language, but when I thought "all the formulas are keywords," it swelled to a huge amount and I only reached the 5th page of Lafferty's book. I may have taken the formula part too seriously. In the beginning, I should have kept it to "What symbols appear in the equation?" rather than "What is the equation font?" I should have kept it to "what kind of symbols appear in the equation? Also, Lafferty's CRF is for general graphs, so it was overspecified for my purpose of implementing a linear-chain CRF. It may have been a mistake in time allocation to stick so closely to Lafferty's formula when I knew that. Well, what I found out.
+ 
+ - Lafferty defines for general graphs
+ - Recursive computation of αβ as in HMM.
+ - There is a square matrix M whose 1-axis is the size of the label, similar to the transition matrix of an HMM
+ - I thought δ was Kronecker's, but he uses it like δμ. I wonder if this is an updated difference?
+ - I am wondering what the label-bias problem is. I know where it is written, but I haven't read it.
+ - I'm not sure what the notation "y|ei" means.
+ 
+ It's important to know what you don't know. Now, before we solve that, Sutton should also do at least 7 pages from Chapter 1.3 Linear-Chain CRF. In terms of the amount of formulas, if I do it at the same pace as I'm doing it now, I think I'll just about make it in 25 minutes.
+ 
+ <hr>
+ 
+ 25 minutes elapsed. only finished up to 1.26. Two pages shorter than planned. I'm reading the formulas too seriously. It's difficult to read the formulas in a straight line. I didn't need to read 1.26 seriously. This is just an expression of "I can write recursively. I'm getting narrow-minded, I guess. What I found out
+ 
+ - Does it say that BFGS is used because direct maximization is not possible during the parameter estimation phase?
+ - Do you want to include a regularization term?
+ - Are x and y both t-dimensional?
+ - Where was S defined?
+ - HMM-like CRFとlinear chain CRFは別物か
+ 
+ It's imperative that you read this section because it contains the alpha-beta recursion to the extent that you plan to read it and haven't read it yet. You should read there in the next 25 minutes and then re-read the whole thing again in the remaining time.
+ 
+ <hr>
+ 
+ 25分経過。
+ - This is not strange because T is in the time direction. My mistake> "Are x and y both T-dimensional?"
+ - There are two ways to avoid underflow: scaling and calculating in logarithmic space, and Sutton explains how to make the latter more stable.
+ - Sutton is working on ways to speed up the parameter estimation phase using L-BFGS; Lafferty says it can be obtained using Newton's method.
+ - Only the definition of Ψ is different between HMM and CRF, but the algorithm is the same
+ - HMM and HMM-like CRFs are naturally derived generating-discriminating pairs. I'd like to know more but it doesn't match my purpose, so I'll hold off.
+ - I wonder if Lafferty's A is like Q in the EM algorithm. Maybe it's a discussion about convergence, so it's not relevant to implementation.
+ 
+ I'm going to use Lafferty's Newton's method to solve this time since it will take me a long time to start studying L-BFGS The two papers have turned into a pile of sticky notes, and I'm going to use Lafferty's Newton's method to solve them. The next phase is to combine them.
+ 
+ f:id:nishiohirokazu:20111130152724j:image
+ 
+ <hr>
+ 
+ There were 95 sticky notes. Thinking over a can of Pepsi.
+ 
+ - Questions not related to this implementation
+ -- What is the label bias problem and why does CRF solve it?
+ -- What is L-BFGS?
+ -- What is a generating-discriminating pair?
+ -- Improved Iterative Scalingって何？(関係あるかも？)
+ - Relevant Question
+ -- How do you estimate the parameters?
+ 
+ <hr>
+ 
+ After 35 minutes of leisurely sipping Pepsi, thinking, rearranging sticky notes, and rereading the paper, I found out: the
+ - Lafferty even says "solve this equation" to estimate the parameters, so you can use Newton's method to solve the equation.
+ - Sutton says, "Solving with the Newton method is impossible for practical applications with many parameters because you have to calculate a Hessian the size of the square of the number of parameters. Using L-BFGS, which is a pseudo-Newtonian method, is fine because it consumes less memory," but the specifics are discussed in another paper.
+ - It said the δ was the update differential.
+ - I don't know where ~Efk or ~Egk is defined in the equation Lafferty is asking me to solve, but ~E[fk] is defined, so I guess he's referring to this, and ~Egk is supposed to define itself with reference to that?
+ - I was wondering why a and b were not defined in the equation I was asked to find, but the text says that they are the expected values of fk and gk. I guess I'm supposed to make up my own equation to find them.
+ 
+ What to do next. I feel like I can already start writing the equations directly in my college notebook, but in KJ-legal terms, I have to do the spatial arrangement first, then the serialization.
+ 
+ f:id:nishiohirokazu:20111202175241j:image
+ 
+ <hr>
+ Twenty-five minutes elapsed. I started to draw a diagram, thinking I could already go from the finish line to the start all at once, but I stumbled along the way.
+ - Efk and ~Efk are different things. Where is ~Efk defined?
+ - ~Efk and ~E[fk] are the same thing, then I guess this is the average under ~p(x, y) of fk.
+ - feature fk, gk says given, how do I give it?
+ 
+ Read more text in 25 minutes
+ - Tutorial on Natural Language Processing with Machine Learning: From Perceptron to CRF" Daisuke Okanohara
+ -- So, summing λkfk for k can be thought of as the inner product of the weight vector w and the feature vector Φ(x, y)?
+ -- OK if I only prime the vertices, fk means all 0's, right?
+ - MeCab Generic Japanese Morphological Analysis Engine Taku Kudo
+ -- "Correct cost < other costs" When you think about it together with the inner product story above, is there something like Passive Agressive going on inside?
+ 
+ <hr>
+ I am getting tired. I'm starting to feel a sense of entrapment. Perhaps a flower garden will be waiting for me when I get out of this long tunnel, but my heart is breaking here.
+ I've decided to hold off on thinking of it as similar to PA because of feedback from id:n_shuyo, which seems to be going in the wrong direction.
+ 
+ He tries to write down the knowledge he understands on the whiteboard, etc. After trying to explain to Mr. Hoshino what he was struggling with, he realized that he needed to understand how to find the gradient of the log-likelihood. It's a representation through dialogue.
+ 
+ f:id:nishiohirokazu:20111202182031j:image
+ 
+ <hr>
+ Time measurements are getting fuzzy due to fatigue and not being able to concentrate box for 25 minutes. There is no reliability in the passage of time in this area of the record.
+ 
+ - Maximum entropy model = loglinear model = linear logarithmic model = conditionally exponential model?
+ - IISはconditional exponential modelの尤度を最大化する手法
+ - It seems that one of the two terms in the expression for the gradient of the likelihood can be obtained by dynamic programming in the recursion of α and β
+ - If log(Z(X)) is differentiated by θ, it should be Ey'[Φ(y', x)], but the gap there is not filled.
+ - How Ey'[Φ(y', x)] maps to dynamic programming is also a gap
+ - These two gaps need to be bridged.
+ 
+ <hr>
+ 
+ Notes from lunchtime conversation with Ms. Nakatani
+ - ME (maximum entropy) is a strategy to select a distribution that has as little extra information (large entropy) as possible among possible distributions. For example, assuming that the uniform distribution has the least amount of information, minimize the KL divergence to the uniform distribution, and so on.
+ - Assuming a uniform prior distribution, ML and ME may or may not coincide.
+ - ME is compatible with loglinear
+ 
+ <hr>
+ - Sutton1.14's Z disappears in 1.15 because it is in both numerators and denominators?
+ - The derivative of the log-likelihood is calculated and Sutton1.22 is now in the equation. The first and second terms can be taken as the mean of fk under different distributions, and since the derivative is zero, these two means are equal. Is this the moment matching method we did at the EP method?
+ - The log-likelihood is in the form of a sum of logarithms, so it is a convex function
+ - The parameter θ is relevant only at the second item p(y|x;θ) of the derivative of the log-likelihood
+ - Both the distribution function Z(X) and the neighborhood distribution p(yt, yt-1 | X) are obtained forward backward
+ -- →How?
+ - p(yt, yt-1 | X) \propto αt-1(yt-1)Ψt(yt, yt-1, xt)βt(yt) (eq.Sutton1.34)
+ - p(X) = sum_xn α(xn) (eq.PRML13.42)
+ - The formula for the recursion of α and β is in Sutton.
+ 
+ Oh, you have all the parts you need for implementation?
+ 
+ Not yet.
+ 
+ p(yt, yt-1 | X) is ξ in PRML p334, and PRML p335 had a formula for how to update parameters using ξ in the M step, so I used that, but it's not written this time, so I have to find it myself.
+ I remember that p(yt, yt-1 | X) appears in Sutton 1.22 of the derivative of the log-likelihood, and in PRML, the expectation of the log-likelihood is maximized using the Lagrange undetermined multiplier method to derive the M-step formula.
+ I guess I need to review that part.
+ 
+ <hr>
+ 
+ Review the EM method and HMM.
+ - "To find Q, we need to find the moments. Since it is a multinomial distribution, the moments coincide with the parameters." What does that mean?
+ - I understand that the process of calculating Q requires sums for all possible series of hidden variables, and that this calculation can be saved by forward-backward, but I don't know what to do with argmax_theta afterwards once the values are obtained.
+ - Instead of finding Q as a single value, you're expressing it in terms of an equation composed of forward-backward values and parameters, and then using the Lagrange undetermined multiplier method to derive update equations for the individual parameters, PRML P334.
+ - CRF parameter estimation should be very similar to HMM parameters (by Sutton), so we need to gather and organize information about what is similar and what is different?
+ - Objective: To gather information on the similarities and differences between HMM and CRF parameter estimation. "1 Pomodoro
+ 
+ <hr>
+ 
+ Interrupted for lunch halfway through, then finished for 25 minutes.I think it is important to understand the Sutton 1.19 equation.
+ 
+ - So the θ' in 1.19 is not the old θ or the derivative of θ, but "some appropriate parameter". What you are saying here is "I'm going to maximize the conditional log-likelihood from now on, but θ doesn't affect p(x), so if I just want to consider optimizing for θ, I can consider simultaneous conditional probabilities".
+ - 1.20 simply substituted a term without regard to it; 1.21 simply added a normalization term to it.
+ - Is the differentiation of the normalization term in equation 1.22 correct, because with Sum_k attached, k disappears and I was thinking that I can't find the value of λk from the information that this equation is 0. If I differentiate the normalization term in 1.21, Sum_k is removed and λk is exposed naked, it seems.
+ - If so, the first and second terms on this right-hand side can be found forward-backward, so we can find λk such that the derivative is zero when the log-likelihood is at its maximum value, thus maximizing the log-likelihood. This should be good enough, right?
+ 
+ <hr>
+ 
+ Mr. Nakatani agreed with me that 1.22 seems to be wrong. After that, I thought I heard somewhere that CRF is the same EM algorithm as HMM, but I did not know where it corresponds to the Q function, and he pointed out that "Lafferty and Sutton's CRF solution method is not an EM algorithm. All my problems were solved.
+ 
+ To recap.
+ - Why was EMA used in HMM in the first place?
+ -- we want to maximize P(X | θ ) because we are learning without a teacher (we assume that the state of the series Z of hidden variables is not given)
+ -- but it is difficult to calculate this directly
+ -- P(X, Z | θ) can be easily computed
+ -- I'll use that one then.
+ 
+ - CRF is of the "I don't know anything about P(X, Z | θ), all I need is P(Z | X; θ) to make a discriminative model" school.
+ -- Optimize θ from X and Z given as teacher data by expressing P(Z | X; θ) as a log-linear model
+ -- Let's differentiate the log-likelihood ln p(Z | X ; θ) and optimize it as 0
+ -- →A value that seems to correspond to ξ at the time of HMM was found in the equation.
+ -- How to ask for this ξ
+ -- →We just need to put the Sutton 1.37 formula in the place where we used p(zt|zt-1)p(xt|zt) in the forward backward at the time of HMM and do the calculation.
+ -- You can't find the Q function by looking for it because it's different, albeit similar to HMM's EM algorithm.
+ 
+ <hr>
+ Something happened and time has opened up. My original intention of studying CRF was to deepen my understanding of HMM and CRF by learning both of them since they are both EM, but I came to the conclusion that CRF is not EM, so I wondered what I should do. Well, I still think I will go as far as the implementation of CRF as a confirmation that I understand what I have learned so far.
+ 
+ In a notebook, write out the formulas and what needs to be done in Japanese. I referred to http://www.slideshare.net/uchumik/crf-8416551 for how to make the elements.
+ 
+ <hr>
+ 
+ He said that he was bothered by the inf and nan of the proposal.
+ 
+ <hr>
+ The value of xi after the first estep is roughly in the range of probability values, so I guess it's correct, but the coefficient of the prime is -1.58295102e+67 after the first mstep, which must be wrong... -> alpha[t - 1] * ... * When I did beta[t], I started t from 0, so I could overstep the boundary, and the value of xi was on the order of e+66 only where the value of xi was 0.
+ 
+ <hr>
+ Isn't it strange that the output_features are all negative... oh, I'm specifying the subscripts wrong and they are broadcast...
+ 
+ <hr>
+ The alpha calculation now overflows. This is due to the fact that we are not taking logs right now, so we need to do some minor work according to Sutton's 1.55 formula.
+ 
+ <hr>
+ The range of values clearly began to oscillate, so I divided it by the norm of the weight vector and guaranteed that the normalization term was satisfied, and it converged to a value that looked like it.
+ If the gradient is subtracted as it is, the learning coefficient will oscillate if it is too large, so when it deviates from the constraint of the normalization term, it will be updated to keep the constraint at each step, but it may go too far and the amplitude will gradually increase...
+ 
+ <hr>
+ Implementation could be done.
+ [f:id:nishiohirokazu:20111216152854p:image]
+ 
+ <hr>
+ Organization of what we learned through this experiment
+ - Making all the formulas sticky notes in the keyword extraction phase is overkill, it is like being told to "pick out keywords" and then excerpting the bolded sentences.
+ - It was good to have high motivation at the start to get off to a good start. If you get stuck after the start dash, you can "try to explain to others and see what they don't understand" or "correct your vague understanding with pointers from others. If you are stuck without trying, you cannot do that.
+ - Output is still a great advantage: "I can see what I don't understand," and "I may be able to point out when I understand something incorrectly.
+ </body>
+
+[Hatena Diary 2011-12-16 https://nishiohirokazu.hatenadiary.org/archive/2011/12/16]

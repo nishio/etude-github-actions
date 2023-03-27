@@ -1,0 +1,31 @@
+Hatena2015-01-21
+code:hatena
+ <body>
+ *1421848052*How to debug interactively when you hit Flask from JS and get an error.
+ Werkzeug, the web application framework Flask (used internally by Werkzeug), can be debugged by turning on debug mode, which allows you to interactively execute code and display variables in the browser from the error screen when an error occurs. This is extremely convenient. However, recently there have been many cases where the API is called from JS, and in such cases, the JS receives unexpected HTML and fails to parse it, so the interactive debugging cannot be used.
+ 
+ So, in the event of an error, a new window is opened and the response is written to that window. Only the first time the popup block is triggered, but after that, the API can be debugged interactively with this.
+ 
+ >|js|
+ $.ajax({
+   url:'/buggy/', 
+   data: 'q=42', 
+   success: function(x){console.log(x)}, 
+   error:function(x){
+     var w = window.open('', 'debug_stuff', 'width=540,height=150');
+     w.document.open();
+     w.document.write(x.responseText);
+     w.document.close();
+   }
+ });
+ ||<
+ 
+ Regarding the idea of pdb debugging on the server (thanks @cocoatomo), I can debug interactively on the console if I stop with pdb.set_trace() in the server code, but if I do python -mpdb server.py, exception occurs It doesn't enter the interactive debugger as it waits for a time. Perhaps it is interfering with Flask's own exception handling.
+ 
+ I've found the following article to be very helpful: "I just keep the stack trace alive and redirect it to the debug screen, so you can open the debug screen by picking up the redirection URL and accessing it from your browser." (thanks @methane) was very helpful, but it looks like there is no redirection in my environment, and also XMLHttpRequest accesses the redirected URL by itself, which is troublesome.
+ 
+ This advice inspired me and eventually led me to what is written here: the
+ <a href='http://stackoverflow.com/questions/9741628/posting-json-and-python-flask-any-techniques-to-use-the-werkzeug-debugger'>debugging - Posting JSON and python Flask - any techniques to use the Werkzeug debugger? - Stack Overflow</a>
+ </body>
+
+[Hatena Diary 2015-01-21 https://nishiohirokazu.hatenadiary.org/archive/2015/01/21]

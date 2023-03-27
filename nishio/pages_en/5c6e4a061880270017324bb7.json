@@ -1,0 +1,56 @@
+What should happen when a compressed sticky is decompressed?
+2021-06
+ The overlay in [Select and Compress Stickies UI Design] can be interpreted as "a group that automatically closes when it loses focus".
+ 　It doesn't have to be a modal dialog or anything.
+ Just have "open groups" and "closed groups."
+
+2019-06の議論 [付箋の選択・圧縮 UI設計]
+
+Discussion of 2019-04---.
+[Regroup]の実装
+[https://gyazo.com/87cbfe1b54375cbe795e14ac7c4dbea8]
+
+	Relative positions of children should be preserved
+		Location has meaning.
+		There is an advantage over the paper KJ method in that this can be done.
+	Child scales should probably be preserved
+		At least, they are so dense before compression that they overlap if you get them closer than that.
+		I don't think it should be spread out and scuttled.
+	Absolute position of the child should not be preserved
+		If you move the parent sticky after compressing it, you will not be happy if the child sticky appears in its original position when you expand it.
+		The position of the child should be stored relative to the center of gravity, and when compressed, the parent sticky should be displayed at the center of gravity, and when expanded, it should be restored at a position relative to that center of gravity
+
+And that's what happens when you think about the natural way to do it.
+	Post-compression scuffing
+	Further grouping of parent stickies = proximity
+	Expand it.
+When you follow the flow of the "What's the point of the stickies?
+What to do?
+
+案1: 物理演算で反発
+	Demonstratively good looking, but unpredictable in behavior.
+	It makes no sense for the opening and closing of one group to affect the position of surrounding stickies.
+	没
+
+Proposal 2: It doesn't have to be a Euclidean space.
+	That's true, but I'm not sure if users will recognize it naturally.
+	保留
+
+Idea 3: Zoom out what doesn't fit
+	[https://gyazo.com/29b4f6a57c7a999567d808fef8718494]
+	If you zoom in, it will be the original size.
+		In doing so, C should not be larger than equal
+		As a simple View layer implementation, "If a sticky is about to overlap with another sticky, it will be shrunk and displayed to the extent that it does not overlap.
+		In this case, the relative position scale of the child is not preserved
+			(It is possible to edit the absolute position on the C side while preserving the scale, but it makes no sense.)
+		As an implementation of View, it is possible to choose "it is only the positional relationship that shrinks with shrinking, not the size of the sticky" in the first place.
+			It's not intuitive, but can you get used to it?
+			[https://gyazo.com/54e280f0069a412d9dfd978cc048d1f7]
+			I think it's surprisingly good.
+→ Metaphor in which the entity is a point
+	The question of whether the size of stickies should increase when the viewpoint is scaled up or down.
+	If the metaphor is that the sticky note itself with its width is a physical entity, it is implicitly limited by "a reasonable size for a human".
+	Only the central dot is an entity.
+		And it's just one point in a multidimensional space, projected onto the current screen coordinates.
+		[Sticky note position is a multidimensional vector].
+[pRegroup2020]

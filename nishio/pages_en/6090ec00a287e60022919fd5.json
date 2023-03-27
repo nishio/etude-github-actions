@@ -1,0 +1,119 @@
+Hatena2009-07-21
+code:hatena
+ <body>
+ *1248166829* Painting of the Day
+ Resampling by the bicubic method was implemented.
+ 
+ <img src="http://gyazo.com/7c957be867cdb483d5358af99f6bea4e.png">
+ 
+ The bicubic method is often associated with image scaling and rotation, but it's not limited to that. Since the method samples the values of non-integer coordinates of a given image, you can play with various transformations.
+ 
+ <img src="http://gyazo.com/a8b98fc7bfd1a791fe3a54cf63c20137.png">
+ 
+ This will allow me to expand the range of my artwork. I think the pattern on the lower left is due to the size of the pixel, so it will not be a problem when printed at about 1/16 mm per pixel. However, it takes 6 seconds for this size, and it would take 10 minutes for A3, which is 100 times larger than this size. I'll have to look into it to see if there is any room for speeding up the process.
+ 
+ Source code, I noticed a mistake the moment I pasted it (forgot to put const &) 6.49sec -> 1.94sec. There are still some stupid mistakes.
+ 
+ >|cpp|
+ double get_pixel(const GrayCanvas& src, int x, int y){
+   // if (x, y) out of canvas, return nearest value
+   if(x < 0) x = 0;
+   if(y < 0) y = 0;
+   if(x >= src.width) x = src.width - 1;
+   if(y >= src.height) y = src.height - 1;
+   return src.image[y][x];
+ } 
+ 
+ void _bicubic(double t, vector<double> &ks){
+   double t2 = t * t, t3 = t2 * t;
+   ks[0] = 0 + -1 * t +  2 * t2 + -1 * t3;
+   ks[1] = 2 +  0 * t + -5 * t2 +  3 * t3;
+   ks[2] = 0 +  1 * t +  4 * t2 + -3 * t3;
+   ks[3] = 0 +  0 * t + -1 * t2 +  1 * t3;
+ }
+ 
+ double _dot_product(const vector<double>& xs, const vector<double>& ys){
+   double result = 0.0;
+   for(size_t i=0; i<xs.size(); i++){
+     result += xs[i] * ys[i];
+   }
+   return result;
+ }
+ 
+ double get_bicubic(const GrayCanvas& src, double x, double y){
+   double t = x - floor(x);
+   vector<double> ks(4);
+   _bicubic(t, ks);
+   vector<double> xs(4), ys(4);
+   for(size_t i=0; i<4; i++){
+     for(size_t j=0; j<4; j++){
+       xs[j] = get_pixel(src, floor(x) - 1 + j, floor(y) - 1 + i);
+     }
+     ys[i] = 0.5 * _dot_product(ks, xs); 
+   }
+   t = y - floor(y);
+   _bicubic(t, ks);
+   return 0.5 * _dot_product(ks, ys);
+ }
+ ||<
+ 
+ I guess I shouldn't create a vector in get_bicubic since get_bicubic is hit for every pixel. Well, I'll multiply the profiler later.
+ 
+ Time taken to implement: 1 hour, time it took me to get motivated: 7 days (ugh!)
+ 
+ <hr>
+ 
+ I did some profiling on the train on the way there and back: 3m49.047s at 100x size (360 DPI on A3), but the bottleneck was not bicubic resampling.
+ <img src="http://gyazo.com/de9cffd958513c7d76c3041161592d58.png">
+ The gauss is a code that calculates the Gaussian distribution on its own and adds and combines it, which is heavy, of course. Well, let's use FFT to speed up the process.
+ 
+ Today's drawing image
+ <img src="http://gyazo.com/b99600d01f87a880505be82930f742fd.png">
+ <img src="http://gyazo.com/1a9e6ab11fecf562eb969951a47f2d27.png">
+ <img src="http://gyazo.com/66c4b0cd5f865b6e3fcba0cb2af88ec4.png">
+ 
+ *1248191853*Motivation Engineering
+ Unorganized list for motivation
+ 
+ - Is the "lack of motivation" acute or chronic? If it is acute, you should suspect poor physical condition (Added on 2011-09-09)
+ - If I go about 12 hours without sugar, I feel sick and unmotivated. If I don't eat when I feel hungry, I don't feel hungry anymore and feel "kind of unmotivated" or "kind of sluggish".
+ - If you are in an airtight room without ventilation for a long time, you may feel sluggish and unmotivated because the oxygen level may decrease. Ventilating the room is a good idea. Sitting still, unrelated to ventilation, can cause similar symptoms. Aerobic exercise, such as a walk, can help. (Added on 2011-10-20)
+ - The body temperature is abnormally high because you are unaware that the temperature should be cooler. Mild dehydration.
+ - Body temperature is too low and sleepy. Warming up may fix the problem. (Added on 2010-12-30) Body temperature drops too low, causing stiffness in the shoulders, which may lead to headaches. (Added on 2011-10-20)
+ - Not sleeping. Brain is too tired to notice fatigue. Fatigue → brain narcotic secretion → work at high tension all night → run out of narcotics, and so on and so forth. You are unable to act productively or are very unproductive, but you do not feel like going to sleep. You are not aware of the option to sleep, or you are not sleepy. I am so numb from the narcotics in my brain that I don't even realize how tired I am, so when I get under the covers and close my eyes, I can fall asleep quite easily.
+ - Not awake. You have slept too long and have not awakened from your "shallow sleep" state. Shower, bathe, rinse your face with water, coffee, eat the type of food that moves your jaw and sends blood flow to your brain, exercise, change clothes and walk to the station, trace a regular pattern each morning, listen to music that wakes you up, etc. Getting up at the same time on holidays as on weekdays is also helpful. (Added on 2011-09-09)
+ - Noise, eye stimulation, and other situations that cause extreme distraction. Run away from the area or use a sun visor, a screen, sunglasses, earplugs, or muffled headphones to protect yourself.
+ - A case in which a flickering sensation in the eyes or a feeling of restlessness in the head is actually a light headache. It can be easily resolved by simply taking a headache medicine. (2011-09-09)
+ - The number of tasks is too many than can be handled and the brain is in a confused state where it cannot decide what to do. There are so many things that need to be done, but we end up doing things we don't need to do. In computer terms, it's like opening too many applications and running out of memory and your hard disk is whirring.
+ -- The solution is to add memory (write the contents of the task in a storage medium such as a notebook other than your own brain).
+ -- Quit the application (give up some tasks. Ask someone to do it for you. Hire someone with money to solve it. Decide not to care. Define it as not a task in the first place).
+ -- Go to a place with less external stimuli and settle down for a while.
+ -- "I can only do one at a time!" and chant, "I can only do one task at a time!" and then transcribe only the top task onto a fusen and move the other tasks out of sight. I don't think about the rest of the tasks until I finish the task on this fusen. (Added on 2011-09-09)
+ - A task is written on a piece of paper, and it is clear that you have to do it, but you don't have the motivation to start it.
+ -- The goal of the task (the target to be achieved) is ambiguous. It would be easier if there were quantifiable goals and progress. What is the point at which this task is complete?"
+ -- Goal setting is wrong. If you set a goal that cannot be achieved by effort or that involves luck, you will not feel a sense of accomplishment, and you will lose heart along the way. Understanding" is not a goal; you cannot measure how much progress you have made in an hour's effort. You have to set a goal that can be achieved with effort, such as "read ~" or "transcribe sample code. (2011-09-09)
+ -- I cannot see the path to the goal of the task. I don't know in which direction to take the first step because I lack the information needed to start the task and take the first step. What would you do if you could only advance this task for five minutes?" If you can't answer the question "What would you do?" then what you need to do is clarify it.
+ -- They do not see the significance in accomplishing the task. In fact, they don't want it to be accomplished because they don't realize it. There is a benefit by not accomplishing it. The benefits of accomplishing the task are small compared to the pain of the task. I feel as if. I write down on paper the advantages and disadvantages of doing the task. (Darwin wrote down the advantages and disadvantages of marriage on a piece of paper.) If, after rational consideration, you find that the disadvantages are too great, you should stop. (Tasks are also "techniques for discarding")
+ --- Advantages before disadvantages of doing. The clarification of the disadvantages of doing can result in further loss of motivation. In particular, uncertain negatives tend to feel like bigger disadvantages than expected ones. If no action is taken as a result of considering the disadvantages, nothing new is available to make a decision. (2011-09-09)
+ - The view has become fixed. They stand in front of a wall and say, "I can't think of a way to get over the wall. But I have to go over it. If you walk along the wall instead of standing still, you may find a door. Change your perspective. If it is written in writing, change it to a diagram. If it is written in writing, change it to a diagram. Make a mind map. Write down the information in your brain. Verbalize it and talk about it with others. Change your location. Try using English. Dare to express yourself without using words. Knead clay. Use drugs that interfere with the brain state (well, legally, like alcohol).
+ - A reverse deadline effect (coined term) is occurring: the psychological state in which you are unable to work because you are concerned about the clock, even though you should be able to work for 50 minutes, with the condition that if you do not leave in 60 minutes, you will not be able to meet your next appointment. You measure and understand in advance how many minutes you need to get ready to go out, and set the timer backward by that amount of time. Include in the "getting ready to go" the time to save your work in progress and record how far you have gone.
+ -- It is important to measure your work on a regular basis. That way, you can decide, "This task should take 15 minutes, so I can start it now.
+ - Use the deadline effect. You tell your friends, "I'm going to do something in 20 minutes," and you often read in books that you should chop two hours into 15-minute increments, but if you can accurately estimate, "This part of the task will take 15 minutes, and if you repeat it eight times, the task will be finished," you will have no trouble. If you can accurately estimate that this part of the task will take 15 minutes, and after repeating it eight times, the task will be completed, you won't have any trouble. If you are feeling unmotivated and feel like slacking off for two hours, it might be better to think about doing one thing that can be done in 15 minutes or less without fail before slacking off for two hours. Inexperienced tasks take twice as long as estimated; if you have to leave in 30 minutes, you'll do the task you thought you could do in 30 minutes, leaving you with an unfinished task that's only half done. Then, you are so caught up in your schedule that you don't properly record "how far you've gotten," wasting time the next time you resume the task. There should be a margin of about 5 minutes between tasks.
+ - My task list is getting too huge and I get depressed every time I look at it. I rename it to "Someday list" except for very important things that I have to do today. For things that are very important and have deadlines that are not today, I write down the dates in a schedule book or something that I have to start. The ones that are not, you can't do all of them after all, and you should just leave them in the salt.
+ - Finding and solving puzzles without doing what needs to be done -> problem-solving skills are wanted to be used, but "what needs to be done" is not crushed to a size that can be solved.
+ - Doing the work has been coupled with some pain in the past, and I subconsciously dislike it. I can't get started. Start a little and pat yourself on the back for starting.
+ - You are thinking too much about perfecting the task from the beginning. Or, they spend too much time honing their skills to get it done perfectly and never start the task.
+ - Drop what you have to do and do what you are happy to do.
+ - Is that "something you have to do" something you really have to do? Are you playing the role of the "perfect you" that you have created in your mind? (2012-09-09)
+ - Symptoms of doing what you want to do instead of doing what you "have to do" and suffering later from a lack of self-control. Think about what is causing that "must-do" avoidance of the mental activity.
+ - Often, talking to others about your problems can help.
+ 
+ I wrote down what came to mind.
+ 
+ *1248192857* Observations before debugging
+ <img src="http://gyazo.com/f1bdc9f91d078c80eb3b640b2745dbf5.png">
+ 
+ I thought it was a good example of how it's important to remember that the phase of observing what's happening is also important, instead of immediately starting the debugger with "Wow, something different from the planned output! I thought it was a good bug image to illustrate the importance of observing what is going on, rather than immediately launching the debugger.
+ </body>
+
+[Hatena Diary 2009-07-21 https://nishiohirokazu.hatenadiary.org/archive/2009/07/21]

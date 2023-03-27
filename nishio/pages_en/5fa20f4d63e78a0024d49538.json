@@ -1,0 +1,18 @@
+loop detection
+ Given [$ f(x)], I want to find [$ f^n(x)] fast
+ 　fの定義域・値域は共通の有限集合
+ 　The starting point x is a single
+ 　If the size of the definition region is D and the maximum value of n is N, then the pre-processing O(D) can be made into the main process O(1)
+	前処理
+	　Prepare two arrays A and B
+　	[$ A: f^i(x) \to i]
+　	[$ B: i \to f^i(x)]
+　Fill this array by incrementing i
+　If Ai is not the initial value, it is a loop
+　Can be determined by constant order.
+　Worst case scenario, a loop is found by D
+	本処理
+		i, Ai to the loop and the length of the path and the length of the loop until it enters the loop.
+ 		loop_start = Ai
+ 		loop_length = i - Ai
+		定数オーダー[$ f^n(x) = (n - A_i) \% (i - A_i)]

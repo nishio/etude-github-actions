@@ -1,0 +1,55 @@
+Coyote Analysis
+from [simplification of existing game].
+[coyote]
+	24 cards for 0 to 5, 3 cards for 10, 2 cards for 15, 1 card for 20, 2 cards for -5, -10, x2, MAX to 0, ? 1 each
+ Cards are dealt to each player and only yours can see them.
+  Indian poker-like
+ Must say a number less than or equal to the total
+ 選択肢
+  A number greater than or equal to one.
+  Point out that the number said by the person immediately preceding you exceeds the total number (coyote).
+ For simplicity, assume that there are only two types of cards, 0 and 5.
+  For example, suppose the cards dealt are 0, 5, 0.
+  If the first person answers 1, the fact is that the total value is not exceeded, but the second person interprets it as "the total value may be exceeded" because the sum of the numbers visible to him is 0
+   If the probabilities of 0 and 5 are equal,
+    If you are a coyote, you get -1(0) for others in 1/2 and -1(5) for yourself in 1/2,
+    If you are not a coyote yourself,
+     If the next coyote is -1(0) for you in 1/2, -1(5) for others in 1/2.
+     If the next one does not coyote, no change in life for now.
+   So 1/2 is the threshold for coyote or not.
+ For simplicity, assume the cards are only 0 and 1. Suppose the cards dealt are 1,0,1,0,1.
+ 	Sample 1
+   Suppose the first player says 1, thinking the total is 2 or 3.
+   I think the second player has a total of 3 or 4, say 2.
+   I think the third player has a total of 2 or 3. 2 is obviously not over so can't coyote, say 3.
+   The fourth player thinks the total is 3 or 4. I say 4 for the same reason.
+   I think the fifth player has a total of 2 or 3. Coyotes. Correct answer.
+  Sample 2
+   Suppose the first player says 2.
+   I think the second player has a total of 3 or 4, say 3.
+   The third player is called 4.
+   I think the fourth player is 3 or 4. I can't be sure, but if I say 5, I am sure I will be coyote, so I have to coyote. Correct answer.
+  Sample 3
+   Suppose the first player says 3.
+   I think the second player has a total of 3 or 4, say 4.
+   I think the third player is 2 or 3. Coyote, success.
+ Assume there are only 0-5 cards.
+  The 1/2 line is the total number of numbers visible from you plus 3.
+  In other words, the bigger your number, the lower the line appears to be.
+  People with high numbers coyote others faster because the line appears to be lower.
+  Those who have less are coyoted by others because the line appears to be higher.
+ Theoretically, you can calculate how much the sum of the fields is for each "value you can have" and use the median as the threshold value.
+ But it's hard in terms of human computational power.
+  Maybe not if you're an abacus expert, but at least it's difficult for me.
+ I'm guessing what your card is based on someone else's behavior, which would be in the form of doing the above calculation based on the assumption that it's equally probable, and then tweaking it from there.
+  Computational difficulties.
+  When playing like a party game, there is a lot of noise due to bluffing or just plain misunderstanding.
+ Can you save computing power?
+  24 cards for 0 to 5, 3 cards for 10, 2 cards for 15, 1 card for 20, 2 cards for -5, -10, x2, MAX to 0, ? 1 each
+  If max -> 0 is a card that reduces a lot and x2 is a card that increases a lot (which is often the case)
+  Well, the median is 3.
+  ? can be thought of as 3
+  There is a 67% chance that the card is 0-5, and about a 33% chance that it is far off the top or bottom.
+  If you can afford it, worst case scenario.
+   Upper side if I have 20 and x2
+   You can measure the lower side if you have -10 or if you have MAX→0

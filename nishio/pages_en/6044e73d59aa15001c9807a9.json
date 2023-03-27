@@ -1,0 +1,85 @@
+AGC052
+I was on the verge of tears thinking it was too difficult and I would have to withdraw with a score of zero, but after 90 minutes, I finally solved one question.
+I looked at other problems, but I couldn't get a clue, so I gave up.
+[https://gyazo.com/c53876b197c7249dda9cf2a2b4b1418e]
+
+I thought the rate would go up because it was subjectively very difficult, but it went down. It seems that it is normal to be able to do this much...
+[https://gyazo.com/66c270de964038a555735b3454023271]
+
+[A - Long Common Subsequence https://atcoder.jp/contests/agc052/tasks/agc052_a]
+[https://gyazo.com/6cf081a57a9cdab37bc93950e9df8a50]
+	[Build one, problem], so I thought there might be an "easy-to-build" construction method, like the greedy method or something.
+	I thought of having the "next 0/1 place" for each of the three strings in order from the beginning, and then choosing the option with the largest one being the smaller one.
+	　Linear Order
+	　I can't think of any proof.
+	　Let's just submit it and see what happens.
+	　Results WA and TLE
+	TLE was unexpected.
+	　I thought it was fast enough because of the linear order.
+	　Looking at the problem conditions... 10^10 even in linear order...
+	　That means we need to come up with a construction method that doesn't loop over totally different strings.
+　　I don't know, so I look at other problems.
+　Try to create a code that enumerates solutions by brute force.
+　	code:python
+   for t in itertools.product("01", repeat=N * 2 + 1):
+       if all(isSubStr(s, t) for s in SS):
+           print("".join(t))
+　　Fast, as it only tests 32 candidates at most in the N=2 case, and can be used for observation
+　　I have observed all the solutions and there are usually always just two or three separate rows.
+　I noticed that there is an obvious solution for a length of 2N.
+　　For example `"0" * N + "1" * N`.
+　There are four possible combinations of the first and last in each column.
+　　Since there are three strings, there are more than one "unused combination"
+　　For example, if 0 and 0 are not used, then there is always a 1 sandwiched between 0 in the center, so `"0" * N + "1" + "0" * N` is a solution.
+　　　伏線A
+　　Same for 1,1
+　　I'm not sure if it could be either at 1,0 or 0,1? I thought that WA
+　Make a sample data of N=2 and pick out the ones where the solution is incorrect and observe the brute force whole enumeration.
+		code:python
+		 def randomtest():
+       import itertools
+       xs = [bytes(x) for x in set(itertools.permutations([48, 48, 49, 49], 4))]
+       from random import seed, choice
+       N = 2
+       for s in range(1000):
+           seed(s)
+           args = [choice(xs), choice(xs), choice(xs)]
+           answer = solve(N, args[:])
+           if not isOK(N, args[:], bytes(answer, "ascii")):
+               ss = [bytes(s).decode("ascii") for s in args]
+               print(ss, flag, answer)
+               blute(N, args)
+               print()
+　　Now that I know what kind of time to answer incorrectly, I've got a work-around.
+　AC
+　	code:python
+　	 def solve(N, SS):
+       flag = [1] * 4
+       for i in range(3):
+           j = (SS[i][0] - 48) + (SS[i][-1] - 48) * 2
+           flag[j] = 0
+   
+       if flag == [0, 1, 0, 0]:
+           return "0" * N + "1" * N + "0"
+   
+       if flag == [0, 1, 1, 0]:
+           return "0" * N + "1" * N + "0"
+   
+       if flag == [0, 0, 1, 0]:
+           return "1" * N + "0" * N + "1"
+   
+       for i in [0, 3, 1, 2]:
+           if flag[i]:
+               if i == 0:
+                   return "0" * N + "1" + "0" * N
+               if i == 1:
+                   return "0" * N + "1" + "1" * N
+               if i == 2:
+                   return "1" * N + "1" + "0" * N
+               if i == 3:
+                   return "1" * N + "0" + "1" * N
+
+公式解説
+　We can reduce the number of cases.
+　I think the pattern is [build one -> loosen the conditions and there is an obvious solution], considering the flow of my thoughts and the hints in the official explanation.
+

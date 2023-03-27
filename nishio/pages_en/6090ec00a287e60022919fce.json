@@ -1,0 +1,190 @@
+Hatena2009-07-14
+code:hatena
+ <body>
+ *1247538392* Hatena said "iPhone is not a cell phone".
+ <img src="http://gyazo.com/0f2a4974c9fab649c0818e33e732baff.png">
+ 
+ *1247538890*Test
+ 
+ 
+ iPhoneから送信
+ 
+ **1247545805* Question on how to express a perfect shuffle as a product of compatibility.
+ Here, a perfect shuffle means that the bottom and top halves of the 2n cards are shuffled so that they overlap alternately in the order "bottom top bottom top". In mathematical terms, it is the substitution of the top half (0 <= i < n) into (i + 1) * 2 - 1 and the bottom half (n <= i < 2n) into (i - n) * 2.
+ 
+ This substitution can be expressed as a combination of two cards exchanged (interchangeable).
+ 
+ >||
+ 0┬1
+ 1┴0
+ ||<
+ 
+ >||
+ 0┬┬2
+ 1┴│0
+ 2┬│3
+ 3┴┴1
+ ||<
+ 
+ There are many ways to combine them.
+ 
+ >||
+ 0┬┬á 3
+ 1┴│ 0
+ 2 │┬4
+ 3┴│1
+ 4┬ │5
+ 5┴ ┴2
+ 
+ 0┬┬á 3
+ 1┴│ 0
+ 2┬┴┬4
+ 3┴┬┴1
+ 4┬│ 5
+ 5┴┴ 2
+ 
+ 0┬┬┬3
+ 1┴││0
+ 2┬│┴4
+ 3┴│┬1
+ 4┬││5
+ 5┴┴┴2
+ ||<
+ 
+ What is the most beautiful combination among several ways of combining them? Of course, "what is beautiful" is not defined, so you can define it freely. In the example above, the third one is the most beautiful, based on the assumption that the top and bottom are symmetrical and that the higher the density of the ruled line elements (such as┬), the more beautiful it is.
+ 
+ We know that we can draw a diagram with 100% density at least up to n=4. The open question is whether this is true for any n, and if not, is there a better definition of "beauty"?
+ >||
+ 0┬┬┬4
+ 1┴││0
+ 2┬││5
+ 3│┴│1
+ 4│┬│6
+ 5┴││2
+ 6┬││7
+ 7┴┴┴3
+ ||<
+ 
+ <hr>
+ I wrote a program to enumerate all the substitutions with 100% symmetric density, n=7. The question is whether this combination of substitutions for any n can make a perfect shuffle. As n increases, the number of "substitutions with 100% symmetric density" increases exponentially (Fibonacci), so I think the possibility of making a perfect shuffle will increase.
+ >||
+ ├────────────┤
+ ├┤├────────┤├┤
+ ├┤├┤├────┤├┤├┤
+ ├┤├┤├┤├┤├┤├┤├┤
+ ├┤├┤├─┤├─┤├┤├┤
+ ├┤├─┤├──┤├─┤├┤
+ ├┤├─┤├┤├┤├─┤├┤
+ ├┤├──┤├┤├──┤├┤
+ ├┤├───┤├───┤├┤
+ ├─┤├──────┤├─┤
+ ├─┤├┤├──┤├┤├─┤
+ ├─┤├┤├┤├┤├┤├─┤
+ ├─┤├─┤├┤├─┤├─┤
+ ├─┤├──┤├──┤├─┤
+ ├──┤├────┤├──┤
+ ├──┤├┤├┤├┤├──┤
+ ├──┤├─┤├─┤├──┤
+ ├───┤├──┤├───┤
+ ├───┤├┤├┤├───┤
+ ├────┤├┤├────┤
+ ├─────┤├─────┤
+ ||<
+ 
+ <hr>
+ 
+ >||
+  0 1 2 3 4 5
+ ├┤├┤├┤
+ ├────┤
+ ├─┤├─┤
+  3 0 4 1 5 2
+ 
+  0 1 2 3 4 5 6 7
+ ├┤├──┤├┤
+ ├──┤├──┤
+ ├──────┤
+  4 0 5 1 6 2 7 3
+ ||<
+ 
+ Up to this point, I solved the first two cases by hand. Next is the case n = 5, which is a little difficult to solve by hand and I chose to solve it by program.
+ 
+ >||
+  0 1 2 3 4 5 6 7 8 9
+ ├─┤├┤├┤├─┤
+ ├───┤├───┤
+ ├─┤├──┤├─┤
+ ├┤├────┤├┤
+ ├──┤├┤├──┤
+  5 0 6 1 7 2 8 3 9 4
+ ||<
+ 
+ Hmmm... This is indeed correct. The computer is smart enough to come up with n=6 right away.
+ 
+ >||
+  0 1 2 3 4 5 6 7 8 91011
+ ├┤├─┤├┤├─┤├┤
+ ├─┤├─┤├─┤├─┤
+ ├──┤├┤├┤├──┤
+ ├┤├┤├──┤├┤├┤
+ ├┤├──────┤├┤
+  6 0 7 1 8 2 9 310 411 5
+ ||<
+ 
+ The n=7 also took about 1.5 minutes, but I got the result.
+ >||
+  0 1 2 3 4 5 6 7 8 910111213
+ ├┤├┤├┤├┤├┤├┤├┤
+ ├─┤├┤├──┤├┤├─┤
+ ├─────┤├─────┤
+ ├┤├┤├┤├┤├┤├┤├┤
+ ├┤├────────┤├┤
+  7 0 8 1 9 210 311 412 513 6
+ ||<
+ The number of tree branches increases exponentially as n increases. n=8 does not seem to be computable with this policy. Now, the search is based on the condition that the distance to the goal is monotonically non-increasing, but if this condition is strengthened to monotonically decreasing, the answer will not be found for n=8.
+ 
+ >||
+  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 
+  |--|  |--|  |-----|  |--|  |-----|  |--|  |--| 
+  |-----|  |--|  |--------------|  |--|  |-----| 
+  |--|  |--|  |--|  |--------|  |--|  |--|  |--| 
+  |--|  |--------------------------------|  |--| 
+  |--------------------|  |--------------------| 
+  8  0  9  1 10  2 11  3 12  4 13  5 14  6 15  7 
+ ||<
+ 
+ After tuning, I was able to finish n = 8 in 30 seconds. Incidentally, n = 7 shrank from 90 seconds to 3 seconds, but then n = 8 is 30 seconds, so n = 9 is going to be tough.
+ 
+ *1247576139*日記
+ I bought a pair of 100 yen sunglasses at Daiso and they improved my quality of life by reducing the glare from the lights when I had eye strain.
+ 
+ 
+ I learned that bell peppers can be eaten raw, so today I ate two bell peppers and a carrot. Vegetable sufficiency.
+ 
+ *1247579980*LifeGameAction
+ http://nao684.blog124.fc2.com/blog-entry-5.html via @TOKOROTEN
+ 
+ <img src="http://gyazo.com/d9a18e34453e2e75e2f53f5de4dec4e7.png">
+ 
+ It was quite interesting. I have to make good use of the foothold with C to get there. I had to make good use of C to make a foothold, bouncing on the yellow cloud and leaving the glider between the blue and red clouds, and so on.
+ 
+ *1247586103*File attached
+ I can't find the menu. How do I attach pics to my email?
+ 
+ iPhoneから送信
+ 
+ 
+ Change your mindset and instead of attaching a photo to an email, email the photo to
+ I decided to send it.
+ 
+ 
+ 
+ 
+ iPhoneから送信
+ 
+ PS, I was able to upload photos from my iPhone to PhotoLife via email, but due to a problem on Hatena's side, they were not pasted into my diary.
+ 
+ Photo Life is broken when viewed on iPhone and difficult to copy id's. It's a hassle!
+ </body>
+
+[Hatena Diary 2009-07-14 https://nishiohirokazu.hatenadiary.org/archive/2009/07/14]

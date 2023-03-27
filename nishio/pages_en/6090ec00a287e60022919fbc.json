@@ -1,0 +1,80 @@
+Hatena2009-06-27
+code:hatena
+ <body>
+ *1246078241* Distractions.
+ It's hard to concentrate on work in the midst of all the talk about RabbitMQ, Q4M, OCaml, suidperl, etc., etc., etc., etc., etc., so I blogged about it anyway. So I blogged about it anyway. Blogging is a step-by-step explanation, so it's easy to remember where I've been, even if there are interrupts along the way.
+ 
+ 
+ Reproduction code for a known bug in the minimum hash function generator: minimum hash of a pattern with 4 pieces in 5 squares.
+ >|python|
+     r = Resource(5, "X")
+     koma1 = r.take("koma1")
+     koma2 = r.take("koma2")
+     koma3 = r.take("koma3")
+     koma4 = r.take("koma4")
+     All = And(And(And(koma1, koma2), koma3), koma4)
+     s = en_decoder.CppRenderer.get_test(All, {"X": []})
+     file("tmp.cpp", "w").write(s)
+ ||<
+ 
+ Generated decoder
+ 
+ >|cpp|
+     and9 = input_value;
+     // And(And(And(Take(Resource(X)), Take(Resource(X))), Take(Resource(X))), Take(Resource(X)))
+     and8 = and9 / 2;
+     take3 = and9 % 2;
+     // And(And(Take(Resource(X)), Take(Resource(X))), Take(Resource(X)))
+     and7 = and8 / 3;
+     take2 = and8 % 3;
+     // And(Take(Resource(X)), Take(Resource(X)))
+     take0 = and7 / 4;
+     take1 = and7 % 4;
+     // Take(Resource(X))
+     koma1 = take0;
+     // Take(Resource(X))
+     koma2 = take1;
+     if(koma1 <= koma2) koma2++;
+     // Take(Resource(X))
+     koma3 = take2;
+     if(koma1 <= koma3) koma3++;
+     if(koma2 <= koma3) koma3++;
+     // Take(Resource(X))
+     koma4 = take3;
+     if(koma1 <= koma4) koma4++;
+     if(koma2 <= koma4) koma4++;
+     if(koma3 <= koma4) koma4++;
+ ||<
+ 
+ When the input is 24, it is first divided by 2 to get 12 and 0, which is then divided by 3 to get 4 and 0, which is then divided by 4 to get 1 and 0. (1, 0, 0, 0), which should be restored to (1, 0, 2, 3) because the place where the pieces are already packed. But in fact it is (1, 0, 1, 2). Because koma3 does not collide with koma1 at the time of comparing koma3 and koma1, it collides with koma1 when it moves to the next square due to the collision with koma2. So it should be "move to an empty square", not "move to the next square (koma3++)".
+ 
+ <hr>
+ 
+ I fixed the decoder. I made a Renderer.assign to be able to write both Python and C++, but I ended up adding a big method for this kind of thing, which was a detour. I'm not sure if it was a mistake to think of both Python and C++.
+ 
+ >|python|
+     def take_decoder(arg_name, node_name, resource_name):
+         lines = [
+             "for(int i=0; ; i++){",
+             "  if(!resource_%(resource_name)s[i]){",
+             "    if(!%(node_name)s){",
+             "      %(arg_name)s = i;",
+             "      break;",
+             "    }",
+             "    %(node_name)s--;",
+             "  }",
+             "}",
+             "resource_%(resource_name)s[%(arg_name)s] = true;"]
+         return [line % locals() for line in lines]
+ ||<
+ And there's no need for it to be for.
+ The encoder has the same problem and needs to be fixed.
+ 
+ <hr>
+ 
+ Crush, crush, crush, and still the bug persists.
+ 
+ Is there something wrong with the design?
+ </body>
+
+[Hatena Diary 2009-06-27 https://nishiohirokazu.hatenadiary.org/archive/2009/06/27]

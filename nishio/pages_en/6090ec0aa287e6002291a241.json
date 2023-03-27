@@ -1,0 +1,42 @@
+Hatena2012-06-16
+code:hatena
+ <body>
+ *1339823842*How do we undo merge in git?
+ ** Use Case 1
+ 
+ I received a file by e-mail from someone who had asked me to work on it. I put aside the work I was doing on my side and tried to merge my work with the file I received, overwriting the file they both used as a common source material, but then I realized that I had changed the character encoding!
+ 
+ >||
+ $ git add foo
+ $ git commit -m "working"
+ $ git tag mine
+ $ git reset HEAD^
+ (File overwrite)
+ $ git merge mine
+ →The line feed code has been changed and there is a big conflict.
+ ||<
+ 
+ I deleted .git/merge_head and git checkout HEAD^ foo, but is there a smarter way?
+ 
+ ** Use Case 2
+ When I tried to merge, I found that the other party's modifications were rewriting one line every few lines, which may or may not be the cause of the auto-merge failure, and a large number of conflict messages were being inserted....
+ Would this be better to do add -p or something without merging? I'll delete .git/MERGE_HEAD again to try it and git checkout HEAD^ foo to put it back in.
+ >||
+ $ git checkout mine foo 
+ ||<
+ Now foo will be in a STAGED state and will be the one you updated, so from here you can unstage it with reset and then add -p. (reset -p might be OK, but I'm not familiar with it, so I'll use the one I'm used to.)
+ >||
+ $ git reset HEAD foo
+ $ git add -p  foo 
+ ||<
+ 
+ Now add the work I did (which is by far the lesser number) and commit. Then checkout HEAD foo and discard the changes that the other person made and I didn't, because I overwrote them.
+ >||
+ $ git commit -m "merge my changes"
+ $ git checkout HEAD foo
+ ||<
+ 
+ I've achieved my goal, but I wonder if there is a better way.
+ </body>
+
+[Hatena Diary 2012-06-16 https://nishiohirokazu.hatenadiary.org/archive/2012/06/16]

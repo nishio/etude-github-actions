@@ -1,0 +1,127 @@
+Hatena2010-08-10
+code:hatena
+ <body>
+ *1281450193*(Python|Ruby) to re-bind to variables outside the nested scope
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20100801/1280651063'>抜粋翻訳 PEP3104: Access to Names in Outer Scopes</a>の内容をコードで。
+ 
+ **Rubyでの挙動(1.9.3dev)
+ 
+ Methods defined inside methods cannot access outside scopes.
+ >|ruby|
+ > def foo(x)
+ >     def bar()
+ >         p x
+ >     end
+ >     bar
+ > end
+ => nil
+ > foo 1
+ NameError: undefined local variable or method `x' for main:Object
+ 	from (irb):32:in `bar'
+ 	from (irb):34:in `foo'
+ 	from (irb):36
+ 	from /usr/local/bin/irb:12:in `<main>'
+ ||<
+ 
+ In a block defined in a method, only bindings to names that do not exist in the scope in which they are defined should be local variables of the block, and all other bindings should be re-bindings to outside variables.
+ >|ruby|
+ > def foo(x)
+ >     lambda {x = 1; y = 2}.call
+ >     p x
+ >     p y
+ > end
+ => nil
+ > foo 100
+ 1
+ NameError: undefined local variable or method `y' for main:Object
+ 	from (irb):27:in `foo'
+ 	from (irb):29
+ 	from /usr/local/bin/irb:12:in `<main>'
+ ||<
+ 
+ Sasada-san told me: <a href='http://www.rubyist.net/~matz/20100616.html#p01'>Matz nikki (2010-06-16): What's new in Ruby 2.0 (or maybe not)(2) nested def as local function</a>.
+ 
+ PS: You can force a local variable by prepending a semicolon. <a href='http://gihyo.jp/dev/serial/01/ruby/0003'>Ruby Freaks Lounge: Part 3: A Tour of New Features in Ruby 1.9 (Part 2): Refined Grammar and Semantics｜gihyo.jp ... Gijyosha</a a>
+ >|ruby|
+ > def foo(x)
+ >     lambda {|;x| x = 1}.call
+ >     p x
+ > end
+ => nil
+ irb(main):014:0> foo 100
+ 100
+ => 100
+ ||<
+ 
+ 
+ **Pythonでの挙動(3.0)
+ 
+ Functions defined within functions can refer to outside values, though,
+ >|python|
+ >>> def foo(x):
+ ...     def bar():
+ ...         print(x)
+ ...     bar()
+ ... 
+ >>> foo(100)
+ 100
+ ||<
+ 
+ When re-binding, it becomes a local variable, so it is not possible to refer to the outer value.
+ >|python|
+ >>> def foo(x):
+ ...     def bar():
+ ...         x *= 2
+ ...     bar()
+ ...     print(x)
+ ... 
+ >>> foo(100)
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in <module>
+   File "<stdin>", line 4, in foo
+   File "<stdin>", line 3, in bar
+ UnboundLocalError: local variable 'x' referenced before assignment
+ ||<
+ 
+ To stop this behavior (make the re-binding x be considered an outside variable), use the nonlocal declaration
+ 
+ >|python|
+ >>> def foo(x):
+ ...     def bar():
+ ...         nonlocal x
+ ...         x *= 2
+ ...     bar()
+ ...     print(x)
+ ... 
+ >>> foo(100)
+ 200
+ ||<
+ 
+ ** Behavior in JavaScript (1.8, or rather Firefox 3)
+ JavaScript, Perl, and many other languages require a declaration to create a local variable. Therefore, if there is no declaration, the name of the outside scope is accessed.
+ >|javascript|
+ function foo(x){
+     function bar(){
+         x *= 2;
+     }
+     bar();
+     console.log(x); 
+ }
+ 
+ foo(100); // -> 200
+ ||<
+ 
+ >|javascript|
+ function foo(x){
+     function bar(){
+         var x = 2;
+     }
+     bar();
+     console.log(x);
+ }
+ 
+ foo(100); // -> 100
+ ||<
+ </body>
+
+[Hatena Diary 2010-08-10 https://nishiohirokazu.hatenadiary.org/archive/2010/08/10]
