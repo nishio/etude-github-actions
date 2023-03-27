@@ -1,0 +1,60 @@
+Hatena2009-04-08
+code:hatena
+ <body>
+ *1239166325*Inkscape
+ Interesting.
+ <img src="http://gyazo.com/2ada670bfe6bf32e53bca49ed54ac04e.png">
+ 
+ *1239175416* I'm trying to wrap my head around some mistake.
+ 
+ f:id:nishiohirokazu:20090408162335j:image
+ 
+ *1239188170*Inkscapeはいい
+ Why didn't I start using it earlier? I am copying my scribbles on a piece of paper. It's interesting. When I write on paper with a pen, the lines are very rough, but when I use Inkscape, the lines are uniformly thick and straight, which is very cool.
+ 
+ <img src="http://gyazo.com/fae680b43a4b0911f1f6012e7c683479.png">
+ 
+ 
+ Well, the left one is better for explanation because anyone can see the recurrent structure, but I prefer the middle one for my aesthetic sense. But I prefer the one in the middle because it is more aesthetically pleasing to me.
+ <img src="http://gyazo.com/799effd88e05229b22e4fc36a698c67c.png">
+ 
+ *1239213131*My game specs are ambiguous and I'm crushing it.
+ -[CopyFuture][RemoveCard][X][Y]
+ --If CopyFuture copies the RemoveCard and deletes the RemoveCard itself, the next step is to execute X
+ --The copy behaves "as if this card were temporarily changed to 'the card to which the instruction to be copied is transcribed'". In other words, the copying is finished before execution.
+ 
+ -[CopyFuture][MoveCard][X]
+ -- If you copy a MoveCard with CopyFuture and move CopyFuture itself to another location, the next time it is triggered is X
+ 
+ 
+ -[CopyFuture][Bomb][X]
+ --CopyFuture copies Bomb, and when activated, CopyFuture is deleted, so X is not activated. the question is which card works when X is Float, etc.
+ 
+ -[CopyFuture][Reverse][CopyPast]
+ --CopyFuture copies Reverse and reverses the execution order, but if CopyPast changes to the copy direction, CopyPast copies CopyPast itself and becomes an infinite recurrence. CopyPast, CopyFuture, and Float determine the copy direction.
+ -- Check for errors → Create test cases → Fix
+ 
+ 
+ I wrote test cases for all of them and checked them!
+ 
+ {"IndexError('list index out of range',)": 18, 'You': 416, 'Computer': 385, 'draw': 37, "RuntimeError('Too Long Play',)": 144}
+ 
+ Hmmm, still about 18 bugs out of 1000.
+ 
+ >||
+ Float      ^ (C)  x-1, x-1 
+ ||<
+ 
+ Wow. I see, so if you decrement the Float's movement number until it becomes negative, the corresponding card no longer exists and it's an error. I guess it would be no good if it is incremented too much.
+ 
+ Fixed. Oh, only 1 error out of 1000 still occurs. This is because Charm forgot to determine "death by bit number 0" after bit rewriting.
+ 
+ Okey, it's fixed. Now all we need to do is make the AI smarter and it will be less likely to be Too Long Play. Let's test it with another 1000 cases, just in case.
+ 
+ "ValueError('list.index(x): x not in list',)": 1, "IndexError('list index out of range',)": 1
+ 
+ Ahh...it seems to be a question of what happens if the Jump destination is deleted after the Jump is triggered.
+ The other problem is that the jump destination is too incremented to find the appropriate jump destination.
+ </body>
+
+[Hatena Diary 2009-04-08 https://nishiohirokazu.hatenadiary.org/archive/2009/04/08]

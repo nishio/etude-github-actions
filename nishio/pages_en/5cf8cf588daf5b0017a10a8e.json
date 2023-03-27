@@ -1,0 +1,82 @@
+TypeScriptのreturn忘れがnever問題を起こす例
+[useHistory | useHooks https://usehooks.com/useHistory/]のJSで書かれたサンプルを[TypeScript]に翻訳していたら、`Type 'any' is not assignable to type 'never'`になった。
+The cause is ultimately a "non-exhaustive switch/case", resulting in a return type of T | undefined due to the "non-returned path", which is never in React's useReducer's type inference process.
+
+The first way to see it is this
+code:ts
+   const [state, dispatch] = useReducer(reducer, {
+     ...initialState,
+     present: initialPresent
+   });
+[https://gyazo.com/130dbfe2c6bdd3d09caa7c73e2ad78b6]
+
+You think "present" is "never. But it's no good if you use "any" for everything.
+code:ts
+ const initialState = {
+   past: [] as any[],
+   present: null as any,
+   future: [] as any[]
+ }; 
+
+When a mysterious phenomenon occurs, the problem is divided.
+code:ts
+   let x = {
+     ...initialState,
+     present: initialPresent
+   }
+   const [state, dispatch] = useReducer(reducer, x);
+At this time, an error is displayed for x in `useReducer(reducer, x);`.
+	>Argument of type '{ present: any; past: any[]; future: any[]; }' is not assignable to parameter of type 'never'.
+
+So the phenomenon is "the type of the second argument of useReducer is inferred to be never".
+Examine the behavior of inference around useReducer.
+ `useReducer(null, null)`
+ 	>Argument of type 'null' is not assignable to parameter of type 'Reducer<any, any>'
+	`useReducer(()=>1, null)`
+		>Argument of type 'null' is not assignable to parameter of type 'number'.
+		So we can expect the return value of the first argument to be inferred to be the type of the second argument
+
+So what is the type of reducer in this case?
+code::
+ const reducer: (state: {
+     past: any[];
+     present: any;
+     future: any[];
+ }, action: any) => {
+     past: any[];
+     present: any;
+     future: any[];
+ } | undefined
+For some reason, it is undefined (you can guess around here).
+
+The implementation of reducer uses switch/case to branch in four different ways and returns in each of them.
+The type system does not know that only these four cases exist. Therefore, it is assumed that there is a pathway out of switch/case that does not match any of the cases. As a result, the return type is undefined, and the reducer's type inference process will turn it into never.
+	(It might be interesting to delve deeper into the process of "reducer's type inference process transforms it into never," but I'll pass this time.)
+
+So there are two solutions to this problem
+	Cutting corners: return state; after switch/case to align the types.
+	Serious: Declare by type that action.type takes only 4 types of values
+
+I got lazy and did a lazy implementation.
+
+---
+The process of "reducer's type inference process that turns it into never."
+code: ts
+     function useReducer<R extends Reducer<any, any>>(
+         reducer: R,
+         initialState: ReducerState<R>,
+         initializer?: undefined
+     ): [ReducerState<R>, Dispatch<ReducerAction<R>>];
+     
+     type Reducer<S, A> = (prevState: S, action: A) => S;
+     type ReducerState<R extends Reducer<any, any>> = R extends Reducer<infer S, any> ? S : never;
+reducerの型が (T, any) => (T | undefined)である場合
+	R = (T, any) => (T | undefined)
+	R extends Reducer<any, any>は成功する
+		Reducer<any, any> = (any, any) => (any)だから
+		返り値のanyに(T | undefined)が入る
+	R extends Reducer<infer S, any> ? S : never はSがanyになって成功しそうな気がするのだが...
+		I wonder if "infer" will ever answer "any".
+			Well, if it were, the infer would always succeed, so the conditional expression would be meaningless.
+			It's hard to say without knowing how the infer works/specs.
+		I think infer S will fail and return NEVER.

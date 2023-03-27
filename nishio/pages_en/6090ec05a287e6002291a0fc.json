@@ -1,0 +1,125 @@
+Hatena2010-08-27
+code:hatena
+ <body>
+ *1282875637*Pretty Print 2
+ I forgot to link to the last paper: http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf
+ 
+ I tried to run it on the train this morning and oops, there was one syntax error of forgetting a comma! I guess I still need to be more diligent.
+ 
+ And when I ran it, as I expected, it was caught by the raise NotImplementedError that I had written. I created an empty Python class ADoc to inherit from the typeclass DOC in the original paper, but before I do the type check using that class, I should first display and observe the raise NotImplementedError, since x is not the class I expected. Fixed it. When I looked at the part of the error message, I found the following error message.
+ 
+ >|diff|
+      if isinstance(y, Union):
+          return better(w, k, 
+ -                      be(w, k, [(i, x)] + z),
+ -                      be(w, k, [(i, y)] + z))
+ +                      be(w, k, [(i, y.x)] + z),
+ +                      be(w, k, [(i, y.y)] + z))
+ ||<
+ 
+ So this is it. In the original paper, they distinguish between DOC and Doc, or use another x variable in the inner scope where there is an x variable, and I'm not sure if it's right to do that, but I'm holding back, thinking "renaming a variable is refactoring, so I have to get it working and write tests first".
+ 
+ There were two more similar mistakes, one with the wrong parentheses. Fixed. I also wrote a test!
+ 
+ >|python|
+ >>> pretty(10, Text("a"))
+ 'a'
+ >>> print pretty(10, fillwords("a b c d e"))
+ a b c d e
+ >>> print pretty(5, fillwords("a b c d e"))
+ a b c
+ d e
+ >>> print pretty(3, fillwords("a b c d e"))
+ a b
+ c d
+ e
+ ||<
+ 
+ Mmmmmm, at least it's working as far as basic functionality is concerned. On my way home today, I'll try to get the test coverage to 100%, and if I still have time, I'll start refactoring.
+ 
+ *1282914041*coverageを使う
+ http://pypi.python.org/pypi/coverage/2.6/
+ 
+ >||
+ $ coverage run prettyprint.py
+ $ coverage html
+ ||<
+ 
+ Well, I'm a pain in the ass.
+ 
+ >||
+ $ coverage run prettyprint.py && coverage html
+ ||<
+ 
+ I do this. This is what happens when you do this
+ 
+ f:id:nishiohirokazu:20100827215641p:image
+ 
+ Write tests for areas not covered by coverage. Ah, but the last one, raise NotImplementedError, or something like that, is put there so that if you make a careless mistake, you'll notice it right away, and it's usually not reached. It seems silly to make them reach it on purpose.
+ 
+ http://nedbatchelder.com/code/coverage/excluding.html
+ http://nedbatchelder.com/code/coverage/config.html#config
+ 
+ Oh, it seems I can put a configuration file .coveragerc in the project directory and use a regular expression to write "ignore if this is included". The example shows exactly how to ignore raise NotImplementedError.
+ 
+ >||
+     # Don't complain if tests don't hit defensive assertion code:
+     raise AssertionError
+     raise NotImplementedError
+ ||<
+ 
+ Yay, I'm at 100%!
+ 
+ *1282915401*Pretty Print 3
+ I wrote a test to get 100% coverage and found a bug in the fill, I mistook xs and zs and got an infinite loop. The name is terrible.
+ 
+ Various variable renaming and refactoring. It's a relief to know that the test is 100%. Testing is important.
+ 
+ And finally, I started on the one that neatly displays the S-expression made by AUTOAST. But at the scale where PRETTY PRINT is needed, it takes a few seconds. Ah, well, the original code is in Haskell. I'll have to write it with lazy evaluation. During the verbatim translation, I thought that the list and string concatenation might be slow and wrote so in the comments, but there were more problems than something like that.
+ 
+ >||
+ 0 1 2 3 4
+ 5 6 7 8 9
+ 10 11 12
+ 13 14 15
+ 16 17
+ 
+ real	0m4.189s
+ ||<
+ 
+ When speeding up the process, profiling must be done first.
+ 
+ http://gist.github.com/553325
+ 
+ Hmmm. There are several functions that are called a great number of times. I wonder why be is called so many times.
+ 
+ >|python|
+     if isinstance(y, Union):
+         return better(width, already, 
+                       be(width, already, [(i, y.x)] + tail),
+                       be(width, already, [(i, y.y)] + tail))
+ ||<
+ 
+ You're the culprit!
+ 
+ Lazy rated: http://gist.github.com/553321
+ 
+ Oh, it used to take 5 seconds, but now it takes about 1 millisecond! I'm so happy!
+ 
+ 
+ By the way, when I tried it for a larger structure, it died because it exceeded the limit for the number of recursive calls. Well, that's what happens when you port code from a language that optimizes for tail calls, and most of be's code is return be(...) So that means this should be converted to a loop. I'll do that tomorrow if I have time.
+ </body>
+ <comments>
+ <comment>
+ <username>nobsun</username>
+ <body>It's chapter 11 of "The Joy of Functional Programming" (http://www.amazon.co.jp/exec/obidos/ASIN/4274068056/philoprogramm-22/). (I was in advertising mode)</body>.
+ <timestamp>1282901353</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, that's true. I hadn't noticed that at all. </body>
+ <timestamp>1282919011</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-08-27 https://nishiohirokazu.hatenadiary.org/archive/2010/08/27]

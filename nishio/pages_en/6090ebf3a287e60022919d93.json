@@ -1,0 +1,221 @@
+Hatena2007-11-26
+code:hatena
+ <body>
+ *1196036636*muuu
+ I'm having chest pains.
+ 
+ No, really...
+ 
+ *1196047020*PEG_PEG
+ oh! (startled)
+ 
+ >>> e.Expression.match("A / B / C")
+ Sequence(Ref('A'), ReMatcher(' B '), Ref('C'))/7
+ 
+ It was obvious, but it was true.
+ 
+ What should we do?
+ 
+ - I would change Or to vertical bars.
+ -- super easy, though.
+ - Regular expression literal expressions instead of /~/.
+ -- Well, even Perl isn't limited to the suspender type.
+ - 文法頑張る
+ -- I don't know how to try harder. How to determine that it's an Or and not a regex literal in a case like the above.... Impossible?
+ --- For now, I've decided that it's not very elegant, but if there is a space immediately after the /, it's not a regular expression literal.
+ 
+ *1196049788*定義
+ >||
+ Char <- '\\' [nrt’"\[\]\\]
+       / '\\' [0-2][0-7][0-7]
+       / '\\' [0-7][0-7]?
+       / !'\\' .
+ ||<
+ 
+ I can understand doing this on the basic premise of "expressing PEG with PEG," but writing this way to solve a real-world problem gets the [this is terrible] tag.
+ \Is ɷ277 valid, or is ɷ99 INVALID?
+ 
+ *1196054011*screencast
+ http://www.screencast-o-matic.com/watch/ciXTrX79
+ 
+ Tried.
+ 
+ *1196057710*IP banned
+ How to write org.
+ 
+ *1196058514*n == n + 1
+ http://d.hatena.ne.jp/morchin/20071125#p1
+ 
+ Let's all think about it!
+ 
+ I got it right the first time (proud).
+ 
+ I also challenged myself to see how many characters I could make that object in the shortest amount of time. Contrary to my expectations, it was only 4 characters. I thought I needed 6 characters. (PS: Sorry, it's 5 letters. (PS: ← This postscript was a mistake, it was still 4 letters...))
+ 
+ I'm not going to write the answer so as not to take away your fun. If you really want to know, please PM me at Django-en.
+ 
+ ---
+ 
+ JS.
+ 
+ http://d.hatena.ne.jp/murky-satyr/20071126/1196078797
+ 
+ "n ! = n"?　What? What?
+ 
+ ---
+ 
+ I'll make it a topic for the org to write about after a day or so.
+ 
+ *1196071297*Makeup Drama
+ http://ja.doukaku.org/comment/4407/
+ 
+ Personally, I thought that the B+ tree problem was indeed a bit too large, and the printf problem could have been a good question about variable length argument passing and so on if the specification had been made more compact.
+ 
+ But hey, I don't think <a href="http://ja.doukaku.org/90/">quiz questions</a> should be allowed to drop off topic. It's hard to tell because neither of them asserts themselves in their profiles, but I think there was actually something very interesting going on.
+ 
+ The contestant, Mr. herumi, is Mr. Mitsunari, the author of <a href="http://homepage1.nifty.com/herumi/soft.html">Afternoon Koda and x86 JIT assembler Xbyak (that was made super fast by LL soul)</a>, and that subject was, so to speak, a C/C I think that the subject was, so to speak, a challenge from C/C++, "Can you solve this in LL?" I think that the problem was a challenge from C/C++, "Can you solve this in LL? And <a href="http://ja.doukaku.org/comment/4382/">shinh</a>, who dutifully showed up while everyone else was struggling and said he could finish it in less than a second with a 15-line Ruby script (no clear proof, but maybe)<a href=" http://www.shinh.org/">anarchy golf</a> author Hamachi-san. A sort of old/new showdown. Wasn't there some kind of drama going on, like the pitcher C++ throwing a hard fastball and the hitter Ruby hitting it back for a good-bye home run?
+ 
+ -----
+ 
+ 追記。
+ 
+ I thought about it a lot, but I realized that the game is won because pitches are thrown that may or may not be in the strike zone, and if the pitcher throws only slow balls down the middle because you yell at him for throwing a ball or complain about him throwing a fast ball, it will just be "batting practice. batting practice. How to write org is not a batting center.
+ 
+ So we will have to accept a few ball pitches as a cost to make the game more interesting. Of course, a pitch out of the strike zone should not be a strike without swinging. Does that mean that subjects with a bad reputation should be attacked and shelled on the topic?
+ 
+ *1196072490*screencast-o-matic
+ The threshold is nice and low, but, you know, it's only 15 minutes maximum and you can't edit it.
+ I wrote a program to "take a screenshot and scp it to the server" in 15 minutes, searching Google and trying it out at the command prompt, but in the last 6 seconds, the server name and account name were glimpsed. I was thinking that it might not be a good idea to make it public.... If only I could cut the last 6 seconds.... Also, I would like to shorten the part I don't want.... I would also like to shorten the parts I don't want.
+ 
+ *1196072579*ActionScript
+ If I were to start tinkering with ActionScript in earnest, the question is whether or not I should buy FlexBuilder.
+ 
+ Well, it's not me who buys it, but the company.
+ 
+ ---
+ 
+ amachang has taught me a lot. I'm going to grow up brilliantly in ActionScripter tomorrow with a policy of not buying!
+ 
+ *1196090668*screencast2
+ http://www.screencast-o-matic.com/watch/ciXO1dsc
+ 
+ I was going to deliver the process of speeding up this Quicksort with odz, but I'm not sure if I'm getting a good shot because Firefox froze or Python froze in the process.
+ 
+ http://d.hatena.ne.jp/odz/20071125
+ 
+ We concluded that it is still hard to do on a laptop with only one core.
+ 
+ >|python|
+ >>> from timeit import Timer
+ >>> t = Timer(setup="""
+ from itertools import islice
+ 
+ def tail(xs):
+     return islice(xs, 1, len(xs))
+ 
+ def quicksort(xs):
+     if len(xs) == 0: return []
+ 
+     x = xs[0]
+     return quicksort([y for y in tail(xs) if y < x]) \
+            + [x] \
+            + quicksort([y for y in tail(xs) if y >= x])
+ 
+ from random import random
+ data = [random() for i in range(4096)]""",
+ stmt="quicksort(data)")
+ >>> t.repeat(3, 10)
+ [1.3894659796146698, 1.3651681987516895, 1.4261438255421126]
+ 
+ >>> t = Timer(setup="""
+ from itertools import tee, chain
+ from random import random
+ 
+ def quicksort(xs):
+     if isinstance(xs, list):
+         xs = (x for x in xs)
+ 
+     try:
+         x = xs.next()
+     except StopIteration:
+         return (x for x in [])
+ 
+     def yield_x():
+         yield x
+ 
+     xs1, xs2 = tee(xs)
+     return chain(
+         quicksort(y for y in xs1 if y < x),
+         yield_x(),
+         quicksort(y for y in xs2 if y >= x))
+ 
+ data = [random() for x in range(4096)]
+ """, stmt="""
+ list(quicksort(data))
+ """)
+ >>> t.repeat(3, 10)
+ [2.9476609457346967, 3.0186817039598282, 3.3074144898305349]
+ ||<
+ 
+ Well, it was late when I went back and rewrote the list comprehensions to generator comprehensions like this.
+ I was going to run a "quick sort that destructively rewrites the listing without creating a new instance" from here as a prelude to this. If I feel up to it, I'll shoot for it tomorrow.
+ 
+ >|python|
+ >>> t = Timer(setup="""
+ from itertools import tee
+ from random import random
+ 
+ def quicksort(xs):
+     if isinstance(xs, list):
+         xs = (x for x in xs)
+ 	
+     x = xs.next()
+     
+     xs1, xs2 = tee(xs)
+     for y in quicksort(y for y in xs1 if y < x):
+         yield y
+     yield x
+     for y in quicksort(y for y in xs2 if y >= x):
+         yield y
+ 
+ data = [random() for x in range(4096)]
+ """, stmt="""
+ list(quicksort(data))
+ """)
+ >>> t.repeat(3, 10)
+ [2.5895629193095715, 2.8631820524675788, 2.9743467395995822]
+ ||<
+ 
+ A little better.
+ 
+ They don't give me a good delay.
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>Is it love? </body>
+ <timestamp>1196040769</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>狭心症です(ぇ</body>
+ <timestamp>1196042274</timestamp>
+ </comment>
+ <comment>
+ <username>shiro</username>
+ <body>I think the quiz question was even better in that it elicited some very interesting discussion, starting with http://ja.doukaku.org/comment/4374/. <br>Wouldn't an "average of the scores on the comments" or something like that be an indicator of whether or not the subject provoked interesting responses/discussion? </body>
+ <timestamp>1196111827</timestamp>
+ </comment>
+ <comment>
+ <username>みずしま</username>
+ <body>I haven't actually tried it, so it may not work, but <br>I'm going to lower the precedence of regular expression literals over OrderedChoice, so <br>no? <br><br>Expression <- "/" ... "/" <br> / OrderedChoice<br>OrderedChoice <- Sequence ("/" Sequence)*<br><br>Something like that. This way the OrderedChoice will probably take precedence. <br>But if you want B to be a regular expression literal in A / B / C, you will have to wrap it in parentheses like A (/ B /) C<br>. </body>
+ <timestamp>1196129005</timestamp>
+ </comment>
+ <comment>
+ <username>jbking</username>
+ <body>I'm also working with AS3 at a company, but the processing system is soooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo. <br>I wish they would throw an exception. </body>
+ <timestamp>1196135210</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2007-11-26 https://nishiohirokazu.hatenadiary.org/archive/2007/11/26]

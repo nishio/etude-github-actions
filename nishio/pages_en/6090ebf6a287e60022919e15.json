@@ -1,0 +1,174 @@
+Hatena2008-04-02
+code:hatena
+ <body>
+ *1207096463*Sleepy
+ wild rocambole (Allium grayi)
+ 
+ *1207097357*Spam
+ I've been getting a lot of spam trackbacks lately. I wonder if Hatena doesn't put a link to a screen where I can delete them in the trackback notification e-mail. Also, I wonder if Hatena has a screen where I can see a list of trackbacks and delete them.
+ 
+ *1207104064*(訂正)Pythonの__future__
+ We correct and apologize for some errors in the <a href="http://d.hatena.ne.jp/nishiohirokazu/20080401/1207025873">Python's __future__</a> that we published yesterday, April 1.
+ 
+ First, regarding the following statement:
+ 
+ >>
+ For example, 1 / 2 is currently 0. This is integer division. But from __future__ import division switches to the same mode as in JavaScript: "If the divisor is not divisible by an integer, the result is a real number.
+ <<
+ 
+ This is true; even Python 2.5 behaves as shown below.
+ 
+ >|python|
+ >>> 1 / 2
+ 0
+ >>> from __future__ import division
+ >>> 1 / 2
+ 0.5
+ ||<
+ 
+ Here is the problem.
+ 
+ >>
+ There are others, for example, in Python 2.6, which is currently in alpha, from __future__ import braces can be used to switch the way blocks are represented.
+ <<
+ 
+ But when I actually run the sample code, I get a syntax error "not a chance" at **import**.
+ 
+ >|python|
+ >>> from __future__ import braces
+ SyntaxError: not a chance (<pyshell#2>, line 1)
+ ||<
+ 
+ Incidentally, importing a feature that does not exist will usually result in the error "future feature *** is not defined".
+ 
+ >|python|
+ >>> from __future__ import hoge
+ SyntaxError: future feature hoge is not defined (<pyshell#5>, line 1)
+ ||<
+ 
+ Actually, only braces is implemented in the function future_check_features in future.c to generate a special error as shown below.
+ 
+ >|c|
+ } else if (strcmp(feature, "braces") == 0) {
+ 	PyErr_SetString(PyExc_SyntaxError,
+ 			"not a chance");
+ 	PyErr_SyntaxLocation(filename, s->lineno);
+ 	return 0;
+ ||<
+ 
+ Finally, I wrote about PEP3099 below:
+ >>
+ However, it seems that although they have implemented it, they are not willing to concede that the default is indentation, and <a href="http://www.python.org/dev/peps/pep-3099/">PEP 3099 -- Things that will Not Change in Python 3000</a> says that they will not change those things in Python 3000. Things that will Not Change in Python 3000</a>.
+ <<
+ 
+ You can actually read this by saying, "I'm not going to import braces. Do from __future__ import braces for this matter and you will get a clear answer. In short, "not a chance" (never happen).
+ 
+ >>
+ No braces.
+ 
+     This is so obvious that it doesn't need a reference to a mailing list. Do from __future__ import braces to get a definitive answer on this subject.
+ <<
+ 
+ *1207104337*(in the April fool sense, of course)
+ I went around and put "(in the April fool sense, of course)" on the entry I wrote yesterday that was a big lie.
+ 
+ *1207116161*[Python]web.pyで画像掲示板
+ I needed to experiment a bit, so I created a "server that can POST images and displays a list of them. I'm going to add a few more new functions, but I thought it would be better to make the current simple state available to the public so that it is easier to read. By the way, if the scale is a little larger, it would be better to change Index#GET to use a template.
+ 
+ >|python|
+ import web
+ 
+ urls = [
+     "/", "Index",
+     "/img/(.+)", "GetImage",
+ ]
+ 
+ def id2path(ID):
+     import os, re
+     if not re.match("\d{8}_\d{6}_\d+", ID):
+         raise RuntimeError("invalid format")
+     return os.path.join("img", ID + ".png")
+     
+ class Index(object):
+     def GET(self):
+         import os
+         print INDEX_GET
+         for f in os.listdir("img"):
+             print "<img src='img/%s'><br>" % f[:-4] 
+     def POST(self):
+         from time import strftime, clock
+         id = strftime("%Y%m%d_%H%M%S_%%d") % (clock() * 1000000) 
+         print id
+         data = web.input().Image
+         file(id2path(id), "wb").write(data)
+         print "ok"
+ 
+ INDEX_GET = """
+ <html>
+ <form enctype="multipart/form-data" action="." method="post">
+ <input type="file" name="Image"/>
+ <input type="submit">
+ </form>
+ <hr>
+ """
+ 
+ class GetImage(object):
+     def GET(self, ID):
+         web.header("Cotent-type", "image/png")
+         print open(id2path(ID), "rb").read()
+  
+ if __name__ == '__main__':
+     web.webapi.internalerror = web.debugerror
+     web.run(urls, globals(), web.reloader)
+ ||<
+ 
+ 追記。
+ Some binary files became corrupt and unreadable after printing. sys.stdout.write is used.
+ 
+ *1207117555*MaxOSXがWindowsXPに劣る点
+ Why can't I complete the path name in Finder's "Go to Folder"?
+ 
+ -----
+ 
+ The comments & hatchets are very helpful.
+ 
+ *1207118112*An old photo generator for the end of the Edo period
+ Bakumatsu Bakumatsu Old Photo Generator -Make your photos look like old photos from the Edo and Meiji periods.
+ http://labs.wanokoto.jp/olds
+ 
+ 
+ I tried:
+ http://labs.wanokoto.jp/olds/view/qr998s7-20080402153315.jpg
+ 
+ *1207127760*MacのFireFoxにはJava Consoleがない？
+ I ended up checking on a Windows machine because I couldn't figure out how to see the error messages even though the applet wasn't working properly.
+ </body>
+ <comments>
+ <comment>
+ <username>earth2001y</username>
+ <body>Because it is not in the original UI philosophy of the Mac to write paths directly. <br>If you really want to write directly, you can do <br>$ open /any/path<br> in the terminal. </body>
+ <timestamp>1207119184</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>No, I know that, but you can't run that command from the Finder, and unlike Windows, it doesn't show the path name, so it would take a lot of work to access the path opened in the Finder with a console. </body>
+ <timestamp>1207127515</timestamp>
+ </comment>
+ <comment>
+ <username>elim</username>
+ <body>In the meantime, if you type up to a unique character, it will be completed, but it is more convenient to use XP, which has an array of completion candidates. <BR>As for paths, View => Show Path Bar will show the hierarchy. <br>By the way, in my environment, the path is also displayed in the title bar, but I have modified it so much that I am not sure if that is standard or not :p</body>.
+ <timestamp>1207138309</timestamp>
+ </comment>
+ <comment>
+ <username>elim</username>
+ <body>There was some configuration required to put the path in the title bar. Please refer to the entry below if you wish.  http://d.hatena.ne.jp/elim/20080403/show_the_path_in_the_windows_title</body>
+ <timestamp>1207238395</timestamp>
+ </comment>
+ <comment>
+ <username>kenji</username>
+ <body>以下でできましたよ。<br>1. Java Console (https://addons.mozilla.org/ja/firefox/addon/5578) を入れる。<br>2. アプリケーション/ユーティリティ/Java/Java Preferences.appのAdvancedタブで、Java Console/Show Consoleを選ぶ。<br>環境：Mac OS X 10.5.1, firefox 2.0.13, J2SE 1.5.0_13</body>
+ <timestamp>1207792526</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-02 https://nishiohirokazu.hatenadiary.org/archive/2008/04/02]
