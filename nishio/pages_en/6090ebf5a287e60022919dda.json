@@ -1,0 +1,200 @@
+Hatena2008-02-02
+code:hatena
+ <body>
+ *1201914803*I'm scared.
+ 
+ Nobody.
+ f:id:nishiohirokazu:20080202101318j:image
+ 
+ *1201916122*Haskell
+ Haskellしたい
+ I want to solve the problems that amachang is stuck on before amachang does and say "I wish I could do that.
+ But today is the day of the writing camp, so I need to focus on writing...
+ 
+ *1201921391*[Haskell][Python]遅延評価のリストを作る
+ >>
+ Isn't the data constructor just a function?
+ <<
+ -I don't know what Haskell's list is. I don't know the delay rating either. - IT Warnings
+ -- http://d.hatena.ne.jp/amachang/20080201/1201881246
+ 
+ No, I don't mind that it is a function, but I don't think it should be a function that returns a list. That would only take two states, "un-evaluated (before calling it)" and "the whole list is ready (after reading it)". In reality, there are countless states such as "only the first one has been evaluated", "only the first two have been evaluated"... so this all needs to be separated into functions.
+ 
+ So first, I created a class that represents "the state before evaluation (Thunk)" and "the value after evaluation"; calling Thunk's force repeats evaluation until the result becomes Value.
+ 
+ >|python|
+ >>> class Value(object):
+     def __init__(self, value):
+         self.value = value
+     def eval(self):
+         return self
+     def force(self):
+         return self
+ 
+ >>> class Thunk(object):
+     value = None
+     def __init__(self, func):
+         self.func = func
+     def eval(self):
+         return self.func()
+     def force(self):
+         x = self
+         while x.value == None:
+             x = x.eval()
+         return x
+ ||<
+ 
+ Next, create a delayed inc, delayed cons, and delayed map.
+ 
+ >|python|
+ >>> def d_inc(x):
+     return Thunk(lambda:
+         Value(x.force().value + 1))
+ 
+ >>> def d_cons(car, cdr):
+     return Thunk(lambda:
+         Value([car, cdr]))
+ 
+ >>> def d_map(f, xs):
+     return Thunk(lambda:
+         d_cons(
+             f(xs.force().value[0]), # (f (car xs))
+             d_map(f, xs.force().value[1]))) # (map f (cdr xs))
+ ||<
+ 
+ Come on, now we should have an infinite list.
+ 
+ >|python|
+ >>> inflist = d_cons(Value(1), d_map(d_inc, inflist))
+ 
+ NameError: name 'inflist' is not defined
+ ||<
+ 
+ Huh?
+ Oh, I see. You have to delay this one too.
+ 
+ >|python|
+ >>> inflist = Thunk(lambda:
+         d_cons(Value(1), d_map(d_inc, inflist)))
+ >>> inflist
+ <__main__.Thunk object at 0x01497B90>
+ ||<
+ 
+ I was able to do it.
+ I'll take a CAR.
+ 
+ >|python|
+ >>> inflist.force()
+ <__main__.Value object at 0x014977D0>
+ >>> inflist.force().value
+ [<__main__.Value object at 0x014978B0>, <__main__.Thunk object at 0x01497530>]
+ >>> inflist.force().value[0].force().value
+ 1
+ ||<
+ 
+ Yes, yes, it's done, let's take cdr, cdar and cddar as well.
+ 
+ >|python|
+ >>> inflist.force().value[1].force().value
+ [<__main__.Thunk object at 0x01497510>, <__main__.Thunk object at 0x01497BF0>]
+ >>> inflist.force().value[1].force().value[0].force().value
+ 2
+ >>> inflist.force().value[1].force().value[1].force().value[0].force().value
+ 3
+ ||<
+ 
+ I was able to confirm that it is properly an infinite list.
+ 
+ -----
+ 
+ !!! I also made a
+ 
+ >|python|
+ >>> def car(xs):
+ 	return xs.force().value[0]
+ 
+ >>> def cdr(xs):
+ 	return xs.force().value[1]
+ 
+ >>> car(cdr(cdr(inflist)))
+ <__main__.Thunk object at 0x01497E30>
+ >>> car(cdr(cdr(inflist))).force().value
+ 3
+ >>> def get(xs, i):
+ 	if i == 0:
+ 		return car(xs)
+ 	return get(cdr(xs), i - 1)
+ 
+ >>> get(inflist, 5)
+ <__main__.Thunk object at 0x0149D250>
+ >>> get(inflist, 5).force().value
+ 6
+ ||<
+ 
+ -----
+ I made a Fibonacci sequence.
+ >|python|
+ >>> def zipWith(f, xs, ys):
+     return Thunk(lambda:
+         d_cons(
+             f(car(xs), car(ys)), # (f (car xs) (car ys))
+             zipWith(f, cdr(xs), cdr(ys))))
+ 
+ >>> def d_add(x, y):
+     return Thunk(lambda:
+         Value(x.force().value + y.force().value))
+ 
+ >>> fib = Thunk(lambda:
+         d_cons(Value(1),
+            d_cons(Value(1),
+               zipWith(d_add, fib, cdr(fib)))))
+ 
+ >>> get(fib, 0).force().value
+ → Infinite loop
+ ||<
+ 
+ It didn't go well. I'll figure out why it didn't work out later.
+ 
+ -----
+ answer
+ >||
+ -   zipWith(d_add, fib, cdr(fib)))))
+ +   Thunk(lambda: zipWith(d_add, fib, cdr(fib))))))
+ ||<
+ 
+ Thunk was missing. fib = Thunk(...) The problem was that fib was being called without any delay in the "fib = Thunk(...)", and the evaluation of fib was running at the timing of the first evaluation of fib, resulting in an endless loop.
+ 
+ >|python|
+ for i in range(7):
+     print get(fib, i).force().value,
+ # 1 1 2 3 5 8 13
+ ||<
+ 
+ It's done, it's done, it's done.
+ 
+ *1201927631*Funahai?
+ f:id:nishiohirokazu:20080202134705j:image
+ 
+ *1201961393*I'm tired.
+ 
+ I wrote 300 lines! I'm getting pretty good at it! If I do 60 more writing camps, I'll be finished for sure!
+ </body>
+ <comments>
+ <comment>
+ <username>amachang</username>
+ <body>Oh. I wonder what's inside a functional language like this</body>.
+ <timestamp>1201923521</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>Then leave http://d.hatena.ne.jp/yukoba/20080202/p1! </body>
+ <timestamp>1201950852</timestamp>
+ </comment>
+ <comment>
+ <username>wasisan</username>
+ <body>Yes. This is the origin of the error. <BR>This means that d_cons does not play the role of an infinite stream. <BR><BR>It would probably be difficult to define in Javascript, where macros do not exist. </body>
+ <timestamp>1202112306</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-02-02 https://nishiohirokazu.hatenadiary.org/archive/2008/02/02]

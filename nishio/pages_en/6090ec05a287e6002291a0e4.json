@@ -1,0 +1,145 @@
+Hatena2010-07-28
+code:hatena
+ <body>
+ *1280318211*講義資料の続き
+ <a href='http://practical-scheme.net/trans/beating-the-averages-j.html'>Beating the Averages</a>
+ >>
+ Programming languages are half technology, half religion [Note 6].
+ ...
+ Note 6: As a result, comparisons of programming languages either turn into religious wars or into textbooks for undergraduates who try so hard to be neutral that they pass off as anthropological studies. Those who prefer peace or want to get tenure at a university avoid this topic. But the religious part is only half of the problem. The other part is worth studying. Especially when you want to design a new language.
+ <<
+ 
+ So, I was really hoping to get a little more inflammatory in a religious controversy kind of way. More than one person pointed out to me that I was writing too seriously (smiles).
+ Continuation of the manuscript I was going to publish after the fire:.
+ 
+ <hr>
+ 
+ Wise men learn from history. Fools learn only from experience.
+ 
+ It is important to compare various existing language processing systems and learn what designs they have adopted and what mistakes they have made before you fall into the trap of building your own proper design.
+ However, interlanguage comparisons can easily lead to sterile disputes.
+ 
+ Why?
+ 
+ <hr>
+ 
+ Which is better for a given design problem, Solution A or Solution B?
+ For example, do you want GC to be ON by default or only available to those who need it?
+ Should strings be able to be changed destructively or not?
+ Is it better to have implicit type conversion between integers, multiple length integers, floating point numbers and strings or not?
+ 
+ **"Option A is the correct answer."
+ Do you think you can say that?
+ That's a narrow view.
+ Most of the problems in the real world are "case-by-case" issues that cannot be easily divided.
+ 
+ In cases where memory consumption and execution time are not critical, it may be easier for the programmer to leave it to GC.
+ However, there are several cases where we do not want to leave it to the GC, such as when memory is very limited for embedded systems, or when the user is annoyed if the GC runs during a game, such as in a shooting game.
+ 
+ - How to Discuss The Problem of "Correctness" http://iwatam-server.sakura.ne.jp/software/giron/giron/ar01s05.html
+ 
+ The assumption that there must be a single correct answer can easily lead to sterile discussions.
+ <hr>
+ 
+ Patterns of sterile debate that often occur: "religious controversy," "bicycle parking debate."
+ 
+ ** What is a religious controversy?
+ A situation in which users of language X and language Y each believe that the design/function of their language is correct, and criticize the design of the other language on the grounds that the design/function is different from what they believe is the correct language. (In general, this is not limited to the design of the language, but also includes editors, operating systems, politics, and religion.)
+ 
+ Since the "correctness" claimed by the followers of language X is "being close to language X," there is no way to agree on what is correct. It is a sterile debate.
+ 
+ 
+ ** Why do religious disputes arise?
+ Since no one knows all languages equally well, there is a bias in any person's statement due to "what language he is proficient in".
+ Humans have a tendency to feel attached to what they are familiar with, so they are often overly complimentary of the languages they are good at.
+ It is also difficult to recognize the value of something one does not know. Therefore, users of a language they do not know seem to be "believers" who highly value and revere trivial features they do not know well.
+ 
+ In addition, if a person has a strong attachment to one language in particular, he or she tends to feel that if someone points out the shortcomings of that language, even if they are on target, it is an "attack on him or her," and tends to argue in defense.
+ 
+ 
+ ** 自転車置場の議論とは
+ The phenomenon is that the more trivial the issue, such as whether to put a roof on a bicycle parking lot or what color to paint it, the more people participate in the discussion.
+ In programming language terms, whether the argument of sleep should be seconds or milliseconds, whether String#join or List#join should be used to join lists of strings, whether the name of the method that applies a function to each element of an array should be map or collect and so on.
+ Not that these discussions are pointless, but they are not issues that need to be considered by a large number of people, nor are they worthwhile subjects that desperately need to be addressed to make their point.
+ 
+ -Bicycle Parking Discussion - bk blog
+ -http://0xcc.net/blog/archives/000135.html
+ -FreeBSD FAQ
+ -http://www.freebsd.org/doc/ja_JP.eucJP/books/faq/misc.html#BIKESHED-PAINTING
+ 
+ ** Why the Bicycle Parking Argument?
+ Humans have a need for approval, which means that they want attention, attention, and reaction from others. For a creature hungry for approval, it is good food to be part of a discussion in which many people are participating, and it is a great treat if one's opinion is accepted.
+ So the quickest people are the first to interject on issues that seem simple, the debate becomes more and more contentious as more people join the discussion and decide to bite a few words themselves, and then they speak out in a desperate attempt to discredit other opinions in order to protect their own honor and attention.
+ 
+ 
+ ** Certain natural phenomena
+ Religious disputes and parking lot arguments are natural phenomena that happen because we are creatures of that nature. It is necessary to make an effort to prevent them from happening to you, but it is pointless to bemoan or be angry at them for having happened. It is the same as the fact that summer is hot and sometimes there are evening showers. Complaining about the clouds that make the evening shower happen will not stop the rain.
+ 
+ It is wise not to be angry at the evening shower or lament the evening shower, but to take shelter from the rain during the evening shower so as not to get wet and catch a cold.
+ 
+ <hr>
+ Followed by "Recommendations for PEP."
+ 
+ *1280325373*抜粋翻訳 PEP3138 String representation in Python 3000
+ PEP3138 String representation in Python 3000
+ 
+ **概要
+ This text proposes a new representation of strings for Python 3000. In Python 3000 and earlier, the built-in function repr() converted arbitrary objects to screen-displayable ASCII strings for debugging and log output. In Python 3000, a wider range of characters should be considered "screenable" based on the Unicode standard.
+ 
+ **動機
+ In the Python 2.* series, the "function to create a displayable string" repr escapes all non-ASCII characters. This is not a problem when most of the characters that make up the string are ASCII. However, in some languages, such as Japanese, most characters are non-ASCII, which is very inconvenient.
+ 
+ 例えば open(japaneseFilemame) が何か例外を投げる場合、エラーメッセージは IOError: [Errno 2] No such file or directory: '\u65e5\u672c\u8a9e' といったものになる。
+ 
+ Python 3000 includes many user-friendly features for non-Latin users, such as non-ASCII identifiers. A similar evolution in the creation of displayable strings would be helpful.
+ 
+ *1280328433*抜粋翻訳 PEP 236 Back to the __future__
+ PEP 236 Back to the __future__
+ 
+ **動機
+ 
+ Over time, Python makes incompatible changes to the widely known semantics of the language core structure, or changes unexpected (implementation-dependent) behavior in some way. These changes are not made on a whim and are always intended to improve the language in the long run, but they are controversial and confusing in the short run.
+ 
+ PEP 5, Guidelines for Language Evolution[1] proposes ways to reduce pain. This PEP introduces a mechanism to achieve this.
+ 
+ **意図
+ When making incompatible changes to the syntax or semantics of core language parts: .
+ 
+     1. the release C in which the change is introduced does not change the syntax or semantics by default.
+ 
+     2. some future release R, where its syntax and semantics are enforced.
+ 
+     3. the mechanism described in PEP 3, Warning Framework[3] will be used to create warnings, whenever possible, about operations or configurations that would change their meaning in Release R.
+ 
+     4. a new future_statement (see below) can be explicitly included in module M to require that code in module M use the new syntax and semantics in the current release C.
+ 
+ This means that the old code will continue to work by default for at least one release, but will begin to display the new warning messages. The transition to the new syntax and semantics can proceed during this period, and future_statement can be used to make the module containing it behave as if the new syntax and semantics were already in force.
+ 
+ *1280333246*抜粋翻訳 PEP 3107 Function Annotations 
+ ** 概要
+ This PEP introduces a syntax for adding arbitrary metadata to Python functions.
+ 
+ ** 根拠
+ The Python 2.x series did not have a way to qualify function arguments and return values, and numerous tools and libraries have emerged to fill the gap. Some use decorators introduced in PEP 318, while others parse function documentation strings to find annotations.
+ 
+ This PEP aims to provide the only standard way to specify such information and to reduce the confusion that a wide range of methods and syntax variations currently cause.
+ 
+ ** Assumptions for function annotations
+ 
+ -Function annotations are completely optional, both for parameters and return values.
+ -Python itself does not give annotations any specific meaning.
+ 
+ >|python|
+ def compile(source: "something compilable",
+             filename: "where the compilable thing comes from",
+             mode: "is this a single statement or a suite?"):
+     ...
+ ||<
+ 
+ >|python|
+ def haul(item: Haulable, *vargs: PackAnimal) -> Distance:
+     ...
+ ||<
+ </body>
+
+[Hatena Diary 2010-07-28 https://nishiohirokazu.hatenadiary.org/archive/2010/07/28]

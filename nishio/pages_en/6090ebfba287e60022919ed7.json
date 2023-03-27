@@ -1,0 +1,128 @@
+Hatena2008-10-24
+code:hatena
+ <body>
+ *1224796794*I'm hungry.
+ Around 2:00 this morning I said to myself, "I just realized I didn't eat anything last night!" but I didn't eat because I wasn't really hungry, but now I'm really hungry.
+ 
+ He chopped up and blanched carrots, cabbage, chives, and other things in the refrigerator that had slightly darkened surfaces.
+ 
+ Oh, shoot. I put carrots, kyabetsu, chives, and so on in order of how they were cooked, but I put them in as I was cutting them, and it didn't take long to cut chives, so I put them in at about the same time as cabbage. I should have waited until the cabbage was translucent before adding it. I couldn't tell if it was chives or spinach.
+ 
+ 
+ Well, that happened, but I ate chicken ramen with lots of vegetables in the morning and the result was okay.
+ 
+ *1224861700* Studying to guard Haskell.
+ before
+ >|haskell|
+ between :: Int -> Int -> Int -> Bool
+ between x y z = 
+     if ((y < x && x < z) || (z < x && x < y)) then
+         True
+     else
+         False
+ ||<
+ 
+ after
+ >|haskell|
+ between :: Int -> Int -> Int -> Bool
+ between x y z  
+     | y < x && x < z = True
+     | z < x && x < y = True
+     | otherwise = False
+ ||<
+ 
+ before
+ >|haskell|
+ progress_turn :: Int -> Int -> Int -> [Int]
+ progress_turn x y z =
+     if (between x y z) then
+         [x, 0, 0]
+     else 
+         if (between y x z) then
+             [0, y, 0]
+         else
+             [0, 0, z]
+ ||<
+ 
+ after
+ >|haskell|
+ progress_turn :: Int -> Int -> Int -> [Int]
+ progress_turn x y z
+     | (between x y z) = [x, 0, 0]
+     | (between y x z) = [0, y, 0]
+     | otherwise = [0, 0, z]
+ ||<
+ 
+ before
+ >|haskell|
+ your_score :: [Int] -> [Int] -> Int
+ your_score cur_score new_score = 
+     if (x == y && x == z) then 
+         0
+     else 
+         if (x == y || x == z) then
+              1
+         else 
+             if (between x y z) then
+                 2
+             else
+                 if (y == z) then
+                     -2
+                 else
+                     -1
+ 
+     where [x, y, z] = [x + y | (x, y)<-(zip cur_score new_score)]
+ ||<
+ 
+ after
+ >|haskell|
+ your_score :: [Int] -> [Int] -> Int
+ your_score cur_score new_score 
+     | (x == y && x == z) = 0
+     | (x == y || x == z) = 1
+     | (between x y z) = 2
+     | (y == z) = -2
+     | otherwise = -1
+     where [x, y, z] = [x + y | (x, y)<-(zip cur_score new_score)]
+ ||<
+ 
+ Oh wow, you write very nicely with the guard.
+ 
+ *1224869072*Haskell続き
+ I was getting high through sleep.
+ 
+ >>
+ id:ujihisa I wonder if it is reasonable for progress_turn to return [Int]. (Int, Int, Int, Int) is better.
+ <<
+ >|haskell|
+ data Score = Score Int Int Int deriving Show
+ add :: Score -> Score -> Score
+ add (Score x y z) (Score a b c) = (Score (x + a) (y + b) (z + c))
+ main = print $ (Score 1 2 3) `add` (Score 0 3 0)
+ ||<
+ I made it like this.
+ </body>
+ <comments>
+ <comment>
+ <username>ujihisa</username>
+ <body>progress_turnが[Int]を返すのは妥当なのかなあ。(Int, Int, Int)のがいいきが。</body>
+ <timestamp>1224863580</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I can't use zip to add (1, 0, 0) and (0, 1, 0). Well, I guess I could make <br>data Score = Score Int Int Int Int<br> and then make a function that takes two Scores and sums them. </body>
+ <timestamp>1224868822</timestamp>
+ </comment>
+ <comment>
+ <username>ujihisa</username>
+ <body>Oh<br>And what's more, it's not Int, but a non-integer constraint(ry)</body>.
+ <timestamp>1224873350</timestamp>
+ </comment>
+ <comment>
+ <username>ujihisa</username>
+ <body>HINT: unzip3</body>
+ <timestamp>1224873644</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-24 https://nishiohirokazu.hatenadiary.org/archive/2008/10/24]

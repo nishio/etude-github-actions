@@ -1,0 +1,236 @@
+Hatena2010-05-19
+code:hatena
+ <body>
+ *1274227631*[Haskell]昨日の続き
+ I'm sure we can divide it into modules and do the etc. again in the future, so let's leave it alone and move on.
+ We stopped making T3Game and T3Play and made them Game and Play.
+ 
+ >|haskell|
+ -- takes a game phase and returns a list of possible moves to choose from
+ possible_hands :: Game -> [Play]
+ possible_hands game = [MakePlay i | (v, i) <- zip (value game) [0..], v == 0]
+ -- returns the open position of the map (index with list value of 0)
+ 
+ -- receive a randomly selectable incoming move, pick one and return it
+ random_choice :: [Play] -> IO Play
+ random_choice hands = do
+   i <- getStdRandom (randomR (0, (length hands) - 1))
+   return (hands !! i)
+ 
+ -- Receive human-selectable incoming moves, pick one, and return it.
+ human_choice :: [Play] -> IO Play
+ human_choice hands = do
+   hSetBuffering stdout NoBuffering            
+   putStr ("Choice a hand: " ++ (show (zip [0..] hands)))
+   i <- readNum
+   return (hands !! i)
+       where readNum :: IO Int
+             readNum = readLn
+ ||<
+ 
+ *1274228566*[Haskell] module
+ It doesn't work. I wanted to use this to switch between import A and import B to change the behavior, but at the beginning of "module B where" I get a parser error.
+ 
+ >|haskell|
+ module A where
+   newtype Foo = MakeFoo {foo :: Integer}
+   newtype Bar = MakeBar {bar :: String}
+   foo2bar :: Foo -> Bar
+   foo2bar (MakeFoo x) = MakeBar ("A" ++ (show x))
+ 
+ module B where
+   newtype Foo = MakeFoo {foo :: Integer}
+   newtype Bar = MakeBar {bar :: (String, String)}
+   foo2bar :: Foo -> Bar
+   foo2bar (MakeFoo x) = MakeBar ("B", (show x))
+ 
+ module Main where
+ import A 
+ main = print $ foo2bar $ (MakeFoo 42)
+ ||<
+ 
+ <hr>
+ >>
+ id:nyaxt Wouldn't it work if I split the file per module?
+ <<
+ module A, BをA.hs, B.hsに切り分けるとimport Aでインポートでき、期待通りにimportの変更で挙動を変えるのができるようになりました。<a href='http://www.sampou.org/haskell/tutorial-j/modules.html'>A Gentle Introduction to Haskell: Modules</a>には
+ >>
+ Module names are not formally associated with file names. Also, two or more modules can be contained in a single file. (A module can also be divided into multiple files.)
+ <<
+ It says....
+ 
+ *1274273394*[Haskell]昨日の続き
+ I created a function that takes a game and an incoming move and returns a new, updated game, and a function that takes a game and returns whether the game is over and who won.
+ 
+ >|haskell|
+ -- Receives games and incoming moves and returns updated new games
+ step_game :: Game -> Play -> IO Game
+ step_game game play = return (MakeGame
+     [if (i == (play_value play)) then (next_turn game) else x | (i, x) <- zip [0..] (value game)] 
+     (3 - (next_turn game)))
+ 
+ -- Receive the game and return if the game is over and who won.
+ check_is_finished :: Game -> (Bool, Int)
+ check_is_finished game = let lines = (map (\x -> (map ((value game)!!) x))
+                                       [[0, 3, 6], [1, 4, 7], [2, 5, 8], 
+                                        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                                        [0, 4, 8], [2, 4, 6]])
+                          in case find (== [1, 1, 1]) lines of
+                               Just x -> (True, 1)
+                               Nothing -> case find (== [2, 2, 2]) lines of
+                                           Just x -> (True, 2)
+                                           Nothing -> case find (== 0) (value game) of
+                                                       Just x -> (False, 0)
+                                                       Nothing -> (True, 0)
+ ||<
+ 
+ Thought routines such as random_choice and human_choice were moved to monte.hs since they are irrelevant to the game. This means that TicTacToe.hs, the game definition, no longer import IO and import Random. Correct.
+ >|haskell|
+ -- To "think" is to choose one of the given options
+ type Think = [Play] -> IO Play
+ 
+ -- receive a randomly selectable incoming move, pick one and return it
+ random_choice :: Think
+ random_choice hands = do
+   i <- getStdRandom (randomR (0, (length hands) - 1))
+   return (hands !! i)
+ 
+ -- Receive human-selectable incoming moves, pick one, and return it.
+ human_choice :: Think
+ human_choice hands = do
+   hSetBuffering stdout NoBuffering            
+   putStr ("Choice a hand: " ++ (show (zip [0..] hands)))
+   i <- readNum
+   return (hands !! i)
+       where readNum :: IO Int
+             readNum = readLn
+ ||<
+ I worked hard on MAIN because I have all the components I need to play the game. Now I can play a game against a random thinking AI and a human or a game.
+ 
+ >|haskell|
+ main = do
+   game <- init_game
+   while_game_finished game
+ 
+ while_game_finished :: Game -> IO Int -- IO Who
+ while_game_finished game 
+     = if finished then
+           do
+             putStr $ show game
+             putStr "finished\n"
+             return who_won
+       else
+           let 
+               choice = if (next_turn game) == 2 then human_choice else random_choice
+           in
+             do
+               putStr $ show game
+               play <- choice $ possible_hands $ game 
+               game <- step_game game play
+               while_game_finished game 
+ 
+     where (finished, who_won) = (check_is_finished game)
+ ||<
+ 
+ Next, the AI will Monte Carlo. This means.
+ >|haskell|
+ choice = if (next_turn game) == 2 then human_choice else random_choice
+ ||<
+ suggests the need to be able to change the part of the
+ >|haskell|
+ -- Receives games and selects AI according to that information
+ select_ai_for_human_play :: Game -> Think
+ select_ai_for_human_play game = if (next_turn game) == 2 then human_choice else random_choice
+ 
+ select_ai_for_monte :: Game -> Think
+ select_ai_for_monte game = random_choice
+ ||<
+ I guess it goes something like this.
+ 
+ source
+ http://bitbucket.org/nishio/montecarlo_game_test/src/tip/monte.hs
+ http://bitbucket.org/nishio/montecarlo_game_test/src/tip/TicTacToe.hs
+ 
+ *1274276378*[Haskell]List of IO monads
+ I have a list with 100 IO Int's in it, how do I find out the number of things with an Int of 1? When I created such a function, I was told that there is no data constructor such as IO.
+ >|haskell|
+ won :: IO Int -> Int -> Bool
+ won (IO x) y = (x == y)
+ ||<
+ 
+ <hr>
+ 
+ <a href='http://www.sampou.org/haskell/a-a-monads/html/laws.html'>The monad laws</a>
+ >>
+ The IO monad is an example of a well-known one-way monad in Haskell: there is no escape from the IO monad, so it is impossible to write a function definition that performs a computation in the IO monad but does not include the type constructor IO as a result value.
+ <<
+ that is to say
+ >|haskell|
+ won :: IO Int -> Int -> IO Bool
+ ||<
+ Should it be? (m >>= f) >>= g == m >>= (\x -> f x >>= g)?
+ 
+ <hr>
+ 
+ >|haskell|
+ won :: IO Int -> Int -> IO Bool
+ won m x = m >>= (\y -> return (x == y))
+ ||<
+ 
+ Done and done. Now that the IO Int list has changed to the IO Bool list... no!
+ 
+ <hr>
+ >|haskell|
+ filterM  :: Monad m => (a -> m Bool) -> [a] -> m [a]
+ ||<
+ If a is IO Int and m is IO, then (IO Int -> IO Bool) -> [IO Int] -> IO [IO Int]. Hmmm. I can do IO Int -> IO Bool by swapping the arguments of won earlier. However, I wonder what is the purpose of making IO [IO Int].
+ 
+ <hr>
+ There's something called msum.
+ 
+ >|haskell|
+ won :: IO Int -> Int -> IO Int
+ won m x = m >>= (\y -> return if (x == y) then 1 else 0)
+ 
+ main = print $ msum $ map won [...]
+ ||<
+ 
+ Ah, no, IO Int is not MonadPlus.
+ 
+ Let's calm down and think about it. I'm about to go to sleep.
+ 
+ <hr>
+ >|haskell|
+ count_n :: Int -> [IO Int] -> IO Int -> IO Int
+ count_n _ [] mresult = mresult
+ count_n n (mx:mxs) mresult 
+     = count_n n mxs (mresult >>= (\r -> mx >>= (\x -> return (if (x == n) then r + 1 else r))))
+ 
+ 
+ main = do
+   game <- init_game
+   play <- return $ (possible_hands game) !! 0 
+   result <- count_n 2 [(step_game game play) >> (while_game_finished select_ai_for_monte game) | _ <- [1..100]] (return 0) 
+   print result
+ ||<
+ Wow, it's done!
+ 
+ Now you can create a Monte Carlo AI tomorrow.
+ 
+ <hr>
+ id:pi8027 told me about liftM.
+ >|haskell|
+ count_n n (mx:mxs) mresult 
+     = count_n n mxs (liftM2 (\x r -> (if (x == n) then r + 1 else r)) mx mresult) 
+ ||<
+ Much cleaner.
+ </body>
+ <comments>
+ <comment>
+ <username>nyaxt</username>
+ <body>Would it work if I split the files by 1 module? </body>
+ <timestamp>1274231922</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-05-19 https://nishiohirokazu.hatenadiary.org/archive/2010/05/19]

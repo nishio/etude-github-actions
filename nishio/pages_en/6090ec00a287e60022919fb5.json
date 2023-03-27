@@ -1,0 +1,194 @@
+Hatena2009-06-20
+code:hatena
+ <body>
+ *1245454540*需要と供給
+ <img src="http://gyazo.com/9ce3a1b263131fdb4555987634c63a26.png">
+ 
+ This study deserves more recognition!
+ 
+ *1245466286*TAGBOAT SUMMER AWARD 2009 is here!
+ We are here at <a href='http://www.tagboat.com/ngs/award/summer/2009/exhibition.html'>TAGBOAT SUMMER AWARD 2009</a>.
+ 
+ Twitterから転載:
+ 
+ >>
+ I honestly don't know what to bring because it's my first group exhibition, so I'm putting everything in my bag for now!
+ about 2 hours ago from web
+ <<
+ 
+ >>
+ I am not even sure if it should stay with the work all the time. But for now, I made a commentary to put next to my works, because there is a big difference between having a commentary and not having one, and because most people will not look at my portfolio. On the way there, I went to a convenience store to print it out and buy a thumbtack.
+ about 2 hours ago from web
+ <<
+ 
+ >>
+ kaorun @nishio On the other hand, some people find it difficult to get a closer look when there are people around, so I think it's better to wander out from time to time rather than sticking around. If you are seriously interested, you can stay there until someone comes.
+ 
+ @kaorun You're right. It's kind of scary to be there all the time, like a clerk in a jewelry store.
+ 
+ I guess I should have made a T-shirt with the same design as my work and worn it...
+ 
+ tokoroten @nishio Why don't you wear a Life Game T-shirt?
+ 
+ @tokoroten You'd fail to identify with a lifegame t-shirt, unless you know lifegame, you don't even know it's a lifegame.
+ 
+ @tokoroten By the way, today's T-shirt is a black T-shirt partially bleached with bleach.
+ <<
+ 
+ At the venue, I posted explanatory texts and set up a desk to leave the portfolios open for the time being. I personally, at least, hesitate to pick up and open a closed booklet on a chair.
+ 
+ So, since there were not many people sticking around, I came outside anyway and am writing a blog now. When I finish writing, I will go back down.
+ 
+ <hr>
+ 
+ Whew, I went to the trouble of talking to someone who was looking at my portfolio. It's hard psychologically to talk to strangers. I don't mind talking to 800 strangers, but it's hard when I'm alone. I don't know why.
+ 
+ <hr>
+ 
+ No matter how many times I see it, the salamander's presence is overwhelming. My work has no presence. If it is a "religious painting that glorifies the god of mathematics," there should be an overwhelming sense of presence and awe, but my current work lacks such power. Hmmm. I think it should be improved, but I don't know what to do.
+ 
+ *1245472471* Quantization noise
+ This one looks like it's drawn well.
+ <img src="http://gyazo.com/9fff60849f568d2e1de6e85fe0d2414e.png">
+ 
+ This area is no good.
+ <img src="http://gyazo.com/38f254eda0991d13fc0ba07e8929a329.png">
+ 
+ Fixed by.
+ <img src="http://gyazo.com/3f743f2dc970b221db186fb4c34cbf2e.png">
+ Oh, so the thickening in the middle is a different factor than quantization noise? Hmmm.
+ 
+ 
+ before/after
+ <img src="http://gyazo.com/37c6e5cf2cfa0e9d547e077d3af6d6e7.png"> <img src="http://gyazo.com/024c43f508d3ab3fcf89c8ccfa15bc96.png">
+ Putting them side by side shows how rickety the first diagram was.
+ 
+ *1245496485*New seven divisions
+ I had an epiphany on the train ride home. Point symmetry!
+ 
+ However, I need to place the 12 vertices beautifully, and I don't think I can do it by hand, so I write the code. I want to minimize the length of the edges, so I should use the conjugate gradient method because it's an optimization problem for a quadratic function. Yup.
+ 
+ 
+ I wrote it by genetic algorithm because it was a pain in the ass.
+ 
+ First, this is the graph where the lengths of the edges should be minimized, the fixed points are written in coordinates, and the moving points are written in subscripts.
+ >|python|
+ edges = [
+     (0, (1, 0)),
+     (0, (1, 0)),
+     (0, 1),
+     (1, (2, 0)),
+     (1, 3),
+     (2, (3, 0)),
+     (2, (4, 1)),
+     (2, 4),
+     (3, 4),
+     (3, 5),
+     (4, (2, 2)),
+     (5, (0, 2)),
+     (5, (0, 3)),
+ ]
+ ||<
+ 
+ Create a function to find the distance
+ 
+ >|python|
+ from math import sqrt
+ def calc_dist(xs):
+     ret = 0.0
+     for (v1, v2) in edges:
+         x1 = xs[v1]
+         if isinstance(v2, tuple): # v2 fixed 
+             x2 = v2
+         else:
+             x2 = xs[v2]
+         ret += sqrt((x1[0] - x2[0]) ** 2 + (x1[1] - x2[1]) ** 2)
+     return ret
+ ||<
+ 
+ Create functions to mutate and random initial values
+ 
+ >|python|
+ from random import gauss, random
+ 
+ def mutate(xs):
+     ret = []
+     for i in range(6):
+         ret.append(
+             (xs[i][0] + gauss(0, 1), xs[i][1] + gauss(0, 1)))
+ 
+     return ret
+ 
+ 
+ cur = [(random() * 4, random() * 4) for i in range(12)]
+ cur = [(calc_dist(cur), cur)]
+ ||<
+ 
+ Now all that remains is for the computer to soldier on.
+ 
+ >|python|
+ for i in range(1000):
+     children = [mutate(cur[0][1]) for i in range(1000)]
+     cur.extend((calc_dist(xs), xs) for xs in children)
+     cur.sort()
+     cur = [cur[0]]
+     print cur        
+ ||<
+ 
+ When executed
+ [(10.066974460981866, [(1.0093958273824633, -0.10241337817317504), (1.67596128193252, -0.088355447743802051), (3.2439881038316933, 1.0639891791625744), (2.1424292236222975, 0.594492140279546), (2.3347757185495399, 1.4530289576181918), (0.010060747437447629, 2.2030633802780248)])]
+ Converged around. Let's start again from here with a smaller mutation size.
+ 
+ Just rewrite it like this.
+ >|python|
+ def mutate(xs):
+     sigma = 0.1
+     ret = []
+     for i in range(6):
+         ret.append(
+             (xs[i][0] + gauss(0, sigma), xs[i][1] + gauss(0, sigma)))
+ 
+     return ret
+ 
+ 
+ cur = [(10.066974460981866, [(1.0093958273824633, -0.10241337817317504), (1.67596128193252, -0.088355447743802051), (3.2439881038316933, 1.0639891791625744), (2.1424292236222975, 0.594492140279546), (2.3347757185495399, 1.4530289576181918), (0.010060747437447629, 2.2030633802780248)])]
+ ||<
+ 
+ Now it's (REMOVED). I forgot to explain that the first number is the sum of the lengths of the sides.
+ 
+ This is how it finally happened. (removed)
+ <hr>
+ Drawings.
+ 
+ <img src="http://gyazo.com/161f1498b49c02c25a7d4d1bfdbe24c5.png">
+ 
+ Ahh. I guess I would have preferred minimizing the difference in area or homogenizing the lengths of the line segments rather than minimizing the lengths of the edges. The edges are indeed taut and 120 degree style, but I don't see the beauty.
+ 
+ <hr>
+ 
+ Oh, and
+ >||
+     (0, (1, 0)),
+     (0, (1, 0)),
+ ||<
+ Bug found.
+ 
+ The most execution with constraints to avoid too much sticking to the edges.
+ 
+ <img src="http://gyazo.com/d61ae917dd29c151c631fccfc0656f16.png">
+ It turned out rather well. The slight bend in the middle of the edge across the edge of the screen should be perfectly straight with a constraint to match the slope of the specific edge.
+ </body>
+ <comments>
+ <comment>
+ <username>yukoba</username>
+ <body>I found something interesting! <br>The result changes a lot depending on whether you use "want" or "need"! </body>
+ <timestamp>1245850799</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>本当だ</body>
+ <timestamp>1245851701</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-06-20 https://nishiohirokazu.hatenadiary.org/archive/2009/06/20]

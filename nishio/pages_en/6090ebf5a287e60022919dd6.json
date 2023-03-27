@@ -1,0 +1,306 @@
+Hatena2008-01-29
+code:hatena
+ <body>
+ *1201579855*地名の由来
+ There was a discussion in the lab about whether Tameike-Sanno had a tame pond after all, so I did a search.
+ 
+ >>
+ 溜池山王駅 - Wikipedia
+ http://ja.wikipedia.org/wiki/%E6%BA%9C%E6%B1%A0%E5%B1%B1%E7%8E%8B%E9%A7%85
+ Tameike" refers to a large reservoir (pond for water storage) built in this area during the Edo period (ry).
+ Sanno" refers to the Hie Sanno Shrine (Nagatacho 2-chome, Chiyoda-ku, Tokyo), which is built nearby.
+ <<
+ 
+ Wikipediaすごい
+ 
+ >>
+ 学研奈良登美ヶ丘駅 - Wikipedia
+ http://ja.wikipedia.org/wiki/%E5%AD%A6%E7%A0%94%E5%A5%88%E8%89%AF%E7%99%BB%E7%BE%8E%E3%83%B6%E4%B8%98%E9%A7%85
+ The name "Tomigaoka" is said to derive from the ancient name "Torimi-go (Tomi-go)" in the western part of Soeshita-gun, Yamato Province, and "Tomi" was also written as "Torimi", "Tomi" or "Tomiya" in ancient times. The "Tomi" in "Tominosato" is connected to "Tomi," "Torimi," "Tomi," and other place names in the western part of present-day Nara City and eastern Ikoma City. The name "Tomisato" is derived from the ancient Shinto ritual of burying birds, and "Tomi" is said to have meant "going up to Hades," or the afterlife in the early days. The mythical Mononobe clan's founder, Rao Hayahi-no-mikoto, is said to have moved to Mt. Shiraniwa in Torimi, which was also located in the area between western Nara City and eastern Ikoma City, and from which the current place names Tomigaoka and Shiraniwa-dai are said to have been derived.
+ <<
+ 
+ Nara is amazing
+ Nara has an extraordinary amount of history.
+ NAIST++
+ 
+ *1201592357*勉強中
+ Ask Mr. Mitsunari to tell you about the 3-operand method.
+ Ask Mr. Minowa to tell you about the advantages of Scheme.
+ Ask Mr. Takezako to explain how AVM works.
+ I'm so blessed to be able to do this.
+ 
+ *1201598235*AS3 Performance Measurement
+ In the meantime, I wrote this code to measure performance.
+ >|actionscript|
+ package {
+   import flash.display.*;
+   public class Test extends Sprite {
+     private var t:Number;
+     public function Test(){
+       var N:int = 10000000;
+       log(N);
+       var d:Date = new Date();
+       for(var j:int=0; j < 5; j++){
+         getTime();
+         for(var i:int=0; i < N; i++){
+             
+         }
+         log(getDiff());
+       }
+     }
+     
+     public function getTime():Number{
+       t = new Date().time;
+       return t;
+     }
+ 
+     public function getDiff():Number{
+       var t2:Number = new Date().time;
+       var result:Number = t2 - t;
+       t = t2;
+       return result;
+     }
+   }
+ }
+ ||<
+ Ten million empty loops are like 78 47 46 46 47 47.
+ If you put x++;, it's like 94 47 47 47 62 63.
+ 
+ -----
+ 
+ >|actionscript|
+ var x:Array = [0, 0];
+ getTime();
+ for(var i:int=0; i < N; i++){
+   x[0] = 0;
+   x[1] = 0;
+ }
+ ||<
+ 
+ 485 484 469 563 469
+ 
+ >|actionscript|
+   x = [0, 0];
+ ||<
+ 
+ 5219 5203 5141 5109 5063
+ 
+ Of course, the cost of generating a new one is higher than the destructive rewriting of Array.
+ But if it takes 5 seconds to make 10 million pieces, it must be lighter than you think.
+ 
+ -----
+ 
+ >|actionscript|
+ var x:Array = [0.1, 0.5];
+ getTime();
+ for(var i:int=0; i < N; i++){
+   var x0:Number = x[0];
+   var x1:Number = x[1];
+   x0 * x0 + x1 * x1;
+ }
+ ||<
+ 
+ 406 375 375 391 375
+ 
+ >|actionscript|
+   x[0] * x[0] + x[1] * x[1];
+ ||<
+ 625 594 609 891 593
+ 
+ The cost of referencing an Array is high; if you want to reference it twice, it is faster to assign it to a local variable, even if it is tedious.
+ I would like to see what kind of instructions are actually running to see what is slow, but flasm was not AS3 compliant.
+ 
+ -----
+ I'm going to go with the policy of creating variables frequently for now, so when I type v and store it, I'll use var ... :... = ... ... = ....
+ 
+ -----
+ There is no difference in runtime performance between a one-character variable and a 100-character variable; AS3 prefers longer names that are easier to read.
+ 
+ -----
+ I'm trying to define my own AS3 coding style while researching performance, and I'm glad to see that I seem to be able to write code that is relatively readable to my liking.
+ 
+ *1201600506*Mystery of AS3 (just a loop but stack overflow)
+ When I run the code below, I get a stack overflow. Mystery.
+ >|actionscript|
+ package {
+   import flash.display.*;
+   public class Test extends Sprite {
+     private var t:Number;
+     public function Test(){
+       var N:int = 100000000;
+       log(N);
+       var d:Date = new Date();
+       for(var j:int=0; j < 5; j++){
+         var a:Number = 0.1;
+         var b:Number = 0.1;
+         var diff:Number;
+ 
+         getTime();
+         for(var i:int=0; i < N; i++){
+           diff = a - b;
+           diff * diff;
+         }
+         log(getDiff());
+       }
+     }
+     
+     public function getTime():Number{
+       t = new Date().time;
+       return t;
+     }
+ 
+     public function getDiff():Number{
+       var t2:Number = new Date().time;
+       var result:Number = t2 - t;
+       t = t2;
+       return result;
+     }
+   }
+ }
+ ||<
+ 
+ What is even more puzzling is that if you rewrite it as shown below, it will run without stack overflow.
+ >|actionscript|
+ for(var i:int=0; i < N; i++){
+   diff = a - b;
+   try{
+     diff * diff;
+   }catch(e){
+     throw e;
+   }
+ }
+ ||<
+ 
+ *1201601153*#SoozyConference4の思い出
+ Danjo-san kicked me.
+ 
+ *1201603991*I was impressed for the first time in a long time.
+ I wrote down the physics engine with the various vector operations expanded inline, took out all the compile errors and warnings, and it worked in one shot. I'm amazing. I'll buy a reward on the way home.
+ 
+ *1201604295* Alright, let's go home.
+ I'm going much faster than usual, but I'm hungry, and now that I'm done, I'm ready to go home.
+ What to do when you don't get into the groove tomorrow:
+ 
+ -ActionScript 3.0 and AVM2: Performance Tuning
+ -- http://www.onflex.org/ACDS/AS3TuningInsideAVM2JIT.pdf
+ - Read the
+ 
+ - Include a disassembler for AS3
+ -- http://www.5etdemi.com/blog/archives/2007/01/as3-decompiler/
+ 
+ *1201604979* good husband
+ http://d.hatena.ne.jp/asami81/20080129/p2
+ Reference++.
+ 
+ even
+ >>
+ Good example: "I like it better than Nico Nico Douga!"
+ Walu example: "You're cuter than Ayanami Rei!"
+ <<
+ I don't know the difference...orz
+ He's not going to be a good husband yet.
+ 
+ *1201607617*AS3 To int after doing the calculation in the subscript part
+ >|actionscript|
+ var a:int = 0;
+ var b:Array = [1,2,3];
+ getTime();
+ for(var i:int=0; i < N; i++){
+   b[a*2]
+ }
+ ||<
+ 
+ 350 ms for 10000000 iterations
+ b[a*2]をb[int(a*2)]に変えると112ms。3倍速。
+ 
+ *1201608783*AS3 Let's put the common parts in parentheses.
+ >|actionscript|
+ var a:int = 0;
+ getTime();
+ for(var i:int=0; i < N; i++){
+  (
+   a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a  *
+   a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a  *
+   a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a  *
+   a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a
+   )
+ }
+ log(getDiff());
+ ||<
+ 
+ 853 ms for 10000000 iterations
+ 
+ Parentheses...
+ 
+ >|actionscript|
+  (
+   (a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a)  *
+   (a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a)  *
+   (a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a)  *
+   (a*a*a*a * a*a*a*a * a*a*a*a * a*a*a*a)
+   )
+ ||<
+ 
+ 404 ms for 10000000 iterations. 2x faster.
+ 
+ But, well, it's 0.4 milliseconds for 1,000 repetitions, so it's not much time.
+ 
+ *1201615578*Haskellでstack overflow
+ >|haskell|
+ Prelude> foldl1 (+) [1..0x7eff0]
+ 135291795576
+ Prelude> foldl1 (+) [1..0x7eff1]
+ *** Exception: stack overflow
+ ||<
+ 
+ *1201622104* Somehow.
+ http://ustream.tv/channel/lalha
+ 
+ I guess it's like turning on the TV and watching it in my spare time.
+ I don't have a TV.
+ After taking a bath, I casually looked at twitter and saw that it was broadcasting live, so I turned it on.
+ Unlike television, it is possible to chat and interact with the person on the screen?
+ 
+ -----
+ 
+ Talk about being forced to use a method with 46 arguments.
+ 
+ -----
+ 
+ Daily Build Important
+ 
+ -----
+ 
+ No good.
+ Unlike TV, it's chat and voice, so if you leave your seat, you can only hear one side of the conversation and it bothers you (like a cell phone call on the train).
+ On the other hand, if you leave the seat completely, what is said on one side is lost because it is audio and cannot be read later.
+ 
+ *1201627544*新聞縛り
+ http://www1.ocn.ne.jp/~tatsujin/ropework/nidukuri/index.htm
+ 
+ It's recyclable garbage tomorrow, so I'll tie it up and put it out.
+ </body>
+ <comments>
+ <comment>
+ <username>yossy44</username>
+ <body>I'll try to write it in the expected way, but I think the process of popping the diff * diff value off the stack is missing when generating the code (maybe a bug). <br>And if you enclose the code in try-catch, the correct code is being generated. </body>
+ <timestamp>1201602730</timestamp>
+ </comment>
+ <comment>
+ <username>yossy44</username>
+ <body>You can disassemble it by forcing it to use asc.jar. http://www.5etdemi.com/blog/archives/2007/01/as3-decompiler/<br>By the way, it is recommended to use flash.utils.getTimer instead of new Date().time to measure time. I recommend using flash.utils.getTimer instead of new Date().time. </body>
+ <timestamp>1201603039</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <body>Yes, sir, you are aiming for the number one SEO position.
+ <timestamp>1201605841</timestamp>
+ </comment>
+ <comment>
+ <username>earth2001y</username>
+ <body>A good wife and a good husband is too greedy</body>.
+ <timestamp>1201609672</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-01-29 https://nishiohirokazu.hatenadiary.org/archive/2008/01/29]

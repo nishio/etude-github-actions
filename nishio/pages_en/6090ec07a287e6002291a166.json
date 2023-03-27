@@ -1,0 +1,234 @@
+Hatena2011-04-01
+code:hatena
+ <body>
+ *1301641688* Flying April Fool's Day
+ Twitterから転載
+ >>
+ Nikoriks April Fools' Day fliers, please refrain from sending out your jokes on the Internet until the entire world is on April 1. It's still March 31st in many parts of the world. #afj
+ <<
+ http://twitter.com/#!/Nikoriks/status/53636996165402624
+ 
+ You are absolutely right! Japanese people tend to think of their small island as the only world! But the world is much bigger than that! Have you ever thought how people in "countries where it is not April Fool's Day yet" or "countries where April Fool's Day has already ended" would feel when they see that lie? You should not be in a hurry and wait until that time when the whole world will be on April 1st before you publish your story!
+ 
+ By the way, the Rhine Islands are kind of ahead of their time.
+ <img src="http://gyazo.com/d4a8ee467933197b306a2fa0a3eac1ce.png">
+ <a href="http://upload.wikimedia.org/wikipedia/commons/c/cd/Timezones2010.png">from Wikipedia</a>
+ 
+ I added this since April Fool's Day is over. In other words, 4/2 begins in the Line Islands (UTC+14) at the same time that 4/1 begins in Hawaii (UTC-10). And then 4/1 starts in Samoa (UTC-11) one hour later, so the whole world is on 4/1 at the same time, not even for a moment.
+ 
+ <img src="http://gyazo.com/d5e504971ded7e31f0dfd08c64669fff.png">
+ 
+ *1301667130*最小限Forth + ワード定義機能付きForth
+ Well, continuing from yesterday, for those of you who have Vol. 60 of WebDBPress, see p. 24, I wrote a minimal amount of code to actually test the behavior of Forth, which can calculate (1 + 2) * 3 with 1 2 + 3 *. It's 31 lines, but it will do 1 2 + 3 * properly. Well, well, well. I can't interpret any numbers other than 1, 2, and 3, but if you are concerned about that, just think of it as an exercise to get it to work with general numbers.
+ 
+ >|python|
+ # -*- encoding: utf-8 -*-
+ """
+ mini-Forth
+ Forth解説のための最小限のForth実装
+ """
+ 
+ data = "1 2 + 3 * print"
+ tokens = data.split()
+ stack = []
+ cur = 0
+ while cur < len(tokens):
+     if t in "123":
+         stack.append(int(t))
+ 
+     elif t == "+":
+         x = stack.pop()
+         y = stack.pop()
+         stack.append(x + y)
+ 
+     elif t == "*":
+         x = stack.pop()
+         y = stack.pop()
+         stack.append(x + y)
+ 
+     elif t == "print":
+         x = stack.pop()
+         print "print:", x
+ 
+     else:
+         raise NotImplementedError(t)
+ ||<
+ 
+ By the way, I made such a version because I thought, "If it doesn't even have a word definition, it's just a calculator rather than a programming language.
+ 
+ >|python|
+ # -*- encoding: utf-8 -*-
+ """
+ mini-Forth
+ Forth解説のための最小限のForth実装
+ """
+ 
+ data = ": dp dup print ; 1 2 dp + 3 * print"
+ stack = []
+ words = {}
+ 
+ def evaluate(tokens):
+     cur = 0
+     while cur < len(tokens):
+         t = tokens[cur]
+         cur += 1
+         prevstack = stack[:]
+ 
+         if t in "123":
+             stack.append(int(t))
+ 
+         elif t == "+":
+             x = stack.pop()
+             y = stack.pop()
+             stack.append(x + y)
+ 
+         elif t == "*":
+             x = stack.pop()
+             y = stack.pop()
+             stack.append(x + y)
+ 
+         elif t == "print":
+             x = stack.pop()
+             print "print:", x
+ 
+         elif t == "dup":
+             x = stack.pop()
+             stack.append(x)
+             stack.append(x)
+ 
+         elif t == ":":
+             buf = []
+             while True:
+                 t = tokens[cur]
+                 cur += 1
+                 if t == ";": break
+                 buf.append(t)
+             words[buf[0]] = buf[1:]
+ 
+         elif words.has_key(t):
+             evaluate(words[t])
+ 
+         else:
+             raise NotImplementedError(t)
+ 
+         print "%s->(%s)->%s" % (prevstack, t, stack)
+ 
+ 
+ 
+ tokens = data.split()
+ evaluate(tokens)
+ ||<
+ 
+ *1301668762*git summary
+ I wanted to manage different versions of a program, so I decided to use git. cvs, svn, hg, and git have been around for a long time, but I had never used them in the style of creating many branches. I'm stumped by the idea, so I'm going to put it all here for my own reference later. I don't have my introductory Git book with me, so I can't look it up... I thought that book had solutions to problems like this when I ran into them...
+ 
+ ** On branch foo, edit a.py which should be edited in branch bar
+ On branch foo, I edited a.py which should have been edited in branch bar, and when I check out branch bar to reflect it there, the contents of a.py in foo and bar are different, so I get "error: You have local changes to 'a.py'; cannot switch branches.
+ 
+ I redirected the result of git diff to tmp.patch, deleted the local modification with git checkout foo, git checkout bar, and tried to git am tmp.patch... "Patch format detection failed. Geez.
+ 
+ Fortunately, the correction was one line, so I fixed it by hand, but what should I have done?
+ 
+ ** forget to move to newly created branch and commit
+ I decided to keep the current master a.py and create an experimental improved version of a.py. I git branch foo, edit, git add a.py, git commit, and now I commit without doing git checkout foo, so master a.py is the experimental version, I did not commit foo, so the master a.py is the experimental version, and the HEAD a.py of foo is the unmodified version.
+ 
+ I think git reset HEAD^ should work on master for now. I guess I should apply this commit to foo and rewind master. checkout would change branches, so maybe merge.
+ 
+ >||
+ $ git checkout foo
+ Switched to branch 'foo'
+ $ git merge master
+ Updating 8e35e6b..56dbe31
+ Fast-forward
+  a.py |   31 ++++++++++++++++++++++++++++---
+  1 files changed, 28 insertions(+), 3 deletions(-)
+ ||<
+ 
+ Mm, sounds like the right answer. So checkout master and reset HEAD^.
+ 
+ >||
+ $ git checkout master
+ Switched to branch 'master'
+ $ git reset HEAD^
+ Unstaged changes after reset:
+ M	a.py
+ ||<
+ Oh, so the local changes will remain...should I have reset --hard?
+ >||
+ $ git reset --hard master
+ HEAD is now at 8e35e6b hogehoge
+ ||<
+ Probably right.
+ 
+ Unfortunately, this time it didn't work because I committed on the wrong branch and pushed without realizing it. The commit is rejected by the It says "To prevent you from losing history, non-fast-forward updates were rejected. Merge the remote changes before pushing again. git pull -> git revert HEAD -> git push.
+ 
+ ** You want to move to another branch while working
+ 
+ I knew I could AMEND it later, so I COMMITTED it. Actually, it was a big deal because it was the "commit to the wrong branch" above... but it's a psychological relief because if it's committed, it won't disappear unless you make a really bad mistake.
+ 
+ ** diff on different branches
+ 
+ What do you do when you want to diff the HEAD of master and the HEAD of branchx?
+ 
+ >>
+ git diff [--options] <commit> [--] [<path>...]
+ This form is to view the changes you have in your working tree relative to the named <commit>. You can use HEAD to compare it with the latest commit, or a branch name to compare with the tip of a different branch.
+ <<
+ 
+ So git diff branchx on the master branch and you're good to go!
+ 
+ ** I want to discard unwanted changes on the working copy.
+ Like svn revert. git checkout I thought I could just HEAD it, but then it said "M foo.py" so I git checkout --force HEAD. I didn't want to specify multiple files every time, so I specified HEAD, but the correct answer seems to be git checkout -- <filename> -- which can be omitted if there is no branch with the same name as filename, and filename can also specify a directory. So the correct answer in my case is git checkout . I guess.
+ 
+ ** cherry-picked and got conflicts.
+ The diff shows no conflicts in the edited area, but there is a change right next to the area that is being changed, so a conflict has occurred. I should have calmly fixed the conflict and then git add <paths> and git commit -c <commit> as instructed, but I mistakenly git add . I forgot about the conflicts and fixed them.
+ 
+ >>
+  -C <commit>, --reuse-message=<commit> Take an existing commit object, and reuse the log message and the authorship information (including the timestamp) when creating the commit.
+  -c <commit>, --reedit-message=<commit> Like -C, but with -c the editor is invoked, so that the user can further edit the commit message.
+ <<
+ 
+ What, that's all there is to it?
+ 
+ ** I want to put it back because I had a conflict and I don't know what it was.
+ I'm thinking git reset HEAD to reset conflicts and other states without moving the pointer, and checkout . to restore the HEAD state, is that correct?
+ 
+ in the message at commit time.
+ >||
+ # Changes to be committed:
+ #   (use "git reset HEAD <file>..." to unstage)
+ ||<
+ It seems normal to use "reset HEAD" to make the staged contents etc. disappear.
+ 
+ ** Error trying to push newly created branch locally to github
+ 
+ git push -u origin masterしてうまく行ったので気を良くして新しいブランチfooを作って作業してからgit push -u origin fooしてエラー「error: src refspec forth-definable does not match any」
+ 
+  I thought it would be OK if I removed the -u, but that wasn't the cause, it was the branch name typo. Let's put in the completion.
+ 
+ ** I want to see the change diff I am committing now.
+ 
+ Read the man for git diff. git diff --cached <commit> is "the difference between what will be committed next and the specified commit", which is HEAD when omitted. Therefore, diff --cached is OK.
+ 
+ ** Small story
+ 
+ I made a .hgignore even though it's git.
+ 
+ And when I thought it didn't work, it was .gitingore.
+ 
+ I was told to use zsh to solve the problem of typos in branch names and working in different branches! I got lines 51~96 from https://github.com/ymotongpoo/dotfiles/blob/develop/.zshrc and wrote "autoload -U compinit && compinit" (<a href='http://gihyo. jp/dev/serial/01/zsh-book/0005'>Ultimate Operations with zsh: Part 5</a>) and I was very comfortable.
+ </body>
+ <comments>
+ <comment>
+ <username>shiro</username>
+ <body>> On branch foo, I edit a.py which should be edited on branch bar<br><br>I do this a lot, I use git stash. <br><br>$ git stash<br>$ git checkout bar<br>$ git stash pop</body>
+ <timestamp>1301686886</timestamp>
+ </comment>
+ <comment>
+ <username>け</username>
+ <body>>On branch foo, you edit a.py which should be edited on branch bar<br>You can use git stash. Also, git apply tmp.patch is correct, not git am tmp.patch<br><br>You forget to move to the newly created branch and commit<br>git checkout foo; git cherry-pick master; git checkout master ; git reset --hard HEAD^<br> seems like a good idea</body>.
+ <timestamp>1301704143</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-04-01 https://nishiohirokazu.hatenadiary.org/archive/2011/04/01]

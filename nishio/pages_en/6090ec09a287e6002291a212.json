@@ -1,0 +1,302 @@
+Hatena2012-04-11
+code:hatena
+ <body>
+ *1334103370*Alloy Girl 5
+ Here's the story so far: <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334024972'>Alloy</a>
+ 
+ ** 第5回
+ 
+ Alloy: Maybe you misunderstand that StateManager.state is a member variable of StateManager or State.belongs to State?
+ Me: What, no?
+ Alloy: Not at all. You've been poisoned by object-orientation.
+ 
+ ** Review
+ 
+ Alloy: Let's review first.
+ 
+ [f:id:nishiohirokazu:20120410111138p:image]
+ 
+ >||
+ one sig StateManager {
+ 	state: set State
+ }
+ 
+ sig State {
+ }
+ 
+ fact {
+ 	all s: State | s in StateManager.state
+ }
+ 
+ run {} for exactly 3 State
+ ||<
+ 
+ Alloy: What is State at this point?
+ JS: Class?
+ Me: No, it's not a class, it's a signature.
+ Alloy: Hmmm, you are aware of that. What is a signature, then?
+ Me: Eh.
+ Alloy: If you can't explain it, you're just parroting a piece of knowledge that "sig = signature". It's as if you don't understand anything.
+ Me: Mm-hmm, um, molds?
+ Alloy: Then what is a type?
+ Me: Hmmm ......, metadata attached to a variable doesn't seem right in this case, so a set of ...... values?
+ Alloy: Yes, that's right. Let's look at the actual values in Evaluator.
+ 
+ ** Evaluatorを使う
+ 
+ Alloy: If you press the Evaluator button in the case study visualization window, you can observe the specific values of the State and other parameters in the case study.
+ 
+ [f:id:nishiohirokazu:20120411091544p:image]
+ 
+ Alloy: So State is a set consisting of three atoms State$0, State$1, and State$2.
+ JS: Atom?
+ Alloy: Atoms are not divisible, do not change with time, and have no meaning.
+ Me: It's just a label.
+ Alloy: そう。そしてstateは関係の集合。{StateManager$0 -> State$0, StateManager$0 -> State$1, StateManager$0 -> State$2}。ここで問題です。関係とは何でしょう。はい、僕君！
+ Me: What, oh, two atoms paired together?
+ Alloy: Yes, although if you go so far as to say there are two, you're making an assumption of a "binary relationship". For example, look at this.
+ 
+ >||
+ sig X{
+ 	rel: X -> X
+ }
+ 
+ run {
+ 	one rel
+ } for exactly 2 X
+ ||<
+ 
+ Alloy: This would make rel, for example, {X$0 -> X$1 -> X$0}.
+ Me: Am I right in thinking this is a pair of three atoms?
+ Alloy: Yes. In this case, rel is a ternary relation.
+ 
+ ** Next notice: Dots are joined
+ 
+ Alloy: So, about the dot operator that you confused with the member access operator in Java, etc.
+ Me: The fact that the state is accessible at the top level was the first thing that caught my attention.
+ Alloy: Alloy's dot operator is a join, oh no, I have something to do today, I'll continue later!
+ Me: Eh...
+ 
+ *1334149939*Solving Illustration Logic with Alloy
+ When we were talking about Alloy during lunch break in the lab, Mr. Nakatani (id:n_shuyo) asked me, "Can you solve Illustration Logic with Alloy?" (id:n_shuyo) asked me. I tried my best, but in the end, I couldn't solve it.
+ 
+ For the rules and original data of Illustration Logic, see: <a href='http://homepage1.nifty.com/sabo10/rulelog/illust.html'>The rules and how to solve - Illustration Logic</a>.
+ 
+ ** 1D Illustration Logic
+ 
+ First, let's start with the easiest problem and solve the 1D Illustration Logic "There are 10 squares and the clue is [7]".
+ 
+ >||
+ open util/ordering[Cell]
+ 
+ sig Cell {
+ 	color: Color
+ }
+ 
+ enum Color {Black, White}
+ 
+ pred all_color(start, end : Cell, col: Color){
+ 	all c: (start + start.nexts) & (end.prevs + end){
+ 		c.color = col
+ 	}
+ }
+ 
+ fact {
+ 	some b : Cell { // block head
+ 		let b7 = b.next.next.next.next.next.next {
+ 			one b7
+ 			all_color[first, b.prev, White]
+ 			all_color[b, b7, Black]
+ 			all_color[b7.next, last, White]
+ 		}
+ 	}
+ }
+ run {} for 3 but exactly 10 Cell
+ ||<
+ 
+ When we run it, we see that there are correctly four different solutions. The search was done under the condition that "there exists a cell b in the cell in which all 10 orders are introduced, and "there exists a cell that follows b 6 timesnext, the cells before b are white, from b to b7 are black, and the cells after b7 are white.
+ 
+ Refactoring while observing if the behavior changes before attempting more difficult problems.
+ 
+ >||
+ open util/ordering[Cell]
+ 
+ sig Cell {
+ 	color: Color
+ }
+ 
+ enum Color {Black, White}
+ 
+ pred all_black(start, end : Cell, size: Int){
+ 	let block = (start + start.nexts) & (end.prevs + end){
+ 		#block = size
+ 		all c: block{
+ 			c.color = Black
+ 		}
+ 	}
+ }
+ 
+ pred all_white(start, end : Cell){
+ 	let block = (start + start.nexts) & (end.prevs + end){
+ 		all c: block{
+ 			c.color = White
+ 		}
+ 	}
+ }
+ 
+ fact {
+ 	some c: Cell {
+ 		all_white[first, c.prev]
+ 		some c2: Cell {
+ 			all_black[c, c2, 7]
+ 			all_white[c2.next, last]
+ 		}
+ 	}
+ }
+ run {} for 3 but exactly 10 Cell
+ ||<
+ 
+ Instead of hitting "next" repeatedly, the size of the set is used to judge the size of the set.
+ 
+ ** 1D Illustration Logic, multiple blocks of clues
+ Let's consider the next case where the clue is something like [6, 3]. After a little thought, we decide that we need two SOME for each black mass.
+ >||
+ fact {
+ 	some c: Cell {
+ 		all_white[first, c.prev]
+ 		some c2: c.nexts {
+ 			all_black[c, c2, 6]
+ 			some c3: c2.next.nexts {
+ 				all_white[c2.next, c3.prev]
+ 				some c4: c3.nexts{
+ 					all_black[c3, c4, 3]
+ 					all_white[c4.next, last]
+ 				}
+ 			}
+ 		}
+ 	}
+ }
+ ||<
+ 
+ It is written that there exists a cell c, that from the first cell to before c is white, that there is c2 in cell c.nexts after c, that from c to c2 is length 6 and all black, that c2.next is white, so there is c3 after c2.next, that is white to before c3, that there is c4 after c3, that from c3 to c4 It says that everything from c3 to c4 is black with length 3, and everything after c4 is white until the end.
+ 
+ When executed, it finds only one correct solution. Now the one-dimensional illustration logic can be solved.
+ 
+ ** 10x10 2D Illustration Logic Challenge
+ To solve the illustration logic, we need to generate this code with the number of clues. Also, the fact that it is not one-dimensional means that it is not a simple total order. Each cell has a "vertical next" and a "horizontal next". This is why I gave up using util/ordering. First, I generated the code to represent 100 cells arranged in a square. About 300 lines.
+ 
+ >||
+ abstract sig Cell {
+   color: Color,
+   hnext: lone Cell,
+   vnext: lone Cell
+ }
+ 
+ (snip)
+ 
+ one sig Cell_0_0 extends Cell {}
+ one sig Cell_0_1 extends Cell {}
+ one sig Cell_0_2 extends Cell {}
+ (snip)
+ one sig Cell_9_7 extends Cell {}
+ one sig Cell_9_8 extends Cell {}
+ one sig Cell_9_9 extends Cell {}
+ 
+ fact matrix_adj {
+   Cell_0_0.vnext = Cell_0_1
+   Cell_0_1.vnext = Cell_0_2
+   Cell_0_2.vnext = Cell_0_3
+ (snip)
+   Cell_6_9.hnext = Cell_7_9
+   Cell_7_9.hnext = Cell_8_9
+   Cell_8_9.hnext = Cell_9_9
+   no Cell_9_9.hnext
+ }
+ ||<
+ 
+ I defined 100 named Cells like this and the adjacencies between them, and forced the generation of a 10x10 matrix.
+ 
+ Also generates puzzle clues. About 200 lines:.
+ 
+ >||
+ fact {
+   let next = hnext {
+     some c1: from[Cell_0_0, next] {
+       all_white[range[from[Cell_0_0, next], c1.~next, next]]
+       some c2: c1.^next {
+         all_black[range[c1, c2, next], 3]
+         all_white[c2.^next]
+       }
+     }
+     some c1: from[Cell_0_1, next] {
+       all_white[range[from[Cell_0_1, next], c1.~next, next]]
+       some c2: c1.^next {
+         all_black[range[c1, c2, next], 2]
+         some c1: c2.next.^next {
+           all_white[range[c2.next.^next, c1.~next, next]]
+           some c2: c1.^next {
+             all_black[range[c1, c2, next], 2]
+             all_white[c2.^next]
+           }
+         }
+       }
+     }
+ (以下略)
+ ||<
+ 
+ Well, I don't know if you can tell from this partially abbreviated code.
+ Alloy code generated here: https://github.com/nishio/learning_alloy/blob/master/illustlogic.als
+ Python code I wrote to generate it here: https://github.com/nishio/learning_alloy/blob/master/tool/illulogic.py
+ The company also placed a
+ 
+ No results yet, it's taking a while to generate the CNF to feed to the SAT solver. I'll add the results when I wake up tomorrow morning if they are available.
+ 
+ ** 追記
+ 
+ 約1時間で
+ >||
+ Executing "Run run$1 for 5 int"
+    Solver=minisatprover(jni) Bitwidth=5 MaxSeq=4 SkolemDepth=1 Symmetry=20
+    Generating CNF...
+ 
+ An error has occurred!
+ ||<
+ The abnormality was terminated w
+ 
+ ** 追記
+ I quit calling MiniSat with JNI and used SAT4J. Memory allocation was raised to the maximum.
+ >||
+ Executing "Run run$1 for 5 int"
+    Solver=sat4j Bitwidth=5 MaxSeq=4 SkolemDepth=1 Symmetry=20
+    Generating CNF...
+ 
+ Fatal Error: the solver ran out of memory!
+ Try simplifying your model or reducing the scope,
+ or increase memory under the Options menu.
+ 
+ An error has occurred!
+ ||<
+ But that's not enough...
+ 
+ Is there some other setting I should tweak? Or is the current code where some is nested 6-fold not good enough, and instead of using 2 somes per block to compare the block size and number, can we do something by outputting code written like .next.next.next.next and reducing the somes to half?
+ 
+ ** Summary
+ Illustration Logic is not for Alloy."
+ 
+ I'll write that id:bonotake can solve it for me (glimpse) cf. <a href='http://d.hatena.ne.jp/bonotake/20110829/1314605061'>Solving Karotan Puzzle with Alloy - Takeo's Diary at Jersey back from Jersey. I'm back</a>.
+ 
+ ** 追記
+ 
+ I was able to get a "yes" from them! Thank you very much! <a href='http://d.hatena.ne.jp/bonotake/20120413/1334300370'>Solving Illustration Logic with Alloy - Takeo's Diary @ I'm back from Jersey</a>.
+ 
+ I wrote the Alloy Girl Extra Edition with this story! <a href='http://d.hatena.ne.jp/nishiohirokazu/20120413/1334305940'>Alloy Girl Extra Edition "Illustration Logic"</a>
+ </body>
+ <comments>
+ <comment>
+ <username>bonotake</username>
+ <body>I posted the solution in my journal, but I'd like to make a small comment here as well. <BR>Basically, if you are mocking up in CNF generation, it doesn't matter what solver you choose, because you are mocking up before you hit JNI. <br>But not minisatprover (MiniSat with Unsat Core), which eats up a lot of time in CNF generation, which is useful when a core is available, but should be avoided in big problems. </body>
+ <timestamp>1334306784</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-04-11 https://nishiohirokazu.hatenadiary.org/archive/2012/04/11]

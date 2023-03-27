@@ -1,0 +1,28 @@
+Hatena2014-02-09
+code:hatena
+ <body>
+ *1391874480*Deep Learning論文紹介「Deep learning via Hessian-free optimization」その2
+ The new optimization method called "Hessian-Free" was used to train an auto-encoder for Deep Learning, and it exceeded the performance of the existing report without prior training.
+ 
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20140208/1391838220'>Deep Learning論文紹介「Deep learning via Hessian-free optimization」</a>の続き。
+ 
+ An example of pathological gradients and an explanation of the suitability of Newton's method for them. For example, suppose two neurons a and b in the same layer of a neural net have almost the same input/output weights, and consider an update in direction d that raises some weight i in a and lowers the corresponding weight j in b. In this case, the gradient in direction d is almost zero. In this case, the gradient in direction d is almost zero, and the curvature is also almost zero, so first-order optimization methods such as gradient methods rarely update. On the other hand, a second-order method such as Newton's method updates faster because the curvature is in the denominator.
+ 
+ Main topic: about Hessian-free optimization. Hessian-free (HF) is a
+ -Does not compute Hessian H (unlike many other quasi-Newtons)
+ -- Instead, calculate Hd directly by finite difference method (in other words, calculate and subtract the gradient twice)
+ - Solve with Linear Conjugate Gradient not for the objective function but for its quadratic approximation qθ.
+ -- If it is N-dimensional, it takes up to N steps, but it is terminated appropriately.
+ -- Unlike the Non-linear Conjugate Gradient method, which is generally referred to as the Conjugate Gradient method, there is no need to recalculate the curvature. This is because the objective function is first approximated by a surface with constant curvature. In other words, since it is a quadratic approximation, the second derivative is constant and H does not change, which means that Hd does not change either, so recalculation is not necessary.
+ 
+ 
+ Impression: I had a misconception that the conjugate gradient method converges twice when the objective function is quadratic, but it seems that it converges twice because the dimension is two-dimensional. In short, if the objective function is quadratic, the maximum N conjugate directions are chosen if the dimension is N, and how far to go in that direction can be accurately obtained in one shot by dividing the gradient by the curvature. So, at most N times. If "divide by curvature" is done by any other method, the inverse of the NxN matrix would be computed, and that would kill you. It is getting interesting. Next, let's start from chapter 4.
+ 
+ ** 出典
+ http://machinelearning.wustl.edu/mlpapers/paper_files/icml2010_Martens10.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ </body>
+
+[Hatena Diary 2014-02-09 https://nishiohirokazu.hatenadiary.org/archive/2014/02/09]

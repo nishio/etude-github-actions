@@ -1,0 +1,44 @@
+Hatena2013-06-12
+code:hatena
+ <body>
+ *1371024081* Check to see if the distribution falls into subspace.
+ Somewhere there was a topic "I want to check if a certain N-bit sequence is evenly distributed in an N-dimensional space" and it sounded interesting, so I wrote it down.
+ 
+ First, an example of correctly distributed in 6-dimensional space.
+ >|python|
+ >>> from pylab import *
+ >>> data1 = [[random_integers(0, 1) for _x in range(6)] for _y in range(100)]
+ >>> from matplotlib.mlab import PCA
+ >>> PCA(array(data1))
+ <matplotlib.mlab.PCA instance at 0x110a23368>
+ 
+ >>> _.fracs
+ array([ 0.22253508,  0.18659093,  0.17676459,  0.15136027,  0.14785211,
+         0.11489702])
+ ||<
+ 
+ The result fracs of the principal component analysis returns the contribution ratio. We can see that it is approximately 1/6 (0.166...) The number of data is small (100 data), so the contribution ratio is between 0.22 and 0.11. The number of data is small (100), so it varies from 0.22 to 0.11.
+ 
+ On the other hand, if there is correlation between the axes.
+ >||
+ >>> def make_vec():
+     ret = [random_integers(0, 1) for _x in range(3)]
+     return ret + ret
+ 
+ >>> data2 = [make_vec() for _y in range(100)]
+ >>> PCA(array(data2))
+ <matplotlib.mlab.PCA instance at 0x111cef7a0>
+ 
+ >>> _.fracs
+ array([  3.83213080e-01,   3.30321515e-01,   2.86465405e-01,
+          3.05496905e-31,   5.77068439e-32,   6.60331164e-33])
+ ||<
+ 
+ In this case, the distribution is practically only on a three-dimensional subspace, which means that the contribution of the results of the principal component analysis is very small with respect to the fourth to sixth axes.
+ 
+ Of course, "distributions that have no correlation between each axis but are not cryptologically appropriate" cannot be determined by this method, but since this method can be easily tested, it would be a good first step to check it.
+ 
+ PS: "Why not just look at the average value for each axis?" I've heard that question, but that works for the type of collapses like "v[0] is always 0", but I can't notice the collapses like "v[0] == v[3]" as in this example. But even with this method, "v[6] = v[0] ^ v[1] ^ ... ^ v[5]".
+ </body>
+
+[Hatena Diary 2013-06-12 https://nishiohirokazu.hatenadiary.org/archive/2013/06/12]

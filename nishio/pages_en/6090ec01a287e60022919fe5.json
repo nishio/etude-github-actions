@@ -1,0 +1,251 @@
+Hatena2009-08-07
+code:hatena
+ <body>
+ *1249612840* Representation of primitive inductive functions in Python.
+ I wasn't sure about the definition of primitive inductive functions, so I looked it up in the Math Encyclopedia. It's written in mathematical language, but translated into Python language:.
+ 
+ >|python|
+ def inc(x):
+     return x + 1
+ 
+ def constant(*args):
+     return CONSTANT
+ 
+ def choice_K(*args):
+     return args[K]
+ ||<
+ (There are an infinite number of constants and choices, depending on the constants to return and the position of the arguments to choose from.)
+ 
+ >|python|
+ def apply_funcs(*args):
+     return REDUCE_FUNC(
+         MAP_FUNC_TABLE[0](*args), 
+         MAP_FUNC_TABLE[1](*args), ...)
+ 
+ def recursive(*args):
+     head = args[0]
+     tail = args[1:]
+     if head == 0:
+         return WHEN_ZERO_FUNC(tail)
+     else:
+         return OTHERWISE(y, recursive(y - 1, *tail), *tail)
+ ||<
+ 
+ which can be created by repeatedly applying the function
+ 
+ Now, let's try to make the rough Python translation above into a solid translation so that we can actually write code to try it out. The main problem is the part written in Japanese, "Constant and choice are innumerable depending on the position of the returned constants and arguments," so let's express this in code. In Python, a function that has countless definitions depending on its parameters is called a class.
+ 
+ >|python|
+ # -*- coding: utf-8 -*-
+ 
+ def inc(x):
+     return x + 1
+ 
+ class Constant:
+     def __init__(self, CONSTANT):
+         self.CONSTANT = CONSTANT
+     def __call__(self, *args):
+         return self.CONSTANT
+ 
+ class Choice:
+     def __init__(self, WHERE):
+         self.WHERE = WHERE
+     def __call__(self, *args):
+         return args[self.WHERE]
+ 
+ class ApplyFuncs:
+     def __init__(self, REDUCE_FUNC, MAP_FUNCS):
+         self.REDUCE_FUNC = REDUCE_FUNC
+         self.MAP_FUNCS = MAP_FUNCS
+     def __call__(self, *args):
+         return self.REDUCE_FUNC(
+             *[self.MAP_FUNCS[i](*args) for i in range(len(self.MAP_FUNCS))]) 
+ 
+ class Recursive:
+     def __init__(self, WHEN_ZERO_FUNC, OTHERWISE):
+         self.WHEN_ZERO_FUNC = WHEN_ZERO_FUNC
+         self.OTHERWISE = OTHERWISE
+     def __call__(self, *args):
+         head = args[0]
+         tail = args[1:]
+         if head == 0:
+             return self.WHEN_ZERO_FUNC(*tail)
+         else:
+             return self.OTHERWISE(head, self(head - 1, *tail), *tail)
+ 
+ # Define x + y
+ add = Recursive(
+     # If x is 0, then y itself
+     WHEN_ZERO_FUNC=Choice(0),
+     # xが0でないならadd(x, y)はinc(add(x - 1, y))
+     OTHERWISE=ApplyFuncs(
+         REDUCE_FUNC=inc,
+         MAP_FUNCS=[Choice(1)]
+         ))
+ 
+ print add(2, 3) #-> 5
+ """ MEMO
+ add(2, 2)
+ -> OTH(2, add(1, 2), 2)
+ -> OTH(2, OTH(1, add(0, 2), 2), 2)
+ -> OTH(2, OTH(1, 2, 2), 2)
+ -> OTH(2, inc(Choice1(1, 2, 2)), 2)
+ -> OTH(2, inc(2), 2)
+ -> OTH(2, 3, 2)
+ -> inc(Choice1(2, 3, 2))
+ -> inc(3)
+ -> 4
+ """
+ ||<
+ 
+ At any rate, I was able to express in code up to the point that addition is a primitive inductive function. This puzzle is quite interesting. I managed to get the addition right, but I heard that x * y, x ^ y, x!, min(x, y), max(x, y), abs(x - y), x == y, x < y, x is divisible by y, x is prime, the xth prime, etc. are all primitive inductive.
+ 
+ <hr>
+ I also made the multiplication.
+ >|python|
+ # define x * y
+ mul = Recursive(
+     # 0 if x is 0
+     WHEN_ZERO_FUNC=Constant(0),
+     # If x is non-zero, then mul(x, y) is add(x - 1, y) + y,
+     # OTH(x, add(x - 1, y), y) to ignore the first argument and use add for the rest
+     # RecursiveのWHEN_ZEROを使う
+     OTHERWISE=Recursive(
+         WHEN_ZERO_FUNC=add,
+         OTHERWISE=Choice(1)))
+ 
+ print mul(5, 7) #-> 35
+ ||<
+ 
+ *1249649135*Cattleya
+ While the first room in the Python spa was a pearl and the second room was a ruby, the third room was a cattleya.
+ 
+ <a href="http://d.hatena.ne.jp/kuma8/20090807/1249624781"><img src="http://gyazo.com/9d16ec48ea092e8a7f0f59c71d96f539.png"></a>
+ 
+ I was asked to do something reckless. So I made it.
+ 
+ http://bitbucket.org/nishio/cattleya/
+ 
+ It is implemented in Python 2.6 and most of the functionality is thrown into Python 2.6, so it is "almost Python 2.6 compatible". Some people complain that the join method is a list method and not a string method, but it is possible to add a join method to a list literal in about 60 lines. I was able to add a join method to a list literal in about 60 lines.
+ 
+ >|python|
+ # cattleya/test_targets/join.py 
+ assert ["foo", "bar", "baz"].join("-") == "foo-bar-baz"
+ assert [1, 2, 1 + 2].join("-") == "1-2-3"
+ ||<
+ 
+ あと、re.findall(pattern, data)をdata.findall(pattern)って書けるようにしてみました。assert "aaabbaababbbaaaab".findall("a+") == ['aaa', 'aa', 'a', 'aaaa']
+ 
+ You can do all you want if you say DIRTY, like making len and sorted into methods, or rewriting functions that return None to make it easier to chain methods.... Let's make the language easy to write one-liners.
+ 
+ **About Design
+ 
+ It reads the source file, runs a preprocessor that edits it as a string, then converts it to an abstract syntax tree, edits it, compiles it to bytecode, edits it again, and finally passes it to Python's exec. Well, the policy is not to create the preprocessor and bytecode editing until it is needed, and right now the code does nothing.
+ 
+ The biggest obstacle in rewriting Python to my liking is the fact that built-in string and integer types are read-only classes. Well, it's not bad that mainstream Python is designed that way because it makes code easier to read and faster, but it's inconvenient for writing one-liners and such that don't take performance and readability into account. A design that makes it impossible to write dirty code is inconvenient for writing dirty code. So for now, let's make it possible to rewrite all literals with wrapper classes. There are libraries such as UserList and UserString for this purpose.
+ 
+ I'm not really interested in creating a new language. Well, I don't really want to create a new language, so I guess I'm going to add strange features to Python with the development code "Cattleya".
+ 
+ *1249655632*How to increase font size in XCode editor
+ I looked in the preferences but can't seem to find it.
+ <img src="http://gyazo.com/96e0410f575fdc605a4aa9480f67de93.png">
+ 
+ Ah, scroll bars!
+ <img src="http://gyazo.com/79f7c9c796b43a2af4e1e8de33cb18c2.png">
+ 
+ You can edit the settings by first copying them, selecting the list together, and then double-clicking. I had to set the font size to 16 points or my astigmatism would get worse. Now I can write code in XCode.
+ 
+ *1249658409*[iPhone]Metronomeを読む
+ - @interface と @protocol は何が違うのか
+ -- @protocolがJavaで言うところのinterfaceで@interfaceがJavaで言うところのクラス
+ >|java|
+ class Foo extends Bar implements Baz, Quux
+ ||<
+ school (e.g. of ikebana)
+ >|objc|
+ @interface Foo : Bar < Baz, Quux >
+ ||<
+ 
+ - What's @class?
+ -- a kind of prototype declaration, like there's a definition of that class in another source, so there's no definition right now, but you should assume it's there.
+ -- Declares "this identifier is a class"; includes are fine, but @class does not load the definition, so it compiles faster. However, it cannot be inherited. The message is sent at runtime, so the compiler only needs to know that it is a class.
+ 
+ -Class Browser is useful. Project→Class Browser
+ <img src="http://gyazo.com/6440e0783b03a816d732b4d9282575f8.png">
+ 
+ - BOOLはYES/NO
+ >|c|
+ // objc.h
+ #define YES             (BOOL)1
+ #define NO              (BOOL)0
+ ||<
+ 
+  The metronome sound file is used as it is, so it's not very nice. I'm using the audio format "caf" extension. <a href='http://iphone-dev.ensites.net/archives/tag/caf'>caf - iPhone App Development Blog</a>
+ 
+ - I'm getting quite sleepy. Let's see.
+ -- □ Replace audio file
+ --- How to make caf?
+ --- How to make sound effects?
+ -- □ Throw away the painting
+ -- □ Write an animation that makes the remaining time bar shrink.
+ --- How to write squares?
+ -- □ Allow time to be set in the settings screen
+ -- □ If you have time left but you play, tap the screen to change to your opponent's turn.
+ - I would like to be able to use it as a game clock for the time being. In the future, I'd like to be able to say "It's time for the second round of consideration.
+ 
+ <img src="http://gyazo.com/84255cb0ac0eef493885e138a23ac9c3.png">
+ </body>
+ <comments>
+ <comment>
+ <username>shou</username>
+ <body>What is this used for? If we are talking about computability, there are computable functions that are not primitive inductive functions, aren't there? (I fell asleep around Church's theorem, so I am far away from this world...)</body>.
+ <timestamp>1249622400</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I don't know what it does, since it was discussed in Python-ML about primitive recursive, and I didn't know the definition, so I looked it up & implemented it. </body>
+ <timestamp>1249829594</timestamp>
+ </comment>
+ <comment>
+ <username>ヤマアラシ</username>
+ <body>It is an ordinary function that enters the class of primitive inductive functions. This corresponds to the ZF axiomatic system. The class of partial inductive functions, formed by adding the μ operator to the operator system of a primitive inductive function, corresponds exactly to the class of functions that can be computed by a Turing machine. <br>Additionally, μ operators correspond to the selection axioms, and the ZFC axiom system corresponds to the partially inductive functions. Maybe</body>.
+ <timestamp>1272920164</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>That comment doesn't clearly define the word "ordinary" at the beginning, so I wonder if you "really know what you're writing" in the difficult string of technical terms that follows. <br>Because it is clear from the definition that f(x) = x / 2 is not a primitive inductive function. </body>
+ <timestamp>1272936051</timestamp>
+ </comment>
+ <comment>
+ <username>ヤマアラシ</username>
+ <body>I don't think it is that obvious that f(x)=x/2 is not primitive inductive. <BR>If the domain of f were a rational number, then f would be primitive inductive. <BR>I think it is perfectly fine by definition, although you have to consider rational numbers encoded as natural numbers. <BR>When I say "ordinary function", I mean any computable function that one would normally think of. <br>I used the undefined term "ordinary" as a pun on Church's suggestion of "intuitively computable,"<br>but I apologize for the misunderstanding. <br>Please take it to mean the kind of function you would normally think of that can be computed by a computer</body>.
+ <timestamp>1272972108</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ If the domain of <body>f is the entire real numbers, then of course f is not primitive inductive, and it would be "normal" not to think that the domain is limited to rational numbers when simply writing f(x) = x / 2, but well, that was a difference in interpretation of the term "normal" which is not clearly defined I guess that's just the way it is. <br><br>By the way, I didn't clearly read the intent of your comment, could you please explain? </body>
+ <timestamp>1272974058</timestamp>
+ </comment>
+ <comment>
+ <username>ヤマアラシ</username>
+ <BODY>Well, which part is not getting through to you? The first comment? Or the comment after that? </body>
+ <timestamp>1272978937</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>The intent of the comment. </body>
+ <timestamp>1272988236</timestamp>
+ </comment>
+ <comment>
+ <username>ヤマアラシ</username>
+ <body>Is that the intent of the comment itself? <BR>I just happened to see it at the top of the list when I searched for primitive inductive functions and Python, so I took a look at it. <br>I'm not sure if this is a good idea or not, but I'm not sure if it's a good idea. <br>This is a very subtle mathematical choice axiom, which is why there is a hierarchy of classes between primitive inductive functions and partially inductive functions (a class of computable functions)<br>. <BR>So, since we were talking about the definition of "ordinary functions", I added some additional information about that and also wrote my opinion that it is difficult to determine whether f(x)=x/2 is a primitive inductive function or not. <BR>I am sorry if I offended you. I have no other intention. If you think it is not appropriate as a comment,<br>please delete it. </body>
+ <timestamp>1272995663</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see what you mean. I was wondering what part of the entry you were responding to, but it was a comment on shou's comment. That makes sense. </body> I see.
+ <timestamp>1273024903</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-08-07 https://nishiohirokazu.hatenadiary.org/archive/2009/08/07]

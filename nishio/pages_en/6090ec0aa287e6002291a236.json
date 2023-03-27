@@ -1,0 +1,151 @@
+Hatena2012-05-29
+code:hatena
+ <body>
+ *1338270898*jscc+flymake to highlight JavaScript error lines
+ I'm writing JavaScript code and I'm continuously compiling it with <a href='http://nishio.github.com/jscc/'>jscc</a> and graphically displaying errors and warnings on a sub-monitor. And I use Emacs. So, wouldn't I be happy if I used the compile result log to highlight the error lines in flymake? So I did it.
+ 
+ Add a couple of lines to the Makefile.
+ >||
+ check-syntax:
+ 	cat compile.log
+ ||<
+ 
+ I added about 5 lines to emacs.el.
+ >|lisp|
+ ;; flymake
+ (add-to-list 'flymake-allowed-file-name-masks
+              '("\\.js\\'" flymake-simple-make-init))
+ 
+ (add-hook 'java-mode-hook
+           '(lambda ()
+              (flymake-mode)))
+ ||<
+ 
+ [f:id:nishiohirokazu:20120529145246p:image]
+ 
+ We did it. We're so happy.
+ 
+ I haven't yet checked if it works properly if the error is in another file or not.
+ 
+ *1338293431*Diary of an unfamiliar make
+ Suppose you want to create another x.js based on multiple *.js. Well, for example, specifically, you want to compile multiple *.js into a single JS file. The compilation part is not essential, so let's use "cat to combine" instead.
+ 
+ ** Q1
+ The filename of the source code shall be unknown. Therefore, wildcards will be used.
+ 
+ >||
+ x.js: *.js
+ 	cat $? > x.js
+ ||<
+ 
+ Suppose now that a.js and b.js are in the current directory.
+ 
+ >||
+ $ cat > a.js
+ a
+ $ cat > b.js
+ b
+ ||<
+ 
+ If I do make x.js in this state, the first time it creates x.js that combines a.js and b.js as expected. However, when it is executed again, x.js itself matches the dependent file *.js, resulting in an error.
+ 
+ >||
+ $ make x.js   
+ cat a.js b.js > x.js
+ $ make x.js
+ make: Circular x.js <- x.js dependency dropped.
+ make: `x.js' is up to date.
+ ||<
+ 
+ Q1: Is there a way to declare "exclude x.js from dependencies"?
+ 
+ A1:「@n0kada: GNU makeなら deps.js: $(filter-out deps.js,$(wildcard *.js))」thanks!
+ 
+ 
+ ** Q2
+ I don't know how to do it, so I decided to put x.js under build instead of the current directory for now.
+ 
+ >||
+ build/x.js: *.js
+ 	mkdir -p build
+ 	cat $? > build/x.js
+ ||<
+ 
+ >||
+ $ make 
+ mkdir -p build
+ cat a.js b.js > build/x.js
+ $ make
+ make: `build/x.js' is up to date.
+ ||<
+ 
+ At any rate, it is working as expected. what if a.js or b.js is in a directory other than the current directory? If they are in the same directory, there is no difficulty.
+ 
+ >||
+ build/x.js: src/*.js
+ 	mkdir -p build
+ 	cat $? > build/x.js
+ ||<
+ 
+ So what if there are two directories, src and lib? I thought I could use vpath to specify the directory to search. But it doesn't work.
+ 
+ >||
+ SRCDIR = src lib
+ 
+ vpath %.js $(SRCDIR)
+ 
+ build/x.js: *.js
+ 	mkdir -p build
+ 	cat $? > build/x.js
+ ||<
+ 
+ This will result in an error stating that it cannot find a way to create *.js.
+ 
+ >||
+ $ make
+ make: *** No rule to make target `*.js', needed by `build/x.js'.  Stop.
+ ||<
+ 
+ If c.js is placed in the current directory, only c will be compiled as the target.
+ 
+ >||
+ $ cat > c.js
+ c
+ $ make      
+ mkdir -p build
+ cat c.js > build/x.js
+ ||<
+ 
+ Hmmm, am I using vpath incorrectly?
+ 
+ I had no choice but to avoid vpath and do patsubst.
+ 
+ >||
+ SRCDIR = src lib
+ 
+ build/x.js: $(patsubst %,%/*.js,$(SRCDIR))
+ 	mkdir -p build
+ 	cat $? > build/x.js
+ ||<
+ 
+ This will work as expected.
+ 
+ >||
+ $ make
+ mkdir -p build
+ cat src/a.js lib/b.js > build/x.js
+ $ make
+ make: `build/x.js' is up to date.
+ ||<
+ 
+ Q2: Isn't there a way to do this that doesn't rely on this kind of brute force?
+ </body>
+ <comments>
+ <comment>
+ <username>iakio</username>
+ <body>マシな方法かどうか微妙ですが<br>SRCS := $(foreach dir,$(SRCDIR),$(wildcard $(dir)/*.js))<br>とか<br>SRCS := $(shell find $(SRCDIR) -name '*.js')<br>とシェルを使っちゃうかですかね</body>
+ <timestamp>1338342935</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-05-29 https://nishiohirokazu.hatenadiary.org/archive/2012/05/29]

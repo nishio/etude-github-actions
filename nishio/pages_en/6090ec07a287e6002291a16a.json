@@ -1,0 +1,39 @@
+Hatena2011-04-11
+code:hatena
+ <body>
+ *130250505085* I built the list using only functions.
+ The topic of today's lunch break was how to make a list-like thing when there is no list -> we can do the equivalent of Lisp cons with tuples -> then what if there are no tuples either -> we should be able to make a function alone in a Church-like way -> then let's make it!
+ 
+ I had no idea how to construct it, only that it should be possible, but I got out my notebook and started messing around with it. I had no idea how to construct it, but I pulled out my notes and started messing around and got it done. I used <a href='http://d.hatena.ne.jp/takuto_h/20110401/ibis'>Ibis</a> to check the actual behavior:.
+ 
+ >||
+ Online interpreter
+ Ibis Interpreter
+ > let id = fun x -> x
+ - : ('a -> 'a) = <closure>
+ > let const = fun x -> (fun y -> x)
+ - : ('a -> ('b -> 'a)) = <closure>
+ 
+ > let fst = fun x -> const x
+ - : ('a -> ('b -> 'a)) = <closure>
+ > let snd = fun x -> id
+ - : ('a -> ('b -> 'b)) = <closure>
+ > let cons = fun x -> (fun y -> (fun z -> z x y))
+ - : ('a -> ('b -> (('a -> ('b -> 'c)) -> 'c))) = <closure>
+ 
+ > let list1 = cons 1 (cons 2 (cons 3 id))
+ - : ((int -> (((int -> (((int -> (('a -> 'a) -> 'b)) -> 'b) -> 'c)) -> 'c) -> 'd))
+ -> 'd) = <closure>
+ > list1 fst
+ - : int = 1
+ > list1 snd fst
+ - : int = 2
+ > list1 snd snd fst
+ - : int = 3
+ ||<
+ 
+ *1302523974* read later
+ <a href='http://www.amazon.co.jp/dp/4641161763/ref=as_li_ss_til?tag=nishiohirokaz-22&camp=1027&creative=7407&linkCode=as4& creativeASIN=4641161763&adid=0JJSB43ZZXWTZ5ZFK445'>Amazon.com: Division of Labor and Competition - Outsourcing Management for Competitive Advantage: Akira Takeishi: Book</a
+ </body>
+
+[Hatena Diary 2011-04-11 https://nishiohirokazu.hatenadiary.org/archive/2011/04/11]

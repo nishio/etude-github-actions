@@ -1,0 +1,348 @@
+Hatena2014-02-20
+code:hatena
+ <body>
+ *1392870493*放射線耐性Quineの読解
+ A crazy (complimentary) code called "<a href='http://d.hatena.ne.jp/ku-ma-me/20140219/p1'>Radiation Resistant Quine (Quine that works even if you delete one character) - Mamememo</a>" was released.
+ 
+ When "<a href='http://d.hatena.ne.jp/ku-ma-me/20100905/p1'>The Qlobe - Mamememo</a>" was previously released, <a href='http://d.hatena.ne.jp/nishiohirokazu/ 20120904/1346685131'>Porting to Python</a> and others "<a href='http://d.hatena.ne.jp/zonu_exe/20120905/1346861740'>Let's read some difficult-to-read code (Python beginner's explanation) - DT War Diary (zonu_exe's diary)</a>" reading entry went up, and I read it with interest as the person who wrote it.
+ 
+ Lately I have been wondering "what is understanding?" and I am interested in what is happening in the process of human beings changing from a state of not understanding to a state of understanding. So I decided to record what I myself am thinking in the process of understanding this metamorphic code.
+ 
+ By the way, to give you an idea of my Ruby skills... I tried to use <a href='https://github.com/yohasebe/wp2txt'>yohasebe/wp2txt</a> on the VM I use for work a while ago, but it didn't have Ruby installed. I tried apt-get install ruby and tried again, but this time I was told that there was no gem or something like that installed. I installed gem for the first time (then I installed ruby 1.8, so I made a mistake again).
+ 
+ -----
+ 
+ Now, let's take a quick look first. There are a few key words that stand out.
+ 
+ ** at_exit
+ The at_exit is probably similar to Python, since Python has a module called atexit, which is a "run on exit" function.
+ 
+ ** rescue
+ I have the knowledge that "rescue" is "finally" in Python or Java (Note: I will realize later that this is a misunderstanding).
+ 
+ I see,
+ >||
+ try:
+   do_X()
+ finally:
+   do_X()
+ ||<
+ If we make do_X, the rule says that there is only one error, so even if do_X on either side is broken, do_X will surely be executed once. However, if the surrounding parts such as try are broken, or if do_X is broken in a syntactically incorrect way and a syntax error occurs at the parsing stage, it is not possible to execute it. I wonder how to handle that.
+ 
+ ** ##
+ 
+ By doubling it with ##, you can be sure that if one or the other disappears, it will still be a comment.
+ 
+ ** ##'
+ 
+ If I put it in the form 'abc'##', then even if the closing quote after the c disappears, I can avoid a syntax error by making the quote after the comment up to the string. But this alone won't work if the front of the a is broken. I wonder how they get around this.
+ 
+ ** eval eval
+ 
+ Woah, you mean method eval and variable eval are different namespaces?
+ 
+ 「eval eval if eval==instance_eval」の行は「文字列evalも文字列instance_evalも書き換わっていなければ文字列evalを評価する」ってことね。このコード自体が壊れていた場合にrescueに入るのかな。
+ 
+ The contents of that string don't look much like Ruby code either.
+ 
+ ** gsub
+ 
+ I see, I guess I'll use gsub to replace and restore the original code.
+ 
+ >|python|
+ python> [(chr(n + 65), chr(92 if n < 1 else n+33)) for n in range(7)]
+ [('A', '\\'),
+  ('B', '"'),
+  ('C', '#'),
+  ('D', '$'),
+  ('E', '%'),
+  ('F', '&'),
+  ('G', "'")]
+ ||<
+ 
+ ** string literal
+ 
+ >||
+ irb> %\aaa\
+ => "aaa"
+ ||<
+ 
+ Wow, such a string literal?
+ 
+ - "%\aaa\""" → valid because the backslash escapes the second quote
+ - %\aaaa\"" → backslash is used as a quotation mark, so "aaa" and "" are concatenated and valid
+ 
+ This is how you keep the opening quote from dying when it disappears. When the closing quote is broken, you protect it with the ###' described earlier.
+ 
+ What if the string contents are corrupted?
+ 
+ ** rescue
+ 
+ If you look closely, you can see that the first rescue is a string method, since it is of the form "aaa".rescue x rescue 42. Let's check it out. <a href='http://www.ruby-doc.org/core-1.9.2/String.html'>Class: String (Ruby 1.9.2)</a> doesn't mention rescue, so is it growing on an Object? Aw, it's not in <a href='http://www.ruby-doc.org/core-1.9.2/Object.html'>Class: Object (Ruby 1.9.2)</a> either?
+ 
+ >||
+ irb> "".rescue
+ NoMethodError: undefined method `rescue' for "":String
+ ||<
+ 
+ Is this intentionally causing a NoMethodError and catching it on the next rescue?
+ 
+ (In the process of researching this area, I realized that rescue==catch, not rescue==finally.)
+ 
+ >||
+ irb> "".rescue x rescue 42
+ 42
+ ||<
+ 
+ But then how do you achieve a safety net in case "eval eval if eval==instance_eval" doesn't work? I thought that calling the rescue method on a string would cause the string to be eval'd, but that doesn't seem to be the case.
+ 
+ ** Finding a safety net
+ 
+ eval ! = instance_eval, the second half is not executed when instance_eval is used, so eval=... Let's try to cut out everything after that (hereafter, we call this part "the second half") and execute it. Oops, it still outputs.
+ 
+ Haha, I see. Embedding code in string literals, huh?
+ 
+ >||
+ irb> "#{1+1}"
+ => "2"
+ ||<
+ 
+ So that's why it's at_exit. If there is a mutation in this code, we don't want it to be executed here and cause an error. On the other hand, if there is a mutation here, it is not in the second half of the code, so "eval eval eval if eval==instance_eval" is sure to succeed. I don't know the specification of at_exit, but I guess if you do exit!0, it will exit immediately without executing anything registered in at_exit.
+ 
+ ** rescue
+ 
+ >||
+ irb> "#{abc}"
+ NameError: undefined local variable or method `abc' for main:Object
+ ||<
+ 
+ I see. I guess 42 is just a convenient integer literal because it can be a valid literal for either 4 or 2 if one of the literals disappears.
+ 
+ I've used up an hour of my lunch break so far, so I'll continue after work. As for "whether Python can do it or not," the lack of "string literals in arbitrary quotation marks" seems to be quite painful.
+ 
+ ** Continued: Clarification of objectives
+ 
+ Now that you feel like you have "most of it figured out," let's clarify our objectives. I have not been able to clarify the objectives until now, but there are a few things that are clear.
+ 
+ - Determine if it can be ported to Python
+ - Gathering information on "what is happening in the process of changing from a state that people do not understand to a state that they do understand."
+ 
+ The former is a strong conclusion that "it can't be done". The latter is a "bad goal setting" that, when you think about it, does not clarify "how far you have to go to get to the end. To confirm that we have changed to a "state of understanding," it would be better to create something and verify it, but it doesn't seem very realistic to create a Python implementation at least. So, I think I'll make it my goal to create an "explanation". I think I'll aim to QED "no matter what part of the code is broken, it will always output the source code before the breakage" by dividing it into cases.
+ 
+ I'll also review this log after I'm done for the day and write an impressionistic entry that examines what I'm doing in the process of understanding.
+ 
+ ** eval evalの動作の確認
+ 
+ Let's make sure that this code is reproduced once eval eval is executed, just to be sure.
+ 
+ First of all, this is how s is determined.
+ >||
+ s=%(B%A  C{at_exit{ZGQG##G
+ 
+ }}}ABB.rescue x rescue 42##B
+ 
+ Z=GQG##G
+ 
+ instance_Z=GQG##G
+ 
+ Z Z if Z==instance_Z
+ ).gsub ?Z,%[eval]
+ ||<
+ 
+ %(...) is a string literal, which is gsubbed and Z is replaced with eval. The result of the replacement is this
+ 
+ >||
+ B%A  C{at_exit{evalGQG##G
+ 
+ }}}ABB.rescue x rescue 42##B
+ 
+ eval=GQG##G
+ 
+ instance_eval=GQG##G
+ 
+ eval eval if eval==instance_eval
+ ||<
+ 
+ 次に7.times{|n|s.gsub! (n+65).chr,(n<1?92:n+33).chr}でA～Gを置換します。置換テーブルを再掲
+ >||
+ [('A', '\\'),
+  ('B', '"'),
+  ('C', '#'),
+  ('D', '$'),
+  ('E', '%'),
+  ('F', '&'),
+  ('G', "'")]
+ ||<
+ 
+ The replacement result looks like this
+ >||
+ "%\  #{at_exit{eval'Q'##'
+ 
+ }}}\"".rescue x rescue 42##"
+ 
+ eval='Q'##'
+ 
+ instance_eval='Q'##'
+ 
+ eval eval if eval==instance_eval
+ ||<
+ 
+ The reason why I did this is because the special meaning of #{...} and the second backslash of #{...} \I wanted to avoid triggering the second backslash of #{...}.
+ 
+ Finally, replace Q. s.gsub ?Q,%[(eval q=%(]+q+%[))#]. Huh? Where did this q come from...
+ 
+ Ah, well, Ruby strings can be destructively modified. (PS: This is getting sidetracked.)
+ 
+ >||
+ irb> x=y="aaa"
+ => "aaa"
+ irb> y[1] = ?A
+ => "A"
+ irb> x
+ => "aAa"
+ ||<
+ 
+ In the flow of processing in the time series, first q=%(s=%(...)) to put a string in q, and then eval q evaluates it.
+ 
+ Here's what's in the q
+ >||
+ s=%(...).gsub ?Z,%[eval]
+ 7.times{|n|s.gsub! (n+65).chr,(n<1?92:n+33).chr}
+ puts s.gsub ?Q,%[(eval q=%(]+q+%[))#]
+ $stdout.flush
+ exit!0
+ ||<
+ 
+ In the contents of q, a part of the same string is named s. The new string instance is created here because gsub is called instead of gsub! (PS: This is a misunderstanding. It is a separate instance from the original.) Then we do a substitution on s, but it is a separate instance from q, so the effect of the destructive change to s does not extend to q. Finally, the output embeds the contents of q in the area labeled Q, flushes the standard output, and exits, and so on.
+ 
+ ** 後半部破壊調査
+ 
+ Now, let's first cut the # before the first half at_exit so that the safety net doesn't move, and see what happens if the second half is broken.
+ 
+ First, if this conditional comparison is broken, NameError
+ >||
+ eval eval if eval==instance_eva
+ ↓
+ quine.rb:48:in `<main>': undefined local variable or method `instance_eva' for main:Object (NameError)
+ ||<
+ 
+ If === becomes =, it will be true, but in this case the other places are not broken, so eval eval will behave as expected.
+ 
+ NameError if if or surrounding whitespace is broken; NameError if eval or surrounding whitespace is broken.
+ 
+ It has been confirmed that there is no problem if the string contents are corrupted.
+ 
+ If the closing quote is broken, the comment at the end of the string will increase and eval==instance_eval will fail and go to the safety net.
+ 
+ What if the opening quote in the string here is broken?
+ >||
+ instance_eval='(eval ...)#'##'
+ ||<
+ What a surprise! At that moment eval is triggered, so it outputs and exits normally without having to wait for comparison.
+ 
+ What if the assignment here is broken? I thought it would be a safety net, but it is not. instance_eval takes a string as an argument and evaluates it, so it outputs and exits normally without waiting for a comparison.
+ 
+ If the variable name is broken, the timing of the comparison will be a mismatch and go to the safety net.
+ 
+ ** Safety Net Survey
+ 
+ This is the part that remains.
+ >||
+ "%\  #{at_exit{eval'(eval q=%(s=%(B%A  C{at_exit{ZGQG##G
+ 
+ }}}ABB.rescue x rescue 42##B
+ 
+ Z=GQG##G
+ 
+ instance_Z=GQG##G
+ 
+ Z Z if Z==instance_Z
+ ).gsub ?Z,%[eval]
+ 7.times{|n|s.gsub! (n+65).chr,(n<1?92:n+33).chr}
+ puts s.gsub ?Q,%[(eval q=%(]+q+%[))#]
+ $stdout.flush
+ exit!0))#'##'
+ 
+ }}}\"".rescue x rescue 42##"
+ ||<
+ 
+ If a mutation enters this zone, #{at_exit...} before the exit-time instruction registered in #{at_exit...} is executed, the second half of the program, which should not contain any mutation, should output normally and terminate the program. The exceptions where this does not happen are when the mutation that entered this zone causes a syntax error and the execution phase does not start, or when an error occurs in the execution of this zone and it dies before the at_exit registration is complete. Let's make sure neither exists.
+ 
+ First of all, it doesn't matter what happens to the contents of q, because it is just a string. The following code will register at_exit normally.
+ >||
+ "%\  #{at_exit{p 12345}}}\"".rescue x rescue 42##"
+ ||<
+ 
+ When the initial quotation marks disappear, as confirmed earlier, the %\... \No problem, since the ס is converted to a string literal.
+ 
+ When the character before # disappears, it is simply a change of string, no problem.
+ 
+ When # or { disappears, at_exit is no longer executed, but since it only changes to a string, no error occurs and the latter part works correctly.
+ 
+ at_exit{...} is broken, a runtime or syntax error occurs. But this is not a problem because the second rescue will grip it, as we saw earlier.
+ 
+ >||
+ irb> "#{at_exi}"
+ NameError: undefined local variable or method `at_exi' for main:Object
+ irb> "#{at_exit{}"
+ SyntaxError: (irb):33: syntax error, unexpected tSTRING_BEG, expecting '}'
+ ||<
+ 
+ at_exit{...} The second quotation mark is added as an extra one in case the closing bracket of "#{" is broken. This is because the second quotation mark in "#{" is assumed to be the content of #{}" instead of the end of the string and parsing continues, resulting in a syntax error when it breaks through rescue, etc.
+ 
+ What if the backslash before the quote is broken?
+ >||
+ "%\  #{at_exit{p 12345}}}"".rescue x rescue 42##"
+ ||<
+ In this case, ".rescue x rescue 42##" is converted to a string literal. No error occurs and the second half of the file runs normally. The same thing happens when one of the closing quotes disappears. It just turns into a string until the end of the line.
+ 
+ What if the period in .rescue disappears? In this case, .rescue, which was "a non-existent method call that causes an error," turns into a control-syntax rescue. The result would be "aaa" rescue x. The string literal would not throw an error, so rescue x would not be executed.
+ 
+ If the RESCUE is broken, it becomes a NameError and the second RESCUE grasps it.
+ 
+ When the space between x and the second rescue dies, a NameError that cannot be gripped is raised, but in that case the successfully registered at_exit is triggered first to exit, so there is no problem. the same applies when the space between rescue and 42 disappears.
+ 
+ >||
+ "%\  #{at_exit{p 12345}}}\"".rescue xrescue 42##"
+ ↓
+ 12345
+ quine.rb:1:in `<main>': undefined method `xrescue' for main:Object (NoMethodError)
+ # Stack trace display due to uncaught exception is happening after processing at_exit
+ ||<
+ 
+ If one of the #42's disappears, it is still a numeric literal. If one of the ##'s disappears, it is still a comment. If the " after ## disappears, it is still a comment, so there is no problem.
+ 
+ Explanation complete. Whew, I'm tired.
+ 
+ ** Summary
+ 
+ - I think you could have done without the story about the first time you installed gem.
+ - Actually, before I wrote the entry, I thought I would need a debugger or something to display the syntax tree, but I didn't.
+ - I was going to finish it in an hour or two, but it ended up taking 4 hours. Oh, I had to prepare my tax return...
+ 
+ ** 追記
+ 
+ >>
+ The fact that gsub is called here instead of gsub! creates a new string instance. (PS: This is a misunderstanding. It is a separate instance from the original)
+ <<
+ 
+ >||
+ irb(main):038:0> eval x="y=%[hoge];y[1]=?a"
+ => "a"
+ irb(main):039:0> x
+ => "y=%[hoge];y[1]=?a"
+ irb(main):040:0> y
+ => "hage"
+ ||<
+ 
+ It did not matter if the gsub had or did not have a ! It didn't matter if the gsub had or didn't have a !
+ </body>
+ <comments>
+ <comment>
+ <username>ku-ma-me</username>
+ <body>Oh, it seems like you could get it written without writing an explanation :-)<br><br>The lack of "string literals with optional quotes" seems pretty painful<br><br>I think this is a rather branchy area and can be managed with something enviable like """. <br>It's more of a hassle that the parentheses disappear and can't be handled, but I have a feeling that the inability to omit the parentheses in the method call is going to be a heavy burden. </body>
+ <timestamp>1392899777</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2014-02-20 https://nishiohirokazu.hatenadiary.org/archive/2014/02/20]

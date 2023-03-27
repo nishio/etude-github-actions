@@ -1,0 +1,85 @@
+Hatena2010-02-07
+code:hatena
+ <body>
+ *1265548462* 55 laws that will work for you if you're a pain in the ass.
+ <a href="http://www.amazon.co.jp/gp/product/447979249X?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=7399& creativeASIN=447979249X">55 Laws That Will Work for You, the Hassle-Free Guy</a>. <a href="http://www.amazon.co.jp/gp/product/4163690204?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=7399& creativeASIN=4163690204">The Woman Who Can't Clean Up: The Art of Tidying Up</a>. I also thought about it in <a href="">The Art of Tidying Up</a>, but in short...
+ 
+ The task (for the most part) doesn't go away if left unattended. In fact, they increase. It's a hassle to take care of them after they increase, so you have to get rid of them before they increase."
+ 
+ So that's what it means. Tasks that will not disappear even if left unattended must be put away quickly. So I washed the dishes. The cup I drank ginger tea in had become shiny because I had neglected it. I have more work to do.
+ 
+ Whew. It's all taken care of.
+ 
+ **1265548836*Simulation of Dominion 2
+ Sequel to the <a href='http://d.hatena.ne.jp/nishiohirokazu/20100206/1265436304'>Dominion simulation</a>.
+ 
+ I had to sit on the train for about 30 minutes to get around, so I made some modifications to yesterday's code. When a chapel is in the hand, the strategy in yesterday's code was "discard as many mansions as you can", but in addition to that, I changed it to "if you have enough copper coins to buy silver or gold coins, discard those as well".
+ 
+ The expected value for the first move, buying a silver coin and a chapel, was 2.06, SD 0.2; the expected value for buying two chapels was 1.73, SD 0.45.
+ 
+ Let's compare the results with the previous results.
+ >>
+ When the first hand bought a chapel and a silver coin, mean 1.72, SD 0.1; when only a silver coin was bought, mean 1.62, SD 0.05; when the first coin was split 3-4 and 2 silver coins were bought, mean 1.68, SD 0.05; when 2 chapels were bought, mean 1.60, SD 0.08; when a moat and a silver coin were bought, mean 1.59, SD 0.05, and if they bought a moat and a silver coin, mean 1.59, SD 0.05. In other words, "chapel + silver coin" outperformed "silver coin + silver coin," "chapel + chapel," and "silver coin + moat. Note that in this experiment, the chapel is used only for discarding the mansion, but in a real battle, it could be used for discarding copper coins, so "chapel + silver coins" and "chapel + chapel" could have higher values.
+ <<
+ 
+ In the end, the play to buy the chapel is head and shoulders above the play to buy the chapel: "chapel + silver coin 2.06" > "chapel + chapel 1.73" > "silver coin + silver coin 1.68" > "silver coin 1.62". The important point is that in any of these strategies, the monetary value per deck exceeds 1.60 by turn 12, so the expected value of coins drawn each turn exceeds 8. In other words, by this time, you can expect to buy a genus state about one out of every two times. The coin strategy is still this fast on its feet, even though it wastes most of the action opportunities. It's important for a strategy that uses action to beat this on speed.
+ 
+ When I first started learning, I was buying action cards every turn, but I guess the basic idea is to use coins and buy enough actions to not waste one action phase each turn! I still don't remember what cards are in the options. I'll make a cheat sheet next time. I was thinking something like +1 action +2 draw laboratory card, which is a good deal because it doesn't consume an action and with a card unit price of 1.5 or more, it practically works for more than gold coins.
+ 
+ >|python|
+ if "C" in hand:
+     while "E" in hand:
+         hand.remove("E")
+ 
+     if "1" in hand:
+         money = count_money(hand)
+         if money > 6:
+             while money > 6 and "1" in hand:
+                 hand.remove("1")
+         elif money > 3:
+             while money > 3 and "1" in hand:
+                 hand.remove("1")
+ ||<
+ 
+ <hr>
+ 
+ The bug was "throw away all the copper coins when there are 3 or more copper coins". (thanks id:flag-boy)
+ 
+ >||
+ if "1" in hand:
+     money = count_money(hand)
+     if money > 6:
+         while money > 6 and "1" in hand:
+             hand.remove("1")
+             money -= 1
+     elif money > 3:
+         while money > 3 and "1" in hand:
+             hand.remove("1")
+             money -= 1
+ ||<
+ 
+ Hmmm... I'm getting 1.91, SD 0.15 for a silver coin + chapel, and 1.85, SD 0.14 for 2 chapels. I wonder if it would be more efficient to throw away the copper coins as well.
+ 
+ >||
+ while "E" in hand:
+     hand.remove("E")
+ while "1" in hand:
+     hand.remove("1")
+ ||<
+ 
+ The result of the version that also discards all the copper coins: 2.21 for the silver coins + chapel, SD 0.25. This is the biggest so far. By the way, two chapels will ruin you if you throw them away too soon.
+ </body>
+ <comments>
+ <comment>
+ <username>flag-boy</username>
+ <body>Wouldn't you have to do money = count_money(hand) in the while as well? </body>
+ <timestamp>1265559235</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>たしかに！</body>
+ <timestamp>1265600799</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-02-07 https://nishiohirokazu.hatenadiary.org/archive/2010/02/07]

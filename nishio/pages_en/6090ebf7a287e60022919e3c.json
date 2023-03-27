@@ -1,0 +1,89 @@
+Hatena2008-05-08
+code:hatena
+ <body>
+ *1210214215*[AS3] Can't the main class receive mouse events?
+ If you write code like the one below, if you click on Foo or Bar, you will see the message, but not if you click anywhere else.
+ >||
+ package {
+   import flash.display.*;
+   import flash.events.*;
+   public class Client extends Sprite {
+     public function Client() {
+       graphics.beginFill(0x00FF00);
+       graphics.drawRect(0, 0, 100, 100);
+       alpha = 0.3;
+       var f:Foo = new Foo();
+       f.setup(this);
+       addChild(new Bar())
+     }
+   }
+ }
+ 
+ import flash.display.*;
+ import flash.events.*;
+ 
+ class Foo extends Sprite{
+   public function Foo(){
+     graphics.beginFill(0x00FF00);
+     graphics.drawRect(0, 0, 50, 50);
+     alpha = 0.5;
+   }
+   public function setup(target:Client):void{
+     target.addEventListener(MouseEvent.MOUSE_DOWN, eventhandler);
+     target.addChild(this);
+   }
+   public function eventhandler(e:Event):void{
+     log("hi!");
+   }
+ }
+ 
+ class Bar extends Sprite{
+   public function Bar(){
+     graphics.beginFill(0x00FF00);
+     graphics.drawRect(0, 0, 50, 50);
+     alpha = 0.5;
+     x = 50;
+     y = 50;
+   }
+ }
+ ||<
+ 
+ -mouse event - Whale Flash ActionScript3 Tips
+ --http://aoi-project.com/flash/wiki/wiki.aoi?%E3%83%9E%E3%82%A6%E3%82%B9%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88
+ >>
+ place where one is addicted to
+ 
+ I tried to addEventLister to the root to get mouse events, but it didn't seem to detect events for the whole stage. So I went to the trouble of creating a child Sprite and added events to it, and it worked.
+ <<
+ Mwah, could be the same behavior. Is it a specification?
+ 
+ I added this to the constructor of the main class. When you click on an area that does not have any child sprites, the stage will be displayed instead of the parent sprite.
+ >||
+ stage.addEventListener(MouseEvent.MOUSE_UP, function(e:Event):void{log(e.target)});
+ // stage
+ ||<
+ 
+ mouseEnableはtrue。
+ >||
+ log(this.mouseEnabled); // true
+ ||<
+ 
+ -----
+ 
+ I ended up receiving both Sprite and Stage like this.
+ >||
+   public function setup(target:DisplayObjectContainer):void{
+     target.addEventListener(MouseEvent.MOUSE_DOWN, eventhandler);
+     target.addChild(this);
+   }
+ ||<
+ 
+ -----
+ 
+ I wanted to make a MOUSE_OVER or MOUSE_OUT to do things, but this is hard to test in rascut because the whole screen is a stage. I guess it would be smart to put another Sprite in addition to the main class.
+ 
+ *1210241701*集中力
+ The reason for some disconnect is simply that I didn't get much sleep last night because of the earthquake, so maybe I'm tired, although I don't realize it. The drop in productivity comes before the subjective symptoms of fatigue. I'm going home early today.
+ </body>
+
+[Hatena Diary 2008-05-08 https://nishiohirokazu.hatenadiary.org/archive/2008/05/08]

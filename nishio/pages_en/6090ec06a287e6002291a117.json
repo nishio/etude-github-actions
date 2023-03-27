@@ -1,0 +1,69 @@
+Hatena2010-10-31
+code:hatena
+ <body>
+ **1288493058*Summary of Translucent Somethings
+ Maloney: potato starch
+ Kuzukiri: potato starch + kudzu starch
+ Harusame: mung bean and pea starch + potato starch
+ Beef noodle, Pho: rice flour
+ Nata de coco: fermented coconut
+ Tapioca: cassava starch
+ Straw rice cake: straw starch (originally), tapioca and potato starch
+ Ito Konnyaku: Konnyaku potato
+ Shirataki: Konnyaku
+ Agar: Tengusa
+ Tokoroten: agar agar
+ 
+ *1288554629*Misconceptions about locals.
+ Python2.6とかで
+ >|python|
+ >>> def foo():
+ ...   locals()["hoge"] = 1
+ ...   print hoge
+ ... 
+ >>> foo()
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in <module>
+   File "<stdin>", line 3, in foo
+ NameError: global name 'hoge' is not defined
+ ||<
+ I thought that the local namespace was unwritable due to optimization and that what locals() returned was a dictionary-like copy of the local namespace.
+ 
+ But this just means that LOAD_GLOBAL is set because hoge doesn't exist at compile time.
+ >|python|
+ >>> import dis
+ >>> dis.dis(foo)
+   2           0 LOAD_CONST               1 (1)
+               3 LOAD_GLOBAL              0 (locals)
+               6 CALL_FUNCTION            0
+               9 LOAD_CONST               2 ('hoge')
+              12 STORE_SUBSCR        
+ 
+   3          13 LOAD_GLOBAL              1 (hoge)
+              16 PRINT_ITEM          
+              17 PRINT_NEWLINE       
+              18 LOAD_CONST               0 (None)
+              21 RETURN_VALUE        
+ ||<
+ 
+ This way, you can see the rewrite properly.
+ 
+ >|python|
+ >>> def foo():
+ ...   locals()["hoge"] = 1
+ ...   print eval("hoge")
+ ... 
+ >>> foo()
+ 1
+ ||<
+ 
+ <hr>
+ 
+ >>
+ I thought this was because the local namespace was unwritten due to optimization, and what locals() returns is a dictionary-like copy of it."
+ This is correct, and the only reason it can be eval'd is because the behavior when locals() is rewritten is undefined, so it just happens to be eval'd for implementation.
+ <<
+ by id:methane
+ </body>
+
+[Hatena Diary 2010-10-31 https://nishiohirokazu.hatenadiary.org/archive/2010/10/31]

@@ -1,0 +1,170 @@
+Hatena2009-05-31
+code:hatena
+ <body>
+ *1243760198*[Blender]Aurora Borealis with Koch Curves (Part 2)
+ Gradient.
+ <img src="http://gyazo.com/93cb420af06aa8fb49e6478e043df74f.png">
+ 
+ I'm going to try a few things while fiddling with the parameters. In the horizontal direction, the spacing of the Halo's is rather "un-smooth" even if they are far apart, but in the vertical direction, if the Halo's are spaced too far apart, the result is a mysterious bump. Also, the smaller the alpha value, the less saturated the image will be when they overlap, so it's cleaner.
+ 
+ <img src="http://gyazo.com/d1833a2fb3e6338076480e846548f3eb.png">
+ 
+ The source code is dirty because it was created by trial and error while cutting and pasting sample code.
+ >|python|
+ from Blender.Mathutils import Vector
+ from Blender import *
+ from math import sin, cos, pi
+ 
+ class Turtle(object):
+     def __init__(self):
+         self.x = 0.0
+         self.y = 0.0
+         self.dirx = 1.0
+         self.diry = 0.0
+         self.vert2d_list = [(0.0, 0.0)]
+         self.faces = []
+ 
+     def forward(self, mag):
+         self.x += self.dirx * mag 
+         self.y += self.diry * mag 
+         self.vert2d_list.append((self.x, self.y))
+ 
+     def rot(self, rad):
+         self.dirx, self.diry = (
+             self.dirx * cos(rad) - self.diry * sin(rad),
+             self.dirx * sin(rad) + self.diry * cos(rad))
+     
+     def build_mesh(self, z=0.0, name="Mesh"):
+         verts3d = [Vector(x, y, z) for (x, y) in self.vert2d_list]
+         me = Mesh.New(name + str(z))          # create a new mesh
+         me.verts.extend(verts3d)          # add vertices to mesh
+         me.faces.extend(self.faces)           # add faces to the mesh (also adds edges)
+         return me
+ 
+ def deg(x):
+     return 2 * pi / 360 * x
+ 
+ def makeHalo(x):
+     mat = Material.New('Halo')          # create a new Material called 'newMat'
+     mat.rgbCol = [0.7 * x, 0.7, 0.1]          # change its color
+     mat.setAlpha(0.3 * (1 - x))                     # mat.alpha = 0.2 -- almost transparent
+     #mat.emit = 0.7                        # equivalent to mat.setEmit(0.8)
+     #mat.mode |= Material.Modes.ZTRANSP    # turn on Z-Buffer transparency
+     #mat.setAdd(0.8)                       # make it glow
+     mat.setMode('Halo')                   # turn 'Halo' "on" and all others "off"
+     return mat
+ 
+ def koch(level=1, unit=1):
+     if level == 0:
+         turtle.forward(unit)
+     else:
+         koch(level - 1, unit)
+         turtle.rot(deg(60))
+         koch(level - 1, unit)
+         turtle.rot(deg(-120))
+         koch(level - 1, unit)
+         turtle.rot(deg(60))
+         koch(level - 1, unit)
+         
+ 
+ turtle = Turtle()
+ koch(4, 0.6)
+ 
+ for i in range(100):
+     ob = Object.New('Mesh', 'myObj')  # link mesh to an object
+     m = turtle.build_mesh(i / 5.0)
+     m.materials += [makeHalo(i / 100.0)]
+     ob.link(m)
+ 
+     sc = Scene.GetCurrent()          # link object to current scene
+     sc.link(ob)
+ ||<
+ 
+ *1243771020*Animal Shogi
+ https://www.joshi-shogi.com/ec/bankoma/animal.html
+ 
+ Hoho, this looks interesting. <a href='http://www.joshi-shogi.com/1day/2009/04/rules.html'>Doubutsu Shogi, Rules Overview (1DAY Tournament｜Japan Women's Professional Shogi Association)</a>
+ 
+ 
+ f:id:nishiohirokazu:20090531205715j:image
+ I made it anyway. Hmm, this is surprisingly well thought out for the small number of pieces.
+ 
+ Let's say you do a retreat analysis. At any rate, "the enemy enters the ball but cannot take it" and "I am taken" are the losing phases, right?
+ 
+ Oh, no. It seems that retrograde analysis can't be used without monotonically decreasing features. <a href='http://ci.nii.ac.jp/naid/110006407467/en'>CiNii - Retrograde Analysis of Dodgem Game</a>
+ 
+ No, wait. <a href='http://ci.nii.ac.jp/naid/110006530809/'>CiNii - Complete Analysis of a Board Game "SIMPEI" (Analysis, Game Programming)</a> has no monotonically decreasing features I see. I see, the former is that if you have monotonically decreasing features, you can use them to divide the game phase into several "one-way" groups, and the latter is that "SIMPEI has a small state space, so the whole game can be regressively analyzed as one group".
+ 
+ Let's properly calculate the number of states in Animal Shogi. First, there are 132 ways in which the lion is somewhere among the 12 places where the first move is made, and somewhere among the remaining 11 places where the second move is made. Since the elephant and the giraffe are "in an empty square in the first position", "in an empty square in the second position", "in the first position" and "in the second position", <del>(10 + 10 + 1 + 1) * (9 + 9 + 1 + 1) * ... = 126720</del><ins>22 ** 4 =234256</ins> is enough. I say "enough" because if both players are ahead or both players are behind, you can save about 1/4 of the game if you try hard enough, since the exchanged moves are also in the same position. (PS: When you have pawns, the number of places you can put them does not decrease, so I changed it to 22 ** 4)
+ 
+ Finally, chicks are tricky. Because they grow up.
+ 
+ <hr>
+ 
+ I had a couple of games against other people here and learned that Google Spredsheet is very useful, with chat and simultaneous editing.
+ 
+ <hr>
+ 
+ The story is about a giraffe and an elephant, both of which move to point 4, but by all accounts the elephant is weaker. Because the elephant is more likely to get stuck due to the edge. The sum of the number of points in each 12 squares: chickens 9, elephants 24, giraffes 34, chickens 46, lions 58.
+ 
+ <hr>
+ 
+ Now, let's continue with the chickens. A chick has 9 ways to be a chick, 12 ways to be a chicken, and a piece to hold, so there are 44 ways for the first and second players to play. If we ignore the effect of the reduction in the number of places where the chickens can be placed, 1,936 ways are enough. When the chicken is a chicken, there are less than 10 places it can be placed. Therefore, 1600 ways are enough.
+ 
+ Well, all together, 59864589312. 60 billion. 60G. hmmm, that's a bit much.
+ 
+ <hr>
+ 
+ I don't understand it exactly yet, but I wonder if the regression analysis is 2 bits of information to have per state: win, lose, and a thousand moves. If so, that's 15 GB, 3.75 GB using symmetry, and the original value is reduced to 50 G since there are less than 10 different places to put it when it is a chicken. So 3.15GB so far. If I do the above "If I work hard, it will be reduced to 3/4" seriously, it will be less than half, and my MacBook with 2GB will be able to have it on-memory level.
+ 
+ <hr>
+ First move Lion L0 0-11
+ 後手ライオンL1 0-10 (if L1 > L0: L1--)
+ Kirin, first of all, "Gote Saki", which is divided into "Saki Saki", "Saki Gote", and "Gote Gote", is normalized. As for the "first move first" and "second move second", the "smaller is first" rule further halves the number of moves.
+ The first-prize winner is 1 + 10 + 45 for "both pawns," "one pawn, the rest is 0-9," "0-9 and 0-8, but 1/2 in order of decreasing size," and the second-prize winner is the same, for a total of 112; the first-prize winner is "both pawns," "one pawn, the rest is 0-9, doubled depending on whether the pawn is first or last," "0-9 and 0-8" for a total of 1 + 20 + 90 = 111. 223 ways for the overall total. That's half of the original estimate of 22 ** 2 = 484. That's a quarter less with the disappearance of the "backward move" and a quarter less with the halving of the first move and the backward move, respectively. If the elephant and chick are halved in the same way, the whole thing would be 1/8 of 3GB and run at about 750MB.
+ 
+ I think it would be too complicated, though it would be smaller if we include the reduction for elephants and chicks due to "squares that cannot be placed because a giraffe is already there". It may be enough to skip only the lion. Then, we have 0-9 * 0-9 for all the giraffes and 121 * 122 = 243 for the giraffes, which is still half of the total. The elephant is exactly the same as the giraffe, 243, with no need to complicate things.
+ 
+ Chickens are also (omitting the conditional branching on whether or not there is a lion in the chick area because it is tedious) 0-8 (chickens) + 0-9 (chickens), so there are only 19 more places to place them, 1 + 19 + 19 * 18 / 2 = 191 for first-previous, 1 + 19 * 2 + 19 * 19 = 400 for first-posterior, 782 in total.
+ 
+ Well, 12 * 11 * 243 * 243 * 782 = 6095273976. hmmm, 1.5 GB with 2 bits per state packed. And then, I reduce it to half by symmetry, and then reduce it again to half by symmetry of "the first move wins, the second moves loses", but I have to add "which move is it now" to the phase to offset it, so the final size is 0.75GB. Well, the symmetry reduction is a hassle. 1.5GB should work on my MacBook, so I guess it's OK.
+ 
+ <hr>
+ 
+ I skipped it because it looks like a hassle and a bug might get in, but considering 0.9 * 0.8 * 0.7 * 0.6 * 0.5 = 0.1512, I wouldn't be surprised if the giraffe piece could be 4 ~ 5 times smaller if the effect of reducing the number of places where the elephant piece can be placed is implemented. Encoding with non-fixed digits is complicated, but we know that the giraffe has 223 digits, so we can use the value of x mod 223 to identify the position of the giraffe, and then use the value N determined by that to determine the position of the elephant by (x / 223) mod N... and just do it hierarchically? I think I can do it if I keep calm. And if it gets this small, the aspect will fit in uint32t, right? I'm a bit attracted to it.
+ 
+ <hr>
+ via id:TOKOROTEN
+ http://sig-gi.tanaka.ecc.u-tokyo.ac.jp/cfp/20091-program.html
+ >>
+ 3. Complete analysis of "Doubutsu Shogi
+ ○田中哲朗(東京大学)
+ 
+ A complete analysis of the board game "Doubutsu Shogi" was performed using backward analysis. The method used and the properties of the game discovered as a result of the analysis are described.
+ <<
+ 
+ 
+ orz...
+ 
+ moreover
+ http://toybox.tea-nifty.com/memo/2009/04/post-3f5f.html
+ >>
+ The number of search phases was about 200 million, and the game seems to be surprisingly difficult.
+ <<
+ 
+ I had worked hard to reduce the estimated 60 billion to 6 billion, and finally reached the point where I could reduce it to 600 million if I worked a little harder (effect of non-own pieces closing the board + symmetry), but I didn't realize that there was still 3 times more to be cut....
+ </body>
+ <comments>
+ <comment>
+ <username>田中哲朗</username>
+ <BODY>It has been a while. I understand your doubts about the number of games. The number of games with "the effect of non-own pieces occupying the board" alone reduces the number of games to 1,567,925,964, and even with "symmetry" it is only about half of that. Therefore, we have reduced the number of positions to 246,803,167 by making only the positions reachable from the initial position symmetrical, assuming that "the lion always wins when it can win". Naturally, it is not possible to encode only the "reachable phases from the initial phase" using uint32, so we decided to encode each phase using uint64 to create a sorted vector that contains all the "reachable phases from the initial phase". Once the vector is created, it uses only 2 GB of memory, but it took about 13 GB to create the vector using hash_set. If I had more memory, I would have thought of doing something more creative, but since I had enough for now, I didn't try that hard. The result was that the initial phase was won by the latter (78 moves), but we cannot rule out the possibility of a bug, so we would appreciate it if you could try again without saying "orz". </body> </P> </P> <BODY>
+ <timestamp>1243829672</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>It's been a while! <br>There are still a lot of things I don't understand, but I'm going to try to learn as much as I can about recession analysis. </body>
+ <timestamp>1243851174</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-05-31 https://nishiohirokazu.hatenadiary.org/archive/2009/05/31]

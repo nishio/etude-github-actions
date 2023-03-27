@@ -1,0 +1,85 @@
+Hatena2015-02-20
+code:hatena
+ <body>
+ *1424413124*A story about getting into the Windows file system redirector.
+ I wanted to do speech synthesis in Japanese on Windows 7, so I created a script using WSH with WScript.CreateObject("Speech.SpVoice"); and used it.
+ 
+ When I run it by itself from the command prompt, it works fine, but when I run it from Python with subprocess.call, I get the error "Could not create object." error.
+ 
+ cscript.exe launched from the command prompt is 64-bit, Python is 32-bit, and when launched from a 32-bit program, the 32-bit version of cscript.exe under SysWOW64 is launched, and the 32-bit version cannot load "Speech.SpVoice SpVoice" cannot be loaded. It is difficult to understand because there is no difference between the 32-bit and 64-bit versions in the output message.
+ 
+ This behavior is due to the Windows file system redirector, which starts the 32-bit version even if the full path specifies the 64-bit version.
+ 
+ >>
+ When a 32-bit application tries to access the %windir%\System32 directory, access is redirected to a new directory called %windir%\SysWOW64.
+ <<
+ 
+ >>
+ For 32-bit applications, you can access native system directories by specifying %windir%\Sysnative directory instead of %windir%\System32 directory. Sysnative is recognized by WOW64 as a special alias used to indicate that access should not be redirected by the file system. This mechanism is flexible and easy to use and is the recommended mechanism for avoiding file system redirection.
+ <<
+ <a href='https://msdn.microsoft.com/ja-jp/library/aa384187(v=vs.85).aspx'>File System Redirector (Windows)</a>
+ 
+ So it is correct to write the following
+ >|python|
+ subprocess.check_call([r"c:\windows\sysnative\cscript.exe", "yomiage.wsf", arg])
+ ||<
+ 
+ *1424413665* Japanese speech synthesis from Python and other sources on Windows 7.
+ Speech.SpVoice instead of SAPI.SpVoice can be used for Japanese speech synthesis. see: <a href='http://d.hatena.ne.jp/language_and_engineering/20150202/Japane seTextToSpeechProgramming'>How to do Text To Speech in Windows batch easily ... Procedures and sample codes for speech synthesis using SAPI and Speech.SpVoice in WSH - mainly Mainly on language and system development</a>.
+ 
+ So, if you create a file named yomiage.wsf with the following contents, you can use speech synthesis from the command line, such as ". /yomiage.wsf", you can use voice synthesis from the command line.
+ >||
+ <job id="Yomiage">
+    <script language="javascript">
+       var tts = WScript.CreateObject("Speech.SpVoice");
+       tts.Rate = 0;
+       tts.Speak(WScript.Arguments.Unnamed(0));
+    </script>
+ </job>
+ ||<
+ 
+ However, this Speech.SpVoice only exists in 64bit version. So it is not possible to load it directly from Python via win32com or something. If you call subprocess.call to start it as a child process, you will get an error message "Could not create object", but this is due to the file system redirector, so there is an official workaround. hatena.ne.jp/nishiohirokazu/20150220/1424413124'>A story about getting into Windows file system redirector</a>.
+ 
+ So now you can easily do things like playing with the say command on a Mac even on Windows.
+ 
+ *1424415040*Linda makes it easy to get past the program barrier.
+ I created a configuration of JavaScript running in a browser, a Linda server running on Ubuntu, and a Python client running on Windows.
+ 
+ The current configuration looks like this.
+ >||
+ JavaScript in the browser
+ ↓WebSocket
+ Linda running on Ubuntu
+ ↓WebSocket
+ Python program running on Windows
+ ↓Process call
+ cscript
+ ↓音声
+ 人間
+ ||<
+ 
+ First of all, Linda server was easily started up (on Ubuntu) by typing 6 lines of commands while looking at the README of this implementation: <a href='http://shokai.org/blog/archives/7515'>Hashimoto Shokai &#187; Parallel Language Extension on Ruby Implemented Linda and made it usable with WebSocket/Comet</a>.
+ 
+ Next, I wrote about 20 lines of HTML and JS to implement chat, referring to this page. At this point, chatting between multiple browser tabs worked easily. At first, the default WebSocket port 9000 was not opened, but it automatically fell back to Comet. : <a href='http://shokai.org/blog/archives/7814'>Hashimoto Shokai &#187; Introduction to Web version of Linda with JavaScript and Ruby (1)</a>.
+ 
+ I also tried to create a program that would run on Windows that would connect to the Linda server and read out the postings. I was quite lost here.
+ 
+ First, I approached it along the lines of "linda.js is JavaScript, so it should work with WSH as-is, right?" However, linda.js depends on jQuery, which is troublesome. I couldn't find a pattern that works easily.
+ 
+ Next I thought I could create an IE object from WSH and load the HTML in it, but this would "disconnect" the object from WSH as it would be destroyed when the integrity level changes. see: <a href='http://www. atmarkit.co.jp/bbs/phpBB/viewtopic.php?topic=42957&forum=7'>Launching IE from Excel - Insider.NET - @IT</a> Meanwhile document. I thought I could just do a WRITE, but this is an unspecified error.
+ 
+ I was pretty much demotivated around here, so I started building a Python version of the Linda library, since I'll be connecting Python programs in the future anyway. linda.js is about 400 lines, skipping the Comet implementation, fallback, and reconnection implementation when disconnected, I was able to port it in about 2 hours by throwing the WebSocket connection to ws4py. I plan to release this implementation in the near future. See: <a href='https://ws4py.readthedocs.org/en/latest/'>ws4py - A WebSocket package for Python &#8212; ws4py 0.3.5 documentation</a>
+ 
+ Writing to Linda can be done simply by accessing a specific URL via HTTP, so it can be done from Raspberry PI, etc. The dream expands.
+ 
+ In summary, the above configuration can be done in one day, so Linda is extremely useful for prototyping in situations where you have to overcome environmental barriers and do not have to worry about the load.
+ 
+ *1424415386*About Clean Language
+ I wrote an explanation of clean language.
+ 
+ <iframe src="//www.slideshare.net/slideshow/embed_code/44913042" width="476" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+ 
+ <iframe src="//www.slideshare.net/slideshow/embed_code/44913054" width="476" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+ </body>
+
+[Hatena Diary 2015-02-20 https://nishiohirokazu.hatenadiary.org/archive/2015/02/20]

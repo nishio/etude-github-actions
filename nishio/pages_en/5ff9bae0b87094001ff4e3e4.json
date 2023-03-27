@@ -1,0 +1,189 @@
+ARC111
+[AtCoder Regular Contest 111 - AtCoder https://atcoder.jp/contests/arc111]
+ARC111, A, B, and D were the three questions. Mistake(?) that the caller missed the pre-arrangement.
+The RE for C was submitted to C with the wrong code for D.
+[https://gyazo.com/c806e1bd22db961b5487a6bb0b885268]
+
+[A - Simple Math 2 https://atcoder.jp/contests/arc111/tasks/arc111_a]
+[https://gyazo.com/8e62ccc2503c21825f8e911cd021e199]
+	Thoughts.
+		[$ 10^{18}] or maybe [$ 10^{10^{18}}].
+ 　Just take the too much in M^2.
+ 　Loop detection, if you make a table of M^2, it's 10^8, so it's not going to work.
+ 　[doubling] looks good.
+ AC
+ 	code:python
+ 	 def main():
+       N, M = map(int, input().split())
+       M2 = M * M
+       doubling = [10 % M2]
+       for i in range(60):
+           doubling.append(
+               (doubling[-1] ** 2) % M2
+           )
+       ret = 1
+       for i in range(60):
+           if N % 2:
+               ret *= doubling[i]
+               ret %= M2
+           N //= 2
+   
+       print(ret // M)
+
+[B - Reversible Cards https://atcoder.jp/contests/arc111/tasks/arc111_b]
+[https://gyazo.com/0054886e607d84a63a9f6c1e35ea53ce]
+	Thoughts.
+ 　Color can paint either vertex of graph, card can paint either vertex of edge or edge, want to maximize the number of vertices to paint
+ 　Consider some typical graph shapes
+ 　　You can choose as many different colors as the number of edges, whether paths or trees.
+ 　　Loop can choose all of them.
+ 　　A vertex with a self-edge is always painted.
+ 　　The vertex with rank 1 is always optimal even if it is painted
+ 　　What else?
+ 　　　Pick an undetermined side and try it two ways?
+ 　　　In the case where the 200,000 edges are all in pieces, 2^200,000 is bad.
+ 　　The number of edges as an obvious upper bound
+ 　　divide into connected components
+ 　　　Because the different connected components don't affect anything.
+ 　　　[Solve for each connected component].
+ 　　　E>=V-1 since the connected components are connected
+ 　　　 When E=V-1, the color is E
+ 　　　 When larger, the color is V
+ 　　What about when there is a self side?
+ 　　　Don't worry about it.
+ 　　　Just +1 the number of sides as usual.
+ 　　　Match the above calculation
+ mounting
+　　Counting the number of edges while finding connected components with [UnionFind
+　　Compare the number of vertices to the number of answers
+ AC
+ code:python
+  def main():
+      N = int(input())
+      init_unionfind(400000 + 1)
+      numEdge = [0] * (400000 + 1)
+  
+      for _i in range(N):
+          a, b = map(int, input().split())
+          ra = find_root(a)
+          rb = find_root(b)
+          if ra == rb:
+              numEdge[ra] += 1
+          else:
+              unite(a, b)
+              rc = find_root(a)
+              numEdge[rc] = numEdge[ra] + numEdge[rb] + 1
+  
+      from collections import Counter
+      ccs = Counter(find_root(a) for a in range(1, 400000 + 1))
+      ret = 0
+      for cc in ccs:
+          V = ccs[cc]
+          E = numEdge[cc]
+          if E == V - 1:
+              ret += V - 1
+          else:
+              ret += V
+  
+      print(ret)
+　Post-Contest Twitter
+  https://twitter.com/mathbbn/status/1347922997600948226?s=21
+   [bipartite graph with edges as vertices]
+   It is solvable in maximal flow since it boils down to [maximal matching of bipartite graphs].
+   Just barely on the edge of TLE, apparently.
+  How do you come up with the idea that it's a graph?"
+  　I see. I wonder why.
+  　I looked back at my notes, and they were graphed in a stream of drawing samples and trying to understand them, without going through a particularly clear "realization".
+  　[https://gyazo.com/3430ad1cdf4888f904042d9966fc36a2]
+
+　　　If I dare to put it into words, there is no need to maintain the form of the given sequence, since this problem is not affected by changing the order of the cards, nor by changing the backs of the cards, so there is no need to maintain the form of the given sequence, it's more like having it in a more flexible form!
+　　Brief proof of why it is good to determine if a tree is a tree or not.
+　　　Consider the whole region tree of connected components
+　　　If we [convert this to a tree with roots], we can paint the non-root vertices by selecting the deeper vertex on each side
+　　　If there is an edge other than the whole tree, you can paint one of the vertices and make that vertex the root, and all the vertices will be painted.
+
+I'm not sure about C, so skip it and go to D.
+
+[D - Orientation https://atcoder.jp/contests/arc111/tasks/arc111_d]
+[https://gyazo.com/077328c4ec18b1260a4a7ecc2347abc2]
+	Thoughts.
+	　Given the number of vertices reachable from a vertex, orient the edge
+	　Of course, it can't be ca<cb when there's an edge from a to b.
+	　I know it can't be that easy, but I'll try to implement it that way anyway.
+	　Oh, it's not obvious which way to face in the case of equals.
+	　　Sample 1 is kind.
+	　Given a graph between vertices with equal number of reachable vertices, make it a strongly connected component
+	　Just do a depth-first search for edges (not vertices).
+	　I wrote [edge depth-first search] in a loop and bugged it, lost confidence in it, so I wrote it in recursion and let it through.
+	code:python
+	 def main():
+      _N, M = map(int, input().split())
+      from collections import defaultdict
+      edgelist = []
+      for _i in range(M):
+          frm, to = map(int, input().split())
+          edgelist.append((frm - 1, to - 1))
+  
+      CS = list(map(int, input().split()))
+  
+      answer = {}
+      edges = defaultdict(list)
+      for v1, v2 in edgelist:
+          if CS[v1] > CS[v2]:
+              answer[(v1, v2)] = "->"
+          elif CS[v1] < CS[v2]:
+              answer[(v1, v2)] = "<-"
+          else:
+              edges[v1].append(v2)
+              edges[v2].append(v1)
+  
+      for v1, v2 in edgelist:
+          if (v1, v2) not in answer:
+              answer[(v1, v2)] = "->"
+              answer[(v2, v1)] = "<-"
+  
+              def visit(e):
+                  (v1, v2) = e
+                  for v3 in edges[v2]:
+                      if v3 == v1:
+                          continue
+                      if (v2, v3) in answer:
+                          continue
+                      answer[(v2, v3)] = "->"
+                      answer[(v3, v2)] = "<-"
+                      visit((v2, v3))
+              visit((v1, v2))
+      for v1, v2 in edgelist:
+          print(answer[(v1, v2)])
+
+[C - Too Heavy https://atcoder.jp/contests/arc111/tasks/arc111_c]
+[https://gyazo.com/234ff93b5a7a9fc5540fb638e59fc11c]
+
+ No policy at all, and it was not submitted.
+ Thoughts.
+ 　[Build one, and you'll have a greedy law.
+ 　Will it be about NlogN?
+ 　If it's okay to replace it, would you replace it?
+  　If I could have the luggage that the original owner of my luggage has, would I exchange it?
+ 　　I have a solution, but I can't exchange it...
+　　Move from heaviest to heaviest?
+　　　Only a limited number of people are allowed to have it.
+　　　What comes back might be heavy when you give them something heavy.
+　Post-Contest Twitter
+　　>The heavier luggage should be handed over to the rightful owner in that order!　The recipient doesn't have to worry about the weight because it will be in the correct luggage, and the one who gives it to you will exchange it for a lighter one, so you won't have to worry about it afterwards!
+ 　　https://twitter.com/kyopro_friends/status/1347908488945496064?s=21
+ 　　Okay, so both "order of heaviness" and "original owner"...
+　考察
+　　How to notice what greed laws to do
+　　[Fill in from the end] pattern
+ 　　This issue should have been ignored because the order of people is meaningless.
+ 　　The "edge" in this case is not the order of the order, but the weight of the luggage
+ 　Twitter also shows a pattern of "least powerful/most powerful".
+ 　I didn't realize that when you move the heaviest thing to its rightful owner, you don't have to worry about tiring it out.
+ 　Proof of optimal, consistent with lower boundaries
+
+E
+ Thoughts.
+ 　[https://gyazo.com/4f6d08eaac17b40c5ef930413c494468]
+　Twitter after the contest
+　 [floor sum]

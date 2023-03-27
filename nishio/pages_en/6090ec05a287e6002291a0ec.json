@@ -1,0 +1,117 @@
+Hatena2010-08-12
+code:hatena
+ <body>
+ *1281594834* I don't know the scope of Perl -> I got it!
+ >|perl|
+ use strict;
+ use warnings;
+ 
+ sub foo{
+     my $x = "static";
+     sub bar{
+ 	print $x;
+     }
+     &bar();
+ }
+ 
+ &foo();
+ ||<
+ >|perl|
+ Variable "$x" will not stay shared at tmp.pl line 7.
+ ||<
+ 
+ Mmmm, I thought of course I could refer to it, but I couldn't. Why not?
+ 
+ <hr>
+ >>
+ @miyagawa It's a warning, so you should be able to reference it. The meaning of warning is that it is not a closure because it becomes a different variable on the second and subsequent calls. see perldoc perldiag
+ <<
+ Thank you! I was blinded by the warning and didn't realize it was showing up.
+ >||
+ tmp$ perl tmp.pl
+ Variable "$x" will not stay shared at tmp.pl line 8.
+ statictmp$
+ ||<
+ 
+ <hr>
+ >>
+ @miyagawa perl -e 'sub foo { my $x = 1; sub bar { warn $x++ } bar() } foo() for 1..3' とすると、will not stay shared の意味がわかるかと
+ <<
+ >||
+ tmp$ perl -e 'sub foo { my $x = 1; sub bar { warn $x++ } bar() } foo() for 1..3'
+ 1 at -e line 1.
+ 2 at -e line 1.
+ 3 at -e line 1.
+ 
+ tmp$ perl -e 'sub foo { my $x = 1; my $bar = sub{ warn $x++ }; $bar->() } foo() for 1..3'
+ 1 at -e line 1.
+ 1 at -e line 1.
+ 1 at -e line 1.
+ ||<
+ 
+ <hr>
+ my $bar = ... my $foo = sub{...} creates a function object and binds it to the lexical scope name $foo, but the sub foo{...} syntax seems to bind the created function object somewhere else. It did not seem to be a global scope, but it is out of the scope of the lecture material I am preparing now, so I will avoid going too deep into it.
+ 
+ >|perl|
+ use strict;
+ use warnings;
+ 
+ sub foo{
+     my $x = "static\n";
+     my $bar = sub{
+ 	print $x;
+     };
+     $bar->();
+ }
+ 
+ &foo();
+ ||<
+ 
+ <hr>
+ Then a demonstration of dynamic scope.
+ 
+ >|perl|
+ #use strict;
+ #use warnings;
+ 
+ sub foo{
+     my $bar = sub{
+ 	print $x;
+     };
+     $bar->();
+ }
+ 
+ $x = "global\n";
+ &foo();
+ {
+     local $x = "dynamic\n";
+     &foo();
+ }
+ &foo();
+ ||<
+ 
+ >||
+ global
+ dynamic
+ global
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>cho45</username>
+ <body>http://www.akatsukinishisu.net/itazuragaki/perl/sub_in_sub.html</body>
+ <timestamp>1281595042</timestamp>
+ </comment>
+ <comment>
+ <username>ohsada</username>
+ <BODY>my is not, it's local. <BR><BR>http://www.futomi.com/lecture/local/my.html<BR>You can see it here. </body>
+ <timestamp>1281595932</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>> cho45<br><br>Thank you! <br><br> ohsada<br><br>I didn't understand the claim. </body>
+ <timestamp>1281606017</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-08-12 https://nishiohirokazu.hatenadiary.org/archive/2010/08/12]

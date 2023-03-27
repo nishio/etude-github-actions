@@ -1,0 +1,109 @@
+Hatena2010-07-29
+code:hatena
+ <body>
+ *1280363864*LISP！
+ http://journal.mycom.co.jp/news/2010/07/27/007/index.html via @maeda
+ >>
+ LISP" is led by popular voice actress Kana Asumi, known for her roles as Yuno in the "Hidamari Sketch" series and Popura Tanejima in "WORKING! Kana Asumi, a popular voice actress known for her roles as Yuno in the "Hidamari Sketch" series and Popura Taneshima in "WORKING!", Azusa Kataoka, who played Uta Yumeno in "Onegai My Melody", and Sayuri Hara, an active female college student voice actress, have come together. The group will be a "voice actress unit that communicates with fans everyday" under the concept of "Kimi to Setsuzoku".
+ <<
+ 
+ You think you've made a foray into the world of Ranobe, and now you're going to turn into a voice acting unit? 
+ 
+ But I guess "communication" is a selling point.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as1&m=amazon&f=ifr&md=1X69VDGQCMF7Z30FM082&asins=475772828X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1280368858*抜粋翻訳 PEP3137: Immutable Bytes and Mutable Buffer
+ ** 導入
+ Since Python 3.0a1 exposed modifiable byte-string types, there has been increased pressure to add a way to represent unmodifiable byte-string types.
+ 
+ (中略)
+ 
+ Use the old PyString implementation and remove the implicit type conversion between locale support and Unicode to make it an unchangeable byte string type, and keep the new PyBytes implementation as a changeable byte string type.
+ 
+ ** 長所
+ 
+ One advantage of having an unchangeable byte-string type is that code objects can use it. It also makes it possible to efficiently create hash tables whose keys are byte-string types. This is useful for parsing protocols that represent text based on byte strings, such as HTTP and SMTP.
+ 
+ Porting code for Python 2.x that deals with binary data (or encoded text) is easier with this new design than it was with the original 3.0 design that used changeable byte sequences. Simply replace str with bytes and use '...' literal to b'...' literal.
+ 
+ ** 名前
+ 
+ Suggest the following Python-level type names
+ - ``bytes`` is an unmodifiable array of bytes (PyString).
+ - ``bytearray`` は変更可能なバイトの配列 (PyBytes)
+ - ``memoryview`` is a byte view of another object (PyMemory).
+ 
+ The old type called ``buffer`` is removed because it is too similar to the new type ``memoryview`` introduced in PEP 3118.
+ 
+ ** 要約
+ 
+ >||
+     +--------------+-------------+------------+--------------------------+
+     | C name       | 2.x    repr | 3.0a1 repr | 3.0a2               repr |
+     +--------------+-------------+------------+--------------------------+
+     | PyUnicode    | unicode u'' | str     '' | str                   '' |
+     | PyString     | str      '' | str8   s'' | bytes                b'' |
+     | PyBytes      | N/A         | bytes  b'' | bytearray bytearray(b'') |
+     | PyBuffer     | buffer      | buffer     | N/A                      |
+     | PyMemoryView | N/A         | memoryview | memoryview         <...> |
+     +--------------+-------------+------------+--------------------------+
+ ||<
+ 
+ *1280415366*抜粋翻訳 PEP227: Statically Nested Scopes
+ **概要
+ 
+ This PEP describes the addition of statically nested scopes (lexical scopes) to Python 2.2 and the source-level options to Python 2.1. Python 2.1 also warns about structures whose semantics would change if this feature were enabled.
+ 
+ The previous language specification (pre-2.0) defined exactly three namespaces to be used to resolve variable names. Local, global, and built-in namespaces. The addition of nested scopes allows unbounded local variable names to be resolved in the namespace of the function that wraps them.
+ 
+ The most obvious consequence of this change is that anonymous functions (and other nested functions) will be able to reference variables defined in the namespace that surrounds them. Currently, anonymous functions must frequently use default arguments to explicitly bind variables to the namespace of the anonymous function.
+ 
+ **導入
+ 
+ This proposal changes the way Python resolves free variables in functions. The new name resolution behavior will take effect in Python 2.2. This behavior is also available in Python 2.1 by adding "from __future__ import nested_scopes" to the module. (See PEP 236)
+ 
+ The Python 2.0 specification specified just three namespaces to resolve each name. Local namespaces, global namespaces, and built-in namespaces.
+ By this definition, if a function A is defined within another function B, the names bound within B are not visible from within A. The proposal is to change this rule so that names bound in B are visible in A (provided that A does not contain name bindings that would hide the bindings in B).
+ 
+ This specification introduces the rule of lexical scope, which is universal in the Algol family of languages. The combination of lexical scope and the already supported first-class functions is reminiscent of Scheme.
+ 
+ There were two problems with the changing scope rules. The limited capabilities of lambda expressions (and nested functions in general) and the frequent confusion of new users accustomed to other languages that support nested lexical scopes, e.g., recursive functions can only be defined at the module level.
+ 
+ Lambda expressions create an unnamed function that evaluates only one expression. This is often used as a callback function. In the example below (written using Python 2.0 rules), any name used in the body of the lambda must be explicitly passed as the default argument to the lambda.
+ 
+ >|python|
+   from Tkinter import *
+   root = Tk()
+   Button(root, text="Click here",
+          command=lambda root=root: root.test.configure(text="..."))
+ ||<
+ 
+ This approach is a pain in the ass. Especially when several names are used in a lambda.
+ A long list of default arguments makes the purpose of the code confusing. The proposed method, bluntly put, solves this problem by automatically implementing the default argument approach. The "root=root" argument can be removed.
+ 
+ The new name resolution behavior causes some problems due to different behavior than in Python 2.0. In Python 2.1, all statements that behave differently will trigger a warning.
+ 
+ *1280416318*Ruby's scope was interesting.
+ >|ruby|
+ $ irb
+ >> $o_o = o_o =-~ ( "o_o" =~ /o_o/ )
+ => 1
+ >> def o_o (o_o) $o_o + o_o end
+ => nil
+ >> o_o
+ => 1
+ >> o_o o_o
+ => 2
+ >> o_o o_o o_o
+ => 3
+ >> o_o o_o o_o o_o
+ => 4
+ ||<
+ 
+ Personally, I was surprised to see the namespace separation between functions and non-functions! I was surprised to see the namespace separation between function and non-function namespaces, but I guess it's not so surprising when you consider that the namespace of methods and properties are separated. I am also surprised that f f f f is interpreted as f (f f).
+ 
+ I wrote $o_o = o_o = 1 at first and said "If only this 1 could be made with only emoticons" and id:hzkr made it for me. Thanks!
+ </body>
+
+[Hatena Diary 2010-07-29 https://nishiohirokazu.hatenadiary.org/archive/2010/07/29]

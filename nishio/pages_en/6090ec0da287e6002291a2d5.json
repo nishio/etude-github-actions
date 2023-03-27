@@ -1,0 +1,64 @@
+Hatena2014-01-11
+code:hatena
+ <body>
+ *1389429825*Python Bytecode短歌
+ >||
+ 64 00 00 0c 04
+ 04 04 17 04 03 17 02
+ 04 03 17 04 03
+ 03 04 03 03 13 04 04
+ 14 04 17 18 17 0b 53
+ ||<
+ 
+ If you replace the co_code in the empty function with this and run it, you will see 2014.
+ 
+ I'll explain in detail later.
+ 
+ ** Taste
+ 
+ If you pronounce 04 as "do", 03 as "ro", and 17 as "a".
+ 
+ >||
+ 64 00 00 0c ど
+ Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do Do
+ Doro-a-doro-a-doro-a-doro-a
+ Roads Roads Roads Roads Roads 13 Roads
+ 14 Do A 18 A 0b 53
+ ||<
+ It will be. There is room for a little more ingenuity.
+ 
+ ** Difficult point
+ 
+ In order to use variables and function calls, it is necessary to load the name string in the constant table, not in the byte code section, and issue a LOAD instruction specifying the index of the string. If you write various meaningful strings in the non-tanka part, the good point of tanka, "complete in 31 characters," will be lost, so it should be avoided. Therefore, neither variables nor functions should be used.
+ 
+ Using constants, of course, requires reading from the constant table. We do not want to write there as well as above. However, the constant table is actually loaded with "None" even for an empty function. It is the only constant that can be used.
+ 
+ The constant load instruction consumes 3 bytes, so if used carelessly, it will use up 31 characters in no time. Therefore, it is used only once at the beginning. The first 64 00 00 is "LOAD_CONST 0".
+ 
+ By using UNARY_NOT(0c) on None, a conversion to bool is performed and the result is True; by using an arithmetic operation such as BINARY_ADD(17) on True, a conversion to integer (True→1) is performed. This produces the seed for the creation of a numerical value.
+ 
+ The Python VM is a stack machine. 04 (D) is the instruction DUP_TOP to duplicate the top of the stack, 03 (R) is the instruction ROT_THREE to rotate the top three stacks, 17 (A) is the instruction BINARY_ADD to add the top two stacks and return them, and 17 (B) is the instruction BINARY_ADD to add the top three stacks and return them.
+ 
+ ** How to execute byte code
+ 
+ Import the module with only empty functions, open the compiled pyc file, rewrite the bytecode part and write it under a different name. Then import it and run it.
+ 
+ https://github.com/nishio/tanka/blob/master/tanka_src.py
+ 
+ ** Consideration of BPT (Byte per Tanka)
+ 
+ Consideration of BPT Upper Limits in Python Bytecode Tanka
+ 
+ The top 5 bytes are the same as the code above, and the next 7 bytes can output 618 characters even if the rest is NOP by doing the following.
+ >||
+         ADD, # 2
+         DUP, # 2 2
+         ADD, # 4
+         DUP, # 4 4
+         POW, # 256
+         DUP, # 256 256
+         POW, # 256^256 (about 616 digits)
+ ||<
+ </body>
+
+[Hatena Diary 2014-01-11 https://nishiohirokazu.hatenadiary.org/archive/2014/01/11]

@@ -1,0 +1,40 @@
+Bad abstraction
+I did it once for the best of intentions, but now I think it was a bad design.
+code:ts
+   if (
+     state.type === "MouseDownOnNothing" ||
+     state.type === "MouseDownOnNothing_WithShift" ||
+     state.type === "LassoMouseDownOnNothing" ||
+     state.type === "LassoMouseDownOnSelection"
+   ) {
+     state.handler.onDragEnd(event, dragStartPoint);
+     state = INITIAL_STATE;
+     return;
+   }
+
+I can't follow in the IDE what exactly `state.handler.onDragEnd` refers to, it jumps to the following
+
+code:ts
+ export type Handler = {
+   onDrag: (event: ToolEvent, dragStartPoint: paper.Point) => void;
+   onDragEnd: (event: ToolEvent, dragStartPoint: paper.Point) => void;
+   onClick: (event: ToolEvent) => void;
+ };
+
+So, when `state.type === "LassoMouseDownOnNothing"`, you will have to follow what exactly the value of `state.handler.onDragEnd` is by yourself without relying on the IDE.
+
+code:ts
+   if (global.selectedTool === "lasso" && leafItem === null) {
+     // Start new selection
+     clearLasso();
+     hideBalloon();
+     state = {
+       type: "LassoMouseDownOnNothing",
+       handler: startLasso(),
+     };
+     return;
+   }
+
+So I ended up having to read the implementation of `startLasso()`, and when I read it, I see that this handler has no state, so it is simply one function being called.
+
+I wonder if there was any benefit to such an abstraction, which is lumped together because the abstract operation of "calling dragEnd" is the same in four different states, but there was no need for it.

@@ -1,0 +1,70 @@
+Hatena2009-05-22
+code:hatena
+ <body>
+ *1242972875*[SVG]色
+ <img src="http://gyazo.com/e68d5663f2b334e1d16846b0dbbac7a7.png">
+ The top one is HSV rotated by 30 degrees, the second one is HLS rotated by 30 degrees, the third one is HLS with L multiplied by 1.2, and the fourth one is HLS also multiplied by 0.8.
+ 
+ For the third and fourth values, the same method used yesterday for the alpha value was used to limit the value range to 0..1. Also, since it is impossible for the value to be 1.0, I introduced a constant called INFINITY.
+ 
+ Python has a standard library called colorsys that provides RGB, HSV, and HLS conversions, so it was a piece of cake. The point of carelessness is that hue is also 0.1 in colorsys, so even if you increase the hue by 30, it will remain red.
+ 
+ The advantage of HLS is that "brightening and darkening" like the third and fourth are centrally controlled by the L (luminance) value.
+ 
+ <hr>
+ 
+ Ah. I was thinking that the value would not be 1.0 in the normal calculation range, so I introduced INFINITY and set it to 1.0, but once it reaches 1.0, it does not change from there. I should stop at about 1023 / 1024.
+ 
+ <hr>
+ 
+ >|python|
+     cont.loop(
+         300, lambda cont:(
+             cont.trans(0.4)
+             .rot(degrees(5))
+             .scale(0.98)
+             .hls(h=15)),
+         lambda cont:(
+             cont
+ #            .rainbow()
+             .circle(fill_opacity=0.5)))
+ ||<
+ 
+ <img src="http://gyazo.com/4db91eb301e95fdb9d4c103daa3677cc.png"> <img src="http://gyazo.com/a3d64a27d3739dd8490607940df5d819.png">
+ 
+ Most of the hue rings have the colors in the same order in a rainbow, etc., but there is no such thing as "in between" short wavelength purple and long wavelength red. In fact, the wavelengths aren't actually rings. In fact, they should be UV or IR and not red/purple, so I bit on a filter that says HLS will not render when H is in the red/purple range.
+ 
+ <hr>
+ 
+ http://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB:CIExy1931_sRGB.png
+ Hmmm, is the light blue region more compressed in terms of wavelength?
+ 
+ <hr>
+ 
+ Context Free Art does not allow you to specify this, but SVG circles have stroke, which can be used as the border color. In other words, the context must have a border color in addition to the fill color. Hmmm... I think .hls(h=15, target="stroke") would work, or target="fill" if target is omitted.
+ 
+ *1242991159* Room is dazzling.
+ 
+ f:id:nishiohirokazu:20090522201914j:image
+ 
+ *1242992860*"Programmer's Cafe" has been established.
+ More info: <a href='http://d.hatena.ne.jp/kuippa/20090522/1242986721'>Programmer's Cafe ver. beta 1.0.0 - Jigoku Raku Ippan. </a>
+ 
+ This is not a one-day-only event, but an ongoing project to provide a salon space where people who code as a profession can gather and interact.
+ 
+ >>
+ We don't know what we can do from here, but we hope to build some kind of model that will be a pioneer in the country. // We hope to start with a small, easy-to-start project.
+ <<
+ 
+ This is a small step, but a big step for the IT industry" (Armstrong)!
+ There are some inconveniences, such as the fact that it is only available on weekdays, but I think that if the benefits of creating such a place for exchange become known and such spaces are created here and there, there will be more options and everyone will be happy. I am rooting for you!
+ </body>
+ <comments>
+ <comment>
+ <username>onering</username>
+ <body>Thank you for your support! </body>
+ <timestamp>1243501182</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-05-22 https://nishiohirokazu.hatenadiary.org/archive/2009/05/22]

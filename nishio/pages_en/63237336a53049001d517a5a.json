@@ -1,0 +1,35 @@
+日記2022-09-16
+
+[img2prompt]はVRAM消費24GB
+
+A bug was discovered for images under seed 752.
+　When I was reading multiple prompts from a file and generating them, I had to fix the seed for each prompt, but I only did it at the beginning.
+　So, even if "seed=500" is recorded, that is "the state after several images are generated after seed is set to 500", so if seed=500 is set again, the same image will not appear
+　I can manage if I try hard enough, but...
+　　For example, after setting seed=500, you can draw several times until you get that image
+　　Wife: "Not as hard as I try."
+　Okay then.
+　I was going to output the pattern of [Diary 2022-09-13] again in a size that could be used for a book cover or a hand towel, but I was puzzled because the image I was expecting did not appear.
+　　Now that we can output cyclic images, I thought I'd do that as far as the hand towels are concerned.
+
+Speeded up img2prompt to work in 2-3 seconds per case.
+　638件のimg2prompt結果が得られた
+　Let's think about importing into Scrapbox in parallel with Instagram posts.
+
+[Thompson sampling]
+　The Bernoulli distribution is used to determine whether an image is "good" or "not good".
+　Its conjugate prior distribution is a beta distribution
+　Thompson sampling to select the largest one by sampling
+　Sampling from a beta distribution can be done with numpy.random.beta
+ Let's say there are two slots here, one slot per 5 draws and one slot per 30 draws.
+  Although the latter is a greater expectation, the uncertainty of the former should be positively evaluated
+  code:py
+   In [245]: [0 if beta(2, 5) > beta(31, 71) else 1 for i in range(20)]
+   Out[245]: [0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1]
+ 	The former was chosen 11 out of 20 times.
+
+[https://pypi.org/project/python-gyazo/ python-gyazo · PyPI]
+
+[日記2022-09-15]←日記2022-09-16→[日記2022-09-17]
+100日前 [日記2022-06-08]
+1年前 [日記2021-09-16]

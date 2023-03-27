@@ -1,0 +1,50 @@
+useStateを差し替える
+from [testing asynchronous React state updates].
+useStateを差し替える
+
+If you are setValue in a component, you will be warned if this is not wrapped in act
+　Related: [state update, not render, wrapped in act in React tests].
+
+code:output
+ console.error
+     Warning: An update to MyAsyncComponent inside a test was not wrapped in act(...).
+     When testing, code that causes React state updates should be wrapped into act(...):
+	...
+       15 |       console.log(6);
+     > 16 |       setValue(x);
+          |       ^
+
+One simple solution is to prepare an "act implementation that does nothing", use it in the body code, and replace it with the real one only during testing, but I don't want to do this for some reason, so I will replace the useState.
+
+code:MockUseState.ts
+ import React, { Dispatch, useCallback } from "react";
+ import { act } from "@testing-library/react";
+ import { useState as originalUseState } from "react";
+ 
+ export const mockUseState = () => {
+   return jest.spyOn(React, "useState").mockImplementation((arg?: unknown): [
+     unknown,
+     Dispatch<unknown>
+   ] => {
+     const [s, dispatch] = originalUseState(arg);
+     const wrappedDispatch = useCallback(
+       (arg: unknown): void => {
+         act(() => {
+           dispatch(arg);
+         });
+       },
+       [dispatch]
+     );
+     return [s, wrappedDispatch];
+   });
+ };
+updated 2021-03-12
+
+code:test.tsx
+ let m_mockUseState: jest.SpyInstance<[unknown, React.Dispatch<unknown>], []>;
+ beforeEach(() => {
+   m_mockUseState = mockUseState();
+ });
+ afterEach(() => {
+   m_mockUseState.mockRestore();
+ }); 

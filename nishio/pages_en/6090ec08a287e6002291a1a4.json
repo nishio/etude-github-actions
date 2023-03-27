@@ -1,0 +1,131 @@
+Hatena2011-08-15
+code:hatena
+ <body>
+ *1313395069*Security & Programming Camp "Find the Bug in Ruby" Issue
+ This is a question from the CTF competition (time trial team competition) at the Security & Programming Camp. A participant <a href='http://sorah.jp/'>Shota Fukumori (sora_h)</a> said, "I'm going to give a talk on SepCan on the 21st, so I'd like to release it as soon as possible.
+ 
+ ** 問題文
+ This is the source code for a bug-infested Ruby processor that was created for a time trial processor debugging exercise in the programming language class, written in C. It is a "veryhard" problem that no one started on. Since it is a "veryhard" problem that no one started, I will add an explanation and make it a CTF problem.
+ 
+ In the language class, we did an exercise on the second day on how to build the Ruby processor and tools for testing, and on the morning of the third day, we did an "exercise to defeat 8 bugs in one hour in order of ease" (time trial processor debugging). I will write again how to build Ruby so that those who have not taken the exercises can start.
+ 
+ >||
+ $ mkdir build
+ $ cd build
+ $ ../configure --disable-gems --disable-install-docs
+ $ make
+ ||<
+ 
+ This should normally result in a successful make, but after the ruby command is built, the make test that runs automatically during make fails because of a bug in Ruby.
+ 
+ >||
+ $ make
+ /.../veryhard/lib/fileutils.rb:1399:in `quote': can't convert
+ NilClass to String (TypeError)
+        from /.../veryhard/lib/fileutils.rb:1399:in `<class:Entry_>'
+        from /.../veryhard/lib/fileutils.rb:1092:in `<module:FileUtils>'
+        from /.../veryhard/lib/fileutils.rb:85:in `<top (required)>'
+        from ../tool/mkconfig.rb:11:in `require'
+        from ../tool/mkconfig.rb:11:in `<main>'
+ make: *** [.rbconfig.time] Error 1
+ ||<
+ 
+ If you use make run or make gdb, (src)/test.rb will be executed. Write whatever you like in test.rb and make run. Then, the buggy processor should behave in a way that is "not right in a sensible way," so find the bug and fix the code written in C so that the processor will work correctly.
+ 
+ The attached test.rb is an example of one of the strange behaviors, as shown below, which makes no sense: "Thread.rb throws an error when trying to calculate a prime number. However, test.rb should be "minimal code to reproduce the bug.
+ 
+ >||
+ $ make run
+ ./miniruby -I../lib -I.ext/common -I./- -r../ext/purelib.rb  ../test.rb
+ /.../veryhard/lib/thread.rb:11:in `<top (required)>': Thread not
+ available for this ruby interpreter (RuntimeError)
+        from /.../veryhard/lib/singleton.rb:63:in `require'
+        from /.../veryhard/lib/singleton.rb:63:in `<top (required)>'
+        from /.../veryhard/lib/prime.rb:14:in `require'
+        from /.../veryhard/lib/prime.rb:14:in `<top (required)>'
+        from ../test.rb:1:in `require'
+        from ../test.rb:1:in `<main>'
+ make: *** [run] Error 1
+ ||<
+ 
+ Please respond with the name of the file and line number that should be modified to fix this bug in the Ruby processing system. If more than one line needs to be modified, the answer should be the line where the modification begins.
+ 
+ Note that there may be some mocking in testing around gc due to running in a VM environment, but this is not the intent of this assignment. Also, if you use made ruby without make install, you may encounter mocking around gems (package management), but this is also not the intention of this issue.
+ 
+ BackTrack 4 Live CD (Ubuntu8.10) to be able to build.
+ 
+ ** File
+ http://www.nishiohirokazu.org/files/veryhard.zip
+ 
+ ** 余談
+ Roughly speaking, if you can solve it within 10 minutes, you are in the moriyoshi level, and if you can solve it within 10 hours, you are in the sora_h level. (Sora_h took 6 hours while solving other problems and couldn't solve it, but after he came back and heard my clue "( https://gist.github.com/1145883 )", he answered "Fat! So I guess that means 10 hours as an order...)
+ 
+ 他の大人の所要時間:
+ >>
+ KNU: "Finding bugs in Ruby" didn't take me 10 minutes from getting the source, but it's home, of course. And the actual bug isn't this simple... http://twitter.com/#! /knu/status/103037840899846144
+ <<
+ 
+ >>
+ mrkn: I solved it but it took me 15 minutes. http://twitter.com/#! /mrkn/status/103062497954775040
+ <<
+ 
+ >>
+ znz: It took me about 40 minutes. It took me a long time because the "minimal code to reproduce the bug" was easy to create, but the fix was for an unfamiliar part of the code. http://twitter.com/#! /znz/status/103084755758755840
+ <<
+ 
+ ** 余談2
+ Problem statement without any additions during the exercise within the language class.
+ >>
+ Q8 (for those who have completed all of them)
+ 
+ Congratulations!
+ 
+ For those who have completed the problems so far and have extra time, veryhard.zip is available. No hints are provided.
+ <<
+ 
+ ** 余談3
+ test.rbの内容
+ >||
+ require 'prime'
+ p Prime.prime? 2403
+ ||<
+ And the result: a
+ >||
+ /.../veryhard/lib/thread.rb:11:in `<top (required)>': Thread not
+ available for this ruby interpreter (RuntimeError)
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>sora_h</username>
+ <body>* I'm trying to get it to build with BackTrack 4 Live CD (Ubuntu 8.10). <BR><BR>I couldn't, though<BR><BR>So, about the environment in detail<BR><BR>- I think you'll go a long way if you do it on Windows, right? <br><br>If you do it on a platform not properly supported by Ruby, you'll be stepping on unrelated bugs, won't you? <br><br>Debian and Ubuntu are stable</body>.
+ <timestamp>1313397745</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>The zip file that was initially released was not executable on BackTrack 4 Live CD (Ubuntu 8.10), and Takezako-san has since fixed it, so I replaced the zip file at around 18:17. <BR><BR>Well, the main problem with CTF was the lack of internet connection, so if you are trying to solve this now, you should just install the necessary packages. By the way, I used Ubuntu 11.04 64bit OS when I made the problem. </body>
+ <timestamp>1313400196</timestamp>
+ </comment>
+ <comment>
+ <username>TAKESAKO</username>
+ <body><br><br>I couldn't do it, though<br><br>I didn't give any hints during the CTF competition, but I included the parse.c and lex.c already generated by <br>bison in the zip file. <br><br>They were placed under the build directory,<br>so if you had done cd build && . /configure as specified in the problem statement<br><br>It would have built properly. <BR><BR>So if I had done . /configure would have required bison,<br><br>cp build/*. [ch] . . [ch] . </body>.
+ <timestamp>1313404046</timestamp>
+ </comment>
+ <comment>
+ <username>sora_h</username>
+ <body>>I replaced the zip file around 18:17. <br>no notice hidos<br><br>I didn't give any hints during the CTF competition, but I included the parse.c and lex.c already generated by <br>bison in the zip file. <BR><BR><BR>Well, the main problem with CTF was the lack of net connection, so if you are trying to solve this problem now, you should just install the necessary packages. <br><br><br>I used Ubuntu 11.04 64bit as the OS I used to make the problem. <br><br>In Debian/Ubuntu, you can use sudo apt-get build-dep ruby1.9.1<br><br>Windows<br><br>It turned out to be a shortcut if you do it in Windows</body>.
+ <timestamp>1313468572</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>>I replaced the zip file around 18:17. <br>><br>no notice hidos<br><br>Oh, I didn't replace it during the CTF competition, but the zip linked from this blog was my version at first, but after 18:17, it is the version that Takezako-san made to work with BackTrack (that is, the same version used at the CTF). I mean, it's the same version that was used at CTF. </body> </body> <br /> <br /> <br /> <body
+ <timestamp>1313496011</timestamp>
+ </comment>
+ <comment>
+ <username>sora_h</username>
+ <body>I see what you mean. </body>
+ <timestamp>1313666852</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-08-15 https://nishiohirokazu.hatenadiary.org/archive/2011/08/15]
