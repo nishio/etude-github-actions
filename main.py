@@ -1,4 +1,4 @@
-import langdetect
+from is_japanese import contains_japanese_characters
 import requests
 import asyncio
 import json
@@ -139,12 +139,7 @@ def translate():
                 # print(line)
 
                 if body not in cache:
-                    try:
-                        lang = langdetect.detect(body)
-                        if langdetect.detect(body) != "ja":
-                            result_lines.append(text)
-                            continue
-                    except langdetect.lang_detect_exception.LangDetectException:
+                    if not contains_japanese_characters(body):
                         result_lines.append(text)
                         continue
 
