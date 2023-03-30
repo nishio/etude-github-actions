@@ -129,6 +129,8 @@ def translate():
                     continue
                 total += len(bytes(body, "utf-8"))
                 # print(line)
+
+                if body not in cache:
                 try:
                     lang = langdetect.detect(body)
                     if langdetect.detect(body) != "ja":
@@ -137,7 +139,7 @@ def translate():
                 except langdetect.lang_detect_exception.LangDetectException:
                     result_lines.append(text)
                     continue
-                if body not in cache:
+
                     no_cache += len(bytes(body, "utf-8"))
                     en = call_deepl(body)
                     cache[body] = en
