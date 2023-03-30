@@ -8,6 +8,7 @@ from collections import namedtuple
 import os
 import re
 from tqdm import tqdm
+from time import sleep
 import dotenv
 dotenv.load_dotenv()
 DEEPL_KEY = os.getenv("DEEPL_KEY")
@@ -47,7 +48,7 @@ async def main():
 
     titles = [TitlePage(page["id"], page["title"],
                         page["created"], page["updated"]) for page in pages]
-    titles.sort(key=lambda x: x.created)
+    titles.sort(key=lambda x: -x.created)
 
     stat = {
         "projectName": project,
@@ -103,8 +104,15 @@ def call_deepl(ja):
         "source_lang": "JA",
         "target_lang": "EN",
     }
-    response = requests.post(url, headers=headers, data=data)
-    response.raise_for_status()
+    while True:
+        try:
+            response = requests.post(url, headers=headers, data=data)
+            response.raise_for_status()
+            break
+        except:
+            sleep(60)
+            continue
+
     result = response.json()
     translated_text = result["translations"][0]["text"]
     return translated_text
@@ -131,14 +139,14 @@ def translate():
                 # print(line)
 
                 if body not in cache:
-                try:
-                    lang = langdetect.detect(body)
-                    if langdetect.detect(body) != "ja":
+                    try:
+                        lang = langdetect.detect(body)
+                        if langdetect.detect(body) != "ja":
+                            result_lines.append(text)
+                            continue
+                    except langdetect.lang_detect_exception.LangDetectException:
                         result_lines.append(text)
                         continue
-                except langdetect.lang_detect_exception.LangDetectException:
-                    result_lines.append(text)
-                    continue
 
                     no_cache += len(bytes(body, "utf-8"))
                     en = call_deepl(body)
