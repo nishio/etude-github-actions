@@ -3,16 +3,16 @@ Mystery switch issue
 >I made a simple version of the circuit to take into account the possibility of a mistake, but it still judges that both are pressed when one of them is pressed...
 
  I made a program that reads whether a switch is pressed or not.
- 解釈:
+ Interpretation: The
 	 The signal line is pulled up with a resistor to 3.3V in normal operation, and when the switch is pressed, the signal line is connected to ground, resulting in 0V.
 	 The microcontroller determines that the switch is pressed when the voltage on the signal line is LO (less than about 1.2V).
-	事実:
+	Fact: The
  	When one switch is pressed, somehow it is determined that both were pressed.
-	問:
+	Q: What is
  	Explain what is happening.
 The answer is after the trial and error section.
 
-試行錯誤編
+Trial and Error Edition
 
 	Pins are IN, of course.
 
@@ -28,12 +28,12 @@ The answer is after the trial and error section.
 
 	I tried pulling GND and Vcc from that state, and when Vcc is pulled out, the original phenomenon is reproduced
 
-解答:
+Solution:
 	One of the cables is broken.
 	What I thought was "HI" was actually "high impedance" because Vcc was disconnected in the first circuit I made.
 	Therefore, if even one of the switches is pushed and shorted to GND, all signal lines will go LO through the pull-up resistor and the Vcc line on the breadboard.
 
-感想
+impressions
 	The major difference between software and hardware. Software components work as specified in any instance once you confirm that one instance works as specified. Hardware components are sometimes mixed with instances that do not work according to specifications.
 	In software, there is no such thing as "Oh, this assignment operator is disconnected"... #Insertion operator disconnection
 

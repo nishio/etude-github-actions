@@ -48,7 +48,7 @@ code:hatena
  
          # (1) I added this location.
          location /test {
-             rewrite  ^/test(.*)$  $1  break; # (2) この行は後で書き足した
+             rewrite ^/test(. *)$ $1 break; # (2) This line was added later.
              proxy_pass        http://localhost:8000;
              proxy_set_header  X-Real-IP  $remote_addr;
          }
@@ -93,7 +93,7 @@ code:hatena
  
  It took me about 30 minutes so far. Next I'll look into how to easily publish my development with Flask at hand on Rackhub. I'm not sure how to do that from within the web app, since hitting '/api' or something like that with an absolute path will fail.
  
- *1345615991*Pythonの__xxx__の集計
+ *1345615991*Python's __xxx__ tally
  (Added, summary here <a href='http://d.hatena.ne.jp/nishiohirokazu/20120822/1345618056'>Python's __xxx__ summary</a>)
  
  I counted up the number of times a string of the form __xxx__ appears in the Python 2.7.3 code. The first one is the count in *.c and *.h. Some of them are used at the C level, such as __LP64__ and __GNUC__. The list for Python code is below this list.
@@ -733,9 +733,9 @@ code:hatena
  ||<
  
  *1345618056*Python __xxx__ Summary
- - <a href='http://www.python.jp/doc/release/reference/datamodel.html#specialnames'>データモデル - 特殊メソッド名 &#8212; Python 2.7ja1 documentation</a>
- - <a href='http://www.python.jp/doc/release/library/__future__.html'>27.11. __future__ &#8212; future 文の定義 &#8212; Python 2.7ja1 documentation</a>
- - <a href='http://www.python.jp/doc/release/library/runpy.html'>30.7. runpy &#8212; Python モジュールの位置特定と実行 &#8212; Python 2.7ja1 documentation</a>
+ - <a href='http://www.python.jp/doc/release/reference/datamodel.html#specialnames'>Data Model - Special Method Names &#8212; Python 2.7ja1 documentation</a >
+ - <a href='http://www.python.jp/doc/release/library/__future__.html'>27.11. __future__ &#8212; future statement definition &#8212; Python 2.7ja1 documentation</a>
+ - <a href='http://www.python.jp/doc/release/library/runpy.html'>30.7. runpy &#8212; locating and running Python modules &#8212; Python 2.7ja1 documentation </a>
  
  Here are the frequency counts from all *.py in the python 2.7.3 repository, the best 100. if you want to see them all: <a href='http://d.hatena.ne.jp/nishiohirokazu/20120822/1345615991'> Python's __xxx__ tally</a>. I tried to add a one-line explanation, but got bored halfway through.
  >||
@@ -758,14 +758,14 @@ code:hatena
  __eq__ 164 x == y
  __call__ 161 x()
  __new__ 160 For when you want to tinker with the class mechanism itself http://www.python.jp/doc/release/reference/datamodel.html#metaclasses
- __cmp__ 157 比較
+ __cmp__ 157 Compare
  __future__ 157 To try and accommodate incompatible changes introduced in future versions ahead of time http://www.python.jp/doc/release/library/__future__.html
  __del__ 154 del x
  __exit__ 150 Used in conjunction with the with syntax; method called automatically when exiting the scope of with
  __setitem__ 148 obj[i] = foo
  __getattr__ 138 obj.some_attr
  __contains__ 133 x in obj
- __format__ 131 文字列化の方法その3 http://www.python.org/dev/peps/pep-3101/
+ __format__ 131 Stringing Method #3 http://www.python.org/dev/peps/pep-3101/
  __import__ 125 Function version of import statement
  __enter__ 119 Used in combination with the with syntax; method called automatically when entering the scope of with
  __version__ 112

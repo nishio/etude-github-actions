@@ -1,8 +1,8 @@
-平均金量
+Average gold volume
 One of the measures in [Dominion
 Haven't found a clear definition yet.
 A value that is the average of the coin value when the deck is composed entirely of coins.
-[参考動画 https://www.youtube.com/watch?v=XGl_M-SzhtI&t=267s]
+[Reference video https://www.youtube.com/watch?v=XGl_M-SzhtI&t=267s]
 Simple configurations can be solved by human calculation, but when they become complex, it seems that they can't be calculated, so they approximate or give up on the calculation.
 
 Then let's calculate it programmatically.
@@ -59,14 +59,14 @@ code:python
  calc(deck)  # => 3.50(0.70) 8.3%
  deck += "22"
  calc(deck)  # => 4.58(0.92) 53.0%
-結果
+result
 	The average purchasing power of the initial deck is 3.5 (0.7 * 5) and the probability of buying 5 gold cards is 8.3
 	Buying 2 silver coins gives an average purchasing power of 4.58 (0.92 * 5) and a 53.0% chance of buying a 5 gold card
 	　The explanation in the reference video says the average amount of money is 0.917. The difference is because I rounded to two decimal places.
 
 Now we want to calculate what would happen if we bought a blacksmith here.
 Execute if there is an action card in hand, only blacksmith for now, and don't consider cards with more actions. (Source code to come later).
-結果
+result
  Initial deck + silver coins + blacksmith
  	4.77(0.95) 61.1%
  Initial deck + 2 silver coins + blacksmith
@@ -96,7 +96,7 @@ Let's break down the average purchasing power calculation here
 　　　This weighted average of 6.11 is "the average purchasing power when there is only one blacksmith on hand."
 　The weighted average of these three streets, 5.44, is the average purchasing power in this case
 
-考察
+consideration
 	It can be shown that average purchasing power is consistent with this by simulating and converging to this value.
 		As for the average amount of gold, it is unclear what value can be determined by observation, so verification is not possible.
 	The discrepancy is probably due to the fact that the values are calculated without the "case by how many blacksmiths are in hand or on the draw," which is required in the calculation of average purchasing power.

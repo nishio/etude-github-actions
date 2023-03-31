@@ -1,5 +1,5 @@
-TypeScriptのreturn忘れがnever問題を起こす例
-[useHistory | useHooks https://usehooks.com/useHistory/]のJSで書かれたサンプルを[TypeScript]に翻訳していたら、`Type 'any' is not assignable to type 'never'`になった。
+Example of forgetting to return in TypeScript causing NEVER problem
+I was translating a sample written in JS from [useHistory | useHooks https://usehooks.com/useHistory/] to [TypeScript] and the `Type 'any' is not assignable to type 'never'`. .
 The cause is ultimately a "non-exhaustive switch/case", resulting in a return type of T | undefined due to the "non-returned path", which is never in React's useReducer's type inference process.
 
 The first way to see it is this
@@ -70,11 +70,11 @@ code: ts
      
      type Reducer<S, A> = (prevState: S, action: A) => S;
      type ReducerState<R extends Reducer<any, any>> = R extends Reducer<infer S, any> ? S : never;
-reducerの型が (T, any) => (T | undefined)である場合
+If the type of reducer is (T, any) => (T | undefined)
 	R = (T, any) => (T | undefined)
-	R extends Reducer<any, any>は成功する
-		Reducer<any, any> = (any, any) => (any)だから
-		返り値のanyに(T | undefined)が入る
+	R extends Reducer<any, any> succeeds
+		Reducer<any, any> = (any, any) => (any) because
+		(T | undefined) in the return value any
 	R extends Reducer<infer S, any> ? S : never seems to succeed with S being any...
 		I wonder if "infer" will ever answer "any".
 			Well, if it were, the infer would always succeed, so the conditional expression would be meaningless.

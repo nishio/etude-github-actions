@@ -13,30 +13,30 @@ code:hatena
  
  <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as1&m=amazon&f=ifr&md=1X69VDGQCMF7Z30FM082&asins=475772828X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
  
- *1280368858*抜粋翻訳 PEP3137: Immutable Bytes and Mutable Buffer
- ** 導入
+ *1280368858*Translation of excerpt PEP3137: Immutable Bytes and Mutable Buffer
+ ** Introduction
  Since Python 3.0a1 exposed modifiable byte-string types, there has been increased pressure to add a way to represent unmodifiable byte-string types.
  
- (中略)
+ (omitted)
  
  Use the old PyString implementation and remove the implicit type conversion between locale support and Unicode to make it an unchangeable byte string type, and keep the new PyBytes implementation as a changeable byte string type.
  
- ** 長所
+ ** Pros
  
  One advantage of having an unchangeable byte-string type is that code objects can use it. It also makes it possible to efficiently create hash tables whose keys are byte-string types. This is useful for parsing protocols that represent text based on byte strings, such as HTTP and SMTP.
  
  Porting code for Python 2.x that deals with binary data (or encoded text) is easier with this new design than it was with the original 3.0 design that used changeable byte sequences. Simply replace str with bytes and use '...' literal to b'...' literal.
  
- ** 名前
+ ** Name
  
  Suggest the following Python-level type names
  - ``bytes`` is an unmodifiable array of bytes (PyString).
- - ``bytearray`` は変更可能なバイトの配列 (PyBytes)
+ - ``bytearray`` is an array of modifiable bytes (PyBytes).
  - ``memoryview`` is a byte view of another object (PyMemory).
  
  The old type called ``buffer`` is removed because it is too similar to the new type ``memoryview`` introduced in PEP 3118.
  
- ** 要約
+ ** Summary
  
  >||
      +--------------+-------------+------------+--------------------------+
@@ -50,8 +50,8 @@ code:hatena
      +--------------+-------------+------------+--------------------------+
  ||<
  
- *1280415366*抜粋翻訳 PEP227: Statically Nested Scopes
- **概要
+ *1280415366*Translation of excerpt PEP227: Statically Nested Scopes
+ **Outline
  
  This PEP describes the addition of statically nested scopes (lexical scopes) to Python 2.2 and the source-level options to Python 2.1. Python 2.1 also warns about structures whose semantics would change if this feature were enabled.
  
@@ -59,7 +59,7 @@ code:hatena
  
  The most obvious consequence of this change is that anonymous functions (and other nested functions) will be able to reference variables defined in the namespace that surrounds them. Currently, anonymous functions must frequently use default arguments to explicitly bind variables to the namespace of the anonymous function.
  
- **導入
+ **Introduction
  
  This proposal changes the way Python resolves free variables in functions. The new name resolution behavior will take effect in Python 2.2. This behavior is also available in Python 2.1 by adding "from __future__ import nested_scopes" to the module. (See PEP 236)
  

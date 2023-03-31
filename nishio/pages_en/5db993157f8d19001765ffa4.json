@@ -12,26 +12,26 @@ Link Creation Support
 	Can you help create a link to this?
 
 	Convert the text on each page into a 768-dimensional vector using [BERT].
-	実験1 
+	Experiment 1
 		Pre-implementation note: [classified by BERT].
 		Take the first 12 dimensions of a 768-dimensional vector and create a 3-byte string with the positive and negative of the vector as 1 bit, and make it an empty link
 		Areas with identical 3-byte character strings (category codes) divide space equally into 2^12
 			It will be around 1 page per space.
 		Scrapbox can be equivalent to "hashtag classification" because pages linked to the same page are displayed together from that page.
-		結果
+		result
 			[/nishio-a1/C, 4eb]
 			Slides with the same content used in different presentations are in the same category.
 			I'm not quite convinced what else is in there.
-		考察
+		consideration
 			I guess I lost a lot of information because I mapped from 768 dimensions to 12 dimensions by simply ignoring the 756 dimensions.
 			For example, if you take 768 dimensions as input, compress them into 12 intermediate layers, and then finetune them with a network that identifies whether the two input slides belong to the same presentation, the intermediate layers will be reduced in dimension such that they are close in value in the same slide, and this is what you should use
 
-	実験2
+	Experiment 2
 		From each of the 5744 pages, a link was provided to "the page that most resembles its content but is not equal to it".
 		The definition of "similarity" is SentencePiece+Japanese BERT converting a sentence into a vector of 768 dimensions, then Euclidean distance.
 		This page has slides from one presentation linked to slides from another presentation and linked from another presentation.
-  	[/nishio-a2/f0f4390ca440,053] 2014名古屋大学
-				→[/nishio-a2/8dec2e4bf848,060] これはf0fの加筆版 2014名古屋大学加筆版
+  	[/nishio-a2/f0f4390ca440,053] 2014 Nagoya University
+				→[/nishio-a2/8dec2e4bf848,060] This is a f0f addendum 2014 Nagoya University addendum
 					⇔[/nishio-a2/1add1c10ec2b,105] leading to yet another addendum 2014 Nada High School Saturday Lecture Addendum
 				←[/nishio-a2/3aaa60135699,027] Simple writing slides 2018 Tokyo Tech CUMOT
 		Another example

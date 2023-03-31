@@ -1,17 +1,17 @@
 Refactoring 20180726
  Initially the slides were GameObjects.
-  `AttayList<GameObject> slides`で管理されていた
+  Managed by `AttayList<GameObject> slides`.
   In implementing physics, I created an update vector with `Dictionary<GameObject, Vector3> updateVec`.
   For red box highlighting, I created a red box object `GameObject highlighter` and a `GameObject to_highlight` that points to the object it should highlight.
   Multiple selection allowed for multiple highlighting targets.
   The same amount of red frame objects are generated as the number of slides.
 	It's time to refactor because it smells fishy.
 
-	`public class Slide`を作る
+	Create `public class Slide`.
  Decided not to inherit MonoBehaviour
   I don't know if it's the right answer.
  This generates two GameObjects: the slide itself and a red frame GameObject for highlighting
- GameObjectに"Slide"タグを付与
+ Add "Slide" tag to GameObject
  The update vector of the physics operation is a member of Slide.
  The hit target of the raycast comes from a GameObject, but in this design, I want to get a Slide object from that GameObject.
   I'm sure there is some better design...
@@ -26,13 +26,13 @@ Refactoring 20180726
 
  All errors in MakeSlide.cs, which was managing the slides, have been resolved.
  Check for errors in LaserPointer.cs
- 	複数選択を実装したときに突貫工事で作られた`Dictionary<GameObject, bool> is_selected = null;`が問題。
+ 	The problem is the `Dictionary<GameObject, bool> is_selected = null;` that was created in a rush job when multiple selections were implemented.
   This should be absorbed well in this refactoring rather than a minor fix.
   So, first comment out the entire multiple selection-related process and pass the compilation through.
 	Runtime error: NullPointerException when calling highlighter thinking it exists as a single object
  	Members for single objects that are no longer used should be removed.
   Compilation errors make it clear what needs to be fixed.
- 従来の単一選択のコードを単純に置き換えるなら`obj.GetComponent<GetSlide>().slide.highlited = true;`
+ If you simply replace the traditional single-selection code with `obj.GetComponent<GetSlide>().slide.highlited = true;`
   But it is strange that the internal structure of such a slide is exposed on the laser pointer side, so we prepare a method for single selection and call it.
  Comment out the code that changes the highlight color once
 
@@ -42,7 +42,7 @@ Refactoring 20180726
  code:cs
   GameObject selected;
   Dictionary<GameObject, bool> is_selected = null;
-	selectedがnot nullの時には単一選択、is_selectedがnot nullの時には複数選択、という状況。
+	Single-selection when selected is not null, multiple-selection when is_selected is not null, and so on.
 	I tried uncommenting it to see what kind of compile error I was getting, but it was just a difference between Slide and GameObject, so it was an easy fix.
  Unexpectedly, it moves easily.
  No highlighting when multiple selections are made (from the original)

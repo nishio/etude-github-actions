@@ -4,7 +4,7 @@ code:hatena
  *1208407306*GIL (global interpreter lock)
  Yesterday's survey added the option to "remove the GIL" I thought I'd give you a brief explanation since some of you may not know what a GIL is.
  
- - Matzにっき(2007-09-13) It isn't Easy to Remove the GIL
+ - Matz Nikki (2007-09-13) It isn't Easy to Remove the GIL
  -- http://www.rubyist.net/~matz/20070913.html#p02
  
  I thought it would be better for you to read the following. I'll use an actual example to illustrate this. →I have two CPUs, so if I do it with two threads, it will be twice as fast. →I'll try it... - Hey, only one of the threads is being used..." This is a common pattern of getting stuck. Since each interpreter is locked, even if you use two threads for heavy calculation, it will not be twice as fast but will be slower due to the cost of switching threads. If you want to do that, you need to launch two interpreters. Of course, if there is a lot of I/O waiting, it is worth using threads so that other threads can compute without blocking while waiting.
@@ -16,7 +16,7 @@ code:hatena
  
  This works up to the point where I can start it with JavaWebStart from the TopCoder site, but when I try to log in, it times out. I wonder why.
  
- 出力は
+ The output is
  (Deleted)
  So I wonder if the part where you receive the server's response and then close it thinking that you have received all of them because you haven't received a response is actually being too hasty.
  
@@ -124,25 +124,25 @@ code:hatena
  *1208423855*something
  I think there is a widespread misunderstanding about Cybozu Labs, but it's just that the work schedule is negotiable and flexible, and not all employees work 3 days a week as a system. I mean, my peers will say to me, "Labs work 3 days a week? I don't want to hear that from my peers.
  
- *1208425951*[cpp]今日のC++
+ *1208425951*[cpp]C++ today
  What I learned.
  
  - using namespace std;
  -- Bumping STL functions into global space, a common practice in TopCoder's view.
  - There are min and max in algorithm, but only 2 arguments. min_element and so on can be used to get the location of the minimum value in the list, so the equivalent of Python's min(xs) would be xs[min_element(xs.begin(), xs.end())]. The following is an example of the use of min(xs).
  - &lt;?=
- -- 最小値演算子 http://www.asahi-net.or.jp/~WG5K-ICKW/html/online/gcc-2.95.2/gcc_5.html thanks @renha
+ -- Minimum operator http://www.asahi-net.or.jp/~WG5K-ICKW/html/online/gcc-2.95.2/gcc_5.html thanks @renha
  -- It has been removed from the latest gcc and should not be used outside of TopCoder
- -- for(int i=0;i&lt;xs.size();i++){result&lt;?=f(xs[i])}とかやってPythonでいうところのmin(f(x) for x in xs)を実現する。
+ -- for(int i=0;i&lt;xs.size();i++){result&lt;? =f(xs[i])} to realize what Python calls min(f(x) for x in xs).
  - Read references from the right.
  -- I wrote gcc -lstdc++ foo.cpp and got an error because the reference was not to the right. gcc foo.cpp -lstdc++ is correct. Or g++ foo.cpp.
  - There is a semicolon at the end of the template definition.
- - template&lt;0> struct Numbersって書いて怒られた。
- -- template&lt;> struct Numbers&lt;0>が正解。変なの。
+ - I wrote template&lt;0> struct Numbers and got angry.
+ -- template&lt;> struct Numbers&lt;0> is correct. Weird.
  -- the first one is the degree of freedom, the second one is what is stuck where.
  - template&lt;int N>&lt;int M>
  -- expected unqualified-id before '<' token
- -- &lt;int N, int M>だな
+ -- &lt;int N, int M>.
  - wrong number of template arguments (1, should be 2)
  -
  
@@ -359,7 +359,7 @@ code:hatena
  </comment>
  <comment>
  <username>kazuhooku</username>
- <body>一般的なコーディングパターンとしては、以下のような感じになると思います。read か write に失敗したら close<br><br>while (1) {<br>  poll_for_read(client_fd and server_fd);<br>  if (read_is_ready(client_fd)) {<br>    write(server_fd, read(client_fd));<br>  }<br>  if (read_is_ready(server_fd)) {<br>    write(client_fd, read(server_fd));<br>  }<br>}</body>
+ <body>A typical coding pattern would look something like this: if read or write fails close<br><br>while (1) {<br> poll_for_read(client_fd and server_fd);<br> if ( read_is_ready(client_fd)) {<br> write(server_fd, read(client_fd));<br> }<br> if (read_is_ready(server_fd)) {<br> write(client_fd, read( server_fd));<br> }<br>}</body>
  <timestamp>1208428699</timestamp>
  </comment>
  <comment>

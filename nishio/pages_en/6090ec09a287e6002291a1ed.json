@@ -34,22 +34,22 @@ code:hatena
  
  The __mro__ is recomputed at the time the value is set to __bases__. mro_internal and mro_subclasses are called from type_set_bases in typeobject.c, and from mro_internal mro_ implementation is called from mro_internal and mro_implementation is re-calculated here. So, if you change the parent class of a class, the MRO for that class and all its subclasses is updated.
  
- ** 参考: PyTypeObjectの定義
+ ** Reference: PyTypeObject definition
  >||
  typedef struct _typeobject {
-     (略)
+     (Abbreviation)
      PyObject *tp_bases;
      PyObject *tp_mro; /* method resolution order */
      PyObject *tp_cache;
      PyObject *tp_subclasses;
-     (略)
+     (Abbreviation)
  } PyTypeObject;
  ||<
  
  *1325898759*Code Reading Observation Diary
  I was once asked how to do code reading and I said, "I can't read at all," but that interpretation aside, the objective fact is that in 30 minutes of free time I was able to look up something like "<a href='http://d.hatena.ne.jp/nishiohirokazu/20120107/ 1325892973'>Order of method name resolution in Python classes</a>", so I'll keep a diary of my observations before I forget how the process went.
  
- ** 観察日記
+ ** Observation Diary
  - (I don't think the Python reference manual says what I want to look up.)
  - Run it interactively with the Python processor to see how it behaves. Think, "It should update __mro__ when __bases__ is rewritten."
  - The source code has already been downloaded (I was going to read the source in ~/src/ but left the source code in there).
@@ -57,7 +57,7 @@ code:hatena
  - . /configure --with-pydebug to create a binary with debugging information, set a breakpoint on set_bases, and run it. Contrary to expectations, it is not called.
  - ack set_bases in the source root. typeobject.c has type_set_bases! So the new style class is typeobject.c.
  - ack type_set_bases. read type_set_bases. read only where the word "mro" appears.
- - r = mro_subclasses(type, temp);が見つかる。
+ - r = mro_subclasses(type, temp); is found.
  - I expected mro_subclasses to rewrite itself and the subclass mro, but contrary to my expectations, it only calls mro_internal in mro_subclasses, following the subclass.
  - I wondered if mro_internal was the process of rewriting mro, so I re-read type_set_bases and found that I had missed reading mro_internal.
  - Now that I think about it, you should search for mro and highlight yourself.

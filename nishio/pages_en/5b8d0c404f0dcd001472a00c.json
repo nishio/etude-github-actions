@@ -5,14 +5,14 @@ code:python
 	data = np.random.random((6, 5))
  # Subtract average
 	d2 = data - data.mean(axis=0)
- # 共分散行列を作る
+ # Create a covariance matrix
 	cov = np.einsum("ij,ik->jk", d2, d2)
 	
  # The covariance matrix is a square matrix of the dimensions of the data
 	>>> cov.shape
 	(5, 5)
 	
-	# 共分散行列を固有値分解する
+	# Decompose the covariance matrix into eigenvalues
 	>>> np.linalg.eig(cov)
  (array([1.34012189, 0.77663231, 0.58201555, 0.08694709, 0.03991043]),
   array([[ 0.67869952,  0.35340645, -0.37436676,  0.50602025,  0.13514392],
@@ -21,12 +21,12 @@ code:python
          [-0.26671759,  0.89310368, -0.08178549, -0.34559589,  0.07142937],
          [-0.20123254,  0.07652205,  0.50049221,  0.38823327,  0.74325791]]))
  
- # 比較対象のPCA実装
+ # PCA implementation for comparison
  from sklearn.decomposition import PCA
  # Fit to data
  m = PCA().fit(data)
 	
- # 主成分軸を表示 
+ # Show principal component axes
  >>> m.components_
  array([[ 0.67869952,  0.45792096, -0.46695028, -0.26671759, -0.20123254],
          [ 0.35340645,  0.20519401,  0.17178326,  0.89310368,  0.07652205],
@@ -62,11 +62,11 @@ code:python
         [ 0.50602025, -0.08403411,  0.68316922, -0.34559589,  0.38823327],
         [ 0.13514392, -0.37505412, -0.53248104,  0.07142937,  0.74325791]])
 
-#主成分分析 #特異値分解 #共分散行列 #PCA
+#Principal Component Analysis #Singular Value Decomposition #Covariance Matrix #PCA
 
- [共分散行列]を作る
+ Create a [covariance matrix
 	 The covariance matrix is a square matrix of the dimensions of the data
-	共分散行列を[固有値分解]する
+	Eigenvalue decomposition of the covariance matrix
 	 Display [Principal Component Axis] of [PCA
 	Comparing the results of the eigenvalue decomposition of the covariance matrix with the principal component axis of the PCA, the difference is almost zero
  Relationship to [Singular Value Classification]([SVD]) (identical except that the signs of some of the axes are reversed)

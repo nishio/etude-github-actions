@@ -3,7 +3,7 @@ Garbage cleanup for ANY Eraser Festival
 The other day, when we eliminated "any" from the Regroup [after 2 days of work], we still could not find all the problems only by testing the types, and error reports are coming up on [Sentry].
 [https://gyazo.com/f20acbd51bf9916b0546eeb288de68b4]
 
-まずは一番多い`Error neverComeHere(assertion) Unhandled InitialState * onDrag`を見ていこう
+First, let's look at the most common `Error neverComeHere(assertion) Unhandled InitialState * onDrag`.
 This is something that is ASSERTED in order to notice inconsistencies as soon as they occur, but the developer didn't notice.
 [https://gyazo.com/3515a0bbce298490cd68d418928f1a50]
 Hmmm, I went back to Breadcrumb to see what was causing it and found that he switched to lasso.
@@ -26,8 +26,8 @@ When I started writing Regroup, I couldn't figure out how to access PAPER from a
 
 `const paper = require("paper");`
 
-Typescipt doc: [export = and import = require() https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require]をみて
-`import paper = require("paper");`にしたらエラー
+Typescipt doc: [export = and import = require() https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require]
+Error when `import paper = require("paper");` is used
 code:error
 	SyntaxError: /Users/nishio/regroup/src/onOverlayCanvas.ts: `import =` is not supported by @babel/plugin-transform-typescript
  Please consider using `import <moduleName> from '<moduleName>';` alongside Typescript's --allowSyntheticDefaultImports option.
@@ -38,7 +38,7 @@ The simple `import paper from "paper";` worked fine. I'm glad I did that.
 With my knowledge before the development of the module mechanism in JavaScript, I unnecessarily wrote in a legacy way by using third-party libraries in TypeScript while reading explanations for JavaScript.
 I even found `var paper = require("paper");`!
 
-`window.app.paper`を`import paper from "paper";`に変えていく。
+Change `window.app.paper` to `import paper from "paper";`.
 Oops, new type error.
 code:ts
  Argument of type 'HTMLElement | null' is not assignable to parameter of type 'string | HTMLCanvasElement'.

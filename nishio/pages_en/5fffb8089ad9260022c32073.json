@@ -1,4 +1,4 @@
-Herokuで自然言語処理
+Natural Language Processing on Heroku
 Notes on the process of turning a locally experimented natural language processing algorithm into an API server on Heroku
 (No consideration of whether it is appropriate to do this on Heroku → [API server placement considerations])
 
@@ -43,7 +43,7 @@ Notes on the process of turning a locally experimented natural language processi
      *.pyc
      __pycache__/
 				$ git commit -m 'minimal Flask server'
-					実際はVSCodeのSource ControlタブでCmd+Enterしてる
+					Actually, I'm doing Cmd+Enter in the Source Control tab of VSCode.
 		Add [gunicorn] and deploy.
 		　This also serves as [HTTPS for Flask], and is included in the minimum configuration because I think that HTTP cannot be the only way for a modern API server.
   	$ pip install gunicorn
@@ -63,7 +63,7 @@ Notes on the process of turning a locally experimented natural language processi
 　　　I've had a hard link with separate repositories, but I don't think it's a good idea.
 　　　I guess I'd better use a git submodule or pip to connect them.
 　　　	[Resolving Application Dependencies with Git Submodules | Heroku Dev Center https://devcenter.heroku.com/articles/git-submodules]
-				[自分用pip]
+				[pip for self].
 
 　　Keep folders separate for easy separation in the future.
 　　　$ mkdir server/regroup_split
@@ -86,12 +86,12 @@ Notes on the process of turning a locally experimented natural language processi
 　　　flask run to see if the test works on the local development server
 　　　It's easier to read error messages on the local development server than after deployment.
 　　　Common Corrections
-　　　　相対インポート `from .foo import bar`
+　　　　Relative import `from .foo import bar`.
 　　　　　I usually run it as a script and experiment with it, but it is imported from the server and run as a module, so the import behavior changes.
 　　　　　Maybe it's better to do [%run -m in IPython] on a regular basis.
 　　　　path of a data file
 　　　　　If you're writing in a way that depends on the current directory at runtime, you'll get into trouble here.
-　　　　　	`DIR = os.path.dirname(__file__)`を使う
+　　　　　Use `DIR = os.path.dirname(__file__)`.
 
 　Push to heroku when it works locally
 　 $ pip freeze > requirements.txt
@@ -142,7 +142,7 @@ Notes on the process of turning a locally experimented natural language processi
        ret = regroup_split.process_single_line(text)
        return ret
   $ curl -X POST -H "Content-Type: application/json" -d '{"q":"test"}' localhost:5000/api/
-　　動作確認
+　　operation check
 　　git push to make sure it works on heroku as well
 
 　Create a client side that calls this API

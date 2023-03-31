@@ -28,11 +28,11 @@ code:hatena
  
  By the way, I just found out that Verilog HDL also has a for statement. (What?
  
- **追記
+ **addendum
  
  It is indeed terrible, so I rewrote the simple shift register using a for statement. 512 rows of rule tables can't be managed.
  
- **追記
+ **addendum
  You don't have to do this about the shift register implementation.
  >|verilog|
  for(i = 0; i < 322; i = i + 1) begin
@@ -50,7 +50,7 @@ code:hatena
  <comments>
  <comment>
  <username>eldesh</username>
- <body>論理圧縮出来なければ、とりあえず<br><br>always @(posedge rule_clk) begin<br>  case(neighbors)<br>    9'b000_000_111: wdata = 1'b1;<br>    9'b000_001_011: wdata = 1'b1;<br>    9'b000_001_101: wdata = 1'b1;<br>    ...<br><br>    default       : wdata = 1'b0;<br>  endcase<br><br>これだけでも大分短くはなりますね。<br>それと、<br><br>  9'b111_111_0XX: wdata = 1'b0;<br>/* 不要になる<br>  9'b111_111_001: wdata = 1'b0;<br>  9'b111_111_010: wdata = 1'b0;<br>  9'b111_111_011: wdata = 1'b0;<br> */<br><br>みたいなことで頑張れる部分が多少ありそうです。</body>
+ <body>If you can't compress logic, for now<br><br>always @(posedge rule_clk) begin<br> case(neighbors)<br> 9'b000_000_111: wdata = 1'b1;<br> 9'b000_001_011. wdata = 1'b1;<br> 9'b000_001_101: wdata = 1'b1;<br> ... <br><br> default : wdata = 1'b0;<br> endcase<br><br>This alone would be much shorter. <br>And, <br><br> 9'b111_111_0XX: wdata = 1'b0;<br>/* no longer needed<br> 9'b111_111_001: wdata = 1'b0;<br> 9'b111_111_010: wdata = 1'b0;<br> 9'b111_111_ 011: wdata = 1'b0;<br> */<br><br>There are some areas where we can do our best with something like this. </body>
  <timestamp>1366766870</timestamp>
  </comment>
  <comment>

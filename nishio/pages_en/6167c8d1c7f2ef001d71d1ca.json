@@ -3,7 +3,7 @@ Receiving JSON in a messy way with FastAPI
 This is sorted based on type hint information and is also used for automatic generation of API documentation.
 This may have its merits, of course, but this time I was trying to create an outlet to receive webhooks from other services, so I thought, "I don't know the exact type of JSON sent in the request body, and it would be tedious to look it up and describe it accurately, so I'd like to receive it in a crude manner and observe what values are coming from it. I thought, "I don't know the exact type of JSON sent in the request body.
 
-結論
+Conclusion.
 code:python
  from fastapi import Body
  (…snip…)
@@ -11,7 +11,7 @@ code:python
  async def root(body=Body(...)):
  	print(body)
 
-解説
+explanation
 
 [doc https://fastapi.tiangolo.com/tutorial/body/#request-body-path-query-parametershttps://fastapi.tiangolo.com/tutorial/body/#request-body-path-query-parameters]
 >The function parameters will be recognized as follows:
@@ -25,7 +25,7 @@ There are times when that is not a good idea, and the documentation explains it,
 > If you don't want to use Pydantic models, you can also use Body parameters. See the docs for [Body - Multiple Parameters: Singular values in body https://fastapi.tiangolo.com/tutorial/body-multiple-params/#singular-values-in-body].
 
 The sample in the document is explained in the case of multiple Pydantic arguments, so it does not directly match our purpose here.
-重要な仕様:
+Important specifications
 　If there is a single Pydantic argument, the entire request body goes into that argument
 　If there is more than one Pydantic in the argument, the value obtained from the request body by the key of the variable name goes into each argument.
 In this case, there is only one Pydantic, so the whole thing goes into the argument body.

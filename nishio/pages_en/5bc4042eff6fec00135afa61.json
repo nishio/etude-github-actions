@@ -1,5 +1,5 @@
-注意機構
-[注意]([Attention])
+attention mechanism
+[Attention]([Attention])
 Generalization as of 2018
 	[$ \mathrm{Attention}(query, Keys, Values) = \mathrm{Normalize}(F(query, Keys)) \cdot Values]
 	There are queries and Keys, which are a bunch of multiple keys.
@@ -7,14 +7,14 @@ Generalization as of 2018
  The results are normalized in some way to sum to 1 to obtain the attention intensity (roughly softmax, see [hard attention mechanism]).
  Weighted average Values by their attention intensity
 
-	図解
+	schematic
 		[https://gyazo.com/211618e709ff284a379c5c2f502934da]
 
 	F does not know the number of Key. [$ F(query, Key)] does not depend on the shape of Key.
 	 I don't know how to express this in mathematical terms.
-  一つのqueryと一つのkeyを受け取る関数fがあって`[f(query, key) for key in Keys]`
+  There is a function f that takes one query and one key, and `[f(query, key) for key in Keys]`.
 
-2014年 [加法注意] [1409.0473 Neural Machine Translation by Jointly Learning to Align and Translate https://arxiv.org/abs/1409.0473]
+2014 [additive note] [1409.0473 Neural Machine Translation by Jointly Learning to Align and Translate https://arxiv.org/abs/1409.0473]
 	Func := Feed-Forward Network
 	[$ Attention(query, Key, Value) = Softmax(FFN(concat(query, Key))) \cdot Value]
  >By letting the decoder have an attention mechanism, we relieve the encoder from the burden of having to encode all information in the source sentence into a fixedlength vector. With this new approach the information can be spread throughout the sequence of annotations, which can be selectively retrieved by the decoder accordingly.
@@ -23,11 +23,11 @@ Generalization as of 2018
   [https://gyazo.com/dab69f04c581681e9c3c543b92633ef5]
 
 
-2015年 [内積注意] [1508.04025 Effective Approaches to Attention-based Neural Machine Translation https://arxiv.org/abs/1508.04025]
+2015 [internal product note] [1508.04025 Effective Approaches to Attention-based Neural Machine Translation https://arxiv.org/abs/1508.04025]
 	Split that query and key are simply inner products of query and key
 	[$ Attention(query, Key, Value) = Softmax(query \cdot Key) \cdot Value]
 	Of course, this inner product is sometimes expressed as a matrix product in some papers.
-	関連 [双線形]
+	Related [bilinear].
 [https://gyazo.com/1db88d9a61dcce7af368f0d0e594b3f1]
 
 [source target note] and [self note] ([2017 https://arxiv.org/abs/1703.03130])
@@ -35,9 +35,9 @@ Generalization as of 2018
  Store the Encoder's hidden states in the Encoder-Decoder configuration and select from among those hidden states by the attention mechanism
  In this configuration, Key and Value come from Encoder and query comes from Decoder.
  This type of configuration is called [source-target attention
- 	([Sequence Generation with Target Attention http://ecmlpkdd2017.ijs.si/papers/paperID307.pdf](2017)でsource-target attentionとtarget-target attentionという形で比較議論されている)
+ 	([Sequence Generation with Target Attention http://ecmlpkdd2017.ijs.si/papers/paperID307.pdf] (2017) for a comparative discussion in the form of source-target attention and target- target attention in the form of comparative discussion.)
  K and V together are called Memory
- 対義語が[自己注意](Self-attention)
+ Synonyms are [Self-attention
   This one is Key, Value, query all are self... no, that definition is not balanced by the level of abstraction...
   It may eventually differentiate into better terms.
   So far, one implementation example is "everything comes from the lower layers."

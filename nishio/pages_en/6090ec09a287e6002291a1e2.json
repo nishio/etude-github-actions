@@ -4,7 +4,7 @@ code:hatena
  *1324015670* Reading papers containing mathematical formulas more efficiently.
  The productivity of intellectual work depends on the design of how to do it. I think it is possible to improve productivity in the task of "reading a paper full of mathematical formulas" by designing a good way of doing it, instead of "just reading it as hard as I can. With this in mind, I decided to try it while observing myself.
  
- 読む論文はCRF(条件付き確率場)についての次の二つ: <a href='http://scholar.google.com/scholar?cluster=14553887910606988646&hl=en&as_sdt=0,5&sciodt=0,5'>Lafferty: Conditional random fields: Probabilistic... - Google Scholar</a>と<a href='http://scholar.google.com/scholar?cluster=1077892667424999194&hl=en&as_sdt=0,5&sciodt=0,5'>Sutton: An introduction to conditional random fields... - Google Scholar</a>
+ Read the following two papers on CRFs (Conditional Random Fields): <a href='http://scholar.google.com/scholar?cluster=14553887910606988646&hl=en&as_sdt=0,5&sciodt=0,5'> Lafferty: Conditional random fields: Probabilistic... - Google Scholar</a> and <a href='http://scholar.google.com/scholar?cluster=1077892667424999194&hl=en&as_sdt=0,5&sciodt=0,5'>Sutton: An introduction to conditional random fields... - Google Scholar</a>
  
  First, clarify the objectives. The objective must be something that can be objectively measured to see if it has been achieved. In other words, "to understand CRF" is not enough. The goal should be "to implement the CRF, make a video visualizing the learning process, and post it on the blog.
  
@@ -13,7 +13,7 @@ code:hatena
  Photo-reading suggests that after clarifying the purpose of reading the target book, the reader should read and research the chapter titles, figure captions, etc. The argument is that before reading a book in earnest, one should gather information on the subject to be read and then decide whether one should really read it or not. In fact, in the process of selecting the above two papers for this experiment, Sutton's team performed this task in order to determine whether or not they should be read. What we learned from it:.
  - Sutton believes that the relationship between CRF and HMM is similar to the relationship between logistic regression and naïve Bayes
  - Discriminative (CRF, logistic regression) and generative (HMM, Naive Bayes) models
- - 系列データが対象(linear-chain CRF, HMM)
+ - For series data (linear-chain CRF, HMM)
  - I heard that there is also one for general graphs, but that is not necessary for my purpose this time, so I will not go through it.
  - It contains a description of parameter estimation and inference for each
  - There is a chapter on implementation issues, which seems important.
@@ -47,13 +47,13 @@ code:hatena
  - Do you want to include a regularization term?
  - Are x and y both t-dimensional?
  - Where was S defined?
- - HMM-like CRFとlinear chain CRFは別物か
+ - Are HMM-like CRF and linear chain CRF different?
  
  It's imperative that you read this section because it contains the alpha-beta recursion to the extent that you plan to read it and haven't read it yet. You should read there in the next 25 minutes and then re-read the whole thing again in the remaining time.
  
  <hr>
  
- 25分経過。
+ 25 minutes elapsed.
  - This is not strange because T is in the time direction. My mistake> "Are x and y both T-dimensional?"
  - There are two ways to avoid underflow: scaling and calculating in logarithmic space, and Sutton explains how to make the latter more stable.
  - Sutton is working on ways to speed up the parameter estimation phase using L-BFGS; Lafferty says it can be obtained using Newton's method.
@@ -73,7 +73,7 @@ code:hatena
  -- What is the label bias problem and why does CRF solve it?
  -- What is L-BFGS?
  -- What is a generating-discriminating pair?
- -- Improved Iterative Scalingって何？(関係あるかも？)
+ -- What is Improved Iterative Scaling? (Might it have something to do with it?)
  - Relevant Question
  -- How do you estimate the parameters?
  
@@ -115,7 +115,7 @@ code:hatena
  Time measurements are getting fuzzy due to fatigue and not being able to concentrate box for 25 minutes. There is no reliability in the passage of time in this area of the record.
  
  - Maximum entropy model = loglinear model = linear logarithmic model = conditionally exponential model?
- - IISはconditional exponential modelの尤度を最大化する手法
+ - IIS is a method to maximize the likelihood of the conditional exponential model
  - It seems that one of the two terms in the expression for the gradient of the likelihood can be obtained by dynamic programming in the recursion of α and β
  - If log(Z(X)) is differentiated by θ, it should be Ey'[Φ(y', x)], but the gap there is not filled.
  - How Ey'[Φ(y', x)] maps to dynamic programming is also a gap

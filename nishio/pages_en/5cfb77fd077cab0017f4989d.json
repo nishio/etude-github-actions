@@ -2,11 +2,11 @@ Learning State Transition Diagrams
 How large a neural network is needed to train a [state transition diagram] with S states and N inputs?
 Initially, I thought "two intermediate layers of O(S^2) size are needed," but I was able to learn with much smaller ones, so I explored the limits.
 The input is a concatenation of S-dimensional one-hot and N-dimensional one-hot.
-出力は新しい状態S次元のone-hot。
+The output is one-hot in the new state S dimension.
 The state transition table is randomly generated.
 	In reality, there is more structure and compression is easier. Randomness is the most difficult problem.
 	S * 1 S is determined for N inputs
-活性化関数はReLU
+The activation function is ReLU
 Set EARLY_STOPPING=False, because if it is True, it will stop before the learning process starts.
 The sizes of the intermediate layers were tried from the smallest to the largest, and the table shows the sizes that could correctly answer all of the S * N possible inputs.
 
@@ -21,7 +21,7 @@ table:Number of intermediate layers required for all patterns to be correct
  40	16	28	60	135
  60	16	28	90	135
 Experiment (up to S=20): https://gist.github.com/nishio/8d2dd6511df11c0aa78b542c7563b2a8
-追加実験(S=40, 60): https://gist.github.com/nishio/905160abc7766fcf239e6c7854465172
+Additional experiments (S=40, 60): https://gist.github.com/nishio/905160abc7766fcf239e6c7854465172
 
 When I saw the results of this experiment, I thought, "What? Why is it OK to have such a small middle class? Isn't it buggy?" I thought,
 To begin with, state transition diagrams can be realized without even an intermediate layer if the input is S*N one-hot. (Figure 2)
