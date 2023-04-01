@@ -34,7 +34,7 @@ async def fetch(url):
             return await response.json()
 
 
-async def main():
+async def crawl():
     pages_response = await fetch(f"{URL_TEMPLATE}/?limit=1")
     page_num = pages_response["count"]
     max_index = (page_num // LIMIT_PARAM) + 1
@@ -46,8 +46,11 @@ async def main():
         result = await task
         pages.extend(result["pages"])
 
-    titles = [TitlePage(page["id"], page["title"],
-                        page["created"], page["updated"]) for page in pages]
+    titles = [
+        TitlePage(
+            page["id"], page["title"],
+            page["created"], page["updated"])
+        for page in pages]
     titles.sort(key=lambda x: -x.created)
 
     stat = {
@@ -66,7 +69,8 @@ async def main():
             f"[scrapbox-external-backup] Start fetching {i} - {i + skip} pages.")
 
         urls = [
-            f"{URL_TEMPLATE}/{quote(title.title, safe='')}" for title in titles[i:i+skip]]
+            f"{URL_TEMPLATE}/{quote(title.title, safe='')}"
+            for title in titles[i:i+skip]]
         tasks = [fetch(url) for url in urls]
         for j, task in enumerate(asyncio.as_completed(tasks), start=i):
             print(
@@ -162,8 +166,12 @@ def translate():
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
 
 
-if __name__ == "__main__":
-    pass
-    # asyncio.run(main())
+def main():
+    print("crawl")
+    asyncio.run(crawl())
+    print("translate")
     translate()
-    pass
+
+
+if __name__ == "__main__":
+    main()
