@@ -126,6 +126,7 @@ def translate():
     target = os.listdir(PAGES_DIR)
     # target = target[:300]
     for name in tqdm(target):
+        is_updated = False
         with open(os.path.join(PAGES_DIR, name), "r") as file:
             data = json.load(file)
             result_lines = []
@@ -146,18 +147,21 @@ def translate():
                     no_cache += len(bytes(body, "utf-8"))
                     en = call_deepl(body)
                     cache[body] = en
+                    is_updated = True
+
                 result_lines.append(indent + cache[body])
         # output to file
         with open(os.path.join(ENGLISH_DIR, name), "w") as file:
             file.write("\n".join(result_lines))
         # output cache to file
-        with open(cache_data, "w") as file:
-            json.dump(cache, file, ensure_ascii=False, indent=2)
+        if is_updated:
+            with open(cache_data, "w") as file:
+                json.dump(cache, file, ensure_ascii=False, indent=2)
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
 
 
 if __name__ == "__main__":
     pass
     # asyncio.run(main())
-    # translate()
+    translate()
     pass
