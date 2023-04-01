@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          lfs: true
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10.4'
@@ -17,20 +20,16 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Remove old pages
-        run: rm nishio/pages/*.json
+        run: |
+          rm nishio/pages/*.json
+          rm nishio/pages_en/*.json
 
       - name: Get new pages
         run: >
           python main.py
 
       - name: Commit files
-        run: |
-          set -x
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add nishio/stats nishio/pages
-          git commit -m "Update pages"
-          git push
+        run: commit.sh
 
       # - name: Set Date
       #   env:
