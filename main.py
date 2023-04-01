@@ -151,7 +151,9 @@ def translate():
 
                 result_lines.append(indent + cache[body])
         # output to file
-        with open(os.path.join(ENGLISH_DIR, name), "w") as file:
+        base, ext = os.path.splitext(name)
+        outpath = os.path.join(ENGLISH_DIR, base + ".txt")
+        with open(outpath, "w") as file:
             file.write("\n".join(result_lines))
         # output cache to file
         if is_updated:
