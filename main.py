@@ -8,23 +8,14 @@ from collections import namedtuple
 import os
 import re
 from tqdm import tqdm
-from time import sleep
+from time import sleep, perf_counter
 import dotenv
 dotenv.load_dotenv()
 DEEPL_KEY = os.getenv("DEEPL_KEY")
 
 TitlePage = namedtuple("TitlePage", ["id", "title", "created", "updated"])
 
-project = "nishio"
-os.makedirs(f"./{project}/stats", exist_ok=True)
-dist_stats = f"./{project}/stats/pages.json"
-PAGES_DIR = f"./{project}/pages"
-os.makedirs(PAGES_DIR, exist_ok=True)
-ENGLISH_DIR = f"./{project}/pages_en"
-os.makedirs(ENGLISH_DIR, exist_ok=True)
-cache_data = "./cache.json"
 
-URL_TEMPLATE = f"https://scrapbox.io/api/pages/{project}"
 LIMIT_PARAM = 1000
 
 
@@ -34,7 +25,9 @@ async def fetch(url):
             return await response.json()
 
 
-async def crawl():
+async def crawl(project):
+    start_time = perf_counter()
+    URL_TEMPLATE = f"https://scrapbox.io/api/pages/{project}"
     pages_response = await fetch(f"{URL_TEMPLATE}/?limit=1")
     page_num = pages_response["count"]
     max_index = (page_num // LIMIT_PARAM) + 1
@@ -58,26 +51,28 @@ async def crawl():
         "count": page_num,
         "pages": [title._asdict() for title in titles]
     }
+
     os.makedirs(f"./{project}/stats", exist_ok=True)
+    dist_stats = f"./{project}/stats/pages.json"
     with open(dist_stats, "w") as file:
         json.dump(stat, file, ensure_ascii=False, indent=2)
 
     skip = 100
     detail_pages = []
-    for i in range(0, len(titles), skip):
-        print(
-            f"[scrapbox-external-backup] Start fetching {i} - {i + skip} pages.")
+    for i in tqdm(range(0, len(titles), skip)):
+        # print(
+        #     f"[scrapbox-external-backup] Start fetching {i} - {i + skip} pages.")
 
         urls = [
             f"{URL_TEMPLATE}/{quote(title.title, safe='')}"
             for title in titles[i:i+skip]]
         tasks = [fetch(url) for url in urls]
         for j, task in enumerate(asyncio.as_completed(tasks), start=i):
-            print(
-                f"[page {j}@scrapbox-external-backup] start fetching /{project}/{titles[j].title}")
+            # print(
+            #     f"[page {j}@scrapbox-external-backup] start fetching /{project}/{titles[j].title}")
             result = await task
-            print(
-                f"[page {j}@scrapbox-external-backup] finish fetching /{project}/{titles[j].title}")
+            # print(
+            #     f"[page {j}@scrapbox-external-backup] finish fetching /{project}/{titles[j].title}")
             detail_pages.append({
                 "id": result["id"],
                 "title": result["title"],
@@ -87,10 +82,14 @@ async def crawl():
             })
         print(f"Finish fetching {i} - {i + skip} pages.")
 
+    PAGES_DIR = f"./{project}/pages"
+    os.makedirs(PAGES_DIR, exist_ok=True)
+
     for page in detail_pages:
-        with open(f"./{project}/pages/{page['id']}.json", "w") as file:
+        with open(f"{PAGES_DIR}/{page['id']}.json", "w") as file:
             json.dump(page, file, ensure_ascii=False, indent=2)
-    print("write success")
+
+    print("crawl:", perf_counter() - start_time)
 
 
 def split_indent(line):
@@ -123,10 +122,18 @@ def call_deepl(ja):
 
 
 def translate():
+    start_time = perf_counter()
+    cache_data = "./cache.json"
+    PAGES_DIR = f"./nishio/pages"
+    ENGLISH_DIR = f"./nishio/pages_en"
+    os.makedirs(ENGLISH_DIR, exist_ok=True)
+
     total = 0
     no_cache = 0
     # load cache from file
     cache = json.load(open(cache_data, "r"))
+    print("cache length:", len(cache))
+    return
     target = os.listdir(PAGES_DIR)
     # target = target[:300]
     for name in tqdm(target):
@@ -134,7 +141,8 @@ def translate():
         with open(os.path.join(PAGES_DIR, name), "r") as file:
             data = json.load(file)
             result_lines = []
-            for line in tqdm(data["lines"]):
+            for line in data["lines"]:
+                # for line in tqdm(data["lines"]):
                 text = line["text"]
                 indent, body = split_indent(text)
                 if not body:
@@ -163,14 +171,17 @@ def translate():
         if is_updated:
             with open(cache_data, "w") as file:
                 json.dump(cache, file, ensure_ascii=False, indent=2)
+            print(f"{perf_counter() - start_time:.1f}", "update cache")
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
+
+    print("translate:", perf_counter() - start_time)
 
 
 def main():
     print("crawl")
-    asyncio.run(crawl())
+    # asyncio.run(crawl("nishio"))
     print("translate")
-    translate()
+    # translate()
 
 
 if __name__ == "__main__":
