@@ -133,7 +133,6 @@ def translate():
     # load cache from file
     cache = json.load(open(cache_data, "r"))
     print("cache length:", len(cache))
-    return
     target = os.listdir(PAGES_DIR)
     # target = target[:300]
     for name in tqdm(target):
@@ -171,7 +170,7 @@ def translate():
         if is_updated:
             with open(cache_data, "w") as file:
                 json.dump(cache, file, ensure_ascii=False, indent=2)
-            print(f"{perf_counter() - start_time:.1f}", "update cache")
+            print(f"{perf_counter() - start_time:.1f}", "sec: update cache")
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
 
     print("translate:", perf_counter() - start_time)
@@ -179,7 +178,7 @@ def translate():
 
 def main():
     print("crawl")
-    # asyncio.run(crawl("nishio"))
+    asyncio.run(crawl("nishio"))
     print("translate")
     translate()
 
