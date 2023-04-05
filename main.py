@@ -181,7 +181,7 @@ def main():
     print("crawl")
     # asyncio.run(crawl("nishio"))
     print("translate")
-    # translate()
+    translate()
 
 
 if __name__ == "__main__":
