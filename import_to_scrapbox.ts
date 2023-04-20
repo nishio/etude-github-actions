@@ -7,7 +7,7 @@ const importingProjectName = Deno.env.get("DESTINATION_PROJECT_NAME");
 assertString(sid);
 assertString(importingProjectName);
 
-const jsonString = await Deno.readTextFile("data_en.json");
+const jsonString = await Deno.readTextFile("data_en_diff.json");
 const data = JSON.parse(jsonString);
 
 const importingPages = data.pages;
