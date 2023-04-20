@@ -1,0 +1,436 @@
+Hatena2008-12-21
+code:hatena
+ <body>
+ *1229805950*[TopCoder] Single Round Match 430 (Div1/500point)
+ A typical graphing problem in which the coordinates of cities and conditions are given, and the goal is to create as many pairs (a "sister city" relationship between two cities) as possible that satisfy the conditions. The two conditions are that the cities must be at least minDistance apart and that a city can be sister to at most maxPartner cities. The other condition is to choose the one with the shortest total distance among several ways of making pairs that maximize the number of pairs.
+ 
+ The maximum number of cities is 10 and the maximum maxPartner is 3, so the maximum number of possible pairings is 45 and the maximum number of pairs is 15. I tried to find out if it would be okay to search the whole area and still be able to do a good job of trimming branches.
+ 
+ >|cpp|
+ class TwinTowns {
+ public:
+   int MAX_EDGES;
+   size_t N;
+   vector<pair<int, int> > edges;
+   vector<int> edgesLen;
+   size_t NUM_EDGES;
+   int MAX_PARTNERS;
+   int resultDist;
+   int resultEdges;
+ 
+   void recur(size_t i, int numEdges, int dist, vector<int>& degree){
+     int v0 = edges[i].first;
+     int v1 = edges[i].second;
+     if(degree[v0] == MAX_PARTNERS || degree[v1] == MAX_PARTNERS){
+       // can't add the edge
+       return;
+     }
+     numEdges++;
+     dist += edgesLen[i];
+     if(dist > resultDist && numEdges <= resultEdges){
+       // too distant
+       return;
+     }
+     if(numEdges > resultEdges){
+       resultEdges = numEdges;
+       resultDist = dist;
+     }else if(numEdges == resultEdges && dist < resultDist){
+       resultDist = dist;
+     }
+     if(numEdges < MAX_EDGES){
+       degree[v0]++;
+       degree[v1]++;
+       // enough room to add edge
+       for(size_t j=i+1; j<NUM_EDGES; j++){
+ 	recur(j, numEdges, dist, degree);
+       }
+       degree[v0]--;
+       degree[v1]--;
+     }
+   }
+   vector <int> optimalTwinTowns(vector <int> x, vector <int> y, int maxPartners, int minDistance) {
+     N = x.size();
+     MAX_PARTNERS = maxPartners; 
+     edges.clear();
+     edgesLen.clear();
+ 
+     for(size_t i=0; i<N; i++){
+       for(size_t j=i+1; j<N; j++){
+         int len = abs(x[i] - x[j]) + abs(y[i] - y[j]);
+ 	if(len >= minDistance){
+ 	  edges.push_back(make_pair(i, j));
+ 	  edgesLen.push_back(len);
+ 	}
+       }
+     }
+     NUM_EDGES = edges.size();
+     vector<int> degree(N);
+     MAX_EDGES = N * maxPartners / 2;
+     resultEdges = 0;
+     resultDist = 2000 * 100; // infinity
+     vector<int> result;
+     for(size_t i=0; i<NUM_EDGES; i++){
+       recur(i, 0, 0, degree);
+     }
+     result.push_back(resultEdges);
+     result.push_back(resultDist);
+     return result;
+   }
+ }
+ ||<
+ 
+ It passed the system test in a short enough time, so I SUBMIT it.
+ >|cpp|
+     if(dist > resultDist && numEdges <= resultEdges){
+       // too distant
+       return;
+     }
+ ||<
+ It's a no-go. This is pruning too many branches because the resultEdges may be smaller than the correct answer if the correct answer has not yet been found. On the other hand, commenting this out would normally result in a timeout. Now, what is the right thing to do?
+ 
+ I kept a record of the number of ranks and the shortest I've ever had at that rank, and used that to prune branches.
+ >|cpp|
+ class TwinTowns {
+ public:
+   size_t N;
+   vector<pair<int, int> > edges;
+   vector<int> edgesLen;
+   size_t NUM_EDGES;
+   int MAX_PARTNERS;
+   int resultDist;
+   int resultEdges;
+   vector<int> cache;
+ 
+   int getDegree(int deg, int i){
+     return (deg >> (i * 2)) & 3;
+   }
+   int setDegree(int deg, int i, int v){
+     return (deg & ~(3 << (i * 2))) | (v << (i * 2));
+   }
+ 
+   void recur(size_t i, int numEdges, int dist, int degree){
+     int v0 = edges[i].first;
+     int v1 = edges[i].second;
+     if(getDegree(degree, v0) == MAX_PARTNERS || getDegree(degree, v1) == MAX_PARTNERS){
+       // can't add the edge
+       return;
+     }
+     numEdges++;
+     dist += edgesLen[i];
+     if(numEdges > resultEdges){
+       resultEdges = numEdges;
+       resultDist = dist;
+     }else if(numEdges == resultEdges && dist < resultDist){
+       resultDist = dist;
+     }
+ 
+     degree = setDegree(degree, v0, getDegree(degree, v0) + 1);
+     degree = setDegree(degree, v1, getDegree(degree, v1) + 1);
+     if(cache[degree] == 0 || dist <= cache[degree]){
+       // add edge
+       cache[degree] = dist;
+       for(size_t j=i+1; j<NUM_EDGES; j++){
+ 	recur(j, numEdges, dist, degree);
+       }
+     }
+ 
+   }
+   vector <int> optimalTwinTowns(vector <int> x, vector <int> y, int maxPartners, int minDistance) {
+     N = x.size();
+     MAX_PARTNERS = maxPartners; 
+     edges.clear();
+     edgesLen.clear();
+     cache.clear();
+     cache.resize(1 << (2 * N));
+     for(size_t i=0; i<N; i++){
+       for(size_t j=i+1; j<N; j++){
+         int len = abs(x[i] - x[j]) + abs(y[i] - y[j]);
+ 	if(len >= minDistance){
+ 	  edges.push_back(make_pair(i, j));
+ 	  edgesLen.push_back(len);
+ 	}
+       }
+     }
+     NUM_EDGES = edges.size();
+     resultEdges = 0;
+     resultDist = 0;
+     for(size_t i=0; i<NUM_EDGES; i++){
+       recur(i, 0, 0, 0);
+     }
+     vector<int> result;
+     result.push_back(resultEdges);
+     result.push_back(resultDist);
+     return result;
+   }
+ }
+ ||<
+ 
+ result
+ >||
+ Args:
+ {{851, 33, 108, 369, 127, 778, 434, 88, 873, 246}, {646, 532, 395, 134, 364, 276, 72, 592, 628, 249}, 3, 649}
+ 
+ Expected:
+ {14, 12205}
+ 
+ Received:
+ {14, 12325}
+ ||<
+ Hmmm.
+ 
+ *1229824697*CUDA Diary 1
+ Thread sync is per block. Shared memory in each block is as fast as a register. Threads that need to cooperate should be in the same block.
+ 
+ I recognized from GPU Gems that GPUPUs have difficulty with scatter (random access write), so the algorithm needs to be devised, but the advantage of CUDA seems to be that it makes this possible.
+ 
+ Kernel execution is asynchronous, but Memcpy, which retrieves the results, waits for kernel execution, so it looked like it was processing synchronously.
+ 
+ Only __device__ memory can be tampered with from the host. The latency of __device__ is high. It is hundreds of times larger than __shared__. If we are going to do table lookups, it would be foolish to leave it in __device__, so should we copy it to __shared__? Or should we embed it in the kernel? Of course there may be a limit to the size of the kernel. I guess it depends on the size of the table and the amount of access.
+ 
+ Variables declared in the kernel without any modifiers will be __shared__. However, arrays of size 5 or larger become __device__.
+ 
+ There are "vector types" such as int4. Will these add up in parallel if I add them, for example? I'll try later.
+ 
+ There's such a thing as cudaMemcpyAsync.
+ 
+ -----
+ 
+ So I wrote a code that searches for all the best moves in the last turn of the last round of the game. I have not yet verified if the result is correct because I just tried to get it to the point where it works without error, but when I run it, it returns the result -1, 23, 3 with time = 10232. Even when I play, I get 5 in the middle on this surface, so I wonder if it's right! The speed only uses one block and the problem is too small to be interesting, so I'll try to get it to read through the entire final round and then compare it to the code in C++.
+ 
+ Oh, you forgot to leave out the x == y case for now.
+ 
+ >|cpp|
+ #include <stdio.h>
+ #include <stdlib.h>
+ 
+ #include <cutil.h>
+ #define NUM_BLOCKS    1
+ 
+ __device__ static int calc_median(int v0, int v1, int v2){
+     if(v1 < v2){
+     	if(v2 < v0){
+ 	    return v2;
+ 	}else if(v0 < v1){
+ 	    return v1;
+ 	}else{
+ 	    return v0;
+ 	}
+     }else{
+     	if(v1 < v0){
+ 	    return v1;
+ 	}else if(v0 < v2){
+ 	    return v2;
+ 	}else{
+ 	    return v0;
+ 	}
+     }
+ }
+ 
+ __global__ static void kernel(const int * input, int * output, clock_t * timer)
+ {
+     __shared__ int shared[3 * 7 * 7];
+ 
+     const int x = threadIdx.x, y = threadIdx.y, z = threadIdx.z;
+     const int bid = blockIdx.x;
+     const int tid = x + y * 7 + z * 7 * 7;
+     if (tid == 0) timer[bid] = clock();
+     
+     // update round score
+     int buf[] = {input[10], input[11], input[12]};
+     int my=input[z], o1=input[3 + x], o2=input[3 + y];
+     int median = calc_median(my, o1, o2);
+     if(my == median) buf[0] += median / 4 + 1;
+     if(o1 == median) buf[1] += median / 4 + 1;
+     if(o2 == median) buf[2] += median / 4 + 1;
+     
+     // update game score
+     median = calc_median(buf[0], buf[1], buf[2]);
+     o1 = buf[1]; o2 = buf[2]; my = buf[0];
+     buf[0] = input[13]; // game score
+     buf[1] = input[14];
+     buf[2] = input[15];
+     if(my == median) buf[0] += median;
+     if(o1 == median) buf[1] += median;
+     if(o2 == median) buf[2] += median;
+ 
+     // find winner
+     o1 = buf[1]; o2 = buf[2]; my = buf[0];
+     median = calc_median(buf[0], buf[1], buf[2]);
+     int win = 0;
+     if(my == median) win += 2;
+     if(o1 == median) win--;
+     if(o2 == median) win--;
+     
+     shared[tid] = win;
+ 
+     __syncthreads();
+     if(x == 0){
+         int sum = 0;
+     	for(int i=0; i < 7; i++){
+ 	    sum += shared[tid + 7 * i];
+ 	}
+ 	shared[tid] = sum;
+     }
+     __syncthreads();
+     if(x == 0 && y == 0){
+         int sum = 0;
+     	for(int i=0; i < 7; i++){
+ 	    sum += shared[tid + i];
+ 	}
+ 	output[z] = sum;
+     }
+     __syncthreads();
+     if (tid == 0) timer[bid+gridDim.x] = clock();
+ }
+ 
+ int main(int argc, char** argv)
+ {
+     CUT_DEVICE_INIT();
+ 
+     int * dinput = NULL;
+     int * doutput = NULL;
+     clock_t * dtimer = NULL;
+ 
+     clock_t timer[NUM_BLOCKS * 2];
+     int input[] = {
+     	1, 5, 13, // own cards
+     	4, 15, 6, 7, 8, 9, 10, // others cards
+ 	0, 5, 0, // round score
+ 	0, 5, 0}; // game score
+ 
+     CUDA_SAFE_CALL(cudaMalloc((void**)&dinput, sizeof(int) * 16));
+     CUDA_SAFE_CALL(cudaMalloc((void**)&doutput, sizeof(int) * 3));
+     CUDA_SAFE_CALL(cudaMalloc((void**)&dtimer, sizeof(clock_t) * NUM_BLOCKS * 2));
+ 
+     CUDA_SAFE_CALL(cudaMemcpy(dinput, input, sizeof(int) * 16, cudaMemcpyHostToDevice));
+ 
+     dim3 THREADS(7, 7, 3);
+     kernel<<<NUM_BLOCKS, THREADS>>>(dinput, doutput, dtimer);
+ 
+     int output[3];
+     CUDA_SAFE_CALL(cudaMemcpy(output, doutput, sizeof(int) * 3, cudaMemcpyDeviceToHost));
+     CUDA_SAFE_CALL(cudaMemcpy(timer, dtimer, sizeof(clock_t) * NUM_BLOCKS * 2, cudaMemcpyDeviceToHost));
+ 
+     CUDA_SAFE_CALL(cudaFree(dinput));
+     CUDA_SAFE_CALL(cudaFree(doutput));
+     CUDA_SAFE_CALL(cudaFree(dtimer));
+ 
+     clock_t minStart = timer[0];
+     clock_t maxEnd = timer[NUM_BLOCKS];
+ 
+     for (int i = 1; i < NUM_BLOCKS; i++)
+     {
+         minStart = timer[i] < minStart ? timer[i] : minStart;
+         maxEnd = timer[NUM_BLOCKS+i] > maxEnd ? timer[NUM_BLOCKS+i] : maxEnd;
+     }
+ 
+     printf("time = %d\n", maxEnd - minStart);
+     printf("%d, %d, %d\n", output[0], output[1], output[2]);
+     CUT_EXIT(argc, argv);
+ }
+ ||<
+ 
+ *1229825420*Vim Diary
+ C-n for dynamic abbreviation completion, :s/... for substitution /... /g for dynamic abbreviation completion, :%s/... /... /... /gc
+ 
+ *1229836965* Information board
+ I would be happy if more stations had something like this.
+ f:id:nishiohirokazu:20081221142244j:image
+ 
+ *1229854217*Sunlight
+ It was a nice day, so I went to Tobu Zoo station for no particular reason. tobu zoo flies when you read the Roman alphabet!
+ 
+ *1229880372*[Mid-term] long time no see
+ I rewrote it a bit based on the discussion in <a href='http://d.hatena.ne.jp/nishiohirokazu/20081101/1225517718'>I noticed </a>.
+ >|cpp|
+ class Cards{
+ public:
+   Cards(vector<int> xs):
+     values(xs),len(xs.size()){}
+   inline int pop(size_t i){
+     len--;
+     swap(values[i], values[len]);
+     return values[len];
+   }
+   inline void revert(size_t i){
+     swap(values[i], values[len]);
+     len++;
+   }
+   vector<int> values;
+   size_t len;
+ };
+ ||<
+ The behavior may be obvious, but just for the sake of testing, I will post the output results.
+ >||
+   DP(hands.values);
+   DP(hands.pop(2));
+   DP(hands.values);
+   hands.revert(2);
+   DP(hands.values);
+ Output under ----
+ hands.values: {4, 14, 15, 17, 49}
+ hands.pop(2): 15
+ hands.values: {4, 14, 49, 17, 15}
+ hands.values: {4, 14, 15, 17, 49}
+ ||<
+ This is used to use the same card array from start to finish.
+ 
+ 
+ I also simplified the core part and combined it into a single function.
+ >|cpp|
+ Result turn(const int iturn, Cards& unknowns, Cards &hand, 
+ 		   const scores &round_score, const scores &game_score){
+ 
+   Result result;
+   size_t N = unknowns.len;
+   
+   for(size_t myi=0; myi<hand.len; myi++){
+     int my = hand.pop(myi);
+     eval_value score = 0;
+ 
+     for(size_t i=0; i < N; i++){
+       int o1 = unknowns.pop(i);
+       for(size_t j=0; j < N - 1; j++){
+ 	if(i == j) continue;
+ 	int o2 = unknowns.pop(j);
+ 	if(iturn == 3){
+ 	  score += end_of_game(
+ 	    end_of_round(
+ 	      end_of_turn(my, o1, o2, round_score), 
+ 	      game_score));
+ 	  
+ 	}else{
+ 	  score += turn(
+ 	    iturn + 1,
+ 	    unknowns, hand,
+ 	    end_of_turn(my, o1, o2, round_score),
+ 	    game_score).score;
+ 	}
+ 	unknowns.revert(j);
+       }
+       unknowns.revert(i);
+     }
+     if(score > result.score){
+       result.score = score;
+       result.hand = my;
+     }
+ 
+     hand.revert(myi);
+   }
+   return result;
+ }
+ ||<
+ 
+ Oh, it takes 9.9 seconds to run. It takes about 4.2 seconds with the older version.
+ http://coderepos.org/share/browser/lang/python/saichugen/experiments/cpp/saichugen_simple.cpp?rev=27176
+ Hmmm...I think I'm making a big mistake if I'm twice as slow as I should be.
+ </body>
+ <comments>
+ <comment>
+ <username>tgbt</username>
+ <body>The old GPGPUs could not do a write->read sequence to the GPU's shared memory during a single drawing pass, but CUDA makes it easier and more comfortable. <BR><BR>Well, in short, I was desperate because I only had Texture. <BR><BR>Threads within the same block cannot perform different types of operations at the same time, so it's important to make it SIMD-like, GlobalMemory is certainly slower, but whether the difference is actually 100 times greater is another matter, and if you want to draw tables, just go for ConstantMemory. If you want to draw a table, ConstantMemory is the way to go. I haven't been doing CUDA programming lately for some reason! </body>
+ <timestamp>1229866391</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-12-21 https://nishiohirokazu.hatenadiary.org/archive/2008/12/21]

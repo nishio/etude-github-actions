@@ -1,0 +1,34 @@
+Hatena2011-08-03
+code:hatena
+ <body>
+ *1312359958*rb_define_global_function and rb_define_module_function(rb_mKernel, ...)
+ You're reading Ruby's object.c and you're thinking, "Huh? I thought global functions were Kernel methods. Why are they used differently?" I wondered.
+ 
+ >||
+     rb_define_method(rb_mKernel, "instance_of?", rb_obj_is_instance_of, 1);
+     rb_define_method(rb_mKernel, "kind_of?", rb_obj_is_kind_of, 1);
+     rb_define_method(rb_mKernel, "is_a?", rb_obj_is_kind_of, 1);
+     rb_define_method(rb_mKernel, "tap", rb_obj_tap, 0);
+ 
+     rb_define_global_function("sprintf", rb_f_sprintf, -1); /* in sprintf.c */
+     rb_define_global_function("format", rb_f_sprintf, -1);  /* in sprintf.c */
+ ||<
+ 
+ I read the definition of rb_define_global_function and found that rb_define_module_function(rb_mKernel, ...) I found that it is a function of rb_define_global_function.
+ 
+ >||
+ /*!
+  * Defines a global function
+  * \param name    name of the function
+  * \param func    the method body
+  * \param argc    the number of parameters, or -1 or -2. see \ref defmethod.
+  */
+ void
+ rb_define_global_function(const char *name, VALUE (*func)(ANYARGS), int argc)
+ {
+     rb_define_module_function(rb_mKernel, name, func, argc);
+ }
+ ||<
+ </body>
+
+[Hatena Diary 2011-08-03 https://nishiohirokazu.hatenadiary.org/archive/2011/08/03]

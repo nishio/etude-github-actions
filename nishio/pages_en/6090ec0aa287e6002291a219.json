@@ -1,0 +1,266 @@
+Hatena2012-04-20
+code:hatena
+ <body>
+ *1334857551*Language Girls' Club Murder at Alloy
+ Incident: PHP killed
+ 
+ ** Situation setting
+ 
+ PHP, Python, Ruby, and Perl are a quartet of close friends who were seen together on the day PHP was killed. The first thing you need to do is to find out if you have a good idea of what you're looking for. The captain is Alloy, see <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334024972'>Alloy Summary</a> for more on Alloy.
+ 
+ ** Interviewed Ruby
+ 
+ Ruby: I'm not the killer.
+ Alloy: I never claimed that.
+ Ruby: The culprit is Python.
+ Alloy: What makes you think that?
+ Ruby: At first, it was supposed to be me, Python, and PHP going to the backwoods. Perl said he was going to the beach to collect something, so Python was the only one with PHP.
+ 
+ ** Interview Python
+ 
+ Python: I'm not the killer.
+ Alloy: I never claimed that.
+ Python: The culprit is Ruby.
+ Alloy: What makes you think that?
+ Python: Because PHP said he was going shopping alone after he heard we were going to the backwoods, Ruby was with PHP at the time of the crime because Ruby later told me and PHP she was going shopping, and Perl went to the beach to look for pearls or something, so only Ruby could have done it. Ruby was with PHP at the time of the crime.
+ 
+ ** Issue
+ Alloy: You asked me to find a case where Python and Ruby think each other is the culprit, and this is the situation I came up with.
+ PHP: Why am I the one who got killed...
+ Alloy: Who do you think did it?
+ JS: Well, is either Ruby or Python lying?
+ Alloy: Neither of us are lying.
+ JS: Is there any other culprit besides Python, Ruby, and Perl?
+ Alloy: That's not happening either.
+ JS: So Python and Ruby both say they are not the culprit, so Perl is the culprit, right?
+ Alloy: ...oh no! I was so focused on satisfying the constraints that I forgot about the difficulty of the problem!
+ JS: Not necessary to answer, but do you ever go somewhere without telling anyone?
+ Alloy: No, we don't. We all change our minds along the way, but we all tell someone where we finally want to go, and we all go where we say we are going.
+ JS: Okay, so there's a PHP statement that hasn't been observed yet. If it hasn't been observed yet, that means there's only one Perl listener.
+ Alloy: It will be.
+ JS: If PHP didn't tell Perl to go shopping or to the backwoods, then he must have changed his mind and told Perl to "go to the coast" after those two statements.
+ 
+ ** Solution
+ Alloy: Was Ruby there when you asked PHP to "go shopping"?
+ Python: Eh, hmmm, I remember I was called to the staff room, and Ruby wasn't there.
+ Ruby: Yes, you didn't tell me you were going shopping.
+ Alloy: In other words, Ruby did not know that PHP told Python that he was going shopping, so he could only answer as he did earlier. He is not lying about anything.
+ Ruby: Then Python is the culprit!
+ Python: PHP told me he was going shopping and never actually came to the backwoods.
+ Alloy: But that doesn't mean PHP went shopping.
+ Python: Okay...
+ 
+ ** Answers
+ 
+ -1: PHP, Python, Ruby Tell Perl They're Going Backwoods
+ -2: Ruby absent, PHP tells Python, Perl to go shopping
+ -3: Perl tells Python, Ruby to coast.
+ -4: PHP then emails Perl to tell him to go to the coast after all.
+ -5: Ruby tells Python and PHP to go shopping
+ 
+ Ruby only knows 1,3,5; Python knows 1,2,3,5. This difference in knowledge caused cases where both parties thought the other was the culprit.
+ 
+ ** Summary
+ 
+ So I tried to see if I could generate the seeds of a mystery in Alloy, and I got something like that. I think I need to modify the code a little more to make it more interesting as a story.
+ 
+ First of all, the "honesty of all" condition is too strict. The condition "always tell others where you are going" is also not very culprit-like. Maybe it would be better if only the culprit lied.
+ 
+ Then again, there is no intention for the culprit to "try not to be identified as the culprit" at all. Perl has no reason to believe that he will not be identified as the culprit, or that Python and Ruby will think of each other as the culprit when Perl commits the crime. Perl thinks that Ruby and Python are going to the backwoods together.
+ 
+ It was interesting that Alloy was able to derive cases of "misunderstanding" and "mutual distrust" among multiple people. I have a feeling that more interesting things could be done in the future.
+ 
+ ** Code
+ This time we are not dealing with the second misbelief, but in order for the culprit to do what he does, which is "to mislead others into believing false information to suit himself," he needs belief in the beliefs of others, and since he thinks he has succeeded perfectly, but there is a mistake and it fizzles out from there, it is a second misbelief. That's right.
+ 
+ Also, the source code could use a little more room to be cleaned up.
+ 
+ Oh, I created Observer to try to model reader misunderstandings, but I didn't end up using it.
+ 
+ The function same_place :: Person -> Person -> Person has a rather misleading name, and same_place[A, X] = B means "The set of people A thinks 'I was with X' is the set of only one person B".
+ 
+ https://github.com/nishio/learning_alloy/blob/master/mardar.als
+ 
+ >||
+ open util/ordering[Time]
+ 
+ abstract sig AbsPerson {
+ 	// Persons, including observers
+ 	belief: Person -> Person -> Place -> Time,
+ }
+ sig Observer extends AbsPerson {}
+ 
+ // Characters
+ abstract sig Person extends AbsPerson{
+ 	// Where did it finally go?
+ 	real_place: Place -> Time
+ }{
+ 	all t: Time | lone real_place.t
+ }
+ 
+ one sig X extends Person{}
+ one sig A extends Person{}
+ one sig B extends Person{}
+ one sig C extends Person{}
+ 
+ sig Time {
+ 	// At each time someone tells someone else where they are going
+ 	who: some Person,
+ 	targets: some AbsPerson,
+ 	where: Place
+ }{
+ 	// The speaker is included in the listener
+ 	who in targets
+ 	// The listener must not be identical to the speaker.
+ 	some targets - Observer - who
+ }
+ 
+ sig Place {}
+ 
+ fact {
+ 	// Never believe the same person exists in more than one place.
+ 	all p1, p2, p3: Person, t: Time{
+ 		lone (p1.belief)[p2, p3].t
+ 	}
+ }
+ // who could have been in the same place as who?
+ fun same_place(self: AbsPerson, who: Person): Person{
+ 	let where = self.(self.belief).last {
+ 		who.where.~where + {p: Person | no p.where} - who
+ 	}
+ }
+ 
+ pred init(t: Time){
+ 	all p: AbsPerson {
+ 		no p.belief.t
+ 	}
+ 	all p: Person {
+ 		no p.real_place.t
+ 	}
+ }
+ pred step(t', t: Time){
+ 	all p: Person {
+ 		(p in t.targets) => {
+ 			// Overrides the beliefs of those who listen.
+ 			p.belief[p].t = p.belief[p].t' ++ (t.who -> t.where)
+ 			// Secondary misconceptions are not dealt with this time.
+ 			no p.belief[Person - p].t
+ 		}else{
+ 			p.belief.t = p.belief.t'
+ 		}
+ 		(p in t.who) => {
+ 			// I go where I say I'm going (I won't lie).
+ 			p.real_place.t = t.where
+ 		}else{
+ 			p.real_place.t = p.real_place.t'
+ 		}
+ 	}
+ }
+ pred final(t', t: Time){
+ 	all p: Person {
+ 		let go = real_place.t',
+ 				place = p.go, 
+ 				meets = go.place {
+ 			// Eventually, he went somewhere.
+ 			one place
+ 			p.real_place.last = place
+ 			// People who eventually go to the same place will have their beliefs updated.
+ 			p.belief[p].t = p.belief[p].t' ++ (meets -> place)
+ 		}
+ 	}
+ }
+ run {
+ 	init[first]
+ 	all t: Time - last - first{
+ 		step[t.prev, t]
+ 	}
+ 	final[last.prev, last]
+ 	// A thinks B is the culprit, B thinks A is the culprit
+ 	same_place[A, X] = B
+ 	same_place[B, X] = A
+ 	// Neither of them has an alibi, but they don't think they're the killer.
+ 	no same_place[A, A]
+ 	no same_place[B, B]
+ 	// C knows he is the killer.
+ 	same_place[C, X] = C
+ } for 7 Time, 3 Place, 1 Observer
+ ||<
+ 
+ *1334902176* Peterson's Algorithm in Alloy
+ >>
+ Peterson's algorithm is an algorithm for mutual exclusion that uses only shared memory for communication and shares resources between "two" processes without contention.
+ <<
+ <a href='http://ja.wikipedia.org/wiki/%E3%83%94%E3%83%BC%E3%82%BF%E3%83%BC%E3%82%BD%E3%83%B3%E3%81%AE%E3%82%A2%E3%83%AB%E3%82%B4%E3 %83%AA%E3%82%BA%E3%83%A0'>Peterson's algorithm - Wikipedia</a>
+ 
+ I tried modeling with Alloy. https://github.com/nishio/learning_alloy/blob/master/Peterson.als
+ 
+ Wikipedia says, "P0 and P1 are never in the critical section at the same time." Let's verify that the program counters of the two processes are never 3 (i.e., in the critical section) at the same time in the for 15 Time scope. No counterexample is found.
+ 
+ >||
+ check MutualExclusion {
+ 	no t: Time {
+ 		PC.proc[0].t = 3
+ 		PC.proc[1].t = 3
+ 	}
+ } for 15 Time
+ ||<
+ 
+ Then, let's also verify "a process never waits more than the processing time of one critical section". I did and quickly found a counterexample.
+ 
+ >||
+ check BoundedWaiting_Bad {
+ 	no t: Time, pid: Int {
+ 		PC.proc[pid].t = 2
+ 		PC.proc[pid].(t.next) = 2
+ 		PC.proc[pid].(t.next.next) = 2
+ 		PC.proc[pid].(t.next.next.next) = 2
+ 		PC.proc[pid].(t.next.next.next.next) = 2
+ 	}
+ } for 15 Time
+ ||<
+ 
+ The reason is rather simple: under the specification that "one of the processes executes one step at each time," it is possible for "the other process to be executed five times in a row while you are in a state of 'proceeding' and the other process is in a state of 'being kept waiting'. In the case of "one step is executed by one of the randomly selected processes at each time", the result of the randomly selected process is that "only the process that should wait is executed continuously (and nothing changes as a result)".
+ 
+ So Wikipedia's "A process never waits more than the processing time of one critical section" was taken literally, which is a mistake. For example, it should be "One process never executes two consecutive critical sections while the other process waits". Okay, this is not a counterexample in the scope of FOR 15 Time.
+ 
+ >||
+ check BoundedWaiting {
+ 	no t, t': Time, pid: Int {
+ 		let range = Time - t.prevs - t'.nexts {
+ 			// A process is always 2 (waiting for lock) and
+ 			all t'': range | PC.proc[pid].t'' = 2
+ 			// Meanwhile, the other process executes 3 (critical section) at least twice
+ 			#{t'': range | 
+ 				PC.proc[PC.current_pid.t''].t'' = 3
+ 			} >= 2
+ 		}
+ 	}
+ } for 15 Time
+ ||<
+ 
+ ** out of order execution
+ 
+ Now, here's the thing: Peterson's algorithm assumes that instructions are executed in the order in which they are written. Modern CPUs do not ((<a href='http://ja.wikipedia.org/wiki/%E3%82%A2%E3%82%A6%E3%83%88%E3%83%BB%E3%82%AA%E3%83%96%E3%83%BB%E3%82%AA%E3%83 %BC%E3%83%80%E3%83%BC%E5%AE%9F%E8%A1%8C'>out-of-order execution - Wikipedia</a>)). So to get it to work on modern CPUs, you need to put the fence up properly ((<a href='http://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%A2%E3%83%AA%E3%83%90%E3%83%AA%E3%82%A2'> Memory barrier - Wikipedia</a>)).
+ 
+ So, with a lot of help from Mitsunari-san ((<a href='http://homepage1.nifty.com/herumi/'>With Unz</a>)), I did gcc -S -O3 -fomit-frame-pointer tmp.c and #include < emmintrin.h> and _mm_mfence(); and "<a href='http://d.hatena.ne.jp/bsdhouse/20101016/1287227939'>Peterson's Algorithm and Memory Barrier - yamasa's Netbook</a> code It works fine on my MacBook Air Core 2 Duo. sfence also works, but not lfence. I see! I thought, but with another CPU, sfence doesn't work and lfence works! Is it just a coincidence that it works? Even if I run it on the actual machine and don't find any problem, I can't feel at ease at all! I was so upset.
+ 
+ So I'm going to model out-of-order execution with Alloy in the future, but for a start, I tried to see what would happen if the store in line 0 and line 1 were swapped, and quickly found a counterexample where both were in the critical section in 2.5 seconds. I found a counterexample where both are in the critical section in 2.5 seconds.
+ >||
+ Time$1: pc0=0, pc1=1, pid=1 turn=0 f0=0 f1=0 // p1 sets turn to 0
+ Time$2: pc0=1, pc1=1, pid=0 turn=1 f0=0 f1=0 // p0 makes turn 1
+ Time$3: pc0=2, pc1=1, pid=0 turn=1 f0=1 f1=0 // p0 is f1==0 so "p1 is not waiting", enter
+ Time$4: pc0=3, pc1=1, pid=0 turn=1 f0=1 f1=0 
+ Time$5: pc0=3, pc1=2, pid=1 turn=1 f0=1 f1=1 // p1 decides "turn is 1, so I can proceed" and enters
+ Time$6: pc0=3, pc1=3, pid=1 turn=1 f0=1 f1=1 // here both are in critical section (pc=3)
+ Time$7: pc0=3, pc1=0, pid=1 turn=1 f0=1 f1=0 
+ Time$8: pc0=0, pc1=0, pid=0 turn=1 f0=0 f1=0 
+ Time$9: pc0=1, pc1=0, pid=0 turn=1 f0=0 f1=0
+ ||<
+ So you need at least sfence between line 0 and line 1.
+ 
+ PS: It turns out that I didn't express exactly what I wanted to say when I wrote "sfence needed". see <a href='http://homepage1.nifty.com/herumi/diary/1204.html#21'>melancholic afternoon</a>. I should have said, "When running Peterson's algorithm on a CPU that may swap the order of W→W in an out-of-order execution, you need to put a constraint between line 0 and line 1 that preserves the order of W→W." On Core 2 Duo, Atom, Core Duo, Pentium 4, and P6 the W→W order is preserved (except for some instructions), so there seems to be no need to put sfence.
+ 
+ Upcoming: "Out of Order Execution with Alloy"
+ </body>
+
+[Hatena Diary 2012-04-20 https://nishiohirokazu.hatenadiary.org/archive/2012/04/20]

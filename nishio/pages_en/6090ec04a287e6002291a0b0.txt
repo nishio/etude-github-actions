@@ -1,0 +1,212 @@
+Hatena2010-05-14
+code:hatena
+ <body>
+ *1273798814* Very high crane
+ Doesn't it look like a
+ 
+ 
+ f:id:nishiohirokazu:20100514095408j:image
+ 
+ *1273833017*[OCaml]!
+ !" is not a negation but an operator to extract the contents of a reference type?
+ 
+ http://ocaml.jp/OCaml%E5%85%A5%E9%96%80%283%29
+ 
+ *1273840876*[OCaml]
+ The standard library
+ http://pauillac.inria.fr/ocaml/htmlman/manual034.html
+ 
+ *1273850464* I went to the Ruin Lounge.
+ The seats are cardboard. The desks are pedophile comics.
+ 
+ f:id:nishiohirokazu:20100514205901j:image
+ 
+ I found myself bugged!
+ 
+ f:id:nishiohirokazu:20100514223131j:image
+ 
+ After an hour of chatting with id:Yoshiori over a meal at McDonald's, I figured out that I could easily use tcpdump to see Lingr and Twitter posts, and that if I exposed my AirPort as an access point, I could eavesdrop on the communications of anyone connected to it. I could see that I could eavesdrop on the communications of anyone connected to my AirPort if I made it public as an access point. However, at the venue, if you were not logged in to Twitter, you were redirected to the login screen, so at the very least, access to non-Twitter sites from an IP address (or MAC address) for which Twitter login information is not available should either be packet-switched or all communications should be routed through a proxy to begin with. I came to the conclusion that it is impossible without rewriting the redirect to Twitter. I am looking forward to id:itkz's seed revealer entry.
+ 
+ By the way, I think it is very educational to experience "If you carelessly connect to an access point around there, you might be eavesdropped", so I thought it would be good to set up the first page to be displayed as "If you connect to this AP, the URL you are accessing will be displayed on the projector there. Do you agree?
+ 
+ *1273864127*[OCaml]I'm not sleepy anymore.
+ I was sleepy when I drank alcohol, but now I'm no longer sleepy after a round of drinking.
+ Filling the bathtub with hot water.
+ 
+ When I learn a new language, it's Fib for now.
+ 
+ I'd like to get the first 10 or something, but http://pauillac.inria.fr/ocaml/htmlman/libref/List.html doesn't seem to have a "get the first 10" function. the Python equivalent of zip is combine, which has an infinite list like Haskell. It has a list, and you can use let rec.
+ 
+ Oh, there is a map2 that takes two lists? Then there is no need to combine.
+ 
+ >|ocaml|
+ # let rec fib = [1; 1; map2 (+) fib (tl fib)];;
+ Error: Unbound value map2
+ # let rec fib = [1; 1; List.map2 (+) fib (tl fib0)];;
+ Error: Unbound value tl
+ # let rec fib = [1; 1; List.map2 (+) fib (List.tl fib)];;
+ Error: This expression has type int list
+        but an expression was expected of type int
+ # let rec fib = [1; 1]::(List.map2 (+) fib (List.tl fib));;
+ Error: This expression has type int list list
+        but an expression was expected of type int list
+ # let rec fib = 1::1::(List.map2 (+) fib (List.tl fib));;  
+ Error: This kind of expression is not allowed as right-hand side of `let rec'
+ ||<
+ 
+ Mwah, it doesn't work.
+ 
+ Let's just take another step back and write the factorial first.
+ 
+ Further down, increment first.
+ >|ocaml|
+ # let inc x = x + 1;;
+ val inc : int -> int = <fun>
+ # inc 2;;
+ - : int = 3
+ # let inc = (1 +);;
+ Error: Syntax error
+ # let inc = (+) 1;;
+ val inc : int -> int = <fun>
+ # inc 3;;
+ - : int = 4
+ ||<
+ Done. The syntax of partial application is a little different from Haskell.
+ 
+ >|ocaml|
+ # let facto n = if (n == 0) then 1 else facto (n - 1);;
+ Error: Unbound value facto
+ # let rec facto n = if (n == 0) then 1 else facto (n - 1);;
+ val facto : int -> int = <fun>
+ # facto 1;;
+ - : int = 1
+ # facto 3;;
+ - : int = 1
+ # facto 5;;
+ - : int = 1
+ ||<
+ Ah.
+ >|ocaml|
+ # let rec facto n = if (n == 0) then 1 else n * facto(n - 1);;
+ val facto : int -> int = <fun>
+ # facto(5);;
+ - : int = 120
+ ||<
+ Careless mistake.
+ 
+ To change to tail recursion, he said.
+ >|ocaml|
+ # let rec facto_ n answer = if (n == 0) then answer else facto (n - 1) (n * answer);;
+ Error: This function is applied to too many arguments;
+ maybe you forgot a `;'
+ # let rec facto_ n answer = if (n == 0) then answer else facto_ (n - 1) (n * answer);;
+ val facto_ : int -> int -> int = <fun>
+ # let facto n = facto_ n 1;;
+ val facto : int -> int = <fun>
+ # facto 5;;
+ - : int = 120
+ # facto 6;;
+ - : int = 720
+ ||<
+ I was able to do it.
+ 
+ Fibonacci is next.
+ >|ocaml|
+ # let rec fib n = if n < 2 then 1 else fib (n - 1) + fib (n - 2);;
+ val fib : int -> int = <fun>
+ # fib(5);;
+ - : int = 8
+ ||<
+ You want it on the list.
+ 
+ >|ocaml|
+ # let rec count = 1::List.map inc count;;
+ Error: This kind of expression is not allowed as right-hand side of `let rec'
+ ||<
+ 
+ Moo, I don't know how to make an infinite list.
+ 
+ >|ocaml|
+ # let rec map_take_n f n answer = if (n == 0) then answer else map_take_n f (n - 1) ((f n)::answer);;
+ val map_take_n : (int -> 'a) -> int -> 'a list -> 'a list = <fun>
+ # map_take_n fib 10 [];;
+ - : int list = [1; 2; 3; 5; 8; 13; 21; 34; 55; 89]
+ ||<
+ 
+ Fibonacci is ready. Next, we create a counter object.
+ 
+ >|ocaml|
+ # type counter = {
+     value : int;
+     push : unit -> int;
+   };;
+ type counter = { value : int; push : unit -> int; }
+ # let c = ref {value = 0};;
+ Error: Some record field labels are undefined: push
+ # let rec c = ref {value = 0; push = fun () -> !c.value};;
+ val c : counter ref = {contents = {value = 0; push = <fun>}}
+ # c.push;;
+ Error: This expression has type counter ref
+        but an expression was expected of type counter
+ # !c.push;;
+ - : unit -> int = <fun>
+ # !c.push ();;
+ - : int = 0
+ ||<
+ I got the value. Is it possible to allow destructive changes by using mutable and assigning with <-?
+ 
+ >|ocaml|
+ # let rec c = ref {value = 0; push = fun () -> (!c.value <- !c.value + 1; !c.value)};;
+ val c : counter ref = {contents = {value = 0; push = <fun>}}
+ # !c.push ();;
+ - : int = 1
+ # !c.push ();;
+ - : int = 2
+ ||<
+ 
+ The rest is constructors.
+ 
+ >|ocaml|
+ # let make_counter () = let rec c = ref {value = 0; push = fun () -> (!c.value <- !c.value + 1; !c.value)} in c;;
+ val make_counter : unit -> counter ref = <fun>
+ # let c1 = make_counter ();;
+ val c1 : counter ref = {contents = {value = 0; push = <fun>}}
+ # !c1.push ();;
+ - : int = 1
+ # !c1.push ();;
+ - : int = 2
+ # let c2 = make_counter ();;
+ val c2 : counter ref = {contents = {value = 0; push = <fun>}}
+ # !c2.push ();;
+ - : int = 1
+ # !c1.push ();;
+ - : int = 3
+ ||<
+ 
+ Yeah, yeah, yeah, it's done.
+ There may be a simpler syntax sugar to write, but, well, it's done.
+ 
+ http://pauillac.inria.fr/ocaml/htmlman/manual005.html
+ Oh, there's a lot of syntax sugar.
+ 
+ >|ocaml|
+ # class counter = 
+     object 
+       val mutable count = 0
+       method push = (count <- count + 1; count)
+     end;;
+ class counter : object val mutable count : int method push : int end
+ # let c1 = new counter;;
+ val c1 : counter = <obj>
+ # c1#push;;
+ - : int = 1
+ # c1#push;;
+ - : int = 2
+ ||<
+ 
+ What's with the lack of unified syntax?
+ 
+ I've taken a bath, let's go to bed.
+ </body>
+
+[Hatena Diary 2010-05-14 https://nishiohirokazu.hatenadiary.org/archive/2010/05/14]

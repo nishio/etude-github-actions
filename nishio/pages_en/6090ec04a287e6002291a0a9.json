@@ -1,0 +1,129 @@
+Hatena2010-05-05
+code:hatena
+ <body>
+ *1273035515*&#227; Why are there so many garbled characters?
+ I'm not sure if this article will not be garbled on Hatena Diary.
+ 
+ >|python|
+ >>> u "Hello World"
+ u'\u3053\u3093\u306b\u3061\u306f\u4e16\u754c'
+ >>> u "Hello World".encode("utf-8")
+ '\xe3\x81\x93\xe3\x82\x93\xe3\x81\xab\xe3\x81\xa1\xe3\x81\xaf\xe4\xb8\x96\xe7\x95\x8c'
+ >>> [unichr(ord(c)) for c in u "hello world".encode("utf-8")]
+ [u'\xe3', u'\x81', u'\x93', u'\xe3', ... , u'\x8c']
+ >>> "".join(_)
+ u'\xe3\x81\x93\xe3\x82\x93\xe3\x81\xab\xe3\x81\xa1\xe3\x81\xaf\xe4\xb8\x96\xe7\x95\x8c'
+ >>> print _
+ &#227;&#129;&#147;&#227;&#130;&#147;&#227;&#129;&#171;&#227;&#129;&#161;&#227;
+ ||<
+ 
+ Oh, I knew that was a bad idea. I'll just use a picture then.
+ <img src="http://gyazo.com/315191fb88e7cae19b03521e1662525b.png">
+ 
+ In other words, when a UTF-8 encoded byte string is mistakenly used as a Unicode string because the codes around ⌘xe3, which often come in the first byte when Japanese is encoded in UTF-8, are used for accented alphabets in Unicode (UCS-2), or when a UTF-8 encoded byte string is used under the misunderstanding that it is a Unicode string, This is often seen when a UTF-8 encoded byte sequence is put into a library that expects the input byte sequence to be encoded in latin-1.
+ 
+ >||
+ >>> print u "Hello world".encode("utf-8").decode("latin-1")
+ (same garbled text as above)
+ ||<
+ 
+ <hr>
+ 
+ I asked for more details, and it seems that when I put urllib.quote string ('%E3%83%9B%E3%82%B2' or something like that) into a StringProperty in GAE, and then tried to output it in json by urllib.unquote, it was corrupted.
+ 
+ The '%E3%83%9B%E3%82%B2' is within the ASCII range, but GAE does not know that, so it assumes the appropriate encoding and converts it to a Unicode string. So, when the string is extracted, it becomes u'%E3%83%9B%E3%82%B2'. Next, urllib.unquote returns a Unicode string because the input is a Unicode string, even though unquote is a function that creates a byte string from an ASCII string such as %E3.
+ >|python|
+ >>> urllib.unquote(u'%E3%83%9B%E3%82%B2')
+ u'\xe3\x83\x9b\xe3\x82\xb2'
+ ||<
+ I wanted a UTF-8 encoded byte sequence, but I got a weird unicode string. The questioner tried interrupting str there, but got confused by the error message.
+ 
+ >|python|
+ >>> urllib.unquote(str(u'%E3%83%9B%E3%82%B2'))
+ '\xe3\x83\x9b\xe3\x82\xb2'
+ ||<
+ 
+ Upon closer reading, I found that the error was not in this part but in the part that outputs in json, and the error was "UnicodeDecodeError: 'ascii' codec can't decode byte 0xe3 in position 1". This error is saying "I wanted to convert a byte sequence to a Unicode string, so I assumed an ascii codec and tried to convert it, but it didn't work". but the processor doesn't, so we need to tell it to it.
+ 
+ >|python|
+ >>> '\xe3\x83\x9b\xe3\x82\xb2'.decode("utf-8")
+ u'\u30db\u30b2'
+ ||<
+ 
+ This solves all problems.
+ 
+ When we encounter a problem and try everything we can think of at random, but it is not solved, it is usually because two or more problems are overlapping and we do not know if we are close to our goal even if we solve one of them. In such cases, it is not a question of whether the whole problem has succeeded or failed, but rather of how far the problem has been broken down into smaller pieces and the extent to which it has succeeded.
+ 
+ *1273055805*Singapore Summary
+ >>
+ id:KoshianX Reading the Hattebu comments, I see people air-reading this as a claim that if Japan imitates this, it will be better. Atamaii" is not about copying, applying a way of thinking is different from copying --- <a href='http://b.hatena.ne.jp/entry/d.hatena.ne.jp/nishiohirokazu/20100504/1272986799'> Hatena Bookmark - Singapore Summary</a>.
+ <<
+ I see, air reading. I was wondering why there were so many people adding misguided comments, but then I found myself thinking, "Japan would be better off if it were run like Singapore! or "Let's all abandon Japan and move to Singapore! or "Let's all abandon Japan and move to Singapore!
+ 
+ I was thinking of this:.
+ >>
+ PHP user's rebuttal @ Matz Nikki: If you only knew PHP, for example, you would feel that your whole way of doing things is negated when someone points out PHP's shortcomings. --- <a href='http://yugui.jp/articles/749'>The risk of being pigeonholed into one language - World Line Wave Storehouse</a>
+ <<
+ 
+ It's a similar composition.
+ 
+ *1273068868*Re: VIPPER me : I can't stop romanticizing when I put "love" in front of science terms.
+ <a href='http://blog.livedoor.jp/news23vip/archives/2640848.html'>VIPPER me : I can't stop romanticizing when I put "love's" in front of science terms</a>.
+ 
+ >>
+ Mohorovicic discontinuity surface of love
+ <<
+ 
+ I don't know what it means, but it blew me away.
+ 
+ >>
+ Asymptote of Love
+ 
+ No matter how close you get, you can't touch it? ......
+ <<
+ 
+ sorrowful
+ 
+ >>
+ Zero Knowledge Proof of Love
+ <<
+ 
+ There's something meaningful going on here.
+ 
+ >>
+ Random Walk of Love
+ 
+ Bitch.
+ <<
+ 
+ A maiden's heart in turmoil. Brownian movement of love.
+ 
+ >>
+ Arrhenius rule of love: the hotter it gets, the exponentially faster the reaction.
+ 
+ Second law of thermodynamics of love: entropy increases
+ 
+ The Meissner Effect of Love: If you get cold feet, you have no choice but to repel each other.
+ 
+ Curie temperature of love: the temperature at which magnets that are supposed to be permanently attracted to each other lose their properties if they are kept too warm.
+ <<
+ 
+ So easy to make when heat is involved. Simulated Annealing of Love (Aiming for convergence to the optimal solution by gradually cooling!)
+ 
+ >>
+ CSMA/CD of Love
+ 
+ When a collision occurs, the procedure is to wait a random amount of time and then retry
+ <<
+ 
+ So you wait until the heat dies down.
+ </body>
+ <comments>
+ <comment>
+ <username>Amerikan</username>
+ <BODY>Rather than air reading, "North Korea!" or "Then I'd rather be in Japan", although I'm sure there were a <br>some comments to that effect. </body>
+ <timestamp>1273095499</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-05-05 https://nishiohirokazu.hatenadiary.org/archive/2010/05/05]

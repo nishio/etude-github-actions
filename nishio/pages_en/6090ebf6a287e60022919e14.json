@@ -1,0 +1,206 @@
+Hatena2008-04-01
+code:hatena
+ <body>
+ *1207009579*(in the April fool sense, of course)
+ When I wrote, "At last, the manuscript was not completed by the end of March, so there is no more talk about the Jython book," I was shocked that it was taken seriously.
+ 
+ *1207010478* I'm cool with it.
+ How long has it been since you went to work (or went to school) on April 1st? Maybe for the first time in your life?
+ 
+ *1207016852*April Fools' Day
+ In fact, I had not prepared a story at all.
+ 
+ *1207016962* pointer
+ The person inside said, "The article on the last C pointer was supposed to be published as of April 1, but we published it by mistake."
+ http://builder.japan.zdnet.com/sp/c-programming-language/story/0,3800083430,20370255,00.htm?p=3&mode=all
+ 
+ -----
+ (In the April fool sense, of course.)
+ 
+ *1207017799* subaccession confession
+ jcnaoya is actually me.
+ 
+ -----
+ 
+ Wrong, it was jdnaoya orz
+ 
+ -----
+ 
+ (In the April fool sense, of course.)
+ 
+ *1207018367* MacBook design complaints
+ The mute button is a toggle button, which is a problem when you want to mute the sound because you don't know if it is muted or not, but you are embarrassed if the sound comes out. Also, if you want to go from mute to volume, you have to remember how loud the volume was before you muted it, or you will get into trouble. I think that the mute button should be used to set the volume to 0, and the volume should be gradually increased from 0 by using the "volume up button" when the volume is restored.
+ 
+ *1207018999* particle
+ There's a difference between "it was written by XXX" and "it was written by XXX," not even close!
+ 
+ *1207021712* What is May fool?
+ Totoro's Satsuki said, "Kanta no baka! I don't know you anymore!" I say.
+ 
+ *1207025873* __future__ of Python
+ I remembered that I said I would explain it later, but forgot to mention it. In Python, changes that would cause incompatibility are not "immediately introduced once they are implemented", but are introduced in phases: once they are "usable if explicitly specified", and then in the next version update, they are introduced in phases "usable without explicit specification & not generating errors even if explicitly specified". The __future__ module is used for this purpose.
+ 
+ For example, 1 / 2 is currently 0. This is integer division. But from __future__ import division switches to the same mode as in JavaScript: "If the divisor is not divisible by an integer, the result is a real number.
+ 
+ >|python|
+ >>> 1 / 2
+ 0
+ >>> from __future__ import division
+ >>> 1 / 2
+ 0.5
+ ||<
+ 
+ There are others, for example, in Python 2.6, which is currently in alpha, from __future__ import braces can be used to switch the way blocks are represented.
+ 
+ >|python|
+ >>> primes = []
+ >>> for n in range(2, 100):
+ 	for p in primes:
+ 		if n % p == 0:
+ 			break
+ 	else:
+ 		primes.append(n)
+ 
+ 		
+ >>> primes
+ [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+ >>> from __future__ import braces
+ >>> primes = []
+ >>> for n in range(2, 100){
+ 	for p in primes{
+ 		if n % p == 0{
+ 			break
+ 		}
+ 	}else{
+ 		primes.append(n)
+ 	}
+ }		
+ >>> primes
+ [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+ ||<
+ 
+ However, it seems that although they have implemented it, they are not willing to concede that the default is indentation, and <a href="http://www.python.org/dev/peps/pep-3099/">PEP 3099 -- Things that will Not Change in Python 3000</a> says that they will not change those things in Python 3000. Things that will Not Change in Python 3000</a>.
+ 
+ -----
+ 
+ Convenient, isn't it? In an April fools' way, of course.
+ 
+ Also check: <a href="http://d.hatena.ne.jp/nishiohirokazu/20080402/1207104064">(Correction)__future__ of Python - Hatena Diary by Yasukazu Nishio</a>.
+ 
+ *1207027563* honest
+ I may have made a mistake in assuming that the audience for the Jython book would be people who have never used Eclipse before. lol.
+ 
+ *1207030486*The venue for the 5th 1000 Speakers Conference has changed.
+ Not the next time, but the one after that, the venue has been changed to Audio-Technica Labs, Inc. (in the April fool's terms, of course).
+ 
+ ---
+ 
+ Sorry, I made a mistake. The correct name is ATL Systems.
+ http://www.atl-systems.co.jp/atl_wdm/html/atl/86673998989.html
+ The nearest station to the venue is Kofu.
+ 
+ ---
+ 
+ Oh, sorry, our Tokyo office was in Shibuya (><)
+ 
+ ---
+ 
+ For additional information, please click here:
+ http://ja.doukaku.org/wiki/index.php/1000speakers:5
+ 
+ *1207031178* Hey, Gigazine!
+ http://gigazine.net/index.php?/news/comments/20080401_april_fool_zoku/
+ This is going to be considered an April Fool's story with Cybozu Labs doing the "Cybozu Lava" w
+ 
+ *1207059436*Manuscript for this volume of the Jython book is complete.
+ The rest is in the appendix.
+ I need to identify what I've been putting off in this volume by writing "to be written in the appendix"...
+ 
+ *1207060451*Why upper bits fall off in string formatting operations in Jython 2.2.1?
+ From PyString.java
+ >|java|
+ final class StringFormatter
+ {
+ (Abbreviation)
+     final char pop() {
+         try {
+             return format.charAt(index++);
+         } catch (StringIndexOutOfBoundsException e) {
+             throw Py.ValueError("incomplete format");
+         }
+     }
+ (Abbreviation)
+ ||<
+ 
+ But about charAt of unicode string
+ 
+ >||
+ >>> String(u"\u3042")
+ B
+ >>> _.charAt(0)
+ u'\u3042'
+ ||<
+ 
+ format
+ >||
+             char c = pop();
+             if (c != '%') {
+                 buffer.append(c);
+                 continue;
+             }
+ 
+ ||<
+ 
+ >||
+     StringBuffer buffer;
+ ||<
+ 
+ Ummm, no, I thought I could tell, but I couldn't.
+ I thought it might be possible that you put it in a byte and the top was cut off...
+ 
+ *1207065575*Character code feelings
+ For example, if a page is full of half-width kana, it is opened in SJIS even though it is originally in EUC.
+ 
+ So" is a syntax error: The source code is written in SJIS, but is treated as ascii or latin-1. The second byte of "so" is a backslash, so the closing quote is escaped.
+ 
+ "A" is displayed as "? is displayed as "? is displayed as "?H": The SJIS byte sequence is interpreted as an ASCII byte sequence, and characters outside the ASCII range are replaced with ? is replaced with "?
+ 
+ A" becomes one-byte B: Only the lower byte "\x42" (corresponding to B) of the Unicode representation u'\u3042' of "A" is displayed.
+ 
+ print u"\u3042" is "UnicodeError: ascii encoding error: ordinal not in range(128)": The default encoding for converting a Unicode string to a byte string is ASCII.
+ 
+ It is now possible to identify cases that are failing when reading and those that are failing when writing out.
+ 
+ *1207073908*HDR
+ <a href="http://ja.wikipedia.org/wiki/HDRI">HDRI - Wikipedia</a>
+ <a href="http://ja.wikipedia.org/wiki/%E3%83%8F%E3%82%A4%E3%83%80%E3%82%A4%E3% 83%8A%E3%83%9F%E3%83%83%E3%82%AF%E3%83%AC%E3%83%B3%E3 %82%B8%E5%90%88%E6%88% 90">High dynamic range synthesis - Wikipedia</a>
+ That's great.
+ 
+ 
+ Takezako's works
+ http://flickr.com/photos/takesako/sets/72157604346600339/
+ That's great.
+ 
+ 
+ http://www.mpi-inf.mpg.de/resources/hdr/
+ I wonder if I can make it if I read this area.
+ </body>
+ <comments>
+ <comment>
+ <username>ujihisa</username>
+ <body>jnishio is actually me. </body>
+ <timestamp>1207028281</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>jdropdb is actually suztomo</body>.
+ <timestamp>1207028593</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>http://www.hdrsoft.com/index.html<br>What about this one</body>?
+ <timestamp>1207103766</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-01 https://nishiohirokazu.hatenadiary.org/archive/2008/04/01]

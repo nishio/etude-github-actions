@@ -1,0 +1,504 @@
+Hatena2008-09-18
+code:hatena
+ <body>
+ *1221708888* How to improve the accuracy of Hatena surveys
+ I am truly sorry to anyone who was offended by this entry or the survey. I have written an explanation and apology in the following entry.
+ http://d.hatena.ne.jp/nishiohirokazu/20080922/1222094878
+ 
+ -----
+ 
+ Sequel to this: http://d.hatena.ne.jp/nishiohirokazu/20080917/1221667941
+ Synopsis: I asked at the mid-progress open house whether Python or Haskell was harder, and the result was impossible, like a close call. I wonder if there are a lot of people who chose at random. In the question that was closed to the public, the result was Python > Scheme > Haskell in order of suitability for beginners, but Coq got more votes than Haskell, which is an impossible result. I wonder if there are many people who voted for Coq at the top of the list for the time being.
+ 
+ This time method: The first question will be a 12-choice question that requires a certain level of knowledge to answer. Only the results of those who answered the first question correctly will be looked at, since a cross tabulation can be done.
+ 
+ http://q.hatena.ne.jp/1221708568
+ 
+ -----
+ 
+ ...At this point there are 19 answers and 0 correct answers.... Even if it says not to answer if you don't know the answer, they seem to be ignoring it. Do you want so many points? I'm going to say something like "I'm in despair," in the style of Mr. Zetsubou-sensei! I despair at the low ethical standards of Hatena! I despair at Hatena's low sense of ethics!
+ 
+ -----
+ 
+ It would be nice to have a feature that says, "We will refuse to respond to people who gave certain answers in the survey in the future."
+ 
+ -----
+ 
+ Ended.
+ Am I right in understanding that the conclusion that "19 out of 20 survey respondents are 'noise sources who respond appropriately to surveys they are not asked to answer'" was revealed after all? Oh dear.
+ 
+ Is Q1 really that hard? I thought it was supposed to be an easy question.
+ 
+ *1221750501*Outputs prime numbers less than the specified number (but not characters 0-9)
+ The topic was discussed in 86 chat, so I tried to implement it on the train on the way home @ 23:01.
+ 
+ or rather (say)
+ >|python|
+ >>> len(())
+ 0
+ >>> len(" ")
+ 1
+ ||<
+ You can make numbers with this.
+ 
+ >|python|
+ >>> primes = []
+ >>> for i in range(len("  "), input()):
+ ...     for p in primes:
+ ...             if i % p == len(()): break
+ ...     else:
+ ...             primes.append(i)
+ ... 
+ 100
+ >>> primes
+ [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+ ||<
+ 
+ Boring. Coding standing up is tiring. 23:06.
+ 
+ I sat down. 23:09.
+ 
+ -----
+ 
+ 23:34. Waiting for the departure of the Eastern Isesaki Line.
+ 
+ >|python|
+ import re
+ N = input("IN>>")
+ lines = []
+ while N:
+     lines = [[]]+[[x]for x in lines]
+     N -= True
+ 
+ def mul(xs, n, result=""):
+     if xs:
+         return mul(xs.pop()[:], n, result + n)
+     return result
+ 
+ def to_num(xs, result=False):
+     if xs:
+         return to_num(xs.pop()[:], result + True)
+     return result
+ 
+ 
+ lines.pop(False)
+ lines.pop(False)
+ primes = []
+ for i in lines:
+     for p in primes:
+         if re.match("(%s)+$"%mul(p[:], ".."), str(i[:].pop())): break
+     else:
+         primes.append(i)
+ 
+ print [to_num(p[:]) for p in primes]
+ ||<
+ I got rid of len for now. It would be more difficult to see if I squashed some functions with readable names or something, but I won't do it.
+ 
+ Boring. Are there not more issues that make my blood boil?
+ 
+ -----
+ 
+ That said, other topics that came up in the 86 chat were "gradual decrease in the number of characters that can be used, like Yūyū Hakusho" and "golf with the small number of character types used".
+ 
+ -----
+ 
+ 23:50. 35 different characters. I found this game not very interesting. Unlike golf, it's not a localized "change this to this and you'll shrink" kind of thing, so it's hard to know what to replace with which.
+ >|python|
+ import re
+ m = input()
+ o = []
+ while m:
+     o = [[]]+[[x]for x in o]
+     m -= not(())
+ 
+ def po(xs, n, r=""):
+     if xs:
+         return po(xs.pop()[:], n, r + n)
+     return r
+ 
+ def op(pp, r=not([()])):
+     if pp:
+         return op(pp.pop()[:], r + (not(())))
+     return r
+ 
+ 
+ o.pop(not([()]))
+ o.pop(not([()]))
+ pp = []
+ for i in o:
+     for p in pp:
+         if re.match("(%s)+$"%po(p[:], ".."), str(i[:].pop())): break
+     else:
+         pp=pp+[i]
+ 
+ print [op(p[:]) for p in pp]
+ ||<
+ 
+ *1221763717*[Mid-term] Flying Diary
+ I will write the rules later. The PDF will be available after Saturday's presentation. The most recent version is a 3-player game using playing cards, with the median value being the winner. I wrote 133 lines of code in Python to play alone and committed it to CodeRepos.
+ 
+ First, 17 cards are dealt.
+ >||
+ ****BEGIN GAME
+ **BEGIN ROUND 0
+ YOUR HAND:
+ C01, C02, H02, D02, H04, S04, D05, H06, D06, C09, H09, D11, H12, D12, C13, D13, S13
+ CHOOSE ONE>>> 
+ ||<
+ I think there are a lot of 13s and 12s. So, if you look at 4 cards in a row and the numbers don't change by 3, it means that they are concentrated there.
+ 
+ That said, I don't yet understand how to do this, so I'll take it as it comes. For now, I'm going to try to get out around H12.
+ 
+ >||
+ CHOOSE ONE>>> H12 
+ PLAY:
+ H12, S02, C06
+ MEDIAN: C06 Player 2
+ SCORES OF ROUND:
+ 0, 0, 6
+ ||<
+ 
+ By the way, I am player 0. 3 players are playing at the same time, so it doesn't matter at all what number I am. Let's play another 12.
+ 
+ >||
+ CHOOSE ONE>>> D12 
+ PLAY:
+ D12, D08, S08
+ MEDIAN: S08 Player 2
+ SCORES OF ROUND:
+ 0, 0, 14
+ ||<
+ 
+ Oops. This is bad. If I win the next turn, only I will advance my score. (I haven't explained the rules of the game or the objective of the game, so you may not understand, but I will write an explanation soon.)
+ S13 is the strongest and C01 is the weakest, so you can play either of those cards and not get the next turn, but, well, it's still early in the game, so save those trump cards. Let's play a small card so that even if we get a score, it won't be too big.
+ 
+ >||
+ CHOOSE ONE>>> D02
+ PLAY:
+ D02, C11, C08
+ MEDIAN: C08 Player 2
+ SCORES OF ROUND:
+ 0, 0, 22
+ 
+ **END ROUND 0
+ MEDIAN OF ROUND SCORES: 0
+ Player 0 got 0 points
+ Player 1 got 0 points
+ SCORES OF GAME:
+ 0, 0, 0
+ ||<
+ 
+ In the end, Player2 took the last turn as well, so 0 points is the median. All players were side by side with 0 points.
+ 
+ Turn 2. Now what to do?
+ >||
+ **BEGIN ROUND 1
+ YOUR HAND:
+ C01, C02, H02, H04, S04, D05, H06, D06, C09, H09, D11, C13, D13, S13
+ ||<
+ I still wonder if it's C13 or something.
+ 
+ >||
+ CHOOSE ONE>>> C13
+ PLAY:
+ C13, D10, S07
+ MEDIAN: D10 Player 1
+ SCORES OF ROUND:
+ 0, 10, 0
+ ||<
+ 
+ Ten is in? Hmmm. Let's say I roll an 11 next, and if it goes in. If Player2 wins the last turn, I can rest assured that I won't get a round unless I play 12 or more, but if Player1 wins, I'll easily get 11 points for myself, which will be sad. Should I play a small card here?
+ 
+ >||
+ CHOOSE ONE>>> H02
+ PLAY:
+ H02, S09, S01
+ MEDIAN: H02 Player 0
+ SCORES OF ROUND:
+ 2, 10, 0
+ ||<
+ 
+ Two went in for me. Well, I guess 9 then. If I win, Player1 will be pushed 10 points, and if Player2 wins, it will probably be bigger than 2.
+ 
+ >||
+ CHOOSE ONE>>> C09
+ PLAY:
+ C09, C12, H10
+ MEDIAN: H10 Player 2
+ SCORES OF ROUND:
+ 2, 10, 10
+ 
+ **END ROUND 1
+ MEDIAN OF ROUND SCORES: 10
+ Player 1 got 10 points
+ Player 2 got 10 points
+ SCORES OF GAME:
+ 0, 10, 10
+ ||<
+ 
+ Player2 had 10 points, so the median was 10, and I was the only one who was 10 points behind. This was not good. With three rounds to go, I would have to let one of the players win to make room for the other player, and then I would have to step in between them to win the game.
+ 
+ With two trump cards that can surely lose the turn, I'm in a situation where I can't go without scoring. Ororo...let's cut S13.
+ 
+ >||
+ **BEGIN ROUND 2
+ YOUR HAND:
+ C01, C02, H04, S04, D05, H06, D06, H09, D11, D13, S13
+ CHOOSE ONE>>> S13 
+ PLAY:
+ S13, C10, H11
+ MEDIAN: H11 Player 2
+ SCORES OF ROUND:
+ 0, 0, 11
+ ||<
+ 
+ Mm. Next time, I'll try 11. If I get it right, I can both push Player2 and get myself in between. But wait, it's only turn 2, so even if I get 11, 0, 11 on the next turn, if Player2 gets it on the next turn, will I be the only one to pass by with 11 points? Hmmm. Nope, but it's not that big a deal; play 11.
+ 
+ >||
+ CHOOSE ONE>>> D11
+ PLAY:
+ D11, H13, H03
+ MEDIAN: D11 Player 0
+ SCORES OF ROUND:
+ 11, 0, 11
+ ||<
+ 
+ Right on target. Now I just hope Player2 doesn't win. Oh, it's not good for me to win. Let's see. Well, let's play another card that doesn't win.
+ 
+ >||
+ YOUR HAND:
+ C01, C02, H04, S04, D05, H06, D06, H09, D13
+ CHOOSE ONE>>> C01
+ PLAY:
+ C01, H08, S10
+ MEDIAN: H08 Player 1
+ SCORES OF ROUND:
+ 11, 8, 11
+ 
+ **END ROUND 2
+ MEDIAN OF ROUND SCORES: 11
+ Player 0 got 11 points
+ Player 2 got 11 points
+ SCORES OF GAME:
+ 11, 10, 21
+ ||<
+ 
+ Oops, I'm totally on target. Now, if I hold the median position for two more rounds, I can win, but, well, the danger is the case of Player1 overtaking me. Not even if I score 10 points myself, but that's still far away. Let's play the smaller card for now.
+ 
+ I thought...
+ >||
+ **BEGIN ROUND 3
+ YOUR HAND:
+ C02, H04, S04, D05, H06, D06, H09, D13
+ ||<
+ I got carried away and used too many good cards, so the remaining cards are stuck in the middle. Well, I guess it is a good idea to play the middle and win all three times and not let anyone else score.
+ 
+ >||
+ CHOOSE ONE>>> H06 
+ PLAY:
+ H06, D07, C03
+ MEDIAN: H06 Player 0
+ SCORES OF ROUND:
+ 6, 0, 0
+ 
+ YOUR HAND:
+ C02, H04, S04, D05, D06, H09, D13
+ ||<
+ 
+ On second thought, I guess that was risky, I hope I get all three, but considering that even if I get out the middle one, which is the easiest to win a turn, I have a 1/2 chance of winning, and with two left, I have a 3/4 chance of winning one of them, except for me. Ah. What should I do? But there's nothing I can do, right? I've spent too many cards willingly in the early game, so there are no moves left to play in the endgame. The only thing to do here is to keep throwing strikes in the middle of the field, believing in 1/4.
+ 
+ >||
+ CHOOSE ONE>>> D06
+ PLAY:
+ D06, D09, H05
+ MEDIAN: D06 Player 0
+ SCORES OF ROUND:
+ 12, 0, 0
+ ||<
+ 
+ grunting or groaning sound
+ 
+ >||
+ CHOOSE ONE>>> H09
+ PLAY:
+ H09, C07, S03
+ MEDIAN: C07 Player 1
+ SCORES OF ROUND:
+ 12, 7, 0
+ 
+ **END ROUND 3
+ MEDIAN OF ROUND SCORES: 7
+ Player 1 got 7 points
+ SCORES OF GAME:
+ 11, 17, 21
+ ||<
+ 
+ If Player1 had won with 7 on the second turn, I could have played C02 or something to reduce the chance of him being in the middle, since he was not in the middle with 6, 7, 0.
+ 
+ It had to be done. It's the last round. I have to score at least 6 points to win. Current cards in hand:
+ 
+ >||
+ **BEGIN ROUND 4
+ YOUR HAND:
+ C02, H04, S04, D05, D13
+ ||<
+ 
+ 
+ 
+ >||
+ CHOOSE ONE>>> S04
+ PLAY:
+ S04, H01, C04
+ MEDIAN: C04 Player 2
+ SCORES OF ROUND:
+ 0, 0, 4
+ ||<
+ 
+ Huh. What a small card.
+ 
+ >||
+ CHOOSE ONE>>> H04
+ PLAY:
+ H04, D03, D04
+ MEDIAN: H04 Player 0
+ SCORES OF ROUND:
+ 4, 0, 4
+ ||<
+ 
+ Ummm, 4 went in for me, but even if 5 did in the next turn, it would be meaningless because I am not the median. Or rather, my chance to win was gone when Player2 won with 4 in the previous turn. In order for me to win, I had to take two turns and then someone had to score 9 or something on the rest. Mwah. And since I had 4 and 4, even if Nikkoku Player1 played a strange card next, the situation would still be the same. Was it a mistake to play 4 this turn? Even if Player1 wins by a large number and overtakes Player2, Player2 still wins, but I don't win. Ah.
+ 
+ >||
+ CHOOSE ONE>>> C02
+ PLAY:
+ C02, C05, S11
+ MEDIAN: C05 Player 1
+ SCORES OF ROUND:
+ 4, 5, 4
+ 
+ **END ROUND 4
+ MEDIAN OF ROUND SCORES: 4
+ Player 0 got 4 points
+ Player 2 got 4 points
+ SCORES OF GAME:
+ 15, 17, 25
+ 
+ ****END GAME
+ MEDIAN OF GAME SCORES: 17
+ Player 1 won
+ rest card of player 0: D05, D13
+ rest card of player 1: D01, S05
+ rest card of player 2: H07, S06
+ not used card: S12
+ ||<
+ 
+ We lost. I had a good feeling until the middle of the game. Or maybe I used too many strong cards by the middle of the game.
+ </body>
+ <comments>
+ <comment>
+ <username>u1p</username>
+ <body>http://q.hatena.ne.jp/1221708568/report?x=q01&y=q02<br> or something like that, it makes me feel empty... </body>
+ <timestamp>1221711238</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>But when I cross tabulate the results, it seems to be filtered pretty well. <br>The machine language, Nadeshiko, BrainF*ck, etc. are properly set to 0. <br>The population is 6, which is a bit of a gastritis</body>.
+ <timestamp>1221711964</timestamp>
+ </comment>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>I didn't understand Q1 because I've never touched Scheme. I'm a functional language virgin. <BR><BR>Because I filtered by Scheme, I guess I excluded people who touch code at work, and <BR>I guess I filtered only people who touch code as a hobby. <br>It occurred to me. </body>
+ <timestamp>1221712248</timestamp>
+ </comment>
+ <comment>
+ <username>Dubhead</username>
+ <body>Well, that's a terrible result. Nishio-san B. <BR><BR>I don't think machine language is such a bad option. <BR><BR>If you are going to teach including computer architecture, you need to know how CPUs work, and it is surprisingly easy to understand because you can understand programs as the movement of things without abstract concepts. <BR><BR>But well, I would still teach in Python. </body><br><br
+ <timestamp>1221712884</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <BODY>I don't think that machine language, Nadeshiko, or Brainf*ck are "0 and natural". The advantage of teaching machine language is as Dubhead explained, and the advantage of Brainf*ck is that the architecture is the machine language of simple machines. The point is that there is little to remember and it is easy to view it as a logic puzzle. The merit of Nadeshiko is that the path to the experience of automating a tedious task with programming is short and it is easy to be motivated to "read and understand". </body>
+ <timestamp>1221713765</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>Sorry to be so thoughtless 、、、、 but I thought it was reasonable given the sample size sa</body>.
+ <timestamp>1221715649</timestamp>
+ </comment>
+ <comment>
+ <username>shiro</username>
+ <body>Brainf*ck is good for educational use if you connect it to the Turing machine story. <br><br>Since I've filtered out people who code at work because I've filtered out people who code as a hobby<br><br>λ... ... </body>
+ <timestamp>1221718454</timestamp>
+ </comment>
+ <comment>
+ <username>kujirahand</username>
+ <BODY>I accessed the site to answer the question to spread Nadeshiko..! It was Mr. Nishio, wasn't it? I was about to add more noise for nothing (w</body>).
+ <timestamp>1221728138</timestamp>
+ </comment>
+ <comment>
+ <username>tgbt</username>
+ <body>I agree with tokoroten. <BR>From someone who has never used a functional language,<BR>there is no way to teach Scheme or Haskell, which are only used by language geeks, to first-year undergraduates, and filtering with them is nonsense. <br>or so I think. <BR><BR>By the way, the second sentence of the question is weird Japanese, how should I catch it? </body>
+ <timestamp>1221730427</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Well, I'm going to be a little harsh on tgbt because he's a friend of mine,<br>but aside from using or teaching Haskell or Scheme as a main language,<br>what Q1 doesn't understand is that he knows almost nothing about Scheme or languages called functional types. <br><br>What Q1 doesn't understand is that he knows almost nothing about the language called Scheme or functional types. <br>I don't think such a person would know the difference between Haskell and Scheme,<br>and I don't think they could answer the question "which one is better for teaching" without discrimination. <BR>They would rule out some options simply because they have no experience with them. <br>Since that's the kind of respondent you are, I don't see why you should be filtered out. </body>
+ <timestamp>1221732368</timestamp>
+ </comment>
+ <comment>
+ <username>nyaxt</username>
+ <body>I was disappointed that too many people couldn't answer Q1! I tried to answer it, but the answer was already closed! <br><br>Conceptual understanding of programming: <br>Difficult Haskell > Python > Scheme Easy<br><br>Time to learn a set of programming concepts and be able to make simple command line tools: <br>Difficult Scheme > Haskell > Python Easy<br <BR><BR>Able to make a parser/compiler: <BR>Difficult Python > Scheme > Haskell Easy<BR><BR>I thought. <br><br>But I would recommend ActionScript3 to programming beginners for now! </body>
+ <timestamp>1221741764</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>I recommend ActionScript3<br><br>I think it's important to be able to see the result & put it on your site if you make something cool<br>. <BR><BR>As id:amachang says, "You can do that with Canvas". <br>If your environment is Mac, you can use NodeBox with Python, or you can use Processing and then move on to Java. </body>
+ <timestamp>1221743116</timestamp>
+ </comment>
+ <comment>
+ <username>a14</username>
+ <body>At any rate, I'm well aware that the questioner is an idiot</body>.
+ <timestamp>1221788071</timestamp>
+ </comment>
+ <comment>
+ <username>xor</username>
+ <body>Since filtering by one language, "Scheme," has created a bias, we should instead<br><br>Q1. Please select a language that you think is suitable for education<br>Q2. To confirm, please select from the following what is said about the language you selected in Q1<br><br>. br><br>We should ask people to vote in this order and filter out those whose answers to Q1 and Q2 do not match</body>.
+ <timestamp>1221850763</timestamp>
+ </comment>
+ <comment>
+ <username>hajimehoshi</username>
+ <body>>> xor<br>(tame language since I'm a junior)<br>I don't think "creating bias" is the issue right now. </body>
+ <timestamp>1221870018</timestamp>
+ </comment>
+ <comment>
+ <username>r24</username>
+ <BODY>It's amazing how many questioners think they'll get a decent answer to a question like this. You should improve the accuracy of your nappy</body>.
+ <timestamp>1221965604</timestamp>
+ </comment>
+ <comment>
+ <username>z11</username>
+ <body>http://q.hatena.ne.jp/1221971933</body>
+ <timestamp>1222000043</timestamp>
+ </comment>
+ <comment>
+ <username>yume22</username>
+ <body>I also <br>http://q.hatena.ne.jp/1222004858</body>
+ <timestamp>1222010189</timestamp>
+ </comment>
+ <comment>
+ <username>yume22</username>
+ <body>http://gnews.x0.com/20080921_231233/<br>>I don't think he has the ability to teach others when he can only give these kinds of problems. </body>
+ <timestamp>1222013681</timestamp>
+ </comment>
+ <comment>
+ <username>kajuntk</username>
+ <body>This is all very interesting, but if you want to get accurate responses from a large number of people, I don't think you should be doing surveys on Hatena. <BR><BR>There are other platforms like Slad or whatever, and I think the survey technique is fundamentally wrong. <BR><BR>Oh, the ethics of those who are outraged are another matter. </body>
+ <timestamp>1222058525</timestamp>
+ </comment>
+ <comment>
+ <username>web10</username>
+ <body>The results of the different survey methods are summarized below. <br>"Hatena survey accuracy increases from 6% to 70% depending on how you use it."<br>http://d.hatena.ne.jp/web10/20080923</body>
+ <timestamp>1222175444</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-09-18 https://nishiohirokazu.hatenadiary.org/archive/2008/09/18]

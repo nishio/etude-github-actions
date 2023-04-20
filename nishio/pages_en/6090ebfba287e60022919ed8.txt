@@ -1,0 +1,213 @@
+Hatena2008-10-25
+code:hatena
+ <body>
+ *1224895628*[Midterm] I wrote a program in Haskell to read out the final round.
+ Let's match the results with the ones written in C++.
+ 
+ http://coderepos.org/share/browser/lang/python/saichugen/haskell/saichugen.hs?rev=22097
+ 
+ -----
+ 
+ >||
+ $ time runghc saichugen.hs
+ [237046,205614,261762,230880,189356]
+ real	6m3.271s
+ user	5m52.644s
+ sys	0m3.304s
+ ||<
+ 
+ It is strange that a process that takes 4 seconds in C++ and 120 seconds in Python takes 720 seconds in Haskell, even though Haskell is supposed to compile natively.
+ 
+ -----
+ 
+ I was told that sum might cause a huge list of arguments to be expanded in memory, so I wrote this to replace it, but it still takes 6 minutes.
+ 
+ >|haskell|
+ mysum :: Int -> [Int] -> Int
+ mysum result [] = result 
+ mysum result (x:xs) = mysum (result + x) xs
+ mysum0 = mysum 0
+ ||<
+ 
+ -----
+ 
+ I translated it almost verbatim into Python to give to id:voluntas.
+ 
+ http://coderepos.org/share/browser/lang/python/saichugen/haskell/experiment_python.py
+ 
+ >||
+ $ time python experiment3.py
+ [237046, 205614, 261762, 230880, 189356]
+ 
+ real	4m5.894s
+ user	4m0.529s
+ sys	0m1.474s
+ ||<
+ 
+ It took me 6 minutes with Haskell, but 4 minutes with Python.
+ 
+ -----
+ 
+ Oh, a comment while I was working on the Python version. Thanks, I see what you mean about using seq and turning off delayed evaluation. I'll give it a try.
+ 
+ -----
+ 
+ >|diff|
+  mysum :: Int -> [Int] -> Int
+  mysum result [] = result 
+ -mysum result (x:xs) = mysum (result + x) xs
+ +mysum result (x:xs) = (result + x) `seq` (mysum (result + x) xs)
+  mysum0 = mysum 0
+ ||<
+ 
+ >||
+ real	6m38.293s
+ user	6m27.055s
+ sys	0m3.467s
+ ||<
+ 
+ Oh my God, I'm late.
+ 
+ >|diff|
+  add :: Score -> Score -> Score
+ -add (Score x y z) (Score a b c) = (Score (x + a) (y + b) (z + c))
+ +add (Score x y z) (Score a b c) = (Score (x + a) (y + b) (z + c)) `seq` (Score (x + a) (y + b) (z + c))
+  --main = print $ (Score 1 2 3) `add` (Score 0 3 0)
+ ||<
+ 
+ >||
+ real	6m51.495s
+ user	6m34.909s
+ sys	0m4.039s
+ ||<
+ 
+ What the heck...am I using seq incorrectly?
+ 
+ -----
+ 
+ >>
+ runghc runs without compiling.
+ <<
+ 
+ Oh, it is an interpreter? I thought it was compiled and executed internally.
+ 
+ >||
+ real	0m14.942s
+ user	0m13.614s
+ sys	0m0.229s
+ ||<
+ 
+ Wow, it's much faster, about 3-4 times faster than C++, maybe a little faster than C++ if it's paralleled and running on a quad core.
+ 
+ -----
+ >>
+ I assume from the execution time that you did not have -O2 on at compile time?
+ <<
+ 
+ >||
+ real	0m1.843s
+ user	0m1.803s
+ sys	0m0.023s
+ ||<
+ 
+ Oh wow, it's about 2x faster than the version I wrote in C++! I guess the C++ version is slower because it has it as a VECTOR instead of a list. Even so, I wonder if it changes 2 times.
+ 
+ *1224917666*[Python]sum is eager or not
+ I'm porting because id:voluntas said "I'm porting to Erlang, so I'm writing Haskell code in plain Python" I was wondering if sum is eager, so I'm experimenting.
+ 
+ >|python|
+ class Foo(object):
+     def __init__(self, i):
+         print "initialized %d" % i
+         self.i = i
+ 
+     def __add__(self, v):
+         print "added %d and %d" % (self.i, v.i)
+         return Foo(self.i + v.i)
+ 
+     def __del__(self):
+         print "deleted %d" % self.i
+ 
+ def gen():
+     for i in range(3):
+         yield Foo(i)
+ 
+ sum(gen(), Foo(100))
+ ||<
+ 
+ Execution Result
+ 
+ >||
+ initialized 100
+ initialized 0
+ added 100 and 0
+ initialized 100
+ deleted 0
+ initialized 1
+ added 100 and 1
+ initialized 101
+ deleted 100
+ deleted 1
+ initialized 2
+ added 101 and 2
+ initialized 103
+ deleted 101
+ deleted 2
+ deleted 100
+ deleted 103
+ ||<
+ 
+ You're running 1 or 100 destructors right after you make 101 or something, and since you're not an eager, you can safely shove a huge generator comprehension in there.
+ 
+ *1224918982* Easter egg for python 3.0
+ import antigravity
+ 
+ http://xkcd.com/353/
+ 
+ The Japanese translation is
+ Why do you fly, Chiyo-chan?" "Because it's Python.
+ 
+ *1224957031*PySpa
+ <a href='http://journal.mycom.co.jp/news/2008/06/10/033/index.html'>Online Presentation "280 Slides" Coming, Both Net and OSX Native Supported | Enterprise | My Comi Journal</a>.
+ 
+ Wow, something like KeyNote is running in the browser with JS. You can export it to PowerPoint or PDF format. Amazing, JS can do all this.
+ 
+ Oh, when I try to post a picture, I can search for it from the internet and post it.
+ <img src="http://gyazo.com/d6b43a91bbb19b8cb18de5b41eff4359.png">
+ 
+ Download PowerPoint or PDF!
+ <img src="http://gyazo.com/4664be707320f4dc77a30cd06f8c8fda.png">
+ 
+ -----
+ 
+ DropBox 20GB or whatever it is, free storage.
+ 
+ -----
+ 
+ http://djangoproject.jp/doc/ja/1.0/
+ Can Django documentation be searched in JavaScript? Conveniently convenient.
+ </body>
+ <comments>
+ <comment>
+ <username>const ()</username>
+ <body>This? <br>http://itpro.nikkeibp.co.jp/article/COLUMN/20070403/267180/?ST=develop&P=2</body>
+ <timestamp>1224917586</timestamp>
+ </comment>
+ <comment>
+ <username>s</username>
+ <body>runghc runs without compiling. </body>
+ <timestamp>1224931958</timestamp>
+ </comment>
+ <comment>
+ <username>tanakh</username>
+ <body>I'm guessing from the run time that you didn't add -O2 at compile time? </body>
+ <timestamp>1224939456</timestamp>
+ </comment>
+ <comment>
+ <username>const ()</username>
+ <body>If we rewrite<br>mysum result (x:xs) = result' `seq` (mysum result' xs)<br> where result' = result + x<br>add (Score x y z) (Score a b c) = x' `seq` y' ` seq` z' `seq` Score x' y' z'<br> where (x,y,z) = (x+a,y+b,z+c)<br>I think. <br>Maybe the optimization will get us there. </body>
+ <timestamp>1225092242</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-25 https://nishiohirokazu.hatenadiary.org/archive/2008/10/25]

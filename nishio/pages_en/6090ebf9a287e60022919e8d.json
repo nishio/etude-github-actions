@@ -1,0 +1,37 @@
+Hatena2008-08-06
+code:hatena
+ <body>
+ *1218040175*[TopCoder]Single Round Match 413 Div1
+ From this time on, we will be fighting in Div 1. Uha, they are all blue or yellow or red (of course).
+ It's kind of amazing to think that everyone here can write code better than me.
+ 
+ 500 questions, 14 of the 18 who answered were challenged and dropped. Including me. It seems easy at first glance, but are there pitfalls in places that are hard to see? By the way, my solution:
+ 
+ >|cpp|
+   int P, Q, X, Y;
+   map<long long, long long> cache;
+   long long calc(long long n, int p, int q, int x, int y) {
+     P = p; Q = q; X = x; Y = y;
+     return calc(n);
+   }
+   long long calc(long long n){
+     if(n <= 0) return 1;
+     if(cache.find(n) != cache.end()){
+       return cache[n];
+     }
+     long long t1 = n / P - X, t2 = n / Q - Y;
+     return cache[n] = calc(t1) + calc(t2);    
+   }
+ ||<
+ If you look at the code of people who haven't fallen, they are doing long long cache[1000000] or something like that.
+ 
+ -----
+ 
+ I changed the cache to long long[1000000] instead of map and the system test passed. Hmmm...should I avoid using map?
+ 
+ -----
+ 
+ I only solved 250 problems and my rating went up about 120. I guess I should aim at steadily solving 250 point problems for a while, since I heard that I can keep the yellow rating just by steadily solving 250 and 500.
+ </body>
+
+[Hatena Diary 2008-08-06 https://nishiohirokazu.hatenadiary.org/archive/2008/08/06]

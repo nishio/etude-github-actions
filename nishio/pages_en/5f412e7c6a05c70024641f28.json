@@ -1,0 +1,167 @@
+ABC176
+Solving 4 questions does not increase the rating.
+[https://gyazo.com/096ba8d1cc428b4f813302c5e7f71ae5]
+
+
+Issue [C - Step https://atcoder.jp/contests/abc176/tasks/abc176_c]
+	[https://gyazo.com/0858ad5cbc91a901a8b1fe7e39702cc8]
+
+ When the condition is satisfied up to the k-1th person, the k-1st person is the highest
+ So, when determining the height of the kth person's step, you only need to compare the k-1th person's step height with the k-1st person's step height.
+ The answer could be 10^14 digits, but it's Python, so it's okay.
+	code:python
+	 def solve(N, AS):
+      ret = 0
+      prevStep = 0
+      for i in range(1, N):
+          if prevStep + AS[i - 1] > AS[i]:
+              prevStep = prevStep + AS[i - 1] - AS[i]
+              ret += prevStep
+          else:
+              prevStep = 0
+      return ret
+
+[D - Wizard in Maze https://atcoder.jp/contests/abc176/tasks/abc176_d]
+[https://gyazo.com/ed9c4a29cba57fc94914dde342c95e95]
+	I TLE'd 5 times. The first two times the TLE decreased, so I decided, "This must be just in time," and did my best to speed it up and let it through.
+ 	It took 23 minutes of trial and error from the first submit to the ac...
+
+	First, follow all the squares that can be reached by distance N, and when there are no more squares that can be reached by walking, add "places that can be reached by jumping from the squares you have followed so far" to the list of candidates for exploration.
+　　If the goal is reached during the search for distance N, it may RETURN.
+	　　Since it has already been confirmed that we can't get there with N-1, we can confirm that N is the shortest.
+ Careless calculation of "jumps" can take a long time.
+ 　For every square (`W*H`), "Can you jump here?" You can't check the
+ 　Many times when the "road is narrow" the "all squares check" runs all over the place.
+　　　The number of jumps will be roughly `W*H/6`, so `W^2 * H^2 / 6`.
+ 　Every time you walk one step, you put 25 squares around you into the "where you can fly the next time you jump" set.
+ 　　The number of times you walk is less than "all squares", so each time you do that, you calculate `25 * W * H`.
+	In what way did you hold that "good place to fly the next time you jump"?
+	 At first, I was marking the same shaped array as the map, but TLE
+		 Don't lick the size of the map on every jump.
+	 If you follow all the places you can go at warp N and then try jumping, you don't need to retain the "warp count".
+ 	 We only need to retain "the point that could be reached on the next jump."
+			Had by the set `set`.
+			　Add O(1), all enumerations O(N)
+	 Even in the case of TLE-aimed input, where "a large number of jumps are repeated," the "next jump destination" set is reset after each jump, so it does not grow larger.
+　I AC'd with this one (654ms).
+　　I was organizing the source code for commentary and it was much faster (387 ms).
+　　Hold "a point that could be the starting point for the next jump" instead of "a point that could be reached on the next jump."
+　　　Because there is no need to calculate the jump destination until it is decided to jump
+　Minor topics
+　　up, down, left, right `for d in [-1, +1, -WIDTH, +WIDTH]:`
+　　By adding a wall when the map is loaded, we can eliminate the conditional branching like "if x==0, don't go left". [Guard]
+　　　[Put a guard on the map when loading it].
+　　No need to make the jump destination unique using a set
+ 　　You can plug it into toVisit with duplicates as it is.
+ 　　　Because the second and subsequent duplicates are promptly skipped because VISITED is true.
+ 　　In this case, it is about 20 msec faster without the set.
+ 　　　I fixed it with the intention of making it faster, but instead it slowed me down.
+ 　　　Both are O(1), but the set is about 70ns slower because of the hash value calculation. see [Python list v.s. set].
+ 　　　More useless search candidates will not reverse this gap.
+
+code:python
+ def solve(H, W, Ch, Cw, Dh, Dw, walkable):
+     N = HEIGHT * WIDTH
+     visited = [0] * N
+ 
+     start = (Ch + 1) * WIDTH + (Cw + 1)
+     goal = (Dh + 1) * WIDTH + (Dw + 1)
+     toVisit = []
+     toVisit.append(start)
+ 
+     currentDistance = 0
+     while True:
+         nextJumpOrigin = []
+         while toVisit:
+             p = toVisit.pop()
+             if p == goal:
+                 return currentDistance
+             if visited[p]:
+                 continue
+ 
+             visited[p] = 1
+             nextJumpOrigin.append(p)
+             for d in [-1, +1, -WIDTH, +WIDTH]:
+                 if walkable[p + d] and not visited[p + d]:
+                     toVisit.append(p + d)
+ 
+         # no continuous cell
+         for origin in nextJumpOrigin:
+             for dx in [-2, -1, 0, +1, +2]:
+                 for dy in [-WIDTH * 2, -WIDTH, 0, WIDTH, WIDTH * 2]:
+                     p = origin + dx + dy
+                     if not walkable[p]:
+                         continue
+                     if visited[p]:
+                         continue
+                     toVisit.append(p)
+ 
+         currentDistance += 1
+         if not toVisit:
+             return -1
+ 
+ 
+ def readMap(H, W):
+     global SENTINEL, HEIGHT, WIDTH
+     SENTINEL = 2
+     HEIGHT = H + SENTINEL * 2
+     WIDTH = W + SENTINEL * 2
+     data = [0] * (HEIGHT * WIDTH)
+     ok = ord(".")
+     for i in range(H):
+         S = input().strip()
+         y = (i + SENTINEL) * WIDTH
+         for j in range(W):
+             data[y + (j + SENTINEL)] = 1 if S[j] == ok else 0
+     return data
+ 
+ 
+ def main():
+     # parse input
+     H, W = map(int, input().split())
+     Ch, Cw = map(int, input().split())
+     Dh, Dw = map(int, input().split())
+     D = readMap(H, W)
+     print(solve(H, W, Ch, Cw, Dh, Dw, D))
+
+[E - Bomber https://atcoder.jp/contests/abc176/tasks/abc176_e]
+[https://gyazo.com/f6b8c7e382d64944aae25946a26e4ec5]
+	Maximum length and width is 3*10^5, so if you multiply the length and width, it will exceed 10^10, no!
+	If you count up the vertical and horizontal lines for each bomb, you can see how many vertical and horizontal lines there are in a row.
+	　This is O(M)
+	Sum of their respective maximums... not
+	　If there is a bomb at the intersection, it is -1, so
+	Check for bombs at the intersection of the lines of maxima...
+	　The maximum value can be many. 10^5 digits.
+	 Intersection is still over 10^10.
+	I've thought this far and given up.
+	Read the commentary
+	　The number of bombs is at most M
+	　So, if there are more intersections of the maximum value line than M, there is certainly more than one "bomb-free intersection", so the answer should be the sum of the maximum values
+	　　I didn't need to search!
+	　Search only for M or less
+code:python
+ def solve():
+     from collections import defaultdict
+     H, W, M = map(int, input().split())
+     hcount = defaultdict(int)
+     wcount = defaultdict(int)
+     bombs = set()
+     for _i in range(M):
+         h, w = map(int, input().split())
+         hcount[h] += 1
+         wcount[w] += 1
+         bombs.add((h, w))
+ 
+     maxh = max(hcount.values())
+     maxw = max(wcount.values())
+     hs = [k for k in hcount if hcount[k] == maxh]
+     ws = [k for k in wcount if wcount[k] == maxw]
+     if len(hs) * len(ws) > M:
+         return maxh + maxw
+     for h in hs:
+         for w in ws:
+             if (h, w) not in bombs:
+                 return maxh + maxw
+     return maxh + maxw - 1
+

@@ -1,0 +1,60 @@
+Hatena2010-04-13
+code:hatena
+ <body>
+ *1271134321*[GAE]A problem I struggled with for an hour today.
+ I thought about narrowing down the problems by elapsed time and categorizing them as easy or hard.
+ >|python|
+     easy =   Question.all().order("elapse").filter("elapse >", 5).fetch(10)
+     normal = Question.all().order("elapse").filter("elapse >", 15).fetch(14)
+     hard =   Question.all().order("elapse").filter("elapse >", 25).fetch(5)
+ ||<
+ 
+ But for some reason, this returns the same list with the same first part for easy, normal and hard. What is wrong?
+ 
+ 1
+ 
+ 2
+ 
+ 4
+ 
+ 8
+ 
+ 16
+ 
+ 32
+ 
+ 64
+ 
+ answer
+ 
+ I was stuck with almost the same problem a year ago. <a href='http://d.hatena.ne.jp/nishiohirokazu/20090225/1235531316'>Cannot use float when narrowing by inequality for IntegerField in GAE Datastore</a>.
+ 
+ In this case, the mistake is that the filter specification is based on an int, even though the elapse is db.FloatProperty(). I was stuck in the "what's the difference between easy and normal? Is this the way to do it? Is it different? I have to go away and do something else, then come back and look at it from a high place, wondering what the value is. Actually, the code was a bit more complicated than that, but when I looked down and organized it, I came up with this kind of problem and solved it easily.
+ 
+ *1271141089*TypeError: 'in <string>' requires string as left operand
+ That's an intuitive and confusing error message.
+ 
+ The code to reproduce is
+ >|python|
+ "A" in u "A"
+ ||<
+ What is it?
+ 
+ *1271153252* Google AdSense "AdSense for Search" is currently not available for registration.
+ I decided to add a Google search window to my service or blog using "AdSense for Search" because it was advertised as an "improved feature" in red, and I tried to register it three times. I went to the help forum and found that it had been in that state for about two weeks. I went to the help forum and found out that it had been in that state for about 2 weeks....
+ 
+ <img src="http://gyazo.com/9451f2d1c91dfd3b336eeddd27236dfe.png">
+ 
+ I am alerting you here so that even one less person will be stuck in the same situation and waste their time.
+ 
+ Google AdSense Forum: when I click the "Get Code" button, it stops at "Saving settings" and I can't get the code http://www.google.com/support/forum/p/adsense/thread?tid=67d370f853f 0dca5&hl=en
+ </body>
+ <comments>
+ <comment>
+ <username>methane</username>
+ <body>Oh, I thought it would be a UnicodeDecodeError, but it turns out to be a TypeError. </body>
+ <timestamp>1271143579</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-04-13 https://nishiohirokazu.hatenadiary.org/archive/2010/04/13]

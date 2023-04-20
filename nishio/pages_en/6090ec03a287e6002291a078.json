@@ -1,0 +1,223 @@
+Hatena2010-03-05
+code:hatena
+ <body>
+ *1267781781* Gamer rock-paper-scissors simulation
+ From the response to <a href='http://d.hatena.ne.jp/nishiohirokazu/20100304/1267706162'>Dr. Ikuo Takeuchi on the Ico issue</a>:.
+ 
+ >>
+ "Adjustment by probability. If there are too many icons, I think gamer rock-paper-scissors is fine." <a href='http://www.tgiw.info/2008/03/post_572.html'>gamer rock-paper-scissors</a>" by id:kamataro
+ <<
+ 
+ Gamer rock-paper-scissors is interesting. Each rock-paper-scissors game reduces the number of people by about 28%.
+ 
+ >>
+ Why can't the teacher and all the students raise their hands and play rock-paper-scissors all at once and the losing student is left out...?" by id:kyorecoba
+ <<
+ 
+ This is reduced by 1/3 each time. It is a little less than gamer rock-paper-scissors and requires a "teacher" who does not participate in the game.
+ 
+ >>
+ When there are too many people, why don't you just use par and goo (disqualify the person who played choki) and the more (less) win! Well, even so, when there are an even number of participants, there will still be aiko..." id:aratafuji
+ <<
+ In rock-paper-scissors-scissors with fewer players, the number of players decreases to about 50% each time, which may seem less than 50%, but the fact that you have to start over when there is a tie pulls the average up, so it is likely to be a little over 50%. The "many poker" game...why they don't make the fewest win is a mystery to me, but I calculated it to be about 60%. That's the worst I've ever come up with.
+ 
+ In the above method, the number of rock-paper-scissors increases on the order of log(N) with the number of participants N. Starting with 1000 participants, the winner is decided after an average of about 10.0 rock-paper-scissors in the less common rock-paper-scissors game and about 5.4 rock-paper-scissors in the more common gamer game. In the method I explained in my previous entry, the winner is decided in about 1.0000 (about 238 0's in all) 00001 times. And now we are waiting for the verification of Dr. Nori's idea that "there may be a way to determine the winner in 1 time".
+ 
+ Note that the above value of "about 28%" was determined after 1,000,000 simulations with 60 starters. Source code: (in Japanese)
+ 
+ >|python|
+ from random import choice
+ 
+ NUM_TRIAL = 1000000
+ NUM_PEOPLE = 60
+ HANDS = [0, 1, 2]
+ 
+ sum = 0
+ for _trial in range(NUM_TRIAL):
+     hands = [choice(HANDS) for _i in range(NUM_PEOPLE)]
+     counts = [hands.count(hand) for hand in HANDS]
+     counts.sort()
+     num_winner = counts[0]
+     if counts[-1] == num_winner:
+         num_winner = NUM_PEOPLE
+     sum += num_winner
+ 
+ print float(sum) / NUM_TRIAL / NUM_PEOPLE
+ ||<
+ 
+ *1267798278* Petition to the King
+ I went to BSW and everyone was playing a game that wasn't Dominion. <a href='http://www7a.biglobe.ne.jp/~bluebear/MyBSW/MU_LIST/UmKuK/UmKuK.html'>Petition to the King - Rules</a>. <a href='http://www7a.biglobe.ne.jp/~bluebear/MyBSW/MU_LIST/UmKuK/CardList.html'>Petition to the King - Character Card List</a>.
+ 
+ <hr>
+ 
+ I wanted to play against him, but he had no opponent, so I made a program to roll the dice.
+ 
+ >|python|
+ In [1]: def dice(n):
+    ...:     return list(sorted(choice(range(1, 7)) for _i in range(n)))
+    ...: 
+ 
+ In [3]: from random import choice
+ 
+ In [4]: dice(5)
+ Out[4]: [1, 2, 2, 5, 6]
+ 
+ In [5]: dice(5)
+ Out[5]: [1, 2, 5, 6, 6]
+ ||<
+ 
+ ** round 1
+ Now, they say the first die is three.
+ 
+ >|python|
+ In [6]: dice(3)
+ Out[6]: [1, 3, 5]
+ ||<
+ 
+ They are all odd numbers. I can get a servant. P1: A servant.
+ 
+ Second person play.
+ 
+ >|python|
+ In [7]: dice(3)
+ Out[7]: [3, 4, 5]
+ ||<
+ 
+ If I keep only the 4, I get a 1/2 chance of a servant, if I leave the 4, I get a 1/4 chance of a philosopher, 1/2 chance of a 2/4 chance of a philosopher, and the remaining 1/2 chance of a farmer. So, let's try the philosopher.
+ 
+ >|python|
+ In [8]: dice(2)
+ Out[8]: [2, 2]
+ ||<
+ 
+ Yes, success. p2: Philosopher
+ 
+ ** round 2
+ 
+ >|python|
+ In [9]: dice(3)
+ Out[9]: [4, 5, 5]
+ ||<
+ 
+ Well, the servant can add 1~3, but I got none... I keep the pair of 5... Oh, no, the effect of the servant is not to add dice, but to increase the number of dice rolls. So let's add +1 to 4 to get 3 pairs of 5... P1: Servants, Guards
+ 
+ >|python|
+ In [10]: dice(3)
+ Out[10]: [1, 5, 6]
+ ||<
+ 
+ Hmmm. I thought the philosopher's effect was to reduce any of the dice and put that amount on another, so if you change 1, 5 to 2, 4, you don't get a card since they are all even numbers and philosophers. I'd rather reroll the 6, 1/2 for the servant, 1/2 for the philosopher's effect, 1, 5 for 3, 3 for the farmer, and so on.
+ 
+ >|python|
+ In [11]: dice(1)
+ Out[11]: [4]
+ ||<
+ 
+ Became a farmer. p2: philosopher, farmer
+ 
+ ** round 3
+ >|python|
+ In [12]: dice(3)
+ Out[12]: [1, 1, 2]
+ ||<
+ I guess the right thing to do would be to make a 2*2 with the Guard's effect "add the 2's dice to the active dice". Get the Astronomer. P1: Servants, Guards, Astronomer
+ 
+ >|python|
+ In [13]: dice(3)
+ Out[13]: [3, 4, 5]
+ ||<
+ 
+ Hmmm...maybe 4,4,4. Oh, shoot, there's a farmer, so there's more dice. Let's start over.
+ 
+ >|python|
+ In [14]: dice(4)
+ Out[14]: [2, 5, 5, 5]
+ ||<
+ 
+ That's a 1/6 chance of a hunter and a 5/6 chance of a guard with a definite 5.
+ 
+ >|python|
+ In [15]: dice(1)
+ Out[15]: [5]
+ ||<
+ 
+ Mm. P2: Philosopher, farmer, hunter
+ 
+ **round 4
+ 
+ >||
+ In [16]: dice(3)
+ Out[16]: [1, 3, 3]
+ ||<
+ I know it's too late now, but the lack of more dice is going to be a drag. I have a servant, a guard, and an astronomer. The Guard's effect is 1,3,3,2, then the Servant's effect is 1+2 and then 3,3,3,2. 3 is confirmed and 2 is rerolled. Regardless of the value, the astronomer's "change any one of the active dice to the same roll as one of the already determined dice" makes it 3...I've got 4, but only one astronomer and one hunter...oh, I can only get the farmer. Hmmm.
+ 
+ P1: Servant, Guardsman, Astronomer, Farmer, 3 dice
+ 
+ P2's turn, first the farmer increases the dice to 5, and then the farmer increases the dice to 5, and then the farmer increases the dice to 5.
+ >||
+ In [17]: dice(5)
+ Out[17]: [1, 1, 1, 4, 4]
+ ||<
+ 
+ At this point, I could take the wench, but considering the benefit of increasing the dice, I'll start with 1,1,1,4,4,3 with the hunter effect. hmm, I could take the bishop by turning 1,3 into 2,2 with the philosopher effect, but the effect is only to increase the dice by 1, right? I think it would be more interesting to have a wench who can roll a 1 on any number of dice. In the meantime, I reroll a 3 and get a 1/6 chance of a noble. I rolled, and got a 4. Isn't this dice cheat? (Yeah)
+ 
+ P2: Philosopher, farmer, hunter, nobleman, 6 dice
+ 
+ ** round 5
+ 
+ P1: Servant, Guardsman, Astronomer, Farmer, 3 dice
+ The farmer's effect brings the dice to four. [1, 4, 4, 4, 4]. Well, I'll make it 1, 4, 4, 4, 2 with the guards. Hmmm... 1+1 with the servant, maybe the lady of the house. I guess so.
+ P1: Servant, Guardsman, Astronomer, Farmer, Maid, 5 dice
+ 
+ P2: Philosopher, farmer, hunter, nobleman, 6 dice
+ Dice 7 for the farmer's effect: [1, 2, 2, 4, 5, 5, 6]. With the hunter, [1, 2, 2, 3, 4, 5, 5, 6]. Oh, you can take the alchemist because you have 1-6.
+ P2: philosopher, farmer, hunter, nobleman, alchemist, 8 dice
+ 
+ ** round 6
+ 
+ P1: Servant, Guardsman, Astronomer, Farmer, Maid, 5 dice
+ I no longer feel like I can win. I was distracted by the ability to control the number of rolls, but I think the number of dice is a bigger contributor. The farmer's effect is 6 dice.
+ [1, 1, 1, 3, 3, 5], add 2 with the guards. Hmmm, 3+1 with the servant would make 1-5 and take the sorcerer, but is that enough? I'm behind on the number of dice. Hmmm...but it might be a bit of a double whammy to go for a card that increases the die rolls.
+ P1: Servant, Guardsman, Astronomer, Farmer, Maid, Magician, 7 dice
+ 
+ P2: philosopher, farmer, hunter, nobleman, alchemist, 8 dice
+ Dice 9 for farmer, [1, 1, 1, 2, 4, 5, 5, 6, 6] 3 for hunter
+ Now... +2 under the effect of the nobleman on all 1s, 2,4 to 3,3 under the effect of the philosopher. [3, 3, 3, 3, 3, 3, 5, 5, 5, 6, 6].
+ Reroll 5 and 6. [2, 4, 5, 6]. Alchemist 2,4 to 3,3. 8 3s in all. Get the king, of course.
+ P2: philosopher, farmer, hunter, nobleman, alchemist, king, queen10
+ 
+ ** round 7
+ P1: Servant, Guardsman, Astronomer, Farmer, Maid, Magician, 7 dice
+ The farmer's effect increases the dice to 8, but you have to make a set of 8 greater than 3 to win? Impossible.
+ [2, 2, 3, 4, 5, 5, 6, 6]. Add 2 at the guards. Hmmm. I look at my cards and think.
+ The servant rolls one die +1 to +3, so if the target is 5, 2 to 5 is a hit. The astronomer rolls one die to a fixed number, so it is an unconditional hit. The sorcerer can also be an unconditional winner since he can set any value. The wench is +1 to any die, so the hit probability only increases to 1/3. The wench is hard to use. The chance of getting one below the target value is 1/6, so 2 cards out of 8 is a good chance to use the wench. 2 5s are +1 with the wench, 4 6s are fixed, and the remaining 4 are rerolls.
+ >|python|
+ In [25]: dice(4)
+ Out[25]: [1, 2, 2, 5]
+ ||<
+ Too bad, confirmed after changing 1 to 6 with the astronomer, rerolling 3.
+ >|python|
+ In [26]: dice(3)
+ Out[26]: [4, 5, 6]
+ ||<
+ Ok! Change 4 to 6 with the servant and 5 to 6 with the magician. All confirmed, 8 sixes. The king is taken!
+ 
+ Now P2's turn.
+ P2: philosopher, farmer, hunter, nobleman, alchemist, queen10
+ Oh, P1 was happy to take the king, but we just need to make a set of 8 or more, or this one. I guess there's plenty of time to spare. Dice 11 for the farmer's effect.
+ >|python|
+ In [27]: dice(11)
+ Out[27]: [2, 3, 3, 3, 4, 4, 4, 4, 5, 6, 6]
+ ||<
+ Let's see, I look carefully at the cards in my hand. The philosopher keeps the sum of the two dice and changes it; he can turn a 3,5 into a 4,4. The hunter adds 3 dice. The nobleman adds +2 to any number of dice; the alchemist changes the sum of three dice. Queen adds a die of any value. Hmmm... Easy.
+ Add 3 dice in hunter: [2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 6, 6].
+ Change 3,5 to 4,4 in Philosopher:[2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6]
+ Change 3,3,6 to 4,4,4,4 in Alchemist:[2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6].
+ 2 for +2 in nobility: [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6].
+ Add 4 at queen: [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6].
+ Reroll 3 and 6: [2, 5]. 2 confirmed and 5 rerolled. [2].
+ 
+ So we now have 11 4s. Is this a win for P2? Or will it be like the Deuce, another recapture of the king all over again?
+ </body>
+
+[Hatena Diary 2010-03-05 https://nishiohirokazu.hatenadiary.org/archive/2010/03/05]

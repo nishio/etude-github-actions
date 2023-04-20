@@ -1,0 +1,266 @@
+Hatena2009-05-21
+code:hatena
+ <body>
+ *1242885329*Re: "I think most people associate the word "download" with illicit methods."
+ http://japan.cnet.com/blog/web/2009/05/20/entry_27022504/ via @bto
+ 
+ I wonder if this person is trying to defuse the fire. This article is simply a misunderstood entry, "I saw a blog entry about a celebrity downloading and watching a movie, wrote an entry that assumed the movie was illegal, and then immediately found out that the movie could be downloaded legally, and that caused a firestorm. I didn't feel the need to mention it by itself...but if someone claims that "if it says download without any annotation, it means illegal downloading," I can't overlook it.
+ 
+ I know there have been several cases where people have written about their acts against the law in their mixi diaries, blogs, etc., and it has become a topic of discussion. So, how much percentage of the content on the Internet is like that? What percentage of Internet users would write such content? I'd say it's a minority, no matter how you look at it, right?
+ 
+ If it simply says "download," it would be normal to first think of it as a "legal download. I understand that the author of this entry is a person who "associates the word "download" with illicit methods. I think the existence of such a person is an obstacle to the spread of video downloading and watching. They are annoying people.
+ 
+ *1242887391*Σ(x^3) = (Σx)^2
+ I just now suddenly remembered one of the things I said the other day, "I drew this a long time ago, but I can't remember it.
+ 
+ <img src="http://gyazo.com/42e68e1f002fd8105c2b2a3b3771589b.png">
+ 
+ There must have been another one. I wonder what it was.
+ 
+ <hr>
+ 
+ Well, that reminds me. I didn't like the diagonal lines, so I figured out how to get rid of them,
+ 
+ <img src="http://gyazo.com/e7c4448692f48f7016d4eb6056a3b26a.png">
+ 
+ I had shown that 4Σ(x^3) = 4(Σx)^2 = (n (n + 1))^2.
+ 
+ <hr>
+ 
+ >>
+ id:amachang Σ(x^3) < Emoticons are cute!
+ <<
+ 
+ <img src="http://gyazo.com/3692b3f8b06c2ffed17f1cb93bac0d38.png">
+ 
+ I'm not! No, no, no, no!
+ 
+ *1242888984* Programs should be written for people to read.
+ >>
+ First we want to establish the idea that a computer language is not just a way of getting a computer to perform operations, but rather that it is a novel formal medium for expressing ideas about methodology. Thus, programs must be written for people to read, and only incidentally for machines to execute. 
+ <<
+ http://biblioteca.universia.net/html_bura/ficha/params/id/26356.html
+ 
+ Programming languages are not merely a new medium for making computers do work, but rather a new medium for explaining exactly "how it can be done". In other words, programs should be written for people to read, and they just happen to be able to be executed by machines.
+ 
+ <hr>
+ 
+ Oh, my SICP also has a page called "Preamble to the 1st edition" and it's right there. I guess if you don't know what to look for, you can't find it even if you look for it, even though I did look for it. So, I translated it myself above, but if you want to read Dr. Wada's translation, please buy the SICP.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=nishiohirokaz-22&o=9&p=8&l=as1&asins=489471163X&md=1X69VDGQCMF7Z30FM082&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=AAFFAA&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1242917938*[SVG]I started making mysvglib.
+ >|python|
+ if __name__ == "__main__":
+     cont = Context()
+     cont.initialize()
+     cont.render_header()
+     cont = cont.trans(300, 300)
+     cont.circle(r=100)
+     for i in range(8):
+         cont.rot(degrees(45 * i)).trans(200).circle(r=50)
+ 
+     cont.render_footer()
+ ||<
+ 
+ <img src="http://gyazo.com/1f8a202a95b69a197c9aba883994f680.png">
+ 
+ The progress of this library depends on what I want to draw, as I have no intention of creating a library that covers the entire specification.
+ <hr>
+ 
+ >|python|
+     cont.circle(r=100)
+     cont.loop(
+         8, lambda cont: cont.rot(degrees(45)),
+         lambda cont: cont.trans(200).circle(r=50))
+ ||<
+ 
+ This is how we got the same figure as before.
+ <hr>
+ >|python|
+     cont.circle(**attrs(r=100, fill_opacity=0.5))
+     cont.loop(
+         8, lambda cont: cont.rot(degrees(45)),
+         lambda cont: cont.trans(100).circle(
+             **attrs(r=50, fill_opacity=0.5)))
+ ||<
+ 
+ <img src="http://gyazo.com/2e141cd2bef0305d5ffaf27a79c64c27.png">
+ 
+ Hmmm...I guess "***attrs" is indeed not good enough.
+ 
+ <hr>
+ 
+ It's sloppy to make users use attrs, but it's also sloppy to do the same thing every time with circles and squares as an implementation. So, here we go.
+ 
+ >|python|
+ def attrs_decorator(f):
+     def new_func(self, **kw):
+         "replace key's hyphen: e.g. fill_rule -> fill-rule"
+         new_kw = dict((key.replace("_", "-"), kw[key]) for key in kw)
+         return f(self, **new_kw)
+     return new_func
+ 
+ class Context(dict):
+ ...
+     @attrs_decorator
+     def circle(self, **kw):
+         kw["transform"] = mat2str(self["matrix"])
+         attr_str = " ".join('%s="%s"' % p for p in kw.items())
+         self["out"].write('''<circle %s />\n''' % attr_str)
+         return self
+ ||<
+ 
+ Like this. I think it might have something in common with the other elements, like the part where it creates a transform from the matrix information it has. Well, I'll just put that together when the other elements are ready. Circles are enough for me.
+ 
+ <hr>
+ 
+ So now you want the ability to combine multiple instructions.
+ 
+ first of all
+ >|python|
+     cont = cont.trans(300, 300).scale(100)
+     cont.circle(fill_opacity=0.5)
+     cont.loop(
+         8, lambda cont: cont.rot(degrees(45)),
+         lambda cont: (
+             cont.trans(1)
+             .scale(0.5)
+             .circle(fill_opacity=0.5)))
+ ||<
+ I want to make this "cont.circle(fill_opacity=0.5)" into a reusable chunk, and
+ 
+ I guess I just need to take a function and attach a method to the context that takes the function and applies it and returns it.
+ 
+ >|python|
+ class Context(dict):
+ ...
+     def apply(self, f):
+         return f(self)
+ ||<
+ 
+ >|python|
+     def circles(cont):
+         return cont.circle(fill_opacity=0.5)
+ 
+     cont = cont.trans(300, 300).scale(100)
+     cont.apply(circles)
+     cont.loop(
+         8, lambda cont: cont.rot(degrees(45)),
+         lambda cont: (
+             cont.trans(1)
+             .scale(0.5)
+             .apply(circles)))
+ ||<
+ This generated the same picture as before. And
+ >|python|
+     def circles(cont):
+         return (
+             cont
+             .circle(fill_opacity=0.5)
+             .scale(0.5)
+             .circle(fill_opacity=0.5)
+             .scale(0.5)
+             .circle(fill_opacity=0.5))
+ ||<
+ <img src="http://gyazo.com/1109d28a32d9c4b4c193ef29d2eac2ac.png">
+ 
+ Yeah, it's a happy ending.
+ 
+ <hr>
+ >|python|
+     @recursion.max_depth(5)
+     def circles(cont):
+         return (
+             cont
+             .circle(fill_opacity=0.5)
+             .scale(0.8)
+             .trans(0.7)
+             .apply(circles))
+ 
+     cont = cont.trans(300, 300).scale(100)
+     cont.apply(circles)
+ ||<
+ <img src="http://gyazo.com/7b16f2e4749dcf6b6e56927c78292969.png">
+ 
+ Yes, the recurrence call is properly stopped at five times.
+ 
+ <hr>
+ 
+ I was thinking of doing "gradually lighten/darken" next, but that would require interfering with the fill-opacity attribute, and in Context Free Art, the alpha value interferes with the fill-opacity in an additive way, but I think this design is just terrible... I think this design is terrible. I think this design is terrible, and I wonder if it's right to interfere with fill-opacity by multiplication.
+ 
+ In essence, opacity is x : 1-x for foreground and background colors, so when x moves from 0 to 1, the ratio value moves from 0 to infinity. I want the foreground color to be "twice as dark" and the background color to be "one-half as light". If opacity is x, and the value of "darken by a factor of 1" is m, then what was originally x / (1-x) is now mx / (1-x). The new x is determined so that the value of the ratio is so.
+ 
+ <hr>
+ 
+ I was able to.
+ >|python|
+     @recursion.max_depth(15)
+     def circles(cont):
+         return (
+             cont
+             .circle(fill_opacity=0.5)
+             .trans(0.7)
+             .alpha(0.8)
+             .apply(circles))
+ 
+ 
+     cont.apply(circles)
+     cont.trans(y=2).alpha(10).apply(circles)
+ ||<
+ 
+ <img src="http://gyazo.com/1318df0ed41ca9334e0e26762b1b8daf.png">
+ The top is 0.5 times denser and gets lighter by a factor of 0.8, and the bottom is 10 times denser and gets lighter by a factor of 0.8. I think this is much better than Context Free Art, which was not displayed below 0 or swung out above 1. At least in terms of creating artwork.
+ 
+ <hr>
+ 
+ Today's Conclusion
+ 
+ <img src="http://gyazo.com/8f090fc9cbeb8d843176c5d4ef56e4f1.png">
+ 
+ indicates object of desire, like, hate, etc.
+ 
+ >|python|
+ if __name__ == "__main__":
+     cont = Context()
+     cont.initialize()
+     cont.render_header()
+     cont = cont.trans(300, 300).scale(100)
+ 
+     @recursion.max_depth(7)
+     def circles(cont):
+         return (
+             cont
+             .circle(fill_opacity=0.5)
+             .loop(5, lambda cont: cont.rot(invr(5)),
+                   lambda cont: cont.trans(1)
+                   .alpha(1.2)
+                   .scale(0.5)
+                   .apply(circles)))
+ 
+     cont.alpha(0.1).apply(circles)
+ 
+     cont.render_footer()
+ ||<
+ 
+ This is about the same number of lines of output.
+ 
+ By the way, this SVG is 3 megabytes and has about 2000 circles. I should be able to preview the screen and then directly output the image with time-consuming parameter settings. I'm going to bed at this point for now. I'll continue when I feel like it.
+ 
+ <hr>
+ 
+ TODO: Color!
+ </body>
+ <comments>
+ <comment>
+ <username>Dubhead</username>
+ <body>It's Nishida, not Utada. I agree with you in general, but I also think it would be better if you wrote "purchased" instead of "downloaded". </body>
+ <timestamp>1242889014</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Fixed. It was revealed how unimportant I thought it was...(^^;</body>
+ <timestamp>1242889823</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-05-21 https://nishiohirokazu.hatenadiary.org/archive/2009/05/21]

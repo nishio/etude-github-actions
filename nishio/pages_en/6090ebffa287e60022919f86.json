@@ -1,0 +1,68 @@
+Hatena2009-05-05
+code:hatena
+ <body>
+ *1241502724*[Python]weakref
+ I knew this as knowledge, but for the first time, I ran into a situation where I felt weakref was necessary. First, let's check the behavior with a short code.
+ >|python|
+ from weakref import WeakValueDictionary
+ 
+ class Foo(list):
+     pass
+ 
+ def make():
+     x = Foo([0])
+     y = Foo([1, x])
+     z = Foo([2, y])
+     return WeakValueDictionary(x=x, y=y, z=z), z
+ 
+ d, cur = make()
+ print cur
+ print d.items()
+ cur = cur[1]
+ print cur
+ print d.items()
+ ||<
+ Output is as follows
+ >||
+ [2, [1, [0]]]
+ [('y', [1, [0]]), ('x', [0]), ('z', [2, [1, [0]]])]
+ [1, [0]]
+ [('y', [1, [0]]), ('x', [0])]
+ ||<
+ When the reference to z is lost, it is also lost from the contents of d.
+ 
+ Incidentally, if I try to insert a list or int directly, I get a "TypeError: cannot create weak reference to 'list' object" error. Also, I was confused when I was trying it with the interactive interpreter and it didn't disappear when I thought it would. The trap is that there is an implicit "_", so for example an assignment is not an expression, so it is not updated and the _ is still grabbed, and d.items() puts it in the _, so the reference from there remains. I thought, "That's strange, it doesn't disappear," so I tried globals(), and when I checked again, this time it was gone.
+ 
+ *1241515605*Housework Diary
+ My back started hurting when I was preparing a pot. Maybe I overexerted myself yesterday. I'm planning to go to Okachimachi by bicycle tomorrow... What's going on with my back that it hurts when I try to put leeks in the pot?
+ 
+ 
+ After putting the vegetables in the pot, I realized that I couldn't find the power cable for the pot and frantically searched around for it. Eventually, <a href='http://d.hatena.ne.jp/nishiohirokazu/20090331'>marking it with vinyl tape</a> worked well, and I found one that had been smudged into the PC's power cable.
+ 
+ *1241528522*[SpaMon] card Ver. 1.4
+ <img src="http://gyazo.com/fbd63ec4ff017ea3d57c3696d63c048e.png">
+ 
+ Ver 1.4 is on now. I made Jump weaker when I played with id:TOKOROTEN, rewrote a lot of things when I played with id:waruhuzaketaichi, but I also added <a href='http://d.hatena.ne.jp/ nishiohirokazu/20090419/1240121206'>Rules modifications</a> and <a href='http://d.hatena.ne.jp/nishiohirokazu/20090427/1240828251'>cards</a>. . Since there was space for 18 cards, I added Heal, ChangeBits (ex-Charm), and SwitchBits (removed Zap and added instead) as additional cards for "****". In normal play, I use up to "****". There is still room at the top and bottom due to the fact that the width has been reduced to meet the de facto standard for normal card size.
+ 
+ Major Changes
+ - MakeBit and MoveBit are confusing at first glance, so I went with AddBit.
+ - Changed icons for RemoveBit, RemoveCard, and Surge
+ - I removed Zap completely and put SwitchBits in its place, maybe even SwapBits.
+ - Heal is heavily enhanced (+6 initially), but the wording has been worked out so that it can be disabled by both Inc and Dec.
+ 
+ Correction in progress for Ver 1.5
+ <img src="http://gyazo.com/4eb300c353e93eece537351d4e20156c.png">
+ I've become more familiar with Inkscape, so I've made Jump more understandable. Also, 1.4 is not maintainable because it was made by simply reducing the size to fit the de facto standard card size when 1.2 was made. Refactoring is in progress.
+ 
+ <img src="http://gyazo.com/5276eae90faf713e13406ac47459e14e.png">
+ Float design, before and after.
+ 
+ <img src="http://gyazo.com/9101c3798ce9bed1515ad288d21b36be.png">
+ 1.5 was created!
+ 
+ *1241535666*[SpaMon] chip
+ I made this because it is complicated to use the same chip as the bit for increment and decrement. It's a bit crooked, vertical or horizontal, but I don't care.
+ f:id:nishiohirokazu:20090506000105j:image
+ </body>
+
+[Hatena Diary 2009-05-05 https://nishiohirokazu.hatenadiary.org/archive/2009/05/05]

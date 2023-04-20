@@ -1,0 +1,109 @@
+Hatena2009-08-19
+code:hatena
+ <body>
+ *1250657560* To search Google in English from the Firefox search bar
+ It is a hassle to delete lang=en and click "Search in all languages" to search again, and the default English is fine:
+ 
+ >>
+ http://mycroft.mozdev.org/google-search-plugins.html
+ Click on "Google (No country redirect)" from the "Google (No country redirect)" menu for a one-shot installation.
+ <<
+ http://blogs.atanaka.biz/tanaka/index.php?itemid=960
+ 
+ It was really a one-shot deal. I should have done it earlier.
+ 
+ *1250674547*EEG Diary
+ It's interesting to reread my electronics and brainwave diaries for the past while and see how they are slowly growing. Previously: http://d.hatena.ne.jp/nishiohirokazu/20090810/1249875992
+ 
+ In the end, I decided to buy measurement amplifiers (instrumentation amplifiers) and other amplifiers from Digi-key instead of substituting them with similar products. Today I bought various resistors and capacitors.
+ - When you go to a capacitor shop, you see only units of pF and μF, so you would think they are adjacent, but 1000pF = 1nF = 0.001μF, and μ is not ASCII, so it is often written as uF. In the circuit diagram, the pass capacitor (capacitor between Vcc and GND) is specified as 100nF, which is a size that is not so common in Japan, but I was wondering if it is a major size in other countries, but this is 0.1uF. I had already bought two sets of 10.
+ - I don't like Akizuki because it is crowded, but I went to buy a three-terminal regulator and found it easily. I thought, "Transistors for power supplies should be in that area. I have been looking at them over and over again, and I seem to be gradually understanding where they are.
+ - I didn't know the market price of electrolytic capacitors, so I bought a 47uF capacitor for 50 yen, which was a little bit cheaper than a 47uF capacitor for 100 yen, which was in a conspicuous place! I thought I was getting a good deal and bought it, but later I found out that it was sold for 10 yen, and I was depressed.
+ - Is it like 10 yen for an electrolytic capacitor, 20 yen for a ceramic capacitor, and 5 yen for a resistor?
+ - Missing: amplifier, photocoupler
+ - Since the part that communicates with the PC picks up noise from the PC, it is necessary to isolate it with a photocoupler. and a capacitor are placed between the two to discard the noise created by the converter. However, it says that it is recommended to be powered by batteries, so why don't we just use batteries to drive all the circuits on the sensor side rather than the photocoupler?
+ - I want to use USB because I don't have serial in the first place.
+ - Battery-driven (sensor → amplifier → photocoupler) → USB-driven (cable → AVR → USB-Serial → PC)
+ - The "AVR -> USB-Serial" part can be replaced by Arduino! I think that would make everyone happy.
+ -- Unfortunately, I heard that passing an analog signal through a photocoupler causes severe distortion (although I don't think it does much harm to the brain waves since the distortion is only overtones), so I decided to put a photocoupler between the AVR and the USB-Serial.
+ - The battery drive is mounted on the headset side.
+ - I bought a bunch of multilayer ceramic capacitors (the little blue ones in the example) and need to learn how to identify which is which. 10: 10pF, 100: 100pF, abc: (ab * 10^c)pF easy
+ - I learned how to read the resistor but got a little nervous when I saw that 220K was red-red-orange, 22 * 10^4, so it's right, but was it 2.2? I was worried. 2.2's shows red-red-gold, gold to the -1 power and silver to the -2 power.
+ 
+ The only things missing should be an amplifier and a photocoupler. There should be enough resistors and capacitors, so I assembled them on a breadboard for the time being. After checking the operation on the breadboard, I soldered it.
+ 
+ - resistance
+ -- 2.2K 100 pcs. 100
+ -- 470 100 pcs. 100
+ -- 7.5K 100 pcs. 100
+ -- 1M 100 pieces 100
+ -- Other @5 x6 30
+ - capacitor
+ -- Laminated ceramic @20 x30 600
+ -- 10 0.1uF (100nF) @100 x2 200
+ -- Electrolytic capacitor 47uF @50 x2 100 # Failure
+ -- Electrolytic capacitor 47uF @10 x8 80
+ -- Laminated ceramic @20 x4 80
+ - Inductor 22uH @25 x2 50
+ - Three-terminal regulator L7805C 4pcs. 100
+ 
+ <hr>
+ 
+ I should have bought another breadboard." And the number of "breadboards with unmade circuits stuck in them" is increasing.
+ 
+ *1250698020* I went to see "Evangelion: The Movie".
+ - 1: Meet id:akio0911 in Akihabara
+ - 2: akio, "Have you seen Eva?"
+ - 3: I've only seen the animation once, and I haven't seen the previous movie version, so I'm not really interested in...
+ - 4: AKIO: "Didn't you see it? That's not allowed! Let's go see it now!"
+ - 5: Moved to Shinjuku to see it.
+ 
+ Dear readers, have you seen Eva?
+ You haven't seen it? Don't do that!
+ Even if you are not interested in Eva, you should definitely see it if you are interested in science fiction, abstract art, or visual images. You should see it. You should see it.
+ 
+ <hr>
+ 
+ Meet in Akihabara → have dinner → move to Shinjuku → see a movie together → take the last train home
+ <img src="http://gyazo.com/21d657586911b296d9686d9ff5ecd2bb.png">
+ I'm not like that!
+ </body>
+ <comments>
+ <comment>
+ <username>akio0911</username>
+ <BODY>I hate you all. I hate them! </body>
+ <timestamp>1250699658</timestamp>
+ </comment>
+ <comment>
+ <username>kajuntk</username>
+ <body>After that, it's your favorite herbivorous lure! </body>
+ <timestamp>1250715087</timestamp>
+ </comment>
+ <comment>
+ <username>kajuntk</username>
+ <body>Wow! Comments are now approved on the WWW</body>.
+ <timestamp>1250715107</timestamp>
+ </comment>
+ <comment>
+ <username>takano32</username>
+ <body>You are dating, right? </body>
+ <timestamp>1250717415</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I can't do this, because she's married...</body>
+ <timestamp>1250745237</timestamp>
+ </comment>
+ <comment>
+ <username>SUUDARA</username>
+ <body>Hey, it's been a while... I mean, you've finally made it to the "brain".　<BR>I think INA114 was almost the same as INA128 in Akizuki.　<br>If INA114 was almost the same as INA128 in Akizuki, it would have given me a hard time either way (grin) <br>One hint. Beware of input protection diodes. </body>
+ <timestamp>1250850796</timestamp>
+ </comment>
+ <comment>
+ <username>siodgp</username>
+ <body>I can't even set it up in ubuntu firefox any way</body>.
+ <timestamp>1411682269</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-08-19 https://nishiohirokazu.hatenadiary.org/archive/2009/08/19]

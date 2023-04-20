@@ -1,0 +1,202 @@
+Hatena2008-08-31
+code:hatena
+ <body>
+ *1220158248*Kushigahama's tummy
+ It's a drinking game until you do SEO. <a href="http://d.hatena.ne.jp/kusigahama/">Eight months pregnant forever</a>
+ 
+ *1220159439* About the 11th java-ja
+ <a href="http://java-ja.yoshiori.org/index.php?%E7%AC%AC%E5%8D%81%E4%B8%80%E5%9B%9E">java-ja</a>
+ 
+ I had planned not to take on the project for the time being because it was too painful to take on so many announcements, but then I found myself in this situation.
+ 
+ *1220160145*gopython
+ I heard that goruby makes the code very short and makes golfing easier, so I'll see what I can do to make golfing easier in Python. Write gradually.
+ 
+ >|python|
+ In [3]: for i in range(10):
+    ...:     globals()["s%d"%i] = lambda x,i=i:globals().__setitem__("x%s"%i, x)
+    ...: 
+ 
+ In [4]: s1(100)
+ 
+ In [5]: x1
+ Out[5]: 100
+ ||<
+ 
+ At any rate, I've made it possible to use assignments to global variables in expressions, but it's not fair no matter how you look at it.
+ 
+ -----
+ 
+ >|python|
+ class SetGlobals:
+     def __getattr__(self, name):
+         def func(value):
+             globals().__setitem__(name, value)
+             return value
+         return func
+ 
+ g = SetGlobals()
+ 
+ print [g.x(2), x] # [2, 2]
+ ||<
+ 
+ Finally.
+ 
+ >|perl|
+ [$x=2, $x]
+ ||<
+ I feel like I'm on the same starting line as a language that can
+ 
+ -----
+ 
+ I wonder if this is how goruby's shortened method names are expanded.
+ 
+ >|python|
+ def find_item(namespace, name):
+     """
+     >>> ns = "size range string stringstring x xs".split()
+     >>> ns = dict(zip(ns, ns))
+     >>> find_item(ns, "x")
+     'x'
+     >>> find_item(ns, "r")
+     'range'
+     >>> find_item(ns, "si")
+     'size'
+     >>> find_item(ns, "ss")
+     'stringstring'
+     """
+     if name in namespace:
+         return namespace[name]
+     candidate = [k for k in namespace if k.startswith(name)]
+     if len(candidate) == 1:
+         return candidate[0]
+ 
+     # zero or more than one exact matches 
+     for can in namespace:
+         start = 0
+         for c in name:
+             start = can.find(c, start) + 1
+             if start == 0:
+                 break
+         else:
+             return can
+     
+     raise RuntimeError(candidate)
+ ||<
+ 
+ -----
+ 
+ I mean, anyway, I think there should be an object like a certain source of magical power (mana) to make it possible to write short.
+ But I think that all objects derived from that mana should be charged with magical power.
+ 
+ >|python|
+ class Mana:
+     def __call__(self, v):
+         "add magical power"
+         if isinstance(v, str):
+             return MagicalString(v)
+         if isinstance(v, int):
+             return MagicalInteger(v)
+ 
+ M = Mana()
+ 
+ class MagicalObject:
+     def __init__(self, v):
+         self.value = v
+ 
+ class MagicalString(MagicalObject):
+     def __add__(self, v):
+         if isinstance(v, MagicalObject):
+             v = v.value
+         if isinstance(v, int):
+             return self.value + str(v)
+         return self.value + v
+ 
+ class MagicalInteger(MagicalObject):
+     def __add__(self, v):
+         if isinstance(v, MagicalObject):
+             v = v.value
+         if isinstance(v, str):
+             return self.value + int(v)
+         return self.value + v
+ 
+ i = M(100)
+ s = M("100")
+ print i + s #=> 200
+ print s + i #=> 100100
+ ||<
+ 
+ Now I can finally do "foo" + 100 and so on.
+ 
+ -----
+ 
+ MagicalList made a destructive addition with +. Because only 3 bytes of [:] are needed to make a copy. Also, it can be a hash key.
+ 
+ >|python|
+ class MagicalList(MagicalObject):
+     """
+     >>> xs = MagicalList(0, 1, 2)
+     >>> xs.value
+     [0, 1, 2]
+     >>> (xs + 3).value
+     [0, 1, 2, 3]
+     >>> d = {}
+     >>> d[xs] = 0
+     >>> d[MagicalList(0,1,2,3)]
+     0
+     """
+     def __init__(self, *value):
+         if len(value) == 1:
+             self.value = list(value[0])
+         self.value = list(value)
+ 
+     def join(self, x):
+         return M(x.join(self.value))
+ 
+     def __hash__(self):
+         return hash(tuple(self.value))
+ 
+     def __eq__(self, v):
+         if isinstance(v, MagicalObject):
+             v = v.value
+         return self.value == v
+ 
+     def __add__(self, value):
+         """add destructively"""
+         if isinstance(value, list) or isinstance(value, tuple):
+             self.value.extend(value)
+         else:
+             self.value.append(value)
+         return self
+ ||<
+ 
+ It's far from finished, but I'm getting bored. If enough people want to see the whole code, I'll put it in CodeRepos. If you want to see it, you can press "Hatena Star".
+ 
+ *1220184318*Household Diary
+ Drinking party → Karaoke until morning → Wake up at noon → No appetite
+ 
+ So I didn't eat anything. At any rate, I went to throw away the empty cans that had accumulated quite a bit.
+ 
+ f:id:nishiohirokazu:20080831210434j:image
+ 
+ I bought a variety of kimchi nabe because I wanted to eat kimchi nabe after seeing the source of kimchi nabe.
+ 
+ 
+ f:id:nishiohirokazu:20080831215930j:image
+ 
+ f:id:nishiohirokazu:20080831220941j:image
+ 
+ Regular calorie counting
+ - 1 ball of udon noodles 303kcal
+ - Carrot 1 70kcal
+ - Green onion 2 35kcal
+ - Enoki mushroom 1/2(100g) 19kcal
+ - Shiitake mushroom 3 about 20 kcal?
+ - Shimeji 1/2 (100g) about 20 kcal?
+ - Tofu 1/2 166kcal
+ - 1/8 Chinese cabbage 30kcal
+ 
+ Wow, tofu is surprisingly high in calories. If you eat one tofu, it's about the same as 1.5 to 2 rice balls from a convenience store.
+ </body>
+
+[Hatena Diary 2008-08-31 https://nishiohirokazu.hatenadiary.org/archive/2008/08/31]

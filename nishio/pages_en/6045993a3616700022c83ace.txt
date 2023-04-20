@@ -1,0 +1,34 @@
+What does react-dom/test-utils act do?
+Briefly, "flush until the update queue is empty after calling the callback."
+
+If the callback is sync, repeat flushPassiveEffects until the while statement is empty.
+ code:ts
+  const flushWork =
+    Scheduler.unstable_flushAllWithoutAsserting ||
+    function() {
+      let didFlushWork = false;
+      while (flushPassiveEffects()) {
+        didFlushWork = true;
+      }
+  
+      return didFlushWork;
+    };
+
+In the case of async, it flushes and re-stacks itself on the queue until the queue is empty.
+	code:ts
+	 function flushWorkAndMicroTasks(onDone: (err: ?Error) => void) {
+    try {
+      flushWork();
+      enqueueTask(() => {
+        if (flushWork()) {
+          flushWorkAndMicroTasks(onDone);
+        } else {
+          onDone();
+        }
+      });
+    } catch (err) {
+      onDone(err);
+    }
+  }
+
+In addition to this, there are codes for checking "whether the act is double", "whether you await something that is not async", "whether you forget to await even though it is async", and so on.

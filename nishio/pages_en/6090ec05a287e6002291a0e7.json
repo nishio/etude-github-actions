@@ -1,0 +1,239 @@
+Hatena2010-08-01
+code:hatena
+ <body>
+ *1280651063*Translation of excerpt PEP3104: Access to Names in Outer Scopes
+ ** Overview
+ 
+ In many languages that support nested scopes, code can refer to and re-bind (assign) names in the nearest scope. Currently, Python can refer to any name in the outer scope, but re-binding is only possible within two scopes. There are two scopes: the local scope (using a simple assignment) and the scope of the module global (using the ``global`` declaration).
+ This limitation has been discussed many times on the Python-Dev mailing list and elsewhere, leading to much discussion and suggestions on how to remove this limitation. This PEP summarizes the many options that have been proposed and notes the advantages and disadvantages noted for each.
+ 
+ ** Reason
+ Prior to version 2.1, Python's handling of scopes was similar to standard C. There were only two scope levels in a file: global and local. In C, this is a natural consequence of the fact that function definitions cannot be nested. In Python, however, function definitions can be executed anywhere, even though functions are usually defined at the top level. This syntactically makes it appear that Python has nested scopes. But that functionality is not there. This discrepancy surprises programmers.
+ 
+ For example, a recursive function that was working at the top level will stop working when placed inside another function. This is because the name of the recursive function itself is not visible in the scope of the body of the recursive function. This goes against the intuition that functions should behave the same regardless of where they are placed. Here is an example::: recursive_function_name
+ 
+ >|python|
+     def enclosing_function():
+         def factorial(n):
+             if n < 2:
+                 return 1
+             return n * factorial(n - 1)  # fails with NameError
+         print factorial(5)
+ ||<
+ 
+ In Python 2.1, bound names are now visible in all outer scopes, closer to statically nested scopes (see PEP 227) This change allows the code example above to work as expected. However, it is not possible to re-bind a name in the outer scope, since all assignments to a name implicitly declare that name as local (except to force the name into the global scope via a ``global`` declaration), so the code below will not work as expected, except for the following example, which is displayed when clicking the button The code expects the number to increase or decrease, but it does not work as someone familiar with lexical scopes would expect. ::.
+ 
+ 
+ >|python|
+     def make_scoreboard(frame, score=0):
+         label = Label(frame)
+         label.pack()
+         for i in [-10, -1, 1, 10]:
+             def increment(step=i):
+                 score = score + step  # fails with UnboundLocalError
+                 label['text'] = score
+             button = Button(frame, text='%+d' % i, command=increment)
+             button.pack()
+         return label
+ ||<
+ 
+ **Examples in other languages
+ 
+ *** JavaScript, Perl, Scheme, Smalltalk, GNU C, C# 2.0
+ These languages use variable declarations to indicate scope: in JavaScript, lexical scope variables are declared with the keyword ``var``; undeclared variable names are interpreted as global. In Perl, lexical scope variables are declared with the keyword ``my``; undeclared variable names are interpreted as global. In Scheme, all variables must be declared (with ``define``, ``let``, or as dummy arguments); in Smalltalk, every block begins with a list of local variable names, separated by vertical bars. In C and C#, all variables require a type declaration. In all of them, the variable belongs to the scope that contains its declaration.
+ 
+ ***Ruby1.8
+ Ruby is a helpful example. It is the only other currently well-known language that seems to have attempted to support statically nested scopes without requiring variable declarations, as Python does. Ruby functions can have other function definitions. A Ruby function can have other function definitions, and it can have blocks enclosed in curly brackets. Blocks can access outer scopes. Nested functions, however, do not. An assignment to a name in a block is interpreted as a declaration of a local variable only if it does not hide a name already bound in the outer scope. Ruby's syntax and rules for scope are also long debated and are expected to change in Ruby 2.0. [28]_
+ 
+ *1280656890*Translated excerpt PEP 342: Coroutines via Enhanced Generators
+ ** Overview
+ 
+ This PEP proposes to improve the API and syntax of the generator so that it can be used as a simple coroutine.
+ 
+ ** Motive
+ 
+ Coroutines are a natural way to express various algorithms. Examples include simulations, games, asynchronous I/O, and other forms of event-driven programming and cooperative multitasking. Python's generator functions are mostly coroutines, but not entirely, because they allow you to create values and pause processing, but have no way to pass values or exceptions when resuming processing.
+ 
+ ** Implementation example
+ 1. a "consumer" decorator that automatically advances to the first yield when the generator function is first called: 1.
+ >|python|
+ def consumer(func):
+     def wrapper(*args,**kw):
+         gen = func(*args, **kw)
+         gen.next()
+         return gen
+     wrapper.__name__ = func.__name__
+     wrapper.__dict__ = func.__dict__
+     wrapper.__doc__  = func.__doc__
+     return wrapper
+ ||<
+ 
+ Create a "reverse generator" using the "consumer" decorator. This takes multiple images, creates a page of thumbnails, and sends them to other "consumers". Functions like this can stitch together "consumers," each of which can have complex internal states, to create an efficient processing pipeline.
+ 
+ >|python|
+ @consumer
+ def thumbnail_pager(pagesize, thumbsize, destination):
+     while True:
+         page = new_image(pagesize)
+         rows, columns = pagesize / thumbsize
+         pending = False
+         try:
+             for row in xrange(rows):
+                 for column in xrange(columns):
+                     thumb = create_thumbnail((yield), thumbsize)
+                     page.write(
+                         thumb, col*thumbsize.x, row*thumbsize.y
+                     )
+                     pending = True
+         except GeneratorExit:
+             # close() was called, so flush any pending output
+             if pending:
+                 destination.send(page)
+ 
+             # then close the downstream consumer, and exit
+             destination.close()
+             return
+         else:
+             # we finished a page full of thumbnails, so send it
+             # downstream and keep on looping
+             destination.send(page)
+ 
+ @consumer
+ def jpeg_writer(dirname):
+     fileno = 1
+     while True:
+         filename = os.path.join(dirname,"page%04d.jpg" % fileno)
+         write_jpeg((yield), filename)
+         fileno += 1
+ 
+ 
+ # Put them together to make a function that makes thumbnail
+ # pages from a list of images and other parameters.
+ #
+ def write_thumbnails(pagesize, thumbsize, images, output_dir):
+     pipeline = thumbnail_pager(
+         pagesize, thumbsize, jpeg_writer(output_dir)
+     )
+ 
+     for image in images:
+         pipeline.send(image)
+ 
+     pipeline.close()
+ ||<
+ 
+ A simple coroutine scheduler, also known as a "trampoline". It allows a coroutine to "call" another coroutine by yielding the coroutine it wants to call. Similarly, if a coroutine throws an exception, the exception is propagated to the "called" coroutine. Similarly, if a coroutine throws an exception, the exception is propagated to the coroutine that "called" it. As a result, this example behaves like a simple tasklet used in Stackless Python, as long as the yield expression is used to invoke the routine. Otherwise, it will "block. This is just a very simple example. More sophisticated schedulers are possible (e.g., the existing GTasklet framework for Python (http://www.gnome.org/~gjc/gtasklet/gtasklets.html) or the peak.events framework (http:// peak.telecommunity.com/) already implement very similar functionality. But currently it uses a weird workaround because there is no way to pass values or exceptions to the generator, so I'm not sure if it's a good idea or not :) :.
+ 
+ >|python|
+ import collections
+ 
+ class Trampoline:
+     """Manage communications between coroutines"""
+ 
+     running = False
+ 
+     def __init__(self):
+         self.queue = collections.deque()
+ 
+     def add(self, coroutine):
+         """Request that a coroutine be executed"""
+         self.schedule(coroutine)
+ 
+     def run(self):
+         result = None
+         self.running = True
+         try:
+             while self.running and self.queue:
+                 func = self.queue.popleft()
+                 result = func()
+             return result
+         finally:
+             self.running = False
+ 
+     def stop(self):
+         self.running = False
+ 
+     def schedule(self, coroutine, stack=(), value=None, *exc):
+         def resume():
+             try:
+                 if exc:
+                     value = coroutine.throw(value,*exc)
+                 else:
+                     value = coroutine.send(value)
+             except:
+                 if stack:
+                     # send the error back to the "caller"
+                     self.schedule(
+                         stack[0], stack[1], *sys.exc_info()
+                     )
+                 else:
+                     # Nothing left in this pseudothread to
+                     # handle it, let it propagate to the
+                     # run loop
+                     raise
+ 
+             if isinstance(value, types.GeneratorType):
+                 # Yielded to a specific coroutine, push the
+                 # current one on the stack, and call the new
+                 # one with no args
+                 self.schedule(value, (coroutine,stack))
+ 
+             elif stack:
+                 # Yielded a result, pop the stack and send the
+                 # value to the caller
+                 self.schedule(stack[0], stack[1], value)
+ 
+             # else: this pseudothread has ended
+ 
+         self.queue.append(resume)
+ ||<
+ 
+ 4. code to make it run with a simple echo server and trampoline ("nonblocking_read", "nonblocking_write" and other I/O coroutines such as throwing ConnectionLost is closed, it assumes the existence of other I/O coroutines, such as throwing ConnectionLost when the connection is closed).
+ 
+ >|python|
+ # coroutine function that echos data back on a connected
+ # socket
+ #
+ def echo_handler(sock):
+     while True:
+         try:
+             data = yield nonblocking_read(sock)
+             yield nonblocking_write(sock, data)
+         except ConnectionLost:
+             pass  # exit normally if connection lost
+ 
+ # coroutine function that listens for connections on a
+ # socket, and then launches a service "handler" coroutine
+ # to service the connection
+ #
+ def listen_on(trampoline, sock, handler):
+     while True:
+         # get the next incoming connection
+         connected_socket = yield nonblocking_accept(sock)
+ 
+         # start another coroutine to handle the connection
+         trampoline.add( handler(connected_socket) )
+ 
+ # Create a scheduler to manage all our coroutines
+ t = Trampoline()
+ 
+ # Create a coroutine instance to run the echo_handler on
+ # incoming connections
+ #
+ server = listen_on(
+     t, listening_socket("localhost","echo"), echo_handler
+ )
+ 
+ # Add the coroutine to the scheduler
+ t.add(server)
+ 
+ # loop forever, accepting connections and servicing them
+ # "in parallel"
+ #
+ t.run()
+ ||<
+ 
+ *1280678844*Bohee
+ I was going to add the PEP I translated today to the lecture material, but I completely forgot and submitted it as is, but that's okay. I'm only going to include the Outer Scope one, so I'll only have one more example to work with.
+ </body>
+
+[Hatena Diary 2010-08-01 https://nishiohirokazu.hatenadiary.org/archive/2010/08/01]

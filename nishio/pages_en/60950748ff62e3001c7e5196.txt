@@ -1,0 +1,11 @@
+Copy title with prefix
+I was going to include existing private project pages in doing the [public to private transfer], but decided to keymark those pages ([to🔒]).
+So I decided to import the key mark and the project name as well as the page title.
+code:python
+ def copy_with_prefix(src, dst):
+     r = export_from(src)
+     pages = r.json()["pages"]
+     for p in pages:
+         p["title"] = f"🔒{src}/" + p["title"]
+ 
+     write_pages(dst, pages)

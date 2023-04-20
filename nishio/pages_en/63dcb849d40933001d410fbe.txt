@@ -1,0 +1,49 @@
+Kozaneba Development Diary 2023-02-03
+prev [Kozaneba Development Diary 2023-01-25].
+
+2023-02-02
+It's a pretty destructive rewrite, but at least I can now observe what happens when I turn off automatic font size adjustment.
+ [https://gyazo.com/98982a33a6751566c08afe60884e34a1]
+
+The "bounding box" when a range is selected or a line is drawn does not match the actual appearance of the box.
+ [https://gyazo.com/61564c7a5390c089bc7a3d5203e3294d]
+　If we want to solve this, we need to get the actual size by accessing the DOM by those codes, or we need to get it at the time of rendering.
+
+
+2023-02-03
+It is difficult to refer to a concept without giving it a name, so I tentatively named it "[Fixed Font Size Function]".
+	This is hard to see the value to the user, so we will eventually rename it.
+
+Future Work
+	Fixed font size is currently being experimented with in a pretty destructive rewrite.
+	　They're achieving this by breaking the original font size adjustment feature.
+	I challenge you to make this a feature toggle.
+　Once it's done, make it "a feature that is turned off for the general public but can be turned on for advanced users because it causes problems with range selection and line merging".
+
+It could coexist with automatic font size adjustment!
+	[https://gyazo.com/ce81250e9ac8d91c6ce5941a251ae181]
+feature toggle
+`kozaneba.constants.exp_no_adjust = true`
+Kozanego's flag for whether to turn off auto-adjustment is "whether the first character is # or not."
+
+Let's use it in this state for now.
+
+[https://gyazo.com/653117636492ca9aa77c28242bd147d6]
+　Bug.
+	Fixed.
+		[https://gyazo.com/64f73e37e119678b0d4ca3f31a62e520]
+　　No release yet.
+
+
+Notes on thoughts
+　User scripts, saved to browser local storage, disappeared.
+　　Well, I'm saving it separately as a sample, so there's no damage, but it's hard to tell with that kind of behavior.
+　　It is technically possible to store the settings tied to the user, the reason why we haven't done it is because there was a need for "different settings for different devices" like a Macbook with a touchpad and Windows with a wheel mouse.
+　　However, there is a sense that only flags are needed to separate settings for each machine.
+　　I haven't tried it myself because it doesn't work properly on my iPad after all, but I've also accessed it from my iPad and iPhone.
+　　　For example, you could just add what comes to mind on your iPhone while walking around, and then organize it on your PC when you get home, like you can see it but not edit the map.
+　It would be a good idea to check for duplicates when they are automatically added, such as in the Scrapbox Kozane expansion.
+　　In other words, if you put one up and expand it, it's great for organizing your Scrapbox! Like this
+　I have a presentation next week and will use this to organize the information.
+
+

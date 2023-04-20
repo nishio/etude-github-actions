@@ -1,0 +1,111 @@
+Hatena2011-11-29
+code:hatena
+ <body>
+ *1322542197*add_patch with transform in matplotlib ignores the coordinate system of the parent axes
+ I had a phenomenon that when I put transform on patch in matplotlib, it seemed to disappear.
+ First, try to put a rectangular PATCH on top of the scatter plot as usual.
+ 
+ >|python|
+ clf()
+ scatter(random(100), random(100))
+ ax = gca()
+ rect = Rectangle((0, 0), 1, 1, alpha=0.3)
+ ax.add_patch(rect)
+ matplotlib.pyplot.savefig("test.png", dpi=100)
+ ||<
+ [f:id:nishiohirokazu:20111129134505p:image]
+ 
+ Up to this point, it works very naturally. Then, when I try to rotate the rectangle and specify a transform, the rectangle disappears, and I thought I had made a mistake in creating the transform, but Affine2D.identity() also disappears.
+ 
+ >|python|
+ clf()
+ scatter(random(100), random(100))
+ ax = gca()
+ t = Affine2D.identity()
+ rect = Rectangle((0, 0), 1, 1, transform=t, alpha=0.3)
+ ax.add_patch(rect)
+ matplotlib.pyplot.savefig("test.png", dpi=100)
+ ||<
+ [f:id:nishiohirokazu:20111129134504p:image]
+ 
+ The key to solving the problem was, as before (<a href='http://d.hatena.ne.jp/nishiohirokazu/20111121/1321855566'>matplotlib's PatchCollection overwrites child patch colors</a>), the PATCH itself but on top of it.
+ 
+ >||
+ Definition: ax.add_patch(self, p)
+ Docstring:
+ Add a :class:`~matplotlib.patches.Patch` *p* to the list of
+ axes patches; the clipbox will be set to the Axes clipping
+ box.  If the transform is not set, it will be set to
+ :attr:`transData`.
+ ||<
+ 
+ In other words, if you specify "transform" in "patch" and do "add_patch," the coordinate system of the parent axes will be ignored. So, in this example, if transform is not specified, the coordinate system is in the range of 0 to 1 according to the axes of the scatter plot, but because the unit matrix is specified in transform, it is now in the global coordinate system of the figure. And since it is outside the clipping of the scatter plot, it has disappeared. If you set the size of the rectangle to 100x100, a little head pops up: "Hey, I'm here!
+ 
+ >|python|
+ rect = Rectangle((0, 0), 100, 100, transform=t, alpha=0.3)
+ ||<
+ [f:id:nishiohirokazu:20111129134503p:image]
+ 
+ So I can just specify ax.transData as transform.
+ 
+ >|python|
+ t = ax.transData
+ rect = Rectangle((0, 0), 1, 1, transform=t, alpha=0.3)
+ ||<
+ 
+ This was the expected result, so I omitted it. Then, let's start the rotation.
+ 
+ >|python|
+ for i in range(5):
+     t = CompositeGenericTransform(Affine2D.identity().rotate(0.1 * i), ax.transData)
+     rect = Rectangle((0, 0), 1, 1, transform=t, alpha=0.3)
+     ax.add_patch(rect)
+ ||<
+ 
+ [f:id:nishiohirokazu:20111129135741p:image]
+ 
+ It's done, it's done. I'm so happy. But do I really have to use CompositeGenericTransform? I wonder if there is an easier way.
+ 
+ Postscript. It seems that Affine2D() can be used to make a unit matrix without using identity for now.
+ 
+ *1322553293* Logistic regression implemented.
+ [f:id:nishiohirokazu:20111129165419g:image]
+ It wasn't very interesting.
+ 
+ *1322553666* To draw the separation plane of a linear classifier in matplotlib
+ [f:id:nishiohirokazu:20111129165419g:image]
+ The story of how this was painted.
+ 
+ First, the vertical and horizontal scales of the scatter plots are fixed to avoid the arrows looking strange (1), the arrows are drawn using weight vectors (2), and the large gray rectangle is drawn almost transparent and rotated using an affine transformation created based on the weight vector values (3).
+ 
+ Don't worry about data1, data2, w, data2color, etc., since they are picked up from the global scope.
+ >|python|
+ def draw(figureid):
+     clf()
+ 
+     ax = gca()
+     ax.set_ylim(-6, 6) # (1)
+     ax.set_xlim(-6, 6) # (1)
+ 
+     scatter(data1[:, 0], data1[:, 1], edgecolors='blue', facecolors=data2color(data1))
+     scatter(data2[:, 0], data2[:, 1], edgecolors='red', facecolors=data2color(data2))
+ 
+     # (2)
+     arr = YAArrow(fig, w, (0, 0), alpha=0.8, width=0.2, 
+                   headwidth=0.6, frac=0.3, facecolor='red')
+     ax.add_patch(arr)
+ 
+     # (3)
+     x, y = w
+     t = CompositeGenericTransform(Affine2D.from_values(x, y, y, -x, 0, 0), ax.transData)
+     rect = Rectangle((0, -100), 100, 200, transform=t, alpha=0.1, facecolor='grey')
+     ax.add_patch(rect)
+ 
+     ax.text(0.05, 0.95, str(figureid), transform=ax.transAxes,
+             fontsize=16, fontweight='bold', va='top')
+ 
+     matplotlib.pyplot.savefig("lr%04d.png" % figureid, dpi=50)
+ ||<
+ </body>
+
+[Hatena Diary 2011-11-29 https://nishiohirokazu.hatenadiary.org/archive/2011/11/29]

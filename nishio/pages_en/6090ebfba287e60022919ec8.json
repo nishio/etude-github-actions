@@ -1,0 +1,102 @@
+Hatena2008-10-09
+code:hatena
+ <body>
+ *1223570211*[TopCoder]SRM421 Div1 easy
+ http://www.topcoder.com/stat?c=problem_statement&pm=10104&rd=13512
+ There are n masses of m[i] in a line at x[i] on a straight line. The universal gravitational force is inversely proportional to the square of the distance. We know that there are n-1 points at which the forces pulling in the positive direction and the forces pulling in the negative direction are balanced when another object is placed. Find this. This is the problem.
+ 
+ Quotes from the chat
+ >>
+ It was solved normally by a bifurcated search.
+ with the upper bound set to x[i+1] and the lower bound set to x[i
+ pos = (upper limit + lower limit) / 2 and
+ Calculate which direction the force is stronger at the pos position.
+ 
+ If you're pulling up, you're too far up, so you have to go back down more to get there.
+ Upper limit = pos and repeat
+ 
+ If the difference between the upper and lower limits becomes narrower than the required system, BREAK
+ 
+ the end
+ <<
+ 
+ Although not mentioned in the explanation above, I will briefly explain that it may not be obvious to some that there is only one point of balance between each given mass.
+ Notice the point between the two masses. At a slightly positive side of that point, the force pulling in the positive direction is stronger because it is closer to the mass on the positive side, and conversely, the force pulling in the negative direction is weaker. The point where these two forces coincide is the point of balance, and there is only one of these between the two masses. (A line that only goes down and a line that only goes up can only intersect at one point, right?)
+ 
+ >|cpp|
+   vector <double> getPoints(vector <int> x, vector <int> m) {
+     vector<double> result;
+     size_t N = x.size();
+     for(size_t i=0; i<N-1; i++){
+       double ub = x[i + 1];
+       double lb = x[i];
+       while(true){
+ 	double pos = (ub + lb) / 2;
+ 	double lforce = 0.0, uforce = 0.0;
+ 	for(size_t j=0; j<=i; j++){
+ 	  double d = x[j] - pos;
+ 	  lforce += m[j] / d / d;
+ 	}
+ 	for(size_t j=i+1; j<N; j++){
+ 	  double d = x[j] - pos;
+ 	  uforce += m[j] / d / d;
+ 	}
+ 	if(uforce > lforce){
+ 	  ub = pos;
+ 	}else{
+ 	  lb = pos;
+ 	}
+ 	if(ub - lb < 1e-10){
+ 	  result += pos;
+ 	  break;
+ 	};
+       }
+     }
+     return result;
+   }
+ ||<
+ 
+ By the way, result += pos is += for vector<double>, but many people don't know this. boost/assign.hpp is used. push_back is long and tedious.
+ 
+ **1223570694*[TopCoder] war has been declared.
+ http://generation1986.g.hatena.ne.jp/n4_t/20081009
+ >>
+ First, we are going after nishio-san.
+ <<
+ 
+ I was on the warpath earlier this year. http://d.hatena.ne.jp/nishiohirokazu/20080101/1199187895
+ 
+ I checked and it was by 12 points. I was caught behind without knowing it. Scary, scary.
+ 
+ *1223572405*[TopCoder]SRM421 Div1 normal not sure
+ http://www.topcoder.com/stat?c=problem_statement&pm=10074&rd=13512
+ A list of integers is given. This is the size of the cake. The problem is to cut this up to maxCuts times so that the difference in size between the largest and smallest pieces is the smallest. How to do this?
+ >>
+ CONSTRAINTS
+ -weights will contain between 1 and 50 elements, inclusive.
+ -Each element of weights will be between 1 and 1,000,000,000, inclusive.
+ -maxCuts will be between 1 and 100,000, inclusive.
+ <<
+ 
+ It would be impossible to search while increasing the number of cuts by one. The maximum size of the cake is 1,000,000,000 and the maximum number of cuts allowed is 100,000,000. The maximum number of cakes is 50.
+ 
+ By the way, even though it is not mentioned in the problem statement, when you cut a cake n times, you can consider it to be divided into n equal pieces. The reason is that if the cake is not divided equally and any of the pieces is the largest or smallest, then if it is divided equally, the largest piece will be smaller and the smallest piece will be larger, so there will be a more "small difference" state. On the other hand, if neither the largest nor the smallest fragment is the largest or the smallest, then equating the fragments does not affect the answer, so equating the fragments is acceptable. Therefore, adding the condition of always equalizing does not change the answer.
+ 
+ -----
+ 
+ If you think vaguely and don't understand, think from the end. First, when there is one cake, the answer is 0.0 regardless of the number of divisions. If there are several cakes and the upper limit of the number of divisions is zero, the answer is simply the difference between the maximum and minimum values.
+ 
+ Consider a situation where there are two cakes and the number of divisions is 1. The one to be divided is the larger one. Let a be the larger one and b the smaller one. a == b, no division is necessary. If the difference b - a / 2 after division is greater than a - b, then there is no need to divide. In other words, if b is greater than a * 3 / 4, then there is no need to divide.
+ 
+ If the number of divisions remains 1 and there are many cakes. It is the largest cake that is divided. Because otherwise the difference between the largest and smallest piece will either remain unchanged or increase. If the largest piece is divided and is not less than the smallest, this will reduce the difference regardless of the size of the other pieces. The case where it goes below is tricky. That is, if max / 2 < min, with the second largest cake as 2nd, the difference is whether max - min > 2nd - max / 2.
+ 
+ Hmmm.
+ 
+ If the upper limit of the number of cuts is 2, there is an option to divide max into 3 parts and an option to divide max and 2nd into 2 parts each.
+ 
+ Hmmm, I don't see a path forward.
+ 
+ (I'll write more later.)
+ </body>
+
+[Hatena Diary 2008-10-09 https://nishiohirokazu.hatenadiary.org/archive/2008/10/09]

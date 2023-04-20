@@ -1,0 +1,146 @@
+Hatena2010-04-04
+code:hatena
+ <body>
+ *1270349375*Problem with external style sheets not being reflected.
+ Specify an external style sheet,
+ >|html|
+ <link type="text/css" href="/style.css" rel="stylesheet" />
+ ||<
+ The server log shows that the stylesheet was properly accessed and returned a 200 OK.
+ >||
+ "GET /style.css HTTP/1.1" 200 -
+ ||<
+ Nevertheless, the style defined in that external style sheet was not hit in the browser.
+ 
+ 
+ The cause was that the HTTP response content-type was text/html, which was resolved after modifying it to return text/css.
+ 
+ I guess both Apache and Google App Engine have a default setting of "content-type: text/css when the extension is .css". When I tried to use the .css extension for PNG images, I got a response with text/css.
+ 
+ <img src="http://gyazo.com/2873b2bef7bcd29f9e38711445cbff5f.png">
+ 
+ I had been unaware of this until now because I have customarily used the .css extension for style sheets, but I discovered it this time when I tried to render CSS with the template engine. The important thing is content-type: text/css.
+ 
+ <hr>
+ 
+ Postscript:.
+ http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element
+ <img src="http://gyazo.com/e2513652142f1bec4a6ec573019bae90.png"> via id:yukoba
+ 
+ *1270367619*Remembering the Periodic Table 2
+ Let's see, sailor Liebe, my ship, the Seven Curves Ship's Clark.
+ >||
+ H                    He
+ Li Be  B  C  N  O  F Ne
+ Na Mg Al Si  P  S Cl Ar
+ K  Ca
+ ||<
+ His Excellency Scotch Exposed Man Tetsuya Ba Nickel Copper Zinc
+ >||
+  H                   He
+ Li Be  B  C  N  O  F Ne
+ Na Mg Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn
+ ||<
+ Garrigel sweat bath Krypton
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ ||<
+ Let's see, what's next? Under potassium is rubidium, so rubistron Y zirconium.
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr
+ ||<
+ Hmmm, hmm. Let's fill in the vertical first.
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr　　　　　　　　　 Ag    In Sn Sb Te  I Xe
+ Cs                            Au    Tl Pb Bi Po At Rn
+ Fr
+ ||<
+ Let's see, so, "Rogipara silver" and "horn stamp tin", so, Zn, Cd, Hg for pollution, and "platinum-gold-mercury".
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr　　　　　　 Rh Pd Ag Cd In Sn Sb Te  I Xe
+ Cs                         Pt Au Hg Tl Pb Bi Po At Rn
+ Fr
+ ||<
+ Oh yes, I'm starting to remember. Tintin pushes Lenin to say, "Iridium is good. Tintin Leninos iridium. Osmium and iridium would have been next to platinum.
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr　　　　　　 Rh Pd Ag Cd In Sn Sb Te  I Xe
+ Cs           W Tn Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn
+ Fr
+ ||<
+ What do we need? I don't have vanadium and niobium, for now. I guess "Smelly forests, wriggling hands" will be in there somewhere... Nb, Mo, Tc, Rt, so maybe 4 pieces.
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr Nb Mo Tc Rt Rh Pd Ag Cd In Sn Sb Te  I Xe
+ Cs           W Tn Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn
+ Fr
+ ||<
+ Barium seems to be somewhat of a family 2. Lanthanides seem to come third, but I think it would be cleaner to continue with cecivalic lanthanides and tantalum leniopushing indium, so that's why I designed it that way.
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr Nb Mo Tc Rt Rh Pd Ag Cd In Sn Sb Te  I Xe
+ Cs Ba    Ra  W Tn Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn
+ Fr
+ ||<
+ Hmmm. I don't know anymore. Answer Matching. Ruthenium is Ru, not Rt. The third lanthanide is correct. The third lanthanide is correct, and the next one is hafnium. And don't write lanthanides as Ra, which is radium under Ba. The order of tantalum and tungsten is reversed. Tungsten is under chromium and molybdenum.
+ >||
+  H                                                 He
+ Li Be                                B  C  N  O  F Ne
+ Na Mg                               Al Si  P  S Cl Ar
+  K Ca Sc Ti  V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+ Rb Sr  Y Zr Nb Mo Tc <ins>Ru</ins> Rh Pd Ag Cd In Sn Sb Te  I Xe
+ Cs Ba <ins>*</ins> <ins>Hf</ins>  <ins>Tn W</ins> Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn
+ Fr <ins>Ra</ins>
+ ||<
+ I've learned a lot. Let's do it again next week.
+ 
+ *1270368371*reminds me of Yamanote Line 2
+ Previous: <a href='http://d.hatena.ne.jp/nishiohirokazu/20100316/1268702007'>Remember the Yamanote Line</a>
+ 
+ Tokyo, Kanda, Akihabara, Okachimachi, Ueno, Uguisudani, Nippori, Nishi-Nippori, Tabata, Komagome, Sugamo, Otsuka, Ikebukuro, Mejiro, Takadanobaba, Shin-Okubo, Shinjuku, Yoyogi, Harajuku, Shibuya, Ebisu, Gotanda, Meguro, Osaki, Shinagawa, Hamamatsucho, Shinbashi, Yurakucho, Tokyo, more.
+ 
+ Now, grading.
+ 
+ Meguro and Gotanda are reversed. Â Meguro Gotanda osaki.
+ Also, "Tamachi doko de tamashita shimashita ya" again. Â Shinagawa-tamachi-hamamatsucho.
+ I want to get it right next time.
+ </body>
+ <comments>
+ <comment>
+ <username>jukuin2000</username>
+ <body>I remembered the first family of the periodic table as "naughty and rich, ka-chan ruby seized to France". </body>.
+ <timestamp>1270435072</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Mine was "naughty Rica"</body>.
+ <timestamp>1270435397</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-04-04 https://nishiohirokazu.hatenadiary.org/archive/2010/04/04]

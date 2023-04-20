@@ -1,0 +1,73 @@
+Hatena2009-03-27
+code:hatena
+ <body>
+ *1238138421*Hatena Star in 15 lines in Python 2.6 in a row.
+ I use Firefox2 and its cookie information is recorded in "/Users/nishio/Library/Application Support/Firefox/Profiles/(profile name).default/cookies.txt". You don't have to think about complicated authentication if you read it. MozillaCookieJar, which is part of the standard library, can be used to read the cookies.
+ Since Python 2.6, JSON is also supported as a standard feature, so you can use the following 15 lines of code to hit 10 Hatena stars in a row. 2.6 users who don't want to use 2.6 can use simplejson or something similar.
+ 
+ >||
+ import cookielib, urllib2, json, time
+ cookies_file = "/Users/nishio/Library/Application Support/Firefox/Profiles/2ac0yy4n.default/cookies.txt"
+ target_uri = "http://d.hatena.ne.jp/nishiohirokazu/20090327/1238138421"
+ entries_uri = "http://s.hatena.ne.jp/entries.json?uri=" + target_uri
+ add_ster_uri = "http://s.hatena.ne.jp/star.add.json?uri=" + target_uri
+ 
+ jar = cookielib.MozillaCookieJar()
+ jar.load(cookies_file)
+ opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(jar))
+ data = opener.open(entries_uri).read()
+ rks = json.loads(data)["rks"]
+ add_ster_uri += "&rks=" + rks
+ for i in range(10):
+     opener.open(add_ster_uri).read()
+     time.sleep(1)
+ ||<
+ 
+ Well, I can't use it from Firefox 3 because the cookie information is in SQLite.
+ 
+ *1238156372*Programmer's Nightmare offline match
+ f:id:nishiohirokazu:20090327180848j:image
+ 
+ 1: It's hard to explain without a piece of paper or something with the rules printed on it.
+ 2: I bought cheap poker chips at Tokyu Hands as an alternative to Bit.
+ 3: "Huh? The end?" It ended like that. I think it would be better if two people played many times... In the play of X, Y, and Z in that order, X moved Y's INCREMENT with SEQUENCE_MOD, but the place where he moved was in front of Y's SELF_DESTRUCT, and moreover, carefully, Y was holding it without activating SELF_DESTRUCT, so he said "INCREMENT increased SELF_DESTRUCT's '4 damage to 1 user' by 2". The INCREMENT was holding without activating SELF_DESTRUCT, so I was caught "INCREMENT increased the 1 in SELF_DESTRUCT's '4 damage to 1 user' to 2".
+ 
+ *1238164682* Code for frame description
+ >|python|
+ import sys                                                                                                                                
+                                                                                                                                           
+ def foo(x):                                                                                                                               
+     print sys._getframe(0).f_locals                                                                                                       
+     if x > 0:                                                                                                                             
+         foo(x - 1)                                                                                                                        
+                                                                                                                                           
+     raise NotImplementedError                                                                                                             
+                                                                                                                                           
+ foo(2)
+ ||<
+ 
+ >||
+ {'x': 2}
+ {'x': 1}
+ {'x': 0}
+ Traceback (most recent call last):
+   File "tmp.py", line 10, in <module>
+     foo(2)
+   File "tmp.py", line 6, in foo
+     foo(x - 1)
+   File "tmp.py", line 6, in foo
+     foo(x - 1)
+   File "tmp.py", line 8, in foo
+     raise NotImplementedError
+ NotImplementedError
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>Sqlalchemy pulls data from sqlite, I see. </body>
+ <timestamp>1238260907</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-03-27 https://nishiohirokazu.hatenadiary.org/archive/2009/03/27]

@@ -1,0 +1,28 @@
+Kozaneba Development Diary 2022-06-09
+prev [Kozaneba Development Diary 2022-06-08].
+
+[* 11:00]
+	[nishio.icon]🍅11:51-12:16 ["[requestAnimationFrame] experiment"]
+	　The original implementation called onWheel at 120call/s.
+		When I put React state updates into [requestIdleCallback], onWheel becomes 15call/s (why?).
+	 When a previous Callback remains unprocessed, cancel it and create a new one.
+	 　→ to get about 70call/s.
+　　　The wheel event is differential, so if you simply discard it, the screen will only move slowly.
+　　　　Self-supplied and added together.
+　　Hmmm, no obvious difference.
+　　　Maybe it's just my imagination, but I think the effect of the "update delayed by up to 100ms after wheeling" makes it "go too far beyond where I expected it to go".
+　　　Let's put it on hold as a feature toggle and then we'll think about it.
+　　　I still think it stops more snugly than it did before the change.
+[* 13:00]
+　[nishio.icon]The performance problem (which I tried to solve) doesn't look like it can be solved right away, so let's do the implementation of the features we want first, we want to use it right away.
+[* 14:00]
+	[nishio.icon]🍅14:43-15:08 [" parsing Scrapbox notation to get links"]✅.
+[* 15:00]
+ [nishio.icon]🍅15:52-16:17 [" import link] ✅
+ 　Use [Promise.all] [MDN https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Promise/all]
+[* 16:00]
+　[nishio.icon]🍅16:23-16:48 [" continued]
+　　It's done!
+　　[https://gyazo.com/0dbed547242f0badd75adb4e5fd93c69]
+
+[/villagepump/Kozaneba+Scrapbox]

@@ -1,0 +1,24 @@
+✅Allow specifying the logs to be trained for motion extraction
+relevance
+　[Motion Extraction]
+　[working notes on motion extraction].
+
+Currently, "text files written out in advance with one line and one remark" are used as the learning target.
+This was good for learning before operation, but after actual operation, "This is how I reacted to this input" triggers re-learning, so you will want to use inputs that are not in this file.
+
+code:ugoki/user.py
+ def _talkid_to_logs(talkid):
+     data = json.load(open(f"{_HERE}/../../logs/cache/{talkid}.json"))
+     for user, text in data["log"]:
+         if user == 1:
+             yield text
+ 
+ def get_unknowns():
+     #logs = open(_RAW_LOGS).readlines()
+     logs = _talkid_to_logs("alUKPkDIxF4BN18b4Yoe")
+     for text in logs:
+         for case in text_to_cases(text):
+             yield case
+
+You might think it would be a good idea to "target all logs" (and I actually did it a long time ago), but it's not good because there are some strange logs that keep posting meaningless strings of text and abusing bots.
+Perhaps [the ability to ignore strange users] is needed first.

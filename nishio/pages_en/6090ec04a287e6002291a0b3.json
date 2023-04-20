@@ -1,0 +1,163 @@
+Hatena2010-05-17
+code:hatena
+ <body>
+ *1274104221*[Haskell] design design design, some implementation
+ I thought that if I suddenly started creating the entire game I was going to make, I would get caught up in the details of the implementation and lose sight of the overall design. I thought that if I suddenly started creating the entire game I was going to make, I would get caught up in the "how do you do that?" details of the implementation and neglect the overall design. This was correct because I wanted to create a library that could be reused no matter what the game was.
+ 
+ I think this is more important than monads!
+ 
+ I think I'm about 70% right in understanding that "Haskell's classes are Java's interfaces". When I used to beat around the bush in Python, objects with game data were just dictionaries, but when you want to declare their types in Haskell, you can't be so lenient. So I made a game interface (Java language) with my Java brain. I also tried to create an interface called "Play" (Java language), which means "start" in Java. I couldn't think of any particular method to put in it, so I decided to declare a method named to_str in both interfaces.
+ 
+ Yes, this is the incorrect point of understanding that "Haskell's class is Java's interface." The scope of method names declared in Java's interface is per-instance. But Haskell's is not. It's a top-level scoped function.
+ 
+ In Java, when you define a method or function in a class or instance, the object is bound to the name "this" and then called. an_obj.a_method(an_arg) can access an_obj by accessing the variable "this" in a_method. In Python, calling an_obj.a_method(an_arg) would pass an_obj as the first argument to a_method. Haskell further requires that an_obj be passed as an argument since a_method is a top-level function independent of an_obj in the first place.
+ 
+ >|java|
+ // Java-like
+ class Foo {
+   int a_method(int an_arg){
+     ... (For some reason, THIS can be used.)
+   }
+ }
+ 
+ Foo an_obj = new Foo();
+ an_obj.a_method(an_arg);
+ ||<
+ >|python|
+ # Python-like
+ class Foo:
+   def a_method(self, an_arg):
+     ... (self can be used)
+ 
+ an_obj = Foo()
+ an_obj.a_method(an_arg)
+ ||<
+ >|haskell|
+ -- Haskell style
+ a_method :: (Foo a) => a -> Int -> Int
+ a_method an_obj an_arg = ... (of course an_obj can be used)
+ 
+ an_obj = MakeFoo ...
+ result = a_method an_obj 1
+ ||<
+ 
+ It is strange to call a Haskell case a "method". Because it doesn't belong to class Foo, it is only guaranteed to pass an argument of type Foo as its first argument.
+ 
+ I'm a little happy, though there is no necessity for it to be the first argument at all.
+ >|python|
+ # Python
+ f = an_obj.a_method
+ f(an_arg) # properly a_method(an_obj, an_arg)
+ ||<
+ >|haskell|
+ -- Haskell
+ f = a_method an_obj
+ f an_arg -- properly a_method an_obj an_arg
+ ||<
+ 
+ I've been thinking about, designing, and making containers for such things, and I'm still only working on the display of the 3-eye lineup. So, in the end, to_str is not "Game's to_str" or "Play's to_str," but "top-level to_str," so it should be a class that "can be displayed," not a class called Game or Play. And that's the Show class and show.
+ 
+ >|haskell|
+ -- "For each of type a such that it is an instance of class Game,
+ -- possible_hands has type (Play b) => a -> [b]"
+ class Game a where
+     -- takes a game phase and returns a list of possible moves to choose from
+     possible_hands :: (Play b) => a -> [b]
+     -- Receives games and incoming moves and returns updated new games
+     step_game :: (Play b) => a -> b -> a
+     -- Receive the game and return if the game is over and who won.
+     check_is_finished :: a -> (Bool, Int)
+ 
+ -- T3 := Tic Tac Toe    
+ newtype T3Game = MakeT3Game {value :: [Int]}
+ 
+ instance Game T3Game
+ 
+ -- "The type T3Game is an instance of class Show, where show is defined."
+ instance Show T3Game where 
+     show xs = unlines $ map unwords $ (map (\f -> f cs) [(take 3), (take 3.drop 3), (take 3.drop 6)]) 
+         where cs = map int2cell $ value xs
+ 
+ int2cell 0 = "."
+ int2cell 1 = "x"
+ int2cell 2 = "o"           
+ 
+ 
+ class Play a
+ 
+ class Player a where
+     -- Receive games and possible starting options and choose one
+     think :: (Game b, Play c) => a -> b -> [c] -> c
+     
+ 
+ main = putStr $ show $ MakeT3Game [0,0,0,0,0,1,0,0,2]
+ ||<
+ 
+ *1274105783*[Haskell] ... is a rigid type variable bound by ...
+ I don't know why this is an error, I guess that means there is still something I don't understand.
+ >|haskell|
+ class Foo a where
+     foobar :: (Bar b) => a -> b
+ 
+ class Bar a
+ 
+ newtype AFoo = MakeAFoo {foo_value :: Int}
+ newtype ABar = MakeABar {bar_value :: Int}
+ 
+ instance Foo AFoo where
+     foobar x = MakeABar $ foo_value x
+ 
+ instance Bar ABar
+ ||<
+ 
+ >||
+     Couldn't match expected type `b' against inferred type `ABar'
+       `b' is a rigid type variable bound by
+           the type signature for `foobar' at tmp.hs:6:19
+     In the expression: MakeABar $ foo_value x
+     In the definition of `foobar': foobar x = MakeABar $ foo_value x
+     In the definition for method `foobar'
+ ||<
+ 
+ Ah, I see. Since "(Bar b) =>" does not mean "b is *any* instance of Bar" but "is *any* b that is an instance of Bar", it should not return a concrete Bar instance ABar. Because passing a foobar return value to a function that only takes another Bar instance AnotherBar is valid in terms of type inference, but the type is different at runtime and an error occurs.
+ 
+ >|haskell|
+ class Foo a where
+     foobar :: (Num b) => a -> b
+ 
+ newtype AFoo = MakeAFoo {foo_value :: Int}
+ 
+ instance Foo AFoo where
+     foobar x = 1
+ ||<
+ This is OK; why? Oh, the type of literal 1 is (Num a) => a?
+ 
+ >|haskell|
+ class Foo a where
+     foobar :: (Show b) => a -> b
+ 
+ newtype AFoo = MakeAFoo {foo_value :: Int}
+ 
+ instance Foo AFoo where
+     foobar x = "1"
+ ||<
+ 
+ This will result in a rigid type variable error as expected.
+ 
+ 
+ So how do we fix this?
+ </body>
+ <comments>
+ <comment>
+ <username>ke</username>.
+ <body>(Bar b) => a -> b would mean creating a function that is polymorphic with respect to the return type of the function, but is that really what you want to do? <br>In Java or C++, it's like determining function overloading by the return type instead of the argument type<br>There are some libraries that do that (like (=~) in Text.Regex.Posix), but usually you don't need to make the return type polymorphic. I don't think there is much need to make the return type polymorphic</body>.
+ <timestamp>1274143885</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ I think the case where the <body> return type is not a specific concrete class, but one of a class that inherits from an interface (and is guaranteed to have a specific method) is common in Java, and the fact that it is not often done in Haskell suggests that the same need can be solved in a different way. I think the fact that this is not often done in Haskell means that the same need can be solved in a different way. </body>
+ <timestamp>1274152465</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-05-17 https://nishiohirokazu.hatenadiary.org/archive/2010/05/17]

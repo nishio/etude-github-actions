@@ -1,0 +1,100 @@
+Hatena2012-04-23
+code:hatena
+ <body>
+ *1335173979*Diary of an introduction to zsh
+ ** 2012-04-23
+ 
+ At first, I changed the shell to be opened at startup to /bin/zsh in the preferences of Terminal.app on my Mac. chsh didn't work.
+ 
+ I now get zsh properly when I open a new tab or something. However, the "Open in the same directory when opening a new tab" that seems to have been introduced in Lion is not working.
+ 
+ http://superuser.com/questions/232835/zsh-open-a-new-tab-in-the-same-directory
+ >||
+ Use Oh-My-Zsh and add the 'osx' plugin in your ~/.zshrc like:
+ 
+ plugins=(git osx)
+ 
+ That's all you need to do!
+ ||<
+ 
+ Oh!
+ 
+ ** oh-my-zsh introduced.
+ 
+ The current directory can now be carried over.
+ 
+ But I don't like the default color scheme, so I made the theme simple for now, but I still don't like the use of non-ASCII for the prompts. I'll have to fix that.
+ 
+ ** I created a dotfiles repository on github.
+ 
+ I know it's a little late, but I hadn't done it. I cloned to ~/.dotfiles.
+ 
+ ** Make minimal more minimal
+ 
+ I have simplified it a lot by eliminating features that I consider superfluous from minimal in theme. I kept the worktree dirty and the branch display, but I don't feel the need for them to be colorful.
+ 
+ [f:id:nishiohirokazu:20120423190933p:image]
+ 
+ Maybe there are times when I want to give out more information depending on the situation, but I'll do that explicitly at those times. If a lot of information is given by default, I get tired.
+ 
+ ** Do not let the title change
+ 
+ Stop changing the title on your own at cd. I want to set the title myself.
+ 
+ >||
+ DISABLE_AUTO_TITLE="true"
+ ||<
+ 
+ ** Provide a way to explicitly change the title.
+ Read lib/termsupport.zsh.
+ >||
+ function title {
+   [ "$DISABLE_AUTO_TITLE" != "true" ] || return
+   if [[ "$TERM" == screen* ]]; then
+     print -Pn "\ek$1:q\e\\" #set screen hardstatus, usually truncated at 20 chars
+   elif [[ "$TERM" == xterm* ]] || [[ $TERM == rxvt* ]] || [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+     print -Pn "\e]2;$2:q\a" #set window name
+     print -Pn "\e]1;$1:q\a" #set icon (=tab) name (will override window name on broken terminal)
+   fi
+ }
+ ||<
+ How about that way of DISABLE.... You should DISABLE it on the caller....
+ 
+ No thanks, I'll define it myself.
+ https://github.com/nishio/dotfiles/commit/cdc7fbc3efd14a3058465cbd102be6d6af7d942a
+ 
+ ** 2012-04-24
+ >||
+ setopt auto_cd
+ setopt auto_pushd
+ 
+ autoload predict-on
+ predict-on
+ ||<
+ When I predicted-on, my preconceived notions of what CUI was all about fell to pieces.
+ 
+ ** 2012-04-26
+ 
+ predict-on is very comfortable when it is successful, but
+ 
+ - When I type ls and press enter, ls foobar is predicted and ls fails.
+ - less ... I wanted to do /foo, but less ... I wanted to do /foo, but when I typed "less ...", it predicted the file bar.baz in the current directory, including the period, and then when I typed /, it predicted .... I should have gone back to /, but instead I get ba/.
+ - And I was going to erase only ba and change it to . And then when I want to change it to ..., it all disappears.
+ - When I want to echo "joo" and type echo "j", it predicts echo "deps.js", and when I type oo as it is, it goes back to doo when it should go back to jo.
+ 
+ You need to implement a more serious recovery for failures...
+ 
+ In the meantime, I decided to simply turn it off because I don't want to spend time improving predict-on in zsh.
+ 
+ ** TODO
+ If I think of something, I'll post it here.
+ </body>
+ <comments>
+ <comment>
+ <username>sora_h</username>
+ <body>chsh -s /bin/zsh or something like that won't work. <br>If that doesn't work, you can also change it by going to OS X System Preferences, opening Users & Groups (the account/user management guy), <br>right clicking on your user name in the left pane, then Advanced Options<br>https://img.skitch.com /20120427-x77cupkhe63347umin3gj1debd.png</body>
+ <timestamp>1335540832</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-04-23 https://nishiohirokazu.hatenadiary.org/archive/2012/04/23]

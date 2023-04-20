@@ -1,0 +1,197 @@
+Tapping the Scrapbox API with Cloud Functions
+from [Kozaneba Development Diary 2021-08-29].
+Hit [ScrapboxAPI] in [Cloud Functions
+
+Introduction:.
+	Added Scrapbox Kozane to Kozaneba.
+	It is troublesome for humans to set various parameters
+	I thought about giving them the URL of the page and they would hit Scrapbox's API to get the necessary data.
+	However, due to CORS restrictions on Scrapbox's API, Scrapbox's API cannot be directly hit from the browser that opened Kozaneba.
+	So we hit it with Cloud Functions.
+
+Explanation with pictures
+　[https://gyazo.com/2dba023d5006b6d506f526d52bd3b7d2]
+
+
+Notes on what we did
+　Upgrade Rate Plans
+　I'm used to Python for the server side, but I don't want to just use Python all the time, and this one shouldn't be too hard, so I'll do it in Node.js.
+　　I want to use [scrabox-parser] in the near future and
+	[https://cloud.google.com/functions/docs/writing Writing Cloud Functions | Cloud Functions Documentation | Google Cloud]
+ How do you add Functions to the emulator?
+code::
+ $ firebase init emulators
+ 
+ You're about to initialize a Firebase project in this directory:
+ 
+   /Users/nishio/kozaneba
+ 
+ Before we get started, keep in mind:
+ 
+   * You are initializing within an existing Firebase project directory
+[https://gyazo.com/78375db9636c8d0659bee712c2839151]
+It's done.
+　Funny how the way to change the settings is "init"...
+
+You're not doing it.
+$ firebase emulators:start --import firebase_emulator_data
+[https://gyazo.com/e1be11881d578cfc80150730880d92ce]
+>⚠  functions: The functions emulator is configured but there is no functions source directory. Have you run firebase init functions?
+
+$ firebase init functions
+code::
+ ? What language would you like to use to write Cloud Functions? TypeScript
+ ? Do you want to use ESLint to catch probable bugs and enforce style? Yes
+ ? Do you want to install dependencies with npm now? Yes
+
+Is this done?
+$ firebase emulators:start --import firebase_emulator_data
+code::
+ ⚠  Error: Cannot find module '/Users/nishio/kozaneba/functions/lib/index.js'. Please verify that the package.json has a valid "main" entry ...
+ ⚠  We were unable to load your functions code. (see above)
+    - It appears your code is written in Typescript, which must be compiled before emulation.
+    - You may be able to run "npm run build" in your functions directory to resolve this.
+Uh, they want me to build it first because I selected TypeScript.
+
+I've got some sample code, so I'm going to uncomment it out and build it.
+code:ts
+ import * as functions from "firebase-functions";
+ 
+ // // Start writing Firebase Functions
+ // // https://firebase.google.com/docs/functions/typescript
+ //
+ export const helloWorld = functions.https.onRequest((request, response) => {
+   functions.logger.info("Hello logs!", { structuredData: true });
+   response.send("Hello from Firebase!");
+ });
+
+This time it's done.
+[https://gyazo.com/3c15fc1641e8e7a27ec20d7ec43212de]
+Access `http://localhost:5001/regroup-d4932/us-central1/helloWorld` with a browser and view the response
+
+` functions.logger.info("Hello logs!", { structuredData: true });` As for ` functions.logger.info("Hello logs!", { structuredData: true });` I got this in the terminal where the emulator is running
+code::
+ i  functions: Beginning execution of "us-central1-helloWorld"
+ >  {"structuredData":true,"severity":"INFO","message":"Hello logs!"}
+ i  functions: Finished "us-central1-helloWorld" in ~1s
+
+Now, create a ScrapboxAPI
+Where can I find the specification of the request object?
+[https://gyazo.com/7f105c12581a995e808e2796a65301fd]
+I see... same as Express.
+https://expressjs.com/en/4x/api.html#req
+
+code:ts
+ export const get_scrapbox_page = functions.https.onRequest(
+   (request, response) => {
+     console.log(request.body);
+     response.json(request.body);
+     // functions.logger.info("Hello logs!", { structuredData: true });
+     // response.send("Hello from Firebase!");
+   }
+ );
+code:js
+ fetch("http://localhost:5001/regroup-d4932/us-central1/get_scrapbox_page", {
+   method: "post",
+   body: JSON.stringify({ foo: "bar" }),
+ })
+   .then((x) => x.json())
+   .then((x) => console.log(x));
+code:output
+ {"foo":"bar"}
+Okay, the interaction part is done.
+Now let's hit Scrapbox's API.
+
+code:ts
+ import fetch from "node-fetch";
+ 
+ export const get_scrapbox_page = functions.https.onRequest(
+   (request, response) => {
+     const body = JSON.parse(request.body);
+     const url = body.url;
+     const api_url = url.replace("scrapbox.io/", "scrapbox.io/api/pages/");
+     fetch(api_url).then((req) => {
+       console.log(req);
+       req.text().then((text) => {
+         console.log(text);
+         response.send(text);
+       });
+     });
+   }
+ );
+code:js
+ fetch("http://localhost:5001/regroup-d4932/us-central1/get_scrapbox_page", {
+   method: "post",
+   body: JSON.stringify({
+     url: "https://scrapbox.io/nishio/2021-08-28Kozaneba%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98",
+   }),
+ })
+   .then((x) => x.json())
+   .then((x) => console.log(x));
+output
+[https://gyazo.com/8703a9fcaa4f8fec4b0c26b8443f1a3d]
+It's done.
+
+Then let's hit this API from the app -> CORS
+https://cloud.google.com/functions/docs/writing/http#handling_cors_requests
+	[https://gyazo.com/c22f02704c9ea44de89383deddd5643c]
+I see.
+code:ts
+ export const get_scrapbox_page = functions.https.onRequest((req, res) => {
+   res.set("Access-Control-Allow-Origin", "*");
+ 
+   if (req.method === "OPTIONS") {
+     // Send response to OPTIONS requests
+     res.set("Access-Control-Allow-Methods", "GET");
+     res.set("Access-Control-Allow-Headers", "Content-Type");
+     res.set("Access-Control-Max-Age", "3600");
+     res.status(204).send("");
+     return;
+   }
+ 
+   const body = JSON.parse(req.body);
+   const url = body.url;
+   const api_url = url.replace("scrapbox.io/", "scrapbox.io/api/pages/");
+   fetch(api_url).then((req) => {
+     req.text().then((text) => {
+       res.send(text);
+     });
+   });
+ });
+I can now hit it from the app with no problem.
+
+ready, able
+[https://gyazo.com/9c5646f9b6aae0c45c0cbc4351f97867]
+Then you can firebase deploy...
+$ firebase deploy
+[https://gyazo.com/702e52e97041dee67073fc8713680227]
+ESLint complains and is noisy, so I disable it.
+
+$ firebase init functions
+code::
+ ? Do you want to use ESLint to catch probable bugs and enforce style? No
+
+Deploy again
+$ firebase deploy
+code::
+ i  functions: creating Node.js 14 function get_scrapbox_page(us-central1)...
+ ✔  functions[get_scrapbox_page(us-central1)]: Successful create operation. 
+ i  functions: cleaning up build files...
+ Function URL (get_scrapbox_page(us-central1)): https://us-central1-regroup-d4932.cloudfunctions.net/get_scrapbox_page
+[https://gyazo.com/74cc324e13b6c473331b5535e3f4b57d]
+It's done.
+
+replace `localhost:5001` to `https://us-central1-regroup-d4932.cloudfunctions.net/get_scrapbox_page` to hit
+
+code:ts
+ fetch("https://us-central1-regroup-d4932.cloudfunctions.net/get_scrapbox_page", {
+   method: "post",
+   body: JSON.stringify({
+     url: "https://scrapbox.io/nishio/2021-08-28Kozaneba%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98",
+   }),
+ })
+   .then((x) => x.json())
+   .then((x) => console.log(x));
+
+It's done.
+[https://gyazo.com/56af245ad9d26f348640d586b1258b98]

@@ -1,0 +1,58 @@
+How many bytes of double-byte characters?
+👨‍👩‍👦 is a full-width (East Asian Wide) character (user-perceived characters, grapheme clusters) and 24 bytes for UTF-7
+
+>[https://twitter.com/kuwaccho0711/status/1605408243689623553?s=46&t=5XPcp5O9XCrSUKkLORvGGQ @kuwaccho0711]: How many bytes are full-width characters?
+>The answer to this question will provide some insight into the type of work the engineer has done in the past.
+
+>[https://twitter.com/nishio/status/1605528444795703297?s=20&t=oi37AaY87BoJTMiIAzbuKA @nishio]: "How many bytes of double-byte characters?" If someone asks you "How many bytes of double-byte characters?" and you answer without checking what those "double-byte characters" are, you're making some kind of unspoken assumption.
+>[https://twitter.com/nishio/status/1605528899458199552?s=20&t=oi37AaY87BoJTMiIAzbuKA @nishio]: Of all the definitions that could be said "this is a double-byte character" based on some standard, which one is the most likely to increase the number of bytes? I'm feeling like "I'm not sure which one can increase the number of bytes". I'm feeling like this.
+>[https://twitter.com/nishio/status/1605529701266509824?s=20&t=oi37AaY87BoJTMiIAzbuKA @nishio]: well, I guess it's easier to show that [combined pictogram] is a full-width character ...
+ [https://gyazo.com/0e6c8d06975b41a46e523853e18ad073]
+		[https://en.wikipedia.org/wiki/Zero-width_joiner Zero-width joiner - Wikipedia]
+		I'm talking about connecting the pictograms with ZWJs to make one pictogram, which would be the longest...
+		ZWJ="\xE2\x80\x8D"
+		code:python
+		 >>> print(b"\xF0\x9F\x91\xA8\xE2\x80\x8D\xF0\x9F\x91\xA9\xE2\x80\x8D\xF0\x9F\x91\xA6".decode("utf-8"))
+   👨‍👩‍👦
+  18 bytes per character
+	>grapheme clusters (“user-perceived characters”) --- [UAX #29: Unicode Text Segmentation https://unicode.org/reports/tr29/]
+　　Use the definition that a user-recognized "[* character]" is a [grapheme cluster
+
+[** [East Asian width]]
+>[https://twitter.com/hrjn/status/1605533390572113920?s=20&t=oi37AaY87BoJTMiIAzbuKA @hrjn]: full-width half-width is no longer a font issue...
+>[https://twitter.com/hrjn/status/1605533475490082818?s=20&t=oi37AaY87BoJTMiIAzbuKA @hrjn]: any character can be half-width or full-width
+　I think it would be better to use "East Asian width" for the definition of full-width and half-width.
+	>[https://twitter.com/nishio/status/1605535291141488646?s=20&t=oi37AaY87BoJTMiIAzbuKA @nishio]: @hrjn >Unicode assigns every code point an [* "East Asian width" property].
+
+>[https://twitter.com/kazuho/status/1605772081538269184?s=46&t=5XPcp5O9XCrSUKkLORvGGQ @kazuho]: On a very serious note, Unicode has a definition of full-width and half-width characters. In the context of Japanese processing, characters with East_Asian_Width attribute of W or A are full-width.... Wikipedia says so [https://ja.wikipedia.org/wiki/東アジアの文字幅 East Asian character width - Wikipedia].
+ >[https://twitter.com/kazuho/status/1605774154644348929?s=20&t=-992ptNNIT8D9zREo7QN8w @kazuho]: f you forgot. This is why people who know as much as they read wikipedia...
+
+How the East Asian Width of the combined pictograms is defined.
+	>5 Recommendations ...
+ > `[UTS51]` emoji presentation sequences behave as though they were East Asian Wide, regardless of their assigned East_Asian_Width property value.
+		[UAX #11: East Asian Width https://www.unicode.org/reports/tr11/tr11-39.html]
+
+another solution
+>[https://twitter.com/sakamotoh/status/1605543944955351042?s=20&t=oi37AaY87BoJTMiIAzbuKA @sakamotoh]: [surrogate pair] with variant (IVS) selector, "full-width character" is 8 bytes.
+	[Variant selector]
+
+[UTF-7] would be longer."
+	Indeed!
+code:python
+ >>> b"\xF0\x9F\x91\xA8\xE2\x80\x8D\xF0\x9F\x91\xA9\xE2\x80\x8D\xF0\x9F\x91\xA6".decode("utf-8").encode("utf-7")
+ b'+2D3caCAN2D3caSAN2D3cZg-'
+24bytes
+
+Make it four.
+>[https://twitter.com/sou7___/status/1606265691392221184?s=20&t=I6FunGmb-H4mRZ2U5IrNcw @sou7___]: @nishio You can make it longer if you specify 4 skin colors!
+>[https://twitter.com/nishio/status/1606267624941305858?s=20&t=I6FunGmb-H4mRZ2U5IrNcw @nishio]: @sou7___ I output a family of 4 to a Mac terminal and one of them ran away from home. I decided not to challenge myself to see how far I could stretch it.
+code:python
+	>>> print(b"\xF0\x9F\x91\xA8\xE2\x80\x8D\xF0\x9F\x91\xA9\xE2\x80\x8D\xF0\x9F\x91\xA6\xE2\x80\x8D\xF0\x9F\x91\xA7".decode("utf-8"))
+	👨‍👩‍👦‍👧
+[https://gyazo.com/6f6aaf97f14efd7bf902f0e5e46f6f74]
+Well, but he's running away from home, but the cursor moves four people at once, so if you argue that "it may look like two letters, but it's one letter because it's one grapheme cluster..."
+
+code:python
+ >>> print(b"\xE2\x80\x8D".join([b"\xF0\x9F\x91\xA8", b"\xF0\x9F\x91\xA9"] * 10).decode("utf-8"))
+ 👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩‍👨‍👩
+I think you mean this one letter.

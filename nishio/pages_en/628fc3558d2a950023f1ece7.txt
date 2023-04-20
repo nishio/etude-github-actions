@@ -1,0 +1,21 @@
+PomodoroScrapbox
+Select the string "Pomodoro" and press the Tomato menu to get the following notation
+[nishio.icon]🍅03:27-03:52 [" Pomodoro]
+The [Pomodoro Technique] puts the current time and the time 25 minutes later.
+
+code:script.js
+	scrapbox.PopupMenu.addButton({
+   title: "🍅",
+   onClick: (text) => {
+     const name = "nishio";
+     const timeFormat = (d) => {
+       const h = d.getHours().toString().padStart(2, "0");
+       const m = d.getMinutes().toString().padStart(2, "0");
+       return `${h}:${m}`;
+     }
+     const now = new Date();
+     const end = new Date(now.getTime() + (1000 * 60 * 25));
+     return `[${name}.icon]🍅${timeFormat(now)}-${timeFormat(end)} [" ${text}]`;
+   },
+ });
+

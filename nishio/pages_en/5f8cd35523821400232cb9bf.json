@@ -1,0 +1,48 @@
+AGC048
+[AtCoder Grand Contest 048 - AtCoder https://atcoder.jp/contests/agc048]
+[https://gyazo.com/ce6dff57ab5fe086ab68116bb814689f]
+　I skipped A and used B as a sample AC with DP, but that would be a TLE for the judge.
+　In terms of difficulty, I should have solved A properly.
+
+[A - atcoder < S https://atcoder.jp/contests/agc048/tasks/agc048_a]
+	[https://gyazo.com/6da41ff4d9ba41609484bc422229e4b7]
+　Thoughts.
+　　It didn't ring a bell, so I skipped it and went to B.
+　Official Explanation
+　　I should have thought in terms of specific values.
+　　If S contains a letter other than a, the condition can be satisfied by bringing it to the beginning
+　　If the first character other than a is the kth, it can be brought to the beginning in k-1 times
+　　If that letter is greater than t, then k-2 times is fine.
+　　I'm wondering about the effect of string censoring and the third letter c.
+　　[unAC].
+
+[B - Bracket Score https://atcoder.jp/contests/agc048/tasks/agc048_b]
+	[https://gyazo.com/f420b862d8e8992897072307e294b328]
+　Thoughts.
+　　required by the Dynamic Programming DP.
+　　[https://gyazo.com/115398bbb2f4da118bbdd41f6f46434d]
+　　This will give the correct answer to the sample case, but when submitted, TLE
+　　I had memoized recursion in the dictionary, so I rewrote it into an array -> RE
+　　I noticed here that N is 10^5, so the range above it is about 10^10.
+　　　Even if you do your best to shave off a digit, you'll still get a MemoryError.
+　　　Note that [MemoryError in AtCoder's Python will result in RE].
+　　 I should have realized, "We'll never get it done in time with the DP."
+　Official Explanation
+　　[The even-oddness of the opening and closing brackets are different.]
+　　　This is true not only in this case, but also in the corresponding sequence of parentheses.
+　　Conversely, it can also be shown that an even-odd number of parentheses is a good sequence of parentheses if the number of even-odd parentheses is equal
+　　There is no need to find the maximum score for all bracket rows, since the score is determined as long as it is determined where the A bracket is
+　　　I became a TLE because I asked for this in my DP.
+　　　This is still too much.
+　　Make all A's and some B's.
+　　　Just choose from the larger B-A.
+　　　Since the even and odd numbers match, we can sort each of them and take the top k. k moves between 0 and N/2.
+　　　O(N log N) since the sorting is only done once in the preprocessing
+　　Related Topics
+   >B: O(n)
+   	>N number sequence of length N A number sequence of length M B `max[k]{the sum of k choices each from A and B}` which is solved by O(N + M)
+    > Once all A's are selected, maximize by selecting N-k back from A and k from B
+    > → -A and B side by side top N
+     https://twitter.com/noshi91/status/1317847834507399169?s=21
+					[Selection Algorithm]
+　　[unAC].

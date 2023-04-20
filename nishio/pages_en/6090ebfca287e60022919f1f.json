@@ -1,0 +1,191 @@
+Hatena2009-01-21
+code:hatena
+ <body>
+ *1232518847*Washing
+ Washed and dried.
+ 
+ I've been drying my clothes indoors (with a humidifier as well) since it got cold, but when I went out on the balcony to check how cold it was outside, I found a T-shirt hanging out to dry... how long has this been there?
+ 
+ Create *1232520184*md4.py
+ I told id:Voluntas to throw a loose ball for rehab and he told me to make md4, so I did.
+ <a href='http://tools.ietf.org/html/rfc1320'>RFC 1320 - The MD4 Message-Digest Algorithm</a><a href='http://www21.ocn.ne.jp/~k-west/ SSLandTLS/rfc1320-Ja.txt'>Japanese</a>.
+ 
+ First of all, when writing code that handles 32-bit integers in Python, there is an aroma of inadvertent promotion to long and stumbling.
+ 
+ >|python|
+ def assert_type_of_return_is(typ):
+     def _wrap(func):
+         def _wrapped(*args, **kw):
+             ret = func(*args, **kw)
+             if not isinstance(ret, typ):
+                 raise AssertionError
+             return ret
+         return _wrapped
+     return _wrap
+ 
+ @assert_type_of_return_is(int)
+ def add(x, y):
+     return x + y
+ 
+ print add(1, 2)
+ print 2 ** 31
+ print add(2 ** 31, 2 ** 31)
+ ||<
+ 
+ The third print causes an overflow and is promoted to long, so it throws an AssertionError and dies because it can no longer satisfy the expected "return value is int" contract.
+ 
+ <hr>
+ >|python|
+ HEAD_BIT = int((1 << 31) - 1)
+ 
+ def split(value, mask):
+     x = value & mask
+     y = value & ~mask
+     return x, y
+ 
+ @assert_type_of_return_is(int)
+ def add(x, y):
+     h1, t1 = split(x, HEAD_BIT)
+     h2, t2 = split(y, HEAD_BIT)
+     return (t1 + t2) ^ h1 ^ h2
+ 
+ @assert_type_of_return_is(int)
+ def rot(x, s):
+     mask = int((1 << (32 - s)) - 1)
+     t, h = split(x, mask)
+     return (t << s) + (h >> (32 - s))
+ ||<
+ 
+ Well, I could have cut it off int after overhanging the LONG, but I'm a little obsessed.
+ <hr>
+ >|python|
+ A = 0x01234567                                                                                              
+ B = 0x89abcdef                                                                                               
+ C = 0xfedcba98                                                                                               
+ D = 0x76543210                                                                                               
+ 
+ # F(X,Y,Z) = XY v not(X) Z                                                                                        
+ # G(X,Y,Z) = XY v XZ v YZ                                                                                         
+ # H(X,Y,Z) = X xor Y xor Z                                                                                        
+                                                                                                                   
+ def F(x, y, z):                                                                                                   
+     return x & y | ~x & z                                                                                         
+                                                                                                                   
+ def G(x, y, z):                                                                                                   
+     return x & y | x & z | y & z                                                                                  
+                                                                                                                   
+ def H(x, y, z):                                                                                                   
+     return x ^ y ^ z      
+ ||<
+ 
+ I have a feeling that the byte order of ABCD is reversed, but I'll fix this later if the test code fails.
+ 
+ <hr>
+ 
+ Ugh, this is actually easier to write in C than in Python, isn't it?
+ >>
+         /* Denote the following operations by [abcd k s]:
+              a = (a + F(b,c,d) + X[k]) <<< s. */
+         /* Execute the next 16 processes */
+         [ABCD  0  3]  [DABC  1  7]  [CDAB  2 11]  [BCDA  3 19]
+ <<
+ Or duke out destructive assignments....hmmm....word buffer should be a dictionary.
+ 
+ >|python|
+ wb = dict(
+     A = 0x01234567,                                                                                               
+     B = 0x89abcdef,                                                                                               
+     C = 0xfedcba98,                                                                                               
+     D = 0x76543210,                                                                                               
+ )  
+ ||<
+ 
+ <hr>
+ Implementation is finished.
+ 
+ >|python|
+ def digest(data):
+     buf = padding(data)
+     for iblock in range(len(buf) / 16):
+         xs = buf[iblock * 16:iblock * 16 + 16]
+         old_wb = copy(wb)
+ 
+         def round1(abcd, k, s):
+             """a = (a + F(b,c,d) + X[k]) <<< s."""
+             dst = a
+             a, b, c, d = (wb[k] for k in abcd)
+             wb[dst] = rot(add(add(a, F(b, c, d), xs[k])), s)
+ 
+         map(round1, [
+            ("ABCD",  0, 3), ("DABC",  1, 7), ("CDAB",  2, 11), ("BCDA",  3, 19),
+            ("ABCD",  4, 3), ("DABC",  5, 7), ("CDAB",  6, 11), ("BCDA",  7, 19),
+            ("ABCD",  8, 3), ("DABC",  9, 7), ("CDAB", 10, 11), ("BCDA", 11, 19),
+            ("ABCD", 12, 3), ("DABC", 13, 7), ("CDAB", 14, 11), ("BCDA", 15, 19),
+         ])
+ 
+         def round2(abcd, k, s):
+             """a = (a + G(b,c,d) + X[k] + 5A827999) <<< s."""
+             dst = a
+             a, b, c, d = (wb[k] for k in abcd)
+             wb[dst] = rot(add(add(add(a, G(b, c, d)), xs[k]), 0x5A827999), s)
+ 
+         map(round2, [
+            ("ABCD", 0, 3), ("DABC", 4, 5), ("CDAB",  8, 9), ("BCDA", 12, 13),
+            ("ABCD", 1, 3), ("DABC", 5, 5), ("CDAB",  9, 9), ("BCDA", 13, 13),
+            ("ABCD", 2, 3), ("DABC", 6, 5), ("CDAB", 10, 9), ("BCDA", 14, 13),
+            ("ABCD", 3, 3), ("DABC", 7, 5), ("CDAB", 11, 9), ("BCDA", 15, 13),
+         ])
+ 
+         def round3(abcd, k, s):
+             """a = (a + H(b,c,d) + X[k] + 6ED9EBA1) <<< s."""
+             dst = a
+             a, b, c, d = (wb[k] for k in abcd)
+             wb[dst] = rot(add(add(add(a, H(b, c, d)), xs[k]), 0x6ED9EBA1), s)
+ 
+         map(round3, [
+            ("ABCD", 0, 3), ("DABC",  8, 9), ("CDAB", 4, 11), ("BCDA", 12, 15),
+            ("ABCD", 2, 3), ("DABC", 10, 9), ("CDAB", 6, 11), ("BCDA", 14, 15),
+            ("ABCD", 1, 3), ("DABC",  9, 9), ("CDAB", 5, 11), ("BCDA", 13, 15),
+            ("ABCD", 3, 3), ("DABC", 11, 9), ("CDAB", 7, 11), ("BCDA", 15, 15),
+         ])
+ 
+         for k in "ABCD":
+             wb[k] = add(wb[k], old_wb[k])
+ 
+     print [hex(wb[k]) for k in "ABCD"]
+ ||<
+ 
+ It's implemented almost exactly as pseudo code. And as expected, the results are wrong, so here's the fun debugging time (oh).
+ 
+ for now
+ 
+ >|diff|
+  def padding(s):
+      "add padding bits and length"
+      buf = [ord(c) for x in s]
+      buf.append(HEAD_BIT)
+ -    while len(buf) % 16 == 15:
+ +    while len(buf) % 16 != 15:
+          buf.append(0)
+ ||<
+ 
+ >|diff|
+ -        def round1(abcd, k, s):
+ +        def round1((abcd, k, s)):
+ -            dst = a
+ +            dst = abcd[0]
+  
+ ||<
+ 2 other locations
+ 
+ Oh, shoot, it's not unsigned, so it has to be negative when the most significant bit is standing, or it won't fit in the Python int range.
+ It became a hassle, so I quit.
+ 
+ <hr>
+ 
+ I told id:Voluntas that I'd have to create a PyUnsignedInt class.
+ http://www.geocities.com/rozmanov/python/u32.html
+ I was referred to this. Terrible W.
+ </body>
+
+[Hatena Diary 2009-01-21 https://nishiohirokazu.hatenadiary.org/archive/2009/01/21]

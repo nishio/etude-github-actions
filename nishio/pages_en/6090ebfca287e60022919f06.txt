@@ -1,0 +1,119 @@
+Hatena2008-12-22
+code:hatena
+ <body>
+ *1229889604* gprof not available on MacOSX -> use Shark
+ I was having trouble with <a href='http://d.hatena.ne.jp/nishiohirokazu/20080926/1222446757'>not understanding how to use gprof</a> and all my functions were going to 0 seconds, but I was looking into it thinking I was using gprof incorrectly. I made the mistake of looking into it thinking that I was using gprof in the wrong way. <a href='http://www.mackb.com/Uwe/Forum.aspx/mac-dev/578/gprof-bug-on-Mac-OS-X'>gprof bug on Mac OS X?</a>.
+ 
+ I read about using Shark instead, so I checked it out and it looks pretty good: <a href='http://developer.apple.com/tools/shark_optimize.html'>Optimize with Shark: Big Payoff, Small Effort</a>. Payoff, Small Effort</a>.
+ 
+ I had XCode on hand that I downloaded just the other day, so I'll put it in from that.
+ <img src="http://gyazo.com/bc162e1dbc7a0fdd8a5c282d2acd426e.png">
+ Installed in /Developer/Applications/Performance Tools/.
+ <img src="http://gyazo.com/01b4116672452d86389a92befea72221.png">
+ I tried it as soon as possible.
+ <img src="http://gyazo.com/bd30117788b10c7e2b5d825785ecd166.png">
+ I guess it means that the freeing in the turn is the most burdensome. I don't explicitly free, but it seems that the temporary objects that are created automatically are too heavy. I should try to create them explicitly and use them without freeing them.
+ 
+ *1229890489* Even if we can't reduce copying, we can reduce malloc/free
+ I found that <a href='http://d.hatena.ne.jp/nishiohirokazu/20081222/1229889604'>gprof is not available on MacOSX -> use Shark</a> and that free is a burden, so I'm going to change it so that it doesn't create temporary objects. I'll change it so that it doesn't create temporary objects.
+ 
+ This function returns a copy of the given game_score with changes, but let's change it to a function that destructively changes the given one.
+ 
+ >|cpp|
+ inline scores end_of_round(const scores &round_score, scores game_score){
+   /* Game score update process at the end of the round */
+   int median = get_median(round_score[0], round_score[1], round_score[2]);
+   if(round_score[0] == median) game_score[0] += median;
+   if(round_score[1] == median) game_score[1] += median;
+   if(round_score[2] == median) game_score[2] += median;
+   return game_score;
+ }
+ ||<
+ 
+ First, take a reference and make it return a reference.
+ >|cpp|
+ -inline scores end_of_round(const scores &round_score, scores game_score){
+ +inline scores& end_of_round(const scores &round_score, scores &game_score){
+ ||<
+ 
+ But I would declare a variable for the score to be destroyed outside of the for statement and use that variable for the game. I'm starting to think that the assignment of new_game_score = game_score is actually creating a temporary object and swapping it, which is meaningless, but I'm going to close my eyes and go straight ahead.
+ 
+ >|cpp|
+ -
+ +    scores new_game_score;
+      for(size_t i=0; i < N; i++){
+        int o1 = unknowns.pop(i);
+        for(size_t j=0; j < N - 1; j++){
+  	if(i == j) continue;
+  	int o2 = unknowns.pop(j);
+  	if(iturn == 3){
+ +	  new_game_score = game_score;
+  	  score += end_of_game(
+  	    end_of_round(
+  	      end_of_turn(my, o1, o2, round_score), 
+ -	      game_score));
+ +	      new_game_score));
+ ||<
+ 
+ Execution. Oh, it's now 4.5 seconds, over 200% faster! Let's change the other functions in the same way.
+ 
+ Wow, 0.96533s, 10 times faster than the previous version. That's 4 times faster than the previous version. I hadn't tuned it because I thought I couldn't reduce the number of times of copying itself, but I guess I can save malloc and free by creating an area for temporary storage and using it instead of creating a new temporary object when copying.
+ 
+ http://coderepos.org/share/changeset/27183/lang/python/saichugen/experiments/cpp/saichugen_simple.cpp
+ 
+ *1229892858*Further speedup
+ The operator= consumes 13% of the time. I just realized that instead of restoring the destruction destination to its original state every time and passing that, why not just pass the value before the change and the area to be destroyed?
+ 
+ It went from 0.97 seconds to 0.73 seconds, a 32% speedup.
+ 
+ http://coderepos.org/share/changeset/27184/lang/python/saichugen/experiments/cpp/saichugen_simple.cpp
+ 
+ 0.65 seconds. That's an additional 12% speedup.
+ 
+ http://coderepos.org/share/changeset/27185/lang/python/saichugen/experiments/cpp/saichugen_simple.cpp
+ 
+ <img src="http://gyazo.com/b78135c66033db232362ac933fc92ccd.png">
+ The flab fell off.
+ 
+ 
+ If I were to further speed up the process, I think I could reduce it by 1/5~6 if I manually inline expand end_turn and get_medium in it, and prune branches using the information whether I am the median or not.
+ 
+ -----
+ 
+ It was still sweet.
+ 
+ >|cpp|
+ +scores new_game_score(3);
+ +scores new_round_score(3);
+  Result turn(const int iturn, Cards& unknowns, Cards &hand, 
+  		   const scores &round_score, const scores &game_score){
+  
+    Result result;
+    size_t N = unknowns.len;
+ -  scores new_game_score(3);
+ -  scores new_round_score(3);
+ ||<
+ 
+ Now it's 0.53 sec. 22% faster. Anyway, malloc/free is heavy, so I wonder if it's better to allocate and use as much as possible those that don't need to be allocated dynamically at the beginning.
+ 
+ *1229923131*cuda diary 2
+ This entry was interesting: <a href='http://wataco.air-nifty.com/syacho/2008/02/cuda2_19b7.html'>President's Diary: CUDA Bench 2</a>.
+ 
+ I thought there were 16 structures that could do 112 calculations in parallel, but there are 112 structures that can do 16 calculations in parallel. I thought there were 16 structures that could do 112 calculations in parallel, but it turns out there are 112 structures that can do 16 calculations in parallel. That explains why tuning 121 to 110 should only speed things up a few percent. ←I guess that means there are 14 Stream Multiprocessors consisting of (8) Stream Processors that do 32 calculations each in parallel, for a total of 112 SPs.
+ 
+ I had never heard of a C language that can switch function definitions at compile-time using templates, so I assumed it must be C++-based and created a class, which worked as expected. However, when I tried to include iostreams, I was told that exception handling is disabled, and I have a feeling that if I turn on exception handling, the generated instruction sequence for the GPU will be mixed up with something else and will not work properly. Hmmm. Maybe I can't use new because it can throw Bad Alloc too? I haven't tested if it works on GPU side. Oh, I can't use it.
+ 
+ -----
+ 
+ I feel that in implementing the most-maximum with CUDA, it is quite important to find a way to reduce an array of numbers that are not a power of 2. Right now I'm just adding them all up in for. I wish there was a way to reset memory to zero at low cost.
+ 
+ **1229925330* Life hacks to improve your rhythm of life.
+ <a href='http://ja.wikipedia.org/wiki/%E5%85%89%E7%99%82%E6%B3%95'>Light therapy - Wikipedia</a>
+ >>
+ Light therapy is a type of treatment that is considered effective for some sleep disorders and depression. It is also sometimes used as a type of health therapy for its effectiveness in regulating biological rhythms.
+ <<
+ 
+ At least I brightened up the backlight of my monitor! !!!1
+ </body>
+
+[Hatena Diary 2008-12-22 https://nishiohirokazu.hatenadiary.org/archive/2008/12/22]

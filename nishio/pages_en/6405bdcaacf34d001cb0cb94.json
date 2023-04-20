@@ -1,0 +1,83 @@
+LLM, regression testing and A/B testing
+2023-03-06
+	Conversation log with the version using ChatGPT API of [Keichobot].
+
+[** one-line summary].
+	A system written in natural language prompts can be easily improved by non-engineers at first glance, but a system of [regression testing] is necessary because an unmaintainable hell awaits them first. LLM] is also necessary for such regression testing. On the other hand, combining it with [A/B testing] also expands the possibilities.
+
+
+[** summary ver.1 (human modified)].
+ Prompts written in natural language need to be improved.
+ 　Easy to implement ad hoc addition of rules
+ 　But there are software engineering problems with that.
+　 After fixing the prompt, we need to verify that the problem has been resolved and that other problems have not recurred.
+　In other words, a regression test is needed.
+　　Regression testing on natural language output requires the use of LLM
+ Combination with A/B testing is also effective
+ 　No need to define good behavior for natural language prompts using LLMs
+ 　But on the other hand, the use of LLM expands the scope of what A/B testing can cover.
+
+
+[** Summary ver.1 by ChatGPT].
+ Need to improve natural language prompts
+ Implementation of ad hoc addition of rules is problematic from a software engineering perspective
+ Need to verify that it will not recur after correction.
+ A/B testing is useful to define good behavior for natural language prompts and does not need to be defined using LLM
+ No new approach is proposed.
+
+[** Summary ver.2 by ChatGPT].
+ I was consulted about a system modification.
+ The implementation method of adding a modification rule is subtle.
+ Step 1: Verify that the correction no longer causes undesirable behavior
+ Step 2: Confirm recurrence with regression testing
+ Step 3: Perform a mechanical decision test using LLM
+ A/B testing approach is also effective in determining whether modifications are necessary.
+ Enables quantification via LLM for natural language that has been difficult to quantify
+
+[** log]
+[/nishio/kei.icon]What would you like to see happen in this conversation? (GPT)
+[/nishio/human.icon]I want to organize my thoughts by talking.
+[/nishio/kei.icon]To achieve your goal of organizing, ask questions to dig into the user's inner issues to form specific ideas.
+[/nishio/human.icon]🙁
+[/nishio/kei.icon]You want to organize your thoughts, you can ask questions to clarify what is confusing and what you need to think about.
+[/nishio/human.icon]Fixing undesirable behavior of systems implemented with natural language prompts
+[/nishio/kei.icon]Can you tell us specifically what behavior occurred?
+[/nishio/human.icon]The system for listening to the user's comments was all over the place.
+[/nishio/kei.icon]That may seem like an unpleasant experience. What modifications do you expect to make from that experience in the future?
+[/nishio/human.icon]Anyway, I added "don't deny the user" to the natural language prompt, but I thought this was subtle from a software engineering perspective.
+[/nishio/kei.icon]Indeed, the expression "don't deny the user" is very subtle. Can we look for ways to improve the system by modifying its algorithm so that it does not happen?
+[/nishio/human.icon]No, it's not that the expression is subtle, but that the implementation style of adding rules ad hoc is not good. The source code becomes bloated, and no one knows which code is useful and which is useless.
+[/nishio/kei.icon]Understood. Regarding the fix, is it possible to check for negative words in user statements against the algorithm and improve the algorithm to avoid them?
+[/nishio/human.icon]You spoke two steps ahead of what I was trying to explain w Yes, but the reader can't keep up, so let's go step by step. The current "simply add a rule" is not verified to see if it makes it better. First of all, it is necessary to verify whether the "undesirable behavior" has been prevented by the modification by including the data of when it occurred. This is Step 1
+[/nishio/kei.icon]Understood. So step 1 is to verify if the "undesirable behavior" no longer occurs after the modification is made. What data should be collected for this purpose?
+[/nishio/human.icon]user input and the system output in response. And step 2 is that regression testing is necessary to know that the "undesirable behavior" has not recurred after it has stopped occurring, and it is not enough for a human to visually determine whether it has or has not occurred.
+[/nishio/kei.icon]Understood. So step 2 is to perform regression testing to confirm recurrence. Specifically, what kind of test should be conducted?
+[/nishio/human.icon]A test is needed in which a machine, not a human, determines if it is OK or NG. However, in this case, since the output is a natural language sentence, it is difficult for a human to write the conditional expression in code. I think we have no choice but to use LLM here as well. This is Step 3
+[/nishio/kei.icon]Going back to what you said earlier, what specific tests should be performed in relation to modifying the natural language prompts?
+[/nishio/human.icon] Specifically, it generates an answer to a given input with the current parameters, gives that answer to a given LLM with the prompt "Does this answer negate the user's statement?
+[/nishio/kei.icon]The test you mentioned seems to judge the negation of the answer that the system gives, but what are some other points to keep in mind when the system gives an answer besides such a test?
+[/nishio/human.icon]That aside, let's wrap up what we've been talking about so far.
+[/nishio/kei.icon]I think the summary of our discussion is that we need to fix natural language prompts, that adding rules ad hoc is subtle from a software engineering perspective, that fixing them requires recurrent testing, and that using LLM is necessary.
+[/nishio/human.icon]Yes, that's right. And if we can get that far, improving natural language prompts to avoid "bad behavior" can be done with proper verification.
+[/nishio/kei.icon]Thank you for your attention. What would you like to talk about?
+[/nishio/human.icon]🙁 Here's what I want to sort out further down the road, so listen first.
+[/nishio/kei.icon]Okay, we have heard you. We will ask questions from here about the steps your client can take to become more specific.
+I think it may be connected to the [/nishio/human.icon]A/B testing approach.
+[/nishio/kei.icon]I think it is more necessary to have a concrete output about improving natural language prompts first, before thinking about connecting with an A/B testing approach. What approach is needed to be able to concretize what we want to convey?
+[/nishio/human.icon]Do not deny users' statements!
+[/nishio/kei.icon]Sorry, my previous answer was incorrect. So, I would like to ask again, regarding the improvement of natural language prompts, I think it is more necessary to have a concrete output first. What approach do you need to take to be able to concretize what you want to communicate?
+[/nishio/human.icon]🙁 I wonder if we can determine if we should include a fix for a certain prompt by putting it in for some users and see if it reduces undesirable behavior.
+[/nishio/kei.icon]Okay, that is a well thought-out approach. It would be a good practice to modify natural language prompts for a small number of users and then verify whether the undesirable behavior has been reduced. So what steps would be needed to do this?
+[/nishio/human.icon]I thought after writing and looking at it, that's a bit of a leap. The definition of "desirable" does not have to be based on LLMs; a system using LLMs can also use withdrawal rates or click-through rates, or even have an explicit good/bad feedback button by the user. There is just a new means of defining "LLM sees and judges" added to the mix.
+[/nishio/kei.icon]Okay, I understand. There is an approach of doing A/B testing to have concrete outputs, but it is not necessary to use LLMs to define the preferred behavior, but to use withdrawal rates, click rates, explicit feedback buttons, etc.
+[/nishio/human.icon] Is it appropriate to say "LLM is effective in increasing the scope of A/B testing" instead of "A/B testing is effective in improving systems that use LLM"?
+[/nishio/kei.icon]Thank you. I would like to ask again, would you say that "LLM is effective in increasing the scope of A/B testing"?
+[/nishio/human.icon]That is true, because it will be possible to quantify natural language via LLM, which has been difficult to do so far. This is because natural language, which has been difficult to quantify, can now be quantified via LLM.
+[/nishio/kei.icon]You have presented various approaches well. So, are there any better directions or new approaches that could be organized so far?
+[/nishio/human.icon]We'll get to that later. Just a bullet-point summary of our conversation so far.
+[/nishio/kei.icon]To summarize what you said, the modification of natural language prompts requires specific outputs such as defining preferred behavior and identifying target users, and there were suggestions for an A/B testing approach and the use of LLM. In addition, when asking questions, it is important to look for key concepts and ask questions related to them.
+[/nishio/human.icon](Not done.
+　Let's add a separate function to generate [nishio.icon] summaries.
+
+https://keicho.netlify.app/#talk=8pZW2kyh27C7lgy9VH4v
+#KeichobotLog

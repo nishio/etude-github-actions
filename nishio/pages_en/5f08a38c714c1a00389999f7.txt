@@ -1,0 +1,17 @@
+dwango2015_prelims_2
+[B - Nikoniko string https://atcoder.jp/contests/dwango2015-prelims/tasks/dwango2015_prelims_2]
+　How many ways [count up] are there to cut out a repeating string of "25" from a given string?
+　Given a substring of N followed by 25, the number of pieces that [tri(N)] tri(N) can cut out of the substring
+　It's faster to use [regex] to cut out the continuation than to loop through it yourself.
+　Because I didn't make it test-driven because I thought it would be easy, I forgot the specification that "if parentheses are used in a regular expression, findall will return only that range" and I WA'd.
+　`(? : )` is a non-capturing grouping
+code:python
+ import re 
+ 
+ def tri(x):
+     return x * (x + 1) // 2
+ 
+ S = input()
+ ret = 0
+ print(sum(tri(len(s) // 2) for s in re.findall("(?:25)+", S)))
+[submitted #15126969 - dwango programming contest https://atcoder.jp/contests/dwango2015-prelims/submissions/15126969]

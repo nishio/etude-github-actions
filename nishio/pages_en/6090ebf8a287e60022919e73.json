@@ -1,0 +1,130 @@
+Hatena2008-07-11
+code:hatena
+ <body>
+ *1215772755*[TopCoder]Single Round Match 409 Div2
+ I still feel less inclined to write if I don't write immediately afterwards.
+ 
+ A synopsis of what TopCoder SRM409, which was at 0:00 this evening, was like.
+ 
+ - 86 chat is now TopCoder chat for some reason.
+ -- ujihisa
+ -- yanbe disconnected in the middle
+ - SUBMIT a 500 point question
+ - Challenge the 1000 point question
+ -- Given the coordinates of a city, the problem is to first draw a road using the given method and then install a set number of teleportation gates to minimize public dissatisfaction (see the problem text for the definition of dissatisfaction).
+ -- Difficult
+ - When I finally get to the point where I can construct the correct graph, I look at the time remaining and see that I have 10 minutes left.
+ - No, no, no, no, no, no, no, no, no, no, no, no, no.
+ - Open 250 point question
+ - Too easy!
+ - SUBMIT in 4 minutes. 245.98 pts. w
+ >|cpp|
+  int pieces(int x) {
+    int result = 0;
+    while(x){
+      result += x % 2;
+      x /= 2;
+    }
+    return result;
+  }
+ ||<
+ - I thought it was fast that I got it out in 4 minutes, but there were 4 people who were even faster.
+ - During break time, talk and create test cases for the 1000-point question, etc.
+ - No one has solved the 1000 point problem orz.
+ - As a result, the rate went up about 120 to 1151.
+ <img src="http://gyazo.com/5e4944b352f14316e87acff6caa60335.png">
+ - The blue zone is in sight!
+ 
+ 
+ By the way, the difficulty of the 1000 point question was still being talked about in the 86 chat after it was over,
+ http://www.topcoder.com/tc?module=ProblemDetail&rd=12181&pm=9830
+ >>
+ Competitors 933
+ Opens 613
+ 
+ Problems Correct  	 0  	 1  	 0  	 0  	 1
+ <<
+ Of the 933 participants, 613 opened the question, but only one eventually answered it correctly!
+ And the time is 0:51:18.301, so you'd have to have been trying this problem from the beginning to take this long.
+ Maybe others, like me, gave up halfway through thinking, "No, I can't solve this problem in time.
+ 
+ And here is the key code
+ http://www.topcoder.com/stat?c=problem_solution&cr=22742950&rd=12181&pm=9830
+ It appears that no particular black magic is being used, just a gutsy solution.
+ I'll try to finish my puzzle later.
+ 
+ *1215787514*Cleaning the bath with a shaver
+ The handle of the shaver was a square hollow tube, and when I casually scrubbed the tub, it scrubbed away all the stains. It was much cleaner than any enzymatic detergent that leaves bubbles in the bathtub.
+ 
+ 
+ Also, I wonder if hot water stains are only above the surface of the water. I wonder. I wonder if it is caused by organic liquid above the water's surface, which then dries, and repeats the process. I thought that below the surface of the water, the water is washed away every day, so it doesn't accumulate much.
+ 
+ *1215790380*[TopCoder]Single Round Match 409 Div2 500pt
+ http://www.topcoder.com/stat?c=problem_statement&pm=9823&rd=12181&rm=297980&cr=22724714
+ A simple explanation of the problem is: "I will give you a lot of strings, and you are to join them together to make a large string. However, make it as small as possible, and make sure that the position of each substring is in the given order. For example, if you are given ab and ba, abba is not correct, abba is correct, aabaa is correct for aab and baa, and baab is not correct because the order is not in the given order. Please return the length of the resulting string." This is what it means.
+ 
+ The sticking point was the find method of string, which I used for the first time this time. I thought it would return -1 when it couldn't find it, but the return value is an unsigned int.
+ >|cpp|
+   unsigned int fpos = last.find(cur, 0);
+   if(fpos == 4294967295U){ // not found
+ ||<
+ 
+ It's hard to explain the algorithm if you leave it a day. In short, we have a string (string &last) after the beginning of the previous string, and if we can find it, we overlap it with the string. If not found, try to overlap as much as possible, and if not overlapped, reduce the overlap a little, and repeat to find the largest overlap. Of course, the largest overlap is the shortest overlap. Then, repeat from that position and onward to the end of the overlap.
+ 
+ 
+ The function named "Pythonic slice" is a copy and paste of the one I created before. I am currently using toolbox.cpp, a file that contains many functions, and I am copying and pasting only the ones I need.
+ If you can make it, you should be able to do something like "#include "toolbox.cpp" and then run the embed script after completion, embed only what you need, and submit. I wonder if I could just scrape the include once and run it and use the "tmp.cpp:126: error: 'foo' was not declared in this scope" or something like that to identify what is being used.
+ 
+ >|cpp|
+ // Pythonic slice
+ string slice(string s, int start, int end){
+   if(end <= 0) end += s.size();
+   if(start < 0) start += s.size();
+   return s.substr(start, end - start);
+ }
+ string slice(string s, int start){
+   return slice(s, start, 0);
+ }
+ 
+ class OrderedSuperString {
+ public:
+   int getLength(vector <string> words) {
+     int result = 0;
+     result += words[0].size();
+     string &last = words[0];
+     size_t N = words.size();
+     for(size_t i=1; i<N; i++){
+       string &cur = words[i];
+       unsigned int fpos = last.find(cur, 0);
+       if(fpos == 4294967295U){ // not found
+ 	//cout << "not found" << endl;
+ 	int maxcover = min(last.size(), cur.size());
+ 	int cover = maxcover;
+ 	for(; cover >= 0; cover--){
+ 	  if(cover == 0) break;
+ 	  if(slice(last, -cover) == slice(cur, 0, cover)){
+ 	    //cout << last << "&" << cur << " overwrap: " << cover << endl;
+ 	    break;
+ 	  }
+ 	}
+ 	//cout << "cover" << cover << endl;
+ 	last = cur;
+ 	result += cur.size() - cover;
+ 	//cout << "result: " << result  << endl;
+ 	
+       }else{
+ 	//cout << "found" << endl;
+ 	uint rest = last.size() - fpos;
+ 	if(rest < cur.size()){
+ 	  result += cur.size() - rest;
+ 	}
+ 	last = slice(last, fpos);
+ 	//cout << "result: " << result  << endl;
+       }
+     }
+     return result;
+   }
+ ||<
+ </body>
+
+[Hatena Diary 2008-07-11 https://nishiohirokazu.hatenadiary.org/archive/2008/07/11]

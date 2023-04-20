@@ -1,0 +1,30 @@
+Inverse Element in mod P
+Fermat's minor theorem
+	[$ a^{p-1}\equiv 1{\pmod {p}}]
+by transforming
+	[$ a \times a^{p-2}\equiv 1{\pmod {p}}]
+therefore
+	[$ a^{-1} \equiv a^{p-2} {\pmod {p}}]
+
+Python: `pow(a, p - 2, p)`
+Can `pow(a, -1, p)` straightforwardly from Python 3.8
+
+Fermat's minor theorem requires P to be prime
+ Use [extended Euclidean reciprocal division] if P is not prime [P is not prime mod P].
+ In this case, a and p need only be prime to each other
+	code:python
+	 def mod_inverse_ee(a, m):
+      """
+       Solve ax mod m = 1 with extended euclidean.
+       x = a^-1.
+       """
+      x, y, g = extended_euclidean(a, m)
+      assert g == 1
+      return x % m
+	[division by remainder group]
+
+
+The inverse element in >n modulo p is from [Fermat's Little Theorem].
+> pow(n, p-2, p)
+> , which is obtained by The computational quantity is O(logp). It is often used in [binomial coefficient] and so on.
+https://qiita.com/Kentaro_okumura/items/5b95b767a2e691cd5482

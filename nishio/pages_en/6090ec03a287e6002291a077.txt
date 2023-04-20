@@ -1,0 +1,108 @@
+Hatena2010-03-04
+code:hatena
+ <body>
+ *1267701185* I attended Prof. Ikuo Takeuchi's final lecture.
+ I went to the final lecture by Prof. Ikuo Takeuchi, who was supposed to be "in principle, only direct friends" when I asked him on 2/2, but in no time at all, the lecture was overturned and even appeared on Slashdot. As expected, there was a huge crowd! I got there without hesitation and was able to sit in the third row from the front, but my friends who were late due to stomachache or work had to stand all over the place.
+ 
+ >>
+ Because we kept proper documentation, we were able to complete the project, which took eight years to complete.
+ <<
+ 
+ My heart aches.... I can't tell you how many projects are abandoned and rotting away due to lack of documentation.... I was asked at a reception, "What happened to GRINEdit?" I was asked.
+ 
+ >>
+ Senior microprogramming from 45 to 51 years old
+ <<
+ 
+ I was feeling a bit overwhelmed by the pressure to accomplish something before my 6th bit, but after hearing this story, I feel a bit better.
+ 
+ >>
+ Whether it's math or programming, it takes effort to crawl on the ground.
+ <<
+ 
+ So it is important to enjoy that crawling on the ground as if it were a game.
+ 
+ <hr>
+ Well, I was first in line at the reception hall, as registration had not yet started. When I entered the room, I was told to write something on a piece of paper for the drawing that would not be shared with others,
+ 
+ >>
+ Tao produces nil.
+ Nil produces atom,
+ atom produces S-expression, and
+ S-expression produces ten thousand things. ...
+ <<
+ 
+ >>
+  "The true creator has no purpose, but by doing so, he fulfills all his purposes admirably."
+ <<
+ 
+ based on
+ 
+ >|scheme|
+ (nil? me)
+ ; NISHIO Hirokazu
+ ||<
+ 
+ He wrote, "I am the true creator, born from nil, or nothingness, or Tao, the creator of all things. Am I nil?" I'd like to be #t, but, well, I guess I'm #f for now.
+ 
+ f:id:nishiohirokazu:20100304215934j:image I got it. buy the Lisp one myself.
+ 
+ *1267706162*I on Dr. Ikuo Takeuchi's Ico Issue.
+ In <a href='http://d.hatena.ne.jp/nishiohirokazu/20100304/1267701185'>Prof. Ikuo Takeuchi's final lecture</a>, the topic was raised: "When a lot of people play rock-paper-scissors, it is easy to become an icon and it takes a lot of time! Is there any good way?" I'm not sure if this is a good idea or not.
+ 
+ In his lecture, he explained the method when participant n=3. He said, "Two out of the three play rock-paper-scissors, and if one of them wins, that is the winner; if the winner is Ico, the winner is the one who did not play rock-paper-scissors."
+ 
+ There are scattered opinions that the strict "rules of rock-paper-scissors" are not defined, or that what should be minimized is not clearly given. But it isn't. There is nothing fun about the questioner answering the given question correctly. It is more creative and interesting to create a question setting that yields an "interesting conclusion". If you can reduce the probability of an icon to zero with a reasonable problem set, that's pretty interesting.
+ 
+ Now, from here, I will talk about the Ico problem, which I interpreted on my own after listening to Mr. Takeuchi's lecture.
+ 
+ First of all, I am thinking that "a method to choose one winner among n participants" is required, and there must be a condition that "each participant has an equal 1/n probability of being the winner". It is too obvious, but if this condition does not exist, we have a very boring "how not to be an icon," which is "everyone plays Guchokipa, and Mr. A wins with probability 1 regardless of the hand he played.
+ 
+ I think this condition needs to be strengthened a bit. For example, if two people play rock-paper-scissors to choose a winner from among nine people, and the method is that Mr. A plays rock-paper-scissors if he plays goo*goo, and Mr. B plays goo*choki, then if the person playing rock-paper-scissors has a 1/3 chance of making a random move, surely everyone has a 1/9 chance of being the winner. But if Mr. A is a rock-paper-scissors player, he would want to play goo, which he has a chance of winning. If someone's chance of winning increases or decreases depending on each participant's choice of move, the game would be too complicated to be called "rock-paper-scissors. Therefore, each participant's move choice and each participant's win rate should be independent and uncorrelated. (Note 1: This condition may be too strong, although I didn't realize it until I organized it like this. (Note 1: I didn't realize this until I organized it, but this condition may be too strong, because it may be possible to design a game in which each participant tries to maximize his/her own winning percentage, resulting in a winning percentage of 1/n. I'll think about it :)
+ 
+ Finally, I believe that "there is no way to determine the winner with a single rock-paper-scissors-paper game" for reasons I will explain below. Dr. Takeuchi also said, "The bigger n is, the faster it ends," so he must not believe that there is a way to determine the winner with only one round of rock-paper-scissors. However, Dr. Ki said
+ >>
+ @nishio #nue Fair rock-paper-scissors problem, I think there is a way not to be ambiguous. I think it is different from Takeuchi-sensei's solution, but I found a hint in his lecture. (but still no confidence/verification)
+ <<
+ http://twitter.com/Nikoriks/status/9959755293
+ It is still an open question as to which of the two is correct, or whether there is a difference in the way both sides set up the problem they are thinking about and both are correct. I am a little unsure because of my oversight in note 1 above.
+ 
+ Now then, to prevent spoilers, I will explain "what I consider to be the correct answer" across the Fibonacci sequence.
+ 
+ 1
+ 
+ 1
+ 
+ 2
+ 
+ 3
+ 
+ 5
+ 
+ 8
+ 
+ 13
+ 
+ 21
+ 
+ 44
+ 
+ 65
+ 
+ Well, first of all, the simplest algorithm that satisfies the condition "move selection and win probability are independent" is the "1/3 probability method of selecting from 3 elements in a 2-player rock-paper-scissors game" described in the n=3 example. Let's use this for the parts.
+ 
+ When n=4, we can equally choose a winner with a probability of 1/9 out of 9 factors by dividing them into 2 people each and playing rock-paper-scissors; if we assign each participant's name to 8 of the 9 factors, we can equally choose a winner with a probability of 8/9; 1/9 is assumed to be Ico and we play rock-paper-scissors again; 1/9 is assumed to be Ico.
+ 
+ When n=5, we can similarly assign the participant's name to 5 of the 9 pieces, thus reducing the Ico probability to 4/9. This may seem like a lot, but it is much better than the Ico probability of 147 / 243 ~ 0.60 for a normal rock-paper-scissors game.
+ 
+ When n=6, the number of pairs to play rock-paper-scissors increases to 3, so there are 27 to choose from. Again, the icon probability is 1/9. 6/27 when n=7. 1/81 when n=8. 0 when n=9. 3/243 when n=10. for general n, (dom % n) / dom as dom = 3 ** (floor(n / 2)).
+ 
+ As n increases, the denominator of the icon probability increases exponentially, while the numerator is always less than n, so the icon probability goes down and down. n=5 has the highest icon probability, but still the expected value of the number of rock-paper-scissors is 1.8. n=2 is a normal rock-paper-scissors and the expected value is 1.5 .
+ 
+ Thus, this is a method that can choose one person equally from any n people with an average number of rock-paper-scissors of less than two. End of explanation.
+ 
+ 
+ The reason I don't think we can get rid of Ico is that the total number of events that can be made with 4 hands is 3 ** 4, so we cannot make 1/4 probability without excluding some events as Ico, not multiples of 4. However, if you remove my basic premise, that "the moves you make are independent of the probability of winning," then maybe there is a way to do something about it. I'll think about it after I publish this.
+ </body>
+
+[Hatena Diary 2010-03-04 https://nishiohirokazu.hatenadiary.org/archive/2010/03/04]

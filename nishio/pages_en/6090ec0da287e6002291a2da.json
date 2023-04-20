@@ -1,0 +1,87 @@
+Hatena2014-02-08
+code:hatena
+ <body>
+ *1391792338*Deep Learning Paper Introduction "Generating Text with Recurrent Neural Networks"
+ A story about using recurrent neural networks (RNNs) to generate sentences.
+ 
+ RNN is powerful but hard to learn; Hessian-free optimization (HF) can be used for nice and difficult problems.
+ 
+ In this paper, a language model is created using letters as input, from which sentences are generated.
+ 
+ I had some problems with the standard RNN, so I made a multiplicative variant. The transition matrix of the vector from the hidden layer to the next layer can be selected according to the input character.
+ 
+ The multiplicative RNN (MRNN) was trained on HF on a machine with 8 high-end GPUs over 5 days and outperformed existing language models.
+ 
+ The activation function of the hidden layer is tanh and the output layer is bare.
+ 
+ Sequence memoizer can handle a data set of about 130 MB on a machine with 32 GB memory due to its data structure, while MRNN does not have this upper limit.
+ 
+ The experiment used 100 MB of data consisting of 86 different characters. There are 1,500 hidden layers and 1,500 FACTORS, for a total of 4.9 million parameters. The weights were initialized to sparse, which corresponds to 500 hidden layers when BPTT is unrolled.
+ 
+ (Incidentally, the scanned data of one copy of Iwanami Bunko I have on hand is 530KB, so 100MB data is roughly equivalent to 200 copies.)
+ 
+ Experimental results: Bits per character are smaller than those of memorizer. When a sentence is generated, words with a clear meaning are generated.
+ 
+ Impressions Having played with the n-gram model to generate sentences, I'd like to try this to see how much better it is. It's interesting to see that words are created even though the text is used as input, but I can't do this alone to determine "what range is a word". I'll see what I can do.
+ 
+ ** Source.
+ http://machinelearning.wustl.edu/mlpapers/paper_files/ICML2011Sutskever_524.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ 
+ *1391825340*Deep Learning Paper Introduction "Learning Recurrent Neural Networks with Hessian-Free Optimization"
+ The story is that it was a difficult problem to train a recurrent neural network (RNN) to learn long-range correlations, but using Hessian-Free, it was possible.
+ 
+ The advantage of RNN is that it can be easily computed with Back Propagation Through Time (BPTT) + stochastic gradient method, but correlations as far apart as 10 time steps cannot be learned at all with a first-order gradient method
+ 
+ The cause is "vanishing/exploding gradients. Long-range correlations are propagated back to the previous time layer many times in BPTT, so the error signal quickly decays and disappears.
+ 
+ The recently developed Hessian-Free (HF), also known as truncated-Newton or Newton-CG, is effective for training Deep Neural Networks, so it must also be effective for training RNNs.
+ 
+ I can't summarize the formulas too succinctly, so I'll skip them. If you don't read this section carefully, this paper won't make any sense.
+ 
+ To put it briefly, it seems to be that "the method of approximating the objective function using the second-order derivative and optimizing it is very computationally expensive because the inverse matrix of the Hessian (the matrix of the second-order derivative) needs to be computed," but I did not understand how Hessian-Free avoids this problem.
+ 
+ Hessian-Free" itself is explained in "Deep learning via Hessian-free optimization" by the same author, James Martens. Should I read this first?
+ 
+ ** Source.
+ http://machinelearning.wustl.edu/mlpapers/paper_files/ICML2011Martens_532.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ 
+ *1391838220*Deep Learning Paper Introduction "Deep learning via Hessian-free optimization"
+ The new optimization method called "Hessian-Free" was used to train an auto-encoder for Deep Learning, and it exceeded the performance of the existing report without prior training.
+ 
+ Parameter determination for neural nets is a well-studied problem and is said to be efficiently computed by the gradient method. However, it does not work well in cases with a very large number of hidden layers, such as in Deep Learning. It can take a long time to learn or even perform badly on the training data (under-fitting).
+ 
+ It is well known among optimization researchers that gradient methods are unstable for objective functions with pathological curvature; second-order optimization methods work well for such objective functions. So it would be a good idea to use this kind of optimization for Deep Learning.
+ 
+ But there are still a few problems. First, we need to make it work at a realistic speed for large data sets. This could be done with online learning, like stochastic gradient descent (SGD).
+ 
+ Pre-training layer by layer is another big step forward. Doing this and then SGD appears to avoid problems. In fact, there are various successful applications. But the question remains: why does this work? Why is it necessary? Some researchers have explained that it is due to the large number of local minima.
+ 
+ Another explanation is that the objective function has pathological curvature (e.g., elongated valleys) and is not optimizable by optimization methods that do not look at curvature, such as the gradient method. Therefore, from this perspective, we propose a semi-online second-order optimization method. This method is not under-fitting and is more efficient than existing methods using pre-training.
+ 
+ First, we will discuss the standard second-order optimization method, the Newton method. The Newton method requires the computation of a Hessian the size of the square of the number of parameters, which is not realistic for computing large models. However, by learning this, one can understand how the more realistic variants (called quasi-Newton methods) behave.
+ 
+ The Newton method, like the gradient method, is a method in which parameters are updated sequentially. The core idea is to "approximate the objective function f by a quadratic function" (Equation 1) You can think of B as a Hessian, but since it is sometimes not positive definite and does not have a minimum value, you increase the diagonal components appropriately to make it positive definite (dump)
+ 
+ Scale invariance" is an important feature of Newton's method. Linear transformations do not change the behavior. Without this feature, poor parameter scaling will result in poor performance. This feature also eliminates the need to adjust the learning rate.
+ 
+ Conversely, one can think of it as an implicit scaling based on the curvature around the current parameters, which transforms the gradient.
+ 
+ If the absolute value of curvature is small, it means that the change in gradient is small, so it is OK to go a long distance. On the other hand, if it is large, it means that you are sensitive to the direction of p, so you should go a little further and reconfirm the appropriate direction of p. (I will reconfirm the formula later in this paragraph. (I will recheck the formula later in this paragraph.)
+ 
+ (I haven't gotten to the important stuff yet, but I'll get to the rest of it later)
+ 
+ ** Source.
+ http://machinelearning.wustl.edu/mlpapers/paper_files/icml2010_Martens10.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+  
+ </body>
+
+[Hatena Diary 2014-02-08 https://nishiohirokazu.hatenadiary.org/archive/2014/02/08]

@@ -1,0 +1,137 @@
+Hatena2011-12-13
+code:hatena
+ <body>
+ *1323766254*Use case of productivity improvement using git as a textile.
+ Many people think that version control and git are "big and cumbersome". But I think that's a missed opportunity to improve productivity. Especially for people who work with a large number of developers, "topic branching before making changes" is a good way to do it, but it seems like such a hassle that it makes people shy away from doing it.
+ 
+ On Sunday, I used git in a very unorthodox way and found it very useful, so I'd like to report it as a use case. However, this is a somewhat unique environment, so the method I used here may not be directly usable at your place.
+ 
+ First, a description of the environment. The project is presented in "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111211/1323533985'>Next Sunday, we will exhibit a new shooting game</a>", which runs on a table type display. Shooting game. Mainly @tokoroten, and the source code has been changed to a crunchy version. I got it to the point where it works on Saturday for now. There are many things to be improved. I have 7 hours to work. My MUST work is done and I want to help implement the game. The table display is connected to a Windows machine, and file sharing allows me to access files from other machines in the LAN. My machine is a MacBook Air, so it was important for me to be able to sense whether the other person's work was finished or not by his/her behavior.
+ 
+ <iframe width="560" height="315" src="http://www.youtube.com/embed/OF0gX2JNIDM" frameborder="0" allowfullscreen></iframe>
+ 
+ 
+ The cheapest initial cost method is to copy the entire source tree for yourself and modify it. But if you do that, it is hard to think about how to merge them later. You have to figure out what the other party is trying to do so that you don't modify the same source at the same time," "You want to modify a certain file, but the other party is also modifying the same file, so you have to wait," "But you still modify the same file, so you have no choice but to take diffs and do your best to fix it," "And then the merge fails and the bug comes back. Then the merge fails and the fixed bug comes back. I don't want to do it by force.
+ 
+ And when I arrived, tokoroten had not arrived yet. Hmmm, yes, it hit me, let's git it.
+ 
+ ** git repository of the other party's source tree without permission
+ 
+ If you git init in the tokoroten source tree, a folder named .git will be created there and become a repository. git status to see what files are there. There was a .svn file, so I decided to ignore it with .gitignore.
+ 
+ >||
+ pattern: glob
+ *.pyc
+ .svn
+ ||<
+ 
+ git add all the files you think you need for your project to the index and git commit them. Now you are ready to share source code via git repository. It won't take much time.
+ 
+ Note that this was done from my MacBookAir via samba, so I didn't install or configure git or anything. That may be one of the reasons why it was so easy.
+ 
+ Write and place a command; if it says t$, it means that you are working in the tokoroten work tree.
+ >||
+ t$ git init
+ t$ git status
+ t$ emacs .gitignore
+ t$ git add .
+ t$ git commit
+ ||<
+ 
+ ** Create your own repository
+ 
+ Next, I create a repository for myself to modify the source code and add features. It may sound exaggerated, but shared/tokoroten/TreFes is the source tree I just made a git repository of, so I just do git clone . /tokoroten/TreFes in my shared/nishio directory. Now I'm in nishio/TreFes, and all I have to do is tweak the source code there as I like. I use n$ to represent that I am in my own work tree.
+ 
+ >||
+ $ git clone ../tokoroten/TreFes
+ $ cd TreFes
+ n$ ...
+ ||<
+ 
+ Then, you tinker with the source code, test it, and commit when you are satisfied that it works and you are done. First, check git status to see what has changed. You can use git add (filename) to add the whole changed file to the index, or I personally like to use git add -p to add each changed part. I don't want to commit debug output that I accidentally forgot to delete.
+ 
+ >||
+ n$ git add -p
+ n$ git commit
+ ||<
+ 
+ Tokoroten appeared when we were starting to add functions on our own.
+ 
+ ** Commit to the timing of the opponent's cutoff.
+ 
+ After considering whether I should teach tokoroten how to use git or ask him to do it as it is, I decided that I should do it since my time is limited. I just cd to his work tree and git add and git commit the changed/added files shown in git status without worrying about the details.
+ 
+ >||
+ t$ git status
+ t$ git add <files>
+ t$ git commit
+ ||<
+ 
+ ** Import the other party's changes into your repository
+ Next, git pull the changes made by tokoroten in your repository. This will bring the changes committed in their repository to your repository and merge them with the files in your work tree. I think I'm going to be pissed if I have uncommitted changes or something. (Oh, well, if I'm working on a topic branch, I can merge without worrying about it. I guess when you notice that the other person's work is done, your work is done too.
+ 
+ When you pull, merge is also done automatically. Sometimes the result is, "The merge was done automatically and without any problems! In one day, there were 31 commits and 6 conflicts. In one case, I was asked, "What is the intention of this? The rest of them were things that could be fixed quickly at a glance. If you fix it, you need to git add the file and git commit it.
+ 
+ Now, I have completed the process of reflecting the changes made by tokoroten in my repository.
+ 
+ >||
+ n$ git pull
+ Edit conflicted files
+ n$ git add <conflicted file>.
+ n$ git commit
+ ||<
+ 
+ ** Poke your changes into their repository
+ Since most of the work in the previous chapter is done in a matter of seconds, we send our changes to the other party while they are not tinkering with the source code. In this case, we can't push because there is no bare repository in between. We have to git pull in the other party's repository.
+ 
+ >||
+ t$ git pull ../../nishio/TreFes
+ ||<
+ 
+ This is the end.
+ 
+ However, if the other party has already tinkered with the code, there is a possibility that they may not be able to merge due to uncommitted changes at the time of this pull. This was not a problem in the field. Maybe it's because when the work is done, we talk about the work, go to the bathroom, or have a cup of tea. Once tokoroten was fiddling with the source while we were taking time to fix a conflict, and I asked, "Where are you fiddling?" I asked him "What are you doing?" and since the file he was fiddling with did not conflict with what I was about to send him, I gave him a go.
+ 
+ Also, as I was writing this, I realized that there may be problems if the other party is "an editor that locks open files in write mode" or "an editor that does not notice when an open file is updated". Especially the latter, it may overwrite and save the file without noticing that it has been changed by pull.... Can I conclude that you should not use such an editor?
+ 
+ ** Summary
+ 
+ I spent a Sunday afternoon making a shooter like this, but at such a speed that 31 commits were made in 7 hours from 14:00 to 21:00, and there were 6 conflicts. Of those, there was only one conflict that took a lot of brainpower to fix. I had only one conflict that took me a lot of thinking to fix, because I had just tweaked the code for the part where the player hits the ball at the same time. I can't count the number of cases where two people were working on the same file... or rather, the file was granular, like treffes.py or player.py, so of course that's the case.
+ 
+ I wonder how much I would have lost motivation to add features if I had thought, "If I mess with identical files, it will be hard to merge them later," or "Let's not mess with the same files. I would probably have been lazy and thought, "Why don't we do it this way? Maybe I would have just been lazy and said, "Why don't we tweak this code to make it work? I probably would have just said, "Why don't you do it this way?
+ 
+ By the way, I dug up the work I did in those 7 hours from the commit logs:.
+ - Change the color of bullets depending on the character
+ - Modified to allow scenarios to be specified in scripts as well as in data files
+ - I made the bullets reflect off the walls.
+ - Create bat file for startup
+ - Collision detection with the edge of the screen
+ - Refactoring to allow multiple types of enemy
+ - Madoka's bullets were shotgunned.
+ - Addition of enemies that reflect bullets from the front
+ - Refactoring around reflections
+ - Change of bullet type for Homura
+ 
+ The fact that we were able to implement major changes such as bullet reflections without worry was an advantage, but I think it was important for the team's productivity to have the main programmer concentrate on more important tasks by letting the others take care of minor tasks such as changing bullet colors instead of loading them onto the main programmer. This was important for the productivity of the team. While I was working on these details, tokoroten was doing things related to the overall game, such as game state transitions, boss appearances, and sound effects.
+ 
+ So for my own productivity, I benefit from being able to use git, regardless of whether other members of my team are using it or not. Even if I use git in a very casual way, not even cutting branches, it is clearly better than not using it at all.
+ </body>
+ <comments>
+ <comment>
+ <username>o_show</username>
+ <body>In the section "Poking our changes into the other person's repository", <br><br>>In this case, there is no bare repository in between, so we cannot push. You have to git pull in the other person's repository. <br><br>But since shared/tokoroten/TreFes is the clone source, <br>git pull should not be possible from shared/tokoroten/TreFes as it is, so you set up remote, right? <br>Since this is a good tutorial, could you please complement that command as well? <br><br>t$ git remote add nishio . /... /nishio/TreFes<br><br>upI think maybe you did something like this. </body>
+ <timestamp>1323773028</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>That's exactly what I was doing! <br>But, well, remote add is not required in this case, so to avoid confusing you with more things to explain, <br>I've modified the method to pull by specifying the repository. <br>- git pull<br>+ git pull ... /... /nishio/TreFes</body>
+ <timestamp>1323773487</timestamp>
+ </comment>
+ <comment>
+ <username>o_show</username>
+ <body>Oh, I see, it is possible to specify the repository and pull on the fly. <BR>It's great that you don't have to explain REMOTE. <BR><BR>This is a good article that shows that Git is effective even in these "don't overdo it" examples. Thank you for publishing the use case. </body>
+ <timestamp>1323774061</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-12-13 https://nishiohirokazu.hatenadiary.org/archive/2011/12/13]

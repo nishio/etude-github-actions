@@ -1,0 +1,87 @@
+Hatena2011-04-04
+code:hatena
+ <body>
+ *1301929103* Minimal VM with subroutine calls
+ I implemented a very primitive form of the concept of a function or subroutine, which can be implemented if there is an instruction to record the position you were at before jumping and an instruction to jump to the recorded position. At first, I was going to create a stack, but I thought that readers would not follow me even if I suddenly showed them a stack implemented, so I used a specification that breaks when a function is called from within a function.
+ 
+ When I made it, I realized that I already had a high-level language brain when I thought mov %ebx, $0 and mov of mov %ebx, %eax were the same thing, and if the argument was a number, as in this implementation, it was necessary to implement them as separate instructions because it was impossible to distinguish between the address and the real value. The former was implemented under the name set and the latter under the name mov, and then I thought, "Oh, if I see something like -4(%rbp), it's neither of these two...".
+ 
+ If you put arguments on the stack, you will get instructions about them, and even if you explain it in Japanese, it is complicated, like "read the value at the address two places before the address that 'the address that points to the top of the stack' points to," so I decided to stop implementing arguments because I thought I should do it gradually instead of putting them in all at once.
+ 
+ >|python|
+ # -*- encoding: utf-8 -*-
+ """
+ mini-VM Minimal VM for explanation
+ Minimal subroutine calls
+ The return address is stored in mem[5] as a definite number.
+ 　→ i.e., calls cannot be nested.
+ 　→How do I nest? →Let's make a stack. Do you want me to explain that?
+ Return value goes into mem[0
+ Arguments? What's that?
+ 　→The caller and what is seen are the same.
+ 　　If rewritten, it spills over to the caller
+ 　→ I'll do the solution to this problem at the dynamic scope.
+ 
+ print a1 : print mem[a1
+ set a1 v1 : set mem[a1] to v1
+ jump pos : change pc to pos
+ if_gt a1 v2 pos : jump pos if mem[a1] == v1
+ call pos : put current PC + 1 into mem[RETURN_ADDR], then jump pos
+ return a1 : put the contents of mem[a1] into mem[0] and then jump to the location pointed to by mem[RETURN_ADDR].
+ """
+ 
+ memory = [0] * 10
+ RETURN_ADDR = 5 # Address to store the location to return
+ 
+ # Implement subroutine (max)
+ code = [
+     ("set", 1, 10),      # B = 10
+     ("set", 2, 20),      # C = 20
+     ("call", 8),         # call max(B, C)
+     ("print", 0),        # print A
+     ("set", 1, 30),      # B = 30
+     ("call", 8),         # call max(B, C)
+     ("print", 0),        # print A
+     ("jump", 999),       # goto end
+     ("if_gt", 1, 2, 10), # 8(max): if B > C goto 10
+     ("return", 2),       # return C
+     ("return", 1),       # 10: return B
+ ]
+ 
+ def eval(code):
+     cur = 0
+     while cur < len(code):
+         line = code[cur]
+         cur += 1
+         op = line[0]
+         if op == "set":
+             memory[line[1]] = line[2]
+ 
+         elif op == "print":
+             print memory[line[1]]
+ 
+         elif op == "if_gt":
+             if memory[line[1]] > memory[line[2]]:
+                 cur = line[3]
+ 
+         elif op == "jump":
+             cur = line[1]
+ 
+         elif op == "return":
+             ret = memory[RETURN_ADDR]
+             cur = ret
+             memory[0] = memory[line[1]]
+ 
+         elif op == "call":
+             memory[RETURN_ADDR] = cur # not +1 because it has already been advanced by 1 above
+             cur = line[1]
+ 
+         else:
+             raise NotImplementedError(op)
+ 
+ 
+ eval(code)
+ ||<
+ </body>
+
+[Hatena Diary 2011-04-04 https://nishiohirokazu.hatenadiary.org/archive/2011/04/04]

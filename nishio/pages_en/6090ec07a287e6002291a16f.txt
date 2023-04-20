@@ -1,0 +1,75 @@
+Hatena2011-04-20
+code:hatena
+ <body>
+ *1303300536* A Better Git Cheat Sheet
+ There are several Git cheat sheets out there, but I can't find "something suitable to give to someone who doesn't know Git and have them read it first". It's not a cheat sheet, it's a tutorial, but it needs to be printed out and made into a single A4 sheet. It would have been a lot smoother if you had told them something like "Git has a place called index where you can organize which changes you've made in your work tree before committing them" or "git revert is different from svn revert in that it makes changes to the repository out of the blue, so be careful". I would have been able to proceed more smoothly.
+ 
+ So let's think about what kind of cheat sheet is needed.
+ 
+ ** Characters
+ http://www.ndpsoftware.com/git-cheatsheet.html
+ 
+ What I like about this cheat sheet is that the characters "stash", "workspace", "index", "local repo", and "remote repo" are clearly defined; there is no way to understand a cheat sheet that says "just add and commit, or commit -a" without explaining the existence of "index". There is no way that you can understand the cheat sheet that says "just add and commit or commit -a" without explaining the existence of the index.
+ 
+ On the other hand, the next thing that is not good about this cheat sheet is: it is not a cheat sheet.
+ 
+ ** Where the change will occur
+ The tragedy of doing a git revert with the intention of doing an svn revert is that there is a mismatch between the user's perception of "what is changed" and the reality of the situation. And even if the user mistakenly remembers commands that do not change anything, such as git status and git diff, there will be no tragedy. So the emphasis should be on "what does this command change? I don't think it's bad to express "change something with reference to something" with an arrow. But then, the root of the arrow shouldn't change.
+ 
+ ** how to undo changes
+ I wish I could undo anything with git undo. Well, that aside, the reason why the problem becomes complicated is that "I made a mistake! It's almost always a case of not knowing how to undo a mistake, and after a lot of trial and error, the mistake evolves into a "two-step failure," like git revert. If this is the case, then each operation should be accompanied by instructions on how to undo it.
+ 
+ >||
+ git init, git clone ⇔ rm -r .git
+ git add <file> ⇔ git rm --cached <file>
+ git commit ⇔ git reset HEAD^, rebase -i if not last minute
+ ||<
+ 
+ Like.
+ 
+ 
+ ** Level division
+ 
+ http://www.textdrop.net/doc/git-cheat-sheet-ja/
+ 
+ Are bisect, fsch, gc that much more important than rebase or cherry-pick? This cheat sheet of course may not be targeting "first time users". Even git revert shouldn't be on there in the first place, don't you think?
+ 
+ My idea of level division
+ - Level 0: clone
+ - Level 1: Operations: init, add, commit, Info: status, diff, log, show
+ - Level 2: reset, rebase, branch, checkout, tag, what is a tag, what is a branch, what is HEAD
+ - Level 3: format-patch, am
+ - Level 4: What are push, fetch, merge, and origin?
+ - Level 5: Other
+ 
+ ** Summary
+ 
+ Anyway, I think we need an A4-size explanation to prevent "new Git users" from falling into the pitfalls. However, I don't think I can create it by myself, so I'd appreciate any feedback you can give me, such as your opinions (or your own experiences where you stumbled)!
+ 
+ ** Feedback
+ 
+ I had set clone to level 4 because I thought "using Git" was mainly for managing my own source code, so I thought "it should be local first before I start thinking about remote repositories", but in reality, there may be a need for "I don't care about managing source code, I just want to check out the latest version (in the svn sense)" before that. I think there is a need to "check out the latest version (in the svn sense) without worrying about managing the source code. So I set clone to level 0.
+ 
+ ** Mind Map
+ 
+ f:id:nishiohirokazu:20110421173917j:image
+ </body>
+ <comments>
+ <comment>
+ <username>Akira51</username>
+ <body>I didn't know git and svn had different features. </body>
+ <timestamp>1303345659</timestamp>
+ </comment>
+ <comment>
+ <username>tokuhirom</username>
+ <body>Is fsch possibly a typo for fsck</body>?
+ <timestamp>1303364810</timestamp>
+ </comment>
+ <comment>
+ <username>fuga</username>
+ <body>I feel that http://gitref.org/ is close to the level division. </body>
+ <timestamp>1303574714</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-04-20 https://nishiohirokazu.hatenadiary.org/archive/2011/04/20]

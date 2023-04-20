@@ -1,0 +1,455 @@
+Hatena2009-03-25
+code:hatena
+ <body>
+ *1237957739*[GAE] Failed to shake sequential integer IDs.
+ First, make a decorator like this
+ >|python|
+ def synchronized(func):
+     def synchronized_func(*args, **kw):
+         return db.run_in_transaction(func, *args, **kw)
+     return synchronized_func
+ ||<
+ 
+ Next, I built this factory.
+ >|python|
+ @synchronized
+ def make_instance(cls, *args, **kw):
+     instance = cls(*args, **kw)
+     last_one = cls.all().order("-added_on").get()
+     if last_one:
+         instance.unique_id = last_one.unique_id + 1
+     else:
+         instance.unique_id = 0
+     instance.put()
+     return instance
+ ||<
+ 
+ The design of the model is such that it has add_on and unique_id without any leaks.
+ >|python|
+ class Game(db.Model):
+     added_on = db.DateTimeProperty(auto_now_add=True)
+     unique_id = db.IntegerProperty()
+ ...
+ ||<
+ 
+ Sequential IDs are assigned when used in this way in
+ >|python|
+     program, rest = logic.deal_cards()
+     p = make_instance(Program, program=program, rest=rest)
+ ||<
+ 
+ straight away
+ >>
+ Exception Type: BadRequestError
+ Exception Value: Can't query inside a transaction.
+ <<
+ grrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+ <hr>
+ I guess I have to use get_or_insert while... That's so stupid.
+ 
+ *1237964303*Household
+ - Phone
+ - E-mail
+ - I put natto in the rice gruel of the day before yesterday and ate it (11 packs of natto left over).
+ -- It has more seafood than just natto rice, and more natto than just rice porridge. Hybrid rice.
+ 
+ **1237987366*Knife found.
+ f:id:nishiohirokazu:20090325222243j:image
+ 
+ That's strange. I think the blade is wrapped in cardboard, but why is it in here without the blade? Moreover, I have used this box many times to take out ladles and spoons from inside, so why didn't I notice the existence of the knife until now? I knew the little guy must have been hiding them until now. The net was sticking out of the bag, and I found it when I was cleaning it up, but the dwarf must have kicked it and scattered it when he played with the knife.
+ 
+ *1237987959*Hacker's Cafe Fes Continued
+ http://www.hackers-cafe.net/hacker-s-cafe-fes
+ 
+ <img src="http://gyazo.com/32199a06c473ec76aba8ec6b1a8f3957.png">
+ 
+ Jiju is the dark side, so everyone should come! (yeah
+ 
+ *1237997832*Programmer's Nightmare Online under construction
+ >||
+ {% block after_body %}
+ <script type="text/javascript">
+ (function(){
+     var pre = $("#with_link_to_desc")[0];
+     var url = "{% url programmers_nightmare.views.card_desc_index %}";
+     var result = pre.innerHTML;
+     var cards = {{ cards|safe }};
+     for(var i=0; i<cards.length; i++){
+         var key = cards[i];
+         result = result.replace(
+             key, ("<a href='" + url 
+                   + key + "/' target='_blank'>" 
+                   + key + "</a>"));
+     }
+ 
+     pre.innerHTML = result;
+ })();
+ </script>
+ {% endblock after_body %}
+ ||<
+ 
+ <img src="http://gyazo.com/c79246b72a8785c97287c899e6ddee4f.png">
+ 
+ It's nice and easy when you're building alone, because you don't have to worry about whether or not others can maintain it (yeah).
+ 
+ *1238002528*Programmer's Nightmare Online was created.
+ The design is very tricky, no, no, there is still room for trial and error in the rules, so the emphasis is on not losing the freedom of game progression!
+ 
+ Played while talking on IRC <a href='http://d.hatena.ne.jp/nishiohirokazu/20090323/1237768121'>Programmer's Nightmare versus</a>, <a href='http://d. hatena.ne.jp/nishiohirokazu/20090323/1237785061'>Programmer's Nightmare 2nd versus</a>, played on Lingr <a href='http://www.lingr.com/room/ programmers_nightmare/archives/2009/03/25">(log)</a>(password is "Nightmare" in Roman alphabet), I found out that the game progress itself is not too harmful in chat conversations. However, sharing the board is a bit of a pain. If you put it up in chat, a lot of it flows. It's especially hard to see if what you put up is wrong, because you can't erase the wrong thing when you make a correction. Also, I had to do card draws while saying "please believe I'm not cheating".
+ 
+ Programmer's Nightmare Online offers
+ - Dealing cards and generating the board
+ - Rewrite the board situation and add or overwrite the previous board.
+ - Fair Draw
+ - Click on a card on the board to jump to its explanation page.
+ and other functions are implemented.
+ 
+ 
+ However, since we are still in the process of experimenting with various things, we did not want to make it too hard, so we basically just did what we had been doing in the text editor at hand in the textarea in the browser. The game's progress is managed by a human.
+ 
+ http://nishiotools.appspot.com/programmers_nightmare/
+ 
+ First, press make new program.
+ 
+ <img src="http://gyazo.com/cdfc5fe1f01cd3e297303b622b3e2d81.png">
+ 
+ When the program comes up, press "start new game" if you are OK with this.
+ 
+ <img src="http://gyazo.com/1ea7613b131e40b1ef429516e5123f45.png">
+ 
+ Then, the game proceeds by rewriting the board and pressing ADD while talking in the chat. If the last write was a failure, you can overwrite it by UPDATE. draw a card to draw a card fairly.
+ 
+ <img src="http://gyazo.com/c24adcc8f061c00d8ef361df716c4d80.png">
+ 
+ This is what happens when you DRAW. The "program or not" is used only to determine that the string in the text area from the beginning is the "most recent program". In the image above, "drawn card is..." is not in the textarea because it is not a program.
+ 
+ Come to Lingr: http://www.lingr.com/room/programmers_nightmare and if I'm around I might use this to play against you for testing. I would be glad to get feedback and logs from other people using this if possible.
+ 
+ *1238005083*Programmer's Nightmare 3rd vs.
+ Log of vs. <a href="http://twitter.com/tnzk">@tnzk</a> and
+ 
+ http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25#msg-63530375
+ >||
+ 01: POWER_SURGE      |
+ 02: DECREMENT        |
+ 03: BIT_SWAPPER      |
+ 04: ACQUIRE          |
+ 05: DEFEND           |
+ 06: SWAP_INSTRUCTIONS|
+ 07: ZAP              |
+ 08: OVERSIGHT        |
+ 09: FLOATER          |
+ 10: DELETE           |
+ 11: ZAP              |
+ 12: FUTURE           |
+ 13: BIT_MOVER        |
+ 14: MULTIPLIER       |
+ ||<
+ 
+ >>
+ Nishio: After playing against the opponent twice, I found out that the first move is probably quite advantageous.
+ Tnzk Oh, yeah.
+ Nishio Maybe it would be better to play it twice, switching the first and second moves. In the same program. With this program, there is a third BIT_SWAPPER, so if that is triggered, even if you have a good instruction, it will be taken away from you. Ah, but DECREMENT is before it, so I guess we can use DECREMENT to disable BIT_SWAPPER.
+ <<
+ 
+ >>
+ Tnzk Then I'll go ahead and put it on BIT_MOVER.
+ Leave in BIT_SWAPPER
+ Tnzk Then I would have to put it on DECREMENT.
+ Nishio: I'm in FUTURE.
+ Tnzk, then DELETE.
+ NISHIO In POWER_SURGE. Gee, I misunderstood DELETE and ERASE (oh).
+ Tnzk I think BIT_DELETE is easier to understand. Now, let's use SWAP_INSTRUCTION.
+ Nishio It is a lesson to programmers that they should not give incomprehensible names (Oh, with FLOATER.)
+ In Tnzk ACQUIRE.
+ Nishio at the ZAP of 11.
+ Tnzk SWAP_INSTRUCTION I totally misunderstood. It's not "swap the front and back of this card", it's swap the front two cards or the back two cards.
+ Nishio-U
+ Tnzk If you do, it may not be as subtle and delicious as it sounds. ....... in MULTIPLIER
+ NISHIO 7 in ZAP. end of BIT placement phase.
+ <<
+ 
+ >>
+  What happens to the bits if swapped? Subordinate to the card?
+ I think it's subservient.
+ <<
+ 
+ >||
+ 01: POWER_SURGE      |(N)
+ 02: DECREMENT        |(T)
+ 03: BIT_SWAPPER      |(N)
+ 04: ACQUIRE          |(T)
+ 05: DEFEND           |
+ 06: SWAP_INSTRUCTIONS|(T)
+ 07: ZAP              |(N)
+ 08: OVERSIGHT        |
+ 09: FLOATER          |(N)
+ 10: DELETE           |(T)
+ 11: ZAP              |(N)
+ 12: FUTURE           |(N)
+ 13: BIT_MOVER        |(T)
+ 14: MULTIPLIER       |(T)
+ ||<
+ 
+ >>
+ NISHIO Then RUN. first, shall we trigger 7:9 tnzk's DECREMENT with my POWER_SURGE (y/n)?
+ Tnzk y. For BIT_SWAPPER
+ Nishio Yes, BIT_SWAPPER changes to "replace one bit" and becomes virtually meaningless
+ Nishio BIT_SWAPPER is not triggered
+ Tnzk ACQUIRE is invoked 9:9
+ SWAP_INST for Nishio tnzk
+ Tnzk It doesn't seem to make much sense to trigger it!
+ Nishio.
+ Tnzk but I'll invoke it for confusion. w
+ SISHIO W
+ Tnzk 7 and 8 swap
+ <<
+ 
+ >||
+ 01: POWER_SURGE      |(N)
+ 02: DECREMENT        |(T)
+ 03: BIT_SWAPPER      |(N)
+ 04: ACQUIRE          |(T)
+ 05: DEFEND           |
+ 06: SWAP_INSTRUCTIONS|(T)
+ 07: OVERSIGHT        |
+ 08: ZAP              |(N)
+ 09: FLOATER          |(N)
+ 10: DELETE           |(T)
+ 11: ZAP              |(N)
+ 12: FUTURE           |(N)
+ 13: BIT_MOVER        |(T)
+ 14: MULTIPLIER       |(T)
+ ||<
+ 
+ >>
+ NISHIO 6:7 with ZAP in effect.
+ Tnzk OverSight not activated?
+ Nishio Oh, it activates. it activates when the BIT is not on. I always forget w
+ Tnzk, from there, even taking into account the ZAP, it's 5:6.
+ Nishio Activate FLOATER to move between DELETE and ZAP. Then FLOATER copies ZAP and activates 4:6
+ NISHIO Program counter moves about FLOATER
+ FLOATER; Move this card forward or backward 1 space in the sequence, then copy the next action. That is, it swaps places with a card adjacent to it. The Program Counter moves with it. (2 cards)
+ So DELETE was skipped.
+ <<
+ 
+ >||
+ 01: POWER_SURGE      |(N)
+ 02: DECREMENT        |(T)
+ 03: BIT_SWAPPER      |(N) -1
+ 04: ACQUIRE          |(T) 
+ 05: DEFEND           |
+ 06: SWAP_INSTRUCTIONS|(T)
+ 07: OVERSIGHT        |
+ 08: ZAP              |(N)
+ 09: DELETE           |(T)
+ 10: FLOATER          |(N)
+ 11: ZAP              |(N)
+ 12: FUTURE           |(N)
+ 13: BIT_MOVER        |(T)
+ 14: MULTIPLIER       |(T)
+ ||<
+ 
+ >>
+ Nishio 11 ZAPs are triggered, 3:6.
+ Tnzk Oh, FLOATER is an entity that is a FLOATER. It's just that the effect is copied when it is activated.
+ Nishio Oh, yes. It's a card game, so I thought it would be very difficult to play if the cards changed there.
+ Nishio Copy ability of COPY and FUTURE also only copy each time and the card remains the same. 12 FUTURE is activated and BIT_MOVER and MULTIPLIER are activated.
+ Nishio I moved the (T) above BIT_MOVER to MULTIPLIER, MULTIPLIER was triggered but my bit is not on it, so I guess that makes one more (T) and three in all.
+ Nishio: Currently 3:6.
+ <<
+ 
+ >||
+ 01: POWER_SURGE      |(N)
+ 02: DECREMENT        |(T)
+ 03: BIT_SWAPPER      |(N)
+ 04: ACQUIRE          |(T)
+ 05: DEFEND           |
+ 06: SWAP_INSTRUCTIONS|(T)
+ 07: OVERSIGHT        |
+ 08: ZAP              |(N)
+ 09: DELETE           |(T)
+ 10: FLOATER          |(N)
+ 11: ZAP              |(N)
+ 12: FUTURE           |(N)
+ 13: BIT_MOVER        |
+ 14: MULTIPLIER       |(T)(T)(T)
+ 
+ Score
+ ------
+ nishio: 6
+ tnzk  : 3
+ ||<
+ 
+ >>
+ Tnzk Ah, POWERSURGE and you lose.
+ Nishio: Yes, that's right.
+ Tnzk I'm going to throw it out backslash.
+ <<
+ 
+ >>
+ Tnzk It was easily settled, too good to be true.
+ Nishio The settlement is always easy.
+ Nishio I mean I thought I was losing, but then I realized I could skip DELETE with FLOATER after starting the execution.
+ Tnzk That's right. I didn't understand it either, so I was like, "This is a disaster.
+ Nishio The first person to come up with a solution that the other person is not aware of wins.
+ Tnzk I was thinking of putting down the bit on FUTURE there.
+ Nishio Yeah, yeah, I knew you would.
+ > Hey, I misunderstood DELETE and ERASE (oh)
+ I thought we were losing at this point.
+ Tnzk Oh, I see, that's what you mean. w
+ <<
+ 
+ *1238006736*Programmer's Nightmare 4th vs.
+ 2nd time against @tnzk
+ 
+ http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25#msg-63534100
+ >||
+ 01: SELF_DESTRUCT  |
+ 02: ZAP            |
+ 03: POWER_SURGE    |
+ 04: REVERSE_PROGRAM|
+ 05: COPY           |
+ 06: OVERWRITE      |
+ 07: ERASE          |
+ 08: INCREMENT      |
+ 09: SUBROUTINE     |
+ 10: DECREMENT      |
+ 11: POWER_SURGE    |
+ 12: INCREMENT      |
+ 13: BIT_SWAPPER    |
+ 14: FUTURE         |
+ ||<
+ 
+ >>
+ Tnzk First, place it in SelfDestruct
+ Place in Nishio Reverse
+ By Tnzk PowerSurge
+ Nishio COPY
+ Tnzk overwrite with
+ NISHIO FUTURE. (Editor's note: Actually, due to a miscalculation, I thought I had already won and have not thought properly since then.)
+ In Tnzk ERAZE.
+ Nishio Poor Subroutine.
+ Nisio 2 in ZAP.
+ In Tnzk DECREMENT.
+ NISHIO BIT_SWAPPER with
+ Tnzk 11 in POWER_SURGE
+ NISHIO 12 INCREMENT at.
+ <<
+ 
+ >||
+ 01: SELF_DESTRUCT  |(T)
+ 02: ZAP            |(N)
+ 03: POWER_SURGE    |(T)
+ 04: REVERSE_PROGRAM|(N)
+ 05: COPY           |(N)
+ 06: OVERWRITE      |(T)
+ 07: ERASE          |(T)
+ 08: INCREMENT      |
+ 09: SUBROUTINE     |
+ 10: DECREMENT      |(T)
+ 11: POWER_SURGE    |(T)
+ 12: INCREMENT      |(N)
+ 13: BIT_SWAPPER    |(N)
+ 14: FUTURE         |(N)
+ ||<
+ 
+ >>
+ Nishio RUN
+ Tnzk selfdestruct for now. 10:6, the card in question disappears.
+ Poor Nishio.
+ Nishio, attacked by ZAP of 2, 9:6
+ Tnzk surge 8:3
+ Tnzk In this case, you have one choice to activate Reverse.
+ Nishio: You're talking about something that can be done under the rules but won't be done.
+ Tnzk I mean virtually one choice.
+ Nishio That is correct. Will not execute.
+ Nishio COPY to copy POWER_SURGE and REVERSE. from 8:6 to 5:5. the order of execution changed with REVERSE. It's my turn all the way (oh).
+ Tnzk ｗｗ
+ Nishio Invoke REVERSE on 04. POWER_SURGE & REVERSE on 05 COPY
+ Tnzk Bu, this is a terrible w
+ Nishio, did I make a mistake in the life calculation above? (Ed. note: this is the wrong calculation I wrote above, I didn't include tnzk's surge in my calculation and I was going to repeat this loop 3 times to win 9:6->6:5->3:4->0:3)
+ Tnzk I feel that way too. 5:2?
+ Nishio 8:3 -> 5:2 -> 2:1, right now.
+ Tnzk. Is it a draw if I PowerSurge here?
+ NISHIO It's a phase-in. It's now 2:1 and you've just been REVERSE and come to 04 upward. I'm not going to invoke REVERSE here, so I'm not sure if tnzk will choose to phase or not.
+ Tnzk surge to phase, 1:1 with zap if not
+ Nishio: You've done your best. The only way to defeat only your opponent without destroying yourself is ZAP.
+ Tnzk ww. er, I don't choose to phase, so I don't Surge!
+ Nishio 1:1 with ZAP
+ Nishio Copy BIT_SWAPPER and INCREMENT in FUTURE
+ Tnzk bitswap twice.
+ Nishio OVERWRITE and replace INCREMENT
+ Tnzk No!
+ Nishio I wonder what happens if I increment the number of times BIT_SWAPPER is exchanged. Might not work.
+ Tnzk Well, it doesn't seem to make much sense.
+ Nishio: I don't see any merit. Then OVERWRITE...
+ Tnzk This is a terrible w
+ NISHIO I just want to check the current situation.
+ <<
+ 
+ >||
+ 02: ZAP            |(N)
+ 03: POWER_SURGE    |(T)
+ 04: REVERSE_PROGRAM|(N)
+ 05: COPY           |(N)
+ 06: OVERWRITE      |(N)++
+ 07: ERASE          |(T)
+ 08: INCREMENT      |
+ 09: SUBROUTINE     |
+ 10: DECREMENT      |(T)
+ 11: POWER_SURGE    |(T)
+ 12: INCREMENT      |(T)
+ 13: BIT_SWAPPER    |(N)
+ 14: FUTURE         |(N)
+ 
+ tnzk:nishio = 1:1
+ ||<
+ 
+ >>
+ I wish Tnzk 12 was DECREMENT!
+ Nishio I made the mistake of trading for 12...
+ Tnzk where was the pc now?
+ Nishio You just finished FUTURE.
+ How do you use Tnzk 13 swap?
+ Nishio REVERSE and INCREMENT exchanged; OVERWRITE with INCREMENT++.
+ <<
+ 
+ >||
+ 02: ZAP            |(N)
+ 03: POWER_SURGE    |(T)
+ 04: REVERSE_PROGRAM|(T)
+ 05: COPY           |(N)
+ 06: OVERWRITE      |(N)+=2
+ 07: ERASE          |(T)
+ 08: INCREMENT      |
+ 09: SUBROUTINE     |
+ 10: DECREMENT      |(T)
+ 11: POWER_SURGE    |(T)
+ 12: INCREMENT      |(N)
+ 13: BIT_SWAPPER    |(N)
+ 14: FUTURE         |(N)
+ 
+ tnzk:nishio = 1:1
+ ||<
+ 
+ >>
+ Tnzk surge is not used, but decrement the "damage to the player on the bit" of the surge of 03 with a decrement of 10
+ Nishio ERASE will erase the ZAP bit! I thought it was a card that ERASE would erase. I always get it wrong.ERASE? (y/n)
+ Tnzk I would like to keep the increments as they may be useful. Therefore n
+ Nishio OVERWRITE is activated. 3 pieces can be rewritten, right?
+ 03 POWER_SURGE
+ 04 REVERSE
+ 11 POWER_SURGE
+ Tnzk I'm running out of ways to attack w
+ Nishio OVERWRITE has expired and I would originally draw another card to replace it, but I'm almost done, so that's okay. don't COPY, don't REVRESE, SURGE. -2:1
+ Tnzk Ahhh, here I come!
+ <<
+ 
+ >>
+ Nishio Well, it's practically a draw, if we had predicted that tnzk would lose, we could have brought the game to a draw at Surge.
+ I won because of the gentleman's rule of no draws, but I don't think there was anything wrong with taking it to a draw since it was very unfavorable when I was the one holding the ZAP.
+ <<
+ </body>
+
+[Hatena Diary 2009-03-25 https://nishiohirokazu.hatenadiary.org/archive/2009/03/25]

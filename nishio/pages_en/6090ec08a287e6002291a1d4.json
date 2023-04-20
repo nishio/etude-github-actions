@@ -1,0 +1,104 @@
+Hatena2011-11-18
+code:hatena
+ <body>
+ *1321604904*Numpy's ndarray is not empty but false
+ In the case of a Python list, if it is put into an if conditional expression and converted to a bool, it becomes "empty or not" in Japanese.
+ 
+ >||
+ >>> if []: print "not empty"
+ 
+ >>> if [0]: print "not empty"
+ not empty
+ 
+ >>> print bool([]), bool([0])
+ False True
+ ||<
+ 
+ But Numpy's ndarray does not.
+ >||
+ >>> print bool(array([])), bool(array([0]))
+ False False
+ ||<
+ 
+ This is due to the fact that ndarray is designed to be "zero when it is one element and the content is zero.
+ >||
+ >>> array([0]).__nonzero__()
+ False
+ ||<
+ 
+ It's not consistent with Python's list behavior, but I thought, well, it's possible that a zero vector is determined to be zero, etc...
+ 
+ >||
+ >>> array([0, 0, 0]).__nonzero__()
+ ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+ ||<
+ 
+ Eh.
+ 
+ *1321611727*How to remove rows and columns that meet certain conditions in NumPy
+ In NumPy, slicing allows you to select only those elements that satisfy certain conditions. Using the opposite condition, it is easy to remove only specific elements.
+ 
+ >|python|
+ >>> array(range(5))
+ array([0, 1, 2, 3, 4])
+ 
+ >>> v = _
+ >>> v[v != 2]
+ array([0, 1, 3, 4])
+ ||<
+ 
+ This is because the "v ! = 2" where the operator is overloaded and it is a boolean array. So this can be used for other arrays.
+ 
+ >|python|
+ >>> v != 2
+ array([ True,  True, False,  True,  True], dtype=bool)
+ 
+ >>> randn(5)
+ array([ 1.96182557,  1.31524788, -0.09140969, -0.80362045,  0.02612784])
+ 
+ >>> _[v != 2]
+ array([ 1.96182557,  1.31524788, -0.80362045,  0.02612784])
+ ||<
+ 
+ If the vector is vertical, just specify ":" (all) for the first axis and the slice for the second.
+ 
+ >|python|
+ >>> randn(5).reshape(1, 5)
+ array([[-0.86985953,  0.59620319, -1.25975869,  1.87290875, -0.44375606]])
+ >>> _[:, v != 2]
+ array([[-0.86985953,  0.59620319,  1.87290875, -0.44375606]])
+ ||<
+ 
+ So far, we have seen this in <a href='http://www.scipy.org/Tentative_NumPy_Tutorial#head-864862d3f2bb4c32f04260fac61eb4ef34788c4c'>Tentative NumPy Tutorial</ a>, but what I want to do this time is to do this elimination on both rows and columns of a square matrix.
+ 
+ >|python|
+ >>> array(range(25)).reshape(5, 5)
+ 
+ array([[ 0,  1,  2,  3,  4],
+        [ 5,  6,  7,  8,  9],
+        [10, 11, 12, 13, 14],
+        [15, 16, 17, 18, 19],
+        [20, 21, 22, 23, 24]])
+ 
+ >>> mat = _
+ ||<
+ 
+ Why not simply specify this slicing for both rows and columns? But this is wrong. Only the diagonal component will be used.
+ 
+ >|python|
+ >>> mat[v != 2, v != 2]
+ array([ 0,  6, 18, 24])
+ ||<
+ 
+ Just slice one side and then the other.
+ 
+ >|python|
+ >>> mat[v != 2][:, v != 2]
+ array([[ 0,  1,  3,  4],
+        [ 5,  6,  8,  9],
+        [15, 16, 18, 19],
+        [20, 21, 23, 24]])
+ ||<
+ </body>
+
+[Hatena Diary 2011-11-18 https://nishiohirokazu.hatenadiary.org/archive/2011/11/18]

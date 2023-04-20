@@ -1,0 +1,30 @@
+Hatena2011-12-01
+code:hatena
+ <body>
+ *1322713121*numpy's array#sort behavior was unexpected.
+ I'm into numpy sorting, especially in 2 dimensions (or more), because it behaves like "each list within a list is sorted" when sorted as if it were a "list of lists".
+ >||
+ >>> x = [[6, 5], [4, 3], [2, 1]]
+ >>> y = array(x)
+ >>> x.sort()
+ >>> x
+ [[2, 1], [4, 3], [6, 5]]
+ >>> y.sort()
+ >>> y
+ array([[5, 6],
+        [3, 4],
+        [1, 2]])
+ ||<
+ Although numpy's sort can specify "which axis to sort on" as an argument, the default value is "-1", which is equivalent to "sort the innermost list individually" if it is omitted. If you want the same sorting as for a normal list, you need to use y.sort(0).
+ 
+ >||
+ >>> y = array([[6, 5], [4, 3], [2, 1]])
+ >>> y.sort(0)
+ >>> y
+ array([[2, 1],
+        [4, 3],
+        [6, 5]])
+ ||<
+ </body>
+
+[Hatena Diary 2011-12-01 https://nishiohirokazu.hatenadiary.org/archive/2011/12/01]

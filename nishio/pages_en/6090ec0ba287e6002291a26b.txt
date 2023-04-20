@@ -1,0 +1,37 @@
+Hatena2012-10-12
+code:hatena
+ <body>
+ *1350045654*What to look for when Python eats too much memory.
+ I tried to implement a rather complex algorithm in Python, and it ate more memory than I expected, so I profiled what caused it.
+ 
+ ** Don't use a lot of dictionaries.
+ 
+ It's obvious when you point it out, but dictionaries use a lot of memory because they are hash tables. I thought, "I want to have integer-to-integer mappings for each vertex in the graph," and inadvertently used a dictionary, but even with 6 entries, it blows up 1048 bytes x number of vertices of memory. No matter how many hash accesses are O(1), it is not cheap at all if you have to malloc 1048 bytes and cause thrashing. Depending on the number of entries and access frequency, it is much better to do a linear search with O(n).
+ 
+ If the number of entries is up to 5, it is 280 bytes because it is a compact way to have a non-hash table. Still, it's huge.
+ 
+ 
+ ** Instances of your own classes also have dictionaries.
+ 
+ If you think it is like a struct in C, you are mistaken, the member variables of the object are stored in a dictionary. So even if you think "this vertex class only has three integers," you are paying for another 280 bytes of the dictionary.
+ 
+ Some may suggest the solution of using __slots__, but see also the next item.
+ 
+ 
+ ** Don't create a lot of objects in the first place
+ 
+ How many bytes is an integer object anyway?
+ 
+ The correct answer is 8 bytes for the value (long), plus a pointer to the type object (8 bytes) and a reference counter (ssize_t: 8 bytes), for a total of 24 bytes.
+ 
+ (Note: Of course, this is affected by the environment and compile options, so the examples given here are based on the author's environment.)
+ 
+ Therefore, it is not reasonable to store a large number of collections of integers in that form, even if they are temporarily treated as Python objects in the middle of a calculation. The standard library provides classes such as array and struct for compactly storing values, so you should use them.
+ 
+ 
+ ** Conclusion
+ 
+ Don't use objects, use a solid array of values... that would have been better written in C, wouldn't it?
+ </body>
+
+[Hatena Diary 2012-10-12 https://nishiohirokazu.hatenadiary.org/archive/2012/10/12]

@@ -1,0 +1,181 @@
+Hatena2009-08-24
+code:hatena
+ <body>
+ **1251112946* Consideration of Deadline Driven
+ I used to think that the reason I was deadline-driven was because of my poor ability to work diligently and habitually. However, I thought that the more significant cause was the poor ability to make choices.
+ If you prioritize tasks, you should not worry about lower-priority tasks while performing higher-priority tasks, nor should you cut off higher-priority tasks, leaving time necessary to do lower-priority tasks. The meaning of prioritization will be lost.
+ However, people with low "task discarding ability" often fail to discard tasks that they know are of low priority, and end up accumulating tasks and filling them to the brim.
+ 
+ The advantage of deadlines is that tasks can be discarded in the form of "I want to do this, I want to do that, but I can't make it in time, so I give up.
+ In a style where you start a task as soon as you think of it, you tend to go down unimportant side roads, but especially when you have a clear goal such as "at least squash that bug by the deadline, print the package, burn 100 CD-Rs, etc.," you may think, "Oh, this kind of function would be useful. But I don't have time for that right now. But I don't have time for that right now, so I'll just make a note of it and do it later.
+ 
+ 
+ It is sluggish to put every single task that comes to mind on a list and consider its priority before executing it, instead of immediately executing it.
+ The process of completing tasks as they come to mind in a rush has a sense of speed similar to that of quickly defeating enemies that appear one after another in a video game.
+ But that is like saying, "Writing data to HDD is too slow, so let's not do it, why don't we write it to memory?
+ It is true that it is faster to just write to memory, but that ends if the power goes out. It also has less capacity. The human brain is the same way: if it is interrupted, it forgets and has little capacity.
+ 
+ *1251115934*Diary of Electronic Work
+ Since I was able to work more efficiently in a dark cafe, I decided to darken my house as well. I went to Yodobashi to see if I could buy a new light, but I couldn't find one that really struck a chord with me.
+ 
+ 
+ I came back and turned on 10 high brightness white LEDs for now. Well, I think this is enough. I heard that bio-light gets very hot, and it would be a nuisance with big lights, but this one doesn't bother me, and it runs on 5V.
+ 
+ 
+ I'm still waiting a bit to solder it. If I want to control it with a microcontroller, I will have to connect a Darlington driver or something.
+ 
+ 
+ I'm running at 5V with an 8.2 resistor now, so 600mA. looking at the TD62783 datasheet, the rated output current is -500mA. if I solder them all in parallel in the current state, it's no good, but I can change it later if I keep half of them in parallel.
+ 
+ 
+ Inspiration. Let's use gooseneck cables as lighting arms!
+ 
+ *1251118341*Diary of Midterm 2.0 Development
+ One more week and we'll have a framework to play against.
+ 
+ - Goal: To get the
+ -- Humans can fight third-party or third-party registered AIs.
+ -- A person without administrative privileges can register an AI
+ -- Can match AI to AI matches
+ 
+ ** Process flow
+ From the chase because I have completely forgotten myself.
+ <hr>
+ 
+ start_game -> redirect to /game if it is HTML
+ <hr>
+ 
+ >||
+ (r'^api/(?P<format>text|json|html)/start_game/$', 'start_game'),
+ ||<
+ 
+ (I got an error when I specified 'html' as an argument.) I used ? format=html because it is not important that the API is REST-like.
+ <hr>
+ I forgot to put the api views in api_views.py. I thought there was no start_game in views, even though it was in urls.py.
+ <hr>
+ It was POST start_game but I changed it to GET. I want to start a game with a link. Returns the ID of the newly started game.
+ <hr>
+ >||
+ return HttpResponseRedirect(reverse(views.game, (game_id,)))
+ __import__() argument 1 must be string, not tuple
+ ||<
+ 
+ Is the use of REVERSE incorrect?
+ ■We'll look into it later.
+ Checked.
+ >||
+ reverse(viewname, urlconf=None, args=None, kwargs=None, current_app=None)
+ ||<
+ I had to add args. Also, at first I used [game_id] and got angry that it was unhashable, so I changed it to a tuple, but it was just the wrong argument in the first place, so that's OK.
+ 
+ >||
+ return HttpResponseRedirect(reverse(views.game, args=[game_id]))
+ ||<
+ 
+ It now redirects as expected.
+ <hr>
+ 
+ http://localhost:8080/saichugen/api/start_game/?format=text
+ game_89e9e218f919a85cae33e8026fdd518b returned
+ as expected (positive events)
+ <hr>
+ 
+ I redirected manually.' NoneType' object has no attribute 'played'
+ 
+ You are trying to show the cards dealt when no one is seated & no cards have been dealt.
+ 
+ TemplateDoesNotExist at /saichugen/game/game_89e9e218f919a85cae33e8026fdd518b/
+ saichugen/gam_waiting_participants.html
+ Expected behavior. I haven't made the template yet.
+ 
+ <hr>
+ add computer players
+ - List of computer players that can be added
+ -- What are you going to do?
+ -- get a list of PLAYERS from the whole and select the PASSIVE ones?
+ --- display when the last enabled/disabled status was returned
+ - List of players you can join
+ <hr>
+ Oh, I thought it was Model.all(), not Model.objects.all().
+ 
+ <hr>
+ What kind of value is the type of -Player?
+ -- why isn't it in the Player class documentation in models.py, explode yourself.
+ 
+ <hr>
+ Two more hours until the battery runs out.
+ What needs to be done before the petty deadline?
+ 
+ - Since it is troublesome to test a game with AI mixed in, you can first make it possible to play against others, and then operate the game yourself to test the flow to the end.
+ - I don't think I can do it in two hours.
+ -- ■ Test if another player can join
+ -- ■ Game starts when all three players are present
+ 
+ <hr>
+ I've been designing the join API this way.
+ >||
+ (r'^api/(?P<format>text|json|html)/join/(?P<game_id>.*)/(?P<player_id>.*)/$', 'join'),
+ ||<
+ for now
+ >||
+ (r'^api/html/join/$', 'join_html'),
+ ||<
+ to accept POST from the form. If this is under api/, and the RATIONALE defined in api_views.py is the view for the general display and api_views.py is the view for the API, then the view that only enlists players and redirects them to the display URL should be in api_views.py should be in api_views.py.
+ 
+ I don't know how to write a form to display a list and make a selection. I don't have a signal, so I'll look into it later.
+ 
+ □ Allow selection of players from a list
+ 
+ For now, I'll just make a decision and move on.
+ <hr>
+ Two people can now be seen to be present while two are seated; when a third person is seated, the screen appears after all three are present.
+ I wish I could see the cards being dealt, but I don't.
+ It should have been implemented with templatetags.
+ 
+ I don't see any cards being dealt.
+ 
+ No, the cards are dealt and if you check the specific sheet in {{ game.seat_set.0 }}, they are dealt properly, but
+ It does not appear to be distributed by {{ game.get_played }}.
+ 
+ No, this is the correct behavior. played is the card that the player put on the field, which is empty and correct at the beginning of the game.
+ 
+ What is needed to prevent this mistake from recurring?
+ 
+ I can't think of any, so I'm through.
+ <hr>
+ In the meantime, I've put up a link to the seat at a later date.
+ □ Make it for 3 persons
+ 
+ The view saichugen.views.seat didn't return an HttpResponse object.
+ As you can imagine, it was unimplemented.
+ Let's see, what should be displayed on the in-play screen... can we refer to version 1.0 for this?
+ <hr>
+ Completion of seat.hand display
+ □ Make a link so that you can click on it and get a card out.
+ □ Card spacing is 30px at a fixed point.
+ <hr>
+ 
+ What must be done next?
+ □ When you click on a card, the card is put out face down.
+ □ The existence of the card currently face-down should be indicated
+ □ If three cards are laid down, proceed with the turn.
+ 
+ 18:30. I'm getting hungry. According to the commit log, I committed the "screen when the game hasn't started yet" template at 17:02, so it's already been 1:30 since then, but my battery still has 1:50 left, and when I started the work before the commit, the battery level was 2:30. Hmmm, does the MacBook report less battery? I can work for another hour or two after I eat.
+ 
+ <hr>
+ For today, let's end with a list of things to do tomorrow.
+ It took me a while to get started because I had completely forgotten the structure and how far I had come, but I expect to be a bit more productive tomorrow, I hope.
+ 
+ - game
+ -- □ Allow selection of players to join from a list
+ --- select, option
+ --□ I've put up a link to the seats by default for now, for three people.
+ - seat
+ --□ Make a link from the seat.hand display so that the card can be clicked on and played.
+ ---□ When you click on a card, the card is put out face down.
+ ---□ The presence of the card currently face-down should be indicated
+ ---□ If three cards are laid down, proceed with the turn.
+ --□ (unimportant) cards are spaced 30px apart by default.
+ </body>
+
+[Hatena Diary 2009-08-24 https://nishiohirokazu.hatenadiary.org/archive/2009/08/24]

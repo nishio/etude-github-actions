@@ -1,0 +1,50 @@
+Knowledge acquisition strategies and specialists
+[https://gyazo.com/c87874588e271a962ef3a9fd33e0a404]
+
+----
+[Knowledge acquisition strategies] and [specialists] and [generalists]
+I decided to generate a [knowledge distribution map] that I often use in code so that I can experiment with it.
+
+You are given a choice of three objects to study each step and learn one according to your own knowledge acquisition strategy.
+When we learn, we gain a random amount of knowledge. Since we also add random noise to the domain of knowledge gained, we sometimes "gain knowledge in areas that are slightly out of line with what we were trying to learn.
+We observed the difference between the strategy of choosing "the subject of which one has more knowledge" from among the three options (specialist strategy) and the strategy of choosing "the subject of which one has less knowledge" (generalist strategy), with the conditions other than the knowledge acquisition strategy being the same.
+[https://gyazo.com/45da70185788ef347932cb3983a11a15]
+I was under the impression that there was only one peak for specialists, but multiple peaks occurred.
+
+I had imagined a more "generalists win in most areas, but specialists are overwhelmingly strong only in their areas of expertise" phenomenon, but specialists win in 44% of the areas.
+
+This behavior occurs because the situation lacks "freedom of the object of learning," which is to choose from three random options out of a total of 100 objects to be learned. This is what happens when the number of choices given is 10.
+[https://gyazo.com/c87874588e271a962ef3a9fd33e0a404]
+This is what happens when you have 30 options, or 30% of all subjects, to choose from freely.
+[https://gyazo.com/bb6f9c91f74d4cbb9931912a82923f2d]
+The "specialist strategy" of choosing what one does best leads to more freedom of choice and more concentration on a single peak.
+On the other hand, the generalist strategy is less affected by freedom of choice.
+
+3 specialists and 1 generalist
+Although gathering three generalists together does not make for a literal wisdom, since none of them are alike,
+When specialists come together and play to their strengths, they will demonstrate higher knowledge than a group of generalists in most areas.
+[https://gyazo.com/2cae28889415e54e823d6c1caf5a83be]
+
+
+[Colab https://colab.research.google.com/drive/15or2hCehfO-NfWFjX5WBeKCS0vOc55bI]
+code:python
+ import numpy as np
+ from matplotlib import pyplot as plt
+ KNOWLEDGE_WIDTH = 100
+ TIMES = 10000
+ 
+ def get_knowledge(policy):
+   knowledge = np.zeros(KNOWLEDGE_WIDTH)
+   for t in range(TIMES):
+     targets = np.random.randint(0, KNOWLEDGE_WIDTH, size=3)
+     target = targets[policy(knowledge[targets])]
+     target = int(np.random.normal(target))
+     if target < 0 or target >= KNOWLEDGE_WIDTH: continue
+     knowledge[target] += np.random.random()
+   return knowledge
+ 
+ specialist = get_knowledge(policy=lambda xs: xs.argmax())
+ generalist = get_knowledge(policy=lambda xs: xs.argmin())
+ plt.plot(specialist, label="specialist")
+ plt.plot(generalist, label="generalist")
+ plt.legend()

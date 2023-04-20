@@ -1,0 +1,204 @@
+Hatena2010-03-08
+code:hatena
+ <body>
+ *1268017610* Color Identification Test
+ http://www.colormunki.com/game/huetest_kiosk
+ 
+ <img src="http://gyazo.com/c9a9fa016d3cfed35ed1a248eb1d73f6.png">
+ 
+ <img src="http://gyazo.com/682bb216a97bcf12cb73ed6c209c9c5e.png">
+ 
+ <img src="http://gyazo.com/dd9307615de2481df49c67aacc6a7c12.png">
+ 
+ Hmmm, a little above the middle. It's hard to tell, so I wish they would express it in terms of deviation.
+ 
+ *1268030174* Apology and correction
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20100304/1267706162'>Icon Problem for Dr. Ikuo Takeuchi</a>.
+ 
+ Ha, wrong addition without 2-digit rounding up! (Yeah.
+ 
+ *1268032676*Leverage memo: Inoko's love letter
+ http://takasumasakazu.tumblr.com/post/417646589
+ 
+ It was a good story but I didn't write it down right away so it got lost. thanks @hal_sk !
+ 
+ 
+ >>
+ Chiyahoyas will surely have repercussions one day.
+ 
+ If you stay low (physically low), greet people briskly (physically loud), and the rest is high intrinsic value, you'll be absolutely fine!
+ <<
+ 
+ *1268038641*Quiz on floating point numbers related to exponential functions (answers)
+ <a href='http://homepage1.nifty.com/herumi/diary/1003.html#6'>melancholic afternoon</a>
+ 
+ During lunch break, Mitsunari asked me to try to solve the puzzle he had written in his diary, as he could not judge (having done this type of problem many times) whether or not I had been given the necessary amount of clues to solve it or not. As a result, it was at a level that I could solve it after 90 minutes of thinking. (I don't mean easy).
+ 
+ >>
+ The following function is the logic used in exp() of fmat.hpp written in C. Answer what each constant appearing there means and what the logic is (you may assume -88 <= x <= 88 -- otherwise it is 0 or ∞).
+ <<
+ 
+ >|cpp|
+ unsigned int tbl[1024]; // initialized once at runtime
+ 
+ union fi {
+     float f;
+     unsigned int i;
+ };
+ 
+ float expC(float x)
+ {
+     float t1 = x * 1.4773197e3 + 12582912; // (1)
+     fi fi;
+     fi.f = t1;
+     float t2 = x - (t1 - 12582912) * 6.7690155e-4; // (2)
+     unsigned int u = ((fi.i + 130048) >> 10) << 23; // (3)
+     fi.i = u | tbl[fi.i & 1023]; // (4)
+     return (1 + t2) * fi.f; // (5)
+ }
+ ||<
+ 
+ Now, to prevent spoilers, I'll explain how I came up with my idea after interspersing the appropriate number sequence:
+ 
+ 52
+ 
+ 26
+ 
+ 13
+ 
+ 40
+ 
+ 20
+ 
+ 10
+ 
+ 5
+ 
+ 16
+ 
+ 8
+ 
+ 4
+ 
+ 2
+ 
+ 1
+ 
+ First, let's go over the basics of what is a float? Let's review the basics of what a float is. <a href='http://ja.wikipedia.org/wiki/%E6%B5%AE%E5%8B%95%E5%B0%8F%E6%95%B0%E7%82%B9%E6%95%B0'>Float - Wikipedia</a>. float is an IEEE754 system that consists of a 1-bit sign, an 8-bit exponent part, and a 23-bit mantissa part.
+ 
+ 
+ 
+ Next, let's change the binary representation of what the value of 12582912 or 130048 is. Of course, 1023 is 111111111.
+ 
+ >|python|
+ In [12]: def to2(x):
+    ....:     buf = []
+    ....:     while x:
+    ....:         buf.insert(0, x % 2)
+    ....:         x /= 2
+    ....:     return "".join(map(str, buf))
+    ....:
+ 
+ In [13]: to2(10)
+ Out[13]: '1010'
+ 
+ In [14]: to2(130048)
+ Out[14]: '11111110000000000'
+ 
+ In [15]: to2(12582912)
+ Out[15]: '110000000000000000000000'
+ 
+ In [16]: len(_)
+ Out[16]: 24
+ ||<
+ 
+ That's 24 bits, even though the precision of the mantissa part of the float is only 23 bits.
+ 
+ 
+ Next, I'll write this code to see what 1.4773197e3 or something like it is.
+ >|cpp|
+ typedef union Float {
+   float    f;
+   unsigned i;
+ } Float;
+ 
+ int main(){
+   Float a;
+   a.f = 6.7690155e-4;
+   printf("%d\n", a.i);
+ }
+ ||<
+ However, I am not sure if I see the bit expression.
+ >||
+ 0 10001001 01110001010101000111011 // a
+ 0 10010110 10000000000000000000000 // b
+ 0 01110100 01100010111001000011000 // c
+ ||<
+ Hmm.
+ 
+ 
+ 
+ I tried many things for a while focusing only on the numbers, but without success, I decided to read the source code. 130048 had 7 1's and 10 0's. In other words,
+ 
+ >|cpp|
+ unsigned int u = ((fi.i + 130048) >> 10) << 23; // (3)
+ fi.i = u | tbl[fi.i & 1023]; // (4)
+ ||<
+ 
+ So the code says "The bottom 10 bits contain the value for the table pull, and the top 7 bits contain the value to be put into the exponential part without offset. So, when this is done, the fi value is the rewritten exponential part of the value taken from the table, so
+ 
+ >|cpp|
+     return (1 + t2) * fi.f;
+ ||<
+ 
+ So that means that the information to correct from the table-pulled value is in t2.
+ 
+ 
+ Examine the relationship between x and (t1 & 130048) >> 10.
+ >|cpp|
+ int main(){
+   Float a;
+   for(float x=0.0; x<10; x+=0.1){
+     a.f = x * 1.4773197e3 + 12582912;    
+     printf("%f, %d\n", x, (a.i & 130048) >> 10);
+   }
+ }
+ ||<
+ Results.
+ >||
+ 0.000000, 0
+ ...
+ 0.600000, 0
+ 0.700000, 1
+ ...
+ 1.300000, 1
+ 1.400000, 2
+ ||<
+ Hmmm....every 0.7 increases by 1. exp(0.7) would be about 2, I guess.
+ >|python|
+ In[64]: 1024 / log(2)
+ Out[64]: 1477.3197218702985
+ ||<
+ Correct, I know what 1.4773197e3 means, multiplying x by this value, x * 1024 / log(2), where x multiplied by log(2) increases by 1024. x multiplied by log(2) means that exp(x) doubles. Therefore, if we discard the last 10 bits of this value and add the exponentiation offset of 1111111, we can use it as the exponentiation part of exp(x).
+ 
+ The reason why b is necessary is obvious. You talk about "discarding the last 10 bits" as if it were an integer bitwise operation, but this is a "floating" decimal number, so the decimal point moves on its own. Even if the value is 1, the least significant bit will not be 1. So we add 12582912 (which is 3 << 22) so that the bottom bit of the floating-point number becomes 1 in integer. 3 << 22 instead of 1 << 23 because x * 1.4773197e3 can take a negative value this time. 1 << 23 would result in a negative value and the 24th bit would be 0. and the 24th bit is 0.
+ 
+ 
+ 
+ Finally, regarding the error estimation. x * a has been rounded to the decimal point by adding b. So, by subtracting b and multiplying by the reciprocal of a, we get back to the original form. Then, by subtracting b and multiplying by the reciprocal of a, the original shape is restored, and by subtracting from the original x, "how much x has shifted due to rounding for table subtraction (Δx)" is obtained, which is t2. This is t2, and the subtracted value is multiplied by (1 + t2). This means that x * Δx is added to the subtracted value.
+ 
+ >|cpp|
+     return (1 + t2) * fi.f;
+ ||<
+ 
+ Since the derivative of exp(x) is x, it is a linear approximation by multiplying the x-axis displacement by the slope, which means that the error is the term after the square of x. Since Δx is less than 1/2048, the accuracy is about 22 bits even if the square error is included. Since Δx is less than 1/2048, even if the square of the error is included, the accuracy is still about 22 bits.
+ 
+ *1268052782*“And Then There Was Salsa”
+ http://vimeo.com/9194146
+ 
+ I wondered what would happen if I embed this, so I'll give it a try:)
+ 
+ <object width="400" height="225"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9194146&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=9194146&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="400" height="225"></embed></object><p><a href="http://vimeo.com/9194146">“And Then There Was Salsa”</a> from <a href="http://vimeo.com/user3100787">Frito Lay Dips</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
+ </body>
+
+[Hatena Diary 2010-03-08 https://nishiohirokazu.hatenadiary.org/archive/2010/03/08]

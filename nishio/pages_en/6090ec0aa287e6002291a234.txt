@@ -1,0 +1,49 @@
+Hatena2012-05-24
+code:hatena
+ <body>
+ *1337854752*Numpy to fatten up the matrix a bit.
+ I need a matrix of species * number of species to calculate transition probabilities between symbol sequences or something, but I didn't want to count the number of species in advance and wanted to fatten the matrix when I came across a new symbol. At first I tried to find a function that would take two square matrices and return a diagonal matrix, but I couldn't find it, so I pasted in c_ and r_.
+ 
+ >|python|
+ def enlarge(mat):
+     """
+     widen matrix
+     >>> x = np.array([[1, 2], [3, 4]])
+     >>> x
+     array([[1, 2],
+            [3, 4]])
+     >>> enlarge(x)
+     array([[ 1.,  2.,  0.],
+            [ 3.,  4.,  0.],
+            [ 0.,  0.,  1.]])
+     """
+     N, M = mat.shape
+     assert N == M
+     result = np.r_[np.c_[mat, np.zeros(N)], np.zeros((1, N + 1))]
+     result[N, N] = 1.0
+     return result
+ ||<
+ 
+ PS: Nakatani's proposal (id:n_shuyo) is much faster than mine. 120 us for N = 5, 8.34 us for Nakatani's implementation. 178 us for N = 100 for my implementation, 27.9 us for Nakatani's implementation.
+ 
+ >|python|
+ result = numpy.zeros((N+1, N+1)) 
+ result[0:N,0:N] = mat 
+ result[N,N] = 1 
+ ||<
+ 
+ *1337870131*Comparing Slideshare and SpeakerDeck
+ I heard a rumor that SpeakerDeck is good, so I tried it... no, it's no good. Sure, SpeakerDeck is more comfortable as a viewer. But it's not the viewer who decides which service to upload slides to, it's the uploader. Let's compare how the uploader sees his/her own uploaded slides.
+ 
+ SpeakerDeck
+ [f:id:nishiohirokazu:20120524233523p:image]
+ 
+ Slideshare
+ [f:id:nishiohirokazu:20120524233522p:image]
+ 
+ SpeakerDeck...what's the point of showing "by NISHIO Hirokazu" in the list of my slides? And Slideshare shows the number of times each slide has been viewed, commented on, and downloaded, but SpeakerDeck does not. Hmmm. What is the motivation of the person uploading the slides? Isn't it for others to see? Why isn't that information shown?
+ 
+ SpeakerDeck seems to be fundamentally bad at designing services (what they offer to users, not what they look like), and I wonder if SpeakerDeck will improve faster or if Slideshare will create a SpeakerDeck-style viewer faster. Well, I'll continue to use Slideshare for the time being.
+ </body>
+
+[Hatena Diary 2012-05-24 https://nishiohirokazu.hatenadiary.org/archive/2012/05/24]

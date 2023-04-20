@@ -1,0 +1,301 @@
+Hatena2008-09-21
+code:hatena
+ <body>
+ *1221957113* Diary of the 2nd day of the Meeting of Young Scientists in Information Science
+ f:id:nishiohirokazu:20080921092548j:image
+ 
+ Open-air bath seen from a second-floor window. Access modifier is public.
+ 
+ I'm talking about making a dedicated H/W for Go using FPGA. 50,000 playouts on 4 CrazyStone cores in 1 sec. FPGA is about 300 MHz, so I'm aiming for 10,000 times/sec. FPGA is small, so I can pile up a lot of them.
+ 
+ CPLD FPGA
+ 
+ ASIC > (FPGA/CPLD/DRP) > MPU General purpose
+ 
+ FPGAs were born in the same era as the 80386, but their diffusion was delayed because development tools were not well developed.
+ 
+ There are many LUTs (Look Up Tables).
+ 
+ >||
+ entity HALF_ADDER is
+   port (A, B: in std_logic;
+         S, C: out std_logic)...
+ ||<
+ 
+ Dedicated H/W is fast if it's a good algorithm, but Pentium is also amazing in many ways. Compiler optimization is also great. Data parallelism and pipeline parallelism is a good fit.
+ 
+ Don't be afraid of 19x19 loops, as long as there are no data dependencies in parallel, they can be computed in parallel. You can take 512 bits in a register. Even 441 bits of information in a series of loops can be stored in a single register.
+ 
+ MoGo http://www.lri.fr/~gelly/MoGo_Download.htm
+ 
+ I wonder if it would be faster if we made a dedicated H/W for the most limited. I wonder if it can be computed in parallel because there is no data dependency.
+ ----
+ 
+ VMM(virtual machime moniter)
+ Pentium has some instructions that are not suitable for virtualization. You can use Intel Virtualization Technology, which makes it very easy. You can use Intel Virtualization Technology, which makes it very easy.
+ Until now, it was difficult to do this because it did not meet the virtualization requirement specifications.
+ 
+ When VM exit happens, the process moves from VM to VMM. In this case, it is possible to easily obtain information on what triggered the exit, whereas before it was necessary to analyze the binary to determine the trigger.
+ 
+ VMCS(Virtual machine control data structure)
+ 
+ -----
+ 
+ Machine Learning in Hardware
+ 
+ Terminator processor 6502, almost identical to NES. Invaded by learning NES!
+ 
+ -----
+ 
+ Invaded by torrential rains!
+ 
+ -----
+ 
+ http://www.mew.org/~kazu/haskell.pdf
+ 
+ -----
+ 
+ I'm getting tired from a cold & too much tension.
+ 
+ -----
+ 
+ They built a BrainF*ck machine in FPGA overnight.
+ And instantly they say, "We already have that.
+ http://natu.txt-nifty.com/natsutan/2008/03/brainfuck_d62c.html
+ 
+ -----
+ 
+ EAGAIN on asynchronous socket -> context switch."
+ The conversation around here still sounds like space language.
+ 
+ http://www.linux.or.jp/JM/html/LDP_man-pages/man2/semop.2.html
+ >>
+ If sem_op is 0, this is a "wait until zero" operation. In this case, the process must have read permission for the semaphore set. If semval is 0, the operation is performed immediately. If semval is not 0, semop() fails and errno is set to EAGAIN if sem_flg has IPC_NOWAIT.
+ <<
+ Hmmm, is this it?
+ 
+ -----
+ 
+ I can smell a cold from the back of my nose.
+ 
+ -----
+ 
+ http://www.google.co.jp/search?hl=ja&q=10000000000000000-9999999999999995&lr
+ 
+ Dr. Google can't do math lol.
+ 
+ <img src="http://gyazo.com/51ca2712ff8a356cafe5452189c764a9.png">
+ 
+ 
+ -----
+ 
+ I "There are no first class rivers in Okinawa" id:earth2001y "No, there are first class rivers in Okinawa" There was a disagreement of opinions and a discussion about betting something, and since there was nothing in particular I wanted to bet on, why don't I just write about it on my blog? As a result of the discussion, I hereby declare my victory.
+ 
+ -----
+ 
+ I tried to download the Verilog simulator icarus, but it seems to be a bit complicated on Mac, and MoGo doesn't work either.
+ 
+ It looks like I got in with sudo port install iverilog.
+ 
+ -----
+ 
+ Mandelbrot set
+ www.math.nagoya-u.ac.jp/~kawahira/courses/mandel.pdf
+ 
+ -----
+ 
+ -----
+ 
+ After 26:30 at night, the battle between the Emacs and Vim factions breaks out!
+ Q1: Display "Hello, world!" 100 times
+ Vim camp's solution:
+ 　qaHello World![Esc]q100qa
+ Emacs camp's solution:
+ 　C-x(Hello WorldC-x)C-u100C-xe
+ 
+ Q2: Hello, world! Increment from 1
+ Vim camp's solution:
+  use something incremental
+ Emacs camp's solution:
+ 　EmacsLisp
+ 
+ Q3: Comment out
+ 
+ Sorry, I was too drunk to keep minutes.
+ 
+ But I thought it would be fun to have a site like doukaku.org, where people can fight about a specific topic using editor operations. I'm thinking Emacs, Vim, xyzzy, Shumaru, and so on. Maybe golf with keystrokes and no mouse.
+ 
+ -----
+ 
+ M-x imenu
+ M-!
+ 
+ *1221981953* Diary of Young Scientists in Information Science, Scala chapter
+ This is scribbled notes while listening to the presentation, so I may be wrong.
+ -----
+ 
+ Separated because the quantity was too large
+ 
+ Scala's if returns a value; unit is returned when there is no else.
+ x to y is the same as x.to(y).
+ 
+ 
+ 
+ It's like Python's list comprehensions.
+ >||
+ for(x <- 1 to 100; y <- 1 to 100 if y == x * x) yield (x, y)
+ ||<
+ This is
+ >||
+ flatMap{x => (1 to 100).filter{y => y == x * x}.map{y => (x, y)}}
+ ||<
+ 
+ 
+ seq.mkString(tok) tok.join(seq) in Python
+ 
+ 
+ Is xs(i) the code equivalent to xs[i]?
+ 
+ 
+ There is an equivalent to Haskell's foldl.
+ >||
+ xs.foldLeft(0)((sum, n) => sum+n.toInt)
+ ||<
+ 
+ 
+ I don't like the lack of parentheses in method calls with no arguments like toInt, but it's a nice language. It's great that it's a static type.
+ obj.noargmethod _ for the method itself. obj.add(x, y) also obj.add _ for the method itself. obj.add is a syntax error.
+ 
+ x /: y means y./:(x) If there is a colon at the end (even for user-defined operators), make the right side the receiver
+ 
+ I like that there is a block handover.
+ 
+ I wonder if we can assume that class and object are separate, object is a singleton, and the static makeInstance method is just hidden.
+ 
+ When overriding, it must be clearly stated.
+ 
+ >||
+ class Point(val x :Int, val y :Int){
+    ...
+ }
+ 
+ class Foo extends JFrame("hoge"){
+   setSize(100, 100);
+ }
+ ||<
+ 
+ Trait, which is a class without the instance creation function, has an implementation unlike Java's interface.
+ 
+ >||
+ implicit def i2str(i :Int) :String = i.toString
+ ||<
+ is in scope, an implicit type conversion is attempted.
+ >||
+ val n = 54321
+ println(n.endsWith(1))
+ ||<
+ Both integers n and 1 are implicitly converted to strings.
+ For example, if you have an Int literal named 1, and the class of Int itself is read-only, you can create Int2MyInt and add a method named foo in MyInt to create 1.foo. In Python, int is read-only for speed, so 1.foo cannot be created. In Python, int is read-only to speed up the code, so you can't add 1.foo. It is nice to be able to add a method to a class dynamically, even though it is a static type.
+ 
+ There is a pattern match.
+ >||
+ xs match {
+   case Array(x, y) => ...
+   case Array(x) => ...
+ }
+ ||<
+ 
+ 
+ Even if you define your own class
+ case class MyTree(l :MyLeaf, r :MyLeaf) ... Then case MyTree(l, r) can be done.
+ ML algebric date type.
+ 
+ 
+ Is it possible to define a method called "unapply" for Foo that is not a case class?
+ 
+ 
+ Some and None. def foo(i :Int) = if (i == 0) Some(1) else None. same as Haskell's Maybe Int, Just(1), Nothing foo return value is Option(Int)
+ 
+ 
+ I heard there is a static type checker called duck typing! Structural type.
+ >||
+ type HasName = {def name() :String}
+ ||<
+ Statically verify that the type has name().
+ 
+ 
+ lazy val x = some_func(...)
+ Evaluated on first access to x, not reevaluated later. Syntax sugar to make writing thunks easier?
+ 
+ 
+ idDefinedAt to only check if pattern matching succeeds. can it be used for distributed actors or something to only take instructions that I can handle.
+ 
+ 
+ Some are E4X-like.
+ >||
+ val tag = <foo>{x} + {y} = {x + y}</foo>
+ ||<
+ And you can apply pattern matching to this XML node! What the heck!
+ 
+ 
+ generics
+ >||
+ val xs :Array[String] = Array("A", "B")
+ xs(0) = 1 // error!
+ 
+ class Ref[T](private var value :T){
+   def unary_! :T = value
+   def :=(newValue :T) :Unit ......
+ }
+ ||<
+ 
+ Higher Kind Generator Wow you can do class R[ T[ _ ] ]! What is this thing doing?
+ 
+ Implicit Parameter Need not be passed if defined in the caller's scope
+ >||
+ def sum[T](xs :List[T])(implicit adder :Adder[T]) ...
+ implicit object StrAdder extends Adder[String] { ... }
+ sum(["a", "b"]) // no adder is passed here, but it is a List[String] in scope
+ // Look for Adder[String] in // and use it because you can find it.
+ ||<
+ 
+ 
+ Existential type. I didn't understand it because the time was too short, but I understood that it is a mechanism to safely fill holes in Java's type system, which solves problems in the Java type system but is inconvenient in some cases. I understood that it was a safe hole to fill because it was inconvenient.
+ 
+ 
+ It's full of syntax sugar, syntax complexity, and tends to confuse beginners. I wonder if this is what it would look like if I developed it with a Perl-like philosophy while keeping the basic premise of static typing.
+ 
+ 
+ Phew. It was super rushed but quite interesting.
+ 
+ 
+ >||
+ val x :Array[String] = Array("a", "b", "c)
+ val y :Array[Any] = x // This is not possible, but suppose it were.
+ // Java arrays can be assigned to Object[] by String[].
+ y(0) = 1 // Int <: Any, so this is valid!
+ 
+ // I don't want to prohibit the second line, // but there are times when you want to do something close to it.
+ // The problem is when you write, so you can create a type that does not allow writing.
+ val z :Array[t] forSome {type T} // Syntax like this?
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>ryousei</username>
+ <body>>Talking about building a dedicated Go H/W with FPGA. <br><br>Would like more details. </body>
+ <timestamp>1221961717</timestamp>
+ </comment>
+ <comment>
+ <username>monanchi</username>
+ <body>>Use increment something<br>[Ctrl]+a increment the selected number<br> or something like that! </body>
+ <timestamp>1222050817</timestamp>
+ </comment>
+ <comment>
+ <username>ujihisa</username>
+ <body>100iHello World![Esc]</body>
+ <timestamp>1222177859</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-09-21 https://nishiohirokazu.hatenadiary.org/archive/2008/09/21]

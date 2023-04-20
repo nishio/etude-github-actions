@@ -1,0 +1,120 @@
+Hatena2008-07-07
+code:hatena
+ <body>
+ *1215376960*[cpp]Try using alias & boost::assign does O(N^2) copies to add N?
+ Suppose there is a vector of some object that is heavily copied (named matrix). When processing the i-th vector, it would be tedious and hard to read to write "matrix[i]" every time. We want to use an alias like "line" here.
+ 
+ 
+ In Python, variables are fundamentally references, so line = matrix[i] is fine, but doing this in C++ is heavy because it copies the contents of matrix[i]. I had struggled to avoid using pointers in <a href='http://d.hatena.ne.jp/nishiohirokazu/20080626/1214499822'>Single Round Match 407 - Yasukazu Nishio's Hatena Diary</a> before, and ended up using pointers. I ended up using pointers.
+ 
+ 
+ But when I was reading the C++ primer, it says there is such a thing as a "reference type"!
+ >|cpp|
+ int main(){
+   vector<MyValue> maxtix;
+   matrix += MyValue(1), MyValue(2), MyValue(3);
+   MyValue &line = matrix[1]; 
+   cout << line.value << endl;
+ }
+ ||<
+ Oooh, that's what I was looking for! Let's see if "&line = matrix[i]" doesn't cause copying.
+ 
+ >|cpp|
+ int main(){
+   vector<MyValue> matrix;
+   matrix += MyValue(1), MyValue(2), MyValue(3);
+   cout << "start assgin" << endl;
+   MyValue &line = matrix[1];
+   cout << "end assgin" << endl;
+   cout << line.value << endl;
+ }
+ //----- Execution Result -----
+ cstr 3
+ cstr 2
+ cstr 1
+ copy cstr 1
+ copy cstr 1
+ copy cstr 2
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ start assgin
+ end assgin
+ 2
+ ||<
+ 
+ Wait a minute. The assignment to the reference type is indeed not copying, but boost::assign is copying a lot ><
+ 
+ >||
+ // matrix += MyValue(1);
+ cstr 1
+ copy cstr 1
+ copy cstr 1
+ 
+ // matrix += MyValue(1), MyValue(2);
+ cstr 2
+ cstr 1
+ copy cstr 1
+ copy cstr 1
+ copy cstr 2
+ copy cstr 1
+ copy cstr 2
+ 
+ // matrix += MyValue(1), MyValue(2),  MyValue(3), MyValue(4);
+ cstr 4
+ cstr 3
+ cstr 2
+ cstr 1
+ copy cstr 1
+ copy cstr 1
+ copy cstr 2
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ copy cstr 4
+ copy cstr 4 <- Hmm?
+ 
+ // 5
+ cstr 5
+ cstr 4
+ cstr 3
+ cstr 2
+ cstr 1
+ copy cstr 1
+ copy cstr 1
+ copy cstr 2
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ copy cstr 4
+ copy cstr 4 <- mmm?
+ copy cstr 5 <- what's this?
+ copy cstr 1
+ copy cstr 2
+ copy cstr 3
+ copy cstr 4
+ copy cstr 5
+ ||<
+ 
+ A mystery my sleepy head can't figure out.
+ 
+ *1215402521* cooling
+ It was so hot yesterday that I turned on the air conditioning, but I thought I should change into proper pajamas with sleeves when I sleep with the air conditioning on. My tonsils are popping.
+ 
+ -----
+ 
+ My head is pounding. When it's hot, remember to turn on the air conditioning. When you turn on the air conditioner, remember to cover yourself with a futon. Remember to stay hydrated. Eating properly.
+ 
+ Thinking about it calmly, I can't remember what I ate after the eel bowl I had at Sukiya on Saturday morning, and I am pretty sure that I didn't eat it. Also, I haven't ordered any supplements yet. I'm still in a daze.
+ </body>
+
+[Hatena Diary 2008-07-07 https://nishiohirokazu.hatenadiary.org/archive/2008/07/07]

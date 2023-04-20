@@ -1,0 +1,45 @@
+ARC110
+[Kajima Construction Programming Contest 2020 (AtCoder Regular Contest 110) - AtCoder https://atcoder.jp/contests/arc110]
+
+[https://gyazo.com/530a2387f5888bc5beef773b2c723251]
+
+[https://gyazo.com/ca2014b0f42b2b45f5267323ab8f2164]
+
+A
+	Multiplying all by +1 satisfies the remainder condition, but it is too large, so I found [least common multiple
+	Related: [Chinese Modulus Theorem].
+	code:python
+	 from math import gcd
+  N = int(input())
+  x = 1
+  for i in range(2, N + 1):
+      g = gcd(x, i)
+      x *= i // g
+  print(x + 1)
+
+B
+ In short, whether this automaton accepts or not.
+　　[https://gyazo.com/ddad8a5c2f2e6cbc723bf2ed788b5b2d]
+　There is a trap when the input is a single character, so it is only the case there.
+	code:python
+	 def solve(N, T):
+      if N == 1:
+          if T == "1":
+              return 2 * 10 ** 10
+          elif T == "0":
+              return 10 ** 10
+  
+      state = [True, True, True]
+      for c in T:
+          nextState = [0] * 3
+          for i in range(3):
+              nextState[i] = state[i - 1] and (c == "011"[i])
+          state = nextState
+      ret = 0
+      for i in range(3):
+          if state[i]:
+              ret += (3 * 10 ** 10 - ((i - N) % 3 + N)) // 3 + 1
+      return ret
+
+[ARC110C]
+[ARC110D]

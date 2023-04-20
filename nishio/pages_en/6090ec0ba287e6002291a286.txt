@@ -1,0 +1,277 @@
+Hatena2013-01-09
+code:hatena
+ <body>
+ *1357664435*C language difficult
+ I'll post the version that worked as expected because of the unexpected response.
+ >|c|
+ #include "Python.h"
+ #include <stdio.h>
+ 
+ int main(){
+   Py_Initialize();
+   unsigned long buf[10];
+ 
+   PyObject* i = Py_BuildValue("i", 0x1234567);
+   printf("i: %p\n", i);
+   memcpy(buf, i, sizeof(long) * 3);
+   printf("  %016lx\n", buf[0]); /* refcount */
+   printf("  %016lx\n", buf[1]); /* type */
+   printf("  %016lx\n", buf[2]); /* value */
+ 
+   PyObject* cls = PyObject_GetAttrString(i, "__class__");
+   printf("i.__class__: %p\n", cls); /* type */
+ 
+   PyObject* x = Py_BuildValue("f", (float)0x123456 / (float)0x100000);
+   printf("x: %p\n", x);
+   memcpy(buf, x, sizeof(long) * 3);
+   printf("  %016lx\n", buf[0]); /* refcount */
+   printf("  %016lx\n", buf[1]); /* type */
+   printf("  %016lx\n", buf[2]); /* value */
+ 
+   cls = PyObject_GetAttrString(x, "__class__");
+   printf("x.__class__: %p\n", cls); /* type */
+ 
+   Py_Finalize();
+   return 0;
+ }
+ ||<
+ 
+ output (e.g. of dynamo)
+ >||
+ i: 0x10101c590
+   0000000000000001
+   0000000100e7f180
+   0000000001234567
+ i.__class__: 0x100e7f180
+ 
+ x: 0x10100c240
+   0000000000000001
+   0000000100e7d690
+   3ff2345600000000
+ x.__class__: 0x100e7d690
+ ||<
+ 
+ 
+ <hr>
+ (Trial and error process below)
+ 
+ Code not working as expected
+ >|c|
+ #include "Python.h"
+ #include <stdio.h>
+ 
+ int main(){
+   Py_Initialize();
+   PyObject* i = Py_BuildValue("i", 0xDEADBEEF);
+   printf("i: %016x\n", i);
+   printf("%016x: %032x\n", i, *(unsigned long*)i); /* refcount */
+   printf("%016x: %032x\n", i + 1, *(unsigned long*)(i + 1)); /* type */
+   printf("%016x: %032x\n", i + 2, *(unsigned long*)(i + 2)); /* value */
+ 
+   PyObject* cls = PyObject_GetAttrString(i, "__class__");
+   printf("cls: %016x\n", cls); /* type */
+ 
+   Py_Finalize();
+   return 0;
+ }
+ ||<
+ 
+ gdb
+ >||
+ (gdb) n
+ 7	  printf("i: %016x\n", i);
+ (gdb) n
+ i: 000000000021c580
+ 8	  printf("%016x: %032x\n", i, *(unsigned long long*)i); /* refcount */
+ (gdb) n
+ 000000000021c580: 00000000000000000000000000000001
+ 9	  printf("%016x: %032x\n", i + 1, *(unsigned long long*)(i + 1)); /* type */
+ (gdb) n
+ 000000000021c590: 000000000000000000000000deadbeef
+ 10	  printf("%016x: %032x\n", i + 2, *(unsigned long long*)(i + 2)); /* value */
+ (gdb) n
+ 000000000021c5a0: 0000000000000000000000000012f180
+ 12	  PyObject* cls = PyObject_GetAttrString(i, "__class__");
+ (gdb) n
+ 13	  printf("cls: %016x\n", cls); /* type */
+ (gdb) n
+ cls: 000000000012f180
+ 16	  Py_Finalize();
+ (gdb) print i
+ $1 = (PyObject *) 0x10021c580
+ (gdb) print x
+ No symbol "x" in current context.
+ (gdb) print cls
+ $2 = (PyObject *) 0x10012f180
+ (gdb) x/xg i
+ 0x10021c580:	0x0000000000000001
+ (gdb) x
+ 0x10021c588: 0x000000010012f180 ← points properly to cls
+ (gdb) x
+ 0x10021c590:	0xffffffffdeadbeef
+ ||<
+ 
+ Hmmm, you mean %x only shows the last 8 characters?
+ 
+ I changed everything to %p, and now I can get the part that exceeds 8 characters anyway.
+ 
+ >||
+ i: 0x10b71c590
+ 0x10b71c590: 0x1
+ 0x10b71c5a0: 0xffffffffdeadbeef
+ 0x10b71c5b0: 0x10b71c530
+ cls: 0x10b5d4180
+ ||<
+ 
+ Erm. Still, I'd really like to see the second thing displayed be the same as cls.
+ 
+ >||
+ (gdb) print sizeof(Py_ssize_t)
+ $1 = 8
+ (gdb) print sizeof(double)
+ $2 = 8
+ (gdb) print sizeof(void*)
+ $3 = 8
+ (gdb) print sizeof(long)
+ $4 = 8
+ (gdb) print sizeof(long long)
+ $5 = 8
+ (gdb) print sizeof(char)
+ $6 = 1
+ ||<
+ 
+ I'll try to memcpy it.
+ >||
+ int main(){
+   Py_Initialize();
+   unsigned long buf[10];
+ 
+   PyObject* i = Py_BuildValue("i", 0xDEADBEEF);
+   printf("i: %p\n", i);
+   memcpy(buf, i, sizeof(i) * 3);
+   printf("%p: %p\n", i, buf[0]); /* refcount */
+   printf("%p: %p\n", i + 1, buf[1]); /* type */
+   printf("%p: %p\n", i + 2, buf[2]); /* value */
+ 
+   PyObject* cls = PyObject_GetAttrString(i, "__class__");
+   printf("cls: %p\n", cls); /* type */
+ 
+   //PyObject* x = Py_BuildValue("f", 0xCAFEBABE + 0x100000000 + 0.0);
+   Py_Finalize();
+   return 0;
+ }
+ ||<
+ 
+ Oh, it's done.
+ 
+ >||
+ i: 0x10811c590
+ 0x10811c590: 0x1
+ 0x10811c5a0: 0x10800c180
+ 0x10811c5b0: 0xffffffffdeadbeef
+ cls: 0x10800c180
+ ||<
+ 
+ I really want to padding with 0, but %p doesn't allow me to specify padding, and %x only gives me 4 bytes. Oh, right, %lx.
+ 
+ I set it to %016lx and the output was as expected.
+ 
+ C language is difficult.
+ 
+ Oh, I just found out now after it was all over.
+ 
+ >||
+ (gdb) print sizeof(PyObject)
+ $2 = 16
+ ||<
+ 
+ This is the reason. That's right.
+ 
+ Notes
+ 
+ >||
+ typedef struct {
+     PyObject_HEAD
+     long ob_ival;
+ } PyIntObject;
+ ||<
+ 
+ >||
+ /* PyObject_HEAD defines the initial segment of every PyObject. */
+ #define PyObject_HEAD                   \
+     _PyObject_HEAD_EXTRA                \
+     Py_ssize_t ob_refcnt;               \
+     struct _typeobject *ob_type;
+ ||<
+ 
+ 
+ >||
+ typedef struct {
+     PyObject_HEAD
+     double ob_fval;
+ } PyFloatObject;
+ ||<
+ 
+ *1357708501*Scala difficult
+ Tried <a href='http://togetter.com/li/219702'>About Scala Type Inference - Togetter</a>
+ 
+ >||
+ Welcome to Scala version 2.9.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.7.0_05).
+ 
+ scala> def id1[T](x : T) = x;
+ id1: [T](x: T)T
+ 
+ scala> def id2[T] = (x : T) => x;
+ id2: [T]=> T => T
+ 
+ scala> id1(id1)
+ <console>:9: error: missing arguments for method id1 in object $iw;
+ follow this method with `_' if you want to treat it as a partially applied function
+               id1(id1)
+                   ^
+ 
+ scala> id1(id2)
+ res1: Nothing => Nothing = <function1>
+ 
+ scala> id2(id2)
+ res3: Nothing => Nothing = <function1>
+ 
+ scala> id2(id2)(1)
+ <console>:9: error: type mismatch;
+  found   : Int(1)
+  required: Nothing
+               id2(id2)(1)
+                        ^
+ ||<
+ 
+ I understand that you can't pass id1 as an argument, but I made a mistake, so I'll go on record.
+ 
+ >||
+ GHCi, version 6.10.4: http://www.haskell.org/ghc/  :? for help
+ Prelude> let id1 = \x -> x
+ Prelude> let foo = id1 id1
+ Prelude> :t foo
+ foo :: t -> t
+ ||<
+ 
+ Well, I just wanted to give an example of how type inference differs depending on the language.
+ </body>
+ <comments>
+ <comment>
+ <username>Matsumoto</username>.
+ <body>I guess it's because %x in printf accepts unsigned in but passes unsigned long long? <br>I think %llx would be able to display it. </body>
+ <timestamp>1357665043</timestamp>
+ </comment>
+ <comment>
+ <username>methane</username>
+ <body>You have to use %p instead of %x or %lx. I think %i is being treated as 32bit. </body>
+ <timestamp>1357665226</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you! </body>
+ <timestamp>1357712601</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-01-09 https://nishiohirokazu.hatenadiary.org/archive/2013/01/09]

@@ -1,0 +1,25 @@
+ts-node
+Running [TypeScript] with [node.js
+$ ts-node src/foo.ts 
+code::
+ import { Foo } from "./Bar";
+        ^
+ 
+ SyntaxError: Unexpected token {
+$ node -v
+	v11.14.0
+
+$ node -v
+	v13.9.0
+	code::
+		(node:39469) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
+  import { Foo } from "./Bar";
+  ^^^^^^
+		
+  SyntaxError: Cannot use import statement outside a module
+
+tsconfig.json
+code:diff
+ - "module": "esnext",
+ + "module": "commonjs",
+Now it works, but would [umd] or something else be better?

@@ -1,0 +1,50 @@
+ABC172D
+[https://gyazo.com/d184857cee408b25e6ea65eb0d7f3799]
+
+
+[problem statement https://atcoder.jp/contests/abc172/tasks/abc172_d]
+If you think of the problem as it is written, the image is to calculate the number of divisors and then multiply by K and add them together, but the key is to [change the order of operations]. However, the key is to change the order of operations [not to do them in the order of the problem statement].
+Multiplication is a repetition of addition, and addition does not change the result when the order is changed.
+Counting the number of items that satisfy the condition" is also a process that takes the sum of "1 if the condition is satisfied and 0 if it is not satisfied.
+So "K times K after counting" can be interchanged in order to "K, if the conditions are met, add up".
+[https://gyazo.com/c5ad2bfbd34a616a96d2e65e5a7c4177]
+
+Once you have done this conversion, then you do [horizontal and vertical conversion]. The horizontal addition is Kf(K), and the answer you want to get is the sum of the two. Adding vertically first does not affect the result since it is an exchange of addition order.
+[https://gyazo.com/0d96d3c6ed540a523a4c41b8aff945c6]
+Vertical addition is [sum of a sequence of equalities], so you can get it out with the formula without turning the loop.
+This is the way it's presented in the commentary
+code:python
+ def solve(N):
+     ret = 0
+     for i in range(1, N + 1):
+         num = N // i
+         end = num * i
+         ret += (i + end) * num // 2
+     print(ret)
+AC 1565 ms https://atcoder.jp/contests/abc172/submissions/14787794
+
+I will explore this issue later, as I have heard that there are two ways to do this, one with a smaller order and the other with a larger order but still manageable to get through.
+
+By the way, this method of adding vertically adds one loop at a time, even though there is only one from halfway down anyway. If we add diagonally, we only need half a loop. However, if you are going to add diagonally...
+[https://gyazo.com/8ce00ba56e9147b6791e01a708f97b66]
+
+Add diagonally to the top left corner tightly. Then the number of loops would be on the order of the root n.
+[https://gyazo.com/eefa326a4a1e00751adbecea14d340fd]
+
+code:python
+ def solve(N):
+     ret = 0
+     i = 2
+     while True:
+         step = i // 2
+         start = (i + 1) // 2 * step
+         if start > N:
+             break
+         end = N // step * step
+         ret += (start + end) * ((end - start) // step + 1) // 2
+         i += 1
+     print(ret)
+AC 33 ms https://atcoder.jp/contests/abc172/submissions/14788541
+50 times faster.
+
+[atcoder]

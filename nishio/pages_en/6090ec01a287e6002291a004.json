@@ -1,0 +1,92 @@
+Hatena2009-09-12
+code:hatena
+ <body>
+ *1252719625*Core Graphics BytesPerRow is not an integer multiple of Width
+ CGImageGetWidth(cgImage) is 300 but CGImageGetBytesPerRow(cgImage) was 1216...
+ 
+ It's a hassle. I wonder if there are any good wrappers.
+ 
+ *1252720535* First iPhone app is ready - Conic Film Camera.
+ It's just an app that takes a photo and applies a filter.
+ 
+ If you take a picture like this...
+ f:id:nishiohirokazu:20090912105604j:image
+ 
+ The image is converted into an image subject to three rotations like this.
+ f:id:nishiohirokazu:20090912105630j:image
+ 
+ I'd like to tune it up because it takes a little longer to process, maybe 10 seconds.
+ Oh, shoot, there is no way to save the resulting image.
+ 
+ f:id:nishiohirokazu:20090912110822j:image f:id:nishiohirokazu:20090912110932j:image
+ f:id:nishiohirokazu:20090912110950j:image f:id:nishiohirokazu:20090912112947j:image
+ 
+ Code Camp #4 (a.k.a. Python Ryokan) is over. Bill:.
+ f:id:nishiohirokazu:20090912120213j:image
+ 
+ I noticed that I can also choose an image already saved so I can take a screenshot. Othello.
+ f:id:nishiohirokazu:20090912120810j:image
+ 
+ Signs and such are rather compatible.
+ f:id:nishiohirokazu:20090912140854j:image
+ 
+ What is this? It is blurry because it was rather small.
+ f:id:nishiohirokazu:20090912140904j:image
+ 
+ f:id:nishiohirokazu:20090912140900j:image f:id:nishiohirokazu:20090912140911j:image
+ f:id:nishiohirokazu:20090912140921j:image 
+ 
+ Tsukishima Monja Now
+ f:id:nishiohirokazu:20090912140932j:image f:id:nishiohirokazu:20090912140928j:image f:id:nishiohirokazu:20090912140938j:image
+ 
+ Interesting how distorted the round ones are.
+ f:id:nishiohirokazu:20090912140942j:image f:id:nishiohirokazu:20090912152332j:image
+ f:id:nishiohirokazu:20090912152348j:image f:id:nishiohirokazu:20090912152403j:image
+ f:id:nishiohirokazu:20090912152422j:image
+ f:id:nishiohirokazu:20090912152459j:image f:id:nishiohirokazu:20090912152555j:image
+ f:id:nishiohirokazu:20090912152635j:image f:id:nishiohirokazu:20090912152645j:image
+ f:id:nishiohirokazu:20090912152705j:image f:id:nishiohirokazu:20090912152732j:image
+ 
+ The same thing can change a lot if the center position is different. I should be able to edit the center position to some extent.
+ f:id:nishiohirokazu:20090912152826j:image f:id:nishiohirokazu:20090912152837j:image
+ 
+ Gee, I'm going to die!
+ f:id:nishiohirokazu:20090912152913j:image
+ 
+ *1252738390*Conic Film Camera improvement proposal
+ - It takes about 10 seconds to process.
+ -- but it's not much of a problem when you're taking a bunch of pictures with your camera in advance while walking and then converting them on the train.
+ -- □ Bring up the progress bar
+ - When you start up, suddenly there is a bar with only one button at the bottom and it's blank -> hard to know what to do.
+ -- □ Bring up the menu screen
+ 
+ - It is not difficult to support 4 and 6, but the UI will be complicated, so keep it simple.
+ - It is very bad that there is no saving function for converted images (I save them as screenshots now).
+ -- □ Should there be "save" and "discard" buttons on the bar at the converted image?
+ 
+ - The conversion actually makes the image one size smaller (that's the black area at the top and bottom), so it's better to hold the image taken with the camera before converting it to 300x400 and let the camera convert it with the center position and guide.
+ -- Are large images that are not 300x400 saved in the iPhone's photo library? I think they are.
+ 
+ - □ Difficult to aim because the center position is not known when shooting with the camera. Provide a guide.
+ 
+ *1252769515*TODO
+ - □ Add the ability to save images.
+ -- □ Just add a save button to the bar where only the camera button is currently placed.
+ -- □ Find out how to save images
+ - □ Display progress bar during processing
+ -- The progress bar is on, but the bar is at 100% after the process is complete.
+ --- □ There must be a repaint()-like thing that triggers the redraw. Check.
+ -- I don't know how to change the size of the UIActionSheet. The height changes on its own according to the number of buttons, so when I cut down the buttons, there is no more room for the progress bar.
+ --- □ Check
+ 
+ - □ Solving the blank screen on startup.
+ -- □ Prepare a logo to be displayed in the upper half of the screen at startup.
+ -- □ Action sheet out from the beginning at startup
+ 
+ - □ Not only three rotations, but also two and five rotations are prepared.
+ -- I want to add buttons for various conversions instead of use where the use button and other buttons are displayed under UIImagePickerController, but I'm not sure. UINavigationController : UIViewController... So I think I should be able to add buttons with - (void)setToolbarItems:(NSArray *)toolbarItems animated:(BOOL)animated in UIViewController, but it doesn't even appear in Xcode's completion suggestions. I think I'm misunderstanding something.
+ - □ Difficult to aim because the center position is not known when shooting with the camera. Provide a guide.
+ -- The UIImagePickerController reference says it has the ability to display an Overlay for it.
+ </body>
+
+[Hatena Diary 2009-09-12 https://nishiohirokazu.hatenadiary.org/archive/2009/09/12]

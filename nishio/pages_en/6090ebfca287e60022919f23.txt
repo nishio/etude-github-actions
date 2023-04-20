@@ -1,0 +1,149 @@
+Hatena2009-01-25
+code:hatena
+ <body>
+ *1232827348*from GAE to pure Django
+ I'm going to rewrite the online version to run on Google App Engine so that it doesn't depend on Google App Engine for the time being. Well, it's not that hard since it's made in Django.
+ 
+ 
+ Replace "from google.appengine.ext import db" with "from django.db import models". Replace "db." with "models.
+ 
+ 
+ <a href='http://djangoproject.jp/doc/ja/1.0/ref/models/fields.html#model-field -types'>Model field reference &#8212; Django v1.0 documentation </a>
+ StringProperty is a TextField, BooleanProperty is a BooleanField, DateTimeProperty is a DateTimeField, and BlobProperty is a BlobField, which I was planning to eliminate in the future. I was wondering what to do with BlobProperty, but I decided to use TextField. ReferenceProperty is a ForeignKey, collection_name option of ReferenceProperty is related_name, IntegerProperty is an IntegerField, and BlobProperty is a TextField. IntegerProperty is an IntegerField.
+ 
+ 
+ Oh, I got to the point where the server is running for now. When I try to view the page, I get an error message "unknown encoding: X-MAC-JAPANESE". I'll have to search for it.
+ <a href='http://d.hatena.ne.jp/jYoshiori/20070907/1189184174'> The "LookupError: unknown encoding: X-MAC-JAPANESE trap" - Diary of an unrequited love for Django</a>
+ Hmmm...you mean that MACOSX has its own SJIS extension and Python does not provide a codec for it? When I said that, id:Volunas told me that it's just not supported by Python in MacPorts, but it's already fixed in the original version. Well... that's a hassle, so I'll just use the option to rewrite DEFAULT_ENCODING.
+ 
+ 
+ Could not import saichugen.main.views. Error was: No module named google.appengine.ext.webapp.
+ >|python|
+ from google.appengine.ext.webapp import template
+ from google.appengine.api import users
+ ||<
+ We need to cut down on this area. Now, if we leave GAE, we won't be able to authenticate using our current Google account. We need to think about how to do that. This time, I just want to make it work without GAE at hand, so I'm leaving it alone for now. PS: <a href='http://code.google.com/intl/ja/apis/accounts/docs/OpenID.html'>OpenID for Google Apps - Account Authentication API - Google Code </a>. If I implement OpenID authentication, I can get the mail address when I authenticate with my Gmail account, and if it matches the mail address used for user identification in GAE, I can take over the data as the same user.
+ 
+ 
+ Let's see, .all() is replaced by .objects.all(), but .all().filter is just .objects.filter? Oh, the syntax of filter is also different: GAE's is filter("play_count >", 0), Django's is filter(play_count__gt=0).
+ 
+ 
+ You haven't set the DATABASE_ENGINE setting yet.
+ 
+ 
+ I got to the top screen for now.
+ 
+ Forgot to write: where to put TEMPLATE
+ 
+ *1232833427* I haven't slept...
+ I'm subtly sleepy and not subtly sleepy, but that doesn't mean I'm not writing code and looking at chat. Should I go to bed? I'm hungry, though. Oh, it's chirping... I'm meeting a friend from noon.
+ 
+ 1: I put rice and water in the rice cooker and turned it on.
+ 2: You can sleep or slumber until it's ready to cook.
+ 3: Eat rice if you are awake when it is cooked
+ 4: Eat and sleep when sleepy
+ 5: Wash dishes to wake up if you haven't fallen asleep
+ 6: If you sleep, the alarm rings at 1:00 p.m. and you jump out of bed.
+ 
+ How about this kind of program (plan)?
+ 
+ *1232838729*Structure Synth recommendations
+ I do this because I suddenly remembered <a href='http://d.hatena.ne.jp/inajob/20081127'>context free art recommendations - INA's diary</a>.
+ 
+ At any rate, I've learned the rules for colors, coordinates, and rotation while watching the tutorial.
+ 
+ >||
+ 36 * { x 1 hue 10 rz 10 } box
+ ||<
+ 
+ <img src="http://gyazo.com/f8f44689c0f45a68e4cc3b1c237241cd.png">
+ 
+ I was concerned about the seams.
+ 
+ >||
+ 36 * { rz 5 x 1.1 hue 10 rz 5 } box
+ ||<
+ 
+ <img src="http://gyazo.com/338f8c36b9381ec5bdc4b8a6fa32a78c.png">
+ 
+ 
+ At any rate, most people will try to make a tree
+ 
+ >||
+ tree
+ rule tree md 10{
+ 	{ x 2 s 4 0.1 0.1} box 
+ 	{ hue 5 x 4 rz 10 rx -10} tree 
+ 	{ hue 5 x 4 rz -10 rx 10 } tree 
+ }
+ ||<
+ <img src="http://gyazo.com/5e5a76cd09f2c4b5016da8a4d8d822db.png">
+ 
+ 
+ >||
+ helix
+ rule helix md 20 > helix_end{
+ 	sphere 
+ 	{ hue 5 x 0.8 rz 10 s 0.9 rx -5 } helix 
+     split
+ }
+ 
+ rule helix_end {
+ 	sphere 
+ 	{ hue 5 x 0.8 rz 10 s 0.9 rx -5 } helix_end 
+ }
+ 
+ rule split w 10{}
+ rule split {
+    {s 1 -1 1} helix
+ }
+ ||<
+ 
+ <img src="http://gyazo.com/67d7032aaf797788b75bf9a21e7671a1.png">
+ Wa-ha-ha.
+ 
+ >||
+ 100 * {color #FFFFFF y 2} box_line
+ 
+ rule box_line w 80{
+ 	box
+      {x 2} box_line
+ }
+ 
+ rule box_line {}
+ ||<
+ 
+ <img src="http://gyazo.com/e84f4b05557dc5543c362b8a126b18a9.png">
+ 
+ I'm starting to see what I'm missing. Fog and metaballs would make it a little easier and cooler.
+ 
+ Well, we have alpha, so we can adjust it to make it look like fog.
+ 
+ >||
+ 100 * {color #FFFFFF y 2} box_line
+ 
+ rule box_line w 80{
+ 	box
+      {x 2 a 0.9} box_line
+ }
+ 
+ rule box_line {
+     box_stair
+ }
+ 
+ rule box_stair {
+ 	box
+      {x 1 z 1 a 0.96} box_stair
+ }
+ ||<
+ 
+ <img src="http://gyazo.com/16df46dc4592e08f0572e796137666dc.png">
+ 
+ I think it's something like this.
+ I don't think we are making use of the function very well.
+ 
+ *1232886149*Fried chicken
+ I had fried chicken at a restaurant called The Strait above Yodobashi Akiba and it was amazing. 3 of us ate fried chicken, salad and cucumbers and drank sake and we were full. 1800 yen.
+ </body>
+
+[Hatena Diary 2009-01-25 https://nishiohirokazu.hatenadiary.org/archive/2009/01/25]

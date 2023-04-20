@@ -1,0 +1,44 @@
+Hatena2010-12-11
+code:hatena
+ <body>
+ *1292035928*tmp.py Part 3
+ <a href='http://d.hatena.ne.jp/camlspotter/20101210/1291958542'>Mr. Camiva is going to make id:ymotongpoo a wooden doll - Oh, you `re no (fun _ → more)</a>
+ >>
+ Why was I trying so hard to write an optimization for string manipulation? What's the point if all you want is the last number!
+ <<
+ 
+ If you just want the last number.
+ >|python|
+ N = 14
+ xs = [1] * N
+ ys = [0] * N
+ 
+ for n in range(1, N):
+     xs[n] = xs[n - 1] + ys[n - 1]
+     ys[n] = sum(xs[i] * xs[n - i] for i in range(n))
+     
+ print xs[-1] + ys[-1]
+ ||<
+ 
+ It was a long time ago. I don't remember if I wanted to find the number or the sequence of parentheses that satisfy the condition since it was a long time ago, but I think I gave it as an example when I was asked to teach dynamic programming or something like that. see <a href='http://d.hatena.ne.jp/ ymotongpoo/20100603/1275518539'>n corresponding parenthesis patterns - YAMAGUCHI::weblog</a> Note: Of course, even if you simply enumerate them, you should create them just before displaying them, not by combining strings every time. But I did not optimize it to that level because it is an explanatory code. I believe this is an explanation of how much faster it can be reused by rearranging the order of calculation.
+ 
+ Incidentally, this one that simply counts.
+ >||
+ $ time python tmp2.py
+ 2674440
+ 
+ real	0m0.038s
+ user	0m0.014s
+ sys	0m0.016s
+ ||<
+ 
+ In tmp.py, which I had put on my blog
+ >||
+ real	0m17.931s
+ user	0m2.806s
+ sys	0m0.901s
+ ||<
+ So it's not likely that it was either of the codes that said "4 seconds in Python" at the time. Maybe it wasn't the machine I'm using now to begin with.
+ </body>
+
+[Hatena Diary 2010-12-11 https://nishiohirokazu.hatenadiary.org/archive/2010/12/11]

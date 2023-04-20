@@ -1,0 +1,31 @@
+Hatena2014-04-04
+code:hatena
+ <body>
+ *1396622022*Try the Python example in Ruby on the technology behind coding p157.
+ I received this question.
+ >>
+ How can I try the Python examples in "The Technology Behind Coding" p157 with Ruby pry or something? pic.twitter.com/4uZXV9mJc4
+ <<
+ https://twitter.com/maehrm/status/429954521947598850
+ 
+ If the encoding of the terminal is utf-8 and Ruby 1.9, you can try this.
+ 
+ >||
+ irb(main):044:0> puts %|\x1b$B$"$"$"|.force_encoding('iso-2022-jp').encode('utf-8')
+ Uh-oh
+ => nil
+ ||<
+ 
+ In Python, there are two types of strings: byte strings and Unicode strings. In the Python example on p157, the byte string '\x1b$B$"$"$"' is "converted to a Unicode string by decode('iso-2022-jp')", and then print" converts it to the terminal's default encoding (UTF-8 since it was a Mac) and outputs it.
+ 
+ In Ruby, on the other hand, strings are designed as "byte strings + encoding information", so at the initial %|\x1b$B$"$"$"| stage, it is determined from the terminal encoding that "this string is utf-8". Then, force_encoding('iso-2022-jp') tells us "No, it is not utf-8, but iso-2022-jp". However, if this is put, the iso-2022-jp byte string will be sent to the terminal as is and will be corrupted, so it is converted to the same encoding as the terminal by encoding('utf-8') again.
+ 
+ ---
+ 
+ My book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write supplemental articles to the questions and comments I received from readers. Please do not hesitate to send us your questions and comments.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2014-04-04 https://nishiohirokazu.hatenadiary.org/archive/2014/04/04]

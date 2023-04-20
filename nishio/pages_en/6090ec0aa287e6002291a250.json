@@ -1,0 +1,147 @@
+Hatena2012-07-14
+code:hatena
+ <body>
+ *1342197532*Comparing Python's with statement with Java7's try-with-resource and C#'s using
+ http://nhiro.org/learn_language/with_statement.html
+ 
+ Java7, as the name implies, is tied to try, while C# and Python are separated. <del>So if you want Java7 to behave like C# and Python, you have to write an empty finally even if you don't need it. </del>(PS: finally and try without except are also OK. thanks id:nowokay)
+ 
+ The "cleanup method" that is called either when the main body exits normally or abnormally by throwing an exception is Dispose in C# and close in Java 7,
+ In Python, it is __exit__. But other than Python, it doesn't take any arguments. How do we know if the main unit exited successfully or not? Is it decided that it is not necessary to know? PS: I heard that it is hard for people of other languages to imagine what kind of arguments Python takes, so I'll add three sets: "type of exception, instance of exception, and stack trace". In short, "whether an exception occurred or not, and if so, detailed information about it" is passed.
+ 
+ An example of changing the "cleanup" process depending on whether or not a specific exception occurred is <a href='http://www.python.org/dev/peps/pep-0343/'>PEP 343 -- The "with" Statement</a>, which is used against generators, If the exception ends, you try to throw the exception into the generator, giving the generator a chance to catch it and handle it.
+ 
+ In Java 7, exceptions are caught in the catch clause, which means that you decide whether or not to catch them at implementation time. In Python, the return value of __exit__ determines whether the exception is allowed to go through or not, since it was handled by __exit__.
+ 
+ The ability to handle multiple resources and to close them in the reverse order of the order in which they were opened is common to all languages.
+ 
+ Only Python can define "methods called before entering a block".
+ 
+ ** Postscript: Conversation with Mr. Sasada
+ (I wish there was some kind of generic Togetter that could help make these chat logs nice and readable. I've switched back and forth somewhat to make the story connect, but some parts are still not connected, so I've enclosed them in parentheses.)
+ 
+ ko1: I'm curious about the Python arguments to begin with. I can't imagine. > In Python, it's __exit__. But non-Python doesn't take arguments.
+ nishio: 3 sets of exception types, exception instances, exception stack traces
+ ko1: I thought catching exceptions and releasing resources are different.
+ nishio: hmmm, maybe a case where you want to change the way resources are released in case of failure and success?
+ ko1: I wonder if it is not using C# to not execute that block if it fails in the first place.
+ ko1: If you want to change the cleanup method depending on the exception, I guess you could use catch (or rescue in ruby). in Ruby, you can get error information with $!
+ nishio: Ah, that's mixing up the failure in resource acquisition and the exception in the execution of the main body. What I was talking about is that the argument of __exit__ differs depending on whether the main body terminated normally or abnormally after successfully acquiring resources.
+ ko1: "If you change the cleanup method depending on the exception...(catch, $!)" was intended to do just that.
+ nishio: Yeah, and "if it fails in the first place, don't execute that block" refers to failure in resource acquisition.
+ ko1: That's at the time of acquisition. And with that, you don't execute the block in the first place, so you don't get an exception on the block
+ nishio: it seems to be the same in all three languages that the block is not executed if it fails when acquiring resources.
+ ko1: I want to close the resource regardless of whether an exception occurs in the block or not.
+ 
+ 
+ >||
+ (ko1:
+ begin
+   a = open(...)
+   b = open(...) # Fail here
+ ensure
+   What to do here
+ end
+ ko1: I have a problem with this in Ruby)
+ ||<
+ 
+ 
+ nishio: it is also the same > it is called whether it occurred or not. So, the issue is whether or not it is necessary to know whether or not an exception occurred in the close process.
+ ko1: I don't think so, that's the feeling of C#, and I can't think of such a situation. Have you ever had such an experience?
+ nishio: I don't know enough about it to assure you that I don't need to know, in fact.
+ ko1: I don't know the syntax of __exit__, but you could try to find a place that uses error content with it.
+ nishio: I think http://www.python.org/dev/peps/pep-0343/ uses it to wrap generators. When an exception occurs in a block, you first throw the exception into the generator, and then you create a chance for the "finally" in the generator to work.
+ ko1: You're doing something difficult... I wonder if "generator" is a resource... I don't know, but I think you should try (rescue) it in Ruby. Ah, that's why Ruby doesn't have using. The other day, we were talking about how it would be nice if ruby had something like "using", but it was more like "make your own blocks and write your own iterators" (like open(){ ... }). }) is more flexible.
+ nishio: I'm not quite sure about the Ruby-style solution.
+ ko1: open(...) {|f| ...} If the block is released with "open(...)", it disappears. That is because open is wrapped in begin/ensure before calling the block, but the foo method of foo{...} is responsible for releasing the resource. There is an air that the foo method of foo{...} is responsible for releasing the resource. So, foo can be written to do something in case of HogeException. In that sense, I wondered if it is similar to __exit__ returning an exception.
+ nishio: first of all, is open a method that takes an argument and a block? I thought it was a file open.
+ ko1: open a file. f = open(...) open(...) {|f| ...} but you can also write
+ nishio: I see, so when a block is passed, it is designed to be called by wrapping it in begin/ensure.
+ ko1: yes. designing it.
+ nishio: To be honest, I think the with statement is block passing for Python, which doesn't have block passing. The contents to be executed before and after the block are __enter__ and __exit__. unlike C# and others, there is also __enter__ to be executed before entering the block.
+ ko1: I see.
+ 
+ 
+ 
+ ko1: it says "try/finally statements" so it's not resource specific.
+ 
+ 
+ >||
+ (ko1: loop{...} The method
+ ko1: def loop
+   begin
+     while true
+       yield
+     end
+   rescue StopIteration
+     # stop
+   end
+ end
+ ko1: Let me put it this way: "raise StopIteration" will stop it.
+ ko1: other raise Foo will go through as is)
+ ||<
+ 
+ 
+ 
+ ko1: Is this with statement often used in Python for resource release?
+ nishio: In the first place, the "process that must be executed when exiting the scope" is often the release of resources, and the problem that we essentially wanted to solve was "the unpredictability of exiting a function or block due to the introduction of exceptions. However, after that, when the need arose for "there are many times when you want to do that for multiple things," you wanted a better way because the nesting gets deeper and deeper if you write try/finally, and the solutions were using, try-with-resource, try-string, and try-string. The solution is using, try-with-resource, and with-statement.
+ ko1: C# using doesn't nest too deeply? Can you do more than one?
+ nishio: you can write more than one, or rather, the sample code says more than one, hoi http://nhiro.org/learn_language/with_statement.html
+ ko1:
+ >||
+         using (
+             MyClass c1 = new MyClass("first"),
+                     c2 = new MyClass("second"))
+         {
+ ||<
+ ko1: This is it.
+ nishio: and open them in the reverse order of how they were secured in any language
+ ko1: I can make c1, but if c2 fails, does it release c1?
+ nishio: I haven't checked, but c1 dispose should be called
+ ko1: Well, I guess I will.
+ nishio: if you don't call it, you might as well go punch the designer in the face. w
+ 
+ 
+ ko1: Java can write such a thing?
+ >||
+ try (
+              AutoCloseable imp1 = new AutoCloseableImpl("first");
+              AutoCloseable imp2 = new AutoCloseableImpl("second")) {
+ ||<
+ nishio: From 7.
+ ko1: If imp1 is closed even if imp2 is also closed
+ nishio: I didn't check because I thought it would be obvious.
+ ko1: In ruby, open{|f1| open{|f2| ...}} is quite a lot of processing, so the nesting is very deep.
+ ko1: with MyClass("first") as x, MyClass("second") as y: is the same (fails on y, __exit__ on x)
+ 
+ 
+ nishio: https://gist.github.com/3106388
+ nishio: If an exception is skipped in y's __init__ after x's init is called and __enter__ is called, body is not executed and x's __exit__ is called with an error argument. The exception that was jumped was not the one that was intended, but w
+ ko1: terrible
+ nishio: Java is RuntimeException, so if you go back and forth, you'll get mixed up w
+ ko1: ruby but let's see what we can come up with
+ </body>
+ <comments>
+ <comment>
+ <username>methane</username>
+ <body>An example of a case where you can change the behavior depending on whether or not an exception is raised in the with con.begin(): block is to switch between committing the transaction and rolling back when exiting the block, depending on whether or not there is an exception. <br>Other cases are unit tests where you write code in the with self.assertRaises(HogeException): block that should throw a HogeException,<br>and if the block exits cleanly or the exception caught is not a HogeException, the test fails. <br><br>Some tests fail if the block is not cleanly exited or if the exception caught is not a HogeException. <br><br>So it is better to think of Python's with statement not as a mechanism for releasing resources, but more generally as a mechanism for hooking both entry and exit from a block. <br>I think you are absolutely right that in Ruby you can do the with equivalent in a block. </body>
+ <timestamp>1342246133</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>An example of a case where with changes behavior depending on whether or not an exception occurs is with con.begin(): block, where the transaction is committed or rolled back when exiting the block, depending on whether or not there is an exception. <br><br>Yes, that sample looks familiar to me too, I thought it was PEP but couldn't find it. </body>
+ <timestamp>1342316685</timestamp>
+ </comment>
+ <comment>
+ <username>methane</username>
+ <body>con.begin(): A possible example is SQLAlchemy. <br>assertRaises is also used in the standard library unittest. </body>
+ <timestamp>1342344809</timestamp>
+ </comment>
+ <comment>
+ <username>nowokay</username>
+ <body>"You'll write an empty FINALLY even if you don't need it" Java7 doesn't need it when try-with-resource. </body>
+ <timestamp>1370280429</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-07-14 https://nishiohirokazu.hatenadiary.org/archive/2012/07/14]

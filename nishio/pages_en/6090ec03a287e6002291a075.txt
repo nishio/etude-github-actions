@@ -1,0 +1,250 @@
+Hatena2010-03-02
+code:hatena
+ <body>
+ *1267500911*[en]Kototoi dango
+ <a href='http://www.kototoidango.co.jp/'>Mukojima Kototoi Dango</a>
+ 
+ <img src="http://gyazo.com/14ade2a85ed2d5247e4364a149459716.png">
+ 
+ Oh, I've been dabbling with variant kana and such for a while recently, but this one is full of them and interesting. The repeated symbols are "ba," "left sa," "Nara no na," "Noto no to," and so on.
+ 
+ I will ask him what he wants to do, and he will say, "I am a bird of the city, and the person I think of is here or there.
+ 
+ I ask, "If your name is Miyako Tori, is my favorite person who lives in the capital still alive and well? Is he dead?" Like that.
+ 
+ *1267520356* When is it advantageous to switch to victory point purchase at Dominion?
+ One line summary: When using a coin strategy with Dominion, switching to victory point purchases on turn 10 was most advantageous.
+ 
+ Up to now.
+ -<a href='http://d.hatena.ne.jp/nishiohirokazu/20100206/1265436304'>Dominion Simulation</a>
+ -<a href='http://d.hatena.ne.jp/nishiohirokazu/20100207/1265548836'>Dominion Simulation 2</a>
+ 
+ As we found out in the previous section, even if you don't buy any action cards, by turn 12, the average coin will be 1.63, so that a deck will average over 8 coins. That means that by that time, there will be a turn where the genus state can be bought. The question here is "when to switch from buying coins to buying victory points". If you rush to buy early, your coin concentration will be diluted and you will not be able to grow later. On the other hand, if you start buying after you have increased your coin concentration, you will win victory points faster, but the game will be over before you can catch up.
+ 
+ Since I thought that the behavior of the players around me would be greatly affected by how they acted, I simulated 4 players with different strategies: "Before turn n, buy gold or silver coins; after turn n, buy the highest victory point you can buy; after turn n, buy gold or silver coins; after turn n, buy the highest victory point you can buy. If the player cannot buy victory points, he or she buys gold or silver coins." I simulated 4 players playing with different n's, each playing 1000 times.
+ 
+ 10, 10, 10, and 20, the mean and standard deviation of the winning points scored at the end of the game is
+ >||
+ player 0
+ 38.4287 4.46966624145
+ player 1
+ 38.3893 4.52960765519
+ player 2
+ 38.4571 4.57748398031
+ player 3
+ 13.7286 7.82187586452
+ ||<
+ 
+ and three players are starting to buy victory points from turn 10, but after about 10 turns late, they are completely behind, with an average difference of 25 points.
+ 
+ What if the delay was about 5 turns, when 10, 15, 10, 10
+ >||
+ player 0
+ 34.0452 3.95185487588
+ player 1
+ 23.1996 6.612349041
+ player 2
+ 33.7394 3.9206233739
+ player 3
+ 33.8632 3.99002327813
+ ||<
+ 
+ Still, he comes out about 10 points behind.
+ 
+ What if we were two turns behind?
+ 10, 10, 12, 10
+ >||
+ player 0
+ 31.7152 4.23264562183
+ player 1
+ 31.8004 4.28403546204
+ player 2
+ 29.1521 5.47075548622
+ player 3
+ 31.6406 4.27626374771
+ ||<
+ The average is still 2 to 3 points behind, but the standard deviation is 4 to 5 points, so a difference of this magnitude could be reversed with luck.
+ 
+ Could it be that the minority of people who start turn 12 lose because they are in turn 12, 10, 12, 10?
+ >||
+ player 0
+ 28.8797 4.86765116971
+ player 1
+ 32.0421 3.97332701775
+ player 2
+ 28.9603 4.95125478137
+ player 3
+ 31.9745 3.95330870917
+ ||<
+ As I said, people starting turn 12 are lagging behind.
+ 
+ 12, 10, 12, even 12, 12
+ >||
+ player 0
+ 28.7421 4.55216295732
+ player 1
+ 32.1273 3.75575487885
+ player 2
+ 28.9181 4.47363301915
+ player 3
+ 28.8409 4.49593006952
+ ||<
+ Seems irrelevant how many people choose to start with 10 points when you say, "After all, a 12-turn start versus a 10-turn start favors the 10-turn start."
+ 
+ So what happens if we start further forward, when we have 8, 10, 8, 8?
+ >||
+ player 0
+ 31.69 5.29408160118
+ player 1
+ 36.8734 5.83316144471
+ player 2
+ 31.5036 5.26218462618
+ player 3
+ 31.7262 5.27483019253
+ ||<
+ Oops, reversed....better to start turn 10 than to start turn 8?
+ 
+ 8, 10, 8, 8, 10 times
+ >||
+ player 0
+ 30.8428 4.89545586846
+ player 1
+ 34.7508 5.42166942556
+ player 2
+ 30.8484 4.81404377213
+ player 3
+ 34.7647 5.48778041744
+ ||<
+ 
+ In 10, 10, 8, 10
+ >||
+ player 0
+ 33.1002 5.02897205799
+ player 1
+ 32.916 5.01730445558
+ player 2
+ 30.5101 4.3520682428
+ player 3
+ 33.1524 4.99991742332
+ ||<
+ 
+ Hmmm...is a 10-turn start more advantageous than an 8-turn start?
+ 
+ Of course, starting turn 10 is not unconditionally advantageous regardless of strategy. Perhaps it means "you should start buying victory points when the coin density reaches a certain amount. Also, it is natural that 1.6 of 32 coins out of 20 and 1.6 of 64 coins out of 40 have a different speed of thinning when you buy victory points, so the latter is more advantageous, so I guess it is not just a matter of density.
+ 
+ Source code below
+ >|python|
+ from random import shuffle, randint
+ from copy import copy
+ from math import sqrt
+ 
+ NUM_TRIAL = 10000
+ 
+ def draw(deck, used, n):
+     if len(deck) < n:
+         shuffle(used)
+         deck.extend(used)
+         used = []
+     hand = deck[:n]
+     deck = deck[n:]
+     return deck, used, hand
+ 
+ def count_money(cards):
+     return cards.count("1") + cards.count("2") * 2 + cards.count("3") * 3
+ 
+ def count_vp(cards):
+     return cards.count("E") + cards.count("V3") * 3 + cards.count("V6") * 6
+ 
+ class CoinStrategy:
+     def __init__(self, threshold):
+         self.count = 0
+         self.threshold = threshold
+ 
+     def __call__(self, (deck, used, hand), game):
+         self.count += 1
+         money = count_money(hand)
+         if self.count < self.threshold:
+             # buy money
+             if money >= 6:
+                 used.append("3")
+             elif money >= 3:
+                 used.append("2")
+         else:
+             # buy victory point
+             if money >= 8:
+                 used.append("V6")
+                 game.vp6 -= 1
+             elif money >= 5 and game.vp3 > 0:
+                 used.append("V3")
+                 game.vp3 -= 1
+             elif money >= 2 and game.vp1 > 0:
+                 used.append("E")
+                 game.vp1 -= 1
+             elif money >= 6:
+                 used.append("3")
+             elif money >= 3:
+                 used.append("2")
+                 
+         return deck, used, hand
+ 
+ class Player:
+     def __init__(self, strat, game):
+         self.used = []
+         self.deck = list("1111111EEE")
+         shuffle(self.deck)
+         self.strat = strat
+         self.game = game
+     
+     def do_turn(self):
+         self.deck, self.used, hand = self.strat(draw(self.deck, self.used, 5), self.game)
+         self.used += hand
+         
+ class GameManager:
+     def __init__(self):
+         self.vp6 = 12
+         self.vp3 = 12
+         self.vp1 = 12
+ 
+     def is_finished(self):
+         return self.vp6 == 0
+ 
+ def test(thresholds):
+     NUM_PLAYER = len(thresholds)
+     sum = [0.0] * NUM_PLAYER
+     sumsq = [0.0] * NUM_PLAYER
+     for _trial in range(NUM_TRIAL):
+         game = GameManager()
+         players = [Player(CoinStrategy(th), game) for th in thresholds]
+         i = randint(0, NUM_PLAYER - 1)
+         while not game.is_finished():
+             p = players[i]
+             p.do_turn()
+             i = (i + 1) % NUM_PLAYER
+ 
+         for i in range(NUM_PLAYER):
+             p = players[i]
+             p.deck += p.used
+             money = count_money(p.deck)
+             vp = count_vp(p.deck)
+             #print "player", i
+             #print money, vp
+             sum[i] += vp
+             sumsq[i] += vp * vp
+ 
+     for i in range(NUM_PLAYER):
+         print "player", i
+         print sum[i] / NUM_TRIAL, sqrt(sumsq[i] / NUM_TRIAL - (sum[i] / NUM_TRIAL) ** 2)
+ 
+ 
+ test([12, 10, 12, 12])
+ ||<
+ 
+ *1267547582*[Kaizen] Visualizing and Quantifying the Results of Throw Away Books Activities
+ It is difficult to see the results of a book-disposal activity unless it is a very good one. Quantifying the results is important to feel a sense of accomplishment and to maintain motivation. Otherwise, you will feel "I worked hard, but I didn't get much done...".
+ 
+ Therefore, I took pictures before cleaning up and compared them after cleaning up to visualize the results. I also weighed the books to be thrown away with a scale and threw them away. Quantification.
+ 
+ I threw away 47.0 kg of books today! I am great! Pang, pang, pang!
+ </body>
+
+[Hatena Diary 2010-03-02 https://nishiohirokazu.hatenadiary.org/archive/2010/03/02]

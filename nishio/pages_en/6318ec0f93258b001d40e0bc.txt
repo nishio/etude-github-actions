@@ -1,0 +1,20 @@
+Unexpected token o in JSON
+code:Deno 1.20.4
+ > JSON.parse({})
+ Uncaught SyntaxError: Unexpected token o in JSON at position 1
+     at JSON.parse (<anonymous>)
+
+The error occurred when JSON.parse was done again by mistake when JSON.parse had already been done.
+	(In [Next.js], I assumed that req.body contained a string and did JSON.parse, but it was kindly already parsed, so there was no need.)
+
+Why "token o" because it is implicitly toString.
+code:Deno 1.20.4
+ > {}.toString()
+ "[object Object]"
+
+On Chrome, the error is a little more obvious.
+code:Chrome 105.0.5195.102
+ JSON.parse({})
+ VM366:1 Uncaught SyntaxError: "[object Object]" is not valid JSON
+     at JSON.parse (<anonymous>)
+     at <anonymous>:1:6

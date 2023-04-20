@@ -1,0 +1,105 @@
+Hatena2011-11-08
+code:hatena
+ <body>
+ *1320717651*numpy invert is not invertible
+ Oops, I tried to create an inverse matrix with invert, but it returned a mysterious matrix.
+ >||
+ In [1]: invert(array([[4, 0], [0, 1]]))
+ Out[1]:
+ array([[-5, -1],
+        [-1, -2]]) 
+ ||<
+ 
+ I heard that invert is "Compute bit-wise inversion, or bit-wise NOT, element-wise.". inv is correct to use. (thanks id:n_shuyo)
+ >||
+ In [2]: inv(array([[4, 0], [0, 1]]))
+ Out[2]: 
+ array([[ 0.25,  0.  ],
+        [ 0.  ,  1.  ]])
+ ||<
+ 
+ inv is defined in linalg.
+ >||
+ In [3]: inv
+ Out[3]: <function numpy.linalg.linalg.inv>
+ 
+ In [4]: invert
+ Out[4]: <ufunc 'invert'>
+ ||<
+ 
+ *1320724692*I implemented EM algorithm for mixed Gaussian distribution in Numpy.
+ [f:id:nishiohirokazu:20111108125655g:image]
+ The ellipse is 3 standard deviations, 6 EM steps from the initial value, 1, 2, 3, 7, and 15 times (judged as convergence by the criterion that the change in the vector of the mean is less than 0.0001), and I made an animated GIF. [f:id:nishiohirokazu:20111108143113g:image]
+ This one runs 0-15 EM steps, which is not possible with the k-means method. However, it can be observed that some initial values converge differently than expected... I tried to find initial values that converge differently, but it didn't work (lol)
+ [f:id:nishiohirokazu:20111108144600g:image]
+ This one is also taking a long time, but if it continues to learn for a while longer, the inner cluster will eat most of the diagonals on one side, and the outer cluster will lose its sticking point and shrink, and eventually it will become an X after all.
+ [f:id:nishiohirokazu:20111108144943g:image]
+ 
+ *1320724994*How to create animated GIFs with ImageMagick
+ >||
+ $ convert -delay 100 -loop 0 [1-6].png anime.gif
+ ||<
+ 
+ Easy.
+ 
+ >||
+ $ convert -delay 100 -loop 0 fig*.png anime.gif
+ ||<
+ 
+ If you have more than 10 images, it would be better to use "%02d" or something like that to get fig00.png ... It would be better to use "fig99.png" with asterisks (*).
+ 
+ *1320740584* I went to a Jubatus workshop.
+ I attended the <a href='http://www.zusaar.com/event/165003'>Jubatus Workshop</a> yesterday. ref: <a href='http://togetter.com/li/211053'>The 1st Jubatus Workshop #jubatus - Togetter</a> <a href='http://www.slideshare.net/JubatusOfficial'>JubatusOfficial Presentations</a>
+ 
+ The following is a summary including my interpretation
+ - The need for Ubatus
+ -- Data will continue to increase. The important issue is not that there is more now, but that there will be more and more in the future.
+ -- The use of data is accumulation, understanding, and prediction. The world is finally at the stage of being able to accumulate data and beginning to understand it.
+ -- The rate at which the volume of data increases is greater than the rate at which CPU speed increases. Inevitably, there will be more and more situations where parallelism must be considered in the processing for data.
+ 
+ - Difference from existing system
+ -- Existing systems have difficulty in combining the following three features: 1) real-time performance, 2) horizontally distributed data processing, and 3) advanced analysis.
+ -- MapReduce has a lot of processing flexibility, but it is basically batch processing and the analysis results do not come back immediately.
+ -- Ubatus tried to explore a different direction from Hadoop
+ -- MIX is the key
+ 
+ - "Machine Learning for All."
+ -- A mechanism to combine feature vector extraction, etc. specified in a configuration file
+ -- Can also be extended with plug-ins
+ 
+ - MIX
+ -- Can be achieved by compromise of not sharing model parameters in real time. It is in the paper that intermittent mixing of model parameters is OK.
+ -- Currently, it is a parallel linear classifier, and the model parameter mixing process ("Iterative Parameter Mixuture") is just an average.
+ -- unnonouno "See here for Iterative Parameter Mixture http://t.co/ApubeIxC" hillbig "I think the average is pretty wild, but if it's at least a perceptron, convergence performance has been shown. http://t.co/r384e8AH"
+ 
+ - Use Case: Power Consumption Estimation from Packet Data
+ -- Flexible idea of using supervised learning since regression is not yet implemented
+ -- When ARP packets were discarded, power estimation was reasonably practical and accurate by packet volume.
+ -- The program to produce this result is a single Python script, about 100 lines long, half of which is used for formatting the original data.
+ 
+ - pficommon
+ -- from_json or to_json in C++.
+ -- Quick RPC in C++
+ -- If you make it MPRPC, it will be MessagePack.
+ 
+ - Leaning toward text?
+ -- sla "Vectors are Key-Value, as a generalization, yes, but is it still a text-oriented implementation?
+ -- hillbig "The feature vectors for amorphous data (bag of words, bag of image features, action history) are sparse vectors, so this implementation is designed for them. Since we originally conducted our demonstration tests on text data, we have a lot of features for text data, but we are planning to consider others."
+ 
+ - Why communication of only learning differences reduces the amount of communication
+ -- nishio "I don't understand why communicating differences is easier than communicating the whole model. For example, in a linear classifier, there are clusters of weight vectors, such as each cluster x each feature x float, but isn't the amount of change from the previous training the same number of floats? *YF*"
+ -- niam "Are you communicating only the non-zero portion of the weight vector? If so, I can see how communicating only the differences, not the whole model, would lower the amount of communication."
+ -- nishio "I understood that, assuming natural language, the difference of model parameters is sparse and can be compressed by sending only non-zero parameters.
+ -- So, hillbig "the feature vectors of amorphous data (bag of words, bag of image features, and action history) are sparse vectors, so the implementation is designed for them".
+ 
+ Other
+ - I heard that multi-class classification of Twitter content runs at 6000 QPS! (where's more info?)
+ - It is said that two machines are enough to handle a Twitter stream (where is the detailed information?).
+ - In addition to supervised learning, they are planning to challenge nearest neighbor search and attribute completion (elemental technology of recommendation) by around January. Streaming is academically challenging. In the future, they plan to add statistical analysis, HMM, LDA, and so on.
+ - Input data are converted into vectors by using bag of words and n-grams, and then fed into an online training program for linear classification. The details of the inner workings of the system will not be discussed at this time. Perceptron and five of them (PA, CW, AROW, <del>NHEAD</del>NHERD) have already been implemented.
+ - At the beginning of the mixing process, a lock is acquired, but this is to prevent other training machines from starting the mixing process, and even during the mixing process, training and classification can be accepted except while each machine is sending and receiving differences, but the training results during the mixing process are discarded, which is inevitable, according to the system.
+ - hillbig: "Since only the model, not the data, is exchanged, the network is not a bottleneck, which is a selling point. In the future, we would like to be able to use it for embedded applications where the network bandwidth is narrow.
+ - jubakeeper does it for you, so you don't have to think about whether you have one or multiple units.
+ </body>
+
+[Hatena Diary 2011-11-08 https://nishiohirokazu.hatenadiary.org/archive/2011/11/08]

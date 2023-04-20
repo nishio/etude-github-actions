@@ -1,0 +1,12 @@
+Input.mousePresent should not identify if it is Oculus or not
+Unity's [Input.mousePresent] was always False under Oculus environment, but it was initially False but changed to True after triggering. don't use mouse presence or absence to distinguish between PC and Oculus environment. I'm not sure if it's a PC environment or an Oculus environment.
+
+So here's how it turned out:.
+code:cs
+ public static bool isOculus()
+ {
+     return (
+         OVRInput.GetActiveController() == OVRInput.Controller.RTrackedRemote ||
+         OVRInput.GetActiveController() == OVRInput.Controller.LTrackedRemote);
+ }
+

@@ -1,0 +1,29 @@
+ABC006C
+[C - Riddle of the Sphinx https://atcoder.jp/contests/abc006/tasks/abc006_3]
+	[https://gyazo.com/2f6b59dcf7787876c9b5f7e08d21cb47]
+　Thoughts.
+　　Assuming they are all 2, the problem is to make up a maximum of N combinations of +1 or +2 for the extra number.
+　　A naive double loop will not make it in time.
+　　If the remainder is less than or equal to N, just give that number of 1's.
+　　If the remainder is more than N, we can make them all 3 and assign the remainder to 4.
+　　Constant Order
+	Official Explanation
+	　It's kind of a totally different story.
+　　　If you decide on one, you can do a Tsurugame count, so you search all about one, or you can find out that the old man is 0/1, so you search all about the rest.
+　　AC with the above solution without searching.
+　　code:python
+		 def solve(N, M):
+       IMPOSSIBLE = (-1, -1, -1)
+       x = M - 2 * N
+       if x < 0:
+           return IMPOSSIBLE
+       if x <= N:
+           return (N - x, x, 0)
+       x -= N
+       if x <= N:
+           return (0, N - x, x)
+       return IMPOSSIBLE
+
+[return training].
+[Small order from official]
+[ABC006]

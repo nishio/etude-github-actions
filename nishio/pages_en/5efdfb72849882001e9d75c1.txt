@@ -1,0 +1,30 @@
+Cython does not allow function definitions within functions
+In Numba, "you can do it only if it's a recursive call," in Cython, "you can't define it there in the first place."
+
+Considering the use in AtCoder, Numba is compiled function by function, so I would like it to be in one function, but Cython is compiled with the entire file converted to C, so it should be placed at the top level in a straightforward manner.
+
+In that case, the local variable of the calling function cannot be accessed, so it must be passed as an argument or placed globally. The reason to avoid placing it globally in Python is that accessing local variables in Python is faster than accessing global variables, so there is no reason to avoid it in Cython.
+	Related [Local variables are faster than global variables in Python].
+
+code:cython
+ def main():
+   cdef foo(long x):
+     if x == 0: return 0
+     return foo(x - 1) + x
+   return foo(1000000)
+ 
+ main()
+NG: `C function definition not allowed here`
+
+code:cython
+ cdef foo(long x):
+   if x == 0: return 0
+   return foo(x - 1) + x
+ 
+ def main():
+   return foo(1000000)
+ 
+ print(main())
+OK 
+
+[Cython]

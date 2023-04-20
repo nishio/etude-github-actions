@@ -1,0 +1,186 @@
+Hatena2009-01-15
+code:hatena
+ <body>
+ *1231980946* Seeking "Power Cafe" ++.
+ <a href='http://www.nikkeibp.co.jp/it/article/COLUMN/20090113/322739/'>Seeking "Power Cafes" | Information & Communication | nikkei BPnet 〈日経BPネット〉</a>
+ 
+ Yes, that's right. I don't rely on wireless LAN service, which may or may not be available, so my criteria for choosing a cafe are whether or not it has a power supply and whether or not it is a smoke-free environment.
+ 
+ *1231980985* Prosin Diary Day 3
+ >>
+ Tatsuya Seino, Takahiro Hayashi, Norio Onai, Masahiro Sanjo, Masaya Mori
+ Prototype of an image cropping system called "Kiri-e."
+ Rakuten R&D Symposium 2008, pp.39-42, 2008.11
+ <<
+ 
+ This is convenient. It can quickly and easily cut through images.
+ 
+ **1232009389*All exploration of wooden cube puzzle
+ f:id:nishiohirokazu:20081128202619j:image → f:id:nishiohirokazu:20081128202531j:image
+ 
+ I wrote this on the romance car on the way home. At first I thought about adding AI to Midterm Online, but it looked like it would take a long time, so I decided not to do it this way. I thought it would be easy.
+ 
+ >|python|
+ PUZZLE = [3, 3, 3, 3, 2, 2, 2, 3, 3, 2, 2, 3, 2, 3, 2, 2, 3]
+ START = (0, 0, 0)
+ INIT_DIR = (0, 0, 1)
+ 
+ 
+ def get_candidate(dir):
+     cs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+     if dir[0]:
+         return [(0, x, y) for x, y in cs] 
+     if dir[1]:
+         return [(y, 0, x) for x, y in cs]
+     if dir[2]:
+         return [(x, y, 0) for x, y in cs]
+ 
+ 
+ def recur(pos=START, dir=INIT_DIR, idx=0, stack=[],
+           used=[START], max_bound=[0] * 3, min_bound=[0] * 3):
+     for i in range(PUZZLE[idx] - 1):
+         pos = tuple(pos[x] + dir[x] for x in range(3))
+         if pos in used:
+             return # conflict
+         
+         for x in range(3):
+             if max_bound[x] < pos[x]:
+                 max_bound[x] = pos[x]
+             if min_bound[x] > pos[x]:
+                 min_bound[x] = pos[x]
+             if max_bound[x] - min_bound[x] > 2:
+                 return # out of bound
+ 
+         used.append(pos)
+ 
+     stack.append(dir)
+ 
+     if idx == len(PUZZLE) - 1:
+         print stack
+         return
+ 
+     for cdir in get_candidate(dir):
+         recur(pos, cdir, idx + 1, stack[:], used[:],
+               max_bound[:], min_bound[:])
+         
+ 
+ recur()
+ ||<
+ 
+ There will be eight outputs. This is because the viewpoint and the direction of the first edge are fixed, so there are 8 ways: "4 ways in which the second edge will appear in either of the 4 directions" x "2 ways in which those 2 edges will appear on either side when they first deviate from the plane to which they are attached". Let's display only the first solution.
+ 
+ >>
+ [(0, 0, 1), (0, 1, 0), (0, 0, -1), (1, 0, 0), (0, 0, 1), (-1, 0, 0), (0, 0, 1), (0, -1, 0), (0, 0, -1), (1, 0, 0), (0, 1, 0), (-1, 0, 0), (0, 0, 1), (1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 1, 0)]
+ <<
+ 
+ I compared it to the actual puzzle until about half way through and it was correct. I ran it, wondering if it was too slow to copy and pass on when searching for a child, and got a result in 0.09 seconds. Too much leeway. I didn't modify the description of the puzzle because it was too complicated, but it would have been better to write the length of the edge as 2 or 1 when the block is considered as a point, rather than 3 or 2 when the number of blocks on the edge is 3 or 2. Also, the end condition could be "used must be 27 pieces". It doesn't make much difference. If I were to change the variable names, I would change stack to dirs, get_candidate to get_next_dirs, and cdir to next_dir.
+ 
+ <hr>
+ 
+ Verification of what id:tokoroten and I were talking about, "It's 4 ** 16 as a state space, so we can simply search all of it and afford it, and it will be even faster because we can prune branches briskly".
+ >|python|
+     dirs.append(dir)
+     idx += 1
+     print "+" * idx
+ 
+     if idx == len(PUZZLE):
+         print dirs # finished
+         return
+ 
+ 
+     if idx == 1:
+         next_dirs = [(0, 1, 0)]
+     elif idx == 2:
+         next_dirs = [(0, 0, -1), (1, 0, 0)]
+     elif idx == 3:
+         next_dirs = [(1, 0, 0)]
+     else:
+         next_dirs = get_next_dirs(dir)
+ 
+     for next_dir in next_dirs:
+         recur(pos, next_dir, idx, dirs[:], used[:],
+               max_bound[:], min_bound[:])
+ ||<
+ I'll rewrite it and run it like that.
+ 
+ >||
+ +
+ ++
+ +++
+ ++++
+ +++++
+ ++++++
+ +++++++
+ +++++++
+ +++++++
+ ++++++++
+ ++++++
+ +++++++
+ ++++++++
+ +++++++++
+ ++++++++++
+ +++++++++++
+ ++++++++++++
+ +++++++++++++
+ +++++++++++++
+ ++++++++++++++
+ +++++++++++
+ +++++++++++
+ ++++++++++
+ +++++++++++
+ +++++++++++
+ ++++++++++++
+ +++++++++++++
+ +++++++++++++
+ ++++++++++++
+ +++++++++++++
+ ++++++++++++++
+ +++++++++++++++
+ ++++++++++++++++
+ ++++++++++++++++
+ +++++++++++++++
+ ++++++++++++++++
+ +++++++++++++++++
+ [(0, 0, 1), (0, 1, 0), (0, 0, -1), (1, 0, 0), (0, 0, 1), (-1, 0, 0), (0, 0, 1), (0, -1, 0), (0, 0, -1), (1, 0, 0), (0, 1, 0), (-1, 0, 0), (0, 0, 1), (1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 1, 0)]
+ +++++++
+ +++++
+ ++++++
+ +++++++
+ +++++++
+ +++++++
+ ++++++
+ +++++++
+ +++++++
+ ++++++++
+ +++++++++
+ ++++++++++
+ +++++++++++
+ ++++++++++++
+ +++++++++++++
+ +++++++++++++
+ +++++++++++
+ ++++++++++
+ +++++++++++
+ ++++++++++++
+ +++++++++++++
+ ++++++++++++++
+ +++++++++++++
+ +++++++++++
+ +++
+ ||<
+ 
+ Wow, the trees are so small!
+ I realized after writing that even if there are two more ways when idx == 3, and even if there are three more ways, this 70 or so x roughly 3x x the next four possible directions would be enough to search at most 1000 pieces to get an answer. It is too easy.
+ 
+ *1232017542*Trying to use BitBucket
+ For free, you can have one private repository and countless public repositories in a 150MB space, with a bug tracker and a wiki, and you can follow others, grant reader privileges, etc. The wiki itself is Mercurial, so you can write offline. Best of all, the wiki itself is Mercurial, so you can write offline.
+ </body>
+ <comments>
+ <comment>
+ <username>shou</username>
+ <body>The "in used:" part is stylish</body>.
+ <timestamp>1232084967</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-01-15 https://nishiohirokazu.hatenadiary.org/archive/2009/01/15]

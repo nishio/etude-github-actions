@@ -1,0 +1,202 @@
+Hatena2008-07-12
+code:hatena
+ <body>
+ *1215836819*ICFP Diary
+ http://www.icfpcontest.org/
+ 
+ (Write gradually)
+ 
+ First of all, I would like to mention that the contest has already started and those who intend to try their best have already begun to do so. My purpose is to experience what ICFP is all about and to write an introductory entry in Japanese, so I will update this blog slowly while doing household chores.
+ 
+ -----
+ 
+ Took empty cans to recycling bin. Hot. Hot. Hot.
+ 
+ I've set up a water-drizzled barley tea.
+ 
+ Well, for now, an explanation of the rules, etc. See more at: http://www.icfpcontest.org/rules.html
+ No pre-registration is required, just complete and submit your source code by July 14 (PDT) Team size is limited to 5 people, with no age or student requirement. Discussions with other teams are allowed, but sharing of code is not.
+ 
+ I heard that there will be $1000 for the grand prize, $500 for the best submission in the first 24 hours, and $500 for the judges' special prize, but I'm not going to do my best, so I'm not going to go through with it.
+ 
+ The default languages available are listed at the end of http://www.icfpcontest.org/live-cd.html, but if you want to use a language other than this, you can send pre-compiled binaries or other binaries you need along with the source. The same environment as the organizer's is distributed as 1CD Linux, so those who want to send binaries will have to use that. Well, I plan to use Python, so it doesn't matter.
+ 
+ -----
+ 
+ I had to vacuum up the annoying little flies around the monitor. The machine is acting up, so I'm going to reboot it.
+ 
+ -----
+ 
+ I hung the laundry out to dry, but I can hear the thunder. An evening shower is coming, I'm sure.
+ 
+ 
+ Wow, lightning struck, and it was pretty close! The sound was sharp!
+ 
+ -----
+ 
+ Okay, now then, let's get to the explanation of the key problem statement. This time, the problem is to control a Mars rover. Of course, it's not a real one, so you can think of it as "playing the Mars Exploration Game." Instead of a human playing it, we create a program to play it. This is the challenge.
+ 
+ Details: http://smlnj.org/icfp08-contest/task.html
+ 
+ The objective of the game is to control the Mars rover to get to the destination. There are craters and big rocks on the map, so you have to avoid them. Moreover, there are Martians, and if the rover is caught by a Martian, it will be destroyed immediately and the game will be over.
+ 
+ The formula below determines if you played the game well (the smaller the better)
+ - If the goal is reached within the time limit, the time t (in milliseconds)
+ - If the goal is not reached within the time limit n, n + 100
+ - If destroyed by Martians at time t, 2n - t + 600
+ - If you fall into the crater at time t, 2n - t + 1000
+ 
+  As you can see from the -t in the box, the score is higher if you run around as much as possible even if you are sure that the Martian will catch you. Also, if the Martian is chasing you and you are about to fall into a crater, the score is higher if the Martian catches you. Well, of course it is best to reach the goal.
+ 
+ -----
+ 
+ I had to sudo port install gmp to get the simulator placed at http://smlnj.org/icfp08-contest/simulator.html to work.
+ 
+ -----
+ 
+ Well, actually, after reading the problem in detail, it is getting tedious, but, well, let's just try a little harder. If you start the server you downloaded from the link above
+ >||
+ $ ./server -v sample-maps/simple-small.wrld 
+ waiting for client connection on port 17676
+ ||<
+ The output will be "1" and the program will be in standby mode. At the very least, we need a program that connects to the specified port and communicates with it. So, for now, let's connect to the specified port and try to read it. Incidentally, the final submission says that the hostname must be able to be specified, so I included that as an option.
+ 
+ >|python|
+ import sys
+ HOSTNAME = sys.argv[1]
+ PORT = int(sys.argv[2])
+ 
+ import socket
+ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+ s.connect((HOSTNAME, PORT))
+ print s.recv(1024)
+ s.close()
+ ||<
+ 
+ Let's run it. Oh, the GUI started up. And it closed in about 1 second.
+ output (result)
+ >||
+ I 200.000 200.000 30000 30.000 60.000 20.000 20.0 60.0 ;
+ 
+ Call from C to SML raised exception.
+ unhandled exception: Fail: EOF
+ (hereinafter abbreviated)
+ ||<
+ 
+ I was going to parse it while looking at 3.1 Messages from the server to the controller, but that's not a "minimum requirement" so I held off (yeah).
+ Let's just let it run without thinking about it.
+ 
+ >|python|
+ while 1:
+     print s.recv(1024)
+     s.send("ar;")
+ ||<
+ 
+ <img src="http://gyazo.com/e4689b56f384031cf0ac4653d06cb139.png">
+ 
+ Oh, it's spinning! Just to explain, the program prints all the messages sent from the server, ignores them, and just keeps shouting "spin around! and keep on shouting "Turn! Incidentally, it switches to "acceleration mode" just by sending "a" once, so there is no point in sending it again and again.
+ 
+ 
+ Now, I tried it because ANEMO said, "If it's just a random run, you can do it in 15 minutes," and yes, if it's just a random run, you can do it in 15 minutes. If it's purely coding time. If you include the time to read the documentation, it's a bit impossible unless you can read English fast. It's interesting to see a probe running around with my code.
+ 
+ -----
+ 
+ <img src="http://gyazo.com/5e21ec10e57a5af4e65015bcad86a4bf.png">
+ Oh, and there are enemies.
+ 
+ -----
+ 
+ I guess ML languages are the easiest to write a parser for this kind of thing. Among the languages I've used so far, writing in Haskell seems to be the easiest. However, I don't want to look up how to do sockets in Haskell, so I'm not going to do it.
+ I wonder what is the easiest way to write this kind of parsing in Python. Or is it faster to just do it by hand instead of thinking about it? I used named groups of regular expressions in LL Ring's Janken 2.0, but this protocol is clearly designed to "pass through a space-delimited tokenizer," so I used a space-delimited tokenizer for now. I used space delimited. Now, let's see.
+ 
+ -----
+ 
+ I find myself wanting to write pattern-matching code for Python, not caring about ICFP or anything else, but I persevered and wrote it anyway.
+ The telemetry perspective looks like this.
+ >|python|
+ def telemetry(xs):
+     """T time-stamp vehicle-ctl vehicle-x vehicle-y vehicle-dir vehicle-speed objects ;"""
+     keys = """time_stamp vehicle_ctl 
+               vehicle_x vehicle_y 
+               vehicle_dir vehicle_speed""".split(),
+ 
+     memory.__dict__.update(zip(keys, take(xs, 6)))
+ 
+     objects = []
+     enemies = []
+     while True:
+         typ = xs.pop(0)
+         if typ == ";":
+             break
+         if typ == "m":
+             # m enemy-x enemy-y enemy-dir enemy-speed
+             enemies.append(take(xs, 4))
+         else:
+             # object-kind object-x object-y object-r 
+             objects.append((typ, tuple(take(xs, 3))))
+ 
+     memory.enemies = enemies # latest data only
+     memory.objects.update(objects) # keep unique (it is a set)
+ ||<
+ 
+ I'm getting bored (again).
+ If the time limit is too long, I get bored in the middle of the game, and I guess one of the reasons is that I'm doing it alone in my room. It might be fun if a few of us got together and had a good time.
+ 
+ 
+ And for now, let's hold off on looking away and make it to the finish line on the smallest map. Otherwise, I'm afraid I'll just throw it away.
+ 
+ -----
+ 
+ >|python|
+ >>> map(apply, [int, str, float], "1 1 1".split())
+ [1, '1', 1.0]
+ ||<
+ Hmm.
+ 
+ >|python|
+ >>> [f(x) for f, x in zip([int, str, float], "12 34 56".split())]
+ [12, '34', 56.0]
+ ||<
+ Hmm.
+ 
+ -----
+ 
+ At any rate, I tried to reach the goal without thinking about it.
+ 
+ >|python|
+     from math import sin, cos, pi
+     rdir = dir / 180 * pi # radian
+     speed = 1
+     dx = speed * cos(rdir)
+     dy = speed * sin(rdir)
+     cp = -x * dy + y * dx
+     print x, y, dx, dy
+     if cp > 0:
+         s.send("ar;")
+     else:
+         s.send("al;")
+ ||<
+ 
+ I really don't think about anything, I just keep pushing toward the goal. And since the angle goes too far and then back again, he wobbles along, shaking his head. Cute!
+ To avoid wobbling, I need to try to calculate my current angular velocity and then the angular acceleration when I am turning.
+ 
+ But that's not the minimum. Should the priority be not falling into a crater? No, but I still need to know how fast I am spinning.
+ 
+ -----
+ 
+ Ahhh. B 777;T ... when a collision occurs ... ;; so I guess a simple space delimiter won't do.
+ 
+ -----
+ 
+ I've tried to calculate the angular velocity. I should create an internal model to simulate where my position will be if I keep going, but it's too much of a hassle.
+ "If we were going at this speed, we wouldn't be able to dodge the crater!" If you don't make a decision, you can't avoid the crater. But it's a pain in the ass.
+ </body>
+ <comments>
+ <comment>
+ <username>inajob</username>
+ <body>Trying with seniors in the lab. It's fun, but it's going to be very troublesome later on</body>.
+ <timestamp>1215874617</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-07-12 https://nishiohirokazu.hatenadiary.org/archive/2008/07/12]

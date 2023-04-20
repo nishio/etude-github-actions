@@ -1,0 +1,166 @@
+Hatena2008-01-23
+code:hatena
+ <body>
+ *1201048867*Gy.
+ Oyasama! There is something white in the sky! (Can I take a paid holiday?
+ 
+ **1201049389*Snow is cold, cold, cold.
+ We asked 100 small people in their minds.
+ Would you like to take a paid vacation today?
+ 
+ yes: 30 people
+ 
+ Don't you want to go to work today?
+ 
+ yes: 98 people
+ 
+ *1201049529*My heart hurts.
+ Just the thought of going out in this snow makes my heart squeak!
+ 
+ *1201049796* Oh no!
+ I'm not sure if I just don't want to go outside or if I'm really sick.
+ 
+ **1201050457* Shortest walking course
+ I am searching for a short walking course because the usual 15-minute walk from Nagatacho is impossible.
+ 
+ Okay, let's take the Asakusa line at Oshiage to Asakusa and then take the Ginza line.
+ 
+ *1201053667* When going to Asakusa from Keisei line
+ 
+ I didn't have to get off at Oshiage, but I did again.
+ 
+ *1201056404*Sigh, I see Akasaka.
+ 
+ I missed the ride.
+ 
+ *1201092199*I'm leaving early today.
+ If I don't go home early and wash and dry my clothes, I won't have clothes to wear tomorrow.
+ 
+ *1201104197*Title TBD
+ >|javascript|
+ function facto(n){
+     if(n == 0){
+         return 1;
+     }else{
+         return n * facto(n - 1);
+     }
+ }
+ 
+ facto(5); //=> 120
+ ||<
+ 
+ >|javascript|
+ // Task: Calling with a no-argument function returns Task or false
+ function tFinal(){
+     return false;
+ }
+ 
+ // Continuation: 1-argument function that returns a Task when called.
+ var result;
+ function cFinal(x){
+     result = x;
+     return tFinal;
+ }
+ 
+ // Main loop
+ var task = tFinal;
+ while(task){
+     task = task()
+ }
+ ||<
+ 
+ >|javascript|
+ function facto(n){
+     if(n == 0){
+         return 1;
+     }else{
+         return n * facto(n - 1);
+     }
+ }
+ 
+ // Task: Calling with a no-argument function returns Task or false
+ function tFinal(){
+     return false;
+ }
+ 
+ function makeTFacto(n, cont){
+     return function tFacto(){
+         if(n == 0){
+             return cont(n)
+         }else{
+             return cont(n * facto(n - 1))
+         }
+     }
+ }
+ // Continuation: 1-argument function that returns a Task when called.
+ var result;
+ function cFinal(x){
+     result = x;
+     return tFinal;
+ }
+ 
+ // Main loop
+ var task = makeTFacto(5, cFinal);
+ while(task){
+     console.log(task);
+     task = task()
+ }
+ 
+ console.log(result);
+ -----
+ tFacto()
+ tFinal()
+ 120
+ ||<
+ 
+ >|javascript|
+ // Task: Calling with a no-argument function returns Task or false
+ function tFinal(){
+     return false;
+ }
+ 
+ function makeTFacto(n, cont){
+     return function tFacto(){
+         if(n == 0){
+             return cont(1)
+         }else{
+             var cont2 = makeCMul(n, cont);
+             return makeTFacto(n - 1, cont2);
+         }
+     }
+ }
+ 
+ function makeCMul(n, cont){
+     return function cMul(m){
+         cont(n * m)
+     }
+ }
+ // Continuation: 1-argument function that returns a Task when called.
+ var result;
+ function cFinal(x){
+     result = x;
+     return tFinal;
+ }
+ 
+ // Main loop
+ var task = makeTFacto(5, cFinal);
+ while(task){
+     console.log(task);
+     task = task()
+ }
+ 
+ console.log(result);
+ -----
+ tFacto()
+ tFacto()
+ tFacto()
+ tFacto()
+ tFacto()
+ tFacto()
+ 120
+ ||<
+ 
+ Am I correct in understanding that this is CPS? ＞Someone who knows more about it
+ </body>
+
+[Hatena Diary 2008-01-23 https://nishiohirokazu.hatenadiary.org/archive/2008/01/23]

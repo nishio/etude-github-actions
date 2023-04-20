@@ -1,0 +1,350 @@
+Hatena2013-03-15
+code:hatena
+ <body>
+ *1363342076*Automatically generate tests for code with state Part 2
+ Last time, we implemented an implementation based on an ambiguous specification and applied automated tests using BLUE* to it. As a result, we confirmed that the automated test generation would run into the point that the specification does not specify whether it should be an error if open after open, or whether it is possible to reopen after close. This time, the specification was even more ambiguous than the previous version. This time, we will start from a point where the specification is even more ambiguous than last time.
+ 
+ ** Initial specifications for this time
+ "Make some kind of CSV that reads and retrieves items, just one line first."
+ 
+ This is terrible...
+ 
+ Note that in this entry, after some implementation, I will include specification changes that make you want to say, "Tell me that first.
+ 
+ For code readability, quotation marks will be denoted by | and backslash by b.
+ 
+ ** This initial implementation
+ 
+ Here is the first implementation of this issue. No matter what I do, I get an error!
+ 
+ >|python|
+ def parse(s):
+     raise NotImplementedError
+ ||<
+ 
+ 
+ ** This initial test
+ 
+ Of course, there is no such thing as a perfect test from the start, so this starts out pretty badly, too. There are no backslashes or commas yet.
+ 
+ >|python|
+ e_plus = ['a', '||', '|a|']
+ e_minus = ['|']
+ ||<
+ 
+ ** Improved implementation
+ 
+ In the meantime, I'll try to pass at least the given test.
+ 
+ >|python|
+ def parse(s):
+     in_quote = False
+     for c in s:
+         if c == '|':
+             in_quote = not in_quote
+ 
+     if in_quote: raise AsserionError
+ ||<
+ 
+ When I run the test with this, the automated tester asks, "Shouldn't "aa" be Fail?" the auto-tester asks, "Don't you have to fail "aa"? I added it to the test.
+ 
+ >||
+ 3: for input 'aa': dfa said False, but target said True
+ ||<
+ 
+ The automated tester says it can't find any more problems with input sequences of less than 20 lengths when the tests are added up. Congratulations, we're happy.
+ 
+ ** Specification change
+ 
+ You say, "Well, this implementation only checks for quotation marks and other characters, but of course you can't escape the quotation marks with a backslash. Huh? Didn't the spec say CSV, so you know what I mean!"
+ 
+ Well, I knew that. Add a backslash (b) to the characters that could appear and run the automated test again.
+ 
+ It is pointed out that it should first Fail on input 'b' but does not. We should fix the implementation.
+ 
+ >||
+ 3: for input 'b': dfa said False, but target said True
+ ||<
+ 
+ >|python|
+ def parse(s):
+     in_quote = False
+     to_escape = False
+     for c in s:
+         if c == '|':
+             in_quote = not in_quote
+         elif c == 'b':
+             to_escape = True
+ 
+     if in_quote: raise AsserionError
+     if to_escape: raise AsserionError
+ ||<
+ 
+ The automated test will now report "no problems found".
+ Well, a failed test indicates the presence of a bug, but a successful test does not indicate the absence of a bug.
+ The current implementation always Fails when a backslash appears. And I think it is right for you, the automated tester, to behave that way too.
+ People need to be taught that that is not right.
+ 
+ ** Add successes with backslashes to the test
+ 
+ Let's add 'ab|a' as an example of success. This must succeed because the backslash escapes the quotation marks.
+ With the addition of this test case, Automated Test-kun will propose several test cases.
+ >||
+ 5: for input 'a|': dfa said True, but target said False
+ 6: for input 'ab': dfa said True, but target said False
+ ||<
+ Let's add this to the test.
+ 
+ >||
+ 14: for input 'ab|': dfa said True, but target said False
+ ||<
+ 
+ This is an input that should be successful, as per the auto-test-kun. The implementation side needs to be fixed.
+ 
+ ** Implement escaping
+ 
+ >|python|
+ def parse(s):
+     in_quote = False
+     to_escape = False
+     for c in s:
+         if to_escape:
+             to_escape = False
+             continue
+ 
+         if c == '|':
+             in_quote = not in_quote
+         elif c == 'b':
+             to_escape = True
+ 
+     if in_quote: raise AssertionError
+     if to_escape: raise AssertionError
+ ||<
+ 
+ Fix the implementation and run the test again, adding about three suggested test cases.
+ 
+ >||
+ 13: for input 'aba': dfa said False, but target said True
+ 14: for input 'ab|': dfa said False, but target said True
+ 15: for input 'abb': dfa said False, but target said True
+ ||<
+ 
+ The auto-test-kun ran for about a minute, and then Ctrl-C because it couldn't find the problem.
+ The current implementation here is "search all input columns of 20 or less," but it could be improved to set an upper limit in time or to search at random.
+ This time we will change the search to search for input columns of 10 or less. We found that 6798 tests were running for lengths of 10 or less.
+ 
+ **Add value test
+ 
+ Since the state transitions seem to be working reasonably well, we can add a test for the value, since the input sequence in e_plus "should succeed", we can write a test for "should return this value if it succeeds". We don't have to worry about what kind of test to add.
+ 
+ >|python|
+ def parse(s):
+     """
+     >>> parse('a')
+     ['a']
+     """
+     ...
+ ||<
+ 
+ Of course, I'm only implementing state transitions now, so I'm going to Fail all over the place. Let's fix them in order.
+ 
+ >||
+ **********************************************************************
+ File "use_bluestar2.py", line 71, in __main__.parse
+ Failed example:
+     parse('a')
+ Expected:
+     ['a']
+ Got nothing
+ **********************************************************************
+ ||<
+ 
+ First one.
+ >|python|
+ def parse(s):
+     """
+     >>> parse('a')
+     ['a']
+     """
+     in_quote = False
+     to_escape = False
+     result = []
+     buf = []
+     for c in s:
+         if to_escape:
+             to_escape = False
+             continue
+ 
+         if c == '|':
+             in_quote = not in_quote
+         elif c == 'b':
+             to_escape = True
+         else:
+             buf.append(c)
+ 
+     if in_quote: raise AssertionError
+     if to_escape: raise AssertionError
+     result.append(''.join(buf))
+     return result
+ ||<
+ 
+ I added it all up.
+ >|python|
+ def parse(s):
+     """
+     >>> parse('a')
+     ['a']
+     >>> parse('||')
+     ['']
+     >>> parse('|a|')
+     ['a']
+     >>> parse('ab|a')
+     ['a|a']
+     >>> parse('aba')
+     ['aa']
+     >>> parse('ab|')
+     ['a|']
+     >>> parse('abb')
+     ['ab']
+     """
+     in_quote = False
+     to_escape = False
+     result = []
+     buf = []
+     for c in s:
+         if to_escape:
+             buf.append(c)
+             to_escape = False
+             continue
+ 
+         if c == '|':
+             in_quote = not in_quote
+         elif c == 'b':
+             to_escape = True
+         else:
+             buf.append(c)
+ 
+     if in_quote: raise AssertionError
+     if to_escape: raise AssertionError
+     result.append(''.join(buf))
+     return result
+ ||<
+ 
+ They also pass all the tests.
+ 
+ ** It's time for a comma.
+ 
+ You said "CSV," why are you ignoring the comma? Huh? First of all, one element? Don't take your time, get on with it and deal with the comma."
+ 
+ Yes, yes, then let's add commas to the possible characters and run the test again, shall we?
+ 
+ Mr. Automated Test asks a few questions again: '' Is ',' a valid input?' a,' is?' ab,'?
+ 
+ >||
+ 4: for input ',': dfa said False, but target said True
+ 8: for input 'a,': dfa said False, but target said True
+ 24: for input 'ab,': dfa said False, but target said True
+ ||<
+ 
+ When I answer that, they say, "We didn't find any mismatches with an input of less than 10 lengths, by the way, it took us about 5 seconds to test about 160,000 cases.
+ 
+ >||
+ no mismatch found in len <= 10 (161404 tests)
+ python use_bluestar2.py  3.98s user 0.34s system 96% cpu 4.483 total
+ ||<
+ 
+ ** Test for values containing commas
+ Add the test.
+ >||
+     >>> parse(',')
+     ['', '']
+     >>> parse('a,')
+     ['a', '']
+     >>> parse('ab,')
+     ['a,']
+ ||<
+ 
+ Add the implementation so that it passes.
+ >||
+         elif c == ',':
+             result.append(''.join(buf))
+             buf = []
+ ||<
+ 
+ The test passed without incident. I'm so happy.
+ 
+ ** Missing test
+ 
+ Some of you may have already noticed the intuition, but this implementation returns ['', ''] when you type '|,|' because it doesn't use the in_quote flag to disable commas.
+ It seems that DFA, which is built around "whether or not an exception occurs when you put a string in parse," fails to realize that it is important to test that input. Because the value is wrong, but success is correct.
+ 
+ >|python|
+ def is_target_ok(s):
+     try:
+         parse(s)
+     except:
+         return False
+     return True
+ ||<
+ 
+ So, let's replace this predicate function with one that says "parsed successfully and the length of the returned list is 1" and start over. Actually, it would be better to keep running the tests we have created so far, but for the sake of experimentation, we will discard the tests and start with the new predicate.
+ 
+ >|python|
+ def is_target_ok(s):
+     try:
+         assert len(parse(s)) == 1
+     except:
+         return False
+     return True
+ 
+ e_plus = []
+ e_minus = []
+ ||<
+ 
+ However, it seems that '|,|' cannot be discovered in this case. Based on the data so far, the auto-tester assumes that '|,' is an error if 'a' does not come after '|', and since '|,' is in fact an error, it says "I knew it" and does not search further. As a result, you cannot notice that '|,|' succeeds.
+ 
+ When I let them do a full search, they pick up a few new mismatches: ' I'm getting some nasty attacks like '|a||' and '|b||', but I didn't get the '|,|' I was hoping for.
+ 
+ >||
+ 13: for input 'ba': dfa said False, but target said True
+ 3: for input 'b': dfa said True, but target said False
+ 26: for input 'a||': dfa said False, but target said True
+ 182: for input '|ba|': dfa said False, but target said True
+ 46: for input '|b|': dfa said True, but target said False
+ 181: for input '|baa': dfa said True, but target said False
+ 186: for input '|b||': dfa said False, but target said True
+ 190: for input '|bb|': dfa said False, but target said True
+ 194: for input '|b,|': dfa said False, but target said True
+ no mismatch found in len <= 10 (1398100 tests)
+ python use_bluestar2.py  38.29s user 2.09s system 84% cpu 47.662 total
+ ||<
+ 
+ As for the mismatches found in the entire search, I have the impression that some interesting ones are included, but others are mixed in.
+ I wonder if it would be better to search without the "will fail" first, and then do a separate smaller sized full search only when it is not found.
+ 
+ ** Differences from last time
+ 
+ Ah, I see. Last time, the input string was a method call, and the success/failure decision was "whether or not an exception is thrown", so the property "if an exception is thrown with an input string, then any string added to it will also throw an exception" was correct.
+ 
+ ** End
+ 
+ The truth is, it's roughly when the CVS parser is finished that you say, "Well, didn't the spec say that quotation marks can be escaped with quotation marks?" Tell me first!" but I didn't get there.
+ 
+ ** Postscript
+ 
+ This time code: https://github.com/nishio/algorithm/blob/master/use_bluestar2.py
+ </body>
+ <comments>
+ <comment>
+ <username>Reader</username>.
+ <body>I am always interested in reading your work. <br>I understand (or think I do) what you intend to do, but I don't have the full picture of the code, so it would be great if you could put it up on github in a working state at hand. <br>Thank you for your consideration. </body>
+ <timestamp>1363371554</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I have put the verification code for this article on Github. </body>
+ <timestamp>1363509738</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-03-15 https://nishiohirokazu.hatenadiary.org/archive/2013/03/15]

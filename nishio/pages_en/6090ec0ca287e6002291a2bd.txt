@@ -1,0 +1,37 @@
+Hatena2013-09-06
+code:hatena
+ <body>
+ *1378398178*About Python's dateutil
+ I read "<a href='http://d.hatena.ne.jp/CortYuming/20130821/p1'>A note on how to get the datetime of the 1st of the following month in Python</a>" and thought that if I were you, I would not design it like this, so as a reminder I would not have designed it this way, so I'll put it in the
+ 
+ The original entry says the following to take the 1st of the following month or the last day of the current month.
+ >|python|
+ >>> today + relativedelta(months=+1, day=1)
+ datetime.datetime(2013, 9, 1, 13, 21, 47, 12133)
+ 
+ >>> today + relativedelta(day=99)
+ datetime.datetime(2013, 8, 31, 18, 33, 28, 167294)
+ ||<
+ 
+ Why does months=+1 mean "the next month" but day=1 is "one day" instead of "the next day"? why does day=99 make it "the last day" instead of "99 days later"?
+ 
+ Although it is not clearly stated in the original entry, relativedelta takes both arguments with and without "s," such as months and months, days and days, etc. The one with "s" is relative and the one without "s" is absolute. The one with "s" is relative and the one without "s" is absolute. The difference is hard to notice, so some people may look at "months=+1" in the code of the original entry and mistake it for a relative specification with a plus or minus sign, but "months=+1" means exactly the same thing as "months=1".
+ 
+ >|python|
+ >>> datetime.date(2013, 2, 20) + relativedelta(day=1)
+ datetime.date(2013, 2, 1)
+ 
+ >>> datetime.date(2013, 2, 20) + relativedelta(days=1)
+ datetime.date(2013, 2, 21)
+ 
+ >>> datetime.date(2013, 2, 20) + relativedelta(month=1)
+ datetime.date(2013, 1, 20)
+ 
+ >>> datetime.date(2013, 2, 20) + relativedelta(months=1)
+ datetime.date(2013, 3, 20)
+ ||<
+ 
+ It may be easy for those who know what they are doing to write code, but most code is read more times than it is written, so it is better to design code with a focus on readability. In that sense, this library is not good. I hope someone will make a better one before it accidentally becomes the standard. （I hope someone will make a better one before it becomes a standard by accident.)
+ </body>
+
+[Hatena Diary 2013-09-06 https://nishiohirokazu.hatenadiary.org/archive/2013/09/06]

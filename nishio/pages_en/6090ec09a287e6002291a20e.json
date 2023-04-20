@@ -1,0 +1,98 @@
+Hatena2012-04-06
+code:hatena
+ <body>
+ *1333684796*Combinator logic and sequel in Alloy
+ This time, I tried to write it in a term rewriting style. Let's start with the K combinator.
+ >||
+ open util/ordering[Term]
+ 
+ some abstract sig Term {}
+ 
+ one sig K extends Term {}
+ 
+ sig Apply extends Term {
+   f, g: Term
+ }
+ 
+ fact {
+   all x, y: Term | (x -> y) in (f + g) => y not in (x.prevs + x)
+ }
+ 
+ pred equal (x, y: Term) {
+   x in Apply and x.f in Apply and x.f.f = K and y = x.f.g
+ }
+ 
+ fun apply(x, y: Term): Term{  
+   {a: Apply | a.f = x and a.g = y }
+ }
+ 
+ run {
+   some x, y: Term | equal[x, y]
+ } for 5 Term
+ ||<
+ 
+ I put "all x, y: Term | (x -> y) in (f + g) => y not in (x.prevs + x)" to prohibit it because it is hard to see and explain when a cycle occurs where one term A uses B and term B uses A. (PS: y in x.nexts is better.) I don't think the naming is appropriate in this definition of EQUAL, because EQUAL with itself is false. Well, now if I make it look for the predicate of run "some x, y: Term | equal[x, y]", i.e. "there are terms x and y, and the two are equal", it finds the solution as expected.
+ 
+ [f:id:nishiohirokazu:20120406123818p:image]
+ 
+ Since y is K and Apply3 is KK applied to K, KK, and x is KK applied to KK, (KK)(KK). So, by the rule Kxy=x, (KK)(KK) = K K K (KK) = K. So, we are happy.
+ 
+ I'd like to introduce S combinator to it, but it's too much trouble to implement S combinator as it is in this equal implementation. I'll make a fact to check if there is any bug in it when I clean it up.
+ 
+ >||
+ pred equal_k (x, y: Term) {
+ 	x in Apply and x.f in Apply and x.f.f = K and y = x.f.g
+ }
+ pred equal_k2 (x, y: Term) {
+ 	one a, b: Term | x = apply[apply[K, a], b] and y = a
+ }
+ check {
+ 	some x, y: Term | equal_k[x, y] iff equal_k2[x, y]
+ }
+ ||<
+ 
+ Oh, I can find a counterexample. So does that mean equal_k and equal_k2 are not equivalent?
+ 
+ [f:id:nishiohirokazu:20120406125530p:image]
+ 
+ It seems that equal_k2[$x, $y] is false in this case. Ah, {a, b: Term | $x = apply[apply[K, a], b]} seems to be empty. Not what I expected. I heard {a, b: Term | a = apply[K, b]} is {Apply$3->K$0}. Huh? Is it returning a relation? Oh, it's just showing that way because the comprehension notation is a two-tuple.
+ 
+ Apply$2 = apply[Apply$3, Apply$3] is false. I wonder what it means.
+ 
+ Ah, I get it: apply[Apply$3, Apply$3] is {Apply$2, Apply$0}. Oh, so there can be multiple instances of Apply applied to the exact same argument.
+ 
+ Then let's put these restrictions in place.
+ >||
+ fact {
+   all x, y: Term | lone apply[x, y]
+ }
+ ||<
+ For any term x, y, there is at most one apply[x, y].
+ 
+ Now I can't find a counterexample.
+ 
+ ** The number of terms...
+ 
+ I implemented S, but I suspect that a, b, and c are O(N^3), given that quantifiers are expanded for a set of scalars.
+ >||
+ pred equal_s (x, y: Term) {
+ 	one a, b, c: Term {
+ 		x = apply[apply[apply[S, a], b], c]
+ 		and
+ 		y = apply[apply[a, c], apply[b, c]]
+ 	}
+ }
+ ||<
+ I can't find the solution in 8 Term, but can I find it if I increase it more or am I wrong in the first place?
+ 
+ Oh, there is at least one mistake. With the current definition of equal, it's only equal to the extent that can be reached with a single term rewrite. I'll try rewriting it.
+ >||
+ pred equal (x, y: Term) {
+ 	equal_k[x, y] or equal_s[x, y] or 
+ 	one z: Term | equal[x, z] and equal[z, y]
+ }
+ ||<
+ I got an error saying that the predicate should not be recursively called. Hmmm, I wonder what to do.
+ </body>
+
+[Hatena Diary 2012-04-06 https://nishiohirokazu.hatenadiary.org/archive/2012/04/06]

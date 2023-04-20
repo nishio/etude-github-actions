@@ -1,0 +1,28 @@
+Wrap setTimeout with Promise
+from [Jest note].
+Wrap setTimeout with Promise
+
+before
+code:ts
+ export function sendToServer(text: string) {
+   if (...) {
+     ...
+   } else {
+     // bot is sleeping
+     setTimeout(() => {
+       sendToServer(text);
+     }, 1000);
+   }
+ }
+
+after
+code:ts
+ export function sendToServer(text: string) {
+   if (...) {
+     ...
+   } else {
+     return new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
+       sendToServer(text, newLogs);
+     });
+   }
+ } 

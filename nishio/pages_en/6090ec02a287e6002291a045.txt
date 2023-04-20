@@ -1,0 +1,41 @@
+Hatena2009-12-07
+code:hatena
+ <body>
+ *1260196022*Memo on how to suck out iPhone SMS
+ Reprinted from Twitter
+ 
+ Trigger:.
+ >>
+ nishio iPhone SMS is in chat format, which is convenient for sloppy conversations, but it's a hassle to search for it when you think "what was that? If there is a way to store them in text format on my Mac, I can just search for them, but I'm not sure if there is a better way.
+ nishio Hmmm, I know that my iPhone backup by iTunes is in ~/Library/Application Support/MobileSync/Backup/, but I'm not sure how to get just the SMS data out of there. I don't understand.
+ nishio What I want to do is to backup my iPhone SMS conversations in text format so that I can search and find the desired content when I want to.
+ <<
+ 
+ Information 1
+ >>
+ ento @nishio http://insend.de/ may help with your sms hack
+ <<
+ 
+ So I go to ~/Library/Application Support/MobileSync/Backup/***/3d0d7e.... .mddata as a binary plist and try to restore it with plutil. However, I get an error message saying that it cannot be restored correctly.
+ 
+ Information 2
+ >>
+ konomi @nishio SMS>csv http://www.tom.sfc.keio.ac.jp/~sakai/d/?date=20090612
+ <<
+ 
+ >>
+ This file is a SQLite file, so sqlite3 -csv -separator ',' 3d0d7e5fb2ce288813306e4d4636395e047a3d28.mddata "select * from message;" > output.csv to CSV You can convert it to CSV with output.csv.
+ <<
+ 
+ Oh, I heard that the latest iTunes uses sqlite instead of binary plist. I tried the code written in the article and got csv easily. That's great.
+ 
+ Unfortunately, though, it doesn't display photos, videos, or emoticons. The emoticons are assigned the appropriate code, so you can just replace them, but I don't know where the image reference is written. Perhaps it is recorded somewhere other than the MASSAGE table.
+ 
+ *1260201742* Bismuth clean
+ I bought more.
+ 
+ 
+ f:id:nishiohirokazu:20091208010137j:image
+ </body>
+
+[Hatena Diary 2009-12-07 https://nishiohirokazu.hatenadiary.org/archive/2009/12/07]

@@ -1,0 +1,150 @@
+ARC112
+[AtCoder Regular Contest 112 - AtCoder https://atcoder.jp/contests/arc112]
+
+[https://gyazo.com/fbcc5d959aff91362239a1d0f6cec5fe]
+[https://gyazo.com/e1acb9683594373b4f5aa9aca7537e96]
+
+A
+　Just calculate the trigonometric numbers.
+	(1): I made a hasty assumption that N = R - L - 1 after looking at the first sample (6, 2).
+　(2): Cases where N is negative (like 100 100) are taken care of.
+ code:python
+  def main():
+      T = int(input())
+      for _i in range(T):
+          L, R = map(int, input().split())
+          N = R - 2 * L + 1  # (1)
+          if N < 0:  # (2)
+              print(0)
+          else:
+              print(N * (N + 1) // 2)
+　I thought I didn't need to put the trigonometric formulas together in a library because they are so easy, but it's not good to return a strange value without warning when you put in a negative number by mistake, so I put them in the library.
+
+B
+　Sum of the following 4 ways of intervals
+　　Not inverted.
+　　Reverse and reduce
+　　Reduce and Reverse
+　　Invert, reduce, invert.
+　The first one I wrote didn't pass the sample, and I modified it by adding the code to solve the smaller sample by brute force and comparing the two.
+　　(1) I took care that s2 and so on are undefined unless you go through the C>=1 path, but the bottom line is that if C=0, then the solution is 1.
+　　(2) (3) I fixed the part where the calculations don't match, but not a good write-up.
+  code:python
+   def solve(B, C):
+       # B-C/2 .. B
+       s1 = B - C // 2
+       e1 = B
+   
+       if C >= 1:
+           # -B-(C-1)/2 .. -B
+           s2 = -B - (C - 1) // 2
+           # -B .. -B + (C-1)/2
+           e2 = -B + (C - 1) // 2
+       if C >= 2:
+           # B .. B + (C-2)//2
+           e1 = B + (C - 2) // 2
+   
+       if C < 1:  # (1)
+           return e1 - s1 + 1
+   
+       ret = e1 - s1 + 1 + e2 - s2 + 1
+       if s1 <= e2 and s2 <= e1:
+           # overlap
+           ret -= e2 - s1 + 1
+           if s1 < s2:  # (2)
+               ret += s2 - s1
+           if e1 < e2:  # (3)
+               ret += e2 - e1
+   
+       return ret
+ Counting the number of points contained in multiple intervals, wasting time when it was buggy, and writing conditional branches when there are more than two intervals in the first place was hard, so I put it all together in a library.
+  code:python
+   def numPointsInSpans(spans):
+       timeline = []
+       for start, end in spans:
+           assert start <= end
+           timeline.append((start, 0, 1))
+           timeline.append((end, 1, -1))
+       prevStart = None
+       value = 0
+       ret = 0
+       for position, _, diff in sorted(timeline):
+           prevValue = value
+           value += diff
+           if prevValue == 0 and value > 0:
+               prevStart = position
+           elif prevValue > 0 and value == 0:
+               ret += position - prevStart + 1
+       return ret
+  	
+  	def solve(B, C):
+       if C == 0:
+           return 1
+   
+       spans = [(B - C // 2, B)]
+       if C >= 1:
+           spans.append((-B - (C - 1) // 2, -B))
+           spans.append((-B, -B + (C - 1) // 2))
+       if C >= 2:
+           spans.append((B, B + (C - 2) // 2))
+   
+       return numPointsInSpans(spans) 
+　By the way, the story of why it goes four ways.
+　　We'll call the inversion operation A and the decrement operation B. We'll use + to denote one or more consecutive
+　　First, an AA that does two inversions in a row is futile.
+　　If there are three or more reversals, we have AB+AB+A. The Bs in these two places cancel each other out, so there is no gain, and we can cut down until one of them is zero.
+　　　And then we can have AA as a result of that, so we can cut that down.
+　　So the value you can make by doing A more than 3 times can always be made by doing A less than 2 times.
+　　Next, for the form B+AB+, B cancels out for the same reason
+　　　Therefore, the number of operations that can be made with B existing across A can always be made with a shorter operation.
+　　As a result, only four ways remain: B+, B+A, AB+, and AB+A.
+
+C
+ When you have a choice, it's up to Greedy to decide which one to choose.
+ With 8 minutes left, he realized that he should choose first when it is beneficial not to change hands and added (1).
+　Still no resolution of WA and timeout.
+　One letter bug that I ended up forgetting the minus of (2).
+	code:python
+	 def main():
+      N = int(input())
+      PS = [0] + [int(x) - 1 for x in input().split()]
+      print(solve(N, PS))
+  
+  
+  def solve(N, PS):
+      from collections import defaultdict
+      children = defaultdict(list)
+      for i in range(1, N):
+          children[PS[i]].append(i)
+  
+      cost = {}
+      sign = {}
+      for i in reversed(range(N)):
+          if len(children[i]) == 0:
+              cost[i] = 1
+              sign[i] = -1
+          elif len(children[i]) == 1:
+              cost[i] = cost[children[i][0]] + 1
+              sign[i] = sign[children[i][0]] * -1
+          else:
+              # choise
+              cs = [(cost[x], sign[x]) for x in children[i]]
+              # debug(i, cs, msg=":i,cs")
+              rc = 0
+              rs = 1
+              for c, s in sorted(cs):  # (1)
+                  if s == 1 and c < 0:
+                      rc += rs * c
+              for c, s in sorted(cs):
+                  if s == -1:
+                      rc += rs * c
+                      rs *= -1
+              for c, s in sorted(cs):
+                  if s == 1 and c >= 0:
+                      rc += rs * c
+              cost[i] = rc + 1
+              sign[i] = -rs  # (2)
+  
+      # debug(cost, sign, msg=":cost, sign")
+      return (N + cost[0]) // 2
+

@@ -1,0 +1,58 @@
+Hatena2012-06-19
+code:hatena
+ <body>
+ *1340115934* What we want to build: a site to learn core concepts of programming languages Part 2
+ Continued from <a href='http://d.hatena.ne.jp/nishiohirokazu/20120501/1335846610'>What we want to build: a site to learn core concepts of programming languages</a>.
+ 
+ The site itself and its description in Japanese are not yet complete, but we have a variety of components in place.
+ 
+ ** Completed
+ 
+ - Real-time SVG visualization of ASTs in JavaScript (using Esprima, unsatisfactory look and feel, room for improvement)
+ - Implementation of LISP in JavaScript (was supposed to be just a parser, but now I can define functions, lexical scopes, macros, etc.)
+ - JavaScript recursion and descent parser for formulas in medial notation (operator type and priority can be changed in the browser, which is also better than planned).
+ - Brainf*ck implementation in JavaScript (room for improvement around IO)
+ 
+ ** Ongoing
+ 
+ - LazyK interpreter in JavaScript (parser completed, limited to SKI notation, visualization part being created before execution part)
+ - Forth interpreter in JavaScript (to be completed in a few days)
+ - EDSAC emulator in JavaScript (Python version implementation is buggy and doesn't work. Fix it after LazyK)
+ 
+ -----
+ 
+ So what's next? I am thinking about this.
+ 
+ ** Previously taken over
+ - A virtual machine with about the same number of instructions as EDSAC, but with a simpler architecture: what would be the design: 1 byte opcode, 1 byte address part, ASCII character set, 8 bits per column with paper tape for both input and output?
+ -- It's okay to have separate instructions for adding 2-byte words as integers and for adding 2-byte words as floating-point numbers (more advanced than EDSAC, though), because that would demonstrate "using the wrong instruction and getting terrible results" and explain the need for type information.
+ - Pages that convert Python code to byte code and display it, no page transitions and moving in real time.
+ - Pages that visualize Python code as ST and AST, respectively, and that work without page transitions and in real time.
+ - If I do a demo of using the output of a math parser to output FORTH code, will I be able to understand the feelings of a system language that spits out bytecode and runs in a VM?
+ 
+ ** GC
+ 
+ - What kind of demonstration is needed to teach GC?
+ -- If we have a language that only allows new_obj(), new_tuple(obj, obj), binding to variables, and destructive rewriting of tuple, we can demonstrate a situation where cross-references can be made and not deleted by the reference counting method for now.
+ -- if you keep repeating it and the heap fills up, mark & sweep runs, can also be demonstrated
+ -- Come to think of it, I made something like this a long time ago... <a href='http://www.nishiohirokazu.org/narVisualizer/'>NarVisualizer</a> and the mail address is still naist.jp, no longer the author. I can't even send an email to the author anymore. Who made this one?
+ 
+ ** Concurrency
+ 
+ - I was thinking that if we had a processing system that would try all patterns of which thread to execute at which timing, we could demonstrate problematic code and non-problematic code, but with two threads of 10 instructions, the total number of patterns would be 180,000. That's a bit too much to ask, isn't it?
+ - Then a processing system that can put a global execution order on the instructions so that we can at least be convinced by actually running the examples that fail?
+ - Since we would like to execute various patterns in a single code, the order of execution must be able to be specified in a different way from the code.
+ 
+ -----
+ 
+ Well, I've dumped the ideas out of my brain, but for now, I might as well just complete what is in progress and clear my head without being in a hurry. The site for the explanation is not ready at all.
+ </body>
+ <comments>
+ <comment>
+ <username>mad-p</username>
+ <body>This may be helpful. <br><br>Accelerating Concurrency Bugs<br>https://www.facebook.com/note.php?note_id=226839507361910<br><br>An accelerated testing technique for finding concurrency control bugs. I heard it was implemented in a Java debugger called Jinx, but unfortunately I have never used it</body>.
+ <timestamp>1340164327</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-06-19 https://nishiohirokazu.hatenadiary.org/archive/2012/06/19]

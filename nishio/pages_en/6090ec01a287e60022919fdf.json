@@ -1,0 +1,115 @@
+Hatena2009-08-01
+code:hatena
+ <body>
+ *1249105594*Diary
+ I can't do any electronic work today because I'm going out, so I just think about it.
+ 
+ I should buy 16 eneloops instead of worrying about how to power the EEG sensor. The eneloop AA 12-pack HR-3UTG-12BP + eneloop AA 4-pack with remaining capacity check function and quick charger set N-MR58TGS costs about 6500 yen. Even if the brainwave sensor doesn't work or I get bored, I can use eneloop for other purposes.
+ 
+ Oh yeah, and I need to buy some zener diodes.
+ I'll have to build it on a breadboard for now and check its operation to see how much noise it gets or something. I'm having a little trouble with a lot of DC component. Do I need a bandpass filter?
+ 
+ *1249110789*In-house coding
+ Processing is so easy. I was able to create a program to FFT and display data on the train on the way to my outing.
+ 
+ The blue area above is the part where the waveform of the incoming signal is written in real time, which is a random + sine wave since we do not have a sensor to connect in the train at the moment. The green area below is the result of the FFT, which shows a sharp peak at the frequency corresponding to the sine wave.
+ 
+ <img src="http://gyazo.com/c505aa264a439bd28ce8bfc5527d7ce5.png">
+ 
+ Processing code:.
+ >|java|
+ import processing.serial.*;
+ import ddf.minim.analysis.*;
+ import ddf.minim.*;
+ 
+ FFT fft;
+ Serial serial;
+ boolean OFFLINE_TEST = true;
+ int WIDTH = 1024;
+ int HEIGHT = WIDTH / 4 * 2;
+ int BUF_SIZE = 1024;
+ int VALUE_RANGE = 1024; // means 0..1023
+ float buf[] = new float[BUF_SIZE]; // RATIONALE: FFT#forward take float[]
+ float fftResult[] = new float[BUF_SIZE];
+ int photo=-1, prev=-1;
+ int time = 0;
+ 
+ boolean needFFTRedraw = false;
+ 
+ void gotPhotoValue(){
+   buf[time % BUF_SIZE] = photo;
+   time++;
+   if(time % BUF_SIZE == 0){
+     fft.forward(buf);
+     needFFTRedraw = true;
+   }
+ }
+ 
+ void serialEvent(Serial p){
+   int d = serial.read();
+   int value = d / 8, mode = d % 8;
+   if(mode == 0){
+     prev = photo;
+     photo = value * 32;
+   }else if(mode == 1){
+     photo += value;
+     gotPhotoValue(); 
+   }
+ }
+ 
+ void setup() {
+   size(WIDTH, HEIGHT);
+   stroke(255);
+   background(0, 0, 0);
+   serial = new Serial(this,"/dev/cu.usbserial-A9004xwG", 9600);
+   fft = new FFT(BUF_SIZE, 10);
+ 
+ } 
+ 
+ void draw() {
+   if(OFFLINE_TEST){
+     for(int i=0; i < 10; i++){
+       photo = floor(random(512) + 512 * sin(time / 1.0));
+       gotPhotoValue();
+     }
+   }
+   
+   if(time == 0) return;
+   if(needFFTRedraw){
+     fill(0);
+     rect(0, HEIGHT / 2, WIDTH, HEIGHT); 
+     stroke(0, 255, 0);
+     for(int i = 0; i < BUF_SIZE / 2; i++){
+       line(i, HEIGHT, i, HEIGHT - fft.getBand(i) / 256);
+     }
+     needFFTRedraw = false;
+   }
+         
+   fill(0);
+   rect(0, 0, WIDTH, HEIGHT / 2); 
+ 
+   stroke(0, 0, 255);
+   for(int i = 0; i < BUF_SIZE; i++){
+     int oldx = (i + BUF_SIZE - 1) % BUF_SIZE * WIDTH / BUF_SIZE;
+     int newx = i % BUF_SIZE * WIDTH / BUF_SIZE;
+     int oldy = floor(buf[(i + BUF_SIZE - 1) % BUF_SIZE] / VALUE_RANGE * HEIGHT / 2);
+     int newy = floor(buf[i % BUF_SIZE] / VALUE_RANGE * HEIGHT / 2);
+     line(oldx, oldy, newx, oldy);
+     line(newx, oldy, newx, newy);  
+   }
+ }
+ ||<
+ 
+ I wondered if it would flicker, but when I tried erasing it with rect as usual, it surprisingly didn't flicker. Is it because the lines I'm drawing are thin so they don't stand out, or is it because they are double-buffered on their own inside? The latter is not surprising in such a well-designed framework.
+ 
+ Too bad I can't hook up the actual heart rate sensor and try it out until tomorrow night or so. Mwah.
+ </body>
+ <comments>
+ <comment>
+ <username>takashyx</username>
+ <body>The usual way to prevent high frequency noise is to apply a low-pass at the analog signal stage to prevent areasing, then digitally sample the signal and perform an FFT. </body>
+ <timestamp>1249132240</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-08-01 https://nishiohirokazu.hatenadiary.org/archive/2009/08/01]

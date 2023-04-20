@@ -1,0 +1,149 @@
+Hatena2012-11-07
+code:hatena
+ <body>
+ *1352287410*The Future of git (VCS)
+ There's a lot of discussion about how great git is, how it's too flexible and confusing, how the UI is terrible, and so on, but let's look back at a bit of history.
+ 
+ - 1990 CVS
+ - 2000 Subversion
+ - 2003 SVK = Wrap Subverion for distributed version control
+ - 2005 Git
+ - 2008 GitHub = Wrap Git to "limit workflow and make it easy to understand"
+ - 2010 gitflow = Wrap Git to "make workflow limited and easy to understand"
+ - 2012 Here and Now
+ 
+ I am sure that by 2020, "version control with limited and easy-to-understand workflow" such as GitHub and gitflow will become a major player in the market.
+ In the near future, people will say, "It's only elementary school to use Git live," just as they once said, "svn is only for elementary school students, from now on it's SVK,
+ Next, as was once said, "SVK is for junior high school students only, from now on it's (git, hg, bzr)", people started to say that Git wrapped is lame and new generation tools are better (but no one knows which one will be the major one yet),
+ And just as the viral cycle of Git began to turn because "it's major", one of its new generation of tools crossed the chasm and began to be used by non-early adopters,
+ And then the complaints of "it's hard to use" start to erupt again.
+ 
+ 
+ In that sense, I think the <a href='http://developer.cybozu.co.jp/tech/?p=919'>git hazama</a> approach of adding commands to git to match the project workflow is very correct.
+ 
+ *1352295805*Leverage memo: continuous delivery Chapter 12
+ For in-house reading <a href="http://www.amazon.co.jp/gp/product/4048707876/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN= 4048707876&linkCode=as2&tag=nishiohirokaz-22">Continuous Delivery Automating Build, Test, and Deployment for Reliable Software Releases</a> for a preliminary review of Chapter 12, so leverage memo
+ 
+ ** Chapter 12: Managing Data
+ 
+ The life cycle of data is longer than that of an application. It is also larger in scale.
+ 
+ There will always be a need to change the structure of data. How do we minimize disruption?
+ 
+ ** 12.2 Database Scripting
+ 
+ The most important aspect of continuous delivery is that it automates "the process of recreating the environment and running the application on it.
+ All DB initialization and migration needs to be scripted and versioned.
+ 
+ The simplest way to update a DB is to delete and recreate it. If you can do that, do it quickly. But in many cases, there is a lot of data that should not be deleted. What to do?
+ 
+ ** 12.3 Incremental changes
+ 
+ For incremental DB changes, put the table version in the migration script.
+ Create both rollforward and rollback scripts so that they can be reverted if they fail.
+ In this way, it can be mechanically determined how to convert from one version of a table to another.
+ 
+ When making changes that throw away data, copy the data to a temporary table so that it can be reverted in a rollback.
+ After a while, when you can determine that there is no problem, you can delete the temporary table.
+ 
+ ** 12.3.2 Managing orchestrated changes
+ 
+ If multiple apps share the DB, testing should be done in an environment as close to the production environment as possible, as changes made to the DB may affect other apps unexpectedly.
+ 
+ ** Column Technical debt
+ 
+ Technical debt bears interest. If too much debt is accumulated, the only thing that can be done is to repay the interest (maintenance to keep the system running), and it becomes impossible to add new functions.
+ 
+ Most projects are riddled with debt. It is better to just refactor after every change. If you are borrowing from the future, have a repayment plan.
+ 
+ ** 12.4 DB rollback and zero-downtime release
+ 
+ The production environment has two constraints.
+ 
+ - Do not lose data added in a post-upgrade transaction when canceling an upgrade
+ - Must minimize downtime to adhere to SLAs
+ 
+ There are three solutions.
+ 
+ - Keep a copy of the transaction.
+ - Blue-green deployments: keep both old and new versions running
+ - Separate DB migration from application deployment
+ 
+ The first is to record the transaction in some layer so that it can be restored later, not necessarily copied in a layer of DB tables, but if it can be restored from the operation log, event log or transaction log, that's OK.
+ 
+ The second method is to run the old system and the new system in parallel. Even if the new system fails and the old system is reverted, the data in the new system will not be lost.
+ 
+ The third method is to design the app to work with both the new version of the DB schema and the old version of the DB schema when the DB schema is changed. This allows the timing of the app update to be separated from the timing of the DB schema update. Even if the app is reverted to the old version, the DB remains new, so no data is lost.
+ 
+ The method of inserting an abstraction layer between DB accesses described on p. 414 is another method that can be used to protect apps from DB schema changes. The author says that the DB schema is usually changed because the app wants to read/write some value of the DB schema, and every time the DB schema is changed, the maintenance cost of the abstraction layer is incurred.
+ 
+ ** 12.5 Managing test data
+ 
+ There are two problems in managing test data.
+ 
+ - Test Performance
+ - Test Separation
+ 
+ Don't use real data for performance. Real data is too large compared to the purpose of the test.
+ Separate the DB access with an abstraction layer so that it can be replaced by a test double. Or, design it so that it can be replaced by an in-memory DB such as SQLite.
+ 
+ For test isolation, it is important that the data for a test be visible only from that test.
+ To guarantee this, the author uses the "start the transaction, then perform the operation, and roll back after the test is completed" method.
+ 
+ Even though the author describes tests as being "atomic" when they do not affect each other, I think it is not good to call something that is not A of ACID atomic in the context of talking about databases and transactions, because it is misleading. The author's favorite technique "operations in a transaction are invisible to others" is not atomicity, but isolation.
+ 
+ It is tempting to create a storyline of "do X, then Y, then..." and test accordingly. This may seem attractive because it eliminates the initialization cost for each test, but it also increases maintenance costs in the future because the tests are tightly coupled. If something changes in the future and the story test fails, it will be necessary to investigate what behavior is occurring and what needs to be fixed. In the end, it is no different from conducting a test for each step.
+ 
+ ** 12.6.1 Data in testing at the commit stage
+ 
+ If testing and implementation are too tightly coupled, testing becomes a hindrance to implementation changes. In fact, they should be a bulwark against mistakes during refactoring. If a minor change in the implementation requires a major change in the tests, then the tests have failed in their role as a "behavior specification.
+ 
+ Tight coupling between testing and implementation is often the result of over-elaborating on data. Use a minimum of data to verify behavior. Be careful how you create data and use test helpers and fixtures whenever possible. This way, if the data structure changes, you only have to modify the fixtures. You don't have to rewrite the entire test.
+ 
+ The goal is to minimize "data specific to each test."
+ 
+ ** 12.6.2 Data in acceptance testing
+ 
+ Data that is not specific to testing is stored in dumps and versioned. It can also be used for migration testing.
+ 
+ ** 12.6.3 Data in the capacity test
+ 
+ P.299 Reusing Recordings with Interaction Templates
+ 
+ ** 12.6.4 Data at other stages
+ 
+ The key concept is to reuse the "behavior specification".
+ 
+ Dumps of production data are too large. Prepare various dumps of appropriate size for different purposes.
+ 
+ ** 12.7 Summary
+ 
+ - The key is to fully automate DB creation and migration.
+ - Dumps of production data are too large.
+ - Version control of DB. Automate migration.
+ - Separate DB deployment issues from app deployment issues by taking care of forward and backward compatibility of the schema.
+ - Minimize the amount of data shared by the test.
+ 
+ Of course, this needs to be varied to suit individual circumstances, but this is the main principle to start with.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4048707876" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+ <comments>
+ <comment>
+ <username>pochi-mk</username>
+ <body>Wow, RCS and SCCS are treated as pre-history? (Well, it doesn't really matter...) </body>
+ <timestamp>1352291397</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I think three is a reasonable size. </body>
+ <timestamp>1352296164</timestamp>
+ </comment>
+ <comment>
+ <username>DQNEO</username>
+ <body>I think SVK was never used except by early adopters. <br>SVK did not cross the chasm, which is why we are in the heyday of Git today. <br>(This may have nothing to do with the purpose of this discussion...)</body>
+ <timestamp>1352981271</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-11-07 https://nishiohirokazu.hatenadiary.org/archive/2012/11/07]

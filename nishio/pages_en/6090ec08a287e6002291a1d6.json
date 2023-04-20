@@ -1,0 +1,73 @@
+Hatena2011-11-21
+code:hatena
+ <body>
+ *1321840949*Contributed to "Talent Grown from Unexplored Youth," a special feature of the Information Processing Society of Japan
+ The <a href='http://www.ipsj.or.jp/annai/aboutipsj/gakkai-shokai.html'>Information Processing Society of Japan</a>'s <a href='http://www.bookpark.ne.jp/cm/ipsj/mokuji.asp? category1=Magazine&vol=52&no=12'>Information Processing</a>, the journal of the Information Processing Society of Japan, is running a feature article titled "Talents Grown from Unexplored Youth. I was asked by Dr. Ikuo Takeuchi to write the article, and there was no way I could refuse (laugh).
+ 
+ Dr. Takeuchi's text is from <a href='http://www.fujisan.co.jp/magazine/1377/b/661100/'>Information Processing <Digital> 2011/11/15 issue [Fujisan.co.jp of magazine]</a>, and the other 1 page Contents can be "browsed" by following from <a href='http://www.bookpark.ne.jp/cm/ipsj/mokuji.asp?category1=Magazine&vol=52&no=12'>Information Processing Society of Japan Electronic Library - Journal "Information Processing"</a>. You can read it by "browsing". It's interesting to see the enriched and unexplored use of the unique authorship of the journal!
+ 
+ What I can't read standing up is the story of the team writing, i.e., the ongoing successful project, and the two pages each of the PM professors.... I would love for you to read these too, though.... I'll add it as soon as I figure out how to read it.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p= 8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00645AR3A" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>←Of course, the quickest way is to buy it or read it at the library.
+ 
+ *1321849806*Resize graph in Matplotlib
+ Recently, I have been writing various graphs using Numpy+Matplotlib, but when I use the default settings, the output is 800x600 pixels, so when I post it on Hatena Diary, it is scaled down. So I looked into how to change the size.
+ 
+ First, matplotlib.pyplot.figure has an optional argument called figsize. This is in inches, and the default is (8, 6). If you want the graph to be square or something, you can change it here.
+ >||
+ figure(num=None, figsize=(8, 6), dpi=80, facecolor='w', edgecolor='k')
+ ||<
+ In my case, however, I wanted to keep the aspect ratio as it is and simply reduce the size, so I decided to use matplotlib.pyplot.savefig to output the image at 400x300 with a dpi of 50 at the time of converting it to an image.
+ 
+ >||
+ matplotlib.pyplot.savefig(filename, dpi=50)
+ ||<
+ 
+ Simple and easy.
+ [f:id:nishiohirokazu:20111121132943g:image]
+ 
+ *1321854084*Numpy does not skip exceptions when dividing by zero.
+ I assumed it would fly, so I was bothered by the calculation LinAlgError: Singular matrix to find the inverse after proceeding for a while because of the nan I entered here, and then dying.
+ >||
+ >>> array([0]) / 0.0
+ array([ nan])
+ 
+ >>> array([1]) / 0.0
+ array([ inf]) 
+ ||<
+ I wonder if there is an option to skip the exception when NaN or Inf comes up. I think fail fast is important for prototyping.
+ 
+ <hr>
+ I heard that numpy.seterr can be configured to skip exceptions! (thanks @shima__shima)
+ 
+ >||
+ >>> numpy.seterr(all="raise") # returns the value before the change
+ {'divide': 'warn', 'invalid': 'warn', 'over': 'warn', 'under': 'ignore'}
+ >>> array([1]) / 0
+ ---------------------------------------------------------------------------
+ FloatingPointError                        Traceback (most recent call last)
+ /Users/nishio/cur/prml/<ipython-input-525-de9a636bcadc> in <module>()
+ ----> 1 array([1]) / 0
+ 
+ FloatingPointError: divide by zero encountered in divide
+ ||<
+ 
+ *1321855566*matplotlib's PatchCollection overrides child patch colors
+ Solution to "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111111/1320994184'>Suspicion that the optional argument fill in matplotlib.patches.Circle is not working</a>"
+ 
+ PatchCollection by default overwrites the color specified in a patch such as Circle.
+ >||
+ Definition:PatchCollection(self, patches, match_original=False, **kwargs)
+ (snip)    
+     *match_original*
+         If True, use the colors and linewidths of the original
+         patches.  If False, new colors may be assigned by
+         providing the standard collection arguments, facecolor,
+         edgecolor, linewidths, norm or cmap.
+ ||<
+ This is my stumbling block: "I specified False for the Circle fill, but it is not reflected! Why do I get blue-filled circles? You can make the fill disappear by specifying facecolor="none" in the PatchCollection. (Note that it is the string "none", not "none". thanks: hoge)
+ 
+ [f:id:nishiohirokazu:201111121150543p:image]Wow I could draw contour lines!
+ </body>
+
+[Hatena Diary 2011-11-21 https://nishiohirokazu.hatenadiary.org/archive/2011/11/21]

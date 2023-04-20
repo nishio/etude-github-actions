@@ -1,0 +1,110 @@
+Hatena2009-03-29
+code:hatena
+ <body>
+ *1238304318*Housekeeping
+ - Laundry
+ - ■Drying laundry
+ 
+ It is a folding bed, but it is seldom folded, so I was wondering if I could use the space under the bed as a storage space. A container is just the right height, but its depth is too short, so the back is wasted, and the 100-yen wire mesh is a little too big. Cardboard might fit in there, but if I put something heavy in there, it might tear when I pull it out. Socks and such could be stored under the bed. Even cardboard won't tear.
+ 
+ f:id:nishiohirokazu:20090329144731j:image
+ 
+ I bought a box of two cases of Soukai Vitamins for 94 yen per bottle.
+ 
+ 
+ f:id:nishiohirokazu:20090329191719j:image
+ 
+ *1238334380*Programmer's Nightmare 5th vs.
+ >||
+ 01: WORM         |
+ 02: BUG          |
+ 03: COPY         |
+ 04: ACQUIRE      |
+ 05: SELF_DESTRUCT|
+ 06: BIT_MOVER    |
+ 07: FUTURE       |
+ 08: POWER_SURGE  |
+ 09: REPLACE      |
+ 10: ZAP          |
+ 11: FLOATER      |
+ 12: COPY         |
+ 13: SUBROUTINE   |
+ 14: DELETE       |
+ ||<
+ 
+ Suggested that SUBROUTINE be replaced by a card drawn from the deck because it complicates the rules -> agreed -> drew PROGRAM_ERROR
+ 
+ >>
+ kareya(haiku) FUTURE assumes the bits are on board, and you run the following two codes
+ Yasukazu Nishio Act as if the FUTURE card contains the instructions on the next two cards.
+ kareya(haiku) In the continuation of this 07:FUTURE, there is a POWER_SURGE, is this FUTURE's POWER_SURGE execution treated as 1 point of damage for FUTURE people, or 3 points?
+ Yasukazu Nishio: The FUTURE card acts as if it says "1 point for anyone who has a bit on this card...", which would be 1 point for the FUTURE person and 3 points for anyone who does not have a bit on the FUTURE card, I guess. Even if I had the bit on POWER_SURGE, when kareya invokes FUTURE I do 3 damage.
+ <<
+ 
+ >>
+ kareya(haiku) Okay. I'll put it at 14:DELETE for now.
+ Yasukazu Nishio Well, WORM, then.
+ kareya(haiku) BIT at 03:_COPY
+ Yasukazu Nishio 06: Place in BIT_MOVER
+ kareya(haiku) 04:BIT to ACQUIRE
+ Yasukazu Nishio 07: Putting it in the FUTURE
+ kareya(haiku) 08:POWER_SURGE.
+ Yasukazu Nishio I wonder where you are going to copy WORM in COPY and put it in WW 12: Put it in COPY
+ kareya(haiku) 05:Put in SELF_DESTRUCT
+ Yasukazu Nishio 11: Place on FLOATER
+ kareya(haiku) 13: Nishio's BIT on PROGRAM_ERROR.
+ Yasukazu Nishio Oh, I see, I thought it was a competition between ZAP and REPLACE, but I guess not. I completely forgot. 10: Putting it on ZAP
+ kareya(haiku) 02: Place in BUG
+ <<
+ 
+ >||
+ 01: WORM         |[N]
+ 02: BUG          |(K)
+ 03: COPY         |(K)
+ 04: ACQUIRE      |(K)
+ 05: SELF_DESTRUCT|(K)
+ 06: BIT_MOVER    |[N]
+ 07: FUTURE       |[N]
+ 08: POWER_SURGE  |(K)
+ 09: REPLACE      |
+ 10: ZAP          |[N]
+ 11: FLOATER      |[N]
+ 12: COPY         |[N]
+ 13: PROGRAM_ERROR|[N]
+ 14: DELETE       |(K)
+ ||<
+ 
+ >>
+ Nishio Execute WORM 07: Add [N] to FUTURE
+ kareya(haiku) BUG is activated and life is 9:9
+ Nishio COPY?(y/n)
+ kareya(haiku) y
+ Yasukazu Nishio Where to put it in WORM?
+ kareya 03:_COPY... is it impossible?
+ Yasukazu Nishio Nunu Nunu
+ KAREYA(HAIKU) It's placed after, so it can't be executed on the spot, right?
+ Yasukazu Nishio So the first bit is finished and then the next bit placed is executed? 03:It is not impossible to place a bit at _COPY (there is no rule that says it is impossible), and if a second bit is placed while the first bit is executing, it will be the target of execution...
+ kareya(haiku) If this is ok, then the rest is a full procedure win, since WORM was not placed on COPY, which begs the question.
+ Yasukazu Nishio So a loop with no increase or decrease in life points is limited to 3 times, but this one can be repeated as many times as you want because of the increase or decrease, and then SELF_DESTRUCT will keep you going, right? Ummm. I lost.
+ kareya(haiku) Oh! We won! Hooray...is this okay?
+ Yasukazu Nishio I lost because I didn't read that far. I lost with the COPY + WORM combo.
+ <<
+ 
+ *1238345011*Programmer's Nightmare Improvement proposal 2
+ Continued from http://d.hatena.ne.jp/nishiohirokazu/20090328/1238228769.
+ 
+ Delete it with a mind of its own.
+ 
+ - DEFEND was removed because the scope of effect is difficult to understand.
+ - Changed REMOVE_CARD from "remove the immediately preceding card" to "remove one card before this card" so that it is subject to INCREMENT and DECREMENT.
+ - MULTIPLIER: "Does it multiply by 2x2x?" "Can it loop infinitely?" I was tempted to add a condition such as "only the first bit", but that would have made the rule even more complicated on the code.
+ - Adopted id:TOKOROTEN proposal: "All players with bits on this card get one new bit. The new bit is placed on this card." was changed to "All players with bits on this card gain one new bit. The new bit is placed on the card at the end of the card's run.
+ - POINTER also removed as it is difficult to understand the scope of effect
+ - The description of REPLACE as "draw a card from the deck and replace any one card." is incorrect. "Specify any one card and replace it with a card drawn from the deck." The order of the numbers is "replace with a card drawn from the deck. The Chinese numerals were changed to Arabic numerals.
+ - Strengthen SWAP_CARD to "replace any two cards". It is suspected to be too strong, but it is one card in a deck, and weakening it to "move any card to any position" makes it the same as SEQUENCE_MOD. The useless card has become stronger than SEQUENCE_MOD at a stretch. We'll see how it goes.
+ - Weakening of TIME_DELAY, which was later said to be too strong. Get a [SKIP] token. Put the [SKIP] token just before any bit. When the program counter gets there, it skips processing that bit and the token is removed." This is easier from a programmatic point of view than having an interrupt at an arbitrary time.
+ 
+ After writing this, I thought, why not delete MULTIPIER, SWAP_CARD, and TIME DELAY as well?
+ </body>
+
+[Hatena Diary 2009-03-29 https://nishiohirokazu.hatenadiary.org/archive/2009/03/29]

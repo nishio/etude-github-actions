@@ -1,0 +1,16 @@
+React Hook useEffect has missing dependencies
+code:ts
+   const [state, setState] = useGlobal("state");
+   const { key } = useParams();
+   useEffect(() => {
+     if (state === "NORMAL") {
+       if (key === "new") {
+         foobar().then((id) => {
+           setState("CREATED_NEW")
+         });
+         setState("WAIT_NEW")
+       }
+     }  // (snip)
+   }, [key]) 
+I wrote this with the intention of updating the state by triggering a change in key, but it warns me that there are missing dependencies for the state.
+What's wrong and what should we do about it?

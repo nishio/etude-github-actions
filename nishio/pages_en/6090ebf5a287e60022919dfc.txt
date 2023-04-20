@@ -1,0 +1,294 @@
+Hatena2008-03-07
+code:hatena
+ <body>
+ *1204857266*codepad
+ http://codepad.org/mKIPLgX6
+ >|python|
+ import time
+ time.sleep(1000)
+ ||<
+ 
+ >>
+ Disallowed system call: SYS__newselect
+ <<
+ 
+ Heh. I didn't know that was going to happen.
+ 
+ *1204860617*Weight
+ 
+ I'm 15 kilos heavier than I should be, even though I packed less!
+ 
+ *1204862739*Shinjuku
+ 
+ I forgot to note which line Super Azusa is on.
+ 
+ *1204863920*Ticket gate
+ 
+ When I bought a ticket, I was given two tickets, and when I put them through the ticket gate with two tickets, it got jammed. I was told to wait for the next train, but the station staff didn't come easily. The next train leaves at 2:00 p.m., so I guess it will arrive around 5:00 p.m.
+ 
+ *1204865496* Power supply
+ 
+ Azusa had a regular shaped outlet.
+ 
+ *1204868134* Kofu already
+ 
+ Close!
+ I want you to sell me a single piece of motifille. I would like to try it but I don't have the courage to buy it by the box.
+ 
+ *1204870674*Geography
+ 
+ I do not know the location of Nagano, Kofu and Ogaki. At first I thought Matsumoto was in Kansai.
+ 
+ What the heck, Kofu was next. I thought it was strange.
+ 
+ *1204871123* Difference from Shinkansen
+ 
+ Intoxication.
+ 
+ *1204873438* Super Close
+ 
+ It was right in front of where I was sitting.
+ f:id:nishiohirokazu:20080307160348j:image
+ 
+ *1204875136*Matsumoto
+ 
+ We're here. It's cold. A careless mistake was discovered. I forgot to write down the name of the venue.
+ 
+ *1204876600* police box
+ f:id:nishiohirokazu:20080307165637j:image
+ 
+ *1204878438* attached
+ I got lost, but I'm here!
+ 
+ Unittest class is starting. I took out my MacBook for some reason. I just realized that it would be fun to record the study process and upload it to Nico Nico later, but I'm hesitant to connect to Ustream because I don't know the network situation at the venue. It might not be a good idea if it takes up bandwidth. I thought I should prepare a system to record locally.
+ 
+ *1204880561* Testing
+ - Does not work (including testing) → dirty but works → clean → repeat
+ 
+ *1204880641*MacBook 3rd day
+ Editing from a MacBook
+ I'm using Emacs and couldn't figure out which meta key was which, and after some trial and error, I realized it was Esc. It's far away ><
+ 
+ *1204889167*Dazzling
+ The fact that the lighting in the room is too glaring...orz
+ 
+ *1204889862*Drinking and eating are strictly prohibited.
+ Wonder that glass cups are provided in the conference room where eating and drinking are strictly prohibited.
+ 
+ *1204890556*class precedence list
+ http://gauche.sourceforge.jp/doc/gauche-refj_141.html
+ 
+ Studying. I feel like I've gone off on a tangent.
+ 
+ >>
+ Gauche uses an algorithm called C3 linearization by default. This algorithm is consistent with local rank, monotonicity, and extended rank graphs. We will not go into details here, but as a general rule, the order of superclasses in a CPL is always consistent with the order of the direct superclasses of that class, the order of the CPL of each superclass, the order of the direct superclasses of each superclass, and so on. See Dylan for a precise description.
+ <<
+ 
+ Ahh. You didn't go into detail ><
+ I think I'll stop going into the details too.
+ I think I should just explain that each CPL is in the same order as the CPLs for the superclasses and the superclasses themselves (so you don't get "A before B in one case and B before A in the other").
+ 
+ Python's new class inheritance is C3 linearization, but I'm not sure how to explain it.
+ 
+ It should be mentioned that the understanding that "depth used to be the priority, but width is now the priority" is simply wrong.
+ 
+ I still can't help but explain. I'm tempted to write "if the author's understanding is correct," but that would be pointless, since basically every reference could be wrong. If I write it here and a well-informed person picks it up and says, "That's not true," I'll revise it.
+ 
+ *1204893212*[Python] method search order
+ In Python 2.3 and newer classes, the method retrieval order (MRO, Method Resolution Order) has been changed to an algorithm called "C3 linearization". This section describes this algorithm.
+ 
+ First, an actual example.
+ >|python|
+ >>> class A(object): x = "a"
+ >>> class B(A): pass
+ >>> class C(A): x = "c"
+ >>> class D(object): x = "d"
+ >>> class E(B, C, D): pass
+ >>> e = E()
+ >>> e.x
+ 'c'
+ ||<
+ You will notice that the class search order is not a depth-first search.
+ 
+ A feature of C3 linearization is that the order in which the methods are looked for is
+ - If class X inherits Y, then X always comes before Y.
+ - If class X inherits in the order Y, Z, then Y always comes before Z
+ - If X comes before Y in the method search order of other classes, then X is always before Y in the search order of other classes
+ The three conditions are to be met.
+ 
+ If the order of method search is depth-first search, E.x above would first search in E, then in B, and then in A, B's parent class. In this way, the override in C.x is not reflected because A is searched first even though C actually inherits A. This is the behavior before Python 2.2.
+ 
+ The following is evidence that width is not a priority
+ >|python|
+ >>> class A(object): x = "a"
+ >>> class B(A): pass
+ >>> class C(object): x = "c"
+ >>> class D(B, C): pass
+ >>> d = D()
+ >>> d.x
+ 'a'
+ ||<
+ Python actually searches in the order D, B, A, C, and C. If it were a breadth-first search, it would search in the order D, B, C, and A, but that would return the value of C.x, even though B should inherit x from A. Python actually searches in the order D, B, A, and C.
+ 
+ First, an algorithm to create a list of classes in what order they are in (CPL).
+ <del>
+ - [B, A, object]
+ - [C, object]
+ - [D, B, C]
+ 
+ When arranging these, the object part is merged first, and then the
+ - [((B, A) | C), object]
+ It will look something like this. Now we have to figure out whether to put (B, A) or C in front, and since B is first in [D, B, C], we have
+ - [B, A, C, object]
+ It goes like this. Finally, this and the non-contradictory D, B, and C are merged into
+ - [D, B, A, C, object]
+ It goes like this.
+ 
+ The first example is
+ - [B, A, object]
+ - [C, A, object]
+ - [D, object]
+ - [E, B, C, D]
+ It was. This, too.
+ - [((B, A) | (C, A) | D), object]
+ This is how it happens, and since D is later than B and C
+ - [(B | C), A, D, object]
+ This is how it happens, and since B is before C
+ - [B, C, A, D, object]
+ This is how it ends.
+ - [E, B, C, A, D, object]
+ It goes like this.
+ 
+ So, is it okay? I guess not.
+ </del>
+ 
+ Should the order be determined when the classes are defined?
+ In other words,
+ - [A, object]
+ is determined first, then B(A).
+ - [B, A, object]
+ C(A).
+ - [C, A, object]
+ and finally D(B, C) with
+ - [D,
+ When the number of the "D(B,C)" is reached, which one should be chosen?
+ - [D, B
+ and the next question is whether to choose A or C. C comes first because A is included in C's CPL.
+ - [D, B, C, A, object]
+ I wonder if it will be.
+ 
+ In the second example.
+ -[A, object]
+ -[B, A, object]
+ -[C, A, object]
+ -[D, object]
+ -[E,
+ and E(B, C, D), so B is chosen and
+ -[E, B,
+ If A and C and D are next to B, then C's CPL comes first because it contains A.
+ -[E, B, C,
+ If A and D are next after B, A is chosen according to the order E(B, C, D), since D's CPL does not contain A but B does.
+ -[E, B, C, A, 
+ If the next object after A and D, D comes first because D's CPL contains an object.
+ -[E, B, C, A, D, object]
+ Will it be?
+ 
+ Yeah, this seems more normal as an implementation.
+ 
+ -----
+ The Python 2.3 Method Resolution Order
+ http://www.python.org/download/releases/2.3/mro/index.html#the-c3-method-resolution-order
+ 
+ The explanation here was very clear.
+ 
+ *1204895684*Gainer
+ The team next to me is having a lot of fun tinkering with Gainer, but they haven't finished the manuscript yet. I started to write it thinking, "If I'm going to write a comparison between Java and Python, why not write a story about the possibility of multiple inheritance? I thought, "If I'm going to write a comparison between Java and Python, how can I do it without writing a story about multiple inheritance? But I'm going to write it.
+ 
+ In the meantime, let's order the yellow book.
+ 
+ *1204901016* It's so hot!
+ Very hot with a lot of people.
+ The turn of the drinking.
+ 
+ I have to put the multiple inheritance story to bed for a bit (if that's what you're talking about) and get on with the review of the text I've already written.
+ 
+ *1204903768*Zen of Python Kansai dialect version
+ Translate The Zen of Python with infoseek's Kansai-ben translation
+ http://translation.infoseek.co.jp/
+ 
+ >>
+ The Zen of Python (by Tim Peters)
+ 
+ Beauty is better than ugliness.
+ The perfect is better than the inherent Nen.
+ What is better than a composite is a simple or.
+ I'd rather have a complex than a difficult one.
+ Flat is better than shrinking.
+ Better than dark is sparse.
+ Readability counts.
+ Special exceptions are not special enough to break the rules.
+ Practicality beats purity, though.
+ Errors should never be passed quietly.
+ Unless we are clearly silenced.
+ In the face of ambiguity, will you reject the temptation to speculate?
+ In order to do it in a clear-cut way, there must be a thing - preferably and only one.
+ Unless you are Dutch, the method may not be obvious at first.
+ Currently, never better or.
+ But now, it's often never better than *right*.
+ If the implementation is too complicated to explain, it is a wrong idea.
+ If the implementation is easy to explain, it may be a good idea.
+ The namespace is a great idea that sets off one's alarm - let's make them more useful!
+ <<
+ 
+ >>
+ The Zen of Python (by Tim Peters / corrected by Yasukazu Nishio)
+ 
+ I'd rather have a beautiful one than a dirty one.
+ It's better to be out in the open than to be hiding inside.
+ <<
+ 
+ No, it's not a correction, it's a re-translation. I don't have time for this.
+ 
+ The policy of not reading the English text is to prepare it with minimal revisions.
+ >>
+ The Zen of Python (by Tim Peters / corrected by Yasukazu Nishio)
+ 
+ I'd rather be beautiful than ugly.
+ I prefer perfection to intrinsic.
+ What is better than a composite is a simple or.
+ I'd rather have a composite than a more difficult one.
+ I prefer flat to condensed.
+ I prefer sparse to dense.
+ Readability is important.
+ Special exceptions are not special enough to break the rules.
+ Practicality is more important than purity.
+ Errors should not be passed quietly.
+ As long as they are not clearly silenced.
+ In the face of ambiguity, the temptation to speculate is a strong one, and I hope you will reject that temptation.
+ There must be one thing - preferably only one thing - to do it in a clear and transparent way.
+ Unless Anhan is Dutch, the method may not be obvious.
+ Doing it now is better than never.
+ But not doing so is often better than doing it now.
+ If it is too complicated to explain the implementation, it is a mistake.
+ If implementation were easy to explain, it might be a good idea.
+ The namespace is a great idea - we can do better than that!
+ <<
+ 
+ *1204904641*IronPython Studio
+ IronPython Studio - Home
+ http://www.codeplex.com/IronPythonStudio
+ </body>
+ <comments>
+ <comment>
+ <username>earth2001y</username>
+ <body>Viva Pendulum Vehicles</body>.
+ <timestamp>1204876163</timestamp>
+ </comment>
+ <comment>
+ <username>yokochie</username>
+ <body> The command key should be the meta key. Also, you can use "(setq mac-option-modifier 'meta)" to make the option key the meta key. via http://homepage.mac.com/zenitani/emacs-j.html</body>
+ <timestamp>1204885160</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-07 https://nishiohirokazu.hatenadiary.org/archive/2008/03/07]

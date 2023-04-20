@@ -1,0 +1,287 @@
+Hatena2008-01-21
+code:hatena
+ <body>
+ *1200877188* Oh shit.
+ ↓I was reading and implementing this kind of thing and time was running out.
+ 
+ Slashdot Japan | Fast search by treating all data as file names?
+ http://slashdot.jp/article.pl?sid=08/01/20/2052246
+ 
+ *1200877575* for now.
+ I put 1.1 million data in a Python dictionary and checked how many tens of seconds it would take to retrieve one random item from it.
+ 
+ >|python|
+ >>> from random import random
+ >>> from time import clock
+ >>> data = dict((str(i), random()) for i in range(1100000))
+ >>> t = clock(); print "select:", data[str(int(random()*1100000))]; print clock() - t, "sec"
+ select: 0.692766546604
+ 0.0483114474047 sec
+ ||<
+ 
+ About 0.05 seconds. I'll find out how long it takes with on-memory SQLite later.
+ 
+ -----
+ PS
+ Code that tastes through all 1.1 million data and outputs the value of another column in the row such that one particular column matches the condition.
+ 
+ >|python|
+ >>> def foo():
+ 	t = clock()
+ 	for k in data.keys():
+ 		if k == "110001":
+ 			print "select where", data[k]
+ 	print clock() - t, "sec"
+ 
+ 	
+ >>> foo()
+ select where 0.895431963644
+ 0.860433099738 sec
+ ||<
+ 
+ -----
+ I can't judge whether the proposed method is fast or slow without more detailed information on the amount of data used in the experiment.
+ 
+ *1200880542*Collem
+ 
+ The in-house ads on the Hanzomon Line are dominated by "Koream". I wonder what it is. It doesn't give any details, but says to search for it. Is it a medicine for constipation?
+ 
+ *1200888986*I created Scheme in Python.
+ After being kicked out of the after-party drinking venue for the <a href="http://ja.doukaku.org/wiki/index.php/1000speakers:1">1000 Speakers Conference</a>, I somehow returned to Cybozu Labs for the third meeting.
+ 
+ For some reason, yukoba started to make Scheme, and amachang also said "let's make it"! Then they said, "Let's make it a hackathon anyway! No, I can't go home if I start doing that! Ah, but if I don't write it now, I may never write it! But if I don't write it now, I may never write it!
+ 
+ So here is what I wrote.
+ <a href="http://ja.doukaku.org/comment/5414/">How do you write it? org 5414 Nishio: I made this in 5 hours after a drinking session, so it's pretty... (Scheme-like implementation) - post details</a>.
+ 
+ Here is what the other two wrote.
+ <a href="http://d.hatena.ne.jp/yukoba/20080120/p1">Scheme on JavaScript made - yukoba's Diary</a>.
+ <a href="http://d.hatena.ne.jp/amachang/20080120/1200850505">We wrote a Scheme imitation in JS! - IT War Diary</a>.
+ 
+ ------
+ 
+ Since I'm here, I'll try to write something to convey the atmosphere of the hackathon.
+ Below is "" for offline statements and > for statements on Lingr.
+ 
+ http://www.lingr.com/room/1000speakers/archives/2008/01/20#msg-23892898
+ nishio "Put it on test case Lingr."
+ yukoba
+ >||
+ ( begin ( define sum3 ( lambda ( a b c ) ( + a b c ) ) ) ( sum3 10 20 30 ) )
+ ( sum3 10 20 30 ) 
+ ||<
+ 
+ yukoba "Do you write defines in the global scope?"
+ amachang
+ >||
+ ( begin ( define sum3 ( lambda ( a b c ) ( + a b c ) ) ) ( sum3 10 20 30 ) ) (sum3 10)
+ If this can be done, sum3 is grobal.
+ (begin (define sum3 (lambda (a b c) (+ a b c)))) (sum3 1 2 3)
+ ||<
+ nishio
+ >||
+ gosh> ((lambda () (define foofoo 1)))
+ #<undef>
+ gosh> foofoo
+ *** ERROR: unbound variable: foofoo
+ Now, since foofoo is global and cannot be referenced, define is not global.
+ ||<
+ 
+ nishio > wow, Scheme can define defines?
+ 
+ Someone say, "What's going on with the tokenizer?"
+ http://www.lingr.com/room/1000speakers/archives/2008/01/20#msg-23899091
+ 
+ yukoba "The next goal is to define functions with define".
+ http://www.lingr.com/room/1000speakers/archives/2008/01/20#msg-23901302
+ 
+ amachang "How do you do a function that takes an argument of indefinite length?"
+ http://www.lingr.com/room/1000speakers/archives/2008/01/20#msg-23903357
+ 
+ YUKOBA "The next target is LET".
+ http://www.lingr.com/room/1000speakers/archives/2008/01/20#msg-23905318
+ 
+ nishio "Gee, I thought lambda was not working properly, but there was a bug in the tokenizer.
+ After all this delay, I finally get lambda working.
+ 
+ I implemented "let" first while yukoba tries to implement "let" by converting to lambda.
+ 
+ Code review. amachang "I don't think this closure is done?" nishio "It doesn't look like it's done...write a test code and write it".
+ 
+ amachang
+ >||
+ Now, if 5 changes it, we're good to go.
+ (define cl (let ((bar 5)) (lambda () bar)))
+ (define bar 6)
+ (cl)
+ ||<
+ 
+ nishio "6 returned shobon
+ YUKOBA "Become undef! Why?
+ nishio "Isn't that just a define being executed instead of an implicit begin when there are multiple expressions?
+ 
+ After this I was hungry and went outside to eat. Not a single restaurant was open! After some twists and turns, we found Sukiya.
+ I'm talking in Sukiya and it turns out that my implementation is not about Fibonacci in the first place.
+ amachang and yukoba are going home by cab. I was at the opposite end of the Hanzomon line, so it was a very long way!
+ Return to the lab to check the behavior of the scope.
+ 
+ nishio
+ >||
+ gosh> (define f (let ((x 1)) (lambda () y)))
+ f
+ gosh> (let ((y 2)) (f))
+ *** ERROR: unbound variable: y
+ Heh, this is how it goes.
+ ||<
+ 
+ I'll fix what was poked at, I just made the lambda have a scope object.
+ Also, it seems that setq is not written in the current scope, but is written after tracing back to the point where it was defined, so it is implemented that way.
+ Finish implementing comparison functions and such for Fibonacci.
+ 
+ -----
+ 
+ I haven't implemented Scheme macros or continuations yet, but I don't know what to do because I've never written a Scheme program with macros or continuations in the first place.
+ I wondered if I would be beaten if I published a Scheme without macros by saying "I made a Scheme"... and amachang said to me, "What are you doing, not publishing a Scheme for fear of being beaten by the organizer of the 1000 speaker project? I was encouraged, so I made it public. I've published it.
+ 
+ -----
+ 
+ I'm faintly hoping that id:higepon will pick it up hard.
+ 
+ summary of a joke
+ "make it a cons list or you'll cry later", "implementing classical macros is easy", "eh, don't optimize the tail call (straw)"
+ When amachang said that his code could easily implement classical macros, and when he did it, I wanted to do it too, so we made an "agreement not to do it during work hours" w
+ Personally, I would like to support the cons list where the list is cons list and the dot list.
+ 
+ *1200889624* Let's have a Haskell Hackathon!
+ <a href="http://d.hatena.ne.jp/yukoba/20080121/p1">I want to do Haskel Hackathlon! - yukoba's Diary</a>.
+ Hey, we were supposed to be talking about "making yacc" over dinner, but for some reason we're supposed to be making Haskell! And the place is Cybozu Labs!
+ 
+ for now
+ - <a href="http://www.sampou.org/haskell/report-revised-j/syntax-iso.html">Haskell 98 Syntax</a>
+ - <a href="http://d.hatena.ne.jp/lethevert/archive?word=%b4%d8%bf%f4%a5%d7%a5% ed%a5%b0%a5%e9%a5%df%a5%f3%a5%b0%a4%ce%a5%a2%a5%d7%a5 ed%a1%bc%a5%c1"> Search results list for "functional programming approach" - lethevert is a programmer</a>(like implementing monads in Python)
+ -- I'll copy this for now before the hackathon
+ - LR Act http://ja.wikipedia.org/wiki/LR%E6%B3%95
+ -- I and amachang will start by looking at this and implementing yacc.
+ 
+ ----
+ Wait, I don't think I can win.
+ I was going to take it easy on Scheme and rework it, but it's been a cataclysm.
+ 
+ **1200900037*Find a non-smoking restaurant.
+ I wrote on the lab's message board, "I wonder if there's a gourmet map that shows the degree of smoke separation..." and was promptly informed.
+ - <a href="http://kinen-style.com/">Nonsmoking Style: A Reviewed Gourmet Guide to Eating and Drinking Places and Restaurants Nationwide</a>.
+ 
+ *1200902501* I want to be able to use ActionScript.
+ Because out of the three of us in the <a href="http://d.hatena.ne.jp/amachang/20080120/1200850505">Scheme Hackathon</a>, only my implementation doesn't work in the browser! (><)
+ 
+ By the way, there seems to be a slight misunderstanding...
+ http://www.mogya.com/blog/2008/01/1000.html
+ >>
+ I had a brief conversation with NISHIO-san during the drinking session.
+ I thought, "Python is getting a lot of users, so maybe it's time to move on to another language.
+ 
+ Personally, I thought that language was a tool and that I should choose the best one to create what I want to create (so the increase in the number of users is not a problem), so this statement came as a great shock to me.
+ I see," he said, "you can make most things in any language." I thought, "I see, this is the kind of person who drives straight ahead on the freeway.
+ <<
+ 
+ I completely agree with the statement "Languages are tools, choose the best one for what you want to create. I have no intention of abandoning Python.
+ However, the fact that the Python population is growing faster and faster means that if I just continue to use Python as I have in the past, my commercial value is going to decrease rapidly, and I have to either increase what I can do in Python faster than the rate at which the Python population is growing, or pioneer other languages. I have to do one of two things. I wanted to say that I feel the former is going to be difficult, and that it is time to explore other languages. So, for now, my current target is ActionScript.
+ 
+ At first, I read <a href="http://d.hatena.ne.jp/koyachi/20070327/1174989643">Using actionscript-mode.el for AS3 - koyachi's diary</a> carefully and configured cc-mode, as- config and other settings. I also changed the definition of yellow in actionscript-mode to a darker color.
+ 
+ *1200930897* just got back.
+ On the train home, I was able to sit down in Shinbashi, so I implemented a kind of macro.
+ 
+ >|python|
+ def test():
+     e(parse("""
+     (begin
+     (define-macro unless (cond body)
+         (if cond () body))
+     (display (unless 0 1))
+     (display (unless 2 3))
+     )"""))
+ ||<
+ 
+ This will show 1 and []. The reason the empty list is [] instead of () is because we are still using Python lists.
+ 
+ - It'll be right before the last train.
+ - If you walk to Nagatacho, you definitely won't make it.
+ - I'm going to Tameike Sanno station, but it's not one, so I don't know if it's the last train or not.
+ - Search in the transfer guide and select the Ginza Line
+ - I can sit down at Shinbashi. There are four stops to Mitsukoshimae, where I plan to transfer, so I'll get out my notebook to implement the macro.
+ - Mitsukoshimae, a nice place, so I decide to ride to Asakusa.
+ - Macro ready.
+ - I arrived at Asakusa. Which way is home?
+ - I arrived home; it took me half an hour.
+ 
+ Asakusa - home is not a distance I can walk. It's not like I have to walk to work every day. When there is no last train, going back to Asakusa is an option.
+ 
+ -----
+ 
+ Above.
+ >|scheme|
+ (define-macro unless (cond body)
+         (if cond () body))
+ ||<
+ is not correct grammar. The correct answer is
+ >|scheme|
+ (define-macro (unless cond body)
+         (if cond () body))
+ ||<
+ But since this correction can be done in a minute, I'll just say that "any mistakes that exist on this site, intended or unintended, are either exercises or jokes for the reader." I'll just say that it was an exercise in
+ 
+ *1200936981*HaskellHackathon Chat
+ http://www.lingr.com/room/haskell_hackathon_2008
+ 
+ A tremendous amount of excitement.
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>How about using pytc with tokyocabinet + python if you only need a dictionary? <br><br>Python Package Index : pytc 0.3<br>http://pypi.python.org/pypi/pytc/</body>
+ <timestamp>1200878555</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>Don't worry, in my mind there is no distinction between Scheme, yacc and Haskell! <br>They are the same thing! (^^;;;</body>
+ <timestamp>1200892457</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>>"We have an agreement not to do this during work hours."<br>What a bunch of losers! （</body> <br> <body> <br>"We have an agreement not to do it during work hours.
+ <timestamp>1200892542</timestamp>
+ </comment>
+ <comment>
+ <username>amachang</username>
+ <body>Agreement w/w</body>.
+ <timestamp>1200896356</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>Make it output Python code for http://www005.upp.so-net.ne.jp/kmori/kmyacc/! </body>
+ <timestamp>1200919331</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ You can also demonstrate it in Python by throwing the source from <body><textarea>. </body>
+ <timestamp>1200923744</timestamp>
+ </comment>
+ <comment>
+ <username>amachang</username>
+ <body>eval.cgi make</body>.
+ <timestamp>1200932334</timestamp>
+ </comment>
+ <comment>
+ <username>mogya</username>
+ <body>x "Python is getting a lot more users, so maybe it's time to move on to another language."<br>x "Python is getting a lot more users, so maybe it's time to learn another language."<br>You mean. I'm sure I failed to understand this. I am sorry. </body>
+ <timestamp>1200991063</timestamp>
+ </comment>
+ <comment>
+ <username>inamenai</username>
+ <body>I googled Koream and only a few thousand results came up? <br>It seems that xcoream -> xcorem. <br>It is strictly forbidden to use the "search it" method with names that can easily be mistaken. </body>
+ <timestamp>1201039655</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-01-21 https://nishiohirokazu.hatenadiary.org/archive/2008/01/21]

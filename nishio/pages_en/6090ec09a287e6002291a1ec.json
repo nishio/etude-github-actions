@@ -1,0 +1,50 @@
+Hatena2012-01-05
+code:hatena
+ <body>
+ *1325752757*Add language model to IBM model 1.
+ Regarding the recent <a href='http://d.hatena.ne.jp/nishiohirokazu/20120104/1325667448'>IBM Model 1 implementation</a>, I discussed why we get "house house house". From the given data alone, we don't know whether das is house, haus is house, or ist is house. Therefore, it is assumed that the probability value is also equal and the first one found when argmaxing is chosen to be a house.
+ 
+ In the previous experiment, the language model was not included, so even if I thought, "I think I can put the, house, or is here," I would have no information on how to arrange them. So wouldn't it be an improvement if we included a language model?
+ 
+ >||
+ # Previous Results
+ das Haus ist klein
+ house house house small
+ das Haus ist schmutzig
+ house house house dirty
+ das Haus ist sauber
+ house house house clean
+ ||<
+ 
+ So, what happened when I added the 2-gram language model, I got all the questions correct regarding the teacher data. But for the unteached sentences, the result was like this
+ 
+ >||
+ das Stift ist klein
+ the a a a
+ Ich habe klein Stift
+ I have a pen
+ Ich liebe Haus
+ I love a 
+ ||<
+ 
+ I tried to figure out why this happened, but since I did not perform smoothing when counting by n-gram, when I found "a sequence of words that did not appear in the teacher data", I judged that it was "a sequence of words that appeared zero times and therefore had a probability of 0" and chose "a" at random among those with a probability of 0. Then let's try smoothing.
+ 
+ >||
+ das Stift ist klein
+ the a house small
+ Ich habe klein Stift
+ I have small a
+ Ich liebe Haus
+ I love house
+ ||<
+ 
+ It's much better than the previous one. But the first one is the pen is small and the second one is I have small pen. The last one, "I love house" is okay.
+ 
+ I tried to implement IBM model 2, but it says that a (lf, le) distortion matrix is to be created for each input word (lf) and output word (le), which I haven't tried yet because I thought, "If I do that, my current handmade data is not enough. Maybe it's time to stop making them by hand and start using an appropriate corpus. I don't want to lose the whole picture.
+ 
+ I'm concerned that this will lead to a curse of dimensionality. I think that in moses, you could specify the option of how much distortion to allow. I think that it may be OK to limit the distortion to a small amount when translating between Western languages. However, I remember that I specified unlimited distortion for English-Japanese translations, and I wonder if it would be a bad idea to specify it without thinking deeply about it.
+ 
+ I knew "<a href='http://d.hatena.ne.jp/mamoruk/20110606/p1'>Thesis is better understood when implemented</a>" was right. In fact, the implementation marathon I am currently working on was inspired by this entry.
+ </body>
+
+[Hatena Diary 2012-01-05 https://nishiohirokazu.hatenadiary.org/archive/2012/01/05]

@@ -1,0 +1,95 @@
+HHKB2020
+[HHKB Programming Contest 2020 - AtCoder https://atcoder.jp/contests/hhkb2020]
+I made a calculation error in D, which looks easy at first glance, and got into it and solved time was 3 questions. I should have skipped it and done E.
+[https://gyazo.com/96fdb60be9b5c7f4c36b92c975424089]
+
+[https://gyazo.com/9d6d93ac3d485534cc5a6bed6d31b23f]
+
+[B - Futon https://atcoder.jp/contests/hhkb2020/tasks/hhkb2020_b]
+	[https://gyazo.com/d25766b2c359add23bb67af11630b668]
+	Counting.
+	The code to read the map in one dimension with a guard was created and registered in a snippet.
+	　[Put a guard on the map when loading it].
+ code:python
+  def solve(data):
+      ret = 0
+      for i in allPosition():
+          if data[i] and data[i + 1]:
+              ret += 1
+          if data[i] and data[i + WIDTH]:
+              ret += 1
+      return ret
+
+
+[C - Neq Min https://atcoder.jp/contests/hhkb2020/tasks/hhkb2020_c]
+	[https://gyazo.com/3bd559ee36a1dd8e504a027b0b98bb28]
+	code:python
+	 def solve(N, XS):
+      used = [0] * (200_000 + 1)
+      cur = 0
+      for i in range(N):
+          used[XS[i]] = 1
+          while used[cur]:
+              cur += 1
+          print(cur)
+ It's a double loop, but the inside is only called 200,000 times at the highest, so it's okay.
+ The size of "used" is N or N+1 and RE.
+
+[D - Squares https://atcoder.jp/contests/hhkb2020/tasks/hhkb2020_d]
+	[https://gyazo.com/4e292857475488888efb440a7ce310a6]
+ The problem that seems simple at first glance but gets bogged down with "Oh, there are times when it overflows" and "Oh, the number of reductions depends on the width of the overflow".
+ Maybe I could have solved it if I'd calmed down and sorted it out, but I'd melted too much time away, and I was too impatient to think straight.
+ In addition, the naive solution is like this
+ code:python
+  def blute(N, A, B):
+      ret = 0
+      for ax in range(0, N - A + 1):
+          for ay in range(0, N - A + 1):
+              for bx in range(0, N - B + 1):
+                  for by in range(0, N - B + 1):
+                      if ax <= bx < ax + A or ax < bx + B <= ax + A:
+                          if ay <= by < ay + A or ay < by + B <= ay + A:
+                              continue
+                      ret += 1
+      return ret
+ I confirmed that dividing by (1-x)^5 yields a quadratic equation.
+ 	code:python
+ 	 >>> xs = np.array([blute(20, 10, i) for i in range(1, 11)])
+   >>> reduce(np.convolve, [[1, -1]] * 5, xs)[:10]
+   array([  36300, -151980,  238728, -166632,   43560,       0,       0,
+                0,       0,       0])
+ 	Related [Rationalizing Sequences].
+　After I saw the big coefficient, I was like, "Oh, this was three variables, what am I supposed to do?
+　I'm not good at math, so computer.
+　　Should I have studied [Lagrange interpolation]?
+　Official Explanation
+　　The part that made the most sense to me was that "you don't have to consider X and Y separately from symmetry" [dimensionality reduction by symmetry].
+　　I'd like to count the non-overlapping cases, but it's hard, so subtract the overlapping cases from the whole" is [subtract the extra event].
+　　
+[unAC].
+
+[E - Lamps https://atcoder.jp/contests/hhkb2020/tasks/hhkb2020_e]
+ [https://gyazo.com/28c8b91789fd402d10da52759be21205]
+ I ran out of time in D. I read it later and this one seems easier for me to solve. Maybe I should have read all the problems first or used the Pomodoro timer to avoid getting bogged down.
+ Thoughts.
+ 　For example, if a square is illuminated by a square where two lights can be placed, the square will be illuminated by three of the four possible light placement combinations
+ 　If there are N squares in total and they are illuminated by K pieces, they are illuminated by [$ 2^{N-K} (2^K -1)] streets.
+ 　Find K for all squares
+ 　　For example, to see how many squares continue upward, just look at the square above you and add 1.
+ 　　Do this for all four directions.
+ I did it unconsciously, but this is [changing the order of addition].
+ 　The sum of the number of illuminated tiles per lighting pattern is the sum of the number of illuminated lighting patterns per tile
+ 　[Sum of f(x,y) per x is sum of f(x,y) per y]
+[unAC].
+
+[F - Random Max https://atcoder.jp/contests/hhkb2020/tasks/hhkb2020_f]
+	[https://gyazo.com/4ece1b83003aa351486285e44b87a67c]
+　[Expected maximum value] of the random variable
+　> max and the probability density function of the [rank statistic] containing it are differentiated after finding the cumulative distribution function.
+  > max(a,b,c) <= x ⇔ a<=x and b<=x and c <= x
+  > like that, and inequality is easier to handle.
+　　https://twitter.com/maspy_stars/status/1314927370105581569?s=21
+		[max inequality is inequality AND].
+>The expected minimum value of K uniformly random numbers in [0,1] is 1/(K+1)
+　https://twitter.com/noimi_kyopro/status/1314924799303458819?s=21
+[unAC].

@@ -1,0 +1,265 @@
+Hatena2008-12-23
+code:hatena
+ <body>
+ *1229985164* CUDA Diary 2: Morning return from year-end party
+ Yesterday I wrote about "parallel reduction of an array of N elements that is not a power of 2. Since all I want to do is to sum up the list, a simple method is to fill in the missing parts to the power of 2 with zeros. If N has only 2 or 3 prime factors, I think the third method is fine, but if N has 7 or more prime factors, what is the fastest way to do it?
+ 
+ I want to think about the "what if" but I'm still sleepy, so I'm going to go to bed for a bit. I've consumed caffeine, so if I set the timer for 30-60 minutes later, my blood caffeine level should be at its highest.
+ 
+ -----
+ 
+ It would be nice to see what the CUDA code looks like in the instruction sequence and how it is processed.
+ 
+ From reading the documentation, I'm thinking that if A and B are completely different processes in the code below, it would only take 1 second on a CPU, but 2 seconds on a GPU. I'll give it a try.
+ >||
+ if(x & 1){ // if odd
+   // Process A, which takes 1 second
+ }else{
+   // Process B that takes 1 second
+ }
+ ||<
+ 
+ -----
+ 
+ I wrote the code to check. 64 threads. 1 block. The difference is one line, so I wrote it in diff style.
+ 
+ >|cpp|
+ const int LOOP_SIZE = 1000000;
+ __global__ static void kernel(const int* input, int* output, clock_t * timer) {
+     const int x = threadIdx.x;
+     const int bid = blockIdx.x;
+     if (x == 0) timer[bid] = clock();
+ 
+     int v = 0;
+ 
+ -    if(x & 1){
+ +    if(x < 32){
+       for(int i=0; i < LOOP_SIZE; i++){
+         v += i;
+       }
+     }else{
+       for(int i=LOOP_SIZE; i > 0; i--){
+         v -= i;
+       }
+     }
+     output[x] = v;
+     __syncthreads();
+     if (x == 0) timer[bid+gridDim.x] = clock();
+ }
+ ||<
+ 
+ >||
+ Result of (x & 1)
+ time = 148000468
+ time = 148000468
+ time = 148000468
+ 
+ (x < 32) results in
+ time = 86000420
+ time = 86000404
+ time = 86000420
+ ||<
+ 
+ The expectation was that the performance difference would be nearly double, but I don't understand why the 148 and 86 are not neatly doubled. I wonder why.
+ 
+ *1230022340*CUDA Diary (Bank Conflict experiment)
+ The number of consumed clocks is like 86000420 because the process I want to measure is calculated 1 mega iteration. So I decided to write it as 86M without worrying about fractions.
+ 
+ I wanted to make sure Bank Conflict happens, so this is the kind of code I used. The number of threads is 4.
+ From the code around the iteration of v += i;, we can see that the cost of the for statement itself is 60M, so the cost of v += smem[x * 2]; is 16M, and the cost of smem[x] += smem[0]; is 36M, more than double.
+ 
+ >|cpp|
+ const int LOOP_SIZE = 1000000;
+ __global__ static void kernel(const int* input, int* output, clock_t * timer) {
+     const int x = threadIdx.x;
+     const int bid = blockIdx.x;
+     __shared__ int smem[16];
+ 
+     if (x == 0) timer[bid] = clock();
+     int v = 0;
+     for(int i=0; i < LOOP_SIZE; i++){
+       //smem[x] += smem[0]; // 96M
+       smem[x * 2] += smem[0]; // 80M
+       //smem[x] += smem[x + 4]; // 88M
+       //smem[x * 2] += smem[x * 2 + 1]; // 80M 
+       //v += smem[x * 2]; // 76M
+       //v += smem[x]; // 80M
+       //v += i; // 80M
+       //v += i; v += i; // 100M
+       //v += i; v += i; v += i;// 120M
+       //v += i + smem[x * 2]; // 80M
+     }
+     output[x] = v; //smem[x];
+     __syncthreads();
+     if (x == 0) timer[bid+gridDim.x] = clock();
+ }
+ ||<
+ 
+ I read that shared memory is as fast as a register as long as BankConflict doesn't occur, but as there are only 4 threads, i must be in the register. But if there are only 4 threads, the i's should be in the registers. Oh, I guess not. I'm not sure if the compiler is smart enough to rewrite the code to get it outside the loop and add a constant, since smem[x * 2] is a constant for the duration of the loop, and if you empty the contents of the for statement, it will delete the entire for statement and replace it with a constant.
+ >||
+       //v += smem[x * 2]; // 76M
+       //v += smem[x]; // 80M
+       //v += i; // 80M
+ ||<
+ 
+ The cost saved by changing the method of memory access is about one-fifth of v += i;, so I thought I shouldn't worry about it unless it is a "process with crazy low calculation density" like reduction or simply multiplying an array by n.
+ 
+ *1230031948*vim diary (delle period)
+ I'm starting to understand the advantages of vim. In an environment where I can customize it freely, I think, "This is so much more complicated than emacs," or "If it were emacs, it would automatically detect all normal languages and indent them appropriately from the beginning," but now that I am using Knoppix, I am using vim I'm using vim because I'm on Knoppix and it's too much trouble to customize it. I haven't messed with .vimrc.
+ 
+ When I want to add to the end of a line, it's easy to use A without having to move to the end of the line. It would be better if you put it right before the semicolon, but I guess $bi.
+ Moving in search is also useful, though I haven't mastered it yet. /1<Enter> to move to the next one. I think there was something that didn't require Enter, but I forget. If you want to rewrite 48 to 72, you can use cw to delete the word and enter insert mode.
+ I'm sure emacs had rectangular selection, but I don't remember. vim is easy to remember because v is for selection, V for line selection, and <CTRL-v> for rectangular selection.
+ The default auto-indent feature is poor, so I do 4i<SPACE><ESC> to put four spaces, but I wonder if there is a better way.
+ 
+ *1230032780*else in preprocessor if
+ I thought it was #else if like C, but it was #elif, same as Python. Of course, Python came later, but was C the first to use elif? I wonder if C was the first to use elif, or if there was an earlier language that used elif and they copied it.
+ 
+ *1230033942*CUDA Diary (parallel reduction experiment for arrays that are not powers of 2)
+ The question is whether it is faster to calculate the sum of an array with 72 elements by filling in up to 128 with zeros and then doing the normal two-by-two reduction, or whether it is faster to factorize and reduce by some 3 or something like that. As it turns out, dividing by 3 first was about 10% faster than the type that fills up to 128.
+ 
+ I also tried the 42 case, but it was only a 5% speedup with 580 reduced to 551. 42 is subtle because of the 7 in the prime factors.
+ 
+ I just realized that if we use 72 * 2 (144) instead of 128 to fill with zero, we don't need __syncthreads(). I also need __syncthreads() after smem[x] = x;.
+ 
+ 
+ >|cpp|
+ #define N 72
+ #define NUM_BLOCKS 1
+ #define CEIL 128
+ #define TYPE 0
+ 
+ const int LOOP_SIZE = 1000000;
+ __global__ static void kernel(const int* input, int* output, clock_t * timer) {
+     const int x = threadIdx.x;
+     const int bid = blockIdx.x;
+     __shared__ int smem[CEIL];
+ 
+     if (x == 0) timer[bid] = clock();
+     for(int i=0; i < LOOP_SIZE; i++){
+ #if TYPE == 0
+       // 684M
+       // zero reset
+       smem[CEIL - N + x] = 0;
+       __syncthreads();
+ 
+       // target values
+       smem[x] = x;
+ 
+       // reduction
+       if(x < 64){
+       	smem[x] += smem[x + 64];
+       }
+       __syncthreads();
+       if(x < 32){
+         smem[x] += smem[x + 32];
+         smem[x] += smem[x + 16];
+         smem[x] += smem[x + 8];
+         smem[x] += smem[x + 4];
+         smem[x] += smem[x + 2];
+         smem[x] += smem[x + 1];
+       }
+ #elif TYPE == 1
+       // 632M
+       // target values
+       smem[x] = x;
+ 
+       // reduction
+       if(x < 36){
+         smem[x] += smem[x + 36];
+       }
+       __syncthreads();
+       if(x < 18){
+         smem[x] += smem[x + 18];
+ 	smem[x] += smem[x + 9];
+ 	smem[x] += smem[x + 3] + smem[x + 6];
+ 	smem[x] += smem[x + 1] + smem[x + 2];
+       }
+ #else
+       // 624M
+       // target values
+       smem[x] = x;
+ 
+       // reduction
+       if(x < 24){
+         smem[x] += smem[x + 24] + smem[x + 48];
+       }
+       __syncthreads();
+       if(x < 8){
+         smem[x] += smem[x + 8] + smem[x + 16];
+ 	smem[x] += smem[x + 4];
+ 	smem[x] += smem[x + 2];
+ 	smem[x] += smem[x + 1];
+       }
+ #endif
+       if(x == 0) output[0] = smem[0];
+     }
+     __syncthreads();
+     if (x == 0) timer[bid+gridDim.x] = clock();
+ }
+ ||<
+ 
+ *1230039090* Too much to do.
+ I'm going back to my parents' house on 27 or 8, so there's only so much I can do.
+ 
+ If o1 < o2 is known, then calc_median would only need two if statements. Might it also make it easier to predict branching?
+ 
+ If the card array is expressed in a structure that allows deletion and restoration while preserving order, it may be possible to further speed up the process while retaining the current advantage of not requiring a copy. Is there such a data structure? Since it is known that no additions will occur, we can create a linked list as an array.
+ 
+ This can be done with a MacBook, so let's do it while I'm back at my parents' house.
+ 
+ Next, we used OpenCV and a USB camera to recognize images of playing cards. It's a hassle to carry around a camera, but if you save the images from the camera locally, you can just bring your Thinkpad back to your parents' house.
+ 
+ I have to do it in my room because my room is not reacheable from outside. I can develop on MacBook with an emulator, but I don't think it will be popular.
+ 
+ I knew CUDA was the top priority!
+ 
+ *1230042229*Goolang
+ Since there was no GPUPU when Erlang was born, Google should just make a new Erlang-like VM. They should also make the hardware. They should also create a language. And call it Goolang!
+ 
+ *1230047914*vim-rogue
+ As you advance through the dungeon, a monster appears, and the monster presents you with the string before and after the rewrite, and you can defeat the monster when you finish the rewrite. It is important to rewrite quickly as hit points decrease with time.
+ 
+ You can buy a magic book at the magic shop in town, and when you read it, it has vim commands, but of course if you don't use them, you forget them (literally).
+ 
+ There are various status abnormalities; for example, the blind status abnormality makes it impossible to see the text being typed. The pious status abnormality is a beginner's curse because it prevents the use of the cursor keys, but advanced users can intentionally cause a status abnormality by wearing a "ring of piety" because it has the effect of lowering the time consumption when moving.
+ 
+ The heavier the load, the slower the key repeat. More in-game time is also consumed. In-game time is basically proportional to the number of keys struck. However, meta keys have an additional cost. The vim command can be used to move around the map.
+ 
+ I hope someone will make a game that is like that!
+ 
+ *1230057212*CUDA Diary 3
+ Shared memory is said to be equivalent to L1 cache. Global memory is not cached, so it explicitly caches itself if necessary. It takes only 4 clocks to tell it to read from global memory, but there is a latency of 400 to 600 clocks before the data is actually sent. If there are a sufficient number of independent processes in the meantime, they can do that, thus hiding the latency.
+ 
+ What I wrote in the first entry today, about how unlike CPUs, branching takes time for both, was properly written in the cuda programming guide.
+ 
+ The unit of the value returned by the clock function is "the value of a per-multiprocessor counter that is incremented every clock cycle". So, which clock is it, the core clock of 600 MHz or the shader clock of 1500 MHz? Am I right in understanding that it is the shader clock?
+ 
+ If so, the readout for the last turn of the middle limit is about 12,000 clocks, so the entire last round would be 1.3 seconds. If we parallelize the code well, it will be 14 times faster than the C++ code, which is 0.09 seconds. Well, if you look at the speedups of other computational processes, I guess that's about right. I still wish it was an order of magnitude faster. I wonder if I can make it an order of magnitude faster if I work hard.
+ 
+ >||
+ >>> 12000 * 4 * 9 * 8 * 5 * 11 * 10 / 1500000000.0
+ 1.2672000000000001
+ >>> _ / 14
+ 0.090514285714285728
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>hoge</username>
+ <body>If you have a choice, there is also vip. </body>
+ <timestamp>1230032720</timestamp>
+ </comment>
+ <comment>
+ <username>earth2001y</username>
+ <body>sh is elif</body>.
+ <timestamp>1230038224</timestamp>
+ </comment>
+ <comment>
+ <username>Dubhead</username>
+ <body>>> Auto indent function<br>I'm not sure, are you talking about CTRL-T / CTRL-D while in input mode? <br>:he i_CTRL-T reference. </body>
+ <timestamp>1230091570</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-12-23 https://nishiohirokazu.hatenadiary.org/archive/2008/12/23]

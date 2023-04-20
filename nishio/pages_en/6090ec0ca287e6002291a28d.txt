@@ -1,0 +1,119 @@
+Hatena2013-01-29
+code:hatena
+ <body>
+ *1359434255* Random, huh? (Gasp!
+ Indeed, I am tired of this temps too:
+ 
+ >>
+ ONK: "There are 10 apples. Randomly divide them among three people." I wonder how neat it would be to drop that into the code.
+ yoshiori: @onk Random, huh?
+ onk: @yoshiori pseudo-random is fine
+ yoshiori: @onk phew, you made me impatient ......(Tempted so far in my mind)
+ yoshiori: I'm starting to feel like it's not a good idea to respond to the word "random" anymore, even in stories
+ <<
+ 
+ So I thought of a new masakari. What are you trying to make equally probable?
+ 
+ 
+ 
+ Let's consider distributing two apples to two people, Mr. A and Mr. B. There are a total of four ways to distribute them. (A, A), (A, B), (B, A), and (B, B).
+ 
+ If we want to make these four ways equally probable, we can assign each apple to A and B with a probability of 1/2 for each apple. Incidentally, Python's random.choice is a function that chooses one of the given elements.
+ >|python|
+ >>> from random import choice
+ >>> [choice("AB") for i in range(2)]
+ ['B', 'A', 'A', 'A', 'B', 'B', 'C', 'C', 'B', 'A']
+ ||<
+ In other words, if you want to distribute 10 pieces to three people, here's how you do it.
+ >|python|
+ >>> [choice("ABC") for i in range(10)]
+ ['B', 'A', 'A', 'A', 'B', 'B', 'C', 'C', 'B', 'A']
+ ||<
+ 
+ 
+ 
+ Is this satisfying to you? No?
+ 
+ 'No, I don't! I don't want to distinguish between (A, B) and (B, A)."
+ 
+ Okay, you want to equate both (A, B) and (B, A) as "one in A and one in B". Then there are a total of three ways to distribute them. (2, 0), (1, 1), and (0, 2).
+ 
+ If you want these three ways to be equally probable, this is the way to do it.
+ 
+ >||
+ >>> from random import random
+ >>> a = int(random() * 3)
+ >>> b = 2 - a
+ ||<
+ 
+ But this method can only be used when "dividing in two"; if you're dividing 10 pieces among three people, you might do it this way.
+ 
+ >|python|
+ N = 10
+ def sampling():
+     x = int(random() * (N + 2))
+     y = int(random() * (N + 1))
+     if x > y:
+         x, y = y, x - 1
+     return (x, y - x, N - y)
+ ||<
+ 
+ In this code, "10 apples to be divided among 3 people" is replaced with "10 apples are placed in a row horizontally, and two of the 11 spaces on either side of the apples (x, y) are marked with a stick, and the space to the left of x is for A, between x and y is for B, and the space to the right of y is for C." I have to sample x and y with the condition "x <= y", but I don't want to throw away the ones that don't satisfy the condition, so I rotate and reuse them.
+ 
+ Let's check it out: sampling 66,000 times, we see that the 66 patterns of output all come out roughly 10000 times each.
+ >|python|
+ >>> from collections import Counter
+ >>> Counter(sampling() for _x in xrange(660000))
+ Counter({(9, 0, 1): 10179, (3, 1, 6): 10161, (1, 9, 0): 10135, (0, 6, 4): 10132, (2, 0, 8): 10131, (3, 7, 0): 10119, (6, 1, 3): 10117, (1, 6, 3): 10112, (0, 7, 3): 10098, (7, 2, 1): 10096, (7, 1, 2): 10083, (10, 0, 0): 10083, (2, 6, 2): 10076, (1, 7, 2): 10068, (7, 0, 3): 10057, (4, 1, 5): 10054, (9, 1, 0): 10050, (2, 7, 1): 10043, (3, 4, 3): 10043, (5, 1, 4): 10041, (2, 5, 3): 10041, (0, 8, 2): 10040, (6, 3, 1): 10040, (1, 0, 9): 10039, (2, 8, 0): 10035, (4, 6, 0): 10033, (3, 3, 4): 10030, (8, 1, 1): 10022, (4, 5, 1): 10020, (5, 0, 5): 10018, (6, 4, 0): 10014, (5, 2, 3): 10011, (6, 2, 2): 10009, (4, 2, 4): 10008, (8, 0, 2): 10005, (3, 6, 1): 9996, (0, 2, 8): 9990, (0, 1, 9): 9983, (2, 1, 7): 9980, (2, 3, 5): 9979, (0, 9, 1): 9978, (1, 4, 5): 9973, (8, 2, 0): 9966, (0, 10, 0): 9964, (1, 1, 8): 9963, (3, 5, 2): 9958, (1, 3, 6): 9956, (7, 3, 0): 9949, (1, 5, 4): 9944, (3, 2, 5): 9943, (0, 0, 10): 9938, (4, 3, 3): 9938, (1, 8, 1): 9937, (5, 3, 2): 9918, (4, 0, 6): 9917, (1, 2, 7): 9910, (2, 4, 4): 9909, (4, 4, 2): 9895, (5, 5, 0): 9887, (3, 0, 7): 9886, (0, 5, 5): 9880, (5, 4, 1): 9854, (6, 0, 4): 9852, (0, 3, 7): 9851, (0, 4, 6): 9846, (2, 2, 6): 9817})
+ ||<
+ 
+ I am not sure what to do when dividing into m people in general. I guess it would be possible to sample widely, and if x1 <= x2 <= ... <= x_(M-1), it would be possible to discard and start over (rejection sampling), but as M gets larger, the efficiency gets worse and worse. I thought I could use the method used in sampling from the Dirichlet distribution, "sort and take the difference," but in this case, the probability of x = y is not zero, so I can't use this method.
+ 
+ 
+ 
+ Zee-ha-ha-ha-ha (exhale) Is this what you've been looking for? What, no?
+ 
+ I don't want to distinguish between (0, 2) and (2, 0)."
+ 
+ Tell me first... If you wish to divide them that way, there are a total of two ways to divide two pieces between two people. (2, 0), (1, 1).
+ 
+ This is getting to be a hassle, so can we do this?
+ 
+ >||
+ >>> choice(((2, 0), (1, 1)))
+ (2, 0)
+ ||<
+ 
+ If the possible value patterns are small enough, enumeration and selection is the quickest way. (I mean, there were 66 possible ways to divide the 10 into three, so you could have just enumerated them without thinking about the hassle, right?)
+ 
+ I think it's OK to write out the 14 values by hand, but since humans are fallible creatures, let's check the code. Each value is sorted into a tuple and put into a set type set. The result was 14, the same as the result obtained by hand.
+ 
+ >||
+ >>> perms.keys()
+ [(3, 0, 7), (1, 6, 3), (2, 8, 0), (2, 1, 7), (3, 7, 0), (3, 3, 4), (1, 0, 9), (2, 2, 6), (0, 8, 2), (5, 4, 1), (6, 0, 4), (5, 1, 4), (7, 1, 2), (1, 9, 0), (4, 3, 3), (5, 3, 2), (4, 2, 4), (5, 5, 0), (3, 5, 2), (7, 2, 1), (8, 0, 2), (2, 0, 8), (1, 7, 2), (5, 2, 3), (4, 1, 5), (7, 0, 3), (1, 1, 8), (5, 0, 5), (6, 4, 0), (0, 7, 3), (6, 1, 3), (6, 2, 2), (0, 1, 9), (4, 5, 1), (2, 4, 4), (4, 0, 6), (2, 5, 3), (2, 6, 2), (0, 6, 4), (0, 9, 1), (9, 1, 0), (1, 4, 5), (8, 1, 1), (3, 4, 3), (3, 1, 6), (1, 8, 1), (4, 6, 0), (0, 2, 8), (0, 3, 7), (2, 3, 5), (1, 5, 4), (3, 6, 1), (0, 5, 5), (9, 0, 1), (1, 3, 6), (1, 2, 7), (2, 7, 1), (7, 3, 0), (0, 0, 10), (6, 3, 1), (0, 10, 0), (8, 2, 0), (4, 4, 2), (3, 2, 5), (0, 4, 6), (10, 0, 0)]
+ >>> keys = _
+ >>> set(tuple(sorted(k)) for k in keys)
+ set([(2, 3, 5), (0, 0, 10), (0, 5, 5), (0, 4, 6), (1, 3, 6), (1, 2, 7), (2, 2, 6), (1, 4, 5), (2, 4, 4), (3, 3, 4), (0, 1, 9), (1, 1, 8), (0, 2, 8), (0, 3, 7)])
+ >>> combs = _
+ >>> len(combs)
+ 14
+ ||<
+ 
+ So the sampling from here is like this. tuple is used because Python does not allow choice from set.
+ 
+ >||
+ >>> combs = tuple(combs)
+ >>> choice(combs)
+ (0, 0, 10)
+ >>> choice(combs)
+ (1, 4, 5)
+ ||<
+ 
+ Whew, I'm not sure what to do when N apples are to be distributed to M people in general and N or M is too large to enumerate all patterns. Someone tell me.
+ 
+ ** Summary
+ 
+ You can easily say "random," but you can't do anything unless you decide what you want to have equal probability of.
+ </body>
+
+[Hatena Diary 2013-01-29 https://nishiohirokazu.hatenadiary.org/archive/2013/01/29]

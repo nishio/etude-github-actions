@@ -1,0 +1,191 @@
+Hatena2012-04-07
+code:hatena
+ <body>
+ *1333763040*Alloy Diary 3: Modeling Marriage and Divorce
+ Since "relationship" is the basic building block of language in Alloy, it is still easy to understand using "relationship" as a familiar relationship. So I took the liberty of creating a sequel to Mr. Hiyama's <a href='http://d.hatena.ne.jp/m-hiyama/20110803/1312363821'>Life Modeling with Alloy Part 2: Setting the Time Line - Masayuki Hiyama's Chimera Breeding Chronicles</a>.
+ 
+ See Mr. Hiyama's entry for an explanation of ORDERING. See chapter 6.1 for how to include time-varying states in the model, or see my <a href='http://d.hatena.ne.jp/nishiohirokazu/20120405/1333636035'>Alloy Diary 2: Time-varying state</a> that I wrote while looking at it.
+ 
+ So, first of all, the source. Excluding blank lines and comments, it is only 29 lines.
+ 
+ >||
+ open util/ordering[Time]
+ 
+ sig Time {}
+ 
+ sig Person {
+ 	state: State -> Time,
+ }
+ 
+ enum State {Married, NotMarried}
+ 
+ pred init (t: Time) {
+   all p: Person | p.state.t = NotMarried
+ }
+ 
+ pred step (t, t': Time) {
+ 	some disj p1, p2 : Person {
+ 		{
+ 			// marrige
+ 			p1.state.t = NotMarried and p2.state.t = NotMarried
+ 			p1.state.t' = Married and p2.state.t' = Married
+ 		} or {
+ 			// divorce
+ 			p1.state.t = Married and p2.state.t = Married
+ 			p1.state.t' = NotMarried and p2.state.t' = NotMarried
+ 		}
+ 	}
+ }
+ 
+ fact Traces {
+ 	init[first]
+ 	all t: Time - last {
+ 		step[t, t.next]
+ 	}
+ }
+ 
+ run {} for exactly 3 Person, 5 Time
+ ||<
+ 
+ In fact Traces, there is a conjunction of "the predicate init is formed at the first time" and "the predicate step is formed for two consecutive times". init means "no one is married at the first time" and step means "there are two different Persons p1 and p2, (both married at the previous time and not married at the next time) or (both married at the previous time and not married at the next time)". (both were married at the previous time and are married at the next time) or (both were married at the previous time and are not married at the next time).
+ 
+ When you run it, you can observe three people coming out and sticking together or moving apart. Oh, of course, I need to set the Visualizer to Projection by Time in the Visualizer settings. Is it possible to embed these instructions to Visualizer in a comment or something in the code?
+ 
+ Now, since the current situation is still not interesting enough with Person0 and Person1 getting married and so on, I'm going to try to name humans using the library I created the other day. To begin with, humans don't have a gender at this point in time.
+ 
+ ** Name the characters
+ 
+ >|diff|
+  open util/ordering[Time]
+ +open named_man_ja [Man]
+ +open named_woman_ja [Woman]
+  
+  sig Time {}
+  
+ -sig Person {
+ +abstract sig Person {
+  	state: State -> Time,
+  }
+  
+ +abstract sig Man, Woman extends Person {}
+ +
+  enum State {Married, NotMarried}
+ ||<
+ 
+ They were named, but Sachiko and Setsuko got married as a female pair! I don't see the restriction that it has to be a pair of different genders.
+ 
+ [f:id:nishiohirokazu:20120407105621p:image]
+ 
+ ** Different genders
+ 
+ >|diff|
+ -       some disj p1, p2 : Person {
+ +       some p1 : Man, p2 : Woman {
+ ||<
+ [f:id:nishiohirokazu:20120407110247p:image]
+ 
+ Okay, I married a man and a woman. But, what the heck? Susumu said, "Unmarried or married, it doesn't matter to me.
+ 
+ This doesn't include the "no change from the state immediately before except for those who are married or divorced" constraint.
+ 
+ ** Others do not change state.
+ 
+ >|diff|
+ 
+         some disj p1 : Man, p2 : Woman {
+ -               {
+ +               {{
+                         // marrige
+                         p1.state.t = NotMarried and p2.state.t = NotMarried
+                         p1.state.t' = Married and p2.state.t' = Married
+  		} or {
+                         // divorce
+                         p1.state.t = Married and p2.state.t = Married
+                         p1.state.t' = NotMarried and p2.state.t' = NotMarried
+ +               }}
+ +               // others don't change their state
+ +               let others = (Person - p1 - p2) {
+ +                       others.state.t = others.state.t'
+                 }
+ ||<
+ 
+ Hmmm, I was just about to show that I got it to work, but it's a pain to manually take 5 screenshots. I wonder if there is a function to output them as sequentially numbered images.
+ 
+ [f:id:nishiohirokazu:20120407111403p:image]
+ [f:id:nishiohirokazu:20120407111402p:image]
+ [f:id:nishiohirokazu:20120407111401p:image]
+ [f:id:nishiohirokazu:20120407111400p:image]
+ [f:id:nishiohirokazu:20120407111359p:image]
+ 
+ First, everyone is unmarried at first, then Kumiko and Susumu get married, get divorced, marry Takashi again, and then get divorced again, and so on, the scenario is generated. Congratulations!
+ 
+ ** Refactoring
+ 
+ Now it's time for everyone's favorite refactoring, and the advantage of Alloy is that it's like an exhaustive test written in a search range, so you can refactor with confidence.
+ 
+ >||
+ pred change_state (
+ 	p1 : Man, p2 : Woman,
+ 	t, t': Time,
+ 	before, after : State){
+ 		p1.state.t = before
+ 		p2.state.t = before
+ 		p1.state.t' = after
+ 		p2.state.t' = after
+ 		// others don't change their state
+ 		let others = (Person - p1 - p2) {
+ 			others.state.t = others.state.t'
+ 		}	
+ }
+ 
+ pred step (t, t': Time) {
+ 	some disj p1 : Man, p2 : Woman {
+ 		change_state[p1, p2, t, t', NotMarried, Married]
+ 		or
+ 		change_state[p1, p2, t, t', Married, NotMarried]
+ 	}
+ }
+ ||<
+ 
+ But then again, you can never be too sure.
+ 
+ ** Narrow search area will not find bugs.
+ 
+ My raw eyes found a bug in the above code while refactoring. Why wasn't it supplemented by Alloy? That's because the characters were only explored to the extent of three. First, let's have Alloy discover it itself. Let's see, can it occur when there are 5 characters and the time is 4 or more?
+ 
+ >||
+ run {} for exactly 5 Person, 4 Time
+ ||<
+ 
+ I ran it, and it showed me a case where the same bug could cause it to occur in a different scenario than the one I came up with, even with 4 people. I see, yes, it still happens.
+ 
+ [f:id:nishiohirokazu:20120407114016p:image]
+ [f:id:nishiohirokazu:20120407114015p:image]
+ 
+ What is the cause?
+ 
+ >|diff|
+ -               let others = (Person - p1 - p2) {
+ -                       others.state.t = others.state.t'
+ -               }
+ +               all other: (Person - p1 - p2) {
+ +                       other.state.t = other.state.t'
+ +               }       
+ ||<
+ 
+ The way I wrote it before the revision was "the set of states of all OTHERS is unchanged", so it is possible to go from "Mr. A has M and Mr. B has M" to "Mr. A only has M and Mr. B has none". This is because I forgot to write the obvious restriction that "each person has exactly one state at each point in time".
+ 
+ The failure of the one I came up with was that it implicitly assumed "each person has exactly one state at each point in time", so there could be an "exchange of states" from "A is M and B is N" to "A is N and B is M", which occurs with 5 or more people, but the implicit assumption was broken, so there was more So there was a smaller example.
+ 
+ The revised writing declares that the status remains the same for each individual in OTHERS in ALL.
+ 
+ ** Summary
+ Well, this is how I unintentionally demonstrated that Alloy is not all-powerful, either (lol).
+ When I use Alloy, I feel as if I am talking to a smart person.
+ 
+ Alloy: "What, you're acting like I made a mistake, but you were the one who first said 'in the range of up to three people' in the first place."
+ 
+ Alloy girl.
+ </body>
+
+[Hatena Diary 2012-04-07 https://nishiohirokazu.hatenadiary.org/archive/2012/04/07]

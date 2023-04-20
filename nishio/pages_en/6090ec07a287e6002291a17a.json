@@ -1,0 +1,105 @@
+Hatena2011-05-12
+code:hatena
+ <body>
+ *1305207754* History of threading (or rather concurrency)
+ Reprinted from Twitter
+ >>
+ I wondered when threads were invented, but I'm not sure. Of course, user-level threads are probably older than that, but I wonder when.
+ <<
+ 
+ >>
+ hideaki_t: NeXTSTEP (Mach 2.0?) had cthread.
+ <<
+ 
+ >>
+ atsuoishimoto: I first heard the term "thread" in OS/2 in the early '90s, I think.
+ <<
+ 
+ >>
+ This is 2004 > NetBSD 2.x+, and DragonFly BSD implement LWPs as kernel threads (1:1 model)
+ <<
+ 
+ >>
+ shidocchi: I learned about it when I was doing Mach source reading in my grad school lab.
+ <<
+ 
+ >>
+ October 2, 2001 Mac OS X v10.1...real-time threads, thread management, and
+ <<
+ 
+ >>
+ Single task -> cooperative multitasking -> preemptive multitasking (but one thread per process) -> so Unix connected processes with pipes -> but it's hard if the data to be shared is large -> let's make a more detailed execution unit in the process (which can share data) -> user thread -> kernel thread Kernel thread, and so on.
+ <<
+ 
+ >>
+ koyama41: pthread is 1995 and Solaris libthread is 1993, I thought UNIX origin was around that time http://download.oracle.com/docs/cd/E19253-01/819-0390/mtintro-75924/ index.html
+ <<
+ 
+ >>
+ So Simula was 67 and the Actor model was 73 with Smalltalk in between.
+ <<
+ 
+ >>
+ I understand that the concept of monitor, introduced by Hoare in concurrent Pascal, became widely popular when it was adopted by Java, but as a result, it was used in inappropriate ways, and the actor model was brought back into the spotlight by Aran and Scalar. Also, I'm trying to figure out what's going on with closure.
+ <<
+ 
+ (I can't find the origin of the thread here, so the story is spreading into parallelism.)
+ 
+ I didn't Tweet this, but the time-sharing system was proposed in 1957, MIT's demonstration of the feasibility of a time-sharing system in 1961, and IBM's release of a commercial time-sharing system OS in 1967.
+ Dijkstra's semaphore in 1965, the actor model in 1973, Hoare's monitor in 1974, Java's release in 1995, and pthread in 1995. That seems to be about the time flow. I thought, "Threads are surprisingly young.
+ 
+ TODO: When were hardware interrupts invented?
+ 
+ <hr>
+ Postscript:.
+ >>
+ ksmakoto: the days when we called it "lightweight process".
+ <<
+ 
+ >>
+ kosaki55tea: I think the thread is older than the process. I can't find any references, though. I mean, if you have an OS that doesn't have virtual space management or something like that, you automatically only have threads.
+ <<
+ 
+ >>
+ AkioHoshi @kosaki55tea @nishio Excuse me for sidestepping, but the basic concept of Mach operating system is "task and thread", which was introduced by Masami Hagiya at DECUS in Japan around 1987. native threading in UNIX was later From.
+ <<
+ 
+ >>
+ uebayasi: I googled faqs.org right away, but Usenet is too old for you to know. uebayasi: I googled it and found faqs.org right away.
+ <<
+ 
+ >>
+ [2.2.3] The history of threads http://www.faqs.org/faqs/os-research/part1/section-10.html
+ <<
+ 
+ >>
+ terazzo I googled and found that the idea of "the importance of being able to make a lightweight process in a heartbeat" came from http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.41.3458&rep=rep1&type=pdfによると I found that the idea came from THOTH (http://cseweb.ucsd.edu/classes/wi08/cse221-a/papers/cheriton79.pdf) or something like that.
+ <<
+ 
+ <hr>
+ A rough translation of The history of threads http://www.faqs.org/faqs/os-research/part1/section-10.html:.
+ 
+ When did we start calling a process flow a "thread"? We called it in the Berkeley Timesharing System in 1965 at the latest. But the concept of concurrency did not exist before then; it was called "process" then. (Even in Dijkstra's '65 paper.) This "process" (unlike what we now imagine as a process in the Unix sense) had shared memory and used semaphores for exclusions.
+ 
+ In 1970 Max Smith prototyped threads on Multics, which was an attempt to have multiple stacks in a single weight process.
+ 
+ The originator of "threads" in programming languages was probably PL/I (1965-) by IBM, which had the syntax `CALL XXX (A, B) TASK;'. This forks a thread for XXX. I don't know if any compilers implemented this feature; it was made after careful study of how Multics was designed. For example, TASK calls are not mapped to processes, and thread-to-thread memory is completely transparent. However, Multics changed direction and IBM removed the TASK feature from PL/I.
+ 
+ Then came Unix, which used the word "process" to mean "thread + virtual address space. (Incidentally, this notation in Unix was inherited directly from Multics.) So "process" in the Unix sense became a heavy thing that involved switching virtual address spaces. Processes couldn't share memory because they each had their own individual address space, but they could interact with each other using pipes and signals. The shared memory feature was added much later.
+ 
+ After a while, Unix users began to miss the old "memory-sharing processes". This triggered the invention of so-called "threads. Threads are "old-style processes" that share the virtual address space of a single Unix process. This distinction between "lightweight" and "heavyweight" processes can be traced back to the late 70s and early 80s, to the first "microkernel".
+ </body>
+ <comments>
+ <comment>
+ <username>Harmless old man</username>.
+ <body>The so-called threads predate Mach, V (1981-). <BR>It seems that hardware threads have been around since the 1950s. <br>The first hardware interrupts seem to be UNIVAC I with only overflow interrupts and NBS DYSEAC with I/O interrupts. </body>
+ <timestamp>1305229510</timestamp>
+ </comment>
+ <comment>
+ <username>soda</username>
+ <body>Solaris libthreads and pthreads are very similar in specification to Mach's cthreads. I think it is safe to say that these are all straightforward bindings of Hoare's Monitor to C. (To put a finer point on it, there are some minor variants in Monitor's semantics...)</body>
+ <timestamp>1305250037</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-05-12 https://nishiohirokazu.hatenadiary.org/archive/2011/05/12]

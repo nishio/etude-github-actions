@@ -1,0 +1,142 @@
+Hatena2007-11-05
+code:hatena
+ <body>
+ *1194229532*Reporting of Unexplored Final Results
+ IPA Exploratory Software Creation Project 2007 I. Final Results Report of Hata PM Adopted Project
+ http://mitou-hata.com/
+ Program
+ http://mitou-hata.com/program.html
+ 
+ I wonder how it is that we can have Mr. Kasahara, the president of mixi, give a lecture, but we can't know that without seeing the program.... Well, I guess it's just because the main actors are unexplored developers.
+ 
+ Plan to attend until the reception.
+ 
+ *1194229816*// TODO: no error checking - we’re bold…
+ Cool.
+ I'll use it next time.
+ 
+ *1194236973*code what?
+ >>
+ The day has already passed, but today (10/26) codeNashii has over 1,000 registered users!
+ <<
+ 
+ Hey, I think I heard something about more before...
+ 
+ But then I found that the relevant entry had been deleted. Was it just a mistake?
+ 
+ *1194242571*EmacsLisp
+ I wrote the following in EmacsLisp and got angry.
+ 
+ >|Lisp|
+ (defun declease-point (n)
+     (lambda () (- (point) n)))
+ ||<
+ 
+ EmacsLisp has no closures.
+ <a href="http://www.geocities.co.jp/SiliconValley-PaloAlto/7043/index.html#cl-elisp-memo-closure">(Scheme) (Lisp)</a> with "The cl package I can use the lexical-let in the cl package to make a closure..." I'm going to check it out on how-to-write-org since I'm making how-to-write-org. The subject that seems to use closure is <a href="http://ja.doukaku.org/29/lang/emacslisp/">Function that returns a function that returns n days later How to write in Emacs Lisp org</a>.
+ 
+ There are four posts by two people, one using lexical-let, but the other doing something with a comma before the identifier. It's a syntax I don't know. I'll look into it.
+ 
+ ---
+ 
+ It went like this.
+ 
+ >|Lisp|
+ (defun declease-point (n)
+     `(lambda () (backward-char ,n)))
+ 
+ (funcall (declease-point 5))
+ ||<
+ 
+ Evaluating the second expression moves the cursor back five places before.
+ 
+ ---
+ 
+ Well, this is what I wanted to do.
+ >|Lisp|
+ (define-abbrev-table 'django-html-mode-abbrev-table '(
+     ("bl" "{% blocktrans %}{% endblocktrans %}" (move-backward 19))
+ ||<
+ 
+ Note the second character from the end of the first line. It is quoted.
+ In other words, (move-backward 19) is evaluated and does not enter the table as a function, but as '(move-backward 19)'. So, Invalid function error orz.
+ 
+ ---
+ 
+ Search for "quotes part evaluation". They use <a href="http://www.mew.org/~kazu/doc/elisp/backquote.html">backquote</a>. Oh, so the `you` are using backquote in the previous one. I was using it as a normal quote.
+ Well, I heard that you can use backquotes to force the evaluation only partially with a comma.
+ 
+ >|Lisp|
+ (define-abbrev-table 'django-html-mode-abbrev-table `(
+     ("bl" "{% blocktrans %}{% endblocktrans %}" ,(move-backward 19))
+ ||<
+ 
+ Now the cursor moves to the middle of the tag after completion successfully.
+ 
+ I'll write about it later on the Lab Blog.
+ 
+ References
+ <a href="http://www.bookshelf.jp/texi/emacs-lisp-intro-jp/eintro_5.html">Emacs Lisp Programming: How to Write Function Definitions</a>
+ <a href="http://www.fan.gr.jp/~ring/doc/elisp_20/elisp_30.html#SEC460">GNU Emacs Lisp Reference Manual: 29. Location in buffers</a>
+ 
+ *1194267368* Summary of the Day
+ Every day we should organize what we did that day and what we'll do tomorrow.
+ 
+ - I'd like to rewrite the four-letter word problem of how to write org, but I'd like to take your point and rewrite it.
+ - added a message indicating when the subject queue is empty
+ - FreeBSD on VMWare, sudo shutdown now from remote only switches to single user mode? Shutdown -h now.
+ - I want to put rsync on my windows machine. http://www.itefix.no/phpws/index.php?module=pagemaster&PAGE_user_op=view_page&PAGE_id=6&MMN_position=23:23 download cwRsync and install it and add it to my path.
+ - I had to put rsync on FreeBSD as well, sudo pkg_add -r rsync got me in.
+ - A reverse proxy was created.
+ - The header delimiter was \r\n. I thought it was \n. http://lab.moyo.biz/translations/rfc/rfc2068-ja.xsp#2.2
+ - I wonder if I can take the body part by .split("\r\n\r\n", 2)[1]. I wonder if there is a more elegant way.
+ - The header part of the parsing is done by wrapping the response in cStringIO and passing it to HTTPMessage.
+ - For now, we have a reverse proxy that replaces the string "test" in the body with "foo". The rest is generalization.
+ 
+ Tomorrow we will pluggable the proxies.
+ I'll post one if I don't have a subject posted on how to write org by tomorrow.
+ 
+ *1194272504* haircut
+ I forgot to do it.
+ 
+ *1194273580* One Liner Web App
+ Since id:amachang DIS told me that I can't do perverted things with Django (a huge exaggeration).
+ 
+ I was so excited that I thought about making one, but since there is little that is technically new, I decided not to.
+ 
+ >|Python|
+ >>> imp.load_module("core", *imp.find_module("core", imp.load_module("django", *imp.find_module("django")).__path__))
+ <module 'core' from 'C:\Python25\lib\site-packages\django\core\__init__.pyc'>
+ ||<
+ 
+ Except that Django's design is too clean and requires code like the above to deal with the lazy loading of modules to prevent instances from getting too fat, it is easy and uninteresting to create a practical web app with just one line in a single manage.py.
+ 
+ *1194274306* Import deep hierarchy modules with one-liners
+ >|Python|
+ >>> lambda x:(lambda y=x.split("."), imp=__import__('imp'): reduce(lambda p,m: imp.load_module(m, *imp.find_module(m, p.__path__)), y[1:], __import__(y[0])))()
+ <function <lambda> at 0x014941B0>
+ >>> _("django.core.management")
+ <module 'management' from 'C:\Python25\lib\site-packages\django\core\management.pyc'>
+ ||<
+ 
+ It is not DRY to follow the modules connected by dots by yourself, so I created a reusable lambda.
+ 
+ *1194276051* enclosure
+ Kako-u Kako-fu 0 [Surrounding] - goo Dictionary
+ http://dictionary.goo.ne.jp/search.php?MT=%B0%CF%A4%A6&kind=jn&mode=0&base=1&row=0
+ 
+ >>
+ (2) To keep a concubine secretly in another house, etc.
+ <<
+ 
+ How dare you take John Resig as a concubine!
+ </body>
+ <comments>
+ <comment>
+ <username>hatashinya</username>
+ <body>>You have to look at the program to see that<br><br>I have put a statement to that effect on the top page. <br>Thanks for pointing that out. </body>
+ <timestamp>1194243810</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2007-11-05 https://nishiohirokazu.hatenadiary.org/archive/2007/11/05]

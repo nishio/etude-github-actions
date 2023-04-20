@@ -1,0 +1,109 @@
+ABC169
+[Atcoder Beginner Contest] 169 #atcoder
+[https://gyazo.com/b5e51a38e875de48224f6fe4ee0a7669]
+I didn't realize that B would be 0 even after the overflow, but it is kind enough to drop it in the sample case.
+
+Some people seem to have gotten into C and consumed a lot of time, but I was able to get through it easily with the first move "integer arithmetic with string replacement of decimal point". I easily passed the first time by doing "integer arithmetic with decimal point replaced by string".
+code:python
+ A, B = input().split()
+ A = int(A)
+ B = int(B.replace(".", ""))
+ print(A * B // 100)
+
+D is prime factorized and compared to triangular numbers. I was anxious because I had no skin in the game to see if the prime factorization would time out, so I asked, "Embed the prime number table?" I thought, "Do I embed the prime number table?
+Since "[premature optimization] is the root of all evil," once I did it the rustic way and threw it in with the intention of speeding it up after it timed out, it went through in one shot.
+code:python
+ from math import sqrt
+ from collections import defaultdict
+ N = int(input())
+ factors = defaultdict(int)
+ 
+ upper = int(sqrt(N))
+ for p in range(2, upper + 1):
+     while N % p == 0:
+         factors[p] += 1
+         N //= p
+ if N != 1:
+     factors[N] = 1
+ 
+ # print(factors)
+ result = 0
+ for p in factors:
+     fp = factors[p]
+     ti = 1
+     while True:
+         # print(p, fp, ti)
+         if fp >= ti:
+             fp -= ti
+             ti += 1
+             result += 1
+         else:
+             break
+ 
+ print(result)
+
+E was a planting arithmetic to find the upper and lower limits of the "possible median value" and count the number in between.
+Since "the lower limit of the median possible value" is "near the median of the lower limit of the range of values," the policy is to sort the upper and lower limits, respectively, and read the middle of the range.
+Since the boundary condition was suspicious, I threw it once when I had finished writing the main plot to make sure it did not time out (if it did, I would have to fundamentally revise the algorithm, so there was no point in doing detailed tests), and then started writing test cases.
+code:python
+ TEST = False
+ 
+ if not TEST:
+     N = int(input())
+     AS = []
+     BS = []
+     for i in range(N):
+         A, B = [int(x) for x in input().split()]
+         AS.append(A)
+         BS.append(B)
+ 
+ 
+ def getBound(AS, BS):
+     """
+     >>> getBound([0, 1], [1, 2])
+     1 3 3
+     >>> getBound([0, 0], [1, 2])
+     1 3 3
+     >>> getBound([0, 1, 2], [1, 2, 3])
+     1 2 2
+     >>> getBound([0, 1, 2], [1, 3, 3])
+     1 3 3
+     >>> getBound([0, 0, 1], [2, 3, 3])
+     0 3 4
+     """
+     N = len(AS)
+     AS2 = AS[:]
+     AS2.sort()
+ 
+     BS2 = BS[:]
+     BS2.sort()
+     if N % 2 == 0:
+         lower = AS2[N // 2 - 1] + AS2[N // 2]
+         upper = BS2[N // 2 - 1] + BS2[N // 2]
+         result = upper - lower + 1
+     else:
+         lower = AS2[N // 2]
+         upper = BS2[N // 2]
+         result = upper - lower + 1
+     if TEST:
+         print(lower, upper, result)
+     else:
+         return result
+ 
+ 
+ def _test():
+     import doctest
+     doctest.testmod()
+ 
+ 
+ if TEST:
+     _test()
+ else:
+     print(getBound(AS, BS))
+ 
+
+[https://gyazo.com/0abed2cc8ce19a58ebfbabf7209f976b]
+Performance is said to be a value that the rating will converge to if it is maintained over time.
+
+https://note.nkmk.me/atcoder-python-numpy-scipy-version/
+I didn't know you could use non-standard libraries.

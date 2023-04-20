@@ -1,0 +1,139 @@
+Hatena2008-11-01
+code:hatena
+ <body>
+ *1225517718*[Mid-term limit] when you find yourself in the middle of the day.
+ It was very fast after not being able to tweak the midpoint for a while.
+ http://shinh.skr.jp/m/?date=20081028
+ http://homepage1.nifty.com/herumi/diary/0810.html#30
+ 
+ I knew that I would be criticized for "using vector to do erase and so on, which is slow," so I was going to fix it and then compare the execution time, but the source code is on CodeRepos, so it was corrected before I fixed it. I thought it was a loss of opportunity not to release the source code because I was afraid that I might be criticized if I released it in its current state.
+ 
+ >>
+ Read the code. Well, the chuunibu-chic is great and all, but the function think_[a23]_turns? is not easy to maintain...
+ <<
+ 
+ Hmm, think_a_turn is the last turn, so there is no need to create a "list of cards available for the next turn", and think_3_turns is the beginning of the round, so the round score is [0, 0, 0] and there is no need to add up the scores from the turn to it. I could put these three functions together, but I couldn't figure out how to do it without paying unnecessary costs, so I've separated them.
+ 
+ >>
+ Maybe this code has not been fully explored.
+ 
+ 　for(size_t i=0; i < N; i++){
+ 　　cards rest1 = except_one(unknowns, i);
+ 　　for(size_t j=i+1; j < N; j++){
+ 
+ I think this is not the case when the two enemies have different scores.
+ <<
+ 
+ Let's use think_a_turn, which requires the least amount of unnecessary processing.
+ 
+ >|cpp|
+     for(size_t i=0; i < N; i++){
+       for(size_t j=i+1; j < N; j++){
+ 	eval_value s = measure(my, unknowns[i], unknowns[j], round_score);
+ 	if(my == get_center(my, unknowns[i], unknowns[j])){
+ 	  // winner is me. 
+ 	  score += s * 2;
+ 	}else{
+ 	  score += s;
+ 	  score += measure(my, unknowns[j], unknowns[i], round_score);
+ 	}
+       }
+     }
+ ||<
+ 
+ When you are in the middle in a turn, swapping the moves played by the other two players does not change the result. Therefore, it does not matter if you do only one side of the process and multiply it by two. On the other hand, if I am not in the middle, I calculate again the version in which the pair is turned over. In about 1/3 of the cases, the two processes can be done once.
+ 
+ >>
+ By the way, as a way to speed up the process, since there are only 52 cards anyway, I think that creating a bool seen[52] before starting to read and switching it between false and true each time a card is used will speed up the process.
+ <<
+ 
+ Is that what this is about?
+ >|cpp|
+        for(size_t i=0; i < 52; i++){
+            if (seen[i]) continue;
+            for(size_t j=0; j < 52; j++){
+                if (seen[j]) continue;
+ ||<
+ 
+ I wonder if it is that obvious that this is fast.
+ In the last turn of reading, what would really be a 5 * 11 * 10 loop would balloon to 52 * 52 * 52 times. Even though most of the time it is just a simple job of taking a value from an array and dumping it, this function is called 6 * 13 * 12 * 7 * 15 * 14 times from upstream, so I don't think it is obvious that the increased cost is acceptable. Well, of course it would be slow to reallocate vectors and so on.
+ 
+ I wonder if it is faster to swap 3 and 5 to [1, 2, 5, 4, 3] and have the information "I have 4 cards in hand" when I use 3 in a hand [1, 2, 3, 4, 5] because the order is irrelevant.
+ 
+ *1225525027*[cpp]How do I compare the performance of the search?
+ What is the fastest way to follow an element when "given N elements, I want to calculate something about a permutation that selects M of them. And how can I write a benchmark to find out which is the fastest? If I write only the loop around the elements, the compiler may say "this is not doing anything" and delete it, and if I write N elements in the program by mistake, they may be calculated to some extent at compile time.
+ 
+ 
+ As for the input, well, let's just pass it in as a command line argument.
+ 
+ 
+ And something that doesn't eat up as much processing time as possible and doesn't make the compiler erase... Maybe a single global variable to which each permutation value is added?
+ 
+ *1225530500*Diet
+ f:id:nishiohirokazu:20081101180521p:image
+ 
+ I tried to lose fat to an age-appropriate level. After all, I used to drink Pilkul every day without thinking, eat sea chicken for breakfast every morning, and have a pork bowl at Sukiya for lunch every day, only to calculate the calories properly and exclaim, "Oh my God, this is so high in calories! I was able to lose weight just by shouting out, "Oh my God, this is so many calories! There is a lot of talk about "recording diets" and such, but I think the most important thing is to be aware of what you are eating and how much you are eating.
+ 
+ *1225532547*Make a tsukotsu nabe
+ f:id:nishiohirokazu:20081101184225j:image
+ 
+ I always avoided daikon radishes because I couldn't consume them all, but they were selling small pieces, so I bought those.
+ 
+ f:id:nishiohirokazu:20081101184929j:image
+ 
+ If you look closely, you will see that it says to put in motsu nabe (motsu, burdock root, leek and cabbage), but leek is the only thing that duplicates it. It says to add vegetables after it starts boiling, but I put them in first because I thought the daikon and carrots would not be cooked through.
+ 
+ f:id:nishiohirokazu:20081101190125j:image
+ 
+ Gumming.
+ 
+ f:id:nishiohirokazu:20081101191046j:image
+ 
+ I added chives and the not-too-hard parts of Chinese cabbage.
+ 
+ I didn't know it until after I made it, but tsukimono has a certain smell.
+ 
+ -----
+ 
+ It was delicious. Once cooked, the smell was not bothersome.
+ 
+ *1225542946*Dishwasher of the future (fantasy)
+ It contains many genetically modified amoebas, which become excited when they are made to listen to certain frequencies of sound, and come out of the culture tank and go around eating organic matter on the dishes. As long as there is food, they divide and eat anyway. When there is no more food, the amoeba starts alcoholic fermentation, and the sensor detects the increase in alcohol concentration inside the dishwasher and plays a sound with a frequency that makes the amoeba want to go home. When the amoeba returns home, the dishwashing is complete.
+ 
+ 
+ It is very eco-friendly as it uses no detergent or water at all. The byproduct is alcohol, which can be used for disinfection. It can also be switched to a mode that produces acetic acid for cleaning sinks.
+ 
+ *1225546707*test
+ >>
+ <aaa
+ <<
+ 
+ What the &lt;/ppp> is this?
+ 
+ >||
+ >>
+ <aaa
+ <<
+ ||<
+ 
+ appears when you write.
+ </body>
+ <comments>
+ <comment>
+ <username>shinichiro_h</username>
+ <body>Ah, I see > I'm turning it over<br><br>seen's means<br><br> for(size_t i=0; i<hand.size(); i++){<br> if (seen[i]) continue;<br> for(size_t j=0; j< unknowns.size(); j++){<br> if (seen[j]) continue;<br><br> that means. It's like hand and unknowns are not updated once the search starts. Don't you think 7 * 15 * 15 * 7 * 15 * 15 or so sounds good? Also, I think swap would be better. <BR><BR>And think_*_turns speed is not too expensive if you add a function object. If vector/list/deque is not updated, the bottleneck will probably be the point count, so I think it would be OK to branch with if, prioritizing maintainability.... </body>
+ <timestamp>1225521811</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, I see, it doesn't have to be 52 * 52 * 52. Doesn't look bad. <br> I should do if (seen[unknowns[j]]) continue; or do hand_is_seen[7], unknown_is_seen[15]. <BR><BR>I don't understand what you mean by "plugging in a function object", but if we lump the different parts of the behavior into a function object and give that function object to the "common process", the compiler should inline it for us so we don't have to pay additional calling costs. Is that what you are saying? </body>
+ <timestamp>1225524450</timestamp>
+ </comment>
+ <comment>
+ <username>shinichiro_h</username>
+ <body>I haven't really thought about it, but I think something like that would probably work > Function Objects<br><br>Well, personally I don't mind the cost, do I? I'm not sure how much I'd like to see it. </body>
+ <timestamp>1225544948</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-11-01 https://nishiohirokazu.hatenadiary.org/archive/2008/11/01]

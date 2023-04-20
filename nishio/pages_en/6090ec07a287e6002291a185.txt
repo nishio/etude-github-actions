@@ -1,0 +1,60 @@
+Hatena2011-06-03
+code:hatena
+ <body>
+ *1307096599*Color lines with multiples of 3 in Emacs
+ To be precise, I wanted to have a green and blue background when the line numbers are 1 and 2 divided by 3. I tried to refer to http://www.bookshelf.jp/soft/meadow_26.html#SEC314, but in the end, small modifications did not result in the desired behavior, so I did a lot of studying. I studied it a lot.
+ First, you can use <a href='http://www.gnu.org/software/emacs/manual/html_node/elisp/Overlays.html#Overlays'>Overlays - GNU Emacs Lisp Reference Manual</a>. Overlays are created by specifying a start point and an end point.
+ 
+ >|lisp|
+ ; stripes.el
+ 
+ (defun stripes-create ()
+   "Colors lines in current buffer alternatively.
+ This will not monitor changes of the buffer."
+   (save-excursion
+     (save-restriction
+       (widen)
+       (stripes-remove)
+       (goto-char (point-min))
+       (while (not (eobp))
+ 	(forward-line stripes-lcount)
+ 	(let ((ppp (point))
+ 	      ovl)
+ 	  (unless (eobp)
+ 	    (forward-line stripes-lcount)
+ 	    (setq ovl (make-overlay ppp (point)))
+ 	    (overlay-put ovl 'face 'stripes-face)))))))
+ ||<
+ (widen) removes narrowing. (goto-char (point-min)) moves to the beginning of the buffer, then forward-line moves down by stripes-lcount (usually 1) lines, make-overlay in the range of before-ppp and after (point), and overlay-put to specify the FACE.
+ 
+ The remainder of the line number divided by 3 can be found by (% (line-number-at-pos) 3).
+ 
+ In stripes.el, I've implemented my own function to get all overlays and then check the value of that face and remove it, but you can do it like (remove-overlays (point-min) (point-max) 'category 'stripe).
+ 
+ The stripes.el places an overlay on the entire buffer when it enters mode, but I don't want it to do that because I have a buffer with a million lines or so for my needs. I've only put it between (window-start) and (window-end), but I'm not sure how to update it when scrolling. I wonder if I should add advice for scrolling commands. <a href='http://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Advice.html#Defining-Advice'>Defining Advice - GNU Emacs Lisp Reference Manual</a>
+ 
+ In stripes.el, this is how you rebuild it when it's edited.
+ >|lisp|
+ (defun stripes-after-change-function (beg end length)
+   "After change function for color alternation mode.
+ Refreshes all the highlighting.  This is slow, but as mostly lists are
+ not changed that often, it should be acceptable.  Arguments BEG END
+ and LENGTH are not used."
+   (if stripes-mode
+       (stripes-create)))
+ 
+ (add-hook 'after-change-functions
+    'stripes-after-change-function)
+ ||<
+ 
+ Oh, there are scrolling hooks available: <a href='http://www.gnu.org/software/emacs/manual/html_node/elisp/Standard-Hooks.html#Standard-Hooks'>Standard Hooks - GNU Emacs Lisp Reference Manual</a> This looks good.
+ </body>
+ <comments>
+ <comment>
+ <username>camlspotter</username>
+ <body>I was thinking of using a lot of overlays too, but stopped there, wondering what to do if I made super many, so this was helpful! </body>
+ <timestamp>1307406634</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-06-03 https://nishiohirokazu.hatenadiary.org/archive/2011/06/03]

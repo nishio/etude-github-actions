@@ -1,0 +1,75 @@
+Hatena2009-12-14
+code:hatena
+ <body>
+ *1260774215*Case in Python where two strings are a == b but not(a is b)
+ Quoting from <a href='http://d.hatena.ne.jp/Kmizukix/20091214'>Question in string comparison</a>:.
+ >>
+ d1 = 'a a'
+ d2 = 'a a'
+ 
+ id(d1)
+ # => 27605856
+ id(d2)
+ # => 27606080
+ 
+ What? Why?
+ <<
+ 
+ Strings are unchangeable objects, so I usually use == instead of is to compare them. It seems that if I create two identical strings with the same content, separated by whitespace, separately in an interactive environment and then compare them with is, the result will be false.
+ 
+ >|python|
+ Python 2.6.1 (r261:67515, Jan 25 2009, 00:21:48) 
+ [GCC 4.0.1 (Apple Inc. build 5490)] on darwin
+ >>> a = "a a"
+ >>> b = "a a"
+ >>> a is b
+ False
+ ||<
+ 
+ However, when written in a single expression, True
+ >|python|
+ >>> "a a" is "a a"
+ True
+ ||<
+ 
+ True if combined into one function
+ 
+ >|python|
+ >>> def foo():
+ ...     a = "a a"
+ ...     b = "a a"
+ ...     return a is b
+ ... 
+ >>> foo()
+ True
+ ||<
+ 
+ True when combined on a single line.
+ >|python|
+ >>> a = "a a"; b = "a a"; a is b
+ True
+ ||<
+ 
+ When executing one line at a time in an interactive environment, each line is compiled to byte code. When a function is created or executed line by line, it is compiled together. That is the difference.
+ 
+ If you try to be thorough and make strings with the same content the same object, you will have to check every time a string is created, "Is this the same as any of the strings that have appeared so far?" That's a lot of work, and it's not easy to do. That's a lot of work, and since Python strings are unchangeable objects to begin with, there is no need to be thorough. That's why they cut a few corners to speed up the process. I wonder. I wonder if it's something like, "Well, a string that contains characters other than alphabetic and numeric characters can't be an identifier, and the probability of having a string with the same content is low."
+ 
+ >|python|
+ >>> a = "a@"
+ >>> b = "a@"
+ >>> a is b
+ False
+ >>> a = "a!"
+ >>> b = "a!"
+ >>> a is b
+ False
+ >>> a = "a1"
+ >>> b = "a1"
+ >>> a is b
+ True
+ ||<
+ 
+ If you want to know more details, you can trace the code from the builder function that creates and returns a string, which probably has a branch that says, "If the string already exists, return a pointer to it; if not, create a new string and return a pointer to it.
+ </body>
+
+[Hatena Diary 2009-12-14 https://nishiohirokazu.hatenadiary.org/archive/2009/12/14]

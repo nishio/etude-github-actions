@@ -1,0 +1,66 @@
+Hatena2012-05-11
+code:hatena
+ <body>
+ *1336731362*Two Alloy-related tools are now available
+ Oops, the day after tomorrow is <a href='http://atnd.org/events/27160'>Start Alloy : ATND</a>, right? I realized that, so I hurriedly pushed the local unpushed changes in my Alloy study repository and cleaned up the scripts.
+ 
+ https://github.com/nishio/learning_alloy
+ 
+ Two of them were published this time
+ 
+ ** allopy
+ 
+ This is a tool that allows you to quickly and interactively process XML exported from Alloy, which was previously in the repository under the name "show.py" without any explanation. ((<a href='http://d.hatena.ne.jp/nishiohirokazu/20120418/1334742488'>Make the XML output from Alloy easier to modify</a>)) You can't copy and paste the Evaluator of Alloy itself, and it's a hassle, right? I thought about tweaking the Alloy side to improve it, but since the results can be output as XML, there is no need to use Alloy to tweak it, so I decided to use an interactive Python interpreter to do it. The difference from the previously released version is that I wrote the interactive operation method in the comment at the beginning of the method, and used doctest to make it a test. So if you read the comments, you should be able to understand how to use it. The test has confirmed that the comments are correct.
+ 
+ https://github.com/nishio/learning_alloy/blob/master/allopy/allopy.py
+ 
+ I'll just post the highlights.
+ >||
+ >>> load_global("test_target.xml")
+ 
+ >>> show_label()
+ sig:
+   Int
+   String
+   seq/Int
+   this/Person
+   univ
+ field:
+   love
+ skolem:
+   $x
+ 
+ >>> get("Person")
+ UtilList([[u'Person$0'], [u'Person$1'], [u'Person$2']])
+ 
+ >>> get("love")
+ UtilList([[u'Person$0', u'Person$2'], [u'Person$1', u'Person$1'], [u'Person$2', u'Person$2']])
+ 
+ >>> get("$x")
+ UtilList([[u'Person$2']])
+ 
+ >>> get("Person$0").join(get("love"))
+ UtilList([[u'Person$2']])
+ 
+ >>> get("love").join(get("$x"))
+ UtilList([[u'Person$0'], [u'Person$2']])
+ ||<
+ 
+ ** Tools to output XML in the console
+ 
+ This is the one where I read Alloy's code before and said, "You've got a sample in there for use in the console!" The one that said. ((<a href='http://d.hatena.ne.jp/nishiohirokazu/20120502/1335925211'>Alloy code reading</a>)) I didn't publish the code I tweaked to make it easier to use. I haven't come up with a good name for it, so it's called NishioTool or something like that, but in short, I thought, "It's a pain if I have to press a button to get the next solution, and since I have extra CPU, I should get more solutions in the background while I look at the first one. So, I did NishioTool.sh foo.als on the command line, and it outputs the solutions in sequential numbering XML.
+ 
+ Now I can finally live a normal life of writing in Emacs and running it on the console!
+ 
+ I'd really like to do all the imaging and such on the console, but I haven't started on that yet.
+ 
+ ** Postscript
+ 
+ >>
+ I just had a sudden thought, but since we have tools to automate Alloy code -> solution XML, and we have tools to tweak solution XML in Python, I think the next thing we need is a tool to easily generate Alloy code from Python.
+ <<
+ 
+ The name is Pyalloy.
+ </body>
+
+[Hatena Diary 2012-05-11 https://nishiohirokazu.hatenadiary.org/archive/2012/05/11]

@@ -1,0 +1,136 @@
+Hatena2008-02-14
+code:hatena
+ <body>
+ *1202954761*Lost on the road
+ 
+ Usually there is a road here where you can go straight...
+ f:id:nishiohirokazu:20080214110556j:image
+ 
+ *1202956682*FeedBurner
+ Maybe we should use <a href="http://en.wikipedia.org/wiki/FeedBurner">FeedBurner - Wikipedia, the free encyclopedia</a> to automatically post English blog entries to Digg and del.icio.us I should be able to post them automatically to Digg and del.icio.us.
+ 
+ -----
+ I'm not sure how to do it.
+ In the meantime, I'm getting hits on del.icio.us and digg -> http://feeds.feedburner.com/nishiohirokazu
+ However, unlike "hatteb" and the like, it doesn't get a lot of comments, so it's not very interesting to look at.
+ The entry on controlling the Wii remote control with IronPython was bookmarked by 5 people with not-so-Japanese-like ID(eh) -> http://del.icio.us/url/28326619a9b6262462ad668d0e42b829
+ 
+ -----
+ Ahh. I saw "including automatic links to Digg and del.icio.us" and thought it meant "automatically Digg", but when I read it carefully, it says "links to Digg", so it says to add links to Digg. My mistake, my mistake, my mistake.
+ 
+ *1202964467*reddit
+ I also created an account on reddit.
+ http://reddit.com/user/nishio/
+ It seems that the first user to reddit receives the credit for the link. At any rate, I'll try to reddit my articles that are technical in nature.
+ I can't seem to post often because it says something like "you are trying to submit too fast. try again in 10 minutes.
+ I get the same warning to write a comment after posting. Hmmm.
+ 
+ *1202964763*Spring
+ Yesterday I had three cats. Today I saw one when I came to work. Spring will be here soon!
+ 
+ *1202979693*About one every 1-2 days.
+ I thought it would be a good idea to write an entry in English every day or every two days, even if it is not of much substance. If you are thinking, "I'm going to write a great entry and collect 1000 digg," you will end up not writing. I think it's better to relax and write in a loose manner.
+ <a href="http://nishiohirokazu.blogspot.com/2008/02/pythoneliminate-assignment-before.html">NISHIO Hirokazu's blog: [Python]Eliminate assignment before conditional statement</a>
+ Someone is getting 2 as I write this entry. It is surprisingly interesting to see the response.
+ 
+ *1202981087*[Python] Remove assignment before conditional statement
+ Python does not allow assignment statements in conditional clauses. This restriction prevents beginners from making the common mistake of mistaking an assignment with a comparison to see if the values are the same, which can lead to bugs. However, it is a bit annoying to have to assign a value to a temporary variable before an if statement because of this limitation.
+ 
+ >|python|
+ import re
+ 
+ data = "aaaabbbbaaaa"
+ 
+ m = re.search("b+", data)
+ if m:
+     print "'b+' is found at", m.start()
+ ||<
+ 
+ One solution is to introduce a stack. Using my bigstack library, you can write as follows.
+ 
+ >|python|
+ import re
+ import bigstack
+ 
+ data = "aaaabbbbaaaa"
+ 
+ if push(re.search("b+", data)):
+     print "'b+' is found at", pop().start()
+ ||<
+ 
+ This library introduces two functions in the built-in namespace: push and pop. As you can imagine, these functions push and pop the stack. In this code, you can see that it is no longer necessary to temporarily assign a value to the variable named "m".
+ 
+ The code for the bigstack library is as follows. It is a very simple implementation. I don't think this will solve all the problems, but it will make the code cleaner in some cases. Especially in while statements.
+ 
+ >|python|
+ """bigstack.py: singleton stack to eliminate temporary variables"""
+ 
+ import __builtin__
+ 
+ BIG_STACK = []
+ 
+ def push(x):
+     BIG_STACK.append(x)
+     return x
+ 
+ def pop():
+     return BIG_STACK.pop()
+ 
+ __builtin__.__dict__.update(
+     push=push,
+     pop=pop
+ )
+ ||<
+ 
+ You can see the original version here: <a href="http://nishiohirokazu.blogspot.com/2008/02/pythoneliminate-assignment-before.html">NISHIO Hirokazu's blog: [Python]Eliminate assignment before conditional statement</a>
+ 
+ -----
+ >>
+ id:odz I'm not popping if the condition is not met, but I hope that's ok.
+ <<
+ 
+ Ah, well, it's a pain to write an else clause that just pops, and if you don't write it, the memory consumption will keep increasing....
+ 
+ >|python|
+ >>> class Stash(object):
+ 	def __call__(self, **kw):
+ 		self.__dict__.update(kw)
+ 		return kw.values()[0]
+ 
+ 	
+ >>> stash = Stash()
+ >>> 
+ >>> if stash(x = 1):
+ 	print stash.x
+ 
+ 	
+ 1
+ ||<
+ There is also this kind of thing, but if you put stash in the builtin, it is likely to be rewritten unexpectedly, creating a nasty bug, and it is a hassle to create a stash object for every single one.
+ 
+ Hmmm...not so good. There is one sure way, and that is to insert DUP_TOP and STORE before the bytecode branch...but I don't want to use that kind of heavy lifting just to get rid of a temporary variable.
+ 
+ *1202983213*Continuing to take a breather.
+ I'm taking a break because I'm tired of preparing materials for the personnel review.
+ Implementing Prolog in Python. While reading this: Tiny Prolog in Python - http://www.okisoft.co.jp/esc/prolog/in-python.html
+ 
+ *1202993313*ahhhh!
+ I don't think I'm ready for tomorrow's personnel review.
+ 
+ Gears are not in good shape. It started spinning out of control.
+ 
+ *1202995167* Oh my god.
+ Totally screwed.
+ It's in full neutral gear.
+ The engine turns, but the tires are not turning at all.
+ Engine overheating
+ 
+ 
+ Let's go home and get some sleep.
+ 
+ -----
+ 
+ I don't have the energy to get up from my seat and leave, but this is not the time to say that. I'm getting sleepy. Finally, I'm starting to feel the symptoms of fatigue.
+ </body>
+
+[Hatena Diary 2008-02-14 https://nishiohirokazu.hatenadiary.org/archive/2008/02/14]

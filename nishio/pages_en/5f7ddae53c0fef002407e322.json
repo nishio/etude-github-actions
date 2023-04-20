@@ -1,0 +1,52 @@
+ARC104
+[AtCoder Regular Contest https://atcoder.jp/contests/arc104]
+[https://gyazo.com/081fb0643104fc030e8fa2efcc2e3c98]
+
+[B - DNA Sequence https://atcoder.jp/contests/arc104/tasks/arc104_b]
+	[https://gyazo.com/818fada48bf4efbe9a8b0cf3d2bd63f8]
+　The question phrase is "if rearranged," but it is not necessary to literally rearrange, but frequency counts are sufficient.
+　　Pattern of "[unordered columns are a multiset]" because reordering is "ignoring order".
+　　[Sort by → Frequency Count]
+　Rustic writing style to make sure you're going in the right direction.
+		code:python
+		 def solve_simple(N, S):
+       from collections import Counter
+       ret = 0
+       for i in range(N):
+           for j in range(i + 1, N + 1):
+               subseq = S[i:j]
+               debug("subseq", subseq)
+               count = Counter(subseq)
+               if count["A"] == count["T"] and count["C"] == count["G"]:
+                   ret += 1
+       return ret
+ And then re-implement this in a fast enough way
+ 　I wonder if it's a [cumulative sum] method since [frequency counts are range sums]. I think.
+　　But since N=5000, wouldn't O(N^2) just barely pass? So I decided to try a simple counting method first.
+　　As a result, the decision is correct and AC without using the cumulative sum
+		code:python
+		 def solve(N, S):
+       from collections import defaultdict
+       ret = 0
+       for i in range(N):
+           count = defaultdict(int)
+           for j in range(i, N):
+               count[S[j]] += 1
+               if count["A"] == count["T"] and count["C"] == count["G"]:
+                   ret += 1
+       return ret
+　　I made one mistake and RE'd the range of movement of j once.
+
+[C - Fair Elevator https://atcoder.jp/contests/arc104/tasks/arc104_c]
+	[https://gyazo.com/b3d2128a1b48c990053e2085fc64aa88]
+	I had no idea what to expect, so I implemented a simple depth-first search for now.
+	The sample case was correct, but the code was quite complex, and the WA was not resolved.
+	　It is not a good idea to implement a halfway fast implementation. The cause of WA could not be identified.
+	　A simpler, slower, and more correct code would have found discrepancies in random tests.
+	The explanation says O(N^3) in DP, attributed to the domain partitioning.
+	　[A larger structure can be created from a bilateral relationship].
+	　[same length if they overlap -> even-length block].
+	　[https://gyazo.com/06ed0feefd8266f248933d30d8b3f36f]
+
+	I didn't think of this at all, I'm thinking that I don't have enough of this kind of "[power of attribution]" and I wonder how I can learn it.
+

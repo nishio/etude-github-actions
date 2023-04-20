@@ -1,0 +1,50 @@
+Hatena2015-11-02
+code:hatena
+ <body>
+ *1446435463*Configuration for connecting to Wifi from a Raspberry Pi.
+ The network settings differ depending on whether the access point is WEP or WPA, etc., but I don't think they are well organized, so I will summarize them here. If there are any mistakes, please point them out.
+ 
+ ** Connect to an access point with no password
+ 
+ Sometimes there is free wifi at inns, etc.
+ 
+ Write the following in /etc/network/interfaces
+ 
+ >||
+ wireless-essid <YOUR_SSID>
+ ||<
+ 
+ ** WEP
+ 
+ Write the following in /etc/network/interfaces
+ 
+ >||
+ wireless-essid <YOUR_SSID>
+ wireless-key s:<YOUR_KEY> 
+ ||<
+ 
+ PS, I had a problem with an access point that somehow became 169.254.... (self-assigned IP) with this configuration. I was able to connect by writing the following in wpa_supplicant.conf. I am not sure what the difference is.
+ 
+ >||
+ network={
+         ssid="<YOUR_SSID>"
+         key_mgmt=NONE
+         wep_key0="<YOUR_KEY>"
+ }
+ ||<
+ 
+ ** WPA
+ 
+ Write the following in /etc/wpa_supplicant/wpa_supplicant.conf
+ 
+ >||
+ network={
+     ssid="<YOUR_SSID>"
+     psk="<YOUR_KEY>"
+ }
+ ||<
+ 
+ There is a way to use wpa_passphrase to not store passwords in plain text. Also, some blogs claim that you need to set key_mgmt, proto, pairwise, group, etc. other than ssid and psk, but it is not a MUST. I tried several times to set the parameters correctly except for ssid and psk, but in the end, I chose "none of the above" and the connection was made easily.
+ </body>
+
+[Hatena Diary 2015-11-02 https://nishiohirokazu.hatenadiary.org/archive/2015/11/02]

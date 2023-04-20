@@ -1,0 +1,27 @@
+Hatena2014-12-15
+code:hatena
+ <body>
+ *1418626623*Problem with VirtualBox not being able to access shared folders -> resolved
+ The host is Windows, the guest is Ubuntu, and it is convenient to share folders and auto-mount them with just a little configuration in the VirtualBox settings dialog! But when I tried to access the files in the folder, I was told that I didn't have the permission to access the folder.
+ 
+ By default, the shared folders are 660 with owner root and group vboxsf. So user nishio cannot access it. So we add nishio to the vboxsf group.
+ 
+ >||
+ $ sudo adduser nishio vboxsf
+ ||<
+ 
+ Do I need to re-login for it to take effect? I rebooted for another issue and was able to access the site successfully.
+ 
+ *1418628439* Port forwarding is easy to SSH to Ubuntu in VirtualBox.
+ The host is Windows, the guest is Ubuntu, and I can't connect to the host by using ifconfig to check the IP address and ssh as usual. Is it because the default network setting is NAT?
+ 
+ Go to Settings -> Network -> Port Forwarding and forward port 3022 on the host to port 22 on the guest. Then SSH to 3022 on the host to connect to the guest.
+ 
+ >||
+ ssh -p 3022 nishio@lovalhost
+ ||<
+ 
+ References:<a href='http://stackoverflow.com/questions/5906441/how-to-ssh-to-a-virtualbox-guest-externally-through-a-host'>How to SSH to a VirtualBox guest externally through a host?
+ </body>
+
+[Hatena Diary 2014-12-15 https://nishiohirokazu.hatenadiary.org/archive/2014/12/15]

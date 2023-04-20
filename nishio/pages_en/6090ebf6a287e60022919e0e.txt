@@ -1,0 +1,178 @@
+Hatena2008-03-26
+code:hatena
+ <body>
+ *1206499625*Video Tags
+ >>
+ nipotan Why does everyone tag 1000speakers when they upload my videos?
+ <<
+ http://twitter.com/nipotan/statuses/777117077
+ 
+ 
+ Stop it!
+ 
+ *1206510857*Nico Nico Nico Douga
+ There are some horrific videos on Nico Nico Douga, but if you watch them, your MP will be sucked out, your DNA will be damaged, and cancer cells will proliferate. Do not watch them.
+ 
+ *1206519978*[Mac][AS3] Continuing to build a development environment.
+ I svn co'd the latest log.as since id:os0x told me about it.
+ http://d.hatena.ne.jp/nishiohirokazu/20080325/1206433123
+ 
+ -----
+ 
+ /Applications/Adobe Flex Builder 3/sdks/3.0.0/frameworks/
+ I was annoyed that there were spaces in the path of the
+ I created /usr/lib/flex3 and put log.as and other stuff there.
+ 
+ By the way, the reason I said it didn't work was because I didn't notice that the entire line in config was commented out and I had added it there.
+ -----
+ 
+ Maybe actionscript-mode.el is next.
+ 
+ -----
+ 
+ http://blog.pettomato.com/?p=22
+ Download actionscript-mode.el and as-config.el from Where should I put them? I should put them in ~/elisp/.
+ 
+ mv Desktop/*.el elisp
+ 
+ What is good about Mac is that the desktop is /home/nishio/Desktop. In Windows, it's "C:\Documents and Settings\nishio\Desktop. Why are there spaces and non-ASCII characters mixed in there?
+ 
+ -----
+ 
+ 　It seems that *.el is usually put in .emacs.d/.
+ 
+ -----
+ 
+ Install cc-mode 5.28 from SourceForge. The actionscript-mode.el must be an older version or else actionscript-mode.el will not work.
+ 
+ https://sourceforge.net/project/showfiles.php?group_id=3875&package_id=3849
+ 
+ Reference: http://d.hatena.ne.jp/haida/20080320
+ 
+ -----
+ 
+ File mode specification error: (file-error "Cannot open load file" "actionscript-mode")
+ I was told. I did the following because it was caused by not passing the path to .emacs.d.
+ >|lisp|
+ (setq load-path (cons "~/.emacs.d" load-path))
+ ||<
+ I thought it would be nice to have a function to add elements to a list instead of the low-grade way of writing that uses setq and cons, but I couldn't find it.
+ 
+ -----
+ 
+ I'm not sure if it's done or not, but I don't like the color. I'll fix it later.
+ 
+ -----
+ 
+ >|lisp|
+ (add-to-list 'load-path "~/.emacs.d")
+ ||<
+ Is this the right answer?
+ 
+ -----
+ 
+ Enter yasnippet. http://code.google.com/p/yasnippet/
+ 
+ -----
+ 
+ http://d.hatena.ne.jp/antipop/20080321/1206090430
+ I will refer to this.
+ 
+ -----
+ 
+ >||
+ nishio:yasnippet nishio$ mkdir mysnippets
+ nishio:yasnippet nishio$ cd mysnippets/
+ nishio:mysnippets nishio$ pwd
+ /Users/nishio/.emacs.d/yasnippet/mysnippets
+ nishio:mysnippets nishio$ svn co http://svn.coderepos.org/share/config/yasnippet/common coderepos_common
+ ||<
+ 
+ This is how I got the common part of coderepos for now.
+ I also mkdir private. I guess I should put it here for now as I see fit, and then put it in common if I think it will be useful to others.
+ 
+ -----
+ 
+ python-mode/class of the original snippet
+ >|python|
+ #contributor : Orestis Markou
+ #name : class ... :
+ # --
+ class ${1:cname}(${2:object}):
+     "docstring for $1"
+     def __init__(self, ${3:arg}):
+         self.$3 = $3
+         $0
+ ||<
+ 
+ You are tempted to ask why there is only one argument, aren't you?
+ 
+ -----
+ 
+ Well, it's still in the trial stage.
+ 
+ >||
+ `(defun join (x sep) (if (= 1 (length x)) (car x) (concat (car x) sep (join (cdr x) sep))))`
+ 
+ klass ${1:cname}(${2:object}):
+     "docstring for $1"
+     def __init__(self, ${3:arg}):
+         ${3:$(join (mapcar (lambda (x)  (concat "self." x " = " x)) (split-string text ", ")) "\n")}
+ 	$0
+ 
+ ||<
+ 
+ If you do this and write a, b, c, etc. at the arg, it will look like the one below.
+ 
+ >||
+ join
+ 
+ klass cname(object):
+     "docstring for cname"
+     def __init__(self, a, b, c):
+         self.a = a
+ self.b = b
+ self.c = c
+ ||<
+ 
+ The issues to be resolved are
+ 1: How can I avoid outputting the function name when I define a function?
+ 2: How do I get the indentation right?
+ Just these two points.
+ 
+ *1206536742*Practice
+ f:id:nishiohirokazu:20080326220536j:image
+ 
+ I fought the last boss about four times.
+ And I still have a feeling that the success rate of rocket serve is still too low to win in an opponent match...
+ 
+ *1206537590*yasnippet
+ >|scheme|
+ #contributor : Orestis Markou
+ #name : class ... :
+ # --
+ `(progn (defun join (x sep) 
+    (if (= 1 (length x)) 
+        (car x) 
+        (concat 
+ 	(car x) 
+ 	sep 
+ 	(join (cdr x) sep)))) "")`
+ 
+ class ${1:ClassName}(${2:object}):
+     "docstring for $1"
+     def __init__(self, ${3:args}):
+         ${3:$
+ (join 
+  (mapcar 
+   (lambda (x)  (concat "self." x " = " x)) 
+   (split-string text ", ")) 
+  (concat "\n" (make-string 8 32)))
+ }
+ 	$0
+ 
+ ||<
+ It seems to be OK to mix line breaks. I assumed tabs to be 4 spaces, but I was able to do it.
+ </body>
+
+[Hatena Diary 2008-03-26 https://nishiohirokazu.hatenadiary.org/archive/2008/03/26]

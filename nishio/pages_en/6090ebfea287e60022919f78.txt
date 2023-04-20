@@ -1,0 +1,20 @@
+Hatena2009-04-20
+code:hatena
+ <body>
+ *1240227590*[SpaMon]Minimum Game
+ >>
+ It is interesting to think about how much can be cut down in considering what the essence of this game is... I think it would be playable if the distance limit for Jump was removed, even if it is only for 5 of the following: RemoveBit, Crack, Float, Jump, and Reverse.
+ <<
+ 
+ C, J, F, RB, R, 5 bits each. I have a feeling that this is a machine-readable size, but I'll let you figure it out for yourself. First, if the first move is on C, the second move must be on J, because C and J create a loop: C1, J2, F, RB, R. The first move may be RB for now, but I don't see the point of taking R. If F is taken, what happens at least on the first round is that the first move skips RB and copies R, and then RB is taken. The second move, I was wrong about the first move earlier, I forgot about the possibility of F moving forward. The player goes back to the front and copies J, which jumps to F again, so the late player wins. No, no, the first move puts it on top of F. Hmm. I'm getting confused, but C1 J2 F21 RB1 R. So the board is set so far. C12 J21 F21 RB12 R12.
+ 
+ Now, the execution phase.  The second player activates C to put the PC in front of the J. Copying the J, the PC moves to the J. Hmm, when you jump to the card you are on, does the process move to the next bit or start from the beginning again? Let's assume it is from the beginning. Then it's the latter's F's turn again, so he moves in front of the RB, activates the RB, and deletes the RB's first bit, C12 J21 F21 RB2 R12, and the former skips the RB by putting the F in front of the R. But he still copies the R, so the R is still skipped. However, since R is copied, the later RB is still triggered on the next turn. Here the first move bit of F is removed. c12 j21 rb2 f2 r12. the next j jumps to f and is not triggered. Next is the RB, which removes the first move bit of C. The first move no longer has a chance to win.
+ 
+ Let's say that jumping to the current card does not start from the beginning: C12 F2>1 J21 RB12 R12 and it is the first player's turn. Then, the first player can play RB twice, and it would be a mistake for the second player to play F in front of the first player. Well, if we continue, F enters behind the RB, RB twice to C12 J21 F21 RB1> R1, reverse, RB again to remove the back move bit of F, F moves in front of the RB to remove the back move bit of C, and the back move ends.
+ 
+ In other words, the first hand does not invoke F. The second hand does not invoke F. The first hand has no advantage in invoking F. The first move has no advantage in triggering F. The process moves to RB, the first move deletes the second move's bit, and the second move deletes C's bit. The first move wins.
+ 
+ Hmmm. I'll have to decide exactly how the "jump to where the PC is currently located" is handled. I think it would be natural to move the process to the next bit. Anyway.... And let's see what happens if we reduce the number of bits.
+ </body>
+
+[Hatena Diary 2009-04-20 https://nishiohirokazu.hatenadiary.org/archive/2009/04/20]

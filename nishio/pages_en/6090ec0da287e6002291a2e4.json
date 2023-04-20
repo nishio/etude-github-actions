@@ -1,0 +1,111 @@
+Hatena2014-02-22
+code:hatena
+ <body>
+ *1393031451*Write a filter in sklearn.svm.LinearSVC
+ I wanted to take out only the quoted parts from the Wikiquote dump data. The original data looks like this
+ 
+ >||
+ [[Junichiro Koizumi]]
+ 
+ CATEGORIES: politicians, japanese, japanese prime minister, born in 1940s
+ 
+ Junichiro Koizumi (1942 - ) is a Japanese politician (Liberal Democratic Party) and the 87th, 88th, and 89th Prime Ministers of Japan.
+ 
+ ==Say==
+ 
+ * It is not calculations that move people.
+ ** 1998 Defeated for the second time in the LDP presidential election, and cried at the press conference.
+ *"Destroy the LDP," "No growth without structural reform," "Reform involves pain.
+ ** 2001 LDP presidential campaign speeches, etc.
+ ||<
+ 
+ So, I wonder if a human would implement "code to identify which is a quoted sentence and which is not". I used sklearn.svm.LinearSVC because it seems to be readily available. It identifies like this. +1 is "quoted text" and -1 is "not so quoted text".
+ 
+ >||
+ +1 *"Destroy the LDP," "No growth without structural reform," "Reform involves pain.
+ -1 ** 2001 LDP presidential campaign speeches, etc.
+ -1 
+ -1 ===During the Prime Minister's tenure=== ===During the Prime Minister's tenure=== ===During the Prime Minister's tenure
+ -1 
+ +1 *"Reform and Decisive Action Cabinet" working together to tackle "structural reform without sanctuary
+ +1 *The "spirit of a hundred bales of rice" of enduring the pain of the present to improve tomorrow is what we need today as we try to promote reform.
+ -1 ** Prime Minister Koizumi's Policy Speech at the 151st Diet Session
+ (omitted)
+ +1 * And if we were to pick up again each of Sterne's paintings at this moment, we would experience what we owe to each of his paintings in the 19th century, and we would gain insight into what we might inherit from Sterne. Proverbs and Reflections, v. 760.
+ -1 *:[tpl]lang|de|Auch jetzt im Augenblick sollte jeder Gebildete Sternes Werke wieder zur Hand nehmen, damit auch das 19. Jahrhundert erf&#252;hre,
+ ||<
+ 
+ The source code is as follows: jawq.txt is the original data, jawq_ok.txt contains examples of quoted parts, and jawq_ng.txt contains examples of non-quoted parts. make_feature is used to create a feature vector of 1280 dimensions, and the data of mapping from the feature vector to +1/-1 is created by make_data. The data is created by make_data and trained in svc.fit. If you find a wrong classification, you can add it to the training data by typing something in the Enter key.
+ 
+ >|python|
+ from sklearn.svm import LinearSVC
+ import numpy as np
+ 
+ svc = LinearSVC()
+ N = 5
+ xs = []
+ ys = []
+ 
+ def make_feature(line):
+     s = line[:N].ljust(N, '\0')
+     x = np.zeros(N * 256)
+     for i, c in enumerate(s):
+         x[i * 256 + ord(c)] = 1
+     return x
+ 
+ def make_data(filename, answer):
+     for line in file(filename):
+         x = make_feature(line)
+         xs.append(x)
+         ys.append(answer)
+ 
+ 
+ make_data('jawq_ok.txt', 1)
+ make_data('jawq_ng.txt', -1)
+ 
+ svc.fit(xs, ys)
+ 
+ for line in file('jawq.txt'):
+     p = svc.predict(make_feature(line))[0]
+     r = raw_input("%+1d %s" % (p, line.strip()))
+     if r: # mean NG
+         if p == 1:
+             open('jawq_ng.txt', 'a').write(line)
+         else:
+             open('jawq_ok.txt', 'a').write(line)
+ ||<
+ 
+ That's easy. If a person implements a filter manually, the task is tightly coupled with himself/herself, but in this form, anyone who can judge whether it is correct or not can raise a filter.
+ 
+ Next, let's try to separate the exhibit information from the body text in the cropped line. It's a bit of a hassle with the parentheses and the quotation marks.
+ 
+ >||
+ *"What is Caesar's, let it be kept in Caesar; and what is God's, let it be kept in God. - Matthew 22:21
+ *Everyone who takes the sword will perish by the sword. - Matthew 26:52
+ * It starts with a crucian carp and ends with a crucian carp -- a fishing proverb
+ * funa one chopstick two chopsticks one chopstick two chopsticks supremely regrettable -- e (the bottom of the natural logarithm)
+ * Blue is taken from indigo, and it is bluer than indigo. Ice is made of water, and yet it is colder than water. -- Jing Zi, "Kangaku Hen" (The Analects of Confucius)
+ * The sound of water-drawing and ice monk's shoes -- Matsuo Basho, "Nozarashi Kiko" (Travels in the Wild)
+ * "Following corrupts both the one who offers it and the one who receives it. Sycophancy is futile not only against the king, but also against the people. It is equally true of the people." -- Edmund Burke, Reflections on the French Revolution
+ *:Far and near, Kyokuraku, the way of the boat, man and woman
+ *"The more a person's guests are cherished, the more they are cherished. That is the human dignity of a cast member." ---A quote from a magazine "Koakuma ageha" about the spirit of "haves and have-nots" that he cultivated during his time in Ginza. Quote from "Koakuma ageha" (2010), "Koakuma Ageha. (2010) "Koakuma ageha," October 2010 issue: "Financial bubble, love, black sun, and Judas... The legends of the chotos who ran through that era are now back! Kabukicho, Roppongi Yoru no Meijin Densetsu !!!! Legend of Sayo Hayakawa" (p.100) published October 10, 2010 by Inforest
+ *"Baseball is life itself" and "Rehab doesn't lie."
+ *"Who is Nagashima?" - Tsuyoshi Shinjo
+ ||<
+ 
+ *1393037245* Listening to Qiita.
+ I thought I didn't know the difference between Qiita and a blog, but it turns out they're very different.
+ 
+ - On a blog, when there is a mistake in an article, you can only point it out in the comments and the author can correct it, but on Qiita, you can throw a pull request (I don't know if they will throw it).
+ - When a mistake is made and corrected, a change notification can be sent to those who have "stocked" the article.
+ - There is an app called Kobito that allows real-time markdown preview locally.
+ - With Kobito, uploading images is a drag-and-drop operation; with Gist, it's a hassle.
+ - Editing in Emacs and real-time preview in Kobito is also possible
+ - You can download the submitted data in JSON, and others.
+ - Templates can be created, so it is easy for multiple people to write in the same format for an internal wiki.
+ - Avoid non-engineers because you need a github or Qiita account to write comments.
+ 
+ The flow of writing and revising and communication design seems to be much different, even though what I saw on the outside was only a blog.
+ </body>
+
+[Hatena Diary 2014-02-22 https://nishiohirokazu.hatenadiary.org/archive/2014/02/22]

@@ -1,0 +1,250 @@
+Hatena2008-01-24
+code:hatena
+ <body>
+ *1201142920*The socks are not dry.
+ orz
+ 
+ Read **1201154132*JSDeferred
+ Read the JSDeferred code that amachang has been telling me for a while that I should read.
+ 
+ >|javascript|
+ Deferred.define = function (obj, list) {
+ 	if (!list) list = ["parallel", "wait", "next", "call", "loop"];
+ 	if (!obj)  obj  = (function () { return this })();
+ 	for (var i = 0; i < list.length; i++) {
+ 		var n = list[i];
+ 		obj[n] = Deferred[n];
+ 	}
+ 	return Deferred;
+ };
+ ||<
+ This is code that writes to the global scope. (function () { return this })() seems to take a window object.
+ 
+ >|python|
+ 
+ class Deferred(object):
+     def define(self, obj=None, list=None):
+         if not list: list = ["parallel", "wait", "next", "call", "loop"]
+         if not obj: obj = globals()
+         for n in list:
+             obj[n] = Deferred.__dict__[n]
+ 
+         return Deferred
+ 
+ ||<
+ 
+ -----
+ 
+ >|javascript|
+ /* function next (fun) //=> Deferred
+  *
+  * `next` is shorthand for creating new deferred which
+  * is called after current queue.
+  */
+ Deferred.next = function (fun) {
+ 	var d = new Deferred();
+ 	var id = setTimeout(function () { clearTimeout(id); d.call() }, 0);
+ 	if (fun) d.callback.ok = fun;
+ 	d.canceller   = function () { try { clearTimeout(id) } catch (e) {} };
+ 	return d;
+ };
+ ||<
+ 
+ If we do setTimeout(function(){alert(1)}, 1000), alert seems to happen after 1 second. setTimeout returns a number and clearTimeout cancels the execution of the scheduled function.
+ I'd have to read up on d.call or something to know more than just here.
+ 
+ >|javascript|
+ Deferred.prototype = {
+ 	init : function () {
+ 		this._next    = null;
+ 		this.callback = {
+ 			ok: function (x) { return x },
+ 			ng: function (x) { throw  x }
+ 		};
+ 		return this;
+ 	},
+ 
+ 	next  : function (fun) { return this._post("ok", fun) },
+ 	error : function (fun) { return this._post("ng", fun) },
+ 	call  : function (val) { return this._fire("ok", val) },
+ 	fail  : function (err) { return this._fire("ng", err) },
+ 
+ 	cancel : function () {
+ 		(this.canceller || function () {})();
+ 		return this.init();
+ 	},
+ 
+ 	_post : function (okng, fun) {
+ 		this._next =  new Deferred();
+ 		this._next.callback[okng] = fun;
+ 		return this._next;
+ 	},
+ 
+ 	_fire : function (okng, value) {
+ 		var self = this, next = "ok";
+ 		try {
+ 			value = self.callback[okng].call(self, value);
+ 		} catch (e) {
+ 			next  = "ng";
+ 			value = e;
+ 		}
+ 		if (value instanceof Deferred) {
+ 			value._next = self._next;
+ 		} else {
+ 			if (self._next) self._next._fire(next, value);
+ 		}
+ 		return this;
+ 	}
+ };
+ ||<
+ 
+ I'm not sure what you mean by self = this in _fire....
+ 
+ >|python|
+ class Deferred(object):
+     def define(self, obj=None, list=None):
+         if not list: list = ["parallel", "wait", "next", "call", "loop"]
+         if not obj: obj = globals()
+         for n in list:
+             obj[n] = Deferred.__dict__[n]
+ 
+         return Deferred
+ 
+     
+     def init(self):
+         self._next = None
+         def ok(x):
+             return x
+ 
+         def ng(x):
+             raise x
+         
+         sefl.callback = dict(ok=ok, ng=ng)
+         return self
+ 
+     def next(self, fun):
+         return self._post("ok", fun)
+ 
+     def error(self, fun):
+         return self._post("ng", fun)
+ 
+     def call(self, val):
+         return self._fire("ok", val)
+ 
+     def fail(self, err):
+         return self._fire("ng", err)
+ 
+     def _post(self, okng, fun):
+         n = Deferred()
+         n.callback[okng] = fun
+         self._next = n
+         return n
+ 
+     def _fire(self, okng, value):
+         self_ = self
+         next = "ok"
+         try:
+             value = self.callback[okng].call(self_, value)
+         except Exception, e:
+             next = "ng"
+             value = e
+ 
+         if isinstance(value, Deferred):
+             value._next = self_._next
+         else:
+             if self_._next:
+                 self_._next._fire(next, value)
+ 
+     def _post(self, okng, fun):
+         self._next = Deferred()
+         self._next.callback[okng] = fun
+         return self._next
+ ||<
+ 
+ -----
+ 
+ I asked amachang, confused by the existence of both Deferred.prototype.next and Deferred.next, and he said they are completely unrelated: in JS, functions are just put in the appropriate hash because they pollute global space if they are placed flat. Deferred.next can be Foo.next or whatever.
+ Coding style in JS that does not have separate scopes for each module.
+ In Python, functions defined at the top level are appropriate to be written at the top level because they are scoped per module.
+ 
+ -----
+ 
+ Oh.
+ JSDeferred was much different from what I had imagined.
+ I thought it was going to run all together after assembling the tasks to be executed with next(f1).next(f2).next(f3), but I see that f1 is executed at next(f1).
+ 
+ -----
+ 
+ >>
+ > I thought that next(f1).next(f2).next(f3) would be used to assemble the tasks to be executed and then execute them together, but I see that f1 is executed at next(f1).
+ 
+ As you can see, the first next reads setTimeout with a weight of 0. So, if you immediately connect .next(f2).next(f3), f1 will be executed after those chains are built. (You can also build your own tasks and call them later, but usually it is easier to execute them automatically after the currently executing process, so this is how it is done.)
+ <<
+ 
+ Oh, I was mistaken.
+ I wrote the code below, and the display was done instantly, so I thought, "Hey, that's instant," though,
+ >|javascript|
+ function foo(){
+     console.log("foo!");
+ }
+ 
+ var id = setTimeout(function () { clearTimeout(id); foo() }, 0);
+ ||<
+ 
+ So you should have tried the code below. bar appears first.
+ 
+ >|javascript|
+ function foo(){
+     console.log("foo!");
+ }
+ 
+ var id = setTimeout(function () { clearTimeout(id); foo() }, 0);
+ console.log("bar!");
+ ||<
+ 
+ I see.
+ I thought it was supposed to be used like next(f1).next(f2).next(f3).start().
+ 
+ *1201189330*Lost on the road.
+ 
+ Where am I? Which way is home?
+ f:id:nishiohirokazu:20080125004156j:image
+ 
+ *1201191880*I'm home.
+ 
+ freeze
+ </body>
+ <comments>
+ <comment>
+ <username>coji</username>
+ <body>www</body>
+ <timestamp>1201155146</timestamp>
+ </comment>
+ <comment>
+ <username>cho45</username>
+ <body>>The meaning of self = this in _fire<br>This is because we used to do setTimeout there as well, so there are still remnants. var self = this; is basically not erased once written (it's a pain when we need it again), so it often remains useless. </body> <br
+ <timestamp>1201169820</timestamp>
+ </comment>
+ <comment>
+ <username>cho45</username>
+ <body>> I thought next(f1).next(f2).next(f3) would be used to assemble the tasks to be executed and then execute them together, but f1 is executed at next(f1). <BR><BR>As you read the first next reads setTimeout with a weight of 0. In JS, at this time, the function is still just placed in the execution queue, but not executed. So, if you immediately connect .next(f2).next(f3), f1 will be executed after those chains are built. (You can also build your own tasks and call them later, but usually it is easier to execute them automatically after the currently executing process, so this is how it is done.
+ <timestamp>1201170158</timestamp>
+ </comment>
+ <comment>
+ <username>TOKOROTEN</username>
+ <BODY>I can manage it in an hour or so if I use a fan to force the air. <br>I think it's a loser to have a fan running in your room in January. </body>
+ <timestamp>1201175512</timestamp>
+ </comment>
+ <comment>
+ <username>maedana</username>
+ <body>That means you're coming to work barefoot tomorrow</body>.
+ <timestamp>1201184074</timestamp>
+ </comment>
+ <comment>
+ <username>yappo</username>
+ <body>W</body>
+ <timestamp>1201296106</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-01-24 https://nishiohirokazu.hatenadiary.org/archive/2008/01/24]

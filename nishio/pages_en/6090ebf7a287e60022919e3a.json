@@ -1,0 +1,86 @@
+Hatena2008-05-06
+code:hatena
+ <body>
+ *1210048314*boost::lambda in Python
+ I made it.
+ >|python|
+ >>> map(_1 + 1, [1, 2, 3])
+ [2, 3, 4]
+ >>> map(_1 + _2, [1, 2, 3], [4, 5, 6])
+ [5, 7, 9]
+ ||<
+ 
+ No, I don't need it because Python has list comprehensions, but I thought something like boost::lambda's binder might help with the "Let me use assignments in lambda! 1!
+ 
+ I haven't made a binder or anything yet because I haven't checked how the C++ side is implemented. For now, I just made it so that expressions like the one I wrote at the beginning of this article work.
+ 
+ >|python|
+ class Expr(object):
+     def __add__(self, v):
+         if not isinstance(v, Expr):
+             v = Const(v)
+         return Add(self, v)
+ 
+ class Const(Expr):
+     "constant"
+     def __init__(self, v):
+         self.v = v
+ 
+     def __call__(self, *args):
+         return self.v
+ 
+     def __repr__(self):
+         return repr(self.v)
+ 
+ class Add(Expr):
+     def __init__(self, lhs, rhs):
+         self.lhs = lhs
+         self.rhs = rhs
+ 
+     def __call__(self, *args):
+         return self.lhs(*args) + self.rhs(*args)
+ 
+     def __repr__(self):
+         return "%r + %r" % (self.lhs, self.rhs)
+ 
+ class Arg(Expr):
+     def __init__(self, id):
+         self.id = id
+ 
+     def __call__(self, *args):
+         return args[self.id]
+ 
+     def __repr__(self):
+         return "_%d" % (self.id + 1)
+ 
+         
+ _1 = Arg(0)
+ _2 = Arg(1)
+ ||<
+ 
+ *1210098983*Diary of the 5th day of consecutive holidays
+ I was going to tidy up my room today, but I ended up continuing with LinCity, which has surprisingly large coal reserves. It is easy for a country with resources. It is easy for a country with resources. And one day, when the resources are depleted, it will be a big problem. Will Brunei Darussalam be okay?
+ 
+ I think that elementary school students should have at least SimCity, Age of Empire, Simtrans, LinCity, and Civilization 4 before they are asked to memorize them in social studies class or something like that. I was forced to memorize the names of the policies of countries I didn't understand, such as "kolkhozes" and "sovkhozes," and I only recognized communism as "something old and bad that I don't understand," but after playing Civilization 4, I can think that it was one of the options. I could think of it as an option after playing Civilization 4. In fact, it was strong in the areas it focused on (<a href="http://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%97%E3%83%BC%E3%83%88%E3%83%8B%E3%82%AF%E3%83%BB%E3%82% B7%E3%83%A7%E3%83%83%E3%82%AF">Sputnik Shock</a>), but there were also areas where it was a drag (<a href="http://ja.wikipedia.org/wiki/%E3%83%AB%E3%82%A4%E3% 82%BB%E3%83%B3%E3%82%B3%E8%AB%96%E4%BA%89">Lysenko controversy</a>), and there are pros and cons to everything.
+ 
+ 
+ 
+ Well, let's not do that, let's get out in the light. My plan for today was to clean up the room and get the floor out. But I just realized that in order to get the floor out, I need a place to fix things on the floor.
+ 
+ 
+ 
+ What has happened to Kinshicho? I wrote that UNIQLO was gone the other day, Kinkado was under renovation, and Daiso had just emptied out the shelves where I tried to buy some items due to layout changes. I wondered what the equivalent of Kohnan in Kansai is in Kanto. I found a plain storage case at MUJI. It's nice and decorative. http://www.muji.net/store/cmdty/detail/4548076747796
+ 
+ I bought six pieces of netting from Daiso and assembled them with ties to make shelves to hold a lot of stuff. That's how I used to put things away. But I noticed a blind spot. Because it is a net, air comes and goes. In other words, dust accumulates on everything inside. It is difficult to clean.
+ 
+ Before that I used a hard container from Konan. (http://www.kohnan-eshop.com/product_info.php/products_id/17304) This one is solid enough to ride on top of. It is easy to hold and carry. But the sides are slanted, so it is not suitable for books. Also, you have to move the top thing out of the way to open it. It's hard to get books out of it because I used it as a leg for my desk, taking advantage of its sturdiness. First of all, I have to clean up the desk.
+ 
+ -----
+ 
+ I had forgotten about TopCoder.
+ 
+ *1210099471*Rice
+ I opened 2 kilograms of unwashed rice. Search when this is gone and calculate how many days you have consumed it and how much per day.
+ </body>
+
+[Hatena Diary 2008-05-06 https://nishiohirokazu.hatenadiary.org/archive/2008/05/06]

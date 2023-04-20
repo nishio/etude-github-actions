@@ -1,0 +1,48 @@
+Hatena2010-07-23
+code:hatena
+ <body>
+ *1279880210*Leverage Memo: Legacy Code Improvement Guide
+ Legacy code := code without tests
+ 
+ In order to create tests, it is necessary to understand the impact of the target class on other classes. If dependencies are eliminated, a fake class can be plugged in and its impact can be observed directly.
+ 
+ We cannot edit the production code every time we test, so we need a place where we can change the inconvenient behavior for testing without editing the code. This is called a seam. Every seam has an enabling point to change its behavior.
+ 
+ When we say "joint" in Japanese, we tend to be conscious of attaching, but it is more important to say "you can detach it there".
+ 
+ **How to add functionality to existing legacy code
+ 1: Sprout Method
+ Instead of adding to existing untested code, create a new method and call it, then write tests for that new method
+ 
+ 2: Wrap method
+ When adding processing before or after an existing untested method, rename the untested method so that it calls the old method by its original name and the method with the new functionality to be added, and test that new method.
+ 
+ **TDD
+ -1: Write tests that fail
+ -2: Ensure that the compilation passes
+ -3: Pass the test. At this time, do not change the existing code as much as possible. Do not think, "This is almost the same as the Foo method, with only some differences, so let's abstract it. Abstraction is refactoring, so it should pass the test first.
+ -4: Clean up the code
+ -5: Back to 1
+ 
+ **Liscov's Substitution Principle
+ Objects of subclass Y must always be available as objects of superclass X. Otherwise, the user would have to be aware that an object in a variable of type X is actually of type Y.
+ 
+ **Pass Null
+ With a language like Java that can detect access to null at runtime, you can simply pass null when you need an object that is too much trouble to create for testing. It will tell you what you need by exception when you need it.
+ 
+ **How to Study Impacts
+ Drawing Impact Sketches
+ Surround the method as if the variable and return value may change. Write the effects with arrows.
+ If well designed, this should be simple.
+ 
+ **_
+ In some cases, the elimination of dependencies breaks encapsulation. For example, if private is removed, it may be necessary to look at the entire package instead of examining only the class to understand the dependencies. Removing dependencies is a means to make it easier to write tests, not an end. Similarly, encapsulation is a means, not an end, to make dependencies easier to read. The authors give priority to testing.
+ 
+ **_
+ The part that calls third party libraries directly is where it could have been done in SEAM. It would be a real downfall if testing is not possible due to tight coupling to third-party libraries. Use wrappers to make it loosely coupled.
+ 
+ I can't read the latter half of the specific examples diagonally, so I'll read them more carefully next time.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as1&m=amazon&f=ifr&md=1X69VDGQCMF7Z30FM082&asins=4798116831" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2010-07-23 https://nishiohirokazu.hatenadiary.org/archive/2010/07/23]

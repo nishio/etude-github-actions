@@ -1,0 +1,124 @@
+Hatena2008-07-26
+code:hatena
+ <body>
+ *1217033279*Google Code Jam Round1
+ I woke up all right! But I'm so sleepy...
+ 
+ -----
+ 
+ Finished.
+ I was able to solve problem A, but I looked at problem B and it looked like trouble, so I did problem C. I was mistaken and didn't solve it at all and ended up only solving A. ORZ
+ 
+ Solution A. As usual, opening and closing files are omitted. Given two integer sequences vec1 and vec2, the question is to rearrange them appropriately so that the inner product (vec1[0] * vec2[0] + vec1[1] * vec2[1] + ...) is the smallest. If one of the values is large and the other is also large, the result of multiplication will be very large, so when one of the values is large, we want to bring the smallest possible value. Therefore, I sorted one in ascending order and the other in descending order. (PS: It is an old habit to use reduce(add, ...) is an old habit and we should use sum.)
+ 
+ >|python|
+     num_test = int(fi.readline())
+     for test_id in range(num_test):
+         fi.readline() # num of elements. no needs
+         vec1 = map(int, fi.readline().split())
+         vec2 = map(int, fi.readline().split())
+         vec1.sort()
+         vec2.sort(reverse=True)
+         from operator import add, mul
+         result = reduce(add, map(mul, vec1, vec2))
+         p("Case #%d: %d" % (test_id + 1, result))
+ ||<
+ 
+ The others were not finished in time. I was thinking that Small was a test case to challenge Large, and I was trying to come up with an algorithm that would allow me to solve Large, which was not good. Should I have tried to pick up Small's score with an algorithm that would allow me to solve Small even if I couldn't solve Large?
+ 
+ 
+ And Rank: 849! It's not subtle enough.
+ 
+ -----
+ 
+ When I look at the code of the person who had the top score in C, it is some kind of matrix calculation. What is this mysterious matrix?
+ 
+ >|cpp|
+ int main()
+ {
+ 	matrix trans;
+ 	trans.data[0][0] = 0;
+ 	trans.data[0][1] = 1;
+ 	trans.data[1][0] = -4;
+ 	trans.data[1][1] = 6;
+ 
+ 	int numCase, i, n;
+ 	scanf("%d", &numCase);
+ 	for (i = 0; i < numCase; i++)
+ 	{
+ 		scanf("%d", &n);
+ 		n--;
+ 		matrix tP = power(trans, n);
+ 		int res = (tP.data[0][0] * 6 + tP.data[0][1] * 28+ 1000000) % mod;
+ 		if (res == 0) res = 999;
+ 		else res--;
+ 		printf("Case #%d: %03d\n", i+1, res);
+ 	}
+ 	return 0;
+ }
+ ||<
+ 
+ -----
+ 
+ Wow! You could have dropped C Small if you attacked it with the stance that you only needed to drop C Small! It's only a few lines of code to pass!
+ >|python|
+     from decimal import Decimal
+     num_test = int(fi.readline())
+     VALUE = 3 + Decimal(5).sqrt()
+     for test_id in range(num_test):
+         n = int(fi.readline())
+         result = int((VALUE ** n) % 1000)
+         p("Case #%d: %03d" % (test_id + 1, result))
+ ||<
+ I guess Small and Large are different. I knew it.
+ 
+ -----
+ 
+ Explanation of C Large by t33f
+ http://t33f.tumblr.com/post/43587848/gcj-2008-round1a-problem-c
+ 
+ *1217088304*Backup
+ I thought I'd back up the entire HDD before sending my presentation laptop in for repair, so I XCOPYed it, and after a few hours of hard work, it died, saying "not enough memory". Oh well.
+ 
+ -----
+ 
+ I don't know if the problem is the sheer volume or the files I tried to copy (I think it's the former), but at any rate, I found that it died while copying temporary internet files, so I'm deleting them and trying again with the /D option and seeing what happens. I'll have to make sure I delete the temporary files.
+ 
+ *1217090023*Diary
+ I looked up the venue for tomorrow's TOEIC (Athénée Français in Ochanomizu) on Google Map and took a picture with my cell phone.
+ I went to a photo shop during the day and had my photo ID taken. I put it on my examination voucher and wrote my name on it.
+ Since cell phones and table clocks are not allowed, I put my wristwatch in my bag. Since I am not in the habit of wearing a wristwatch, I had a hard time finding one.
+ I don't have a writing utensil! Ugh! I need a pencil and eraser! I wonder if there is one at the convenience store.
+ 
+ 
+ I bought an eraser.
+ 
+ 
+ Admission starts at 11:30 and ends at 12:20. Closing time is 15:15.
+ 
+ My plan was to spend the whole day today making a final push, but, well, I couldn't do it. I'm pretty sure I'll have to go to bed early for tomorrow.
+ </body>
+ <comments>
+ <comment>
+ <username>runfor</username>
+ <body>C thought about it while looking at the source:<br>If f(n)=(5+√3)^n then <br>f(n+2) = 6*f(n+1) - 4f(n)<br>This is similar to the Fibonacci sequence<br>T( f(n) f(n+1)) = ( T(0 -4) T(1 6) ) ( f( n-1) f(n))<br><br>I'm still puzzled why +1000000 % 1000 or 3+√5 ≈ 6 (3+√5)^2 ≈ 28 could be omitted orz</body>.
+ <timestamp>1217060055</timestamp>
+ </comment>
+ <comment>
+ <username>earth2001y</username>
+ <body>The ads on xcopy's Hatena keyword page are amazing... </body>
+ <timestamp>1217119469</timestamp>
+ </comment>
+ <comment>
+ <username>Hikki</username>.
+ <BODY>To runfor the comenT<BR>You may already know this, but a clear explanation can be found at <BR><BR>http://www.onaneet.org/blog/2009/08/21/code-jam-2008%E3%81%AE%E5%95%8F%E9% A1%8C2/<br><br>I found it. By the way, I put it out there. </body>
+ <timestamp>1254101161</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>By the way, I also wrote a biting commentary a few days after this entry<br>http://d.hatena.ne.jp/nishiohirokazu/20080802/1217652404</body>
+ <timestamp>1254384626</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-07-26 https://nishiohirokazu.hatenadiary.org/archive/2008/07/26]

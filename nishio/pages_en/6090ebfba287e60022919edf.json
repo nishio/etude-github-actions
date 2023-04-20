@@ -1,0 +1,150 @@
+Hatena2008-11-02
+code:hatena
+ <body>
+ *1225602689* I need to clean up my room.
+ 
+ I don't know where to start.
+ f:id:nishiohirokazu:20081102141129j:image
+ 
+ *1225611468*Measurements
+ Time required for washing: 45min
+ 
+ 
+ The number of samples is still one, so we do not know how much variation there is. We confirmed that there is almost no variation in the time it takes to fill the bath with hot water at 12min.
+ 
+ 
+ Laundry drying: 6mim
+ 
+ 
+ Number of samples: 1. Continuous measurement is needed in the future, as the results are expected to vary greatly depending on the amount of laundry. In this study, seven hangers were used. The measurement was taken after taking in dry socks from the sock dryer and having enough hangers available, so it may take a little more time if hangers are depleted. In the process of drying socks outdoors, I stepped on a document case that had fallen to the floor and damaged it. We felt the need to tidy up the flow line.
+ 
+ 
+ General Considerations. We have observed cases of frequent escapes in front of the PC so far because I don't like housework, but when I am measuring time, I am less likely to escape because the desire "I'm in the middle of housework but I want to goof off" outweighs the desire "I can't mess up the experiment".
+ 
+ *1225630723* Parity bits
+ It looked interesting as a puzzle, so I wrote it down.
+ >|python|
+ >>> [int(c == "1") for c in raw_input()]
+ 1001010
+ [1, 0, 0, 1, 0, 1, 0]
+ >>> (lambda xs: xs + [sum(xs) % 2])([int(c == "1") for c in raw_input()])
+ 1101010
+ [1, 1, 0, 1, 0, 1, 0, 0]
+ >>> (lambda xs: xs + [sum(xs) % 2])([int(c == "1") for c in raw_input()])
+ 111
+ [1, 1, 1, 1]
+ >>> "".join(map(str, (lambda xs: xs + [sum(xs) % 2])([int(c == "1") for c in raw_input()])))
+ 1100
+ '11000'
+ >>> "".join(map(str, (lambda xs: xs + [sum(xs) % 2])([int(c == "1") for c in raw_input()])))
+ 1110
+ '11101'
+ ||<
+ 
+ *1225635738*Bits
+ >>
+ ME: It's 8 bytes, but 56 bits, because the input is US-ASCII limited and the most significant bit is 0, so I don't mind stuffing that. It would be much easier if they didn't stuff it!
+ ME: Don't save me a single byte or something!
+ ME: I am sure there will be a blood war between the embedded brain and the LL brain.
+ me: Is there any library to make it easier to handle bits in Python?
+ me: "Extract 7 bits from this byte sequence.
+ <<
+ 
+ That's why I wrote it.
+ >|python|
+ def to_bin(x, width=8):
+     """
+     for debug
+     >>> to_bin('A')
+     '01000001'
+     >>> to_bin('AB')
+     '01000001,01000010'
+     """
+     if isinstance(x, str):
+         if len(x) == 1:
+             return to_bin(ord(x))
+         return ",".join(map(to_bin, x))
+     if isinstance(x, int):
+         return "".join(
+             str(int(bool(x & (2 ** i))))
+             for i in reversed(range(width)))
+     raise NotImplementedError
+ 
+ def split_to_fixed_bits(bytes, width):
+     """
+     >>> to_bin("ABC")
+     '01000001,01000010,01000011'
+     >>> [to_bin(x, 4) for x in split_to_fixed_bits("ABC", 4)]
+     ['0100', '0001', '0100', '0010', '0100', '0011']
+     >>> [to_bin(x, 3) for x in split_to_fixed_bits("ABC", 3)]
+     ['010', '000', '010', '100', '001', '001', '000', '011']
+     """
+     if width > 8: raise NotImplementedError
+     mask = (2 ** width) - 1
+     total = len(bytes) * 8
+     if total % width: 
+         bytes += "\x00"
+     start = 0
+     for start in range(0, total, width):
+         sb = start / 8
+         end = start + width
+         eb = (end - 1) / 8
+         if end % 8 == 0:
+             yield ord(bytes[sb]) & mask
+             
+         elif sb == eb:
+             ret = ord(bytes[sb])
+             _mask = mask << (8 - end % 8)
+             ret &= _mask
+             ret >>= 8 - end % 8
+             yield ret
+ 
+         else:
+             before_half = ord(bytes[sb])
+             _mask = (2 ** (8 - start % 8)) - 1
+             before_half &= _mask
+             before_half <<= end % 8
+             after_half = ord(bytes[eb])
+             _mask = (2 ** (end % 8)) - 1
+             _mask <<= 8 - end % 8
+             after_half &= _mask
+             after_half >>= 8 - end % 8
+             yield before_half + after_half
+ ||<
+ 
+ So, personally, I feel like I've already finished solving the puzzle and I'm going to leave it alone, but I wonder if I should add it to CodeRepos. If you think I should add it, please give me a Hatena Star.
+ 
+ *1225640149*Bath Salt
+ f:id:nishiohirokazu:20081102234314j:image
+ 
+ I kind of bought it.
+ 
+ *1225651646*Insomnia every 2 days.
+ I think I say I can't sleep every two days.
+ For now, I'm flipping through "Introductory VerilogHDL Description".
+ 
+ 
+ I wonder if this is the kind of hardware I should buy: <a href='http://www.amazon.co.jp/HuMANDATA-XILINX%E5%AF%BE%E5%BF%9CFPGA%E3%83% 88%E3%83%AC%E3%83%BC%E3%83%' 8A-EDX-002/dp/B0019LW0K2/pages20-22/ref=sr_1_2?ie=UTF8& s=electronics&qid=1225650226&sr=1-2'>FPGA Trainer for XILINX (EDX- 002): Amazon.com Xilinx : Electronics</a>.
+ 
+ 
+ I wonder if there is a good manual for CUDA, Game Gems is very expensive.
+ </body>
+ <comments>
+ <comment>
+ <username>Name</username>.
+ <body>I think it's from Cup Noodles</body>.
+ <timestamp>1225610208</timestamp>
+ </comment>
+ <comment>
+ <username>tgbt</username>
+ <body>The CUDA manual is the official programming guide. </body>
+ <timestamp>1225726134</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>By the looks of it, my earlier comment wasn't understood. </body>
+ <timestamp>1225778604</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-11-02 https://nishiohirokazu.hatenadiary.org/archive/2008/11/02]

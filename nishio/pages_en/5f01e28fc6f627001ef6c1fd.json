@@ -1,0 +1,73 @@
+ABC173
+Yay, I'm green!
+[https://gyazo.com/9c02c55f0b7706469c3858aa1e220e53]
+I solved 5 questions this time.
+[https://gyazo.com/db2b82d6397bf11a9a0588dcaa21799a]
+
+C problem
+	It was so difficult last time that this C was a real doozy.
+	　I reviewed it calmly, and W, H were max 6, so the size is small enough to search all of them.
+　C++ people like to do bitwise whole searches, but in Python, bitwise operations are not light, so they're not very meaningful.
+　　The standard library itertools provides iterators for enumerating systems.
+	The counting process can be multiplied by Numpy and the loop will run at native speed.
+　The output of itertools.product is treated as a vector and multiplied into a matrix, so it's easy.
+　`data = (data == 35)`
+　This will result in a Bool matrix. True will be 1 and False will be 0 during the operation.
+code:python
+ def solve(H, W, K, data):
+     data = (data == 35)
+     ret = 0
+     for x in itertools.product((0, 1), repeat=W):
+         dX = data * x
+         for y in itertools.product((0, 1), repeat=H):
+             s = (dX.T * y).sum()
+             if s == K:
+                 ret += 1
+     return ret
+https://atcoder.jp/contests/abc173/submissions/14993373
+
+D problem
+	code:python
+	 def solve(N, AS):
+      buf = []
+      AS.sort(reverse=True)
+      ret = AS[0]
+      for i in range(N - 2):
+          ret += AS[1 + i // 2]
+      return ret
+	Are you sure you want such a short cord? I was worried that AC
+　Actual diagrams drawn during the contest
+　　[https://gyazo.com/fea759711c68351a4066d6f92db8a63e]
+　I wonder if it's really okay to arrive in order of size..."
+ I wonder if Greedy is the right..."
+ I assumed those two things, tried them in turn by hand, and got the above.
+ The first person's score is 0, the second person's score is A1, and the rest add up to 2 each.
+ I submitted it anyway, and if it was a WA, I'd think hard about it, but it was an AC, so I didn't prove it.
+ The official explanatory PDF contains proof of why this is a good idea.
+
+E problem
+　Greedy after dividing the cases into three ways.
+　　Case 1, using all
+　　　There's no choice, so multiply it all without thinking.
+　　Case 2, no positive numbers and K is odd
+　　　At this point, multiply the negative number by an odd number to determine that the result is negative
+　　　So make the absolute value smaller.
+　　　multiply in decreasing order of absolute value
+　　Case 3, Other
+　　　Do the larger of "multiply two positive numbers with large absolute values" or "multiply two negative numbers with large absolute values.
+　　　If there is only one remaining, multiply by the largest positive number if there is still a positive number; if not, multiply by the negative number with the smallest absolute value (Note 2)
+	AC, but when I was writing this commentary after the contest, I realized that there was a mistake in the (Note) section.
+	 Does case 3 mean "when the solution is positive"?
+	 　If this is what is meant, then the case distinction in Note 2 should not be necessary.
+	 　If it doesn't make sense, then it's odd that they're calculating the absolute value to be so large.
+	 If you submit as "multiply by the largest number" without case, AC
+	 However, the test case at hand gives an error stating that there are no positive numbers left.
+	 　I added the case because of the error at hand in the first place.
+	 If you take 3 from 9,9,-1,-1,-1, 9,-1,-1 is correct
+	 　My code would choose 9,9 for Greedy.
+	 　This is the correct choice for only one 9.
+	 　　In the next step, there are not enough positive numbers and -1,-1 is selected
+In other words, a false solution (a solution that is not the correct solution, but was assumed to be correct because the management did not prepare a test case to point it out).
+What, so you can't be happy about being green?
+
+#atcoder

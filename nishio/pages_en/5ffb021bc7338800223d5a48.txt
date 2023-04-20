@@ -1,0 +1,189 @@
+ABC188
+[AtCoder Beginner Contest 188 - AtCoder https://atcoder.jp/contests/abc188]
+I answered all the questions correctly. After solving A-E in the first 25 minutes, I got into F and spent about 50 minutes. I got completely impatient during the process and got 6 penalties.
+
+[https://gyazo.com/c4d11f9ce3d61e26fe505cf52f0fcaeb]
+[https://gyazo.com/4609564a3c452f696c5c8b8ae80f176e]
+
+[A - Three-Point Shot https://atcoder.jp/contests/abc188/tasks/abc188_a]
+	[https://gyazo.com/9440dcf0419562d1b705b2004be36511]
+	1WA, I'll trade you, overlooking the condition "to the one with the lowest score."
+	code:python
+	 X, Y = map(int, input().split())
+  if X > Y:
+      Y, X = X, Y
+  if X + 3 > Y:
+      print("Yes")
+  else:
+      print("No")
+
+[B - Orthogonality https://atcoder.jp/contests/abc188/tasks/abc188_b]
+	[https://gyazo.com/d780c78a7d0081ce919dd80c915291da]
+ Repeat multiplying and adding in loops.
+	code:python
+	 def main():
+      N = int(input())
+      AS = list(map(int, input().split()))
+      BS = list(map(int, input().split()))
+      ret = 0
+      for i in range(N):
+          ret += AS[i] * BS[i]
+      if ret == 0:
+          print("Yes")
+      else:
+          print("No")
+
+[C - ABC Tournament https://atcoder.jp/contests/abc188/tasks/abc188_c]
+	[https://gyazo.com/0b911fc8e109fee21c9c592e6e26e671]
+ Make a list of IDs of people who will play the next game, play the tournament N-1 times, and return the IDs of the losing side as the last 2 people get
+	code:python
+	 def main():
+      N = int(input())
+      AS = list(map(int, input().split()))
+      PS = range(2 ** N)
+      for _r in range(N - 1):
+          newPS = []
+          for i in range(0, len(PS), 2):
+              if AS[PS[i]] > AS[PS[i + 1]]:
+                  newPS.append(PS[i])
+              else:
+                  newPS.append(PS[i + 1])
+          PS = newPS
+      if AS[PS[0]] > AS[PS[1]]:
+          print(PS[1] + 1)
+      else:
+          print(PS[0] + 1)
+	Twitter
+		>"The runner-up is the player who won the opposite block to the one who will win", so the answer is the index of the right half and max and the left half max, whichever is smaller [src https://twitter.com/kyopro_friends/status/ 1348264284417978369]
+　　　I see!
+
+[D - Snuke Prime https://atcoder.jp/contests/abc188/tasks/abc188_d]
+	[https://gyazo.com/9e383b268bf227d379e4cef649a273e1]
+ There is no penalty for joining and leaving Prime, so you can calculate the daily cost and pay C for each day you exceed C.
+　I'd like to find the daily cost per day, but it's impossible to add up to 10^5 times and up to 10^9 days to the section
+　So [RangeAdd is two PointAdd].
+ 　The 10^9 day section is hard to hold in array.
+  So we'll do it in the dictionary.
+	code:python
+	 def main():
+      N, C = map(int, input().split())
+      from collections import defaultdict
+      diff = defaultdict(int)
+      for _n in range(N):
+          a, b, c = map(int, input().split())
+          diff[a] += c
+          diff[b + 1] -= c
+      keys = list(sorted(diff))
+      cost = 0
+      ret = 0
+      for i in range(1, len(keys)):
+          cost += diff[keys[i - 1]]
+          days = keys[i] - keys[i - 1]
+          ret += min(cost, C) * days
+  
+      print(ret)
+	Twitter
+		>[ABC183]Just do the simulation in the explanation of [ABC183]D [src https://twitter.com/kyopro_friends/status/1348264284417978369]
+　　I see what you mean about doing [coordinate compression], well, that's certainly a good idea.
+　　[I have never heard the term "event sort" before, but I guess it means "sorting the start and end events of an interval together". I used the "time -> increase/decrease" dictionary, but I guess it means using the "(time, increase/decrease)" list. Might be a bit of a hassle since some of the events are at the same time.
+
+[E - Peddler https://atcoder.jp/contests/abc188/tasks/abc188_e]
+	[https://gyazo.com/643399598cd75f589f09039a4773f7d8]
+ I'd like to know the likelihood of getting from each vertex to each vertex, but if I do it naively, I'll never get there in time.
+ The [special constraint] that "Xi<Yi is guaranteed" is the key.
+ In other words, we can update the "minimum purchase cost at the apex that can get there" in the order of decreasing i
+	code:python
+	 def main():
+      N, M = map(int, input().split())
+      AS = list(map(int, input().split()))
+      from collections import defaultdict
+      edges = defaultdict(list)
+      for _i in range(M):
+          frm, to = map(int, input().split())
+          edges[frm - 1].append(to - 1)  # -1 for 1-origin vertexes
+  
+      INF = 9223372036854775807
+      minBuyCost = [INF] * N
+  
+      ret = -INF
+      for i in range(N):
+          ret = max(ret, AS[i] - minBuyCost[i])
+          m = min(minBuyCost[i], AS[i])
+          for j in edges[i]:
+              minBuyCost[j] = min(minBuyCost[j], m)
+  
+      print(ret)
+
+[F - +1-1x2 https://atcoder.jp/contests/abc188/tasks/abc188_f]
+	[https://gyazo.com/2f312cac88ff2f3803637e6be88c1ff5]
+ [Time reversal]
+ Never -1 after +1
+ Never +1 after +1, because /2,+1 is cheaper than +1,+1,/2
+ 　Foreshadowing: There is a mistake here.
+ If Y is less than X, it can only be +1.
+ Put them in a prioritized queue and try them from lowest cost to highest cost.
+ 　I observed that the queue had the same value over and over, so I combined the dictionaries [heapq+dict].
+ 12WA
+ After a while of dawdling, implement the naive solution method and observe discrepancies in a range of small values.
+ 		code:python
+  	 def blute(X, Y):
+        queue = {X}
+        ret = 0
+        while True:
+            newqueue = set()
+            if Y in queue:
+                return ret
+            ret += 1
+            for x in queue:
+                newqueue.add(x * 2)
+                newqueue.add(x + 1)
+                newqueue.add(x - 1)
+            queue = newqueue
+    
+    
+    def fulltest():
+        for x in range(20):
+            for y in range(20):
+                s = solve(x, y)
+                b = blute(x, y)
+                if s != b:
+                    print(x, y, s, b)
+ 　Cause of error: "A sequence of +1s and -1s is missing the shortest path case."
+ 　In (1) of the following code
+ 　The statement "never +1 after +1" is incorrect.
+ 　　No /2 would come after that, but it could have gone straight to the finish line.
+	code:python
+	 def solve(X, Y):
+      from heapq import heappush, heappop
+  
+      queue = [(0, Y)]
+      minCost = {Y: 0}
+      INF = 9223372036854775807
+  
+      def add(cost, y):
+          c = minCost.get(y, INF)
+          if cost < c:
+              minCost[y] = cost
+              heappush(queue, (cost, y))
+  
+      while True:
+          cost, y = heappop(queue)
+          if y == X:
+              return cost
+          if y < X:
+              add(cost + (X - y), X)
+              continue
+          if y == X + 1:
+              add(cost + 1, X)
+              continue
+  
+          add(cost + (y - X), X)  # (1)
+  
+          if y % 2 == 0:
+              add(cost + 1, y // 2)
+          else:
+              add(cost + 2, (y + 1) // 2)
+              add(cost + 2, (y - 1) // 2)
+	Twitter
+		> If y<x, then x-y is the answer. When it's not, it's roughly the same as [AGC044A]. Thinking backwards, using the fact that ±1 is not continuous except at the end, we can solve it with a small number of states by memoization recursion [src https://twitter.com/kyopro_friends/status/1348264284417978369].
+

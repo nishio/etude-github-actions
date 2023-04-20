@@ -1,0 +1,69 @@
+Hatena2010-11-20
+code:hatena
+ <body>
+ *1290213368*Diary of Manuscript Writing
+ - Problem with < and & disappearing in code.
+ - Why not enclose it in CDATA?
+ >||
+ HTMLParser.HTMLParseError: unknown declaration: 'CDATA[\n$x = ...
+ ||<
+ orz
+ - I'm not sure if it's OK if I set it to "&amp;" -> it doesn't show up orz.
+ >|python|
+ >>> from HTMLParser import HTMLParser
+ >>> class Foo(HTMLParser):
+ ...   def handle_data(self, data):
+ ...     print repr(data)
+ ... 
+ >>> Foo().feed("foo&amp;bar")
+ 'foo'
+ 'bar'
+ ||<
+ 
+ Oh? Separated means another handler is being called?
+ 
+ >>
+ HTMLParser.handle_entityref(name)¶
+     This method is called to process a general entity reference of the form &name; where name is an general entity reference. It is intended to be overridden by a derived class; the base class implementation does nothing.
+ <<
+ http://docs.python.org/library/htmlparser.html
+ 
+ There were!
+ 
+ >|python|
+ >>> Foo.handle_entityref = lambda self, name: self.handle_data(name)
+ >>> Foo().feed("foo&amp;bar")
+ 'foo'
+ 'amp'
+ 'bar'
+ ||<
+ 
+ OK, so I can just change the & and so on in the code to entity references and output them back in handle_entityref.
+ 
+ - Geez, the blanks are clogged.
+ >||
+ for($i = 0; $i<10; $i++){&shori();
+ ||<
+ 
+ Oh, but this is not my fault that I am applying strip. I've changed the "strip()" to "strip("\n")" to fill in the blank lines.
+ 
+ Oh, but ...
+ >||
+  }&yobu();
+ ||<
+ So this is what happens. I'm sorry, but it's a bad idea to remove the blank lines. I thought it would be hard to see the blank lines when I quit, but I think it's rather easy to see, so I'm fine with it.
+ 
+ <hr>
+ 
+ The footnote misalignment issue, this is a race condition with image loading. So $() only waits for the document to load, not the image again? That's right.
+ 
+ <hr>
+ 
+ The ones that did not go in well at this point will have to be deleted now.
+ 
+ >>
+ C++ author Bjarne Stroustrup also says, "We tend to pay attention to syntax, but it's not the syntax that matters, it's the semantics" (TODO: source needed, probably D&E). D&E perhaps).
+ <<
+ </body>
+
+[Hatena Diary 2010-11-20 https://nishiohirokazu.hatenadiary.org/archive/2010/11/20]

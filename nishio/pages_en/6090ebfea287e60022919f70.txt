@@ -1,0 +1,410 @@
+Hatena2009-04-12
+code:hatena
+ <body>
+ *1239496730*"I'd like to receive a copy of this book" is a change.
+ It's weird to say, "I'll have a book donated to me. It's just as strange as "kazazete iru" (to give a book to someone). It's just as strange as "I'll have a look at it.
+ 
+ I was wondering if anyone else thought the same thing: <a href='http://www.msng.info/archives/2008/05/post_667.php'>I want to paraphrase "dedication" - in my head</a>.
+ 
+ But it's rude to use coined words that the other person doesn't understand, because it's a problem before the rules of respect and modesty.
+ 
+ *1239515631*Study Group
+ Infinite dimensional arbel?
+ 
+ Cubic development
+ 
+ Fibonacci with point free?
+ 
+ >||
+ fib 0 = 1
+ fib 1 = 1
+ fib n = (fib (n - 1)) + (fib (n - 2))
+ ||<
+ 
+ >||
+ fib_ n x y = if (n == 0) then x else fib_ (n - 1) y (x + y)
+ fib2 n = fib_ n 0 1
+ 
+ main = print $ map fib2 [1..10]
+ ||<
+ 
+ >||
+ fib_ x y n = if (n == 0) then x else fib_ y (x + y) (n - 1)
+ fib2 n = fib_ 0 1 n
+ 
+ main = print $ map fib2 [1..10]
+ ||<
+ 
+ Read Prelude. Oh, there are I, K and T combinators. But there doesn't seem to be an ⌘x, f -> (f x)x thing. First we need to increase n to 2. I need to make this point-free. \f, x -> (f x)x would be better.
+ 
+ There is a triangle with 3 sides of 8 cm, 5 cm, and 3 cm. What is the area of the triangle?
+ 
+ How can I find the area of a cone without using calculus?
+ 
+ Read Prelude. Oh, take 3 $ repeat 2 to get [2, 2, 2]. I guess I can make (f x)x by using fold system.
+ 
+ >||
+ adder x y = x + y 
+ main = print $ foldl1 adder $ take 2 $ repeat 2
+ -- => 4
+ ||<
+ 
+ Oh, it's done, it's done.
+ 
+ >||
+ adder x y = x + y 
+ foo f = (foldl1 f).(take 2).repeat
+ main = print $ foo adder 2
+ ||<
+ 
+ Got it. Next, we can remove the f from this foo f.
+ 
+ >||
+ Prelude> (.(1 +)) (1 +) 2
+ 4
+ ||<
+ 
+ Hmmm... I refer to this: <a href='http://www.jmuk.org/diary/2006/06/13/3'>point freestyle - val it : α → α = fun</a>
+ 
+ >||
+ foo = (.(take 2).repeat).foldl1
+ main = print $ foo adder 2
+ ||<
+ 
+ OKOK
+ 
+ >||
+ foo = (.(take 2).repeat).foldl1
+ main = print $ foo fib_ 5 0 1
+ ||<
+ 
+ Oh no, it has to be Int->Int->Int. The real thing is fib_ :: Int->Int->Int->Int->Int, so Int->Int->Int and Int are mismatched and pissed off. foo f x is T->T->T, or more accurately, if you put two T's in f, foldl requires T to be returned. Mm, I see.
+ 
+ >|haskell|
+ fib_ :: Int -> Int -> Int -> Int -> Int
+ fib_ x y n1 n2 = if (n1 == 0) then x else fib_ y (x + y) (n2 - 1) (n2 - 1)
+ 
+ -- foo f x = (f x) x
+ foo = (.(take 2).repeat).foldl1
+ main = print $ map (foo (fib_ 0 1) ) [1..7]
+ --[1,1,2,3,5,8,13]
+ ||<
+ 
+ It's done, it's done, it's done.
+ 
+ Can't the if statement be partion, indeed.
+ >||
+ cond x y z = if x then y else z
+ 
+ fib_ :: Int -> Int -> Int -> Int -> Int
+ fib_ x y n1 n2 = (cond (n1 == 0)  x (foo (fib_ y (x + y)) (n2 - 1)))
+ ||<
+ 
+ >||
+ fib_ x y n1 = (
+                (.(foo (f2 x y).(subtract 1)))
+                (flip f1 x n1)
+               )
+ 
+ fib_ x y n1 = (
+                (.(foo (f2 x y).(subtract 1)))
+                .(flip f1 x)
+               ) n1
+ ||<
+ 
+ OK OK OK, I'm getting the hang of it.
+ 
+ >||
+ fib_ x y = (
+             (.(foo (f2 x y).(subtract 1))).(flip f1 x)
+            )
+ ||<
+ I was able to erase n1. Now, what to do with it?
+ 
+ >||
+ fib_ x y = (
+             (.)
+             (. 
+              (
+               ((.)
+                (. (subtract 1))
+                ((foo . (f2 x)))) 
+               y
+              )
+             )
+             (flip f1 x)
+            )
+ ||<
+ 
+ Mmm. (. f(x)), which fills only the right term.
+ 
+ >||
+ Prelude> (.((+) 2)) (* 5) 10 
+ 60
+ ||<
+ 
+ I guess I'll just chuck out 2 of these. Hmm. Oh, I see.
+ .x is ⌘x, y -> y.x, so that means ⌘x, y -> (.) y x, where flip comes in and \x, y -> flip (.) x y, and then y disappears.
+ 
+ >||
+ Prelude> ((flip (.)) ((+) 2)) (* 5) 10
+ 60
+ ||<
+ OK
+ 
+ >||
+ fib_ x y = (
+             (.)
+             (
+              (.)
+              (flip (.)) 
+              (
+               ((.)
+                (. (subtract 1))
+                ((foo . (f2 x)))) 
+              )
+              y
+             )
+             (flip f1 x)
+            )
+ ||<
+ Test passed!
+ 
+ >||
+ fib_ x = flip
+          ((.)
+           (.)
+           
+           (
+            (.)
+            (flip (.)) 
+            (
+             ((.)
+              (. (subtract 1))
+              ((foo . (f2 x)))) 
+            )
+           )
+          )
+ 
+          (flip f1 x)
+ ||<
+ Yay, the y is gone!
+ Now, before we go any further, let's make f2 x y = (fib_ y (x + y)) point free.
+ 
+ Hmm, I want to increase y, but the method I just used doesn't seem to work, so I don't know what to do. At any rate, it's easy enough to bring y to the end.
+ >||
+ f2 x y = ((flip fib_).(x +)) y y
+ ||<
+ I'm tired of it.
+ >||
+ dup f x = f x x
+ f2 x = dup ((flip fib_).(x +))
+ ||<
+ 
+ let's see
+ >||
+ f2 x = (dup (
+              (.)
+              (flip fib_)
+              (x +)
+             )
+        )
+ ||<
+ 
+ >||
+ f2 x = (dup (
+              (
+               (.)
+               (flip fib_)
+               .(+)
+              ) x
+             )
+        )
+ 
+ f2 = (dup.(((.) (flip fib_).(+))))
+ ||<
+ 
+ It's done!
+ 
+ >||
+ fib_ x = flip
+          ((.)(.)
+           (
+            (.)(flip (.)) 
+            (
+             (
+              (.)(. (subtract 1))
+              ((foo . (f2 x)))
+             ) 
+            )
+           )
+          )
+ 
+          (flip f1 x)
+ ||<
+ 
+ I'm getting tired of it...here's the finished product, 3 Minute Cooking style."
+ 
+ >||
+ fib_ = dup (
+             (flip(flip.(((.)(.).((((.)(flip (.))).((((.)(. (subtract 1))).((((.)foo).f2)))))))))).(flip f1)
+            )
+ ||<
+ 
+ Overall code of the completed version
+ >|haskell|
+ cond x y z = if x then y else z
+ dup f x = f x x
+ fib_ = dup ((flip(flip.(((.)(.).((((.)(flip (.))).((((.)(. (subtract 1))).((((.)dup).((dup.(((.) (flip fib_).(+))))))))))))))).(flip (cond . (0 ==))))
+ fib = (dup (fib_ 0 1))
+ main = print $ map fib [1..7]
+ ||<
+ 
+ *1239543517* Is a parameter (temporary argument) required in a function definition?
+ I'm like, "Why do I need a list of arguments in a function definition? Don't we need them?" I was asked, and I tried to explain why it was necessary, but then it occurred to me that if it were Haskell, I wouldn't need it, so I checked. Implement a function to calculate the Fibonacci sequence with no arguments.
+ 
+ >|haskell|
+ cond x y z = if x then y else z
+ dup f x = f x x
+ fib_ = dup(flip(flip.(.)(.).(flip (.).).((.subtract 1).).((dup.).(dup.((flip fib_.).(+))))).flip(cond.(0 ==)))
+ fib = (dup (fib_ 0 1))
+ main = print $ map fib [1..7]
+ ||<
+ 
+ Yes, I have a question about the definition of a function to find the Fibonacci sequence. We now know that an argument list is not necessary to define a function to find the Fibonacci sequence, given two things: "a partially applicable conditional branch" and "a function that, given a function f and an argument x, calls f with an argument x to obtain the result of calling f with an argument x." You should not lie and say, "There is no way I can define a function without an argument list" without doing proper research. The correct answer is "Most languages out there require a list of arguments to define a function, and at least in Haskell, given a couple of generic components, you can create a function to find the Fibonacci sequence without a list of arguments, but it is **never easy to read and not recommended**". It becomes.
+ 
+ This is about as readable as it gets when written in an easy-to-read format.
+ >|haskell|
+ fib2 1 = 1
+ fib2 2 = 1
+ fib2 n = fib2 (n - 1) + fib2 (n - 2)
+ ||<
+ 
+ *1239546395* "How do I understand a programming language?" What I think when I hear people say
+ I was thinking when I heard people say, "I studied a lot to learn programming or a particular programming language or something, but I don't feel like I understand it, what's wrong with it, what do I need to learn?"
+ 
+ Isn't that just another way of saying that the objectives are so vague that they don't give a sense of accomplishment?
+ 
+ There have been moments in my life when I thought, "I've mastered programming! or "I understand Python! I have never had a moment in my life when I could think, "I have mastered programming! I could implement a language with continuity in Python! I could implement a language with continuity in Python. But if you ask me if I have mastered the concept of continuity, I don't think so at all. I still have a long way to go. But when I see people who know much more about continuity than I do gather together and discuss continuity, I know that there is no clear goal on this path. No matter how far I go, I am sure I will be left with the feeling that there is still more to come.
+ 
+ The means are not wrong, the goal is wrong. There is no such thing as the goal of "mastering ________. Therefore, no matter how far you go, you will never reach the goal. You will never feel a sense of accomplishment.
+ 
+ Why do most languages in the world, whether Java, Python, or Ruby, go from version 1.0 to version 1.0 instead of being fixed? Isn't it because the author of the language thinks, "I made it and released it, but I think I should have done this instead of that, so I'll fix it. Do you think you can reach a goal that even the author of the language does not understand by studying a book or something? If you really want to master a language, you should first read all the official documentation of the language, then read all the code in the standard library, read all the implementation of the processing system, and then implement the processing system yourself. If you do that, you can say that you have mastered the language. I don't think I'm going to do that. My goal is not to understand a particular language completely. I want to make something, and I want to know the minimum necessary to make it.
+ 
+ Is your goal really to master the language?
+ 
+ <hr>
+ 
+ I'm going to put up an affiliate link to a book I wrote and a Python book I recommend, since it seems to have become something of a hot entry.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=nishiohirokaz-22&o=9&p=8&l=as1&asins=4839922829&md=1X69VDGQCMF7Z30FM082&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=AAFFAA&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe><iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=nishiohirokaz-22&o=9&p=8&l=as1&asins=4797353953&md=1X69VDGQCMF7Z30FM082&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=AAFFAA&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ When I wrote this book, I was plagued for a long time with the feeling of "I wonder if the content is good enough, if I can do better, or if I should just say I'm sorry and stop publishing. It is true that "it is better to understand more before making" not only books, but it is also true that there is no goal that "understanding up to this point is enough. I believe that the only way to learn is to make and publish what I can do now, and learn through the act of making and publishing.
+ 
+ *1239559925*Drawing
+ <img src="http://gyazo.com/9010c43aec268d32a13dde255e0012e1.png">
+ 
+ How about drawing a bunch of meaningful (well, yes, there is one) pictures and putting them all over the mug without explanation and calling it the "Mystery Chalice"?
+ </body>
+ <comments>
+ <comment>
+ <username>ujihisa</username>
+ <body>programmig</body>.
+ <timestamp>1239550033</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>This is really annoying</body>.
+ <timestamp>1239554842</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I didn't realize I had misplaced the title, of all things...! </body>
+ <timestamp>1239555791</timestamp>
+ </comment>
+ <comment>
+ <username>otsune</username>
+ <body>I wonder why some people see pointing out a typo is just a typo patch as a "language lesson" or an act that hurts their self-esteem. Is it the influence of the entrance exam? There is no one who doesn't make mistakes. <br>Well, isn't it unusual when you look at the news about Prime Minister Aso's Kanji? </body>.
+ <timestamp>1239593030</timestamp>
+ </comment>
+ <comment>
+ <username>tshimuran</username>
+ <body> I was encouraged by the content. Even more encouraging "even though pointing out typos is just a typo patch", lol. </body>
+ <timestamp>1239593511</timestamp>
+ </comment>
+ <comment>
+ <username>bgnori</username>
+ If you can point out a <body>typo, that means the situation isn't that bad, right? Long live redundancy. <br>Urban legend of the fortran bug. <br>http://www-users.cs.york.ac.uk/susan/cyc/p/fbug.htm</body>
+ <timestamp>1239594158</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>It's not that we "don't need pseudo-arguments", it's just that we defined it as an alias for a function that needs pseudo-arguments by using compositing</body>.
+ <timestamp>1239610762</timestamp>
+ </comment>
+ <comment>
+ <username>otsune</username>
+ <body>If I were to tweak Nishio's entry, I would say. <BR>Not many people want to master a specific programming language or something. <br>I think most of them really want to be "admired and respected by others as someone who has mastered a particular programming language or something like that ......". <br>To achieve this goal at a low cost, people often "know something" or "bluff" or "Mr. XXX who is a language developer?　Yeah, I know him..." would be the best solution. </body>
+ <timestamp>1239619780</timestamp>
+ </comment>
+ <comment>
+ <username>barlog</username>
+ <body>"No goal" would be pleasing to the language, and mastery (?) <body>I think it would be desirable for the language to be substantiated by the opinion of an appropriate third party, not a fourth party or later. <BR>In fact, we rarely hear the word "master" from the majority of people who have "implemented" a particular language, such as Mr. Nishio. <BR>I would suggest that you be very careful about including "bluff" in your claims! I think. I think honest and humble claims are the facts that will get you more in the future at a lower cost (ideally)</body>.
+ <timestamp>1239623176</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>No, I think not. </body>
+ <timestamp>1239625973</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>Because, you know, inside the seemingly argumentless fib, dup is waiting with its big mouth open, right? </body>
+ <timestamp>1239668392</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>If you simply don't want to have an explicit list, perl does. </body>
+ <timestamp>1239668463</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I'm not sure I understand what you are saying because you are doubling down on it<br>"defined as an alias for a function that requires a pseudo-argument"<br>This is not true. </body>
+ <timestamp>1239695337</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <BODY>I honestly don't understand how you can say it's two or three different things. From the beginning, I've just said, "Isn't that essentially the same thing?" <br><br>Well, I'm an idiot, so maybe I'm just not explaining myself well enough. <br>Well, I'm an idiot, so I guess I'm just not good at explaining. </body>
+ <timestamp>1239698029</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Hmmm, I'm not sure what Shou's point is here either, but at any rate, it's not "defined as an alias for a function that requires a pseudo-argument". If you go all the way down, you will eventually arrive at a function defined with a pseudo-argument, isn't that correct? If that is your argument, it is correct. And it is known that two final functions, S x y z = x z (y z) and K x y = x, are sufficient. The above dup can also be easily derived from S, although I skipped the explanation. <br><br>sterling x y z = x z (y z)<br>warbler = flip sterling id<br><br>main = print $ warbler (+) 2<br><br>I don't know if Haskell provides a standard function equivalent to this sterling or not. I am not familiar with Haskell, so I don't know if Haskell has a standard function equivalent to this sterling, but that and the fact that the Fibonacci sequence can be defined without arguments if a "conditional branch that can be handled as a function" is given is the subject of this entry. </body>
+ <timestamp>1239699552</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Ah, warbler should be read as dup. </body>
+ <timestamp>1239699578</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>Thank you politely</body>.
+ <timestamp>1239699624</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>Oh sorry. It means I'm convinced (it's a bad habit of mine to ignore others and go away when I'm convinced). As you pointed out, "...I thought we were going to get there..." And I was stuck in the obvious place. I don't know anything about combinator theory, but Nishio's explanation is very easy to understand because of the examples. </body>
+ <timestamp>1239700842</timestamp>
+ </comment>
+ <comment>
+ <username>ggr</username>
+ <body>If you want the Fibonacci sequence in Haskell, there is an infinite list version with no arguments at http://d.hatena.ne.jp/takatoh/20060417/1145268988. <br><br>fibonacci = 1:1:zipWith (+) fibonacci (tail fibonacci)<br>main = print $ take 7 fibonacci</body>
+ <timestamp>1240003418</timestamp>
+ </comment>
+ <comment>
+ <username>moridai</username>
+ <body>>I was left with the feeling that I still have a ways to go<br>A feeling that I still don't understand as a beginner, but I somehow understood the meaning of the saying that programming has endless room to learn. To be honest, I have been trying to master the language, but I didn't know where I was at in my mastery. I had just started, but I felt like I had no idea how far I needed to go. <BR>>>My goal is not to fully understand a particular language. I have something I want to create, and I just want to know the minimum necessary to create it. <BR><BR>I'm also going to learn mainly what I want to do with the programming language. Otherwise, I don't see the point of learning it in the first place. </body>
+ <timestamp>1243653490</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-04-12 https://nishiohirokazu.hatenadiary.org/archive/2009/04/12]

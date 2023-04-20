@@ -1,0 +1,331 @@
+Hatena2012-01-25
+code:hatena
+ <body>
+ *1327461670* 10 points that people who are used to other languages tend to stumble when using Python.
+ 
+ I was asked the question today, remembered I had written about it before on Twitter, and then had trouble finding it due to poor searchability. I'm reprinting it here. I'll fill in the details when I get around to it.
+ 
+ ** Timing of evaluation of optional arguments
+ 
+ In Ruby, optional arguments are evaluated each time the function is called.
+ >|ruby|
+ def foo() print "foo!" end
+ def bar(x=foo()) end
+ 
+ bar #=> foo! and outputs
+ bar #=> foo!
+ bar #=> foo!
+ ||<
+ 
+ In Python, it is evaluated only once when the function is defined.
+ 
+ >|python|
+ def foo(): print "foo!"
+ def bar(x=foo()): pass
+ #=> foo!
+ 
+ bar() #=> nothing is output
+ bar()
+ ||<
+ 
+ If you want to evaluate every time, for example, "If the argument is omitted, it is the current date and time," you can set the default value to None and write an if statement "If None = if omitted".
+ >|python|
+ def foo(when=None):
+     if when is None: when = datetime.now()
+ ||<
+ 
+ ** Inclusion notation does not create scope
+ 
+ >|python|
+ >>> x = 42
+ >>> [x + 100 for x in range(5)]
+ [100, 101, 102, 103, 104]
+ 
+ >>> x
+ 4
+ ||<
+ 
+ Also, in the code below, i in the scope of the parent is 2 at the time of evaluating the free variable in the function, so any function call would be +2.
+ 
+ >||
+ >>> functions = [lambda x: x + i for i in range(3)]
+ >>> functions[0](100)
+ 102
+ ||<
+ 
+ One technique that takes advantage of the above "optional arguments are evaluated at function definition" behavior is to write "lambda x, i=i: x + i". But to begin with, the motivation to "create multiple similar functions that behave slightly differently depending on their parameters" is straightforward to implement using classes.
+ 
+ >||
+ class Func(object):
+      def __init__(self, i): self.i = i
+      def __call__(self, x): return x + self.i
+ ||<
+ 
+ ** All variables are references
+ 
+ >|python|
+ >>> a = []
+ >>> b = a
+ >>> b.append(1)
+ >>> a
+ [1]
+ ||<
+ 
+ Assignments do not make copies. If you want to copy, you can do something like from copy import deepcopy.
+ 
+ ** Strings and Unicode strings are different
+ 
+ What is called a string (str) in Python 2.0 is a sequence of bytes. Apart from that, there is a unicode string (unicode), which is a sequence of "Unicode code units". Roughly speaking, each element of a string is 8 bits, while each element of a Unicode string is 16 or 32 bits.
+ 
+ >||
+ # In Mac Terminal (encoding is UTF-8)
+ >>> "Hoge"
+ '\xe3\x81\xbb\xe3\x81\x92'
+ >>> u "hoge"
+ u'\u307b\u3052'
+ ||<
+ 
+ >||
+ # At Windows command prompt (encoding is cp932)
+ >>> "Hoge"
+ '\x82\xd9\x82\xb0'
+ >>> u "hoge"
+ u'\u307b\u3052'
+ ||<
+ 
+ Note that "hoge" is changed to Unicode string and "b "hoge" is changed to byte string in Python 3.
+ 
+ ** implicit conversion between unicode and str
+ *** Decode in join, etc.
+ There is no problem when Unicode strings are concatenated, but when a Unicode string and a byte string (str) are concatenated, the byte string is converted to a Unicode string. At this time, since the encoding is assumed to be ascii, Japanese usually die of UnicodeDecodeError. Since only you know whether the byte string is UTF-8 or SJIS, you have to explicitly tell Python by doing something like x.decode("utf-8").
+ 
+ >||
+ >>> u "hoge" + u "fuga"
+ u'\u307b\u3052\u3075\u304c'
+ 
+ >>> u "hoge" + "fuga" # the second one is not a unicode string
+ ---------------------------------------------------------------------------
+ Traceback (most recent call last)
+ ----> 1 u "hoge" + "fuga"
+ 
+ UnicodeDecodeError: 'ascii' codec can't decode byte 0xe3 in position 0: ordinal not in range(128)
+ ||<
+ 
+ In addition to concatenation, this implicit conversion is also used in comparisons. In order to reduce problems caused by implicit conversion, the rule has been changed since Python 3.0: "hoge" is a unicode string, "b" is a byte string, and unicode strings and byte strings are not converted implicitly. When I try to combine them, I get "TypeError: Can't convert 'bytes' object to str implicitly. Explicitly convert.
+ 
+ *** Encode in print
+ Conversely, when printing a Unicode string, conversion is performed to a byte string to match the character code of the terminal.
+ 
+ >||
+ print u "hoge"
+ #=> hoge is displayed
+ ||<
+ 
+ However, if the output is redirected to a file, it cannot get the character encoding because the destination is not a terminal and is considered ascii. Therefore, this script will die with UnicodeEncodeError when redirecting output.
+ 
+ >||
+ tmp$ python t.py
+ foobar-style name for a dummy variable
+ tmp$ python t.py > out.txt
+ Traceback (most recent call last):
+   File "t.py", line 2, in <module>
+     print u "hoge"
+ UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+ ||<
+ 
+ If you want to output in a specific encoding regardless of whether the output is to a terminal or a file, it is easy to wrap the standard output.
+ >||
+ import sys, codecs
+ sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
+ ||<
+ 
+ see also: <a href='http://d.hatena.ne.jp/atsuoishimoto/20110311/1299805971'>Python 2.x without UnicodeDecodeError/UnicodeEncodeError Programming - atsuoishimoto's Diary</a>.
+ 
+ ** Source code encoding
+ Using non-ASCII characters in source code without specifying the encoding of the source code will result in a syntax error.
+ >||
+ SyntaxError: Non-ASCII character '\xe3' in file t.py on line 1, but no encoding declared; see http://www.python.org/peps/pep-0263.html for details
+ ||<
+ 
+ In other languages, the encoding of the source code may be assumed to be latin-1, etc. However, in that case, for example, if the source code is written in Shift-JIS, the second byte of the character "table" is the same as a backslash, so the second quotation mark in ""Chart"" is escaped. (See also: Wikipedia <a href="http://ja.wikipedia.org/wiki/Shift_JIS#2.E3.83.90.E3.82.A4.E3.83.88.E7.9B.AE.E3.81.8C5C.E7.AD.89.E3.81. AB.E3.81.AA.E3.82.8A.E3.81.86.E3.82.8B.E3.81.93.E3.81.A8.E3.81.AB.E3.82.88.E3.82.8B.E5.95.8F.E9.A1.8C">Problem with second byte can be 5C, etc</a>)
+ 
+ To avoid this, Python stipulates that "if you use non-ASCII characters, you must specify the encoding". The error message contains a link to the details, but for simplicity, all you need is a string on the first or second line of the source code that matches the regular expression "coding[:=]\s*([-\w.]+)". Example:.
+ 
+ >||
+ # -*- coding: utf-8 -*-
+ print u "hoge"
+ ||<
+ 
+ ** Commas are required for one-element tuples
+ 
+ I'm thinking, "Do you make a one-element tuple as (x, )? Why do you need a comma?"
+ 
+ No. The tuple brackets are decorative to begin with. They are the same as (1 + 2) * 3 brackets, such as in an expression. If the body is a comma and the trailing comma can be omitted without any problem, it can be omitted.
+ 
+ >||
+ >>> 1,
+ (1,)
+ >>> 1, 2,
+ (1, 2)
+ >>> 1, 2, 3,
+ (1, 2, 3)
+ ||<
+ 
+ Excerpt from the <a href='http://www.python.jp/doc/release/reference/expressions.html#exprlists'>list of expressions</a> in the language reference:.
+ 
+ >>
+ A list of expressions containing at least one comma is a tuple. ...If you want to create a single-element tuple, you must have a trailing comma. ...If you want to create an empty tuple, use the empty parentheses pair: ().
+ <<
+ 
+ 
+ ** Local variables are created by assignment
+ 
+ Unlike JavaScript, local variables are created by assignment. Therefore, when an assignment is made in a nested function to a variable name that exists in the outer scope, it only creates a new local variable in the inner scope and has no effect on the outer variable.
+ 
+ >|python|
+ def outer():
+     x = 1
+     def inner():
+         x = 2 
+         # Here the local variable x of function inner is created, and,
+         # x in outer is not rewritten
+     inner()
+     print x
+ 
+ outer() #=> 1 is displayed. See, it's not rewritten.
+ ||<
+ 
+ In python 3.0, it is possible to declare "this name is not a local variable" (nonlocal).
+ 
+ >|python|
+ def outer():
+     x = 1
+     def inner():
+         nonlocal x
+         x = 2 
+     inner()
+     print(x)
+ 
+ outer() #=> 2 is displayed. Rewritten!
+ ||<
+ 
+ Also, variables that can be assigned to within a function become local variables of that function, rather than being created at the time the assignment is performed. In the example below, x is a local function of foo because it can be assigned in the function foo. Therefore, at the timing of print x, the error message "local variable 'x' referenced before assignment" will appear.
+ 
+ >|python|
+ x = 1
+ def foo():
+     print x
+     x = 2
+ 
+ foo() #=> UnboundLocalError: local variable 'x' referenced before assignment
+ ||<
+ 
+ ** Integer does not overflow
+ 
+ When an integer's range is exceeded by an addition, division, or shift operation, it is converted to a "long integer" with no upper limit, rather than being kept within the range by discarding the overflowing bits, as in C, etc.
+ 
+ >||
+ >>> 1 << 63
+ 9223372036854775808L
+ >>> -9223372036854775808 / -1
+ 9223372036854775808L
+ 
+ >>> type(1)
+ <type 'int'>
+ >>> type(1L)
+ <type 'long'>
+ ||<
+ 
+ In particular, encryption and pseudo-random number generation algorithms written in C are sometimes written to be truncated by overflow, and do not work as expected when translated verbatim into Python.
+ 
+ ** Slices make copies
+ 
+ Slices are not operators that return left-side values.
+ 
+ If you are used to C++, etc., the code xs[i:j] = ys looks like "xs[i:j] returns the left-hand side value and then the assignment operator is executed on it," and if you execute ys = xs[i:j] and then destructively update ys, the effect is not transmitted to xs I feel uncomfortable with this. It might be interpreted as if the copying is done at the time of the assignment of the slice.
+ 
+ When xs[i:j] = ys is executed in Python, a "slice object" with values i and j and ys is passed to the xs.__setitem__ method. And in the case of a list, xs is implemented to be rewritten destructively. On the other hand, if ys = xs[i:j], the slice object is passed to the xs.__getitem__ method. In the case of a list, this is an implementation that creates a new list with the values copied from that range.
+ 
+ Unlike C++, the assignment operator cannot be redefined, nor is it a method of an object; it would be appropriate to imagine PyObject *x, *y; doing x = y.
+ 
+ ** Extra FAQs
+ 
+ *** Is there a good introductory book?
+ 
+ <a href='http://www.python.jp/doc/release/tutorial/'>Python Tutorial</a>
+ 
+ *** Are there any good commentaries for intermediate students?
+ 
+ Read the <a href='http://www.python.jp/doc/release/tutorial/'>Python Tutorial</a> one more time and then <a href='http://www.python.jp/doc/release/library/'> Python Standard Library</a>. It used to be translated as "library reference", but you shouldn't search for that and get hits 2.5.
+ 
+ *** Where is the explanation of whether it is chr or int?
+ 
+ Chapter 2 of the Library Reference: <a href='http://www.python.jp/doc/release/library/functions.html'>2. Built-in Functions</a>
+ 
+ *** Where is the explanation about strings, lists, tuples, etc.?
+ 
+ Most of it is in the library reference, but this is not in the table of contents because of the deep hierarchy...
+ 
+ Chapter 5 of the Library Reference, <a href='http://www.python.jp/doc/release/library/stdtypes.html#str-unicode-list-tuple-bytearray-buffer-xrange'>5. Built-in Types</a>, summarized in the "Sequence Types" section.
+ 
+ >>
+ There are seven sequence types: strings, Unicode strings, lists, tuples, byte arrays (bytearrays), buffers, and xrange objects.
+ <<
+ 
+ *** What is the difference between a list and a tuple?
+ 
+ Lists are rewritable, tuples are not. However, I think the fact that this kind of question arises means that people don't understand the advantage of being non-rewritable.
+ 
+ For example, a tuple can be a key in a dictionary, but not a list. This is because the design is "tuples are not subject to change, so hash values may be computed. Lists may not compute hash values because they may be changed.
+ 
+ >||
+ >>> x = (1, 2)
+ >>> {x: 1}
+ {(1, 2): 1}
+ >>> x = [1, 2]
+ >>> {x: 1}
+ TypeError: unhashable type: 'list'
+ ||<
+ 
+ In Ruby, an Array (list-like) that can be rewritten can be used as a key for a Hash (dictionary-like), but instead, rewriting it results in an inconsistent state where the value cannot be retrieved.
+ 
+ >||
+ > x = [1, 2]
+ => [1, 2]
+ > d = {x => 'hello'}
+ => {[1, 2]=>"hello"}
+ > d[x]
+ => "hello"
+ 
+ > x << 2
+ => [1, 2, 2]
+ > d
+ => {[1, 2, 2]=>"hello"}
+ > d[x]
+ => nil
+ ||<
+ 
+ Also, by convention, a list is "a list containing an unknown number of items of the same type" (e.g., [1, 2, 3]), and a tuple is "a list containing a fixed number of items not necessarily of the same type in a fixed order" (e.g., ('Taro', 31, 'Osaka', 167.8, 67.8). It is used to express a lazy struct in which the fields are not named.
+ 
+ *** What is the * or ** in func(*arg, **kw) in a function call?
+ This is a notation for unpacking a list or dictionary and passing it to a function. It is explained in tutorials such as <a href='http://www.python.jp/doc/release/tutorial/controlflow.html#tut-unpacking-arguments'>4.7.4. Unpacking Argument Lists</a>. <a href=''>4.7.4. Unpacking argument lists</a>.
+ </body>
+ <comments>
+ <comment>
+ <username>m11m</username>
+ <body>>The motivation to "create multiple similar functions" is straightforward to implement using classes. <br>Using only function functions, one could write <br>functions = [(lambda i: (lambda x: x + i))(i) for i in range(3)]<br><br>The function is not a function, but a function. </body>
+ <timestamp>1327668450</timestamp>
+ </comment>
+ <comment>
+ <username>t98907</username>
+ <body>"Strings and Unicode strings are different" is a pytho 2.x system. </body>
+ <timestamp>1327757630</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>> m11m<br>Not recommended. <br><br>> Mr. T98907<br>Yes, I added a few words to avoid misunderstanding. </body>
+ <timestamp>1328933982</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-01-25 https://nishiohirokazu.hatenadiary.org/archive/2012/01/25]

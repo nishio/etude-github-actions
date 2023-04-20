@@ -1,0 +1,79 @@
+Hatena2014-01-07
+code:hatena
+ <body>
+ *1389063822*MacPort hangs -> cause was xcrun
+ MacPorts would hang without saying anything when I did install/uninstall, and I wondered for a while how to fix it.
+ 
+ - I left it overnight, no progress, no messages.
+ - Ctrl-C doesn't kill it, it freezes up to other terminals and power off dialog.
+ - rm /opt/local/var/macports/registry/.registry.lock does not resolve
+ - mv /opt/local/var/macports/ ... and reinstalled MacPort from the package, but the situation remained the same.
+ 
+ I gave up and put in Homebrew and found the answer easily. The answer was "Error: Your xcode-select path is currently set to '/'. I heard it was "Error: Your xcode-select path is currently set to '/'.
+ 
+ >||
+ $ brew search scikit-learn 
+ Error: Your xcode-select path is currently set to '/'. 
+ This causes the `xcrun` tool to hang, and can render Homebrew unusable. 
+ If you are using Xcode, you should: 
+   sudo xcode-select -switch /Applications/Xcode.app 
+ Otherwise, you should: 
+   sudo rm -rf /usr/share/xcode-select 
+ ||<
+ 
+ I did sudo xcode-select -switch /Applications/Xcode.app and now MacPort works properly.
+ 
+ *1389084079* scikit-learn installed.
+ I pip installed on MacOSX (10.7.5) with <a href='http://scikit-learn.org/stable/install.html'>Installing scikit-learn</a> and was happy to see it succeeded easily. But when I try to use it, it fails to find the symbols starting with ATL when it tries to read so.
+ 
+ I should have been satisfied with the success of import sklearn and not properly "nosetests sklearn --exe". I needed to test if the dynamically loaded stuff was working properly.
+ 
+ This issue is the same as this one in behavior: <a href='http://stackoverflow.com/questions/14861169/scikit-learn-fails-to-load'>python - scikit-learn fails to load - Stack Overflow</a>
+ >||
+ from .cd_fast import sparse_std
+ ImportError: sklearn/linear_model/cd_fast.so: undefined symbol: ATL_dcopy
+ ||<
+ 
+ And here is the workaround script. <a href='https://github.com/scikit-learn/scikit-learn/issues/1247'>Linking problem with atlas on OS X &#183; Issue #1247 &#183; scikit-learn/ scikit-learn</a>
+ 
+ This script is "re-run all commands with -L/opt/local/lib with -L/opt/local/lib shaved off". However, I don't want to have to use port for that, pip for that, and bite a work-around script from the source for that.
+ 
+ It seemed that ATLAS in MacPort was doing something bad, so I first removed MacPort and then used port install py27-scikit-learn to see what would happen. The test did not catch any more ATLAS problems. I'm happy and satisfied.
+ 
+ But one test is an error.
+ >||
+ ======================================================================
+ ERROR: sklearn.cluster.bicluster.tests.test_utils.test_get_submatrix
+ ----------------------------------------------------------------------
+ Traceback (most recent call last):
+   File "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/nose/case.py", line 197, in runTest
+     self.test(*self.arg)
+   File "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/sklearn/cluster/bicluster/tests/test_utils.py", line 43, in test_get_submatrix
+     assert_true(np.all(X != -1))
+   File "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/unittest/case.py", line 422, in assertTrue
+     if not expr:
+   File "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/scipy/sparse/base.py", line 183, in __bool__
+     raise ValueError("The truth value of an array with more than one "
+ ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all().
+ 
+ ----------------------------------------------------------------------
+ ||<
+ >|python|
+ def test_get_submatrix():
+     data = np.arange(20).reshape(5, 4)
+     rows = [True, True, False, False, True]
+     cols = [False, False, True, True]
+     for X in (data, csr_matrix(data)):
+         submatrix = get_submatrix(rows, cols, X)
+         if issparse(submatrix):
+             submatrix = submatrix.todense()
+         assert_array_equal(submatrix, [[2, 3],
+                                        [6, 7],
+                                        [18, 19]])
+         submatrix[:] = -1
+         assert_true(np.all(X != -1))
+ ||<
+ This is because csr_matrix(data) returns a sparse matrix, which is broadcasted as X ! = -1, it is broadcasted to bool sparse matrix, and when it is passed to np.all, it returns sparse matrix instead of bool for some reason*. I'll follow up the rest of the story next time I get around to it.
+ </body>
+
+[Hatena Diary 2014-01-07 https://nishiohirokazu.hatenadiary.org/archive/2014/01/07]

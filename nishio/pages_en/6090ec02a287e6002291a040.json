@@ -1,0 +1,173 @@
+Hatena2009-11-25
+code:hatena
+ <body>
+ *1259110976*Bismuth
+ I bought a bismuth ingot at the <a href='http://www.cyclicblue.com/c3b/'>Shihua Works</a> booth at the Make Tokyo Meeting. It is beautiful on its own.
+ 
+ f:id:nishiohirokazu:20091124192801j:image
+ 
+ Buy various things at 100 yen stores.
+ 
+ f:id:nishiohirokazu:20091124192744j:image
+ 
+ Perfect size for a ladle!
+ 
+ f:id:nishiohirokazu:20091124193256j:image
+ 
+ Dororo. Melted more easily than I imagined.
+ 
+ f:id:nishiohirokazu:20091124193425j:image
+ 
+ It was easy to melt the liquid, but I don't understand "to a certain extent" in the phrase, "to a certain extent," when the liquid portion is discarded when it has hardened to a certain extent. After leaving it for a while, the edges of the liquid surface had hardened, so I quickly poured it out. Oh, it was done!
+ 
+ f:id:nishiohirokazu:20091125100116j:image
+ 
+ The liquid of the one who disposed of it is also clean.
+ 
+ f:id:nishiohirokazu:20091125100135j:image
+ 
+ Incidentally, the measuring spoons were not used at all. The ceramic tea bowl cracked spectacularly the moment the melted liquid was poured into it. I might not recommend it.
+ 
+ Well, now that we've taken pictures, let's melt it again.
+ 
+ 
+ I can't get a good clean shot with the iPhone camera. I would love to have a camera.
+ 
+ f:id:nishiohirokazu:20091125102809j:image
+ 
+ I noticed the center of the liquid dump wasn't solid, so I dumped more and this is what I got. Interesting.
+ 
+ f:id:nishiohirokazu:20091125104903j:image
+ 
+ It's frustrating that there's only so much you can do with 200 g. I should have bought 1 kg.
+ 
+ *1259123736*simplejson in.
+ I'm not very good at doing things with packages. I forget what to try and in what order, so I just get it done. I'll just expose my trial-and-error process and let the experts tell me, "No, that's not right! I'll try to get a pundit to tell me, "No, that's not right!
+ 
+ - Q: Run a script that requires simplejson
+ - A: ImportError: No module named simplejson
+ - "Oh, you don't have simplejson in there?"
+ - Q: sudo port install simplejson (I forgot to mention that the OS is Mac)
+ - A: Error: Port simplejson not found
+ - "I don't see it in the port, maybe use easy_install or something."
+ - Q: Try completion with _easy_.
+ - A: easy_install      easy_install-2.4  easy_install-2.5  
+ - Q: $ easy_install simplejson
+ - A: No eggs found in /var/folders/jF/jFCv7+jlGWuEz+W8iRqbyE+++TI/-Tmp-/easy_install-VFdnbf/simplejson-2.0.9/egg-dist-tmp-fCKOyv (setup script problem?)
+ - "Huh, do I need sudo?"
+ - Q: $ sudo easy_install simplejson
+ - A: Same error
+ - "Then I'll drop it off at PyPI."
+ - Open a browser and view the simplejson page. $ wget http://pypi.python.org/packages/source/s/simplejson/simplejson-2.0.9.tar.gz
+ - $ tar -xzvf simplejson-2.0.9.tar.gz
+ - $ cd simplejson-2.0.9
+ - Q: $ ls
+ - A:
+ >||
+ LICENSE.txt		docs			scripts			simplejson
+ PKG-INFO		ez_setup.py		setup.cfg		simplejson.egg-info
+ conf.py			index.rst		setup.py
+ ||<
+ - Q: $ python setup.py install
+ - A:
+ >||
+ ---------------------------------------------------------------------------
+ This script requires setuptools version 0.6c7 to run (even to display
+ help).  I will attempt to download it for you (from
+ http://pypi.python.org/packages/2.6/s/setuptools/), but
+ you may need to enable firewall access for this script first.
+ I will start the download in 15 seconds.
+ 
+ (Note: if this machine does not have network access, please obtain the file
+ 
+    http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c7-py2.6.egg
+ 
+ and place it in this directory before rerunning this script.)
+ ---------------------------------------------------------------------------
+ 
+ Downloading http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c7-py2.6.egg
+ Traceback (most recent call last):
+ (Abbreviation)
+ urllib2.HTTPError: HTTP Error 404: Not Found
+ ||<
+ - "Oh come on, you're trying to put in setuptools and it's failing."
+ - Look at the setuptools in your browser.
+ - 0.6c7 is no longer available; 0.6c11 is.
+ - Q: $ sudo easy_install setuptools
+ >||
+ Searching for setuptools
+ Best match: setuptools 0.6c11
+ Processing setuptools-0.6c11-py2.5.egg
+ ...
+ ||<
+ - (I'm not aware that I've gone into py2.5)
+ - $ python setup.py install
+ >||
+ ---------------------------------------------------------------------------
+ This script requires setuptools version 0.6c7 to run
+ ||<
+ - "Oh, I'll try installing it from setuptools egg."
+ - $ wget http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c11-py2.6.egg
+ - $ easy_install setuptools-0.6c11-py2.6.egg 
+ >||
+ Installed /Library/Python/2.5/site-packages/setuptools-0.6c11-py2.6.egg
+ Processing dependencies for setuptools==0.6c11
+ Finished processing dependencies for setuptools==0.6c11
+ ||<
+ - $ python setup.py install
+ >||
+ ---------------------------------------------------------------------------
+ This script requires setuptools version 0.6c7 to run (even to display
+ ||<
+ - "Ehh."
+ - $ emacs ez_setup.py
+ >||
+ import sys
+ DEFAULT_VERSION = "0.6c7"
+ DEFAULT_URL     = "http://pypi.python.org/packages/%s/s/setuptools/" % sys.version[:3]
+ ||<
+ - "Let's just rewrite this to 0.6c11 for now."
+ - "Oh, it's done!"
+ 
+ I noticed two setuptools update failures during the process, and when I was reprinting the logs, I noticed that both of them were in python 2.5. That's the reason for the failures.
+ 
+ Continuing on, I pitched easy_install and it put me back into 2.5. I looked and found that easy_install 2.6 has been added. I see that easy_install (for 2.5), easy_install2.4, and easy_install2.5 are available even though python is 2.6.
+ 
+ >||
+ $ sudo easy_install-2.6 pit
+ (Abbreviation)
+ Processing pit-0.2-py2.5.egg
+ pit 0.2 is already the active version in easy-install.pth
+ Using /Library/Python/2.5/site-packages/pit-0.2-py2.5.egg
+ ||<
+ 
+ Mmm.... Why go in there.... Nope, my package management skills are not good enough. It became too much trouble, so I tweaked the original script to not use Pit.
+ 
+ <hr>
+ 
+ PS: I was told to use <a href='http://pypi.python.org/pypi/virtualenv'>Python Package Index : virtualenv 1.4.3</a>. I'll look into it later.
+ </body>
+ <comments>
+ <comment>
+ <username>Yoshiori</username>
+ <body>I was stuck in a similar situation a long time ago, and at the time I was putting in MacPython and things went wrong, but <br>I remember getting so fed up that I rm'd everything and put it in through the port, and it cleaned up. ......</body>
+ <timestamp>1259130661</timestamp>
+ </comment>
+ <comment>
+ <username>from_kyushu</username>
+ <body>The name in MacPorts is py-simplejson. There is also py25-simplejson and py26-simplejson. </body>
+ <timestamp>1259196541</timestamp>
+ </comment>
+ <comment>
+ <username>showyou</username>
+ <body>You should have port searched simplejson first...</body>.
+ <timestamp>1259228551</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>You should have done a port search simplejson at the beginning...<br><br>You are absolutely right...why you didn't is a mystery</body>.
+ <timestamp>1259280435</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-11-25 https://nishiohirokazu.hatenadiary.org/archive/2009/11/25]

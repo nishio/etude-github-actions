@@ -1,0 +1,213 @@
+Hatena2008-12-20
+code:hatena
+ <body>
+ **1229718263*Attention poison contamination!
+ It's unprotected. It looks like it could get bugs or something.
+ f:id:nishiohirokazu:20081220052422j:image
+ 
+ It's hard to understand, so I'll explain: the bread is normally exposed to the open air.
+ 
+ *1229725752* Rush of year-end parties
+ It was a year-end party on Saturday, Sunday, Wednesday, Thursday, and Friday. I die.
+ 
+ My digestive system is in very bad shape, so I took a lot of vegetables and tea with less alcohol at the 81st year-end party yesterday. It was a one-pot dish, so it was just right for my tired tummy.
+ 
+ Physically I'm pretty tired, but mentally I feel pretty energized. I had a hackathon for the first time in a while. Also, id:akio0911 made his CUDA debut first, which is frustrating: http://twitter.com/akio0911/status/1067917816
+ 
+ I'll do CUDA when I go to bed and wake up, I've even got CUDA for KNOPPIX up and running.
+ 
+ *1229766889* My first CUDA
+ Here's the synopsis so far: I ran KNOPPIX for CUDA on a machine with a 9800GT. <a href='http://d.hatena.ne.jp/nishiohirokazu/20081216/1229425310'>Problem that KNOPPIX for CUDA cannot be started with "Can't find KNOPPIX filesystem" (solved)</a>.
+ 
+ I thought it might not be able to write to a file since it boots from CD, so I created a file in home, and it writes to the file. I tried to put a USB flash drive in it and it was recognized, so I can put anything that I don't want to be lost in here.
+ 
+ There are many things in /usr/local/cuda. Let's copy some rudimentary samples from /usr/local/cuda/NVIDIA_CUDA_SDK/projects to the home directory. I chose "clock", and when I tried to compile clock.cu in cuda/bin/nvcc, I was told that cutil.h was missing. I mean, there's a Makefile, let's read it.
+ 
+ In the Makefile, "include ... /... /common/common.mk" or something like that, so rewrite it to an absolute path for now. (Note: This was not necessary in the end.)
+ It doesn't have emacs. There is something called kwrite in there, so I used that for now. Oh, vim 7.0 is included. I can use this.
+ 
+ I tried to make. "... /... /I guess copying the entire CUDA_SDK directory to a writable location is the quickest way to do that. I'll do that, and pass the path to nvcc as well.
+ 
+ nvcc -I after make ... /... /common/inc clock.cu gives me the error below.
+ >||
+ "/usr/include/c++/4.2.1/i586-suse-linux/bits/c++config.h", line 149: error:
+          expected a "{"
+  namespace std __attribute__ ((__visibility__ ("default"))) {
+ ||<
+ According to <a href='http://forums.nvidia.com/lofiversion/index.php?t45966.html'>NVIDIA Forums > nvcc problem with __attribute__</a> this is a change in gcc4.2 and that we can use gcc4.1. Fortunately, KNOPPIX for CUDA includes gcc4.1. I made a symbolic link to the appropriate location as written in the forum and added --compilar-bindir to nvcc at "# Compilers" in common/common.mk. I also changed gcc and g++ to gcc-4.1 and g++-4.1. I thought it was probably necessary.
+ 
+ Make now succeeds, and an executable binary is created in CUDA_SDK/bin/linux/release.
+ 
+ -----
+ I thought I simply ran the 9 * 9 multiplication table in parallel, and IS2D was faster. It's obvious. The kernel name "timedReduction" is the same as the original sample. By the way, I really wanted to try to switch the behavior with -DIS2D or something, but it didn't work because I compiled it via make. I wonder how others do it.
+ 
+ >|c|
+ // calc multiplication table
+ // derived from CUDA_SDK/project/clock
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+ 
+ #include <cutil.h>
+ #define N 9
+ #define NUM_BLOCKS 1
+ #define IS2D
+ 
+ __global__ static void timedReduction(const int* input, int* output, clock_t * timer) {
+ #ifdef IS2D
+     const int x = threadIdx.x, y = threadIdx.y, tid = x * y;
+ #else
+     const int tid = threadIdx.x, x = tid % N, y = tid / N;
+ #endif
+ 
+     const int bid = blockIdx.x;
+     if (tid == 0) timer[bid] = clock();
+     output[tid] = input[x] * input[y];
+     __syncthreads();
+     if (tid == 0) timer[bid+gridDim.x] = clock();
+ }
+ 
+ int main(int argc, char** argv)
+ {
+     CUT_DEVICE_INIT();
+ 
+ #ifdef IS2D
+     dim3 threads(N, N);
+ #else
+     dim3 threads(N * N);
+ #endif
+ 
+     int* dinput = NULL;
+     int* doutput = NULL;
+     clock_t * dtimer = NULL;
+ 
+     clock_t timer[NUM_BLOCKS * 2];
+     int input[N];
+     int output[N * N];
+ 
+     for (int i = 0; i < N; i++)
+     {
+         input[i] = i + 1;
+     }
+ 
+     CUDA_SAFE_CALL(cudaMalloc((void**)&dinput, sizeof(int) * N));
+     CUDA_SAFE_CALL(cudaMalloc((void**)&doutput, sizeof(int) * N * N));
+     CUDA_SAFE_CALL(cudaMalloc((void**)&dtimer, sizeof(clock_t) * NUM_BLOCKS * 2));
+ 
+     CUDA_SAFE_CALL(cudaMemcpy(dinput, input, sizeof(int) * N, cudaMemcpyHostToDevice));
+ 
+     timedReduction<<<NUM_BLOCKS, threads>>>(dinput, doutput, dtimer);
+ 
+     CUDA_SAFE_CALL(cudaMemcpy(output, doutput, sizeof(int) * N * N, cudaMemcpyDeviceToHost));
+     CUDA_SAFE_CALL(cudaMemcpy(timer, dtimer, sizeof(clock_t) * NUM_BLOCKS * 2, cudaMemcpyDeviceToHost));
+ 
+     CUDA_SAFE_CALL(cudaFree(dinput));
+     CUDA_SAFE_CALL(cudaFree(doutput));
+     CUDA_SAFE_CALL(cudaFree(dtimer));
+ 
+     // Compute the difference between the last block end and the first block start.
+     clock_t minStart = timer[0];
+     clock_t maxEnd = timer[NUM_BLOCKS];
+ 
+     for (int i = 1; i < NUM_BLOCKS; i++)
+     {
+         minStart = timer[i] < minStart ? timer[i] : minStart;
+         maxEnd = timer[NUM_BLOCKS+i] > maxEnd ? timer[NUM_BLOCKS+i] : maxEnd;
+     }
+ 
+     // print result
+     for(int i=0; i < N; i++){
+     	for(int j=0; j < N; j++){
+ 	    printf("%3d, ", output[i + j * N]);
+ 	}
+ 	printf("\n");
+     }
+     printf("time = %d\n", maxEnd - minStart);
+ 
+     CUT_EXIT(argc, argv);
+ }
+ ||<
+ 
+ *1229787138*I'm in good shape.
+ Today is TopCoder at 26:00, I slept until 2:00pm and then slept for 3 hours from 9:00pm, let's try a little more.
+ 
+ *1229789327*premature optimization is the root of all evil
+ Writing code in a low-level language like this, you are likely to fall to the dark side: instead of writing an 11 * 11 for statement where i and j are both in the range 0-10 and i == j, and if(i == j) continue, it would be faster to write an 11 * 10 loop where _j = j + (i <= j) would be faster than writing a 11 * 11 for statement and doing something like "if(i == j) continue" or something like that.
+ 
+ We need to keep chanting the mantra to keep from falling to the dark side. Premature optimization is the root of all evil.
+ 
+ But well, my GeForce9800GT has 112 stream processors, so 11 * 11 is slightly overflowing and 11 * 10 is not, so I will have to try it later.
+ 
+ I was going to write a continuation of CUDA, but I'm already sleepy, so I lost the title "CUDA Diary". I woke up in the afternoon and slept from 21 to 24, but my activity time is so short.
+ 
+ -----
+ 
+ It seems to be 3% ~ 5% faster. Not very important.
+ 
+ *1229797290*Diary
+ TopCoder, I still have about 5 minutes left in the coding phase, but I'm sleepy so I'm going to bed. But it's too noisy and wasteful of electricity to keep it on while I'm sleeping. I've copied the code I wrote and I've written how to set up the machine in my diary, so it's okay to turn off the power.
+ 
+ I'll try to automate the process tomorrow with a shell script or something to put up symbolic links or something.
+ 
+ *1229801566*[TopCoder] Single Round Match 430 (Div1/250point)
+ Given a positive integer x and k, the question is to answer the kth one of y such that x + y = x | y from the smallest. (This is an easy problem to explain!)
+ 
+ If x | y becomes x + y, it means that x & y == 0. Therefore, we can express both x and k in binary and make k with 0 inserted where x is 1. In the figure below, x=5, k=3
+ >||
+ k =     1 1
+ x = 0 1 0 1
+ y = 1   1
+ ||<
+ 
+ So the code looked like this. I copied the function to_bin, which converts an integer to a binary vector, from my own library.
+ 
+ >|cpp|
+ vector<int> to_bin(int N){
+   vector<int> buf;
+   while(N){
+     buf.push_back(N % 2);
+     N /= 2;
+   }
+   return buf;
+ }
+ 
+ class BitwiseEquations {
+ public:
+   long long kthPlusOrSolution(int x, int k) {
+     vector<int> kbin = to_bin(k);
+     vector<int> xbin = to_bin(x);
+     size_t i=0, j=0, p=1;
+     LL result=0;
+     while(i < xbin.size()){
+       if(xbin[i] == 1){
+ 	i++;
+ 	p *= 2;
+       }else{
+ 	i++;
+ 	if(j == kbin.size()) break;
+ 	result += p * kbin[j];
+ 	j++;
+ 	p *= 2;
+       }
+     }
+     while(j < kbin.size()){
+       result += p * kbin[j];
+       j++;
+       p *= 2;
+     }
+     DP(p);
+     return result;
+   }
+ }
+ ||<
+ 
+ Dropped in challenge. result is long long, but p is int, so if there are too many digits, it will overflow and go to 0.
+ >|cpp|
+ 	result += p * kbin[j];
+ 	j++;
+ 	p *= 2;
+ ||<
+ When dealing with long long values, we need to consider whether there are other values that can be larger.
+ </body>
+
+[Hatena Diary 2008-12-20 https://nishiohirokazu.hatenadiary.org/archive/2008/12/20]

@@ -1,0 +1,40 @@
+Minecraft Pi Socket API
+[https://gyazo.com/d82a2610de7f71191303b86b6bc97399]
+Minecraft: Pi edition can send packets via TCP to place blocks at arbitrary coordinates
+　On the client side, there is a Python library [mcpi].
+	A plugin that adds this protocol to Bukkit-based servers is [RaspberryJuice].
+
+[mcpi]: Python library for communicating with Minecraft: Pi edition and RaspberryJuice.
+https://github.com/martinohanlon/mcpi
+API REFERENCE https://www.stuffaboutcode.com/p/minecraft-api-reference.html
+
+[RaspberryJuice]: A Bukkit plugin which implements the Minecraft Pi Socket API.
+https://github.com/zhuowei/RaspberryJuice
+	https://www.spigotmc.org/resources/raspberryjuice.22724/
+
+code:python
+ from mcpi import minecraft
+ m = minecraft.Minecraft.create(SERVER_IP_ADDRESS, 4711)
+ m.setBlock([X, Y, Z, ID])
+
+I was confused because the default settings were relative coordinates from the spawn point, so the blocks were not created where I expected them to be.
+It was necessary to change the configuration file created at the first startup and restart the system.
+
+code:python
+ from mcpi import block
+ m.setBlock(0, 80, 0, block.STONE.id)
+[https://gyazo.com/6dc5f0c700922eb6af0eca2e6bb0e433]
+
+code:python
+ m.setBlocks(0, 80, 0, 15, 80, 15, block.STONE.id)
+[https://gyazo.com/7d0577698a7571c3a3d0db82e482d355]
+
+code:python
+ m.setBlocks(0, 80, 0, 512, 80, 512, block.STONE.id)
+[https://gyazo.com/9c9e7e6ae2220d4dea255f2ecec3d2f3]
+
+code:python
+	for x in range(30):
+		for z in range(30):
+			m.setBlock(x, 81, z, block.WOOL.id, x * z % 16)
+[https://gyazo.com/d82a2610de7f71191303b86b6bc97399]

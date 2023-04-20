@@ -1,0 +1,270 @@
+Hatena2008-10-11
+code:hatena
+ <body>
+ **1223698363*[Mid-term] Diary of Game Server Creation
+ I'd like to go through the shortest path to make it possible for a human to play this weekend, though granular instructions like create_room will be necessary for BOT competition in the future. I'm going to Tokyu Hands today.
+ 
+ - start_single_game(/player_id/password)
+ -- create_room and two AI joins
+ -- Deal cards and wait for play
+ -- API-wise, it needs to return game_id
+ - get_status/game_id(/player_id/password)
+ -- Get information about the game of game_id
+ -- Humanly speaking, the screen you are looking at while playing
+ -- AI-like API for acquiring slightly granular information
+ - play/card_id(/player_id/password)
+ -- Play a card. Game master assesses the situation and updates the game state.
+ 
+ Is it necessary to map the API for BOTs to the screens that humans see?
+ - When to Correspond
+ -- Each card is linked to /api/play/card_id/html, and when clicked, redirects to /api/game_status/html with the information returned after hitting the API via HTTP
+ - When not corresponding to
+ -- Each card is linked to /games/game_id/?play=card_id or something like that, which is a "normal" URL from the user's perspective
+ 
+ I wonder if it's the latter. The former is also a bit interesting, though, as in "it doesn't distinguish between human and BOT access".
+ 
+ -----
+ 13:36
+ Define the model. Let's say you have about two hours to define the model and make a small transition demo, then go to Tokyu Hands.
+ 
+ <a href='http://builder.japan.zdnet.com/sp/google-app-engine/story/0,3800086196,20371381 -2,00.htm'>Google App Engine while building a Twitter imitation Understanding the Liver Data Store - page2 - builder by ZDNet Japan</a> via <a href='http://code.google.com/appengine/docs/datastore/typesandpropertyclasses.html '>Types and Property Classes - Google App Engine - Google Code</a>.
+ 
+ It's kind of interesting that there's IM and Rating....I wonder if the ForeignKey is written like db.ReferenceProperty(Author).
+ 
+ As announced, I was going to make a model that just has one Blob for now, but I also gave it a game start time while I was at it.
+ >|python|
+ class Game(db.Model): 
+     opened = db.DateTimeProperty(auto_now_add=True)
+     info = db.BlobProperty()
+ ||<
+ In views.py, we create that object for now and put it.
+ >|python|
+ def main(request):
+     game = Game(info="")
+     game.put()
+     ...
+ ||<
+ 
+ >>
+ NameError at /
+ global name 'Game' is not defined
+ <<
+ 
+ Forgot to import. from saichugen.main.models import Game
+ 
+ <img src="http://gyazo.com/89213256fccf8ba9824b101697290246.png">
+ 
+ Oooh, it's done...too easy. I thought Django was a lot easier than CGI when I first started using it (especially the data persistence part... I was a freshman in college when I was modifying and playing with KENT CGI). When I first started using Django, I thought it was much easier than CGI (especially in data persistence, but I was a freshman in college playing with the KENT CGI), but Django on GAE is even easier than that.
+ 
+ Next is the one that takes information. info = request.get("info") and I get an error.' WSGIRequest' object has no attribute 'get'. I wrote request.GET.get("info") and it worked.
+ 
+ I can't do print debugging, because with Django, what I print goes to the console, so I can print debug without worrying about HTTP headers and such.
+ >|python|
+     info = request.GET.get("info")
+     print info
+ ||<
+ if that's the case
+ >>
+ hello
+ Status: 200 OK
+ Content-Type: text/html; charset=utf-8
+ 
+ Hello, world!
+ <<
+ The first time the company was in the
+ 
+ -----
+ 
+ >>
+ Is it necessary to map the API for BOTs to the screens that humans see?
+ - When to Correspond
+ -- Each card is linked to /api/play/card_id/html, and when clicked, redirects to /api/game_status/html with the information returned after hitting the API via HTTP
+ - When not corresponding to
+ -- Each card is linked to /games/game_id/?play=card_id or something like that, which is a "normal" URL from the user's perspective
+ I wonder if it's the latter.
+ <<
+ I wrote "I'm sorry, but it seems to me that the natural behavior is to access /start_new_game or something like that when starting a new game, for example, where a unique game_id is assigned and redirected to /game/game_id or something like that.
+ 
+ How will the redirection be done?
+ 
+ I always wonder "How do you redirect with Google App Engine?" but it's Django. I forget.
+ 
+ What's the latest documentation <a href='http://michilu.com/django/doc-ja/request_response/'>this</a>, I haven't touched Django in over a year, I forget.
+ 
+ >|python|
+     import cPickle
+     deal = logic.deal_cards()
+     game = Game(info=cPickle.dumps(deal), memo="new single game")
+     game.put()
+     return HttpResponseRedirect("/game/%d" % game.id)
+ ||<
+ I wonder how to get the ID of an object. This would result in an error.
+ 
+ <a href='http://code.google.com/appengine/docs/datastore/keysandentitygroups.html'>Keys and Entity Groups - Google App Engine - Google Code</a>
+ Because obj.key().id().
+ 
+ Hmmm, how do you get an object from an id?
+ <a href='http://code.google.com/appengine/docs/datastore/creatinggettinganddeletingdata.html'>Creating, Getting and Deleting Data - Google App Engine - Google Code Google App Engine - Google Code</a> shows only getting from key, but key is UGLY and I don't want users to see it.
+ Oh, there's Model.get_by_id.
+ <a href='http://code.google.com/appengine/docs/datastore/modelclass.html#Model_get_by_id'>The Model Class - Google App Engine - Google Code</a>
+ 
+ -----
+ 
+ When I access /start_new_game, I create a new game object, persist it in the DataStore, redirect to /game/game_id, and then on a request to /game/game_id, I see the game_id, retrieve it from the data, and display it. I was able to get to that point.
+ 
+ <img src="http://gyazo.com/acb698b15b6737757ce8d72c50dae042.png">
+ 
+ I'm not done yet, but the bigger the diff gets, the harder it is to read, so I committed it.
+ http://coderepos.org/share/browser/lang/python/saichugen/gae
+ 
+ -----
+ 
+ That's two hours, as planned. I'm going to take 10 minutes now to fill the bathtub with hot water, take a leisurely bath, and then go to Tokyu Hands. I also want to get a haircut.
+ 
+ List of tasks to be done upon return
+ - I realized that authentication is a must. As long as we want others to see the playing screen, we need to make sure that only players can play cards. For now, I'll use Google's authentication API to authenticate only humans, but I need to design it so that it can be bypassed for BOTs.
+ - There is a Blob with the cPickle results plugged in, but I have a feeling that Expando would serve the purpose without having to do that. I haven't read it properly yet.
+ - Also, I didn't realize that DataStore can handle dynamic addition of fields. I was timid because I had experienced the "difficulty in migration when I wanted to change the model from the original one" at the time of doukaku.org, but maybe that's just my Relational Database brain.
+ 
+ *1223716045*Shibuya
+ I got to Hands without hesitation!
+ I bought what I was looking for. It's heavy. Had dinner at an Indian curry shop across the street.
+ 
+ f:id:nishiohirokazu:20081011180850j:image
+ 
+ It's very, very big (Nan).
+ 
+ *1223722713* Installation
+ I agonize for a while over how to fix a 5-kilogram object without screwing it to the wall or scratching the wall with the edge of the bracket.
+ 
+ First, attach it to the net. The end of the weighted fitting will come out on the other side of the net if it is left as it is, so a rolled newspaper is inserted between the two.
+ The mounting bracket itself is tied with a cable tie. I recommend tying the fixture with cable ties, as they are surprisingly strong against pulling. By the way, just to be safe, I used hot glue after tying it up.
+ 
+ f:id:nishiohirokazu:20081011195832j:image
+ 
+ Ready to use.
+ 
+ f:id:nishiohirokazu:20081011201055j:image
+ 
+ *1223723794* to Shibuya
+ I used Firefox's ScrapBook extension to locally scrap the Google App Engine documentation so I can read it on the train to Shibuya.
+ 
+ Expando is useful. Just assigning without prior declaration creates a new column and stores it properly in the database. However, I can't seem to assign list.
+ 
+ I just realized that each object is assigned a unique key in the entire database, which means that we can assign a ForeignKey to the object regardless of the table it lives in. For example, it is possible to design a database in which the player1 column of the Game table contains objects (keys) from the Human or AI tables. It is not likely that there is a function to "restrict the entry of other objects" though. What is exciting about this is that it is possible to have the same interface and act as if the data were the same, regardless of how the data is held (the actual columns held). It will be possible to design a virtual Player class, and then mix instances of Human and AI that inherit from the Player class with vector<Player>.
+ 
+ I arrived at Shibuya.
+ 
+ -----
+ 
+ The train on the way home.
+ 
+ I was looking at the Using Template section and thinking, "That looks just like Django.
+ >>
+ The template uses Django templating syntax to access and iterate over the values, and can refer to properties of those values.
+ (snip)
+ For more information about the Django templating engine
+ <<
+ I'm not familiar with any web app framework other than Django, so I'm very lucky.
+ 
+ ---
+ 
+ >>
+ An App Engine application cannot:
+ (snip)
+ # open a socket (snip)
+ # (snip) A web request to an application must be handled in a single process within a few seconds. Processes that take a very long time to respond are terminated to avoid overloading the web server.
+ <<
+ 
+ Yeah, you can't peel a socket and you can't do time-consuming AI. Well, within expectations.
+ If the AI can't respond in a few seconds or it will be terminated, it's not a good idea to have the AI running in the same request process. In the screen waiting for the user to select a card, the JavaScript in the page goes to hit the AI, and the AI registers its own hand in the DB and then does a redirect to the face-down card image. If it doesn't finish in time and comes back 500 or something, it goes to hit the AI which makes a random hand. Yeah, it doesn't look too bad. If you're playing against other players, you can poll to see if other players have played cards.
+ 
+ But for now, my goal is to get it to the point where I can play it this weekend, so I can put it all in one place.
+ 
+ *1223742338*[Midterm] Diary of Game Server Creation 2
+ Oh no, I was playing and the date changed.
+ 
+ I don't know whether to motivate myself by making it look good for the time being, or motivate myself by making it possible to play the game without putting the appearance aside for the time being.
+ 
+ At any rate, it's a template.
+ 
+ -----
+ 
+ >>
+ TemplateSyntaxError at /game/22/
+ 'saichugen_tags' is not a valid tag library: Could not load template library from django.templatetags.saichugen_tags, No module named saichugen_tags
+ <<
+ 
+ Hmmm. Is the custom template tag misplaced from a normal Django app? I'll hold off on this for now to get it done over the weekend, I might be able to tweak it in sys.path, but there might be some trap that works locally and doesn't work when uploaded.
+ 
+ <img src="http://gyazo.com/3827f18f5d2a0156a3004be6a431a757.png">
+ 
+ It is overlaid with a negative margin.
+ 
+ Next time I'll make sure to play this card when I push it. We should also say what turn it is.
+ 
+ -----
+ 
+ >||
+ {% for card_id, img in myhand %}
+   <a href="/game/{{ game_id }}/play/{{ card_id }}">{{ img }}</a> 
+ {% endfor %}
+ ||<
+ 
+ >>
+ TemplateSyntaxError at /game/22/
+ 'for' statements with five words should end in 'reversed': for card_id, img in myhand
+ <<
+ 
+ Oh, I don't remember being able to do that. It's a pain in the ass if you can't do this.
+ 
+ -----
+ 
+ Try the interactive console on the administration page.
+ Input:
+ >|python|
+ from google.appengine.ext import db
+ game = db.get("aglzYWljaHVnZW5yCgsSBEdhbWUYFww")
+ print game
+ 
+ from pprint import pprint
+ import cPickle
+ pprint(cPickle.loads(game.info))
+ ||<
+ Output:
+ >||
+ <saichugen.main.models.Game object at 0x14a2a90>
+ {'game_score': [0, 0, 0],
+  'hands': [[15, 51, 10, 11, 8, 38, 3, 31, 26, 29, 6, 27, 50, 22, 23, 40, 9],
+            [47, 24, 35, 36, 12, 19, 30, 2, 17, 37, 20, 45, 0, 34, 7, 43, 1],
+            [14, 33, 39, 28, 44, 5, 16, 4, 42, 49, 32, 13, 21, 25, 48, 41, 18]],
+  'iround': 0,
+  'iturn': 0,
+  'rest_card': 46}
+ ||<
+ 
+ Well, it is convenient to be able to access the contents of the database from the browser. But honestly, I wish the UI could be improved a little more, like Ctrl+Enter to execute, like Firebug, or the results of past executions could be saved.
+ 
+ -----
+ 
+ I can now play the game, though I haven't finished the game exit process yet. I'm still working on the end of the game, but I can play it now.
+ 
+ -----
+ 
+ <img src="http://gyazo.com/9a38ac0ce055aa7082a7e7f9521ee9bf.png">
+ <img src="http://gyazo.com/28ca04fe7561fde7237293a176b7e01f.png">
+ 
+ I was able to do it. I can't sleep even with my eyes closed. My knees are cold.
+ 
+ -----
+ 
+ Cards played immediately before are also displayed.
+ 
+ I'd also like to put up a log that goes chronologically, little by little. With a chat anyway. Do you want to include information about the time and the actions?
+ 
+ -----
+ 
+ Fell asleep around 5:00.
+ </body>
+
+[Hatena Diary 2008-10-11 https://nishiohirokazu.hatenadiary.org/archive/2008/10/11]

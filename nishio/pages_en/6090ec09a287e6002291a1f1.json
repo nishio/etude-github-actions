@@ -1,0 +1,51 @@
+Hatena2012-01-14
+code:hatena
+ <body>
+ *1326550980* The dichotomy of "pass by value or pass by reference" is confusing.
+ At a recent programming symposium, the topic "What kind of education is rather harmful nowadays? It didn't occur to me at the time, but it came to me today when I saw a comment to the effect that "Python is all about references, but it's not about bool or passing references, is it?
+ 
+ >>
+ The "everything in Python is by reference" is just saying that "all Python variables are PyObjects* in C", which is independent of whether function calls are passed by reference or not. And Python function calls are value passing. It can only be traced because the value passed is a pointer.
+ Textbooks that teach passing by reference and passing by value as if they can be classified in two ways are rather harmful today. The most major method of passing is "passing by reference by value" nowadays. Continuing to use the old terminology only adds to the confusion.
+ <<
+ 
+ I was tweeting that from @kuenishi.
+ >>
+ An impossible education in retrospect: a lecture in which value-passing and reference-passing were explained in Java.
+ I don't understand pointers and references, so please explain "address passing" and "copy passing" properly.
+ A pointer is an abstract term created for specification purposes, and it is a disturbing or even harmful concept for beginning students.
+ <<
+ I was pointed out that this is true, and I thought, well, that's true too - someone should write such an explanation, etc.
+ 
+ I'll write a description when I feel like it.
+ 
+ <hr>
+ 
+ Postscript. First of all, it seems that some people in the world are not familiar with the idea of variable assignment, so let's think about it in order from before variables were created. A computer has a device that can store a number of values, and if you want the computer to remember, for example, the value 42, you would write 42 in the 102nd available memory area, for example.
+ 
+ f:id:nishiohirokazu:20120115001259j:image
+ 
+ But if I wanted to write a program with this, I would get confused with a lot of numbers that are hard to remember, such as "call the function written from the 598th argument with the 102nd value, and put the result in the 104th...". So I thought, "Let's make a language that allows me to call the 102nd number "x." That's how the variable was created. If you write "I want to use the name x," the system internally searches for a free memory space, and if it is the 102nd, the system remembers that "x is the 102nd" and automatically converts the name "x" to "102nd.
+ 
+ f:id:nishiohirokazu:20120115001336j:image
+ 
+ So, if I call a function int f1(int y){...} If we call f1(x);, what should happen?
+ 
+ (You don't have to read the parentheses: we are talking about what happens if you call the function f1 with y as a dummy argument and x as a real argument.)
+ 
+ There are different design decisions to be made here. One way is to pass the location information "102nd" so that y also points to 102nd. The other way is to pass the information of the value "42" and copy it to the new free area, the 104th, and call y the 104th.
+ 
+ With the former, if y is rewritten in function f1, the value of the caller's x will also change. With the latter, the value of the caller's x (number 102) is unchanged because the value of the copied number 104 is only changed.
+ 
+ (You don't have to read the parentheses: in short, the former is passing the left-hand side value, so-called pass-by-reference, while the latter is passing the right-hand side value, so-called pass-by-value. The latter is passing the right-hand side value, so called passing by value. Historically, Fortran chose the former and C the latter. (Various other methods, such as name passing, were also invented, but I omit them.)
+ 
+ f:id:nishiohirokazu:20120115001608j:image
+ 
+ Then, there is a programming technique to write "202" in the place where "42" was written and use it as "this means the 202nd". Let's say that the storage area with this kind of "location" data is passed using the latter type of passing method described earlier, in which a new variable is created by copying the data. Then, even if the data is copied, the fact that it points to "202" remains the same. Therefore, rewriting y (104th) has no effect on x. However, if the contents of y are traced once and then its destination (202nd) is rewritten, of course the destination traced from x (202nd) is also affected.
+ 
+ (You don't have to read this part: it's called a pointer or a reference, or something like that. The value of "*x" one step further from the caller x would be 84).
+ 
+ f:id:nishiohirokazu:20120115001935j:image
+ </body>
+
+[Hatena Diary 2012-01-14 https://nishiohirokazu.hatenadiary.org/archive/2012/01/14]

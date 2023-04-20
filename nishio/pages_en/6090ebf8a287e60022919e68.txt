@@ -1,0 +1,334 @@
+Hatena2008-06-30
+code:hatena
+ <body>
+ *1214783722*Diary of mouth ulcers
+ Hmm. My tongue...
+  
+ -----
+ 
+ When I tried to go to the lab for the first time in a week, I almost got the wrong ticket gate to go out. I almost left through a ticket gate that was not connected to the Ginza Line. Dangerous.
+ 
+ -----
+ 
+ If I blog about C++ stuff, it will be very long because the code is so long.
+ 
+ -----
+ 
+ http://www.tantrix.com/cgi-bin/gs_logon.cgi
+ 
+ -----
+ 
+ http://d.hatena.ne.jp/Yoshiori/20080630/1214814814
+ I've been going through this stuff with aplomb (but I haven't been able to).
+ 
+ >>
+ I hope you can make her on java because it's a monthly thing to get a girlfriend on twitter.
+ <<
+ http://b.hatena.ne.jp/entry/http://d.hatena.ne.jp/HolyGrail/20080630/1214814675
+ 
+ Yes, yes, I've claimed that java is a mote for many years, so now is the time to demonstrate it!
+ 
+ http://q.hatena.ne.jp/1214841443
+ 
+ Write specifications here and id:yoshiori will implement it in 3 seconds.
+ 
+ *1214786241*How to run Chumby on a MacBook internet connection share.
+ References:<a href='http://wiki.chumby.com/mediawiki/index.php/Chumby_tricks#Configure_your_chumby_to_connect_wirelessly_through_a_ Macintosh_laptop'>Chumby tricks - ChumbyWiki</a>
+ I tried it and it worked well, so I will explain.
+ 
+ 
+ - Shared Internet connection
+ -- Set a password of 5 characters and select WEP 40bit (128bit should be fine, but entering the password in chumby is a pain).
+ - Convert password to hex
+ -- Start terminal, type python
+ -- enter [hex(ord(c)) for c in "chumb"] (use password for the "chumb" part)
+ -- ['0x63', '0x68', '0x75', '0x6d', '0x62']. Put this in chumby later.
+ -- control-d to exit Python
+ - chumby settings
+ -- Choose your own MacBook AP in new connection
+ -- Put in a password. In the above hex, enter 6368756d62, etc.
+ -- If asked to choose between Automatic or Manual, choose Manual (I didn't check if Automatic is wrong or not).
+ - When asked for IP addres, enter 10.0.2.10.
+ - The netmask is 255.255.255.0 from the beginning, so it is OK.
+ - Put in 10.0.2.1 three more times.
+ 
+ This connected in my case.
+ 
+ And, as the information is mixed, I'll summarize as much as I understand it: the person whose job it is to read RFCs and visit interop said that the MacBook's "shared Internet connection" is in ad hoc mode, so "Chumby can't connect in ad hoc mode" must be wrong. I guess. At least "you can't connect to the internet with internet connection sharing from a MacBook" is wrong. Since it is working here now.
+ 
+ -----
+ >>
+ otsune 
+ Why not just use echo -n 'chumby' | hexdump -C?
+ <<
+ I see!
+ I tried up to echo 'chumby' | hexdump and ran away saying "Oh, it's too much trouble to explain because it has newlines.
+ 
+ *1214792065*ScrapBook
+ ScrapBook is really great. When I read a blog or something, I can clip out the sentences I like, draw a line where I want to emphasize it, or add a little something I thought of, and keep it with the source link, and search for it later when I want to know what it was about. If I wanted, I would like to have a function to "select and delete" unimportant parts of sentences and make them "(omitted)" or something like that, but that's OK. The link to the original text is automatically stored, and in the case of a newspaper or something where the original text seems to disappear, I can just scrap the entire original text and then scrap from there.
+ 
+ The folder where ScrapBook data is stored can be viewed by selecting "ScrapBook Folder" from the "Tools" menu on the sidebar of the scrapbook. The data is contained in individual folders by year, month, date, minute, and second. The folder, scrap title, and URL of the original are written in a single XML file. If this XML file can be merged between different machines, it would be possible to share scraps between home and office. Or, this data folder itself could be taken to a drive on the network. Would it be less operable?
+ 
+ In addition to comments directly on the page, you can also comment on the entry from its properties, and the comments can be captured in XML. This means that it is possible to "upload entries with the comment "public" to the server and make them public".
+ 
+ *1214807207*[cpp]Beware of the "argument is itself" trap when defining assignment operators.
+ I didn't think anyone would try to use the code I wrote "for study purposes" for practical purposes, so I added a note <a href='http://d.hatena.ne.jp/nishiohirokazu/20080628/1214669168'>shared_ptr About <a href=''>making</a>. I'll make a note of this so that I don't forget what Mrs. Oku and Mitsunari pointed out to me.
+ 
+ This previous code will die if used in this way.
+ >|cpp|
+ int main(){
+   {
+     SPM x(new MyValue(43));
+     cout << "x = x" << endl;
+     x = x;
+   }
+ }
+ -----
+ cstr with value43
+ x = x
+ obj 43 refcount--, now: 0
+ dstr43
+ obj -1073741821 refcount++, now: 1
+ obj -1073741821 refcount--, now: 0
+ dstr-1073741821
+ a.out(17254) malloc: *** error for object 0x100150: double free
+ *** set a breakpoint in malloc_error_break to debug
+ a.out(17254) malloc: *** error for object 0x100160: double free
+ *** set a breakpoint in malloc_error_break to debug
+ ||<
+ 
+ This is because the assignment operator is defined as shown below, so x is deleted first when x = x.
+ 
+ >|cpp|
+   SharedPtr<T>& operator=(SharedPtr& rhs){
+     if(_ptrwrap->dec() == 0){
+       delete _ptrwrap;
+     };
+     rhs._ptrwrap->inc();
+     _ptrwrap = rhs._ptrwrap;
+     return *this;
+   }
+ ||<
+ 
+ In this case, you can avoid this by calling inc first, or by adding if(this == rhs) return *this; first.
+ 
+ By the way, if you call delete first, in case an exception occurs in rhs._ptrwrap->inc(), it will go out before the subsequent _ptrwrap = rhs._ptrwrap; is called, leaving you with an invalid "dirty pointer" that has been deleted _ptrwrap = rhs._ptrwrap; is called. If this is the case, the dirty pointer can cause a secondary disaster in the exception handling code that follows, or it can cause strange error messages, or it can die without giving an error message. If you are simply increasing or decreasing the reference counter, it is unlikely that an exception will be thrown, but if you are using new or a vector, a bad_alloc exception may be thrown.
+ 
+ So, to avoid a messy situation if an exception is thrown, we will mimic what Effective C++ says and first copy the value we are trying to change, then swap it out after we have changed it.
+ 
+ >|cpp|
+   SharedPtr<T>& operator=(SharedPtr& rhs){
+     SharedPtr<T> copy(*this);
+     SharedPtr<T> copy_rhs(rhs);
+     
+     copy._ptrwrap->dec();
+     copy_rhs._ptrwrap->inc();
+     this->swap(copy_rhs);
+     rhs.swap(copy);
+     return *this;
+   }
+   SharedPtr<T>& swap(SharedPtr<T>& rhs){
+     std::swap(_ptrwrap, rhs._ptrwrap);
+     return *this;
+   }
+ ||<
+ 
+ You pay the cost of copying and instead gain safety against exceptions. I could have made it exception-safe without going this far this time, but I wrote it this way for practice. This way of writing it, you don't have to worry about the "assignment argument being yourself?" This way, you don't have to worry about whether the argument of the assignment is yourself or not.
+ 
+ References
+ Effective C++ 3rd Edition "Be Prepared for Self-Assignment in Implementing operator=" and "Make Your Code Exception-Safe", Exceptional C++. Mr. Oku, Mr. Mitsunari, and Mr. Shimizukawa taught me a lot.
+ 
+ I was going to paste only the differences, but I found that "a copy constructor is necessary" and "the reference counter must drop at the timing when the temporary variable swapped by making a copy exits the scope, and the delete must not be on the SharedPtr side because it cannot be deleted if necessary" etc. I'll re-paste this as it has changed quite a bit.
+ 
+ -----
+ 
+ Postscript:
+ I heard that it can be written smartly as shown below, even though it was mumbling in the above. I can follow it step by step, and I can see that it is indeed OK, but it doesn't feel right.
+ >|cpp|
+   SharedPtr<T>& operator=(const SharedPtr& rhs){
+     SharedPtr<T> tmp(rhs);
+     swap(tmp);
+     return *this;
+   }
+ ||<
+ 
+ >||
+ Execution Result
+ cstr with value43
+ x = x
+ obj 43 refcount++, now: 2
+ obj 43 refcount--, now: 1
+ end of assignment(43 must be alive. soon leave current scope)
+ obj 43 refcount--, now: 0
+ PtrWrapper dstr:43
+ dstr43
+ out of scope(43 must be deleted)
+ 
+ -----
+ 
+ cstr with value43
+ cstr with value44
+ x = y
+ obj 44 refcount++, now: 2
+ obj 43 refcount--, now: 0
+ PtrWrapper dstr:43
+ dstr43
+ after assign(43 must be deleted)
+ obj 44 refcount--, now: 1
+ out_of_y(44 must be alive)
+ obj 44 refcount--, now: 0
+ PtrWrapper dstr:44
+ dstr44
+ out_of_x(44 must be deleted)
+ 
+ -----
+ 
+ cstr with value45
+ 45 should be accessible: 45
+ obj 45 refcount--, now: 0
+ PtrWrapper dstr:45
+ dstr45
+ 45 should be deleted
+ ||<
+ 
+ >|cpp|
+ #include <iostream>
+ using namespace std;
+ 
+ template<typename T>
+ class PtrWrapper {
+ public:
+   PtrWrapper(T* ptr):_ptr(ptr),_count(1){}
+   ~PtrWrapper(){
+     cout << "PtrWrapper dstr:" << *_ptr << endl;
+     delete _ptr;
+   }
+ 
+   void dec(){
+     _count--;
+     cout << "obj " << *_ptr << " refcount--, now: " << _count << endl;
+     if(_count == 0){
+       delete this;
+     }
+   }
+   void inc(){
+     _count++;
+     cout << "obj " << *_ptr << " refcount++, now: " << _count << endl;
+   }
+   T* _ptr;
+ private:
+   int _count;
+ };
+ 
+ template<typename T>
+ class SharedPtr {
+ public:
+   SharedPtr(T* ptr):_ptrwrap(new PtrWrapper<T>(ptr)){
+   }
+   SharedPtr(const SharedPtr<T>& x):_ptrwrap(x._ptrwrap){
+     _ptrwrap->inc();
+   };
+   ~SharedPtr(){
+     _ptrwrap->dec();
+   }
+   T* operator->()const{
+     return _ptrwrap->_ptr;
+   }
+   T operator*()const{
+     return _ptrwrap->_ptr;
+   }
+   /*
+   operator T*(){ // is this a cast to (T*)?
+     return _ptrwrap._ptr;
+   }
+   */
+   
+   // operator= should return a reference to itself
+   SharedPtr<T>& operator=(const SharedPtr& rhs){
+     SharedPtr<T> tmp(rhs);
+     swap(tmp);
+     return *this;
+   }
+   SharedPtr<T>& swap(SharedPtr<T>& rhs){
+     std::swap(_ptrwrap, rhs._ptrwrap);
+     return *this;
+   }
+   PtrWrapper<T> *_ptrwrap; // How do I make it private?
+ };
+ 
+ class MyValue {
+ public:
+   MyValue():value(42){
+     cout << "cstr wit 42" << endl;
+   }
+   MyValue(int v):value(v){
+     cout << "cstr with value" << value << endl;
+   }
+   ~MyValue(){
+     cout << "dstr" << value << endl;
+   }
+   MyValue(const MyValue &v){
+     cout << "copy cstr " << value << endl;
+     value = v.value;
+   }
+   int value;
+ };
+ 
+ typedef SharedPtr<MyValue> SPM;
+ ostream& operator<<(std::ostream& os, const SPM& p){
+   os << p->value;
+   return os;
+ }
+ ostream& operator<<(std::ostream& os, const MyValue& v){
+   os << v.value;
+   return os;
+ }
+ 
+ 
+ SPM foo(){
+   SPM x(new MyValue(45));
+   return x;
+ }
+ int main(){
+   {
+     SPM x(new MyValue(43));
+     cout << "x = x" << endl;
+     x = x;
+     cout << "end of assignment(" << x 
+ 	 << " must be alive. soon leave current scope)" << endl;
+   }
+   cout << "out of scope(43 must be deleted)" << endl;
+ 
+   cout << "\n-----\n" << endl;
+ 
+   {
+     SPM x(new MyValue(43));
+     {
+       SPM y(new MyValue(44));
+       cout << "x = y" << endl;
+       x = y;
+       cout << "after assign(43 must be deleted)" << endl;
+     }
+     cout << "out_of_y(" << x << " must be alive)" << endl;
+   }
+   cout << "out_of_x(44 must be deleted)" << endl;
+ 
+   cout << "\n-----\n" << endl;
+ 
+   {
+     SPM f(foo());
+     cout << "45 should be accessible: " << f->value << endl;
+   }
+   cout << "45 should be deleted" << endl;
+ }
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>Not that one, the network drive ... Don't you think it would be better to put it on Amazon S3 or something? </body>
+ <timestamp>1214807913</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-06-30 https://nishiohirokazu.hatenadiary.org/archive/2008/06/30]

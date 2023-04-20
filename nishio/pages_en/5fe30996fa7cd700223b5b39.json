@@ -1,0 +1,41 @@
+PAST2J
+from [The Second Algorithm Practical Skills Test].
+[https://gyazo.com/b4d2ae6d4c49a41f64ced937f0f5dbae]
+[J - string parsing https://atcoder.jp/contests/past202004-open/tasks/past202004_j]
+
+PAST2J
+ We can call it recursively with a function that handles the range enclosed by the parentheses.
+ Access strings by subscripts instead of editing them directly
+ AC
+code:python
+ def solve(S):
+     N = len(S)
+     cur = 0
+     ret = []
+ 
+     def parse_palen():
+         nonlocal cur
+         cur += 1
+         ret = []
+         while cur < N:
+             c = S[cur]
+             if c == ")":
+                 s = "".join(ret)
+                 s2 = "".join(reversed(s))
+                 return s + s2
+             elif c == "(":
+                 ret.append(parse_palen())
+             else:
+                 ret.append(c)
+             cur += 1
+ 
+     while cur < N:
+         c = S[cur]
+         if c == "(":
+             ret.append(parse_palen())
+         else:
+             ret.append(c)
+         cur += 1
+     return "".join(ret)
+
+9min

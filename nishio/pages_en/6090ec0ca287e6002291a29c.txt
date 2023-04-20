@@ -1,0 +1,149 @@
+Hatena2013-03-13
+code:hatena
+ <body>
+ *1363167178* Automatic generation of tests for code with state
+ I implemented the BLUE* algorithm, so I went ahead and did the automatic test generation.
+ 
+ The specification of the code to be tested this time is
+ - Open, close, and write.
+ - If I write or close it without opening it, I get an error.
+ something like ...
+ 
+ And here is a "buggy implementation" of it:
+ 
+ >|python|
+ class Target(object):  # bad impl.
+     def __init__(self):
+         self.opened = False
+         self.closed = False
+ 
+     def open(self):
+         self.opened = True
+ 
+     def write(self):
+         if not self.opened:
+             raise RuntimeError
+         if self.closed:
+             raise RuntimeError
+ 
+     def close(self):
+         if not self.opened:
+             raise RuntimeError
+         self.closed = True
+ ||<
+ 
+ First, write the test manually. e_plus is "operation that should not result in an error," e_minus is "operation that should result in an error," and open, close, and write are abbreviated as o, c, and w, respectively.
+ 
+ >||
+ e_plus = ['o', 'oc', 'ow', 'owc', 'oww', 'owwc', 'owww']
+ e_minus = ['c', 'w', 'ocw']
+ ||<
+ 
+ When this test is fed to BLUE*, a DFA is created that satisfies the condition.
+ 
+ [f:id:nishiohirokazu:20130313181238p:image]
+ 
+ Generate a test case for this with a breadth-first search, feed it to both the DFA and the actual implementation, and look for different results.
+ 
+ First, I found a mismatch on the fourth candidate: when I open and re-open it, the DFA claims that it should be an error, but the implementation says that it is not. Yeah, that is not clearly stated in the spec. In this case, we will assume that it should be an error. Let's add that to the spec and fix the implementation.
+ 
+ >||
+ 4: for input ['o', 'o']: dfa said False, but target said True
+ ||<
+ 
+ Fix implementation.
+ >|python|
+     def open(self):
+         if self.opened:
+             raise RuntimeError
+         self.opened = True
+ ||<
+ 
+ Ran it again. This time a mismatch was found in the 8th candidate. According to the report, "If you open, close, and then close again, DFA expected an error, but the implementation does not. The specification does not specify whether it should be an error when closing something that has been closed again. We will determine that this should be an error and correct the implementation.
+ 
+ >||
+ 8: for input ['o', 'c', 'c']: dfa said False, but target said True
+ ||<
+ 
+ I'm sure those with good instincts have noticed that you only want to manage two states, "open or not open," so there's no need for a flag called closed.
+ 
+ >|python|
+ class Target(object):
+     def __init__(self):
+         self.opened = False
+ 
+     def open(self):
+         if self.opened:
+             raise RuntimeError
+         self.opened = True
+ 
+     def write(self):
+         if not self.opened:
+             raise RuntimeError
+ 
+     def close(self):
+         if not self.opened:
+             raise RuntimeError
+         self.opened = False
+ ||<
+ 
+ The implementation was corrected and the search was run again.
+ 
+ This time, "If you open and then close and then open, DFA expected an error, but the implementation does not. The spec doesn't even specify if it's closed and then opened again. The spec should say that this can be opened. In other words, this is wrong on the part of DFA. In cases like this, I would add to e_plus to tell them, "That's correct that it's not an error.
+ 
+ >||
+ 7: for input ['o', 'c', 'o']: dfa said False, but target said True
+ ||<
+ 
+ He thought ocoo was going to succeed, but this is correct to make an error. I'll add this to e_minus to tell him that "it's right to make an error".
+ >||
+ 13: for input ['o', 'c', 'o', 'o']: dfa said True, but target said False
+ ||<
+ 
+ The implementation of this is also correct.
+ >||
+ 16: for input ['o', 'w', 'c', 'o']: dfa said False, but target said True
+ ||<
+ 
+ The implementation of this is also correct.
+ >||
+ 34: for input ['o', 'w', 'w', 'w', 'o']: dfa said True, but target said False
+ ||<
+ 
+ Then the search program reports "No mismatches were found for input columns of length 20 or less. Congratulations, we are happy.
+ 
+ If I had simply tested for sequences of less than 20 operations, there would have been 3 ** 20, or 3486784401 operations, but here I only need 53130 because I don't search beyond the path that causes the error. That's 60,000 times faster than testing randomly without thinking. On the other hand, as for the human description, there are 9 positive tests and 5 negative tests, which means that about 4000 times more tests are generated from the description.
+ 
+ This is what the DFA looks like at this time. If a human wrote it, I think he would stick 3 and 5 together, but, well, he's not wrong.
+ [f:id:nishiohirokazu:20130313182644p:image]
+ 
+ In this case, there is no noise in the input, but BLUE* itself is an algorithm for how to estimate DFA from a noisy column, so I would like to use it in a noisy example in the near future.
+ 
+ References
+ - "BLUE*: a Blue-Fringe Procedure for Learning DFA with Noisy Data" by M Sebban, J Janodet, F Tantini
+ - "From Test Cases to FSMs: Augmented Test-driven Development and Property Inference"  by Thomas Arts and Simon Thompson
+ </body>
+ <comments>
+ <comment>
+ <username>shiracha</username>
+ <body>Is this a kind of model checker? <br>I think it's an interesting direction to take, as it shows only a part of the model and infers the rest of the model behavior. <br>The question is, where did you come up with this idea? </body>
+ <timestamp>1363275174</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I've added a bibliography. I've only done a cursory read though. </body>
+ <timestamp>1363316521</timestamp>
+ </comment>
+ <comment>
+ <username>seizans</username>
+ <body>Midway <br>> says "If you open, close, and then close again, DFA expected an error, but the implementation doesn't." <br>> The spec doesn't specify if you can open it again after closing it. I don't think the two statements in <br> are occluded. <BR>I guess if open -> close -> close, then whether it can be closed again after closing? <br><br>And I don't have a proper grasp of the details and what kind of DFA I should be able to do, but <br>This is what the DFA looks like at this time. If a human wrote it, I would probably stick 3 and 5 together, but I'm not wrong. <br>Wouldn't this attach 1, 3, and 5 if a human wrote it? </body>
+ <timestamp>1365864444</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>>> says: "If you open, close, and then close again, DFA expected an error, but the implementation does not. <br>>> The spec doesn't specify if you can open it again after closing it. I don't think the two statements <br>>are occluded. <BR><BR>You are right, I think I was mixing up the description of the next test. I have corrected it! <BR><BR>Wouldn't this stick 1, 3 and 5 together if written by a human? <BR><BR>Yes, and it is also wrong that 0 is a non-accepted state, and if you write a clean DFA that includes that, it should be a DFA with only two states: "closed" and "open". </body>
+ <timestamp>1365867023</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-03-13 https://nishiohirokazu.hatenadiary.org/archive/2013/03/13]

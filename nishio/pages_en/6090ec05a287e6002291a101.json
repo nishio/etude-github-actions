@@ -1,0 +1,123 @@
+Hatena2010-09-11
+code:hatena
+ <body>
+ *1284167528*Tools for writing magazine manuscripts in HTML.
+ I made this kind of thing.
+ <img src="http://gyazo.com/4997c984d379a4bb468ffee925d81df0.png">
+ <img src="http://gyazo.com/56313c86a3bb1b7c6a902c5e296c34fd.png">
+ 
+ ****Motivation
+ 
+ I am required to deliver in text format, but I would like to write in a format that is easier to add metadata to. In addition, I would like to be able to easily see what I am editing in order to get an idea of how well I am writing, and to hand it over to others for review. I would like to be able to write in a format that is easy to handle in a program. I want a format that is easy to use in a program. Why not just use HTML?
+ 
+ ***Past Implementation
+ 
+ When I was writing the Jython book, I converted the text from "a proprietary format that allows minimal metadata to be added to the required text format" to HTML and text for delivery, but the difficulty of adding metadata and the hassle of running the conversion script every time I previewed my manuscript made me realize that this approach was no good. However, I thought this approach was no good because of the difficulty of putting metadata and the hassle of running the conversion script every time I previewed my manuscript.
+ 
+ ***Current Specifications
+ The paper was designed to have 23 characters per line, 42 lines per page, and 2 columns per page. Since I did not feel like doing a serious two-column structure with JS and CSS, I decided to display only one column vertically and draw a red horizontal line at intervals of about one page. The font size is fixed at 17px, the column width is 400px (17 * 23 = 391), and the page height is 1114px (17 * 42 * 1.5 = 1071).
+ 
+ ***Output format
+ 
+ >||
+ $ convert.py genko.html
+ ||<
+ 
+ This will output the standard output without tags, div class="ignore", etc. Redirect to the appropriate file and save the file. If you add the option "-o", only the title will be output in outline mode!
+ 
+ ***License
+ It's GPLv3! The license won't spill over to manuscripts or anything else you create using this, even though it's obvious!
+ 
+ <hr>
+ I have created an alpha version of this document. I'm still working on the alpha version, but I'm releasing it to the public for now.
+ http://bitbucket.org/nishio/genko
+ 
+ **1284172426*About x = y + y = x in Ruby and C
+ If you write x = y + y = x in Ruby, this has the same behavior as doing x = y + x and y = x.
+ >|ruby|
+ > x = y = 1
+ => 1
+ > x = y + y = x
+ => 2
+ > [x, y]
+ => [2, 1]
+ > x = y + y = x
+ => 3
+ > [x, y]
+ => [3, 2]
+ > x = y + y = x
+ => 5
+ > [x, y]
+ => [5, 3]
+ > x = y + y = x
+ => 8
+ > [x, y]
+ => [8, 5]
+ ||<
+ 
+ Why is it that, first of all
+ >||
+ x = y + y = x
+ ||<
+ of y = x is executed and the value of that substitution expression is x, so
+ >||
+ x = y + x
+ ||<
+ 
+ By the way, I thought this would work in C and tried it, but I get the same error as you did.
+ 
+ >||
+ error: lvalue required as left operand of assignment
+ ||<
+ 
+ This is probably because the + bond strength is higher than the = bond strength.
+ >||
+ x = (y + y) = x
+ ||<
+ and y + y is not a left-hand side value, so it can't be on the left-hand side of the assignment.
+ >||
+ x = y + (y = x);
+ ||<
+ and this turned out to be x = x + x. Hmmm, is the + argument evaluated from the right side? I thought so, so I changed it to a function call, and it evaluated the left side first.
+ >|cpp|
+ #include<iostream>
+ int y = 5;
+ int get_y(){
+   std::cout << "get_y: " << y << std::endl;
+   return y;
+ }
+ 
+ int main(){
+   int x = 3;
+   x = get_y() + (y = x);
+   std::cout << x << "," << y << std::endl;
+ }
+ ||<
+ 
+ In get_y(), it becomes 8,3, and if you replace it with y, it becomes 6,3. According to <a href='http://www.cppreference.com/wiki/jp/operator_precedence'>C++ Operator Precedence [C++ Reference]</a>, the evaluation order of expressions is often undefined. In short, if you mix "operations with side-effects" such as assignments in an expression, the results will vary depending on the evaluation order, so don't do it.
+ 
+ By the way, in Python
+ >|python|
+ x = y = 1
+ ||<
+ The above cannot be done in the first place because the assignment statement is defined as "= Expr followed by one or more Expr". Write it as follows.
+ >|python|
+ x, y = y, x + y
+ ||<
+ <hr>
+ I wrote this in response to Sasada-san's Tweet, but the source, according to Sasada-san, is this: http://jarp.does.notwork.org/diary/201009a.html#201009101
+ </body>
+ <comments>
+ <comment>
+ <username>nama</username>
+ <body>x = y + (y = x);<br><br>This first assigns x to y. At this time, both y and x are 1.<br>Then it evaluates (y = x). I think this means that you will eventually assign y+true to x, since such an expression will always be true. <br>Because true is equivalent to 1 in most environments. </body>
+ <timestamp>1284173560</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>...for now, please read the text again as I don't know where to begin to go into this. </body>
+ <timestamp>1284211867</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-09-11 https://nishiohirokazu.hatenadiary.org/archive/2010/09/11]

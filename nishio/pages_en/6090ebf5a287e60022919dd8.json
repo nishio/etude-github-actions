@@ -1,0 +1,209 @@
+Hatena2008-01-31
+code:hatena
+ <body>
+ *1201741734* Something came.
+ 
+ **1201748116*[Haskell]Deriving Considerations
+ >|haskell|
+ x::Int
+ x = 1
+ 
+ data DerivingShow = Foo Int deriving Show
+ y::DerivingShow
+ y = Foo 2
+ 
+ data CustomizedShow = Bar Int
+ instance Show CustomizedShow where
+     show (Bar x) = "[Custom: " ++ show x ++ "]"
+ 
+ z::CustomizedShow
+ z = Bar 2
+ 
+ main = print z
+ ||<
+ 
+ This is written in Python. Note, of course, that it cannot be said that "the same content is implemented" due to the fact that Haskell declarations are replaced by Python procedures and so on.
+ 
+ >|python|
+ >>> class Int(object):
+     def __init__(self, v):
+         self.value = v
+     def show(self):
+         return str(self.value)
+ 
+     
+ >>> Int(1)
+ <__main__.Int object at 0x01492C90>
+ >>> Int(1).show()
+ '1'
+ ||<
+ 
+ >|python|
+ >>> class CustomizedShow(object):
+     @staticmethod
+     def Bar(intValue): # data constructor
+         self = CustomizedShow()
+         self.value = intValue
+         return self
+     def show(self):
+         return "[Custom: " + self.value.show() + "]"
+ 
+     
+ >>> CustomizedShow.Bar(Int(2))
+ <__main__.CustomizedShow object at 0x01492D70>
+ >>> CustomizedShow.Bar(Int(2)).show()
+ '[Custom: 2]'
+ ||<
+ 
+ >|python|
+ >>> class DerivingShow(object):
+     @staticmethod
+     def Foo(intValue): # data constructor
+         self = DerivingShow()
+         self.value = intValue
+         return self
+ 
+     
+ >>> def deriving_show(cls):
+     def show(self):
+         return (
+             self.__class__.__name__ +
+             " " + self.value.show())
+     cls.show = show
+ 
+     
+ >>> deriving_show(DerivingShow)
+ >>> DerivingShow.Foo(Int(3))
+ <__main__.DerivingShow object at 0x01492B50>
+ >>> DerivingShow.Foo(Int(3)).show()
+ 'DerivingShow 3'
+ ||<
+ 
+ This Python code does not guarantee before execution that the object has a show method.
+ So the Show type class doesn't appear. if there is some kind of Java interface, I wonder if I can guarantee it by implemeting it.
+ However, unlike Java interfaces, it can have an implementation. Multiple inheritance is also possible.
+ 
+ *1201748220* A system of Haskell-like types is...
+ I wonder how it can be made!
+ 
+ *1201755035* This is terrible.
+ asahi.com: University of Tokyo's dissertations cost 18.45 million yen each, one of the largest costs among national universities - Society
+ http://www.asahi.com/national/update/0131/TKY200801300394.html
+ 
+ First of all, I don't think it's a good idea to measure productivity in terms of the number of papers, but even if we let that go at 10,000 steps, it's still a good idea.
+ >>
+ The eight schools above the University of Tokyo only had high production costs due to the small number of papers produced by liberal arts universities such as Tokyo University of Foreign Studies and Hitotsubashi University, and the University of Tokyo was the highest in real terms.
+ <<
+ Even the University of Tokyo has a humanities department. After all, what this statistic is saying is, "If you calculate research expenses per number of papers, humanities universities make up the top 8. It is natural that humanities majors have a small number of papers. If you omit liberal arts colleges from the statistic because they have fewer papers, you have to subtract the research expenses of liberal arts faculties from the research expenses of the University of Tokyo to make the calculation again. When you say that "the former imperial universities come out on top when humanities universities are excluded," doesn't that just mean that the former imperial universities have large humanities departments in their own right?
+ 
+ -----
+ I hit the original text.
+ http://www.nistep.go.jp/achiev/ftx/jpn/mat150j/pdf/mat150j.pdf
+ From p. 57 is a discussion of expenses per paper.
+ 
+ f:id:nishiohirokazu:20080131135947p:image
+ 
+ Wait a minute. Before the number of papers is small, papers in the humanities are not counted.
+ The original statistical data is about making a scatter plot with external funds and what not, but you ignore the caveats in the original text, take out only the parts that are convenient, cut out the top 8 for the right reasons, write as if the wrong interpretation is supported by the statistical data, and give the article a catchy title. It's really terrible. It's really terrible.
+ 
+ *1201763374*Return completed.
+ f:id:nishiohirokazu:20080131160552p:image
+ 
+ I gave it back to you!
+ 
+ So let's pretend this one never happened.
+ 
+ http://q.hatena.ne.jp/1201442424/139588/
+ >>
+ That's not what dropdb is about.
+ 
+ I think I'll forget about the good wife one if she dresses up as a maid and works for me!
+ <<
+ 
+ *1201773029*[AS3] Should loop variables be declared first?
+ >|actionscript|
+ getTime();
+ for(var i:int=0; i < N; i++){
+ 
+ }
+ log(getDiff());
+ ||<
+ 
+ I was hoping that the third one would be faster because of the getlocal3 instruction, but it seems that the file size only shrinks a little.
+ 
+ If you replace N with 100000000, the time is 462 ms. Use integers where they are sufficient (too obvious).
+ I declared i as global and it was 750ms. Well, I say that frequently accessed variables should be local functions (this is also too obvious).
+ Read access to a field is as fast as that to a local variable. Surprisingly, read access to a field is as fast as that to a local variable. On the other hand, write access is a little slower. But I don't think it's anything to be worried about. If you want to make it faster, there may be more places to cut down.
+ 
+ *1201779126* Akiba on the way home
+ 
+ I thought I would not make it in time if I walked to Akasaka-mitsuke and transferred to Kinshicho on the Hanzomon Line, so I decided to transfer from Tameike-sanno to Shinbashi on the Ginza Line according to the transfer guide. I got there in 35 minutes.
+ 
+ *1201792873* Can't find solder.
+ 
+ I wonder if he took it to work. I have a soldering iron at home.
+ </body>
+ <comments>
+ <comment>
+ <username>amachang</username>
+ <body>Wow</body>.
+ <timestamp>1201764398</timestamp>
+ </comment>
+ <comment>
+ <username>High Boost Childhood</username>.
+ <body>You are right! I felt the same thing. </body>
+ <timestamp>1201767996</timestamp>
+ </comment>
+ <comment>
+ <username>TAKESAKO</username>
+ <body>You can also take the Ginza Line from Tameike-Sanno to Suehirocho</body>.
+ <timestamp>1201787861</timestamp>
+ </comment>
+ <comment>
+ <username>cactusman</username>
+ <body>>It doesn't matter. dropdb<br>I'm going to forget about the good wife one if she dresses up as a maid and works for me! <br>Ditto. </body>
+ <timestamp>1201792438</timestamp>
+ </comment>
+ <comment>
+ <username>AKIMOTO</username>
+ <body>Depending on where in Akiba you are, you can get off at Kanda on the Ginza Line and it will be quicker</body>.
+ <timestamp>1201794995</timestamp>
+ </comment>
+ <comment>
+ <username>Youchan</username>
+ <body>I'm sure it's in your bag.
+ <timestamp>1201797164</timestamp>
+ </comment>
+ <comment>
+ <username>jonosuke</username>
+ <body>I wonder how you count the number of papers from liberal arts colleges. <BR>Do you by any chance count the papers published by science faculty members affiliated with liberal arts universities? <br>If so, there is no point in comparing them at all.... </body>
+ <timestamp>1201832985</timestamp>
+ </comment>
+ <comment>
+ <username>the48</username>
+ <body>When it comes to a discussion about which university to install huge facilities that are few in number,<br>most people will mention the old imperial universities. <BR>By the way, is it normal for the humanities to have a small number of papers? </body>
+ <timestamp>1201835368</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>By the way, is it normal for liberal arts majors to have fewer papers? <br><br>I think so, but I'm not basing my statement on data, so if you have any good data, please let me know. </body>
+ <timestamp>1201839136</timestamp>
+ </comment>
+ <comment>
+ <username>about data</username>
+ <body>You seem to misunderstand the article, but the data is meaningful enough since it compares comprehensive universities with 700+ papers. <BR>The former imperial universities are a problem (i.e., they waste a lot of money) because the value of their papers is almost the same as that of regional national universities, even though their research expenses per paper is almost twice as much. For example, at http://www.thomsonscientific.jp/news/press/esi2006/ranking.html, the average number of citations shows that Kumamoto University 11.37, Kanazawa University 9.97, etc. are on the same level as the former imperial universities. There are several other data of this kind. <br>http://chubu.yomiuri.co.jp/kyoiku/chubu_kyo/chubu_kyo080109.htm <br>http://www.mie-u.ac.jp/blog/2008/01/post-29.html</body>
+ <timestamp>1202023493</timestamp>
+ </comment>
+ <comment>
+ <username>nishi</username>
+ <body>↑I guess this is the opinion of the author of this article. I guess that's why they are not talking to each other. </body>
+ <timestamp>1202033827</timestamp>
+ </comment>
+ <comment>
+ <username>kumarin</username>
+ <body>↑↑↑↑<br>I can't discuss this with someone who has a different ontology. <br><br>They are not just a cultural investment, but a research contract, and the nation is investing in a field that will carry Japan into the future, so they tend to think in terms of return on investment. <BR><BR>As a university, we have a self-contradiction between management and academia, which should be cultivated purely, so these people will poke us with how they view our existence as an academic institution. <BR><BR>Since newspapers are commercial newspapers, they have a contradictory self-contradiction: even if they are of high quality and good journalism, if they do not sell well, they are no good. So, let's discuss the issue based on the epistemology of how it should be, while acknowledging the problems it faces. I guess that's what I'm asking. </body>
+ <timestamp>1202114280</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-01-31 https://nishiohirokazu.hatenadiary.org/archive/2008/01/31]

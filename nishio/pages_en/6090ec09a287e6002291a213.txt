@@ -1,0 +1,239 @@
+Hatena2012-04-13
+code:hatena
+ <body>
+ *1334305940*Alloy Girl Extravaganza "Illustration Logic"
+ Here's the story so far: <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334024972'>Alloy</a>
+ 
+ ** One day
+ 
+ JS: Hey, hey, can you solve Illustration Logic with Alloy?
+ Me: Well, um, I can't immediately answer how you could do it by writing it, but I think you could obviously solve it in terms of SAT performance!
+ JS: Hmmm, I see!
+ 
+ ** That night
+ 
+ Me: Hmmm...how do you represent the cells as being lined up in two dimensions to begin with?
+ 
+ …
+ 
+ Me: I made a program in Python to output Alloy code! 500 lines of www!
+ 
+ …
+ 
+ Me: It doesn't return any results when I run it. Oh, it died due to lack of memory...
+ 
+ ** Next day
+ 
+ Me: So Alloy is not suitable for illustration logic! (snip ((<a href='http://d.hatena.ne.jp/nishiohirokazu/20120411/1334149939'>Solve Illustration Logic with Alloy</a>))
+ Alloy: Of course not. You have a bad writing style. Here, read this and study it! <a href='http://d.hatena.ne.jp/bonotake/20120413/1334300370'>Solving Illustration Logic with Alloy - Takeo's Diary @ I'm back from Jersey</a>.
+ Me: Gosh, I will be diligent.
+ 
+ ** Cells are arranged in two dimensions.
+ 
+ Me: I see... so this is how you describe "cells lined up in two dimensions"...
+ 
+ >||
+ open util/ordering[Col] as cols
+ open util/ordering[Row] as rows
+ 
+ abstract sig Region {}
+ sig Col extends Region {
+   cell: Row -> Cell
+ }
+ sig Row extends Region {}
+ enum Cell { Black, White }
+ 
+ fact {
+   all c: Col, r: Row | one cell [c, r]
+ }
+ ||<
+ 
+ Alloy: Someone somewhere made about 300 lines of code generation, but I have a bad habit of resorting to brute force before using my head.
+ Me: I have no words to reply, the trick is that the cell relationship is Col -> Row -> Cell. I used to make 100 cells by my own power, but with this, I only need 10 Col, 10 Row, and 2 Cells (or rather, 2 Color). It's so compact!
+ 
+ Alloy: Why don't you compare the time or something? Just try to specify 10 pieces and run it.
+ >||
+ run{
+ 	#Col = 10
+ 	#Row = 10
+ } for 10 but 5 int
+ ||<
+ 
+ Me: bonotake's elegant solution is 20ms.
+ >||
+ Executing "Run run$1 for 10 but 5 int"
+    Solver=minisat(jni) Bitwidth=5 MaxSeq=10 SkolemDepth=1 Symmetry=20
+    511 vars. 200 primary vars. 500 clauses. 13ms.
+    . found. Predicate is consistent. 7ms.
+ ||<
+ 
+ Alloy: Your elephantine solution is about 80 times slower.
+ 
+ >||
+ Executing "Run run$1"
+    Solver=minisat(jni) Bitwidth=4 MaxSeq=4 SkolemDepth=1 Symmetry=20
+    60363 vars. 20000 primary vars. 99382 clauses. 1514ms.
+    . found. Predicate is consistent. 67ms.
+ ||<
+ 
+ Me: Gnu.
+ Alloy: bonotake's solution has "200 primary vars" while yours has "20,000 primary vars". 80x slower is mostly due to the fact that you are making CNFs to pass to SAT.
+ JS: What is CNF?
+ Alloy: see <a href='http://ja.wikipedia.org/wiki/%E4%B9%97%E6%B3%95%E6%A8%99%E6%BA%96%E5%BD%A2'>Multiplicative standard form - Wikipedia</a>
+ I: In short, there is a tool (SAT) that finds a solution that satisfies a logic equation when you give it to it, and you have to make a clean logic equation (CNF) to give it to it. Alloy's job is to interpret the source code in a human-readable form, create a CNF, and hand it to SAT to solve, and then show us the result in a human-readable form.
+ JS: I see - there is a way to see that C.N.F.!
+ Me: Eh, I don't know. I don't know.
+ Alloy: There's an option called Output CNF to File.
+ Me: I tried but I don't know how to read it
+ >||
+ p cnf 14 15                 
+ -2 -1 -4 0
+ 4 -8 0
+ -1 5 0
+ -2 5 0
+ 1 2 -5 0
+ -5 -3 -6 0
+ 6 -8 0
+ 3 5 -7 0
+ 7 -8 0
+ -1 2 -9 0
+ 9 -13 0
+ -2 3 -11 0
+ 11 -13 0
+ 8 0
+ 13 0
+ ||<
+ 
+ ** An array of Int is an Int to Int relationship
+ 
+ Me: I thought that Alloy does not have arrays, but I see that arrays can be regarded as a relation in which Int is the domain.
+ >||
+ 0 -> 1 + 1 -> 1 + 2 -> 1
+ ||<
+ JS: Hmm? 0 -> 2 -> 3 -> 1?
+ Me: No, it doesn't. (->) has higher priority.
+ >||
+ (0 -> 1) + (1 -> 1) + (2 -> 1)
+ ||<
+ JS: I don't understand the addition of arrows and such. What does (0 -> 1) + (1 -> 1) mean?
+ Me: It is the union of "the set containing only one (0 -> 1)" and "the set containing only one (1 -> 1)".
+ JS: I see!
+ 
+ ** Sequence
+ 
+ Me: What is seq? It's not even mentioned in the language reference in Appendix B.
+ Alloy: Appendix F, "Syntactic Features of Alloy4," describes additional features not listed in the reference.
+ Me: Gnu. Oh, I found both DISJ and ENUM here.
+ Alloy: I bet you only read the first and last pages again. Put a sticky note on it.
+ Me: Yes.
+ Alloy: p.329 starts explaining the sequence of atoms. sig Book is Int -> Book.
+ Me: Ah, so it's like an array. Wow, subseq, indexOf, and many other useful things!
+ 
+ ** Sort
+ 
+ Me: I see, so this is how you sort a set.
+ >||
+ pred headsSeqInCol (c: Col, s: seq Row) {
+ 	// s elements are the same as the set of block heads
+ 	s.elems = headsInCol[c]
+ 	// s is monotonically increasing
+ 	all i: s.butlast.inds | lt [s[i], s[plus[i, 1]]]
+ }
+ ||<
+ 
+ Alloy: The expression "sort" is very procedural brain.
+ Me: My native language is Python, so there is no choice there!
+ Alloy: Well, I can understand the temptation to call "a sequence in which the elements are identical to some set of Int's and a minor is established on two adjacent elements" a sort.
+ 
+ ** Reflective transition closed packet
+ 
+ Me: I'm seeing some unfamiliar operators like asterisks.
+ 
+ >||
+ start.*cols/next - end.^cols/next
+ ||<
+ 
+ Alloy: Reflective transitive closed envelope operator.
+ Me: Ah, that was in the textbook, but I didn't know what it meant, so I didn't go through with it.
+ Alloy: It's not hard if you understand transitive closed envelopes. Just as the transitive closed parcel^r was the smallest set satisfying the transitive law ((<a href='http://ja.wikipedia.org/wiki/%E6%8E%A8%E7%A7%BB%E9%96%A2%E4%BF%82'>transitive relation - Wikipedia</a>)) containing the given relation r Just as the reflexive transitive closed parcel*r is the smallest set that satisfies the transitive and reflexive laws ((<a href='http://ja.wikipedia.org/wiki/%E5%8F%8D%E5%B0%84%E9%96%A2%E4%BF%82'>Reflexive relation - Wikipedia</a>)) containing the given relation r. The only thing is that it is the smallest set that satisfies the given relation r.
+ Me: No, that's not how I understand transitive closed packages. I understand that "a.^r is a.r + a.r.r + a.r.r.r + .... and the relation r is applied more than once.
+ Alloy: You have a very procedural brain.
+ Me: .... So, if I have a procedural brain, can I understand that "a.*r is a + a.r + a.r.r + a.r.r.r + a.r.r.r + .... and the relation r is applied more than 0 times repeatedly", is that OK?
+ Alloy: I see no contradiction in that interpretation.
+ Me: So, in short, this is "the set of all the values greater than or equal to start and less than or equal to end", right?
+ >||
+ start.*cols/next - end.^cols/next
+ ||<
+ Alloy: Yes, that's right.
+ 
+ ** Hint reading
+ 
+ Me: So you mean like this.
+ >||
+ pred rowHint (j: Int, sizes: seq Int) {
+   let r = Int2Row[j] | some cs: seq Col {
+     #sizes = #cs
+     // cs is the sorted sequence of positions at the beginning of the black block
+     headsSeqInRow [r, cs]
+     all i: sizes.inds {
+       // cs[i] is called start, col at position start plus size[i] minus 1 is called end
+       let start = cs [i], end = Int2Col [plus [Col2Int [start], minus[sizes [i], 1] ]] {
+         // end exists
+         some end
+         // all black from start to end
+         all c: start.*cols/next - end.^cols/next | cell [c, r] in Black
+         // end next to no or white
+         no end.next or cell [end.next, r] in White
+       }
+     }
+   }
+ }
+ ||<
+ 
+ 
+ ** Visualize results
+ 
+ JS: You got the answer? Let me see, let me see! Yes, gah!
+ 
+ [f:id:nishiohirokazu:20120413203527p:image]
+ 
+ Alloy: Cell color information is in Col->Row->Color, so it's hard to read.
+ Me: XML...
+ 
+ >||
+ <field label="cell" ID="6" parentID="4">
+    <tuple> <atom label="Col$0"/> <atom label="Row$0"/> <atom label="White$0"/> </tuple>
+    <tuple> <atom label="Col$0"/> <atom label="Row$1"/> <atom label="White$0"/> </tuple>
+    <tuple> <atom label="Col$0"/> <atom label="Row$2"/> <atom label="White$0"/> </tuple>
+    (hereinafter abbreviated)
+ ||<
+ 
+ Me: ...Well, just write a script. Ta-da!
+ 
+ >||
+ 　　　　
+ 　　　■■ ■■
+ 　　　■ ■ ■ ■
+ 　　■■ ■■ ■■ ■■
+ 　■■■■■
+ ■■■■■■■　　　
+ ■■■■■■■　　　
+ ■■■■■■■　　　
+ ■■■■■■■　　　
+ 　■■■■■
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>bonotake</username>
+ <body>The CNF format is called DIMACS format, which has become the standard format for SAT solvers in recent years. <br>cf. http://www.satcompetition.org/2009/format-benchmarks2009.html</body>
+ <timestamp>1334307436</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you! </body>
+ <timestamp>1334320175</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-04-13 https://nishiohirokazu.hatenadiary.org/archive/2012/04/13]

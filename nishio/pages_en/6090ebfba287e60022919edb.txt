@@ -1,0 +1,138 @@
+Hatena2008-10-29
+code:hatena
+ <body>
+ *1225267589*Write out your brain.
+ Write down what you want to do because it's confusing when there are so many things you want to do.
+ 
+ - Haskell and C++
+ -- The C++ version of the code calls functors with the intention of using it for general purposes, and also uses vectors without much care, so we can't simply compare the speed with Haskell's code.
+ -- Haskell's seq only fires evaluations up to weak-headed normal form, so I can't go to the beginning if I want to force the evaluation to be brought to the beginning. This previous code is not good at all. Also, I think it would be nicer to use $! would be more elegant. I'll rewrite it.
+ -- I'll do those two benchmarks, then Parallel Haskellize the Haskell version and observe the cost of rewriting and performance changes, and have it run on 4x5 cores in the MiChiLu lab.
+ - next-month delivery
+ -- I have one heuristic AI from a2c, so I will run it against random opponents to see how strong it is. I have tried to write an AI in Python before, but it takes quite a long time to gather a valid sample size, so writing it in Haskell may be the right choice.
+ -- Create an AI for commentary (that is stronger than random for now if played as it should be, and can display a good explanation of "why the move is good")
+ - Most limited online 2 (with versus)
+ -- Allow multiple players to be created under one account (for bot authors)
+ -- Client is Flash
+ --- If we abstract the protocol part, can we use it for the most limited online 1?
+ -- API is HTTP-based, with GET and POST.
+ -- Use SHA256 hash of time to identify games
+ - tidy up one's room
+ - cook a meal
+ 
+ *1225277252*[cpp]Speeding up the most read-only program
+ Is std::list O(1) for both push_back and pop_front? In the process of searching using one card at a time, first use 1 from [1, 2, 3] and pass [2, 3] to the subsequent process, then when the search is over, return to [1, 2, 3] again, next use 2 and pass [1, 3], and so on. Now, this is achieved by creating a vector with one element removed, but the cost of this copying is probably the biggest cost that can be reduced right now. So I thought, if the cost of pop_front and push_back of std::list is O(1), I should pop [1, 2, 3] and process it, then push_back it. Since [2, 3, 1], the next process is also pop_front, and since it always goes around the whole list, it is back to its original form at the end of the process.
+ 
+ The reason I did not use list at first was because I was not aware of this and was concerned about that area, thinking, "If I make a destructive change, it will break the iterator," or "Which would be more expensive, the cost of tracing from the head each time or the cost of copying once?
+ 
+ -----
+ 
+ verification code
+ >|cpp|
+ void recur(list<int>& xs, int depth){
+   BEGIN(depth);
+   for(int head_value = xs.front();;){
+     int x = xs.front();
+     xs.pop_front();
+     if(depth > 1){
+       DP(x);
+       recur(xs, depth - 1);
+     }else{
+       DP(x);
+     }
+     xs.push_back(x);
+     if(xs.front() == head_value) break;
+   }
+   END(depth);
+ }
+ 
+ int main(){
+   list<int> values;
+   values.push_back(1);
+   values.push_back(2);
+   values.push_back(3);
+   values.push_back(4);
+   recur(values, 3);
+ }
+ ||<
+ 
+ result
+ >||
+ BEGIN depth: 3
+   x: 1
+   BEGIN depth: 2
+     x: 2
+     BEGIN depth: 1
+       x: 3
+       x: 4
+     END depth: 1
+     x: 3
+     BEGIN depth: 1
+       x: 4
+       x: 2
+     END depth: 1
+     x: 4
+     BEGIN depth: 1
+       x: 2
+       x: 3
+     END depth: 1
+   END depth: 2
+   x: 2
+   BEGIN depth: 2
+     x: 3
+     BEGIN depth: 1
+       x: 4
+       x: 1
+ 
+ (Abbreviation. In short, (1, 2, 3), (1, 2, 4), (1, 3, 4), (1, 3, 2), (1, 3, 2)
+  (1, 4, 2), (1, 4, 3), (2, 3, 4), (2, 3, 1),...
+ and I want to say that it's all patterns. It's hard to tell because it's not in dictionary order.
+ 
+     END depth: 1
+   END depth: 2
+ END depth: 3
+ ||<
+ 
+ DP, BEGIN, and END are debug output macros in /lang/cplusplus/debugprint in CodeRepos.
+ 
+ -----
+ 
+ id:methane pointed this out to me, so I checked. I was surprised that deque was 10 to 20 times faster than list for this application. I mean, I guess it does.
+ 
+ It would be faster to use <a href='http://en.wikipedia.org/wiki/Dancing_Links'>Dancing Links - Wikipedia, the free encyclopedia</a> or something like that, but it's too much trouble, so I just used std::list, which is almost as fast. I was hoping that std::list would be close to that, but it wasn't. I guess the big difference is that Dancing Links does not need malloc, even though the order is 1.
+ 
+ Hmmm, I guess I'll have to rewrite the whole thing anyway, so I guess I'll go with Dancing Links.
+ 
+ **1225295755*Considering Productivity Improvement
+ It's hard for me to concentrate, but I thought about how I could be more productive: how about a sport where you have 90 minutes or so to decide what you're going to do by that time and challenge yourself.
+ 
+ 
+ I'm already sleepy today, so I'm going to bed in an effort to live a healthier life. Tomorrow, I'll make a 90 minute class wrapping up Dancing Links.
+ 
+ *1225306780* Insomnia
+ Why can't I sleep, even though I am tired and yawning, even though I got under the covers because I am sleepy?
+ </body>
+ <comments>
+ <comment>
+ <username>methane</username>
+ <body>Another way is deque</body>.
+ <timestamp>1225278676</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>Ginger tea is recommended</body>.
+ <timestamp>1225329165</timestamp>
+ </comment>
+ <comment>
+ <username>tkuro</username>
+ <body>Chamomile might be good</body>.
+ <timestamp>1225330151</timestamp>
+ </comment>
+ <comment>
+ <username>Youchan</username>
+ <BODY>You shouldn't do too much work or anything before bedtime. <BR>Before bedtime, you should have a cup of tea and relax. </body>
+ <timestamp>1225335103</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-29 https://nishiohirokazu.hatenadiary.org/archive/2008/10/29]

@@ -1,0 +1,32 @@
+ABC132D
+[D - Blue and Red Balls https://atcoder.jp/contests/abc132/tasks/abc132_d]
+	[https://gyazo.com/b40880b288c4dd49649f7ecc52b89ecc]
+　Thoughts.
+　　In short, I want to count up the arrangement of K blue balls into i non-contiguous groups
+　　At least one red ball between groups.
+　　K blue balls into i non-contiguous groups
+　　　[https://gyazo.com/95d89bbd307f278fd1788557b7742f0e]
+　　	[$ b_i = \binom{K-1}{i-1}]
+　　N-K red balls are divided into i+1 groups, but both ends can be zero
+　　　[https://gyazo.com/7e203a9a37997fafc1062cd78ebda967]
+			[$ r_i = \binom{N-K+1}{i}]
+　　Now all we need to do is calculate K cases of this.
+　　　Pre-calculate up to 2000 to speed up the process.
+　Official Explanation
+　　Policy OK
+　　Since K is as small as 2000, they can use [Pascal's triangle] without pre-calculation.
+	AC
+		A naive implementation of the above policy could result in N - K - 1 < i in the calculation of ri.
+		　Mathematically it is 0, but the implementation of the combination did not expect it and returned an incorrect value and WA'd.
+		　I took care on the side of the library so as not to melt time with careless mistakes.
+		code:python
+		 def main():
+       N, K = map(int, input().split())
+       MOD = 1_000_000_007
+       c = Combination(N, MOD)
+       for i in range(1, K + 1):
+           r = c.comb(K - 1, i - 1)
+           r *= c.comb(N - K + 1, i)
+           r %= MOD
+           print(r)
+

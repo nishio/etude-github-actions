@@ -1,0 +1,67 @@
+Hatena2011-08-19
+code:hatena
+ <body>
+ *1313756054*Comments on Sepcan 2011
+ I had a hard time reading it because everyone wrote it in binary ((http://d.hatena.ne.jp/mayahu32/20110816/1313505335)) or binary ((http://twitter.com/#! /_ko1/status/103706889086443520))) or UCAS((http://d.hatena.ne.jp/k_operafan/20110815/1313421656)) and I had trouble reading it, so I wrote it in ASCII! I'm not sure how to do that!
+ 
+ https://gist.github.com/1156669
+ 
+ ** Language Specifications
+ It is one character, one token, and a simple sequence of characters is a function call. For example, the code "XYZ" is equivalent to "X(Y)(Z)" in Python. That is, "call function X with argument Y, and then call the function with argument Z for its return value.
+ 
+ The parentheses () have a special meaning and are used to summarize the process, well, as everyone expects. The evaluation is in order from the inner parentheses. For example, if you have a code "X(YZ)", this is equivalent to "X(Y(Z))" in Python. In other words, it means "call function Y with argument Z, and call function X with the return value as the argument. Also, if there are multiple innermost values, the one with the earliest appearance is evaluated. In the case of "( (01)(02)(03))", it means that 01, 02, 03 are executed in that order. (PS: The word "innermost" could be misunderstood as "deepest bracket", so I'll add another note: "( (01) (0(02)) (03))" is executed in the order of 01, 02, 0(02), 03...)
+ 
+ There are three built-in functions U, 0, and 1. There is also a special form + for naming.
+ 
+ The most unique feature is that every number is also a function, and an integer object can be treated as a function that increments by that number. 1 is both an integer 1 and a function. For example, "11" is a function called "1" with an argument of 1, so it becomes 2. However, since 0 is not interesting even if it becomes a function that increases 0, it is made into a function that outputs an argument. The return value is the argument plus 0. ((01)(02)(03))" in the previous example outputs 1, 2, 3 in that order, then evaluates (123) and returns 6.
+ 
+ Also, the special form + binds a value to a name. For example, "+X(11)" will bind (11) to the integer 2 and then to the name X. So after that, if you do something like "XX", it will put the number 2 into function 2 and return 4. Note the order of evaluation. It may seem surprising, but "X(+X(11))" is executed without error because the first X is evaluated before the first X is bound with +X. The return value of (+XY) is Y.
+ 
+ To take another example, "(0(1(01)))" first evaluates (01) and outputs 1, then (11) of (0(11)) evaluates to 2, and finally (02) is executed and outputs 2
+ 
+ See http://en.wikipedia.org/wiki/Iota_and_Jot for specifications of the built-in function U.
+ 
+ The name of the language is spcamp and the version number is 2011.0.0.
+ 
+ I wonder if there was anything else to say. Feel free to comment if anything is unclear.
+ 
+ I thought I was pretty kind in writing the S, K, and I in the source code. I could have written all of them in U, but it would have been hard to read in non-essential parts. I didn't know where to find good Japanese articles about S, K, and I. SKI combinator: http://en.wikipedia.org/wiki/SKI_ See combinator_calculus. (PS: I also included the specification of U <a href='http://blog.livedoor.jp/dankogai/archives/51524324.html'>404 Blog Not Found:Math - How small can a language get - (unlambda|iota| jot) recommendations</a> is a good summary)
+ 
+ It is one token per character, so there is no need for a lexer, and the syntax is just a tree structure with parentheses, so the parser is easy. The processing system is written in Python, with many test cases written in doctest (about 300 lines), so about 200 lines if you remove the tests. 562 lines if you disassemble it into byte code with dis.dis. It is a little smaller than SimpleHTTPServer.
+ 
+ PS: As of 12:03, one correct answer was sent to me via email.
+ 
+ *1313757478*Sepcan was introduced on NHK
+ http://cgi2.nhk.or.jp/nw9/pickup/?date=110818_2
+ 
+ I thought I couldn't watch it because I don't have a TV, but now it's officially online. I think the content is well organized considering that it is aimed at people with no prerequisite knowledge.
+ 
+ And I thought women were terrifying because my wife had only seen me for about 0.2 seconds and she had discovered me after just one look.
+ <img src="http://gyazo.com/f7f8e9d63881b4454efd60ee55caa3fd.png">
+ 
+ Oh, and LAC is cool.
+ </body>
+ <comments>
+ <comment>
+ <username>sora_h</username>
+ <body>Mr. Nishio could afford to be specific<br><br>LAC cool</body>.
+ <timestamp>1313797655</timestamp>
+ </comment>
+ <comment>
+ <username>sora_h</username>
+ <body>I was able to run this without throwing an interpreter error, but I wonder if it is better to output it as text or a number. <BR><BR>I'm not sure if this is really a report if it outputs numerical values. <BR><BR>I used Integer#chr in Ruby, and there was an error when I exceeded the Range on the way. <BR><BR>Or do you want me to decode it? </body>
+ <timestamp>1313989940</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>I got an error on the way over the Range<br><br>I suspect something is wrong</body>.
+ <timestamp>1313992775</timestamp>
+ </comment>
+ <comment>
+ <username>sora_h</username>
+ <body>I know...(I found the bug before I got the answer)</body>.
+ <timestamp>1314003074</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-08-19 https://nishiohirokazu.hatenadiary.org/archive/2011/08/19]

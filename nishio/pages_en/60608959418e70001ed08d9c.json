@@ -1,0 +1,105 @@
+ARC116
+[AtCoder Regular Contest 116 - AtCoder https://atcoder.jp/contests/arc116]
+[https://gyazo.com/b973ebf946e1fd75b4a4becdca7684a1]
+
+A
+　It's too time consuming at hand to naively ask for an approximate number.
+　　I missed that N is 10^18 max.
+　[https://gyazo.com/9e82d1029a8d1c1e8aaee3c7daf48a04]
+　　In short, just find out how many 2's are in the prime factors.
+　TLE with prime factorization library
+　 All you need is the number of 2's so you can implement it on your own and AC
+	code:py
+	 def main():
+      N = int(input())
+      for _i in range(N):
+          x = int(input())
+          p2 = 0
+          while x % 2 == 0:
+              p2 += 1
+              x //= 2
+          if p2 > 1:
+              print("Even")
+          elif p2 == 1:
+              print("Same")
+          else:
+              print("Odd")
+
+B
+　Thoughts.
+　　Good for sorting
+　　The maximum and minimum are determined by how many are not used from the end.
+　　[https://gyazo.com/08d207bc5bbcfb0000dc9f8ae5d11a14]
+　　The area enclosed by the square is required to reuse the previous result to obtain a fast result, so do it.
+　code:py
+　 def main():
+      N = int(input())
+      AS = list(map(int, input().split()))
+      AS.sort()
+      MOD = 998_244_353
+      ret = 0
+      x = 0
+      for a in AS:
+          ret = (ret + a * (a + x)) % MOD
+          x = (x * 2 + a) % MOD
+  
+      print(ret)
+
+C
+　Not submitted
+　Thoughts.
+　　Directed graphs with a quadrature relation.
+　　At length 1, each vertex is 1
+　　When the length is +1, the value of the root of the edge is added first.
+　　If it were smaller, it would be obtained, but since it is O(NM^2), it is not possible with this constraint.
+　　What is the number of sides e?
+　　　2.47 million, so even O(NE) can't do it.
+　　Think of a larger example.
+　　　2, 3, 5 and 7 are always the same value
+　　　6 and 10 are the same value
+　　　I guess we can classify it by the sorted number of shoulders of the prime factorization.
+　　　How many ways? →192 ways.
+　　　192^2 × 2 × 10^5 This looks tough.
+　　　　And since the classification is heavy, this solution method would embed the results of the calculation at hand.
+D
+　Thoughts.
+　　If the result of XOR is 0, then each binary digit has an even number of 1s
+　　Add them up and you get M.
+　　M is 5,000, that's 13 digits at most.
+　　Put up a library to create a table of combinations, search for the number of 1's placed and add them together.
+		AC
+	code:py
+	 def solve(N, M):
+      if M % 2:
+          return 0
+      M //= 2
+      MOD = 998_244_353
+      comb = CombinationTable(N + 10, MOD).comb
+  
+      cache = {}    
+      def foo(x, start=11):
+          if (x, start) in cache:
+              return cache[(x, start)]
+          if start == 0:
+              if 2 * x > N:
+                  return 0
+              else:
+                  ret = comb(N, 2 * x)
+                  cache[(x, start)] = ret
+                  return ret
+  
+          p = 2 ** start
+          if p <= x:
+              ret = 0
+              for i in range(x // p + 1):
+                  ret = (ret + foo(x - i * p, start - 1) * comb(N, 2 * i)) % MOD
+          else:
+              ret = foo(x, start - 1)
+          cache[(x, start)] = ret
+          return ret
+  
+      return foo(M)
+
+E
+
+

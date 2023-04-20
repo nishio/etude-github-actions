@@ -1,0 +1,322 @@
+Hatena2009-05-07
+code:hatena
+ <body>
+ *1241668201* Scale and card templates
+ f:id:nishiohirokazu:20090507124954j:image
+ 
+ I wondered what the magic number was, and calculated the reciprocal of 72 to see if it had anything to do with DPI. I wondered what the magic number was, and calculated the reciprocal of 72 to see if it had anything to do with DPI, but it's not quite the same. 138%. 10% difference means it must look different, so this number has nothing to do with it. I don't know what 1:1 is when Inkscape is set to 1:1.
+ 
+ <img src="http://gyazo.com/9e85d29959dbed137e3ac2411ebdaecf.png">
+ The size of the actual hard sleeve fits 9 sheets of A4 paper. This template could be reused, so I published it on the server.
+ http://www.nishiohirokazu.org/files/blank_card_template.svg
+ 
+ *1241670653*howm + taskpaper + DropBox
+ <img src="http://gyazo.com/b4b83a8bafe8e00af289e01db7af15b8.png">
+ Something like this. I thought it would be useful to be able to link to the project directory. If you have so many tasks that you have to put them all in the main list, you can create a task paper for a specific project and link it to the main list. But I wonder if it would be better to make it possible to fold and open each project.
+ 
+ *1241675603*[Scheme]call/cc does not repeat the exact same situation
+ Some people have understood that "call/cc is like saving/loading a game" to mean that "the entire state of the interpreter at the time call/cc is called is saved" or "the exact same situation is reproduced," so I wrote code to say that this is not true. Only the current scope is preserved, and if the scope outside is rewritten, it will be affected by the rewritten scope.
+ 
+ >|scheme|
+ gosh> (define x 1)
+ x
+ gosh> (define c 0)
+ c
+ gosh> (define (foo) (call/cc (lambda (c_) (set! c c_))) x)
+ foo
+ gosh> (foo)
+ 1
+ gosh> c
+ #<subr continuation>
+ gosh> (c)
+ 1
+ gosh> (set! x 2)
+ 2
+ gosh> (c)
+ 2
+ ||<
+ 
+ >>
+ Yasukazu Nishio(nishio.hirokazu) 14:40
+ Like, the items are saved in the game data save, but the FPS and controller settings are in a different scope.
+ 
+ Yasukazu Nishio(nishio.hirokazu)14:41
+ No global variables! That's not what I'm saying.
+ So you can just pass it on as an argument. w
+ <<
+ 
+ *1241680405*Shogi
+ <iframe width="312" height="176" src="http://ext.nicovideo.jp/thumb/sm1287688" scrolling="no" style="border:solid 1px #CCC;" frameborder="" 0"><a href="http://www.nicovideo.jp/watch/sm1287688">[Nico Nico Douga] "Hanyu vs Nakagawa Upset" with background music to make it more duel-like ver1.0</a></iframe>
+ 
+ I didn't know Shogi was so interesting! I don't know much about Shogi, but I saw that Hanyu-san was getting pushed to the edge until about 6:00, and at 9:30, he played a move that I thought "Oh wow", but the commentary was still in a mood like "But he can't win, can he? The commentary was already "Huh? Huh? Huh? and...
+ 
+ *1241703121*[SpaMon] Minimum Game Ver. 1.5 was implemented.
+ I've just implemented the one that works on the console and made the card selection Monte Carlo. The bits are arranged to maximize the computer's advantage, and after one play through, there seemed to be no bugs, so I'm going to increase the number of attempts and play it now.
+ 
+ >||
+ --------------------
+     AddBit [1, 0] []
+    MoveBit [1, 0] []
+  RemoveBit [1, 0] []
+      Crack [1, 0] []
+       Bomb [1, 0] []
+ life: [10, 10]
+ 
+ player 1 thinking @ AddBit
+ ||<
+ 
+ Player 1 is the computer and 0 is me.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0] []
+  RemoveBit [1, 0] []
+      Crack [1, 0] []
+       Bomb [1, 0] [1]
+ life: [10, 10]
+ ||<
+ 
+ I think I put it on Bomb. If I trigger all of these, I'm dead. And I can't win by chasing it with Bomb, I'll use RemoveBit to cut down the bits.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0] []
+  RemoveBit [1, 0, 0] []
+      Crack [1, 0] []
+       Bomb [1, 0, 1] []
+ life: [10, 10]
+ 
+ player 1 thinking @ MoveBit
+ 
+     AddBit [1, 0] []
+    MoveBit [1, 0] [0]
+  RemoveBit [1, 0, 0] []
+      Crack [1, None] []
+       Bomb [1, 0, 1] []
+ life: [10, 10]
+ ||<
+ 
+ Mwah, you do that kind of thing. Disgusting. Adding bits is taking advantage of the rules that are handled when the card changes. I'll do the same thing: MoveBit's computer bit to MoveBit.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1] []
+  RemoveBit [0, 0] []
+      Crack [1] []
+       Bomb [1, 0, 1] []
+ life: [10, 10]
+ ||<
+ 
+ Continuing with my turn. This removes both of the two bits on the Bomb.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1] []
+  RemoveBit [0, 0] []
+      Crack [1] []
+       Bomb [0] []
+ life: [8, 10]
+ ||<
+ 
+ Crack takes 2 points of damage, 8:10. let's activate Bomb, 8:6. Now where will the AI use AddBit? My guess is Bomb, as expected. I pile it on RemoveBit.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1] []
+  RemoveBit [0, 0, 0] []
+      Crack [1] []
+       Bomb [0, 1] []
+ life: [8, 6]
+ 
+ player 1 thinking @ MoveBit
+ 
+     AddBit [1, 0] []
+    MoveBit [1, 0, None, 1] [0]
+  RemoveBit [0, 0, 0] []
+      Crack [1] []
+       Bomb [0, 1] []
+ life: [8, 6]
+ ||<
+ 
+ Hmmm. And I just noticed that there is a bug where the bits used in Bomb are not disappearing. w That's why the AI only goes after Bomb.
+ 
+ I use MoveBit to deactivate the last bit of MoveBit, and then the next three RemoveBit rounds to gouge out the bits. the Bomb bit is still there, but it's a bug, so I don't trigger it.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [0, 0] []
+  RemoveBit [0, 0, 0] []
+      Crack [1] []
+       Bomb [0] []
+ life: [6, 6]
+ ||<
+ 
+ Wherever you put it with AddBit, you win by removing three bits with RemoveBit, and so on.
+ 
+ 
+ I've played one more round, and as I said, it's not a serious opponent yet. I can turn it around even from the most disadvantageous phase. it was a bit of an eye-opener that when I moved on MoveBit with MoveBit, it was nullified by the "adding bits is when the cards change" rule, but if you use that, you could move my bits on MoveBit to MoveBit on the first move, nullify them, and then move them to MoveBit on MoveBit. You could disable it, and then in RemoveBit, you could delete RemoveBit's me bit. I would put it on RemoveBit with AddBit if I expected it to do so, though. Well, it's still Monte Carlo. Next time, I'll put in UCB.
+ 
+ *1241714591*[SpaMon] Monte Carlo tree search implemented.
+ I am quite troubled by the test play with 1000 UCTs in a phase that I said was totally weak even with 10000 UCB Monte Carlo.
+ 
+ Computer, the first move AddBit to place in Bomb is still the same.
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0] []
+  RemoveBit [1, 0] []
+      Crack [1, 0] []
+       Bomb [1, 0] [1]
+ ||<
+ 
+ I put it in RemoveBit with AddBit as before, thinking that it hasn't grown at all, but the next MoveBit moved the RemoveBit bit to MoveBit. Hmmm, what a nasty move.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0] [0]
+  RemoveBit [1, 0, None] []
+      Crack [1, 0] []
+       Bomb [1, 0, 1] []
+ ||<
+ 
+ Consider. If the next RemoveBit wipes out the RemoveBit bit, it will die because there is no way to mitigate the remaining damage, so it needs to be addressed at this point. move Bomb's bit to MoveBit.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1] []
+  RemoveBit [1, 0] []
+      Crack [1, 0] []
+       Bomb [0, 1] []
+ ||<
+ 
+ AI thought RemoveBit would erase the RemoveBit bit, but it erased Crack. Hmmm?
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1] []
+  RemoveBit [1, 0] []
+      Crack [1, None] []
+       Bomb [0, 1] []
+ ||<
+ 
+ At any rate, in order, I eliminate Bomb's bits. I activate them in order, 8:6. 2 point lead. AI again put me on Bomb with AddBit.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1] []
+  RemoveBit [1, 0] []
+      Crack [1] []
+       Bomb [] [1]
+ life: [8, 6]
+ ||<
+ 
+ Hmmm, it's not instant death, but if one of my bits in MoveBit is disabled, and I disable MoveBit with the other one, then RemoveBit will erase RemoveBit, and if I don't disable it, I can revert the changes I made, so in effect, mine will be disabled and RemoveBit will be done to me. I can't avoid taking 2 points of damage?
+ 
+ And I'm thinking too long, so I'll just put the bit on RemoveBit. At worst, I still have one more round to die.
+ 
+ AI MoveBit. move the 4th bit of MoveBit to Bomb! I'm thinking maybe I should move the first one, but I'm not so sure anymore. I'll have to use a one-minute timer, because I keep thinking too long while writing.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, None] []
+  RemoveBit [1, 0, 0] []
+      Crack [1] []
+       Bomb [1] [1]
+ ||<
+ 
+ Yeah, this would be an AI failure. I can use MoveBit twice so I move two bits from RemoveBit and Bomb.
+ 
+ >||
+     AddBit [1, 0] []
+    MoveBit [1, 0, 0, 1, 1] []
+  RemoveBit [0, 0] []
+      Crack [1] []
+       Bomb [1] []
+ ||<
+ 
+ And then there's RemoveBit. RemoveBit and AddBit with these two RemoveBit. Now the AI won't stand a chance, so we pile more on RemoveBit with AddBit, and the AI moves one bit to Bomb with MoveBit.
+ 
+ >||
+     AddBit [0] []
+    MoveBit [1, 0, 0, 1, None] []
+  RemoveBit [0, 0, 0] []
+      Crack [1] []
+       Bomb [] [1]
+ life: [6, 6]
+ ||<
+ 
+ My turn, MoveBit and Bomb with two MoveBit. Then three RemoveBit in a row.
+ 
+ >||
+     AddBit [0] []
+    MoveBit [0, 0, 1] []
+  RemoveBit [0, 0, 0] []
+      Crack [] []
+       Bomb [] []
+ life: [6, 6]
+ ||<
+ Delete the last bit with RemoveBit while disabling MoveBit, and you are done.
+ 
+ I was feeling a little nervous. I'm not thinking too hard with 1000 searches, so I'm going to set the number to 10,000, shuffle the board, and try to fight with a time limit of 1 minute on the human side.
+ 
+ *1241716515*[SpaMon] Monte Carlo Tree Search Part 2
+ Bomb, RemoveBit, Crack, MoveBit, AddBit, in that order. Two bombs suddenly exploded, and both sides started with HP: 6.
+ 
+ >||
+       Bomb [None, None] []
+  RemoveBit [1, 0] []
+      Crack [1, 0] []
+    MoveBit [1, 0] []
+     AddBit [1, 0] []
+ life: [6, 6]
+ ||<
+ 
+ If I use RemoveBit to delete RemoveBit and MoveBit to disable MoveBit, then AddBit would put a bit on Bomb and I would lose. But the AI erased Crack.
+ 
+ Then I thought that I would be safe if I deleted AddBit, but after thinking about it, I realized that I would not be safe if I deleted AddBit, because after Crack reduced HP:4, MoveBit would be able to attack Bomb with Crack's bit. I decided to cut off MoveBit's head after thinking about the time I had.
+ 
+ >||
+       Bomb [] []
+  RemoveBit [1, 0] []
+      Crack [1] []
+    MoveBit [0] []
+     AddBit [1, 0] []
+ ||<
+ 
+ And disable AddBit in MoveBit. in AddBit, put it in Bomb. 4:2.
+ 
+ >||
+       Bomb [None] []
+  RemoveBit [1, 0] []
+      Crack [1] []
+    MoveBit [0, 1] []
+     AddBit [0] []
+ life: [4, 2]
+ ||<
+ 
+ Still RemoveBit is ahead of AI. Sure enough, the RemoveBit bit is erased. But that should erase AddBit, right? I deactivate MoveBit and place it on Bomb with AddBit to win.
+ 
+ Hmmm. I think there might be a bug in the algorithm. The endgame should be stronger, like RemoveBit, where there were only 3 options.
+ 
+ I've tried to display the contents of the diaper for now, and it seems to be working fine. Maybe it's just that there's no way to win no matter what I do, so I tried the most confusing way and I wasn't fooled. Let's say I erased AddBit. Hmmm. I delete MoveBit, MoveBit moves a bit to Bomb, and I win. Then what if I erase MoveBit, erase MoveBit, place it in Bomb with AddBit, and win. Okay, so no matter what I did at the same depth, I won.
+ 
+ *1241717339*[SpaMon] Ver 1.5 conclusion
+ You can play with just 5 cards, Crack, Bomb, MoveBit, RemoveBit, and AddBit. So the four concepts of "Increase/Decrease Arabic Numbers", "Edit Card Order", "Flow Control", and "Copy" are removed. Can we make the manual as if we were gradually increasing these?
+ 
+ **1241724975*About Monte Carlo Tree Search
+ Try implementing two different games. I was going to write an explanation, but it is more fun to implement new games than to write an explanation, so it is on the back burner.
+ 
+ 
+ One thing for sure is that you need to be sensitive to whether the function you are writing has side effects or not. The first game engine I implemented had a Game object, and when the Game#step method was used to advance the game, the values of the Game object, Card object, and Player object hanging from the Game object were being destructively rewritten. However, the side-effects of Monte Carlo AI are very troublesome. At a certain point in the decision process, you want to create a world where "A" is chosen and a world where "B" is chosen, run them, and then aggregate the results before reaching a conclusion. In the end, it was easier to design a world without side effects from scratch than to untangle tangled objects with side effects. The one time we had a bug where the Bomb didn't disappear, it was because we had failed to squash the side-effects.
+ 
+ 
+ Also, at the point where the "AI makes some decision", you stop the process, try what would happen with a different decision, and then go back to make that decision again, so you can't go there without a design that allows you to do that. You should also read this for a bird's eye view of what you are trying to do: <a href='http://practical-scheme.net/docs/cont-j.html'>continue anything</a>.
+ </body>
+ <comments>
+ <comment>
+ <username>methane</username>
+ <body>Isn't that number the difference between the actual DPI of the display and the DPI on the settings? <br>For example, if the setting is 72dpi but the actual display is 144dpi, the application will display 1 inch at 72pix but the actual 1 inch is 144pix, so if you set the magnification to 200%, it will be the actual size. </body>
+ <timestamp>1241676841</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-05-07 https://nishiohirokazu.hatenadiary.org/archive/2009/05/07]

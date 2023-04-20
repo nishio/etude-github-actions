@@ -1,0 +1,119 @@
+Hatena2013-03-06
+code:hatena
+ <body>
+ *1362557967*Is Scala trait a mixin?
+ Ruby's mixin (module), Squeak's trait, and Scala's trait, respectively:
+ 
+ **Q1: Can I have a method implementation?
+ Yes, yes, yes.
+ 
+ Yes for Java classes, no for interfaces, yes for C++ and Python classes
+ 
+ **Q2: Can a class inherit more than one of them?
+ Yes, yes, yes.
+ 
+ No" for Java classes, "Yes" for interfaces, "Yes" for C++ and Python classes
+ 
+ **Q3: Can you create an instance?
+ No, Yes, No
+ 
+ Yes" for C++ and Python classes
+ 
+ **Q4: I got a name conflict when I inherit more than one, what happens?
+ override, error (*), error
+ 
+ (*) Squeak does not throw an exception when defining a class, but replaces the conflicting method with "a method that throws a conflict exception. The user will notice the conflict when he/she checks the method in the class browser or when he/she calls the method.
+ 
+ **Q5: Join the Inheritance Path?
+ Do (?) No, do not, do (?)
+ 
+ I'm not quite sure how to verify whether or not they participate in the inheritance path, or how it affects the users of the programming language.
+ 
+ **Q6: Can a type enforce that a class that inherits from it has a particular method? (self type annotation in Scala)
+ No. No. Yes.
+ 
+ **Q7: What happens if one class inherits from another and there is a name conflict between the parent class and it?
+ Override by it's definition, Override by it's definition, Error
+ 
+ **Summary
+ 
+ >||
+ Q1 Y, Y, Y
+ Q2 Y, Y, Y
+ Q3 N, Y, N
+ Q4 O, E, E
+ Q5 Y, N, Y
+ Q6 N, N, Y
+ Q7 O, O, E
+ ||<
+ 
+ Well, in short, they are three different things. id:sumim's claim (<a href='http://d.hatena.ne.jp/sumim/20130306/p1'>Scala's trait is not really a trait but just a mixin</a>) is that Scala's I guess id:kmizushima's argument is that it's not like mixin when it comes to Q4 and Q6. Personally, I was surprised that Squeak is "yes" in Q3.
+ 
+ Source Code: https://github.com/nishio/learn_language/tree/master/trait
+ I'll add C++ or Python if I feel like it.
+ 
+ *1362570581*Nibbling on Squeak Part 4
+ In the last issue (<a href='http://d.hatena.ne.jp/nishiohirokazu/20130206/1360153589'>Chapter 3</a>), we went as far as trying out Trait's behavior without Squeak's GUI. Here is the code that worked at that time:
+ 
+ https://github.com/nishio/learn_language/blob/master/squeak/test_trait.st
+ 
+ This time, I tried to make multiple traits and make sure that the two together can be used from a class. Here is the code:
+ 
+ https://gist.github.com/nishio/5098115
+ 
+ This behaves as expected when I run it one statement at a time on Squeak's GUI, but when I pass it to Squeak as a script, I get an "InMidstOfFileinNotification" error. Hmmm, what does this mean? I've googled it and can't figure it out.
+ 
+ 
+ Oh, I got it to work after removing the enclosure (below) to catch the exception!
+ >||
+ [
+ ...
+ ] on: Exception
+   do: printException.
+ ||<
+ https://gist.github.com/nishio/5098168
+ </body>
+ <comments>
+ <comment>
+ <username>umejava</username>
+ <body>I think it is a bug that Squeak's Trait can be renewed; a similar operation in Pharo would result in an error. In the case of Smalltalk, a class A is also an instance of a metaclass, so a home-made TraitA is also an instance of a Trait (although it is obviously strange that the home-made TraitA can respond to new). </body>
+ <timestamp>1362577450</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>One more pitfall of the Squeak and PHP shell traits is that if a class or trace has a method of the same name, it shields the method of the same name of the trace to be used. Please be careful when checking the operation or creating samples. The reason why m is called from m0 without defining m in C in the sample in the previous entry is to avoid this behavior, which would prevent m from being called from the used trace. </body>
+ <timestamp>1362620280</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>The point about "if the using side has a method with the same name, it shields the same name method on the side being used" is due to the fact that override is the default behavior. I think that's the behavior of most languages except Scala, where you have to explicitly indicate override to get an error. <br><br>On the other hand, in the case of "the parent class of the use class has a method with the same name", Squeak does not hear the collision detection, so it will silently override the method as in Ruby. </body>
+ <timestamp>1362623121</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>The fact that a method is silently overridden when the parent class has a method of the same name is not directly related to the trait, since it is the same thing as not getting a warning when overridden in a child class. When a method in a shelly trait is used, it is injected directly into that class (rather than inserted into the inheritance path), so it is treated the same as a method defined in that class (except during the shielding condition mentioned above). In this view, shielding a method with the same name is a bit different from overriding a method with the same name (in the case of overriding, the method exists on the inheritance path and can be called with super, but in the case of shielding, there is no way to call the method except by renaming it). </body>
+ <timestamp>1362625703</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see, from a viewpoint accustomed to "models inserted in the inheritance path," we tend to think of traits as parent classes, and the phenomenon of "if there is a method of the same name on the side to be used, it shields the method of the same name on the side to be used," which is "an override that has nothing to do with traits. It appeared to be an "override that has nothing to do with traits". <BR><BR>From the "flattened and injected model" point of view, "overriding the same-named method of the parent class" is indeed "an override that has nothing to do with traits", isn't it? I understand it much better now! </body>
+ <timestamp>1362631666</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ I was afraid that the <body> Scala trace would not work well if I tried it with the Scala trace from the "model inserted in the inheritance path" perspective (and vice versa), since the <body> Scherli et al. trace is usually explained from the "flattened and injected model" perspective. If you have reached the understanding you mentioned, I am very happy that I could be of some help to you. </body>
+ <timestamp>1362633933</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>This is just a notification saying "fileIn progress". <br>Most of the time, Notification is used in situations where you don't mind going through it, but once you CATCH it, you need to explicitly continue the process. <br>If you list the References (list of usage locations) of the InnMidstOfFileinNotification class in your browser, you can see an actual example of its use, which you can mimic. </body>
+ <timestamp>1362907250</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you! I thought it was a mysterious serious error, but I see that Notification is something I can ignore! </body>
+ <timestamp>1362915473</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-03-06 https://nishiohirokazu.hatenadiary.org/archive/2013/03/06]

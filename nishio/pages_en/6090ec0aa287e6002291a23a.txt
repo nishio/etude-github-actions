@@ -1,0 +1,110 @@
+Hatena2012-06-02
+code:hatena
+ <body>
+ *1338602090* Obstacles to running jQuery in JSX.
+ I'm getting bored, so I'll disclose what I've noticed before I get zero motivation.
+ 
+ - $ cannot be used for identifiers.
+ - Can't use jQuery.is because is is a reserved word for JSX. rename it to is_ or something?
+ - It is troublesome that jQuery is an entity that can do both jQuery(...) and jQuery.foo are both possible, which is tricky. In my current implementation, I create a class jQuery and use the constructor new jQuery(...) and static method jQuery.foo. and static method jQuery.foo, but I've stopped trying to make it look like jQuery, and instead use jQuery(...) and use the static method jQuery.foo, but stop trying to make it look like jQuery and use jQuery(...) instead. , jQuery.ready(...) , etc.).
+ - The return value of jQuery.find is "something like an Array" that can do [0] or something like that, but this is not actually an Array and cannot be cast to an Array in JSX.
+ -- I had trouble with jQuery("p") as Array.<variant> was null.
+ -- Must be cast to Map.<variant> and accessed by ["0"].
+ - JSX has no way to define a "type that contains the value of type T1 or type T2" (a variant type in OCaml).
+ -- For example, jQuery.text returns {(string|!jQuery)}. jSX says "accept it as variant, and if the programmer thinks it's jQuery, cast it as jQuery and use it" and you can't write it in a method chain because the cast is interrupted. In JSX, you can't write it in a method chain because the cast is interrupted.
+ -- or if you have a class in the jQuery wrapper to represent "string or jQuery type" and .as_string() and .as_jQuery() of it hide the cast, you could do method chaining.
+ -- For example, the argument type of jQuery.text is {(string|function(number,string))=}. This cannot be expressed in JSX, so it has to be a VARIANT. As a result, jQuery.text becomes a function that takes a variant and returns a variant. Hmmm, where is the type checking...
+ - For example, jQuery.text can have zero or one argument. jSX does not have variable omission, so this must be expressed by overloading two methods.
+ 
+ Closure Compiler can suppress checkType at the granularity of a function, and if you do that, all type errors in the function are suppressed. Closure Compiler can do suppress checkType at the granularity of a function, and if you do that, all type errors in the function will be suppressed. This is too granular and inconvenient, so I think it would be better to introduce suppress at a smaller granularity, taking advantage of the ability to tweak the language.
+ 
+ >||
+ suppress("checkType"){
+   jQuery(...).foo().bar().baz();
+   ...;
+ }
+ ||<
+ 
+ <hr>
+ PS, I had no idea about haXe, but the above syntax, which I thought I needed this morning, is already implemented in haXe!
+ >||
+ untyped {
+   ...
+ }
+ ||<
+ It's nice to discover that a design that I thought "should be like this" is being used elsewhere.
+ 
+ <hr>
+ PS, I wrote something like a lot, but I guess I can sum it up in one word: "It's hard to use jQuery in JSX".
+ 
+ *1338610649*Maximum recursion depth exceeded in Sphinx
+ >||
+ RuntimeError: maximum recursion depth exceeded in cmp
+ ||<
+ 
+ Maybe what you wanted to do was to create a table of contents within the page? And maybe you tried to put the toctree from index.rst in the page?
+ 
+ The correct way is to use contents:.
+ 
+ <a href='http://sphinx-users.jp/reverse-dict/writing/contents.html'>I want to create a table of contents within a page :: Documentation Tools Sphinx Sphinx-users.jp</a>
+ 
+ *1338611128* I want to tinker a bit with css in Sphinx.
+ I was told to "create a theme" and left it as a hassle, but after reading about 5 pages starting from <a href='http://sphinx-users.jp/cookbook/makingwebsite/theme.html'>Change Theme :: Sphinx-users.jp</a>, I was able to create it easily. I could make it easily after reading about 5 pages starting from <href='_95'>Modifying the theme :: Sphinx-users. So I'm going to publish what I did.
+ 
+ >||
+ |-- conf.py
+ |-- index.rst
+ `-- mytheme
+     |-- static
+     |   |-- default.css
+     |   `-- main.css
+     `-- theme.conf
+ ||<
+ 
+ ** theme.conf
+ >||
+ [theme]
+ inherit = basic
+ stylesheet = main.css
+ pygments_style = sphinx
+ ||<
+ 
+ ** main.css
+ This is the css I wrote to answer the needs of "It's hard to tell which is a clause and which is a section! or "I want to make a page break before a section.
+ 
+ >|css|
+ @import url('default.css');
+ 
+ h2:before {
+   content: "[section]";.
+   page-break-before: always;
+ }
+ h3:before {
+   content: "[section]";.
+ }
+ h4:before {
+   content: "[subparagraph]";.
+ }
+ ||<
+ 
+ The default.css was copied directly from the css used when the default theme was created to the static folder.
+ 
+ **  conf.py
+ 
+ All that remains is to rewrite the conf.py settings to change the theme to be used.
+ >|python|
+ html_theme = 'mytheme'
+ html_theme_path = ['.']
+ ||<
+ 
+ Now it worked without any problem. I was happy and satisfied.
+ </body>
+ <comments>
+ <comment>
+ <username>Youchan</username>
+ <body>I was interested in JSX because it generates fast JavaScript, and I was looking into combining it with jQuery and found myself here. <BR>I see, it sounds like a tough one. <br>I was wondering if it would be better to implement a jQuery-like library with JSX, given the advantage of faster JavaScript compiled with JSX. </body>
+ <timestamp>1349083688</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-06-02 https://nishiohirokazu.hatenadiary.org/archive/2012/06/02]

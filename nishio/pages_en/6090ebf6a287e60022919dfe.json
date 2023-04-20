@@ -1,0 +1,206 @@
+Hatena2008-03-09
+code:hatena
+ <body>
+ *1205020473*NodeBox on AS3
+ I haven't made it yet.
+ 
+ -NodeBox on Jython software called "NodeJythox" - On the trail to Web 2.0 craftsmanship http://d.hatena.ne.jp/akio0911/20080308/1204989711
+ 
+ The Jython version is already ready, apparently.
+ 
+ So for now, I'll make the AS3 version halfway through.
+ >||
+ >>> import compiler
+ >>> data = """
+ SIZE = 600
+ size(SIZE, SIZE)
+ z = 1+1j
+ colormode(RGB, 1)
+ for i in range(30):
+     fill(color(0.5, 0.3 + 0.02 * i, 0.5, 0.1))
+     rotate(i * -0.47)
+     rect(5 * i, 5 * i, 100 + 10 * i, 100 + 10 * i)
+ """
+ >>> 
+ >>> compiler.parse(data)
+ Module(None, Stmt([Assign([AssName('SIZE', 'OP_ASSIGN')], Const(600)), Discard(CallFunc(Name('size'), [Name('SIZE'), Name('SIZE')], None, None)), Assign([AssName('z', 'OP_ASSIGN')], Add((Const(1), Const(1j)))), Discard(CallFunc(Name('colormode'), [Name('RGB'), Const(1)], None, None)), For(AssName('i', 'OP_ASSIGN'), CallFunc(Name('range'), [Const(30)], None, None), Stmt([Discard(CallFunc(Name('fill'), [CallFunc(Name('color'), [Const(0.5), Add((Const(0.29999999999999999), Mul((Const(0.02), Name('i'))))), Const(0.5), Const(0.10000000000000001)], None, None)], None, None)), Discard(CallFunc(Name('rotate'), [Mul((Name('i'), UnarySub(Const(0.46999999999999997))))], None, None)), Discard(CallFunc(Name('rect'), [Mul((Const(5), Name('i'))), Mul((Const(5), Name('i'))), Add((Const(100), Mul((Const(10), Name('i'))))), Add((Const(100), Mul((Const(10), Name('i')))))], None, None))]), None)]))
+ ||<
+ 
+ Compared to Java, which already has a Python processor called Jython, running Python code directly in AS3 is a lot of effort. I thought it would be a good idea to convert such Python code into AS3 code after making a syntax tree like this. I think it would be easier to create a class NodeBox extends Sprite and implement the "oval" and so on as a method of the class.
+ 
+ *1205021090*Next Hackathon
+ Personal letter to id:amachang: I thought we should have a "Hackathon to make a proper Scheme processor while reading SICP" because Haskell is too difficult and incomplete, and the last Scheme is also incomplete because it was left in a state before macros were added. I thought of this: http://d.hatena.ne.jp/higepon/20060625/1151217479
+ 
+ *1205031723*Test source code in manuscript with doctest
+ 
+ Cases that go wrong
+ - They use random numbers.
+ - I'm using globals (test code comes in in droves and the logs flow!)
+ - Around escape sequences and raw strings
+ - hash
+ - Example of failure (the example that says "this will result in a SyntaxError" will still result in an error and be logged)
+ - Package name (what would be __main__.Foo in an interactive console would be test.Foo and fail)
+ 
+ *1205031783* Difference between Jython 2.1 and 2.2 notation
+ 2.1
+ <__main__.Foo instance at 13627328>
+ 2.2
+ <__main__.Foo object 4>
+ 
+ Ah, I think it would be easier to understand if you wrote "instance" for Java people.
+ 
+ *1205037477* Not curry-like
+ f:id:nishiohirokazu:20080309133751j:image
+ 
+ *1205056789* Going home
+ I'm back anyway.
+ 
+ *1205058604*CamTwist+iMovie
+ I thought I could record CamTwist's output using iMovie's "Import from Camera", but when I select the camera, only the built-in iSight shows up, even though it is recognized by Ustream.
+ 
+ *1205068341*Complete checking chapter 5 of Jython book using doctest
+ doctest++
+ 
+ With the change from Jython 2.1 to 2.2
+ >|python|
+ #2.1
+ >>> id(a)
+ 27458013
+ 
+ #2.2
+ >>> id(a)
+ 8
+ ||<
+ IDs can be sequential numbers and so on.
+ 
+ >|python|
+ #2.1
+ >>> int(1)
+ <jclass org.python.core.PyInteger at 32762551>
+ 
+ #2.2
+ >>> int(1)
+ <type 'int'>
+ ||<
+ 
+ There are a few improvements, such as not exposing the names of implemented classes anymore, but because of that I have to modify a large part of the code I wrote in 2.1.
+ 
+ →I wonder if I can use doctest (Python's standard library for testing the "interactive execution-like parts of the document"). I realize that I should use doctest.
+ 
+ >|python|
+ # C:\Home\Projects\jythonbook\test.py
+ 
+ def _test():
+     import sys
+     sys.path.insert(0, r"C:\Home\Projects\jythonbook")
+     import doctest, test
+     s = file(r"genko\05.txt").read()
+     s = s.replace("</pre>", "")
+     s = s.replace("__main__", "test")
+     test.__doc__ = s
+     doctest.testmod(test)
+     print "test finished."
+ 
+ if __name__ == "__main__":
+     print "test start"
+     _test()
+ ||<
+ 
+ There are cases where you want to suppress tests in areas where the output is line-ended for easy viewing, or where you want to show the output in CPython or Jython 2.1.
+ Inserted "\n!" before ">>>" to prevent it from being considered interactive execution.
+ 
+ if it is done in that way
+ >||
+ !>>> hoge()
+ {some long long long print}
+ 
+ >>> x = _
+ ||<
+ The error is made so that what goes into x changes with the "create an object once, show it to the reader, and then assign it to a variable" pattern of code, such as
+ >||
+ >>> x = hoge()
+ 
+ !>>> x
+ {some long long long print}
+ ||<
+ There is not much of a problem with this way of writing, so I changed to that style.
+ 
+ When executed
+ >||
+ test start
+ *****************************************************************
+ Failure in example: id(a)
+ from line #1386 of test
+ Expected: 5123456
+ Got: 5
+ *****************************************************************
+ 1 items had failures:
+    1 of 189 in test
+ ***Test Failed*** 1 failures.
+ test finished.
+ ||<
+ You'll get output like this. I ran all the code in chapter 5, and how many of them were errors, and so on. At first there were about 98 errors, but after replacing pre and __main__ with test, there were only 40. Now all I have to do is to smash those 40 pieces of code. However, I used to paste the code into the console and run it to visually check if it was correct, but now it does it automatically up to the point where I run it, so it's a lot easier.
+ 
+ -----
+ 
+ So there are 189 codes in a 2000 line manuscript.
+ 
+ It's cool to "code like you breathe." My manuscript is "write code like breathing". The code is the punctuation.
+ 
+ -----
+ 
+ Postscript. I changed the name of the test script to __main__.py.
+ 
+ >|python|
+ def _test():
+     import sys
+     sys.path.insert(0, r"C:\Home\Projects\jythonbook\test")
+     import doctest, __main__
+     s = file(r"..\genko\04.txt").read()
+     s = s.replace("</pre>", "")
+     __main__.__doc__ = s
+     doctest.testmod(__main__)
+     print "test finished."
+ 
+ if __name__ == "__main__":
+     print "test start"
+     _test()
+ ||<
+ 
+ I like this because I can notice mistakes that I'm inadvertently going through. For example, if you forget to import, doctest will mechanically execute from the top, resulting in an error.
+ I seem to have missed that jarray.array([72, 105, 33], "b") was displayed as array([72, 105, 33], byte) in 2.1, but became array('b',[72, 105, 33]) in 2.2.
+ 
+ -----
+ 
+ >||
+ Failure in example: Counter.__dict__
+ from line #2025 of __main__
+ Expected: {'__doc__': None, 'numCounter': 0, '__module__': '__main__'}
+ Got:
+ {'__dict__': <attribute '__dict__' of 'Counter' objects>, 'numCounter': 0, '__module__': '__main__'}
+ ||<
+ 
+ Wow, I can see __dic__ since Jython 2.2!
+ 
+ -----
+ 
+ Ahh. Even though I was using the name x in one place and referring to it in another, I was getting an error because I was putting in code to assign a value to x between the two. This is the kind of thing that the reader would be stuck with if I ran it in order, but I'd have to go through it myself. doctest++;.
+ 
+ -----
+ 
+ Yay...and all the errors in chapter 4 are gone!
+ </body>
+ <comments>
+ <comment>
+ <username>akio0911</username>
+ <body>I'll make an ADOBE AIR version, too! </body>
+ <timestamp>1205023166</timestamp>
+ </comment>
+ <comment>
+ <username>akio0911</username>
+ <body>I'm just now reading up on SICP, so <br>I'm hoping to participate in the Hackathon! </body>
+ <timestamp>1205023660</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-09 https://nishiohirokazu.hatenadiary.org/archive/2008/03/09]

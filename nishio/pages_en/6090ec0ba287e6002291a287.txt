@@ -1,0 +1,81 @@
+Hatena2013-01-12
+code:hatena
+ <body>
+ *1357988044*I want to use SAT in Python.
+ Checked.
+ 
+ http://minisat.se/MiniSat.html
+ 
+ >||
+ $ port search minisat
+ minisat @2.2.0 (math, science)
+     Minimalistic SAT solver
+ port search minisat  1.85s user 0.13s system 90% cpu 2.178 total
+ ||<
+ 
+ <a href='http://d.hatena.ne.jp/sxhxtxa/20121120/1353407236'>I wrote a Python wrapper for MiniSat - shtaxxx weblog</a>
+ 
+ https://github.com/shtaxxx/pyminisat Short
+ 
+ <a href='http://d.hatena.ne.jp/ku-ma-me/20080108/p1'>How to Solve Sudoku with SAT Solver - Mamememo</a>
+ 
+ Review of <a href='http://ja.wikipedia.org/wiki/%E4%B9%97%E6%B3%95%E6%A8%99%E6%BA%96%E5%BD%A2'>Multiplicative standard form - Wikipedia</a>.
+ 
+ This time "not (x and y and z) and not (~x and ~y and ~z)" is a solid problem with and, so we can just transform it into (~x or ~y or ~z) and (x or y or z) with de Morgan. And then we can tuple this mass of or's and poke at it, and so on.
+ 
+ >|python|
+ solver = minisat.SatSolver()
+ vars = {}
+ for x in RANGE:
+     for y in RANGE:
+         vars[(x, y)] = minisat.SatVar()
+ 
+ for baika in baika_list:
+     solver.append(tuple(vars[p] for p in baika))
+     solver.append(tuple(-vars[p] for p in baika))
+ 
+ def to_xo(x):
+     if x < 0: return 'x'
+     if x > 0: return 'o'
+     raise AssertionError
+ 
+ solver.solve(dump=False)
+ print "\n".join(" ".join(
+         to_xo(solver[vars[(x, y)]]) for x in RANGE) for y in RANGE)
+ 
+ """
+ x x o x x
+ o x x x x
+ x x x o x
+ x o x x x
+ x x x o o
+ """
+ ||<
+ 
+ ready, able
+ 
+ >||
+ o x o o x o x x o x o x x o x
+ x x o o x x x x x x o o x x o
+ o o x o x o o o x o o x o x x
+ o x o o o x o x o o o x x x x
+ x x x x x x o o o x o x o o o
+ x o x x o x o o x o o o x o x
+ x o o x x o o x x x x x x o o
+ o o x o x x o x o x x o x o o
+ o o x x x x x x o o x x o o x
+ x o x o o o x o o x o x x o x
+ o o o x o x o o o x x x x x x
+ x x x x o o o x o x o o o x o
+ x x o x o o x o o o x o x o o
+ o x x o o x x x x x x o o o x
+ x o x x o o o x x o x o o x o
+ python ex2.py  189.17s user 1.08s system 94% cpu 3:20.40 total
+ ||<
+ 
+ I can't get the 17-way results to come up. But I'm not stuck at the place to create the CNF, so I'm not talking about using <a href='http://d.hatena.ne.jp/soutaro/20100125/1264420334'>Creating a CNF to use a SAT solver - soutaro nikki</a> or something. Nah.
+ 
+ <a href='http://bach.istc.kobe-u.ac.jp/aisat.html'>Featured "Recent Developments in SAT Technology"</a>
+ </body>
+
+[Hatena Diary 2013-01-12 https://nishiohirokazu.hatenadiary.org/archive/2013/01/12]

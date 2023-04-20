@@ -1,0 +1,57 @@
+Hatena2009-08-22
+code:hatena
+ <body>
+ *1250885641* sepcan diary
+ <a href='http://d.hatena.ne.jp/Pasta-K/20090820/1250770929'>Slides for the presentation used in the results meeting are now available - Pastalablog in Hatena</a>.
+ 
+ I was slammed with connection tests on the shared machine and forgot to check the connection on id:Pasta-K's machine. It is quite frustrating because there were no other notable problems.
+ 
+ Now, let me try to write a little to convey the atmosphere of the camp. For this assignment, Mr. Sasada was originally thinking of making a modification to gc.c to make a sound when gc is executed, but Pasta-K said, "I want to make a different sound depending on whether the if statement is true or false. But right after we started, Pasta-K said, "I want to make a different sound depending on whether the if statement is true or false.
+ 
+ Then, after briefly explaining the policy of inserting a bytecode that would be hooked into the process of dropping down from the syntax tree to bytecode, I said, "Let's read compile.c and find the relevant part! and left it alone for a while. It's important to read it thoroughly before writing.
+ 
+ After a while, I got to the part that compiles the if conditional expression properly. That's wonderful. By the way, at first I was going to replace if(condition) then with if(make_sound(condition)) then, but I thought it would be difficult to explain "you need to rotate the stack because the receiver needs to be in front of the argument" when I didn't have a very good idea of how the stack machine behaves yet. I decided to go with the suggestion to put a sound instruction at the head of then. I thought, "Let's put it at the end of then, because we don't want the label of the jump destination to be shifted," but then I realized that it is not difficult to put it at the beginning of then.
+ 
+ As a result.
+ >|ruby|
+ if condition
+     # then
+ else
+     # else
+ end
+ ||<
+ A syntax tree of the form
+ >|ruby|
+ if condition
+     then_sound()
+     # then
+ else
+     else_sound()
+     # else
+ end
+ ||<
+ The result was compiled into a byte code equivalent to At first, I wrote a "p" command and confirmed that it was called properly. I was stumped by some code that reads itself, such as prelude.rb and gem_prelude.rb, but I managed. Well, it works out.
+ 
+ The next step is to write a command to play a sound. I thought it should be possible to play a sound file if I put in an appropriate library or something, but I decided to go with this for now because I got a sound when I tapped the OSS with echo. It is better to have a saw wave sound than to try to make a beautiful sound and get "no sound because it didn't come out in time. At first, I wrote one character at a time in "times" and fell into the trap of thinking I was changing the frequency, but it didn't change much. I thought it would be buffered and written after it had been put together to some extent. I changed to writing after creating the waveform data, and now the sound comes out as expected.
+ 
+ I am amazed that I was able to make it this far in the limited time of 20 hours through trial and error. If it looked like I wouldn't make it in time, I was going to tell them that I had already created the sound effects, but I did it all on my own. My name is on the slide, but there is not a single line of my code. I think that's pretty amazing.
+ </body>
+ <comments>
+ <comment>
+ <username>sasada</username>.
+ <body>gc It was Nishio who thought of this. </body>
+ <timestamp>1250888921</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Are you? </body>
+ <timestamp>1250889242</timestamp>
+ </comment>
+ <comment>
+ <username>Pasta-K</username>
+ <BODY>Oh, by the way, I took good care of Mr. Nishio's handwritten note and took it home with me. </body>
+ <timestamp>1250904795</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-08-22 https://nishiohirokazu.hatenadiary.org/archive/2009/08/22]

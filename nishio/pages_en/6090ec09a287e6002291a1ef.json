@@ -1,0 +1,68 @@
+Hatena2012-01-12
+code:hatena
+ <body>
+ *1326355987*If you want to print a unicode string that sometimes contains characters that cannot be represented by cp932 on a Windows console.
+ I got this question.
+ >>
+ I'm using Python 2.7 on Windows, and I'm using print statements for easy debugging output, but if the Unicode string x I'm trying to display contains characters that cannot be represented by cp932, I get a UnicodeEncodeError. If I explicitly do x.encode('cp932', 'replace') or something like that, it should work, but I don't want to go around writing this in every place. Any suggestions on how to do this?
+ <<
+ Well, I use a Mac and my console is UTF-8, so no problem.
+ 
+ Aside from that, when you try to display a Unicode string with a print statement, it tries to convert (encode) the Unicode string into a byte string in the encoding of the terminal. At this time, the default mode is "throw an exception if any character cannot be converted" (strict).
+ 
+ >||
+ Python 2.7.1 (r271:86832, Nov 27 2010, 18:30:46) [MSC v.1500 32 bit (Intel)] on win32
+ Type "help", "copyright", "credits" or "license" for more information.
+ >>> print u"\ufffe"
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in <module>
+ UnicodeEncodeError: 'cp932' codec can't encode character u'\ufffe' in position 0: illegal multibyte sequence 
+ ||<
+ 
+ So I thought it would be a good idea to create a StreamWriter with a "replace as appropriate if there are characters that cannot be converted" (REPLACE) mode.
+ 
+ >||
+ >>> import codecs
+ >>> import sys
+ >>> codecs.getwriter(sys.stdout.encoding)(sys.stdout, errors='replace')
+ <encodings.cp932.StreamWriter object at 0x00BC1470>
+ >>> sys.stdout = _
+ >>> print u "A "A "A "A "A "A "A "A "A "A""
+ Ah? Ah!
+ ||<
+ 
+ Incidentally, not only can it be replaced with an appropriate character (replace), but it can also be replaced with an XML reference (xmlcharrefreplace) or with a backslash expression (backslashreplace). Also, ignore for ignore and throw an exception for strict.
+ 
+ >||
+ >>> import sys, codecs
+ >>> sys.stdout = codecs.getwriter(sys.stdout.encoding)(sys.stdout, errors='xmlcharrefreplace')
+ >>> print u "A "A "A "A "A "A "A "A "A "A""
+ A&#65534;a
+ ||<
+ 
+ >||
+ >>> import sys, codecs
+ >>> sys.stdout = codecs.getwriter(sys.stdout.encoding)(sys.stdout, errors='backslashreplace')
+ >>> print u "A "A "A "A "A "A "A "A "A "A""
+ A ¨ufffe ah!
+ ||<
+ 
+ >||
+ >>> import sys, codecs
+ >>> sys.stdout = codecs.getwriter(sys.stdout.encoding)(sys.stdout, errors='ignore')
+ >>> print u "A "A "A "A "A "A "A "A "A "A""
+ Ah!
+ ||<
+ 
+ 
+ Also read: <a href='http://d.hatena.ne.jp/atsuoishimoto/20110311/1299805971'>Python 2.x without UnicodeDecodeError/UnicodeEncodeError Programming - atsuoishimoto's Diary</a>(Lifehack to skip trackbacks and wait for Mohawk tweaks)
+ </body>
+ <comments>
+ <comment>
+ <username>atsuoishimoto</username>
+ <body>At this level, <br><br>c:\>set PYTHONIOENCODING=cp932:xmlcharrefreplace<br>c:\>python -c "print u'\ufffe'"<br><br><br>may be easier</body>.
+ <timestamp>1326356988</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-01-12 https://nishiohirokazu.hatenadiary.org/archive/2012/01/12]

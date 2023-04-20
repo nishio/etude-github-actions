@@ -1,0 +1,78 @@
+Hatena2009-01-24
+code:hatena
+ <body>
+ *1232786601*Housekeeping
+ - Email the university office
+ - <del>□□</del> Call the hospital and make an appointment
+ -- □ Call on Monday to make an appointment
+ - <del>□</del> Going to the liquor store to serve Sagawa
+ -- □ On Monday, I'll check <a href='http://map.e-map.co.jp/standard/12214010/'>Sagawa Express - Nearest Store Locator -</a> and take it out.
+ - □ Go to a real estate agent (-19:00)
+ 
+ *1232795960*Optimizations since Python 3.0
+ >|python|
+ >>> def foo():
+ ... 	return 2 ** 10
+ ... 
+ >>> dis.dis(foo)
+   2           0 LOAD_CONST               3 (1024) 
+               3 RETURN_VALUE         
+ ||<
+ 
+ Literal-to-literal calculations are calculated at byte-compile time and the results are written to the byte code.
+ 
+ Unfortunately, we do not calculate expressions that contain variables even if it is obvious that they are constants.
+ >|python|
+ >>> def foo():
+ ... 	N = 10
+ ... 	return 2 ** N
+ ... 
+ >>> dis.dis(foo)
+   2           0 LOAD_CONST               1 (10) 
+               3 STORE_FAST               0 (N) 
+ 
+   3           6 LOAD_CONST               2 (2) 
+               9 LOAD_FAST                0 (N) 
+              12 BINARY_POWER         
+              13 RETURN_VALUE         
+ ||<
+ 
+ <hr>
+ 2 ** 10 was also optimized in 2.5, so the example was changed.
+ >|python|
+ # 2.6
+ >>> def foo(): return 1.0 / 2.0
+ ... 
+ >>> dis.dis(foo)
+   1           0 LOAD_CONST               1 (1.0)
+               3 LOAD_CONST               2 (2.0)
+               6 BINARY_DIVIDE       
+               7 RETURN_VALUE        
+ 
+ # 3.0
+ >>> def foo(): return 1.0 / 2.0
+ ... 
+ >>> dis.dis(foo)
+   1           0 LOAD_CONST               3 (0.5) 
+               3 RETURN_VALUE  
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>shou</username>
+ <body>I get CONST even in 2.5.1, is this a backported thing? </body>
+ <timestamp>1232950409</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, it seems that 2 ** 10 is a constant even at 2.5, while 1 / 2 is not. I made the mistake of using a power as an example because I thought it would be easier to understand. </body>
+ <timestamp>1232954349</timestamp>
+ </comment>
+ <comment>
+ <username>Moron</username>.
+ <body>That's interesting, but looking at the travails, it's a mistake to call it a 3.0 optimization</body>.
+ <timestamp>1233179268</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-01-24 https://nishiohirokazu.hatenadiary.org/archive/2009/01/24]

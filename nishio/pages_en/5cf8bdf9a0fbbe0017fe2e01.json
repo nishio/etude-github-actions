@@ -1,0 +1,18 @@
+useCallback
+[React Hooks] [Hooks API Reference – React https://reactjs.org/docs/hooks-reference.html#usecallback]
+
+code:js
+ const memoizedCallback = useCallback(
+   () => {
+     doSomething(a, b);
+   },
+   [a, b],
+ );
+
+	`useCallback(fn, deps)` creates a function that calls fn only when deps changes
+	No arguments are passed to fn. Read from the outer scope.
+	Use when you want to prune fn so that it is not called on changes other than the value you want to focus on (deps).
+	useCallback(fn, deps) is equivalent to useMemo(() => fn, deps) [useMemo].
+	Values used in fn should be enumerated in deps (design philosophy)
+		When the compiler advances, the deps will be generated automatically.
+		Can be checked in ESLint by exhaustive-deps rules

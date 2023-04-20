@@ -1,0 +1,169 @@
+ARC108
+[AtCoder Regular Contest 108 - AtCoder https://atcoder.jp/contests/arc108]
+C was written with recursive calls and was 21 TLE in PyPy and 16 TLE in raw Python, and with a few minutes left I switched to depth-first search using my own stack, but I bugged it and got a lot of WAs, which I didn't fix in time.
+
+[https://gyazo.com/44afac5fb9526b9edc19e2dad7880e2a]
+
+[https://gyazo.com/1b31dfee77439a16c2b8125469bf4e41]
+A
+ Thoughts.
+ 　The range of values is up to 10^12, but finding the divisor is on the square root order, so 10^6
+ 　Just check if x+P/x=S for all divisors x
+ code:python
+  def solve(S, P):
+      i = 1
+      while i * i <= P:
+          if P % i == 0:
+              s = i + P // i
+              if S == s:
+                  return "Yes"
+          i += 1
+      return "No"
+
+B
+ Thoughts.
+ 　A non-nesting FOX can be accepted by an automaton with three states.
+ 　Push the state to the stack if f comes up in the middle of the process.
+ 　Pop the stack when accepted.
+ 　If it is not accepted, all the higher-level "in-process" items are also not accepted, so the stack is cleared.
+ 　　I'm making this a mere pop and 1WA.
+	code:python
+	 def solve(N, S):
+      i = 0
+      state = [0]
+      ret = N
+      while i < N:
+          # debug(i, S[i], state, msg=":i, state")
+          if state[-1] == 0:
+              if S[i] == "f":
+                  state.append(1)
+          elif state[-1] == 1:
+              if S[i] == "o":
+                  state[-1] = 2
+              elif S[i] == "f":
+                  state.append(1)
+              else:
+                  state = [0]
+          elif state[-1] == 2:
+              if S[i] == "x":
+                  state.pop()
+                  ret -= 3
+              elif S[i] == "f":
+                  state.append(1)
+              else:
+                  state = [0]
+          i += 1
+      return ret
+
+C
+ Thoughts.
+ 　Simple graphs for consideration
+ 　Just trace the appropriate global tree from the root and label the vertex labels with the edge labels from the parent (wrong).
+  　[https://gyazo.com/1aef189277920d6cddc249820d8ab8c4]
+  　Are you sure you want to do that?
+  　Not good, if the same thing comes to the edge label, it will disappear because both ends of the edge are the same.
+  　Then, for the root and "the point where the parent's label matches the edge label to the parent", we make the point label "the object that does not appear in the edge label to the child".
+  　70AC 16TLE
+ Official Explanation
+ 　Appropriately labeling roots.
+  　If you write any number other than that label at "the point where the parent label matches the edge label to the parent," that edge will not disappear.
+  　If there is no match, write a value equal to the edge label and the edge will not disappear
+  If you read the explanation, C is the same up to the point where you can just paint the appropriate tree from the root, but I had a loop for the number of children because I was doing "the parent should be a number not used for the edge labels to the children" and I couldn't make it in time. In fact, I can make it so that the edge doesn't disappear on the child's side, even if I decide to do it properly. I see.
+ 　But this still takes 1 TLE.
+ 　I submitted it in raw Python, not PyPy, and I got AC.
+ 　　So you're saying that the slow function call in PyPy was a problematic situation.
+ 　　I thought my original method wouldn't change the order (since each vertex must loop about its connection point), but it looks like I'm losing a constant times slower.
+ 	code:python
+ 	 def solve(N, M, edges):
+       vlabel = [None] * N
+   
+       def f(cur, parentEdge=None, parent=None):
+           if parentEdge is None:
+               vlabel[cur] = 1
+           else:
+               if parentEdge != parent:
+                   vlabel[cur] = parentEdge
+               else:
+                   vlabel[cur] = (parentEdge % N) + 1
+           for child in edges[cur]:
+               if vlabel[child]:
+                   continue
+               c = edges[cur][child]
+               f(child, c, vlabel[cur])
+   
+       f(0, None, None)
+       return vlabel
+
+D
+ Thoughts.
+ 　Does it make sense for N to be as small as 1000?
+ 　Consider DP
+ 　　Not very clear.
+ 　Let's start with the smallest one.
+ 　　When AB → AAB, the initial B remains at length 1, and A can be extended to any length greater than or equal to 2.
+ 　　When AB → ABB, conversely, A remains length 1
+ 　　Since the two are symmetrical, consider only the former.
+ 　　AA to AAA, one street since only a row of A's can be created.
+ 　　AA to ABA at
+ 　　 If AB → AAB and BA → BAA, the length of inserted B does not increase, so it is always 1
+ 　　 　I'll think about this calculation later.
+ 　　 Otherwise, B can also be any length.
+ 　　 　That is, it can be any sequence of length N-3: [$ 2^{N-3}] streets
+ 　Counting up a sequence of N-3 1/0's where any zero is a zero, but not a sequence of zeros.
+ 　　Combine 1 and 10 to form a column of length N-2
+ 　　Choose 0 from N-2, 1 from N-3... and make it 10.
+ 　　[$ \sum_i \binom{N-2-i}{i} ] as
+　Official Explanation
+　　The sum of these binomial coefficients is the Fibonacci
+　　　[sum of binomial coefficients and Fibonacci]
+　　　I'll combine one forward or two forward to make N-2.
+	code:python
+	 def solve(N, S):
+      if N < 4:
+          return 1
+      MOD = 1_000_000_007
+      S = [x[0] - ord("A") for x in S]
+      AA, AB, BA, BB = 0, 1, 2, 3
+      A, B = 0, 1
+      c = Combination(N + 10, MOD)
+      if S[AB] == A:
+          # len(B) = 1
+          if S[AA] == A:
+              return 1
+          if S[AB] == A and S[BA] == A:
+              # inserted B = length 1
+              M = N - 2
+              ret = 0
+              for i in range(M):
+                  if M - i < i:
+                      break
+                  ret += c.comb(M - i, i)
+                  ret %= MOD
+              return ret
+          else:
+              return pow(2, N - 3, MOD)
+      else:
+          if S[BB] == B:
+              return 1
+          if S[BA] == B and S[AB] == B:
+              # inserted B = length 1
+              M = N - 2
+              ret = 0
+              for i in range(M):
+                  if M - i < i:
+                      break
+                  ret += c.comb(M - i, i)
+                  ret %= MOD
+              return ret
+          else:
+              return pow(2, N - 3, MOD)
+
+[ARC108E]
+
+F
+ Thoughts.
+ 　Paint the tree, if both ends of the longest path are the same color, it doesn't matter how the rest of the tree is painted.
+ 　What if it is different?
+ 　　Can you make the same argument about a graph with one removed?
+ 　　Not likely to make it under this policy...
+ 　　Cases with half painted over have the lowest scores.

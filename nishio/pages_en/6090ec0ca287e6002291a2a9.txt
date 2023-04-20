@@ -1,0 +1,124 @@
+Hatena2013-04-20
+code:hatena
+ <body>
+ *13666388496*About the evaluation strategy
+ In a review of "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>" book review, we received some feedback on our evaluation strategy.
+ 
+ >>
+ id:dankogai It is unfortunate that evaluation strategies have been left out entirely. In the past, there was virtually only up-front evaluation, and the fact that there was a choice in evaluation strategies was hardly known, but nowadays, languages that mainly focus on delayed evaluation are used practically enough, though not widely. The author knows Haskell, of course, and it is a shame that it is omitted from this book, even though it appears in the book. If you have a chance to write a revised edition of this book, please definitely devote a chapter to it.
+ <<
+ http://blog.livedoor.jp/dankogai/archives/51864510.html
+ 
+ 
+ Certainly, there are many people who have assumed that "that's the way it is" because of the prior reputation of most languages in the world. It might be good to show such people that there are different languages by using Haskell with unsafePerformIO or something like that. Then you can go on to explain about thunk and so on, or you can go back in time and talk about ALGOL 60 name passing and so on....
+ 
+ 
+ >>
+ id:matarillo Pointing out that there is no precedence/delay. You could have talked about positive/non-positive in relation to if and ? (can you turn if into a function? or some such yarns)
+ <<
+ http://b.hatena.ne.jp/entry/blog.livedoor.jp/dankogai/archives/51864510.html
+ 
+ 
+ I see, it would be interesting to explain how Smalltalk achieves conditional branching, or to create your own ifs using LISP macros.
+ 
+ 
+ I usually end up with something like this, but I am sure this is because I am assuming "people who know what they are doing" like Dan-san as my readers. If I write a book manuscript with this tension, readers will be left behind.
+ 
+ So, I will write and publish a blog post with the intention of writing a draft of the book.
+ 
+ <hr>
+ 
+ If the function foo and the function bar are used in the form foo(bar(1)), which function is called first?
+ 
+ For example, what happens if you write and run the following code in Python?
+ 
+ >|python|
+ def foo(x):
+     print "foo"
+     return x + 1
+ 
+ def bar(x):
+     print "bar"
+     return x * 2
+ 
+ print foo(bar(1))
+ ||<
+ 
+ The result of executing this code is as follows: bar is called first.
+ 
+ >||
+ bar
+ foo
+ 3
+ ||<
+ 
+ I doubt that many people will be surprised by this result, since the behavior is the same in both C and Java.
+ 
+ But this behavior is not the same for all languages; let's look at an example from Haskell.
+ 
+ >|haskell|
+ import System.IO.Unsafe
+ 
+ foo x = unsafePerformIO $ do
+           print "foo"
+           return (x + 1)
+ 
+ bar x = unsafePerformIO $ do
+           print "bar"
+           return (x * 2)
+ 
+ main = print $ foo(bar(1))
+ ||<
+ 
+ The result of executing this code is as follows. You can see that foo is called first, unlike the previous example.
+ 
+ >||
+ "foo"
+ "bar"
+ 3
+ ||<
+ 
+ Thus, "where to evaluate first" (evaluation strategy) varies from language to language. Many languages evaluate the argument bar(1) of function foo before function foo. This is called "positive evaluation. Haskell, on the other hand, has a default behavior of non-positive evaluation (commonly known as "lazy evaluation"). (Footnote: The default behavior of Haskell is to evaluate the function before the function foo. ).
+ 
+ <hr>
+ Continued (tentative)
+ - Advantages of delayed evaluation: does not calculate what is not needed
+ - Delayed Evaluation Mechanisms: The "I'll Do It Later" Story
+ - The Cost of Delayed Evaluation: Memory Consumed to Remember "I'll Do It Later"
+ 
+ ...This leaves no room for name passing or Smalltalk....
+ <hr>
+ Note: This time, I used a backdoor called unsafePerformIO to forcefully observe which is evaluated first, but for the compiler, the conclusion that "the calculation result is 3" does not change whether it evaluates from foo or from bar. Therefore, we cannot deny the possibility that the compiler, for some reason, thinks "I want to evaluate bar first," and evaluates bar first. So, "bar(1) is evaluated before the function foo" is a positive evaluation, and "foo may be evaluated first, or bar may be evaluated first" is a non-positive evaluation.
+ <hr>
+ 
+ I would like to write a supplemental article to the questions I received from readers of my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write a supplementary article like this. Please feel free to ask any questions or comments.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ Diary of trying to use FPGA's chip internal RAM for VRAM in *1366462179*DE0 and it didn't work.
+ The procedure is as described here "<a href='http://d.hatena.ne.jp/nowokay/20130116/1358331649'>Accessing FPGA's chip internal RAM with DE0 - Kishida's Hatena</a>".
+ 
+ Select "RAM: 2-port" and assign one port each to read/write. I wanted to create a monochrome 640x480 pixel VRAM, so I chose 307200 bits for "How many bits for memory" Resource Usage is 48 lut + 40 M9K + 6 reg. Embedded Memory Blocks" according to the manual, so it should not be strange to use 40 M9K blocks.
+ 
+ However, when I tried to draw a picture using this as VRAM, for some reason the same picture appeared in about five places, or a zone was created where no picture was displayed, and other strange behavior occurred.
+ 
+ As a test, I filled 1024 bits from the beginning of the memory with 0s and 1s. Since the width of the screen is 640px, if we alternately fill in 1024 bits, we should be able to create a "horizontal stripe pattern with a thickness of 1 or 2". However, after 10 stripes were drawn (i.e., 20480 bits), the rest of the image was painted solid. There are five striped zones in the picture below, but in the process of filling in from the head, stripes were written in five places at the same time, and the blue zone instantly turned blue. So you're saying that if I fill in probably 1 bit of memory at the very edge of the limit, all of these blue zones will turn blue. I have no idea what is happening.
+ 
+ The M9K memory block is 9216 bits including parity, so effectively usable memory is 8192 bits; I have no idea how this relates to 20480 bits.
+ 
+ [f:id:nishiohirokazu:20130420214711j:image]
+ 
+ The resolution is 160x120 with 4x4 pixels to fit into the first half of the usable 20480 bits. 160 * 120 is 19200. I wonder if the problem is on the RAM side, since it works as expected as long as the memory is not wrong. 307200 bits was not expected to be allocated, and the circuitry related to addressing may be wrong. I don't know how to solve this problem because I am an amateur in FPGA.
+ 
+ [f:id:nishiohirokazu:20130420214710j:image]
+ 
+ By the way, I'm thinking of implementing a life game, but I'm not sure how to do double buffering. I wonder if it would be better to make two RAMs of the same size and use a one-bit flag to determine which one to read from and which one to write to by using an if statement.
+ 
+ I am thinking that the rules portion should be a table pull with 512 bit ROM.
+ 
+ I think a simple implementation would be to multiply 9 clocks to read the pixel data at 9 locations, and then use those values to draw a table and write the table, but I would like to make it more parallel because I think it is a waste to spend 9 clocks per pixel in FPGA. I wonder what I should do, if I can use 9 read ports of RAM, but the wizard can only make 2 ports. Or do I have a 323bit shift register and slide the data for 2 rows + 3px while storing it there?
+ </body>
+
+[Hatena Diary 2013-04-20 https://nishiohirokazu.hatenadiary.org/archive/2013/04/20]

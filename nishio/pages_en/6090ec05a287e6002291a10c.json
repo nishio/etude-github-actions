@@ -1,0 +1,63 @@
+Hatena2010-10-02
+code:hatena
+ <body>
+ *1285994674*Reviewing Object Oriented in Perl.
+ even if
+ >|perl|
+ my $counter = {"value" => 0}; 
+ print "$counter\n"; # HASH(0x1008001f0)
+ 
+ bless $counter, Counter;
+ print "$counter\n"; # Counter=HASH(0x1008001f0)
+ ||<
+ If you do this, you will be told "Bareword "Counter" not allowed" when using strict; if you use bless $counter, "Counter";, you will be fine.
+ 
+ I want to explicitly bless packages and references for the sake of explanation, but what about doing it with strings? Should I explicitly bless the package with a string so as not to mislead people into thinking that the package is a first-class object, or should I do it with a bareword so as not to distract them from other things? Of course, normally I would call it Counter->new or something like that, so I guess there is no practical case where this would be a problem.
+ 
+ >|perl|
+ use strict;
+ use warnings;
+ 
+ {
+     package Counter;
+     sub push{
+ 	my $values = shift;
+ 	$values->{count}++;
+ 	print "$values->{count}匹\n";
+     }
+     sub new{
+ 	my $class = shift;
+ 	my $values = {count => shift};
+ 	bless $values, $class;
+     }
+ }
+ 
+ {
+ my $counter = {"value" => 0}; 
+ print "$counter\n"; # HASH(0x1008001f0)
+ 
+ bless $counter, "Counter";
+ print "$counter\n"; # Counter=HASH(0x1008001f0)
+ 
+ $counter->push; # 1 fish
+ $counter->push; # 2 animals
+ my $c2 = Counter->new;
+ $c2->push; # 1 fish
+ $counter->push; # 3 animals
+ }
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>tokuhirom</username>
+ <body>Bareword "Counter" is actually evaluated as a string, so you can simply write "Counter". <br><br>By the way, if a package called Counter already exists, <br>bless $counter, Counter::; can be used even if it is used strictly. </body>
+ <timestamp>1285995166</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>We will write "Counter" in a straightforward manner! </body>.
+ <timestamp>1285997419</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-10-02 https://nishiohirokazu.hatenadiary.org/archive/2010/10/02]

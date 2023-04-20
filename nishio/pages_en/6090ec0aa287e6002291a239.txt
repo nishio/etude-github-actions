@@ -1,0 +1,116 @@
+Hatena2012-06-01
+code:hatena
+ <body>
+ *1338479302* To tell JSX "this object should have foo"
+ Well, I wanted to tell you that JSX does not know that jQuery objects have a member called css.
+ 
+ First, I created a NATIVE class, but this is a mistake.
+ >||
+ ...
+         var t = this._v as __noconvert__ jQueryNative;
+         t.css(a1, a2);
+ ...
+ native class jQueryNative {
+     function css(a1:string, a2:string) : void;
+ }
+ ||<
+ 
+ Because the native class declares "jQueryNative objects defined in other parts of JS have these attributes," this would result in a runtime error "There is no such thing as jQueryNative (Uncaught ReferenceError: jQueryNative is not defined). Uncaught ReferenceError: jQueryNative is not defined)" at runtime.
+ 
+ So, the next idea was to use interface.
+ 
+ >||
+ ...
+         var t = this._v as __noconvert__ jQueryNative;
+         t.css(a1, a2);
+ ...
+ interface class jQueryNative {
+     function css(a1:string, a2:string) : void;
+ }
+ ||<
+ 
+ This stops at runtime with a type checking assertion.
+ >||
+ if (! (v === null || v instanceof jQueryNative)) {
+         debugger; ...
+ ||<
+ In other words, you cannot cast something that is not in an inheritance relationship with jQueryNative and tell it that it has the same members as jQueryNative.
+ 
+ And the correct answer is this
+ >||
+ native __fake__ class jQueryNative {
+     function css(a1:string, a2:string) : void;
+ }
+ ||<
+ If you use this, jQueryNative will be created unlike a simple native class... but you are mistaken, it will output code without type checking as if it was "created and cast".
+ 
+ >||
+ // Original code
+         var t = this._v as __noconvert__ jQueryNative;
+         t.css(a1, a2);
+ 
+ // Generated code
+         /** @type {jQueryNative} */
+         var t;
+         t = this._v;
+         t.css(a1, a2);
+ ||<
+ 
+ ---
+ 
+ So <a href='http://d.hatena.ne.jp/nishiohirokazu/20120601/1338480359'>jQuery .css now works in JSX</a>.
+ 
+ *1338480359*JSX now works with jQuery .css
+ >||
+         jQ("p").css("background", "red");
+ ||<
+ I can now write like that.
+ https://github.com/nishio/learning_jsx/blob/899525a2f0f586c63999673e6654d7a1de2f2c47/use_native_class/main.jsx
+ 
+ *1338541360* jQuery clicks now work in JSX.
+ Yes, I have changed the background color with new jQuery("p").css("background", "#afa") and registered an event handler for the click with .click(_Main.click_handler);. When you click on the p tag that turns green after execution, hogehoge is added to the content.
+ 
+ >|javascript|
+ import "jquery-1.7.jsx";
+ class _Main {
+     static function click_handler(e : jQueryEvent) : void{
+         e.target.innerHTML += "hoge";
+     }
+     static function main() : void {
+         new jQuery("p").css("background", "#afa")
+         .click(_Main.click_handler);
+     }
+ }
+ ||<
+ 
+ The point of this issue:
+ 1: I couldn't figure out how to create an anonymous function, so I used static method.
+ 2: I stopped using as_func and made it a constructor.
+ 3: Calls from JS are now made the official way (JSX.require)
+ 
+ Here is the code:
+ https://github.com/nishio/learning_jsx/tree/06a7c47f689331da9d51793ea82d494930d846aa/use_native_class
+ 
+ *1338546916*Parsing JSDoc type annotations
+ >|java|
+ import com.google.javascript.jscomp.parsing.JsDocInfoParser;
+ public class Foo {
+     public static void main(String[] args){
+         System.out.println(JsDocInfoParser.parseTypeString("(Array.<Element>|!jQuery)").toStringTree());
+         System.out.println(JsDocInfoParser.parseTypeString("jQuery.jqXHR=").toStringTree());
+     }
+ }
+ ||<
+ >||
+ PIPE 0
+     STRING Array 0 [length: 5]
+         BLOCK
+             STRING Element 0 [length: 7]
+     BANG 0
+         STRING jQuery 0 [length: 6]
+ 
+ STRING jQuery.jqXHR 0 [length: 12]
+ ||<
+ </body>
+
+[Hatena Diary 2012-06-01 https://nishiohirokazu.hatenadiary.org/archive/2012/06/01]

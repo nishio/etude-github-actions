@@ -1,0 +1,110 @@
+Hatena2008-10-02
+code:hatena
+ <body>
+ *1222908996* Talking about different behavior between gcc4.0 and gcc4.2.3 yesterday.
+ <a href='http://gcc.gnu.org/gcc-4.1/changes.html'>GCC 4.1 Release Series &#8212; Changes, New Features, and Fixes - GNU Project - Free Software Foundation (FSF)</a>
+ According to:
+ >>
+ ARM-style name-injection of friend declarations is no longer the default. For example:
+ 
+           struct S {
+             friend void f();
+           };
+ 
+           void g() { f(); }
+ 
+ will not be accepted; instead a declaration of f will need to be present outside of the scope of S. The new -ffriend-injection option will enable the old behavior.
+ <<
+ I heard that.
+ <a href='http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35631'>Bug 35631 - operator overloads defined as a friend within a class are not always correctly resolved</a>.
+ >>
+ Standard says:
+ 
+ 11.4.6. A function can be defined in a friend declaration of a class if and
+ only if the class is a non-local class (9.8), the function name is unqualified,
+ and the function has namespace scope.
+ <<
+ This is what we are talking about. Is the change above about the loss of ARM-style name-injection based on this use? I have a feeling not.
+ 
+ *1222955689*TopCoder SRM 420 Div1 Medium
+ TopCoder & Curry at id:suztomo's house today!
+ A game in which R red cards and B black cards are flipped in order and if a red card is found, the player pays $1 and if a black card is found, the player pays -$1. The question is how much is the expected value when the best strategy is taken. For example, if you have 5 red cards and 1 black card, you can get $4 if you take all of them, but that is not the best strategy, because if you take 5 cards and all of them are red, you should not draw the last card. The problem is that if you take five cards and they are all red, it is better not to draw the last card.
+ 
+ >|cpp|
+   double getProfit(int R_, int B_) {
+     size_t R = R_ + 1;
+     size_t B = B_ + 1;
+     vector<double> score(R * B);
+ 
+     for(size_t b=0; b<B; b++){
+       score[b] = 0.0;
+     }
+     for(size_t r=1; r<R; r++){
+       score[r * B] = r;
+       for(size_t b=1; b<B; b++){
+ 	size_t pos = r * B + b;
+ 	score[pos] = (r + r * score[pos - B] - b + b * score[pos - 1]) / (r + b);
+ 	if(score[pos] < 0) score[pos] = 0; // <- here
+       }
+     }
+     return score[R * B - 1];
+   }
+ ||<
+ 
+ Forgetting the one line that says "here" and still passing four tests without realizing that the algorithm is wrong, I said, "Double is not accurate enough? What should I do? I was confused.
+ 
+ >||
+ Test Case #0...PASSED
+ Test Case #1...PASSED
+ Test Case #2...PASSED
+ Test Case #3...PASSED
+ Test Case #4...FAILED
+ 	Expected: "8.32418"
+ 	Received: "8.30769"
+ ||<
+ 
+ I got bogged down because I panicked and thought about making it more precise. Mwah.
+ 
+ *1222956534*TopCoder SRM 420 Div1 Easy
+ Some cards are given. They are divided into several piles. For example, 3, 2, 3. You take one card from each of these to make a new pile, 2, 1, 2, 3. you take one more card, 1, 1, 2, 4. 1, 3, 4. and 2, 3, 3. you looped. The problem is to return the cycle of this loop. However, it does not necessarily return to the starting state.
+ 
+ Well, since there are only 50 cards, the policy is to save them all and compare them.
+ >|cpp|
+   int periodLength(vector <int> heaps) {
+     int result = 0;
+     sort(heaps.begin(), heaps.end());
+     vector<vector<int> > cache;
+     cache += heaps;
+     while(true){
+       result++;
+       size_t N = heaps.size();
+       vector<int> new_heaps;
+       for(size_t i=0; i<N; i++){
+         int v = heaps[i] - 1;
+ 	if(v > 0){
+ 	  new_heaps += v;
+ 	}
+       }
+       new_heaps += N;
+       heaps = new_heaps;
+       sort(heaps.begin(), heaps.end());
+       size_t M = cache.size();
+       for(size_t i=0; i<M; i++){
+ 	if(cache[i] == heaps){
+ 	  return result - i;
+ 	}
+       }
+       cache += heaps;
+     }
+   }
+ ||<
+ 
+ *1222957383*TopCoder SRM 420
+ Flymake is useful and was demonstrated by id:suztomo (alpha blogger) from around the world.
+ 
+ I've been promoting the usefulness of my debug print library.
+ 
+ http://coderepos.org/share/browser/lang/cplusplus/debugprint/README
+ </body>
+
+[Hatena Diary 2008-10-02 https://nishiohirokazu.hatenadiary.org/archive/2008/10/02]

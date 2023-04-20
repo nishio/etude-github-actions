@@ -1,0 +1,42 @@
+Bundle state names and variables and constrain by type
+[TypeScript type]
+code:ts
+ type STATE_TYPE = "INITIAL" | "HAS_NUMBER";
+ let state: STATE_TYPE = "INITIAL";
+ let value: number | undefined;
+ const setNumber = (x: number) => {
+   state = "HAS_NUMBER";
+   value = x;
+ }
+ const useNumber = () => {
+   if (state === "HAS_NUMBER") {
+     const x: number = value;  // NG
+     // Type 'number | undefined' is not assignable to type 'number'.
+   }
+ } 
+
+code:ts
+ const useNumber = () => {
+   if (state === "HAS_NUMBER") {
+     if (value !== undefined) {  // mmm...
+       const x: number = value;  // OK
+     }
+   }
+ }
+
+code:ts
+ type STATE_TYPE = (
+   { type: "INITIAL", value: undefined } |
+   { type: "HAS_NUMBER", value: number }
+ );
+ let state: STATE_TYPE = { type: "INITIAL", value: undefined };
+ const setNumber = (x: number) => {
+   state = { type: "HAS_NUMBER", value: x };
+ }
+ const useNumber = () => {
+   if (state.type === "HAS_NUMBER") {
+     const x: number = state.value;  // OK
+   }
+ }
+
+`console.log(state)` become more useful

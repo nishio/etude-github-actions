@@ -1,0 +1,281 @@
+Hatena2012-04-18
+code:hatena
+ <body>
+ *1334678046*Second false belief assignment with Alloy.
+ I've been thinking for a while that I could make a mystery story in Alloy, but I've been watching mystery TV shows and it's starting to solidify a bit.
+ >||
+ I don't feel like I can model a mystery story in Alloy in a single step, so maybe I'll model a second misconception assignment first.
+ 
+ The second false belief assignment was not correct on the first attempt, so they wanted more questions to find out if in general I am incapable of getting questions at this level correct or if I just happened to get them wrong.
+ 
+ I wonder if, in the mystery sense, a gap needs to be created between what each character knows and what the reader knows, and then the gap needs to be closed based on very few clues.
+ 
+ As a kind of false belief, it is possible that character X believes that she is Y's wife, and the reader who hears her story mistakes it for fact, but it is not actually true.
+ 
+ Well, if the person explicitly lies, the intent of what motivates the lie must be explained, but if the person is unaware that he/she is being watched, intent is not necessary if the misbelief is conveyed through a delusional diary.
+ ||<
+ 
+ So first, we modeled a second false belief assignment. This is what a secondary misconception assignment looks like:
+ 
+ When Alice and Bob are at the park, the ice cream man says, "I'll be here all day. Bob didn't have any money, so he goes back to the house to get some. When Alice is the only one there, the ice cream man says, "I'm going to the front of the station after all. Alice goes home. The ice cream man meets Bob on the way and tells him, "I'm going to the station. When Alice goes to Bob's house, Bob's mother tells her that he went to buy ice cream. Where does Alice go to find Bob?
+ 
+ Click here for the Alloy code.
+ >||
+ // False Belief Assignment
+ open util/ordering[Time]
+ sig Time {}
+ abstract sig Belief {}
+ 
+ // Where is the ice cream man?
+ abstract sig InWhere extends Belief {}
+ one sig InPark extends InWhere {}
+ one sig InStation extends InWhere {}
+ 
+ abstract sig Person {
+ 	belief: Belief -> Time,
+ 	others_belief: Person -> Belief -> Time
+ }
+ one sig Alice extends Person {}
+ one sig Bob extends Person {}
+ 
+ // We all have no beliefs at first.
+ pred init(t: Time){
+ 	all p: Person {
+ 		no p.belief.t
+ 		no p.others_belief.t
+ 	}
+ }
+ 
+ pred step(now, prev: Time, b: InWhere, targets: Person){
+ 	all p: Person {
+ 		(p in targets) => {
+ 			p.belief.now = p.belief.prev - InWhere + b
+ 			p.others_belief.now = (
+ 				p.others_belief.prev ++ 
+ 				((targets - p) -> b)
+ 			)
+ 		}else{
+ 			p.belief.now = p.belief.prev
+ 			p.others_belief.now = p.others_belief.prev
+ 		}
+ 	}
+ }
+ run {
+ 	some times: seq Time{
+ 		#times = 4
+ 		all i: times.butlast.inds {
+ 			times[i].next = times[plus[i, 1]]
+ 		}
+ 		init[times[0]]
+ 		step[times[1], times[0], InPark, Alice + Bob]
+ 		step[times[2], times[1], InStation, Alice]
+ 		step[times[3], times[2], InStation, Bob]
+ 	}
+ } for 4 Time
+ ||<
+ 
+ When we run it, we find that Alice has a false belief that Bob thinks there is an ice cream man in the park.
+ 
+ I think we should look for examples like this, where the characters are acting according to their own beliefs, and the reader observes all but one step in the process, and the conclusion inferred from this is different from reality. If we can find a case where, for example, character X's opinion is that Y is the culprit, and Y's opinion is that X is the culprit, but when combined with X's opinion, Z is the culprit, and Z's opinion is that Z is the only culprit, but in fact X is the real culprit when the information observed by a passerby is added and examined, then we can find a case like that. Is it good to make it into a story? To be continued.
+ 
+ *1334742488*Easier to tinker with XML output by Alloy.
+ Alloy has an interactive console called Evaluator to observe the values, but it's a pain in the ass, and you can't copy and paste the output values. I'd like to tell them to just plug in a Jython console, but I'm afraid they'd say, "You do it yourself.
+ 
+ It is intended to be used interactively in ipython.
+ 
+ >|python|
+ In [29]: load("a.xml")
+ 
+ In [30]: get("flag")
+ Out[30]: 
+ [[u'Memory$0', u'0', u'0', u'Time$0'],
+  [u'Memory$0', u'0', u'0', u'Time$1'],
+  [u'Memory$0', u'0', u'0', u'Time$2'],
+  [u'Memory$0', u'0', u'1', u'Time$3'],
+  [u'Memory$0', u'0', u'1', u'Time$4'],
+  [u'Memory$0', u'0', u'1', u'Time$5'],
+  [u'Memory$0', u'0', u'1', u'Time$6'],
+  [u'Memory$0', u'1', u'0', u'Time$0'],
+  [u'Memory$0', u'1', u'1', u'Time$1'],
+  [u'Memory$0', u'1', u'1', u'Time$2'],
+  [u'Memory$0', u'1', u'1', u'Time$3'],
+  [u'Memory$0', u'1', u'1', u'Time$4'],
+  [u'Memory$0', u'1', u'1', u'Time$5'],
+  [u'Memory$0', u'1', u'1', u'Time$6']]
+ 
+ In [31]: get("flag").to_int(1, 2, 3)
+ Out[31]: 
+ [[u'Memory$0', u'0', u'0', u'Time$0', 0, 0, 0],
+  [u'Memory$0', u'0', u'0', u'Time$1', 0, 0, 1],
+  [u'Memory$0', u'0', u'0', u'Time$2', 0, 0, 2],
+  [u'Memory$0', u'0', u'1', u'Time$3', 0, 1, 3],
+  [u'Memory$0', u'0', u'1', u'Time$4', 0, 1, 4],
+  [u'Memory$0', u'0', u'1', u'Time$5', 0, 1, 5],
+  [u'Memory$0', u'0', u'1', u'Time$6', 0, 1, 6],
+  [u'Memory$0', u'1', u'0', u'Time$0', 1, 0, 0],
+  [u'Memory$0', u'1', u'1', u'Time$1', 1, 1, 1],
+  [u'Memory$0', u'1', u'1', u'Time$2', 1, 1, 2],
+  [u'Memory$0', u'1', u'1', u'Time$3', 1, 1, 3],
+  [u'Memory$0', u'1', u'1', u'Time$4', 1, 1, 4],
+  [u'Memory$0', u'1', u'1', u'Time$5', 1, 1, 5],
+  [u'Memory$0', u'1', u'1', u'Time$6', 1, 1, 6]]
+ 
+ In [32]: get("flag").to_int(1, 2, 3).trans(6, 4, 5)
+ Out[32]: 
+ [[0, 0, 0],
+  [1, 0, 0],
+  [2, 0, 0],
+  [3, 0, 1],
+  [4, 0, 1],
+  [5, 0, 1],
+  [6, 0, 1],
+  [0, 1, 0],
+  [1, 1, 1],
+  [2, 1, 1],
+  [3, 1, 1],
+  [4, 1, 1],
+  [5, 1, 1],
+  [6, 1, 1]]
+ 
+ In [33]: get("flag").to_int(1, 2, 3).trans(6, 4, 5).sort(0)
+ Out[33]: 
+ [[0, 0, 0],
+  [0, 1, 0],
+  [1, 0, 0],
+  [1, 1, 1],
+  [2, 0, 0],
+  [2, 1, 1],
+  [3, 0, 1],
+  [3, 1, 1],
+  [4, 0, 1],
+  [4, 1, 1],
+  [5, 0, 1],
+  [5, 1, 1],
+  [6, 0, 1],
+  [6, 1, 1]]
+ 
+ In [34]: get("flag").to_int(1, 2, 3).trans(6, 4, 5).sort(0).map(lambda t, x, y: "%d: flag[%d] = %d" % (t, x, y))
+ Out[34]: 
+ ['0: flag[0] = 0',
+  '0: flag[1] = 0',
+  '1: flag[0] = 0',
+  '1: flag[1] = 1',
+  '2: flag[0] = 0',
+  '2: flag[1] = 1',
+  '3: flag[0] = 1',
+  '3: flag[1] = 1',
+  '4: flag[0] = 1',
+  '4: flag[1] = 1',
+  '5: flag[0] = 1',
+  '5: flag[1] = 1',
+  '6: flag[0] = 1',
+  '6: flag[1] = 1']
+ ||<
+ 
+ I'd also like to see group_by and maybe even an Alloy-like join operation.
+ 
+ https://github.com/nishio/learning_alloy/blob/master/show.py
+ 
+ ** joined
+ I put in the join operation!
+ 
+ >|python|
+ 
+ In [16]: get("flag").trans(3, 1, 2)
+ Out[16]: 
+ [[u'Time$0', u'0', u'0'],
+  [u'Time$1', u'0', u'0'],
+  [u'Time$2', u'0', u'0'],
+  [u'Time$3', u'0', u'1'],
+  [u'Time$4', u'0', u'1'],
+  [u'Time$5', u'0', u'1'],
+  [u'Time$6', u'0', u'1'],
+  [u'Time$0', u'1', u'0'],
+  [u'Time$1', u'1', u'1'],
+  [u'Time$2', u'1', u'1'],
+  [u'Time$3', u'1', u'1'],
+  [u'Time$4', u'1', u'1'],
+  [u'Time$5', u'1', u'1'],
+  [u'Time$6', u'1', u'1']]
+ 
+ In [17]: get('Time$6').join(_)
+ Out[17]: [[u'0', u'1'], [u'1', u'1']]
+ ||<
+ 
+ In terms of aggregation, I'm tempted to do something like group_by, or multiple relationship stacking (like the UNIX paste command), but it's not very type-sensitive. I don't know what to do.
+ 
+ I wonder if it is strange that the return value of map is AlloyList in the first place, or if it is better to use map or group_by to pass to a function for visualization after fiddling around in the range of AlloyList.
+ 
+ ** I put in group_by
+ >|python|
+ In [21]: get("flag").trans(1, 2, 3).map(lambda x, y, t: [t, "flag[%s] = %s" % (x, y)])
+ Out[21]: 
+ [[u'Time$0', u'flag[0] = 0'],
+  [u'Time$1', u'flag[0] = 0'],
+  [u'Time$2', u'flag[0] = 0'],
+  [u'Time$3', u'flag[0] = 1'],
+  [u'Time$4', u'flag[0] = 1'],
+  [u'Time$5', u'flag[0] = 1'],
+  [u'Time$6', u'flag[0] = 1'],
+  [u'Time$0', u'flag[1] = 0'],
+  [u'Time$1', u'flag[1] = 1'],
+  [u'Time$2', u'flag[1] = 1'],
+  [u'Time$3', u'flag[1] = 1'],
+  [u'Time$4', u'flag[1] = 1'],
+  [u'Time$5', u'flag[1] = 1'],
+  [u'Time$6', u'flag[1] = 1']]
+ 
+ In [22]: get("flag").trans(1, 2, 3).map(lambda x, y, t: [t, "flag[%s] = %s" % (x, y)]).group_by(0)
+ Out[22]: 
+ [(u'Time$0', [[u'Time$0', u'flag[0] = 0'], [u'Time$0', u'flag[1] = 0']]),
+  (u'Time$1', [[u'Time$1', u'flag[0] = 0'], [u'Time$1', u'flag[1] = 1']]),
+  (u'Time$2', [[u'Time$2', u'flag[0] = 0'], [u'Time$2', u'flag[1] = 1']]),
+  (u'Time$3', [[u'Time$3', u'flag[0] = 1'], [u'Time$3', u'flag[1] = 1']]),
+  (u'Time$4', [[u'Time$4', u'flag[0] = 1'], [u'Time$4', u'flag[1] = 1']]),
+  (u'Time$5', [[u'Time$5', u'flag[0] = 1'], [u'Time$5', u'flag[1] = 1']]),
+  (u'Time$6', [[u'Time$6', u'flag[0] = 1'], [u'Time$6', u'flag[1] = 1']])]
+ 
+ In [24]: get("flag").trans(1, 2, 3).map(lambda x, y, t: [t, "flag[%s] = %s" % (x, y)]).group_by(0, lambda k, xs: (k, ", ".join(x[1] for x in xs)))
+ Out[24]: 
+ [(u'Time$0', u'flag[0] = 0, flag[1] = 0'),
+  (u'Time$1', u'flag[0] = 0, flag[1] = 1'),
+  (u'Time$2', u'flag[0] = 0, flag[1] = 1'),
+  (u'Time$3', u'flag[0] = 1, flag[1] = 1'),
+  (u'Time$4', u'flag[0] = 1, flag[1] = 1'),
+  (u'Time$5', u'flag[0] = 1, flag[1] = 1'),
+  (u'Time$6', u'flag[0] = 1, flag[1] = 1')]
+ 
+ In [33]: get("turn").trans(2, 1, 2).join(_)
+ Out[33]: 
+ [[u'Time$0', u'0', u'flag[0] = 0, flag[1] = 0'],
+  [u'Time$1', u'0', u'flag[0] = 0, flag[1] = 1'],
+  [u'Time$2', u'0', u'flag[0] = 0, flag[1] = 1'],
+  [u'Time$3', u'0', u'flag[0] = 1, flag[1] = 1'],
+  [u'Time$4', u'1', u'flag[0] = 1, flag[1] = 1'],
+  [u'Time$5', u'1', u'flag[0] = 1, flag[1] = 1'],
+  [u'Time$6', u'1', u'flag[0] = 1, flag[1] = 1']]
+ 
+ In [35]: _.map(lambda t, x, y: "%s: turn = %s, %s" % (t, x, y))
+ Out[35]: 
+ [u'Time$0: turn = 0, flag[0] = 0, flag[1] = 0',
+  u'Time$1: turn = 0, flag[0] = 0, flag[1] = 1',
+  u'Time$2: turn = 0, flag[0] = 0, flag[1] = 1',
+  u'Time$3: turn = 0, flag[0] = 1, flag[1] = 1',
+  u'Time$4: turn = 1, flag[0] = 1, flag[1] = 1',
+  u'Time$5: turn = 1, flag[0] = 1, flag[1] = 1',
+  u'Time$6: turn = 1, flag[0] = 1, flag[1] = 1']
+ 
+ In [37]: print "\n".join(_)
+ Time$0: turn = 0, flag[0] = 0, flag[1] = 0
+ Time$1: turn = 0, flag[0] = 0, flag[1] = 1
+ Time$2: turn = 0, flag[0] = 0, flag[1] = 1
+ Time$3: turn = 0, flag[0] = 1, flag[1] = 1
+ Time$4: turn = 1, flag[0] = 1, flag[1] = 1
+ Time$5: turn = 1, flag[0] = 1, flag[1] = 1
+ Time$6: turn = 1, flag[0] = 1, flag[1] = 1
+ ||<
+ 
+ yay-yay!
+ </body>
+
+[Hatena Diary 2012-04-18 https://nishiohirokazu.hatenadiary.org/archive/2012/04/18]

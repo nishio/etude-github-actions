@@ -1,0 +1,190 @@
+Hatena2009-04-30
+code:hatena
+ <body>
+ *1241059506* How to put on the mask
+ http://www.rakuten.co.jp/saibou/561938/829231/
+ <img src="http://gyazo.com/7a13684356570763a9e53002800081fd.png">
+ No, it's not.
+ <img src="http://gyazo.com/c90046a7c9d43e53ba9ddd821ec1179a.png">
+ Don't you think this is unnatural?
+ 
+ http://www.senshin-medical.co.jp/page5-2.html
+ <img src="http://gyazo.com/217c20c1e428a9e7d46dc94cb2b41814.png">
+ This is how the top rubber does it.
+ 
+ *1241075459*Why you need a virtual node for a consistent hash that took me an hour to figure out.
+ <a href='http://www.hyuki.com/yukiwiki/wiki.cgi?ConsistentHashing'>ConsistentHashing - Consistent Hashing Method</a>
+ 
+ I was asked about it in one of the chats, and I even drew a diagram to explain it, so I made an entry because it was a waste of time. I made this entry because it was a waste of time.
+ <img src="http://gyazo.com/8a884c285678afa6e6472d4c5ed59427.png">
+ 
+ >>
+ And if B disappears, the entire scope of B's responsibility will be pushed to D, and you feel sorry for D, don't you?
+ 
+ 
+ D will have more work, and C will have less time to do it! The benefit of having multiple servers is diminishing. It is desirable for everyone to work about the same amount.
+ 
+ 
+ And because B is represented by a single point, there is only one "in front of B," D, and because of this, D has to take over the whole job. In other words, because the work is not divided into small pieces but is a single lump, there is only one person who can take over the work, and the person who took over the work is in tears. If we had divided the work into 100 parts in advance, everyone would be happy to share the work and shoulder the responsibility.
+ 
+ 
+ So we have 5 servers, but instead of 5 dots, let's hit 500. That is a virtual node.
+ <<
+ 
+ What about implementation? In response to the question
+ 
+ >>
+ If we take the server data we now have in [IP, Port], for example [IP, Port, X] (0 <= X < 100), and then calculate the hash, we will have 100 hash values per server.
+ 
+ 
+ It is enough to have 100 different hash values per server. There is no need for substance. Just do so in increments of a consistent hash.
+ 
+ 
+ You don't need to store the value of X, right? It is not needed for access. So, when calculating the hash value, we can just make 100 different hash values by attaching appropriate values.
+ 
+ 
+ Question: "Can I just use random numbers?"
+ 
+ 
+ With random numbers, when there are multiple inquiry windows, the ticks for each window will not be the same, so we need to share the seed.
+ <<
+ 
+ I'm not talking about "it's better to have this for additional deletions", but almost a MUST.
+ 
+ >>
+ I thought it was easy to understand the add/delete story, so I used it as an example, but isn't C skimming in the first place at the stage of assigning by hash value at the beginning? And E is overworked.
+ 
+ 
+ If hash values are used, it is as if they are randomly assigned, so there will be variation. To solve this problem, it is necessary to prepare about 100 virtual nodes in the first place. Almost a must.
+ 
+ 
+ You see the graph drawn in the middle of the document?
+ >From this experiment, we can say that a reasonable balance can be achieved with 100 to 200 replicates (with a standard deviation of about 5-10% of the mean). (The standard deviation is about 5-10% of the mean.)
+ 
+ 
+ That's what this is about.
+ <<
+ 
+ <hr>
+ 
+ http://b.hatena.ne.jp/entry/http://d.hatena.ne.jp/nishiohirokazu/20090430/1241075459
+ >>
+ id:hitotakuchan It is not a must if the number of nodes is reasonable and there is no bias in the hash function. Also, the Dynamo paper says that log2(N) (32 for IPv4) is sufficient because the number of hops increases when the number of virtual nodes is increased. It is also difficult to manage the routing table.
+ <<
+ 
+ I thought about going through with it, but I feel sorry for those who might misunderstand, so I'll just stick it out. I don't know if you are using the term "virtual node" or not, but if you at least understand what is written in this entry and Mr. Yuki's page, you should know that adding more "virtual nodes" here will not increase the number of hops or make the routing table management more difficult. You should be able to understand this.
+ 
+ <hr>
+ 
+ >>
+ Sorry. I fixed it before the postscript came in.
+ But I am sure the size of the routing table will increase. (Don't know if this will make it harder to manage)
+ Also, I think it is too much to say that it is a must. In the Dynamo paper, the experimental results showed that about 20 pieces are enough to distribute the data, so I thought that 100 pieces is too many.
+ <<
+ So before you bring up Dynamo, you first need to understand how a consistent hash works to the extent described here... Aside from using consistent hashing in Dynamo, Dynamo and consistent hashing are not "similar". They're not "the same thing". I get the feeling that you have words like DHT and P2P mixed up in your brain, based on misconceptions such as "the routing table size is sure to grow", but at least you understand that the hash table is not distributed yet as far as this entry is concerned? Do you understand that? Do you understand that no matter how many virtual nodes you add, you will not have the same problems as when you add more P2P nodes?
+ 
+ <hr>
+ >>
+ That is my answer. However, what I really wanted to say in my comment was the basis for the number of virtual nodes (100). As shown in the referenced graph, when using Java's hashCode() as a hash function, the total number of virtual nodes is around 1000, and the standard deviation is about 5-10% of the average value.
+ If this is the case, then if there are 1000 physical nodes from the beginning, the use of virtual nodes should not be a must.
+ Also, as mentioned in the reference, the hashCode() function does not always distribute hash values well over space. In other words, it is possible that a better function could achieve the same level of distribution with a total number of 100 virtual nodes. In that case, the number of virtual nodes required should also depend on the number of physical nodes.
+ In other words, I thought it was not a good way to teach beginners that the number of virtual nodes per physical node must be 100.
+ Shouldn't we tell them that the number of virtual nodes required can vary depending on the hash function to be used, the physical nodes to be prepared, etc.?
+ <<
+ 
+ Ah, I see, I finally understand what is being claimed. It is not a MUST in that sense. It is definitely not a MUST, especially in RFC usage. The flow of the chat before the edit was such that such a misunderstanding would not occur, but I guess I misled you with the assumption of making it short and easy to understand. My apologies. I also don't perceive the discussion under the assumption "if there were 1000 physical nodes from the beginning". I'm sorry that this entry called "ConsistentHashing - The Consistent Hashing Method" and asked, "Why do we need virtual nodes?" Please understand the prerequisite that this entry is an explanation of what happens when you simply use 5 or so physical nodes in a 1:1 situation.
+ 
+ *1241076535* They said I have to pay inhabitant's tax.
+ It's a pain in the ass, so I'm hoping they'll offset it with a flat rate benefit or something (neither of which has been processed yet).
+ 
+ *1241081914* I got into a groove while shopping.
+ f:id:nishiohirokazu:20090430175831j:image
+ 
+ I thought I would buy snacks that were individually wrapped and could be stored for a long time, but then I got excited and bought all the snacks that met the criteria, and even bought snacks that were discounted by 50 or 30 yen. But it was a 100-yen store, so it was still about 3,000 yen.
+ 
+ *1241090236* San Juan Considerations
+ <a href='http://www.mobius-games.co.jp/alea/SanJuan.htm'>San Juan</a>
+ Rulebook: http://www.mobius-games.co.jp/PDF/SanJuan_0510.pdf
+ 
+ One of the many I played at Java-ja spa. Started before I could see what kind of cards there were, played it once and moved on to the next game when I thought I understood the rules. Number one game I want to play again. I mean, I'll probably buy it.
+ 
+ In this game, cards are both money and buildings. Building a building costs money, which is represented by discarding a specified number of cards from your hand. The game ends when someone builds 12 buildings, and the victory is determined by the number of points won. Therefore, the general flow of the game is to first obtain the means to earn money to improve the turnover of cards in hand, and then to win the game by building cards with high victory points. This section discusses the expected value of earnings and winning points.
+ 
+ Production facilities, 42 total
+ Expected value of 1 product sold: Indigo 1, sugar 1.4, tobacco 1.8, coffee 2.2, silver 2.6
+ However, this is the expected value when one unit is produced in the "director phase" and one unit is sold in the "merchant phase," so if the order is "director → merchant" in the early stage when there are no buildings to be strengthened, this is all you will get. It is meaningless to rush to build a lot of buildings; you may be so happy when the second one stands that you want to take a director or something, but that would fill up your buffer. If the merchant phase comes when there is no crop, or if the director phase comes when there is no free buffer, you will be in a damaged state compared to others.
+ 
+ Councillor is +0 just to speed up the card rotation and draw good cards, gold digger is +1 unconditionally, and the other three are a delicate balance and can be good or bad depending on everyone's situation. Architects get +1 if they build, merchants get +1~+2.6 if they have enough goods, and miners get +0 if they draw good cards.
+ 
+ Blacksmith: Cost 1, +4 value for 4 production facilities that will be built in the future.
+ Gold Mine: Cost 1 Card that may be taken in the gold digging phase.
+ Archives: Cost 1: Unwanted items are discarded from the hand held in the Counselor phase as well.
+ Relief House: cost 2, +1 per round, but only when there are few cards left.
+ Black Market: Cost 2 When building, goods can be immediately considered as 1 gold. Expected value is +1 when you become a director.
+ Trading Post: cost 2 Sell 1 additional piece in the merchant phase. +1~+2.6 per round, but only if enough are produced
+ Wells: Cost 2 +1 per round if productive enough to produce 2
+ Food stall: cost 2 +1 per round if you have the selling power to sell 2
+ Crane: cost 2, can reconstruct unwanted buildings
+ Chapel: cost 3 per round -1 cost per round +1 victory point
+ Tower: Cost 3, increase hand limit
+ Suidobashi: Cost 3 Productivity +1
+ Furniture factory: cost 3, +4 for 4 purple buildings that will be erected in the future
+ Governor's Palace: Cost 3 +1 per round
+ Market: Cost 4 +1 if there are goods to sell in the merchant phase
+ Quarry: cost 4 +1 per purple building constructed
+ Library: Cost 5 Various cheat cards
+ 
+ It seems that in the beginning, we should aim to build a library for now. Well, but only if you can pull off a library.
+ 
+ *1241093697* What if the person next to you on the plane has type A flu?
+ <a href='http://www.asahi.com/national/update/0430/TKY200904300275.html'>asahi.com (Asahi Shimbun): About 20 people stranded on Narita arrival plane with A flu - Society</a>.
+ 
+ >>
+ It was revealed that a simple in-flight test revealed that it was Type A influenza. Whether it is a new type of swine flu or not// results are not expected until early morning on the 1st. //About 20 passengers who were sitting around the cabin are also stranded at the airport as a precaution.
+ <<
+ 
+ <a href='http://www.asahi.com/national/update/0429/TKY200904290158.html'>asahi.com (Asahi Shimbun): Nasal swab test: Ministry of Health, Labor and Welfare announces swine flu diagnosis procedure - Society</a>.
+ 
+ >>
+ If positive for type A, a genetic test called the PCR method is used to see if the virus is not the existing Hong Kong type, which falls into the same type A category. If the results show that it is not the Hong Kong type in as little as half a day, the patient is quarantined to a designated medical institution in accordance with the law, as swine flu is still suspected. Finally, the virus will be examined in detail to determine if it is swine flu or not.
+ 
+ 　If the person is quarantined in airport quarantine, the person's family members and those who have flown next to the person for an extended period of time are also stranded in accommodations near the airport.
+ <<
+ 
+ Therefore, "about 20 passengers" who are now "stranded at the airport just in case" will be kept at the airport until about 7:30 a.m. tomorrow morning, assuming that the tests, which started at 7:30 p.m., will take half a day at the earliest. Then, if the infected person's virus is found to be "not Hong Kong type," the infected person will be quarantined in a hospital. I wonder if the 20 people around him will be put under house arrest in an accommodation facility near the airport and watched to make sure they don't go out on their own. I wonder how long they will be there.
+ 
+ <a href='http://www.asahi.com/national/update/0430/TKY200904300260.html'>asahi.com (Asahi Shimbun): Narita quarantine officers to double to 160 - Society</a>.
+ >>
+ 10 days considered the incubation period of the virus
+ <<
+ 
+ When I search the news for "incubation period," I get a few hits about 10 days, so I guess I'll be under house arrest for about 10 days. I went out to play during Golden Week and inadvertently ended up taking a lot more time off than Golden Week. I wonder if there are any stories somewhere about what the isolation ward is like.
+ 
+ <a href='http://mainichi.jp/select/today/news /20090501k0000m040123000c.html'>Narita passenger tests positive for new strain of influenza A - Mainichi
+ >>
+ If the woman is a suspected case of H1N1 influenza, these approximately 20 people are expected to remain at a facility near the airport for about 10 days to monitor their health.
+ <<
+ Oh, it says here that it is 10 days.
+ 
+ *1241101265* cleaned up tDiary.
+ I cleaned up <a href='http://www.nishiohirokazu.org/diary/?date=200602'>Yasukazu Nishio's Diary (2006-02)</a>, which had become full of spam and sometimes could not be displayed due to memory errors. It was surprisingly easy. tdc is a file that contains comments and is formatted for easy parsing, so I used Python to delete all the comments that looked like that, and then deleted the files in the cache directory. Now I have tdc as read only. I'll wget it soon and make it look like <a href='http://www.nishiohirokazu.org/archived_coreblog/'>NISHIO HIROKAZU # Archived COREBlog</a>.
+ </body>
+ <comments>
+ <comment>
+ <username>hitotakuchan</username>
+ <body>Sorry. I fixed it before the addendum came in... <BR>I'm sure the routing table will be larger, however. (I don't know if this makes it harder to manage.)<br>Also, I think it is too much to say that it MUST be, and the Dynamo paper showed that 20 or so were distributed enough, so I thought 100 might be too many. </body>
+ <timestamp>1241085798</timestamp>
+ </comment>
+ <comment>
+ <username>hitotakuchan</username>
+ <BODY>This is somewhat off in the direction I intended, but since I don't do diaries, I'm sorry to respond here. <BR><BR>That's why you have to first understand how Consistent Hash works to the extent described here before you bring up Dynamo.... <BR><BR>I understand it. <BR><BR><BR>"I am going to do it. <BR><BR>>I guess from misunderstandings such as "the size of the routing table is sure to increase", <BR><BR>This means that in the Java code on the referenced page, circle will hold more data. This would not be a problem with consistenthash, which is a memcache with a hash space that is shared by multiple nodes (like Katama?). <br><br><br><br>These are not problems for consistenthash (e.g. Dynamo), since each node maintains its own hash space. <BR><BR>>At least you understand that the hash table is not yet distributed as far as what is explained in this entry? <BR><BR>I mistakenly thought they were distributed in my initial bookmark comment, but I have already corrected that. <BR><BR>Do you understand that no matter how many virtual nodes you add, there should not be the same problems as when you add more P2P nodes? <BR><BR>I don't understand the problem here. <BR><BR>That is my answer. <BR><BR>What I really wanted to say in my comment was about the rationale for the number of virtual nodes of 100. As shown in the referenced graph, when using Java's hashCode() as the hash function, the total number of virtual nodes is around 1000 and the standard deviation is about 5-10% of the mean value. <br>Thus, if there are 1000 physical nodes from the beginning, the use of virtual nodes should not be a must. <br>Also, as mentioned in the reference, the hashCode() function does not always distribute the hash values well over the space. In other words, it is possible that a better function could achieve the same level of variance around 100 total virtual nodes. Even in that case, the number of virtual nodes required should vary depending on the number of physical nodes. <br>In other words, I thought it was not a good way to teach beginners that the number of virtual nodes per physical node must be 100. <br>I think we should teach them that the number of virtual nodes required varies depending on the hash function used, the physical node to be prepared, and other factors. </body>
+ <timestamp>1241097934</timestamp>
+ </comment>
+ <comment>
+ <username>earth2001y</username>
+ <BODY>They're not withholding tax? It's a hassle, and the same goes for not processing the fixed benefit...</body>.
+ <timestamp>1241101962</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-04-30 https://nishiohirokazu.hatenadiary.org/archive/2009/04/30]

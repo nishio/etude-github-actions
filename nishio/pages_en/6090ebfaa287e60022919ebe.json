@@ -1,0 +1,112 @@
+Hatena2008-10-01
+code:hatena
+ <body>
+ *1222821016*Slept wrong...?
+ What does it mean that the middle finger of my right hand hurts when I extend or bend it?
+ 
+ Fortunately, I don't feel the bend enough to type on the keyboard, so it doesn't hurt too much as I type this sentence.
+ 
+ *1222856199* Bugs and Relationships
+ >||
+ ry: It is interesting to compare bugs to relationships.
+ ME: Interesting.
+ ry: what's the typo?
+ ME: In my sleep
+      Calling different people names
+ ry: that's too funny!
+      And it's too sad.
+ me: This causes a serious syntax error, but
+ RY: Too serious.
+ ME: The "shurakujo" is when an existing identifier is unfortunately clashed with an existing identifier.
+ ry:  ｗｗｗｗｗ
+ ||<
+ 
+ Identifier typos do not cause syntax errors. The "Who is XXX!" error occurs.
+ A typo at a syntactically important point will simply result in a "I don't know what you're talking about" syntax error.
+ If you write an existing identifier of a type that should not appear in a bedtime story, the STL (standard typical lady) may give you hundreds of lines of error messages.
+ 
+ **1222859604*[cpp]boost::operators and private inheritance and friend
+ boost:operators is a library that defines operator! =" can also be used just by defining operator==. For more details, see: <a href='http://www.kmonos.net/alang/boost/classes/operators.html'>letsboost::operators</a>.
+ 
+ But if you look at the sample usage, you will see that for some reason private inheritance is used. private inheritance makes all members of the parent class private. In other words, the inherited material is completely invisible to the outside world. Why does this work?
+ 
+ I wondered, so I read boost/operators.hpp.
+ 
+ -----
+ 
+ For example, suppose we have a class Foo like this.
+ 
+ >|cpp|
+ class Foo : private Addable<Foo>{};
+ ||<
+ 
+ How should I define Addable in order to write code like below and not get a compilation error?
+ 
+ >|cpp|
+ #include <iostream>
+ using namespace std;
+ 
+ int main(){
+   Foo x;
+   cout << x + 1 << endl;
+ }
+ ||<
+ 
+ So, I implemented this as a trial.
+ 
+ >|cpp|
+ template<typename T>
+ struct Addable{
+   int friend operator+(T&, int x){
+     return x;
+   }
+ };
+ ||<
+ 
+ It will now compile through. The gimmick is that "A FRIEND function may be defined within a class. The scope of that function is exported to the scope surrounding that class definition" (C++ Primer, 4th Edition, p. 511). So this looks like a method, but it doesn't actually belong to the class. So it doesn't inherit anything from its parent before whether private inheritance is OK in the first place.
+ 
+ I was tempted to think that since it inherits, it gets something it needs from the parent class, but it seems that the inheritance of Addable<Foo> here is simply to trigger the compile-time process of "materializing Addable with Foo as the type argument". As proof of this, I can rewrite it as shown below and it still compiles with gcc4.0.
+ 
+ >|cpp|
+ class Foo{};
+ class Bar : private Addable<Foo>{};
+ ||<
+ 
+ However, this is a compile error with gcc4.2.3. I tried to compile it with gcc4.2.3 and failed, so I wondered if my understanding as written above was wrong. I wrote on the Cybozu Lab's bulletin board, "Is my understanding of the above wrong? Thank you very much. But I can't summarize all the details because there were about 40 posts including source codes on the board, so I'll spare you the details.
+ 
+ <hr>
+ 
+ see <a href='http://en.wikipedia.org/wiki/Barton-Nackman_trick'>Barton-Nackman trick - Wikipedia, the free encyclopedia</a> (via @SubaruG)
+ 
+ *1222863744* It is a C++ specification that is invisible to fools!
+ http://b.hatena.ne.jp/entry/http://www.jisc.go.jp/app/pager?NSKNM_vJISJISNO=X3014
+ 
+ The page is mysteriously designed in such a way that you can't see it if you go to see it suddenly, but you can see it from this buzzer link after you have searched for it from the search page and attacked it through the normal route. It is good that it explains STL of C++ in detail in Japanese, but I was a little bit disappointed when I read "localization". I also recommend this one (via amachang's bookmark): http://www.kuzbass.ru:8086/docs/isocpp/
+ 
+ *1222875411*Middle finger to wrist
+ As of this morning, I just couldn't bend and extend my middle finger, but my right wrist started to heat up. I put a compress on it anyway. It's very annoying when I can't use my right hand. My typing speed is cut in half or less. And the downside of the touchpad is that it's a pain to keep from touching it when I'm typing with only my left hand.
+ 
+ <img src="http://gyazo.com/5144891597e1c7f8f8a70206255fc725.png">
+ http://www.e-typing.ne.jp/index.asp?mode=levelcheck
+ 
+ Less than half was probably an exaggeration. Two handed typing will be a weight off until my wrist improves.
+ </body>
+ <comments>
+ <comment>
+ <username>elim</username>
+ <body>This is an experience, I understand. <br>(No, this is not fashionable! You'll experience it in person: ......)</body>
+ <timestamp>1222862158</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>By the way, I don't seem to talk much in my sleep. My friend says, "I woke up in the middle of the night and shouted, 'Yes, we should use Lisp! and asked for his consent, I wondered what I was going to do. </body>.
+ <timestamp>1222874775</timestamp>
+ </comment>
+ <comment>
+ <username>egtra</username>
+ <body>Oh, by the way, the official reference also explains how to use it without inheritance (in the "Separate, Explicit Instantiation" section). <br>http://www.boost.org/libs/utility/operators.htm</body>
+ <timestamp>1352038274</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-01 https://nishiohirokazu.hatenadiary.org/archive/2008/10/01]

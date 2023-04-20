@@ -1,0 +1,269 @@
+Hatena2009-03-24
+code:hatena
+ <body>
+ *1237877428*Mysterious error when using url tag in Django
+ With the url tag, instead of writing 1 or 2 below, you can write 3. 1 requires you to be aware of "what URL is currently being displayed" and if that URL changes, you must properly . The second way needs to be aware of "the URL where this application is provided," for example, if the URL was provided as "http://example.com/programmers_nightmare/", it could be changed to "http:// For example, if you change the URL from "" to "programmers_nightmare.com/", you need to rewrite it. The third method is to specify the "function to display the page" and calculate the URL backward from it, so there is no need to modify the URL even in situations where the link would be broken in the first and second methods.
+ 
+ >||
+ 1: <a href="../../new_game/{{ id }}/">start new game</a>
+ 2: <a href="/programmers_nightmare/new_game/{{ id }}/">start new game</a>
+ 3: <a href="{% url programmers_ightmare.views.new_game id %}">start new game</a>
+ ||<
+ 
+ This is a useful feature, so I tried to use it, but I was puzzled because the error messages were still difficult to understand.
+ 
+ <a href='http://djangoproject.jp/doc/ja/1.0/ref/templates/builtins.html#ttag -url'>Built-in tag/filter reference &#8212; Django v1.0 documentation</ a>
+ 
+ ** Looks like you're going looking for something completely unrelated.
+ The first error I ran into when I wrote {% url new_game id %} was the following.
+ 
+ >>
+ Caught an exception while rendering: Tried download_file in module programmers_nightmare.views. Error was: 'module' object has no attribute 'download_file'
+ <<
+ 
+ What's a download_file? It says {% url new_game id %} so why am I going looking for it!
+ 
+ This is rather easy to understand if you check where "download_file" appears. For example, if you specify the mapping between URLs and views in urls.py as a string like the one below, when you access /download/foobar/, the function named "download_file" is searched for the first time and an error message "not found" is displayed. However, when using the url tag, it is necessary to have all the views defined in order to create a "view to URL" mapping.
+ 
+ >||
+     (r'^new_game/(?P<key>\d+)/$', 'new_game'),
+     (r'^download/(?P<key>\d+)/$', 'download_file'),
+ ||<
+ 
+ So, you can either comment out the lines from urls.py that have not yet defined their contents, or define an empty view in views.py.
+ 
+ >||
+ def download_file(request, key):
+     raise NotImplementedError
+ ||<
+ 
+ ** Error looking for settings.new_game
+ 
+ >>
+ Caught an exception while rendering: Reverse for 'settings.programmers_nightmare.views.new_game' with arguments '('',)' and keyword arguments '{}' not found.
+ <<
+ 
+ 
+ The search is failing with the extra prefix "settings". I've tried <a href='http://djangoproject.jp/doc/ja/1.0/topics/http/urls.html#naming-url-patterns'>naming the URL pattern</a>, etc. but it doesn't help. google-app I thought maybe the urlsauto.py used by -patch was doing something wrong, or maybe it was incompatible with the url tag implementation. url tags are designed to "search for a given argument and if it is not found, append the period before the SETTINGS_MODULE and search again. If it is not found, it searches again by appending the period before the SETTINGS_MODULE. In other words, it simply says "search failed" even though it has the mysterious SETTINGS.
+ 
+ >|python|
+     try:
+         url = reverse(self.view_name, args=args, kwargs=kwargs)
+     except NoReverseMatch:
+         project_name = settings.SETTINGS_MODULE.split('.')[0]
+         try:
+             url = reverse(project_name + '.' + self.view_name,
+                           args=args, kwargs=kwargs)
+         except NoReverseMatch:
+ ||<
+ 
+ Looking at the error log again, I see. The variable id was undefined (= empty string), so it didn't match the pattern. I fixed that and it worked fine.
+ 
+ >>
+ Caught an exception while rendering: Reverse for 'settings.programmers_ightmare.views.new_game' with arguments <strong>'('',)'</strong> and keyword arguments '{}' not found.
+ <<
+ 
+ The template behavior of "return empty string when variable is undefined" is a bit of a trap, so I'm tempted to add a Strict mode that throws an exception saying "No such variable exists! I'd like to add a Strict mode that throws an exception saying "No such variable exists!
+ According to <a href='http://djangoproject.jp/doc/ja/1.0/ref/templates/api.html#id6'>Handling Invalid Values</a>, "Many templates, including the Admin site templates, are The Admin site template and many other templates are built on the assumption that a call to a non-existent value will not output anything." This does not seem to be the case.
+ 
+ 
+ Well, if the url tag is stubbed, it would be a good idea to make sure that you are not typoing the variable name of the argument, and that the expected value is entered properly.
+ 
+ *1237895547*Housework (shopping)
+ I went to 7-Eleven and bought a brown sugar karinto, then went to Ito-Yokado and bought natto (fermented soybeans) for 73 yen, then went to Lawson's 100 yen store and found that natto was discounted 50 yen.
+ 
+ 
+ That is why I have 9 packs of natto whose expiration date is today. I have to find out how to consume them other than natto rice.
+ 
+ <a href='http://cookpad.com/recipe/106926'>Natto Spa by monemaruku [Cookpad] 400,000 easy and delicious recipes for everyone</a>.
+ <a href='http://cookpad.com/recipe/437989'>Crispy Natto with Cheese by Shinonome A [Cookpad] 400,000 easy and delicious recipes for everyone</a>.
+ 
+ 
+ I bought some instant coffee because I heard that caffeine doping can motivate you.
+ 
+ *1237914302*[TopCoder] Single Round Match 437 (Div2/250point)
+ I copied and pasted the sum from toolbox. I also wondered about 0ULL. I thought T(0) would be fine.
+ 
+ It was the first problem in a long time that I could solve in an instant, or maybe my programming skills are coming back after a long slump recently. Or maybe my programming skills are coming back after a long slump recently. coding time: 0:02:30.041, Passed System Test, 248.08points
+ 
+ >|cpp|
+ template<typename T>
+ T sum(vector<T> xs){
+   return accumulate(xs.begin(), xs.end(), 0ULL);
+ }; 
+ 
+ class TheBeauty {
+ public:
+   int find(int n) {
+     vector<int> b(10);
+     while(n){
+       b[n % 10] = 1;
+       n /= 10;
+     }
+     return sum(b);
+   }
+ }
+ ||<
+ 
+ *1237915040*[TopCoder] Single Round Match 437 (Div2/500point)
+ The question is: "What is the largest value that can be created by swapping numbers k times in decimal notation for an integer n? However, do not create a number that starts with 0. If that cannot be avoided, return -1, and so on.
+ 
+ I don't like the fact that you're not using a pre-increment in the for statement. Also, you're searching for the largest value at the end, but I thought the set was sorted.
+ 
+ coding time: 0:26:30.942, Passed System Test, 305.56 points
+   	
+ >|cpp|
+ vector<int> to_vec(int n){
+   vector<int> result;
+   while(n){
+     result.insert(result.begin(), n % 10);
+     n /= 10;
+   }
+   
+   return result;
+ }
+ 
+ vector<int> swap(vector<int> n, int i, int j){
+   // n is a copy
+   swap(n[i], n[j]);
+   return n;
+ }
+ 
+ int to_int(vector<int> xs){
+   int result = 0;
+   for(size_t i=0; i < xs.size(); i++){
+     result = result * 10 + xs[i];
+   }
+   return result;
+ }
+ 
+ class TheSwap {
+ public:
+   int findMax(int n, int k) {
+     vector<int> xs = to_vec(n);
+     size_t N = xs.size();
+     if(N == 1) return -1;
+     set<int> cur;
+     cur.insert(n);
+     set<int> next;
+     typedef set<int>::iterator siter;
+     for(size_t times=0; times < k; times++){
+       for(siter iter=cur.begin(), end=cur.end(); iter != end; iter++){
+ 	int n = *iter;
+ 	vector<int> xs = to_vec(n);
+ 	for(size_t i=0; i<N; i++){
+ 	  for(size_t j=i+1; j<N; j++){
+ 	    vector<int> new_xs = swap(xs, i, j);
+ 	    if(new_xs[0] != 0){
+ 	      next.insert(to_int(new_xs));
+ 	    }
+ 	  }
+ 	}
+       }
+       if(next.empty()) return -1;
+       cur = next;
+       next.clear();
+     }
+     int result = 0;
+     for(siter iter=cur.begin(), end=cur.end(); iter != end; iter++){
+       if(*iter > result){
+ 	result = *iter;
+       }
+     }
+     return result;
+   }
+ }
+ ||<
+ 
+ *1237915884*[TopCoder] Single Round Match 437 (Div2/1000point)
+ It had been a while since I had enough extra time, so I tried the 1000-point problem. I had enough time to do a 1000 point problem. The allowed operations are
+ - increase by one
+ - Decrease by 1 (only if original value is greater than 1)
+ - Multiply (for example, if the original value is 2, change it to 4, 8, or 16)
+ three."
+ 
+ 
+ If we simply calculate, the possibilities would naturally increase to the power of 3 and diverge, so we pruned the branches by saying, "We will not search for the number that has already appeared (because it is not the shortest)," "The number that exceeds the goal can only come back by decrement, so power must be just above the goal," and "We will not increment the number that has already exceeded the goal. The number of numbers that are above the goal cannot be the shortest, so we don't search for them" and "If power is no longer used in the final stage, we don't search for the number that is above the goal. I tried to do "if power is no longer used at the end of the game, then just increment or decrement to nip at the goal, so +distance and end", but I got real 0m4.153s at hand, time out and no luck.
+ 
+ >|cpp|
+   int count(long long goal) {
+     typedef unsigned long long ULL;
+     const ULL MAX_ULL = 18446744073709551615ULL;
+     set<ULL> cur;
+     cur.insert(1);
+     set<ULL> next;
+     set<ULL> used;
+     ULL distance = goal - 1;
+     typedef set<ULL>::iterator siter;
+     int result = 0;
+     if(goal == 1) return 0;
+     while(true){
+       used.insert(cur.begin(), cur.end());
+ 
+       result++;
+       bool skip = true;
+       for(siter iter=cur.begin(), end=cur.end(); iter != end; ++iter){
+ 	ULL n = *iter;
+ 	ULL x = n;
+ 	if(n == 1) skip = false;
+ 	if(n != 1){
+ 	  // power
+ 	  while(MAX_ULL / n >= x && x < ULL(goal)){
+ 	    x *= n;
+ 	    if(x == ULL(goal)) return result;
+ 	    if(used.find(x) == used.end() && x < ULL(goal) + distance){
+ 	      next.insert(x);
+ 	      skip = false;
+ 	      if(goal - x > 0 && goal - x < distance){
+ 		distance = goal - x;
+ 	      }
+ 	      if(x - goal > 0 && x - goal < distance){
+ 		distance = x - goal;
+ 	      }
+ 
+ 	    }
+ 	  }
+ 	  
+ 	  // decrement
+ 	  x = n - 1;
+ 	  if(used.find(x) == used.end() && x < ULL(goal) + distance){
+ 	    if(x == ULL(goal)) return result;
+ 	    next.insert(x);
+ 	    if(goal - x > 0 && goal - x < distance){
+ 	      distance = goal - x;
+ 	    }
+ 	    if(x - goal > 0 && x - goal < distance){
+ 	      distance = x - goal;
+ 	    }
+ 	  }
+ 	}
+ 	// increment
+ 	x = n + 1;
+ 	if(used.find(x) == used.end() && x <= goal){
+ 	  if(x == ULL(goal)) return result;
+ 	  next.insert(x);
+ 	  if(goal - x < distance){
+ 	    distance = goal - x;
+ 	  }
+ 	}
+       }
+       if(skip) return result + distance;
+       cur = next;
+       next.clear();
+     }
+   }
+ ||<
+ 
+ *1237918388*[TopCoder] Single Round Match 437 Results
+ I got both 250 and 500 correct, for a total of 550 points.
+ 
+ I've recovered a lot, but I can't go back to the first team yet. I'm just barely missing a few points. I feel like there is a glass ceiling around the border (must be my imagination).
+ <img src="http://gyazo.com/f69c4a9a34278cf80896139de756702e.png">
+ 
+ *1237919004*Hacker's cafe Fes
+ http://d.hatena.ne.jp/akio0911/20090324/p1
+ 
+ I thought it would conflict with the Python Ryokan, but the Python Ryokan finishes at 12:00 pm so I can attend in the afternoon.
+ </body>
+
+[Hatena Diary 2009-03-24 https://nishiohirokazu.hatenadiary.org/archive/2009/03/24]

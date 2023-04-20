@@ -1,0 +1,127 @@
+Hatena2012-10-06
+code:hatena
+ <body>
+ *1349509849*Talking about Ruby strings having encoding information.
+ Talk about Ruby strings having encoding information.
+ 
+ >|c|
+ struct RString {
+     struct RBasic basic;
+     union {
+ 	struct {
+ 	    long len;
+ 	    char *ptr;
+ 	    union {
+ 		long capa;
+ 		VALUE shared;
+ 	    } aux;
+ 	} heap;
+ 	char ary[RSTRING_EMBED_LEN_MAX + 1];
+     } as;
+ };
+ ||<
+ 
+ Huh? I don't have it?
+ 
+ straight away
+ >|c|
+ int
+ rb_enc_get_index(VALUE obj)
+ {
+ ...
+       case T_STRING:
+       case T_REGEXP:
+ 	i = ENCODING_GET_INLINED(obj);
+ 	if (i == ENCODING_INLINE_MAX) {
+ 	    VALUE iv;
+ 
+ 	    iv = rb_ivar_get(obj, rb_id_encoding());
+ 	    i = NUM2INT(iv);
+ 	}
+ 	break;
+ ||<
+ 
+ and then...
+ 
+ >|c|
+ #define ENCODING_GET_INLINED(obj) (int)((RBASIC(obj)->flags & ENCODING_MASK)>>ENCODING_SHIFT)
+ ||<
+ 
+ why?
+ >|c|
+ struct RBasic {
+     VALUE flags;
+     VALUE klass;
+ };
+ ||<
+ It seems to be stuck here.
+ 
+ >|c|
+ #define ENCODING_MASK (((VALUE)ENCODING_INLINE_MAX)<<ENCODING_SHIFT)
+ ||<
+ 
+ >|c|
+ #define ENCODING_INLINE_MAX 1023
+ ||<
+ 
+ Aside from that, what happens when strings are concatenated?
+ 
+ >|c|
+ VALUE
+ rb_str_plus(VALUE str1, VALUE str2)
+ {
+ ...
+     enc = rb_enc_check(str1, str2);
+ ||<
+ 
+ >|c|
+ rb_encoding*
+ rb_enc_check(VALUE str1, VALUE str2)
+ {
+     rb_encoding *enc = rb_enc_compatible(str1, str2);
+     if (!enc)
+ 	rb_raise(rb_eEncCompatError, "incompatible character encodings: %s and %s",
+ 		 rb_enc_name(rb_enc_get(str1)),
+ 		 rb_enc_name(rb_enc_get(str2)));
+     return enc;
+ }
+ ||<
+ 
+ rb_enc_compatible, well, if they are both in the same encoding, it will return it easily, but if they are not...
+ >|c|
+ rb_encoding*
+ rb_enc_compatible(VALUE str1, VALUE str2)
+ {
+ 
+ ... (Return one if they are the same, or return 0 if one of them is -1)
+ 
+     if (TYPE(str2) == T_STRING && RSTRING_LEN(str2) == 0)
+ 	return (idx1 == ENCINDEX_US_ASCII && rb_enc_asciicompat(enc2)) ? enc2 : enc1;
+     if (TYPE(str1) == T_STRING && RSTRING_LEN(str1) == 0)
+ 	return (idx2 == ENCINDEX_US_ASCII && rb_enc_asciicompat(enc1)) ? enc1 : enc2;
+     if (!rb_enc_asciicompat(enc1) || !rb_enc_asciicompat(enc2)) {
+ 	return 0;
+     }
+ 
+     /* objects whose encoding is the same of contents */
+     if (BUILTIN_TYPE(str2) != T_STRING && idx2 == ENCINDEX_US_ASCII)
+ 	return enc1;
+     if (BUILTIN_TYPE(str1) != T_STRING && idx1 == ENCINDEX_US_ASCII)
+ 	return enc2;
+ ...
+ ||<
+ 
+ If it was a string in ASCII-compatible encoding combined with ASCII, I had to elevate the ASCII side... or do something if one side had a 7-bit code range, and I did a lot of hard work. It's a lot of work.
+ 
+ ** Summary
+ 
+ So I have been following the string area of Ruby 1.9, which is often rumored to be going its own way.
+ I thought it was something like this in a nutshell:
+ - C: Byte sequence
+ - Pascal: byte sequence + length
+ - Java: 16-bit column + length, fixed to UTF-16, so you don't have to worry about anything when doing joins, etc. You can pass the encoding as an argument to getBytes to get a byte sequence in another encoding.
+ - Ruby: byte sequence + length + encoding. Check for encoding compatibility when doing joins, etc.
+ - Python: "byte string + length" string and "Unicode codepoint string + length" unicode string. 16bit or 32bit is compile option. String by itself is like Pascal. Unicode string alone is like Java. Combining byte strings and unicode strings is compatible only when the byte string side is ASCII (Series 2) / incompatible (Series 3).
+ </body>
+
+[Hatena Diary 2012-10-06 https://nishiohirokazu.hatenadiary.org/archive/2012/10/06]

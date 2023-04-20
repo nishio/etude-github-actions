@@ -1,0 +1,122 @@
+ABC193
+I only solved 5 questions, but it was a new personal best.
+[https://gyazo.com/66fbb4cdf9248927491c87940c0e16c1]
+[https://gyazo.com/295a6fe07a61e4df1c3dbe6ce0e03dc6]
+
+[C - Unexpressed https://atcoder.jp/contests/abc193/tasks/abc193_c]
+[https://gyazo.com/cb635c05c6816e60ce37299f58bd2f2c]
+	The number that can be represented is not a large number.
+　At most [$ \sum \log_i N [2 \le i \le \sqrt{n}]]
+ 	So just count them all.
+　　The most common time a=2 is a little over 30 at the highest, and a can only go up to 10^5 at the maximum, so we can judge that there is plenty of room.
+		PS: Actual count was 102230.
+ code:py
+  def main():
+      N = int(input())
+      from math import sqrt, floor
+      ok = set()
+      MAX_A = floor(sqrt(N))
+      for a in range(2, MAX_A + 1):
+          x = a * a
+          while x <= N:
+              ok.add(x)
+              x *= a
+  
+      print(N - len(ok))
+
+[D - Poker https://atcoder.jp/contests/abc193/tasks/abc193_d]
+[https://gyazo.com/407827a9676a567be92cd4e082d29d83]
+ There are only a high of 81 ways to play the hand, so try them all.
+	code:py
+	 def main():
+      K = int(input())
+      S = input().strip().decode('ascii')
+      T = input().strip().decode('ascii')
+      scount = [0] * 9
+      tcount = [0] * 9
+      rest = [K] * 9
+      for i in range(4):
+          s = int(S[i]) - 1
+          t = int(T[i]) - 1
+          scount[s] += 1
+          tcount[t] += 1
+          rest[s] -= 1
+          rest[t] -= 1
+  
+      def calcScore(xs):
+          ret = 0
+          for i in range(9):
+              ret += (i + 1) * (10 ** xs[i])
+          return ret
+  
+      ret = 0
+      for a in range(9):
+          if rest[a] == 0:
+              continue
+          pa = rest[a]
+          rest[a] -= 1
+          scount[a] += 1
+  
+          for b in range(9):
+              if rest[b] == 0:
+                  continue
+              pb = rest[b]
+              tcount[b] += 1
+              if calcScore(scount) > calcScore(tcount):
+                  ret += pa * pb
+              tcount[b] -= 1
+  
+          rest[a] += 1
+          scount[a] -= 1
+  
+      ret /= (9 * K - 8) * (9 * K - 9)
+      print(ret)
+
+[E - Oversleeping https://atcoder.jp/contests/abc193/tasks/abc193_e]
+	The problem text is too long to fit in the screenshot, so I omitted it.
+	In short, the problem is to find the earliest time when both of them turn ON when there is one that turns ON in a certain range of period N and another that turns ON in a certain range of period M.
+	　N and M are on the order of 10^9, so it's impossible to actually test each cycle.
+	　However, the period during which it is ON in that cycle is limited to a maximum of 500.
+	[The Chinese remainder theorem] allows us to find the smallest value in logarithmic order that is "divide by N and get less a, divide by M and get less b".
+	We can do the Chinese remainder theorem for all 500 x 500 combinations and answer the minimum of the whole.
+	　My library implementation was based on the assumption that N and M are prime to each other, but this is not always the case, so I hastily corrected it
+	code:python
+	 def crt(a, m, b, n):
+      """
+      Find x s.t. x % m == a and x % n == b
+  
+      >>> crt(2, 3, 1, 5)
+      11
+      >>> crt(1, 4, 3, 6)
+      9
+      """
+      x, y, g = extended_euclidean(m, n)
+      if g == 1:
+          return (b * m * x + a * n * y) % (m * n)
+      s = (b - a) // g
+      return (a + s * m * x) % (m * n // g)
+  
+  def main():
+      from math import gcd
+      T = int(input())
+      for _t in range(T):
+          X, Y, P, Q = map(int, input().split())
+  
+          m = 2 * X + 2 * Y
+          n = P + Q
+          ret = INF = 9223372036854775807
+          g = gcd(n, m)
+          for a in range(X, X+Y):
+              for b in range(P, P + Q):
+                  if a % g == b % g:
+                      x = crt(a, m, b, n)
+                      ret = min(ret, x)
+  
+          if ret == INF:
+              print("infinity")
+          else:
+              print(ret)
+
+[✅ABC193F]
+
+Previous [ARC113].

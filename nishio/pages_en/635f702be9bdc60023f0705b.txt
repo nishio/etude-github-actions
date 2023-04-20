@@ -1,0 +1,14 @@
+Reset VRAM on Google Colab
+I was doing a process in Google Colab that used a lot of video memory, and the first time it worked, but the second time I got an error because I didn't have enough memory.
+This is due to the fact that "instances that are not needed are still alive grabbing video memory.
+　The first run, Y was not yet created when doing X. The second run, X is done with the remaining Y created in the first run.
+　Colab's environment keeps grabbing global variables created in the past, which is why they are not GC'd.
+
+So we explicitly release it.
+code:py
+ from numba import cuda
+ device = cuda.get_current_device() 
+ device.reset()
+[https://stackoverflow.com/questions/71371756/can-i-clear-up-gpu-vram-in-colab google colaboratory - Can i clear up gpu vram in colab - Stack Overflow]
+
+Not tested if this is correct.

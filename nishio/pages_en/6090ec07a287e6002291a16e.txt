@@ -1,0 +1,91 @@
+Hatena2011-04-18
+code:hatena
+ <body>
+ *1303091592*Rethinking Pomodoro
+ Reprinted from Twitter
+ >>
+ I think the key to Pomodoro is the C part of PDCA. To check why I am not working according to the plan even though I work with relatively few interruptions, a record focusing on the frequency of interruptions is not enough, and it should also measure things like continuing to work after the pomodoro is over, or working without a timer.
+ <<
+ 
+ ** What should be recorded
+ 
+ Interruptions that have occurred after working on the Pomodoro for a while now.
+ - earthquake
+ - I can talk to you.
+ I think it averages less than one a day. It must be a very low interruption workplace. So there must be other issues to focus on than reducing interruptions when it comes to my productivity.
+ 
+ bad pattern
+ - Work without turning the timer and the pomodoro that should be counted is not counted.
+ -- I was doing some research during my break, and I was moving straight to work and spent about 1 pomodoro of time, but I didn't measure it.
+ -- Researching during break time took longer than expected, and I found myself doing about one pomodoro minute of research, but I didn't measure it.
+ -- After Pomodoro was finished, I thought, "I'm almost done getting this bug out!" I spent a lot of time, but I don't know how much I spent.
+ - Less than one pomodoro between meetings, study sessions, and other appointments, and work is not getting done.
+ 
+ There is a tendency to "get into it" for better or worse. There is no way to improve without first being able to properly measure and quantitatively evaluate. Should we record how many tasks have been done without measurement? If we record the time at the start of the Pomodoro, we should be able to tell when the rest time is unnaturally long and when it is an outlier. It could be that the person is demotivated for some reason, or that he/she is absorbed in his/her work without recording it, or that he/she is doing some task that is not on the task list. This is something that needs to be improved.
+ 
+ As for the latter, "shredded time", we should do "shredded time tasks".
+ 
+ ** How to represent the task in text
+ 
+ One of the reasons why we are not good at dealing with fine time tasks may be that we do not have a fixed notation for them.
+ 
+ One of the things I learned after joining Cybozu Labs is to use the notation "□ for unprocessed tasks and ■ for processed tasks," which I like so much that I have registered it in the IME so that I can convert "todo" and "done" to it. I have been using the rule of one □ per task, and when I started Pomodoro, I extended it to three Pomodoros with □□□□. This is an incorrect expansion. If I expect a task to finish in 3 pomodoros and it finishes in 2 pomodoros, it looks like a task that is not completed in ■■■□.
+ 
+ I had glanced at a blog entry by someone who manages Pomodoro with a text editor, but I couldn't find it when I searched for a reference. I have no choice but to come up with a new one.
+ 
+ To conform to my existing habits, there is one □ at the head of the task, which changes to ■ when the task is completed. This rule should not be changed. On the other hand, as a pomodoro, "make an estimate of how many pomodoros it will take to complete the task before it starts," "record interruptions during the task," and "record the times when the task was not completed as estimated. How many pomodoros did you think you would need to add to finish, and whether your estimate was correct" is necessary. Therefore.
+ 
+ >||
+ - Hoge Project
+ -- □xoo Preparation for something
+ ||<
+ 
+ How about expressing pomodoros as o, consumed pomodoros as x, and rescheduling as xxx|oo? Should we represent a pomodoro that has been destroyed by an interruption in the same way, say z? Or should tasks with less than one pomodoro be marked with . It is not a good idea to add nothing. As for z and . I'll see if I can use that symbol for z and .
+ 
+ ** Summary
+ >||
+ Legend: □xxx|xoo z for interrupts, . for tasks less than 1, and ? Missed timer is represented by ? Timer misses are represented by
+ Rule: Turn the timer anyway, even for small tasks.
+ ||<
+ It took one pomodoro to organize so far.
+ 
+ *1303109263*Interacting with sub-processes in Python
+ I had a program that would return one line of standard output when I put one line of standard input, and it took 7 minutes each time it started up, so I decided to leave the process running and wrap it in an HTTP server.
+ 
+ You can think of it as CAT for subprocess behavior. So.
+ 
+ >|python|
+ p = Popen(["cat"], stdin=PIPE, stdout=PIPE)
+ ||<
+ after doing something
+               
+ >|python|
+ p.stdin.write("%s\n" % query)
+ result = p.stdout.read()
+ ||<
+ 
+ When I did that, it was blocked. The manual says to use p.communicate instead of raw read/write to avoid the block, but if I use that, the fd is closed after one exchange, so the second exchange results in "ValueError: I/O operation on closed file". p.stdin.flush() has nothing to do with it. p.stdout.read(1) can read it without blocking. In other words, Python's file#read() behaves like read(1024) and blocks if the specified amount of data is not available.
+ >>
+ It is not an error if this number is smaller than the number of bytes requested; this may happen for example because fewer bytes are actually available right now...
+ <<
+ If you are writing code in a POSIX environment, you can use os.read.
+ 
+ >||
+ >>> p.stdin.write("hoge\n")
+ >>> os.read(p.stdout.fileno(), 1024)
+ 'hoge\n'
+ ||<
+ 
+ thanks id:moriyoshi, id:mopemope
+ 
+ PS: Many have pointed out that readline is fine if it is known that it will be returned line by line.
+ </body>
+ <comments>
+ <comment>
+ <username>methane</username>
+ <body>If your subprocess buffers line-by-line like cat, you can use p.readline(). </body>
+ <timestamp>1303110631</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-04-18 https://nishiohirokazu.hatenadiary.org/archive/2011/04/18]

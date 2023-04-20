@@ -1,0 +1,91 @@
+Hatena2010-02-06
+code:hatena
+ <body>
+ **1265436304*Dominion simulation
+ **Outline
+ On whether one should buy a chapel on the first move when doing a Dominion coin-buying strategy.
+ For 10 turns after the end of the first move, "If you get a chapel, abandon the mansion. Buy silver or gold coins if you can." The results of the simulation are as follows. The results showed that "chapel + silver coins" was superior to "silver coins + silver coins," "chapel + chapel," or "silver coins + moat.
+ 
+ **Motivation
+ Read <a href='http://d.hatena.ne.jp/takerunba/20091102/p1'>Takerumba's Dominion Strategy - Part 4 Action Cards (Part 1) - Sir Takerumba's Diary</a
+ >>
+ I'm not sure how well a chapel would work for the simple tactic of raking in the coins. It's not that it's not effective, and with 2 gold you can't buy silver coins anyway, so the idea of buying and disposing of the mansion anyway is possible, but whether you can conveniently dispose of 3 mansions depends on luck, and since the possibility of drawing coins is reduced by one chapel, I wonder how advantageous it will be early in the game.
+ <<
+ I thought this would be an easy experiment if I wrote a program, so I did it.
+ 
+ **Method
+ During the 10 turns after the end of the first move, "If you get a chapel, abandon the mansion. Buy silver or gold coins if you can." The simulation was run 10,000 times to see what the coin value per deck would be if the strategy was "Buy silver or gold if you can afford it. The source code is at the end.
+ 
+ **Results
+ When the first hand bought a chapel and a silver coin, mean 1.72, SD 0.1; when only a silver coin was bought, mean 1.62, SD 0.05; when the first coin was split 3-4 and 2 silver coins were bought, mean 1.68, SD 0.05; when 2 chapels were bought, mean 1.60, SD 0.08; when a moat and a silver coin were bought, mean 1.59, SD 0.05, and if they bought a moat and a silver coin, mean 1.59, SD 0.05. In other words, "chapel + silver coin" outperformed "silver coin + silver coin," "chapel + chapel," and "silver coin + moat. Note that in this experiment, the chapel is used only for discarding the mansion, but in a real battle, it could be used for discarding copper coins, so "chapel + silver coins" and "chapel + chapel" could have higher values.
+ 
+ In addition, it is worth considering whether an increase in average value of +0.1 and discarding +3 victory points is a worthwhile investment.
+ 
+ ** Source code
+ >|python|
+ from random import shuffle
+ from copy import copy
+ 
+ NUM_TRIAL = 10000
+ 
+ def draw(deck, used, n):
+     if len(deck) < n:
+         shuffle(used)
+         deck.extend(used)
+         used = []
+     hand = deck[:n]
+     deck = deck[n:]
+     return deck, used, hand
+ 
+ def count_money(cards):
+     return cards.count("1") + cards.count("2") * 2 + cards.count("3") * 3
+ 
+ def test(initial_deck):
+     sum = 0
+     sumsq = 0.0
+ 
+     for triel in range(NUM_TRIAL):
+         deck = copy(initial_deck)
+         shuffle(deck)
+         used = []
+         for i in range(10):
+             deck, used, hand = draw(deck, used, 5)
+             if "C" in hand:
+                 while "E" in hand:
+                     hand.remove("E")
+             elif "M" in hand:
+                 deck, used, got = draw(deck, used, 2)
+                 hand += got
+ 
+             money = count_money(hand)
+             if money >= 6:
+                 used.append("3")
+             elif money >= 3:
+                 used.append("2")
+ 
+             used += hand
+ 
+         deck += used
+         money = count_money(deck)
+         x = float(money) / len(deck)
+         sum += x
+         sumsq += x * x
+ 
+     from math import sqrt
+     print sum / NUM_TRIAL, sqrt(sumsq / NUM_TRIAL - (sum / NUM_TRIAL) ** 2)
+ 
+ 
+ print "a silver only"
+ test(list("1111111EEE2"))
+ print "silver and chapel"
+ test(list("1111111EEE2C"))
+ print "two silvers"
+ test(list("1111111EEE22"))
+ print "two chapels"
+ test(list("1111111EEECC"))
+ print "silver and moat"
+ test(list("1111111EEE2M"))
+ ||<
+ </body>
+
+[Hatena Diary 2010-02-06 https://nishiohirokazu.hatenadiary.org/archive/2010/02/06]

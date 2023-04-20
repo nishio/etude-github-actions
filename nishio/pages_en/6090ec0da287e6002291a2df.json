@@ -1,0 +1,31 @@
+Hatena2014-02-14
+code:hatena
+ <body>
+ *1392304771*Paper Introduction "A Hierarchical Bayesian Language Model based on Pitman-Yor Processes"
+ Talk about reading the original HPYLM paper to implement NPYLM.
+ 
+ The Pitman-Yor process is a stochastic process that creates a new distribution from the base distributionG0 and discount parameter 0 < d < 1 and strength parameter θ > -d. It can be constructed by stick breaking. It can be constructed from a sequence of independent random variables Vk ~ Beta(1 - d, θ+kd) and φk ~ G0 using equation (9). This is stick breaking.
+ 
+ Another perspective can be expressed in the Chinese restaurant process. A single restaurant has an unlimited number of tables, and customers sit at those tables. The first customer sits at the first table, and subsequent customers sit at the kth table with probability proportional to ck - d, where ck is the number of customers already sitting at that table. A guest may also sit at a table where no one is sitting yet. This probability is proportional to θ + dt. Here t is the number of tables. it says that φk is drawn from G0, or that φk is a dish, but I don't understand! So far, it seems to me that the distribution of customer placements is determined without room for G0.
+ 
+ Adding ck - d for t tables, plus θ + dt, to which the new table is added, yields θ + c. This comes to the denominator of equation (10). Ah, which dishes to place in the newly added table comes out of G0.
+ 
+ Equation (11) is the predicted probability, which I believe is the same equation that appeared in the NPYLM. tw is the number of tables serving w. The vocabulary is finite and the number of tables is infinite, so there can be tables that serve the same food. I wonder if this would have to have a w->int correspondence for each restaurant. Sounds bulky.
+ 
+ Chapter 4. Context u is n-1 characters in front. we want to predict Gu(w) when u is given. We make the distribution of u in PY from d and θ determined by u in and then the distribution in the context one letter shorter than u. In the following equation, u is the restaurant = context, w is the dish = word, and k is the table. cuwk is the number of customers sitting at table k in restaurant u eating w. If k does not serve w, then 0. (k does not serve more than one w, right?). tuw is the number of tables serving w in restaurant u. tu・ is the number of tables in restaurant u (so k still serves 1 w, right?).
+ 
+ and equation (16) is the expression for the predicted probability when made hierarchical.
+ 
+ Appendix B contains pseudo codes.
+ 
+ Appendix C describes the estimation of d and θ. We assume that d follows a beta distribution and θ a gamma distribution. For computational convenience, we make x follow a beta distribution, y and z follow a Bernoulli distribution, and combine them to determine the hyperparameters for d and θ. Let's see, you use d and θ sampled from that distribution to calculate the probability of the current seating arrangement coming up, and then you decide on MCMC, checking to see if it fits the Metropolis Hasting acceptance criteria. Oh, d and θ are mixed in with the parameters of the x, y, and z distributions. So, sampling with the current values, replacing them if they get better, and repeating the process will get you to the appropriate d and θ. The initial values are also well written.
+ 
+ ** Source.
+ http://www.stats.ox.ac.uk/~teh/research/compling/hpylm.pdf
+ http://www.gatsby.ucl.ac.uk/~ywteh/research/compling/acl2006.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ </body>
+
+[Hatena Diary 2014-02-14 https://nishiohirokazu.hatenadiary.org/archive/2014/02/14]

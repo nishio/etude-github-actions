@@ -1,0 +1,235 @@
+Hatena2008-04-07
+code:hatena
+ <body>
+ *1207517065* early bird
+ I set a timer to go to bed after 7pm to sleep for 90 minutes and didn't wake up until 27:00.
+ 
+ That's why I'm up super early today. Hmmm. I should come in early and go home early.
+ 
+ *1207523803* Hachiro Development Camp
+ Went to. Honey and closures. Patahene and Hennepata.
+ 
+ f:id:nishiohirokazu:20080407081505j:image
+ 
+ *1207525260*Housekeeping
+ uh oh
+ It's about this time when I'm hanging the laundry out to dry.
+ And I'm getting sleepy.
+ 
+ *1207536676*Read output of child process in Python
+ If the child process "outputs something and exits" as shown below, you may read from the standard output of the child process without thinking.
+ >|python|
+ # print.py
+ print "Hello!"
+ ||<
+ 
+ >|python|
+ # readline.py
+ import sys
+ from subprocess import Popen, PIPE
+ p = Popen(sys.argv[1:], stdout=PIPE)
+ print "data:", p.stdout.readline()
+ ||<
+ 
+ >||
+ $ python readline.py python print.py 
+ data: Hello!
+ 
+ ||<
+ 
+ However, if the child process is one that does not terminate, such as the one below, it may not be readable in this way.
+ >|python|
+ print "Hello!"
+ from time import sleep
+ while True:
+     sleep(1)
+ ||<
+ 
+ >||
+ $ python readline.py python print.py 
+ data: (Waiting without displaying)
+ ||<
+ 
+ This is because the standard output of the child process is not flushed. If you can modify the code of the child process, you can add flush as shown below to make it readable.
+ 
+ >|python|
+ print "Hello!"
+ 
+ import sys
+ sys.stdout.flush()
+ 
+ from time import sleep
+ while True:
+     sleep(1)
+ ||<
+ 
+ But it's hard to go around flushing all the output, and if you use pty and pretend to be a terminal, you can read this kind of stuff.
+ 
+ >|python|
+ import sys
+ import pty
+ import os
+ 
+ def reader(fileno):
+     return os.read(fileno, 1)
+ 
+ pty.spawn(sys.argv[1:], reader)
+ ||<
+ 
+ In this case, however, what os.read read is not the string output by the child process itself, but the control code sent to the terminal. For example, even if the output is a newline (\n, \x0A), the terminal will receive CR+LF (\r\n, \x0D\x0A).
+ 
+ -----
+ 
+ I heard from Mitsunari that if the child process is written in Python, python -u print.py can be used for non-buffering mode. I wonder if Ruby has a similar option.
+ 
+ -----
+ 
+ id:kazuhooku pointed this out to me:
+ - If it is ruby, STDOUT.sync = true
+ - If perl, $| = 1 or $fh.autoflush(1)
+ 
+ *1207547027* Self-serving correction: Continuation: Program for finding intersections of circles.
+ -A program to find the intersection of circles - a2c.get.diary
+ --http://d.hatena.ne.jp/a2c/20080407/1207535925
+ 
+ Trigonometric functions are not necessary, so I erased them. Since the line connecting the centers of the circles and the line connecting the intersections of the circles are perpendicular, we first find the distance from the center of circle 1 to "the intersection of the line connecting the centers of the circles and the line connecting the intersections of the circles" using the Pythagorean theorem in right triangle. After that, we find the intersection point, kdir, and use the Pythagorean theorem again to find how much it should deviate from kdir in the perpendicular direction. The lengths a and b are the lengths of the two line segments connecting the centers of the circles, divided by the intersection point. Also, I think you need to check when the circles don't intersect, but I left that out... there is an intersection when mag <= r1 + r2... not necessarily (because there are cases where it is completely contained inside).
+ 
+ >|python|
+ import math
+ size(300, 300)
+ background(0.3, 0.3, 0.3)
+ nofill()
+ stroke(1, 0.1, 0)
+ 
+ def writeEn(posX, posY, R):
+     x = -R + posX
+     y = -R + posY
+     oval(x, y, R * 2, R * 2)
+ 
+ def scale(k ,vec):
+     return (k * vec[0], k * vec[1])
+ 
+ def add(v1, v2):
+     return (v1[0] + v2[0], v1[1] + v2[1])
+     
+ def circleCross(xc1, yc1, r1, xc2, yc2, r2):
+     from math import sqrt
+     cross = []
+     dir = (float(xc2 - xc1), float(yc2 - yc1))
+     sqmag = dir[0] ** 2 + dir[1] ** 2
+     r1sq = r1 ** 2
+     r2sq = r2 ** 2
+     # r1sq == a ** 2 + d ** 2
+     # r2sq == b ** 2 + d ** 2
+     # sqmag == (a + b) ** 2
+     # r1sq - r2sq == a ** 2 - b ** 2 == (a + b) * (a - b)
+     ratio = (r1sq - r2sq + sqmag) / sqmag # 2a / (a + b)
+     mag = sqrt(sqmag)
+     k = ratio * mag / 2
+     d = sqrt(r1sq - k ** 2)
+     ndir = scale(1 / mag, dir)
+ 
+     kdir = add(scale(k, ndir), (xc1, yc1))
+     writeEn(kdir[0], kdir[1], 2)
+ 
+     odir = scale(d, (ndir[1], -ndir[0]))
+     
+     return [
+         kdir[0] + odir[0], kdir[1] + odir[1], 
+         kdir[0] - odir[0], kdir[1] - odir[1], 
+     ]
+ 
+ c1 = [100,200,100]
+ c2 = [200,100,60]
+ writeEn(c1[0],c1[1],c1[2])
+ writeEn(c2[0],c2[1],c2[2])
+ 
+ p1= circleCross(c1[0],c1[1],c1[2],
+                 c2[0],c2[1],c2[2])
+ stroke(0.5, 0.1, 0)
+ writeEn(p1[0], p1[1], 10)
+ writeEn(p1[2], p1[3], 10)
+ ||<
+ 
+ *1207548353*197X
+ http://d.hatena.ne.jp/n_shuyo/20080407/1207537462
+ 
+ While amachang and I were at the 86 generation development camp, the 7X generation was doing something interesting in Tokyo, and considering that it has been less than half a year since we started talking about the 81 generation, it seems that the fire is spreading fast. I guess the problem is how to make this fire spread to the whole of Japan and not just Tokyo, but it is too heavy a burden for one person to take on alone. Well, I guess there is no need to panic so much, and I will just wait and see what will happen while repeating the 1000 speaker conference....
+ 
+ *1207562048*[Mac]hg
+ >||
+ $ make all
+ (snip)
+ $ sudo make install
+ (snip)
+ $ hg version
+ Traceback (most recent call last):
+   File "/usr/local/bin/hg", line 11, in <module>
+     from mercurial import demandimport; demandimport.enable()
+ ImportError: No module named mercurial
+ ||<
+ Oh, no!
+ 
+ -----
+ 
+ sudo python setup.py install was fine, id:Voluntas made fun of me, the README said to make it.
+ 
+ >||
+ Basic install:
+ 
+  $ make            # see install targets
+  $ make install    # do a system-wide install
+  $ hg debuginstall # sanity-check setup
+  $ hg              # see help
+ 
+ See http://www.selenic.com/mercurial/ for detailed installation
+ instructions, platform-specific notes, and Mercurial user information.
+ ||<
+ 
+ Voila!
+ 
+ -----
+ 
+ I made it on the lab machine anyway since I can make a repository on the local file system.
+ Viewed from a Mac with file sharing. when viewed in Finder, it is mounted under /Volumes. It looks empty, but the .hg is just hidden.
+ hg clone /Volumes/hgrepos projectname
+ Hmm. Done. Now I can edit locally and commit in the appropriate units even if the machines are not connected. When I want to put it in the shared repository, I push. If someone else is updating the file, the push will fail, so pull the file, get the changes, make sure they match up and work properly, and then push.
+ 
+ It's rather easy. I guess I can use freehg.org if it's a project I don't mind showing to others.
+ 
+ *1207564777*Rain
+ 
+ Gee, it started raining when I was eating dinner!
+ 
+ *1207581508* It's on the top floor.
+ The rain is hitting the ceiling and making a great noise!
+ </body>
+ <comments>
+ <comment>
+ <username>coji</username>
+ <body>Let's do a traveling caravan, caravan. </body>
+ <timestamp>1207551832</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>mjd!</body>
+ <timestamp>1207553258</timestamp>
+ </comment>
+ <comment>
+ <username>jj1bdx</username>
+ <BODY>20 years ago, we were doing similar things. Now, with the Internet, I think it's good to see more horizontal connections. I support it. </body> <body>
+ <timestamp>1207564414</timestamp>
+ </comment>
+ <comment>
+ <username>ujihisa</username>
+ <body>freehg looks like freehug</body>.
+ <timestamp>1207581985</timestamp>
+ </comment>
+ <comment>
+ <username>naoki0311</username>
+ <body>We'll be waiting for your Sapporo business trip caravan...</body>.
+ <timestamp>1207625869</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-07 https://nishiohirokazu.hatenadiary.org/archive/2008/04/07]

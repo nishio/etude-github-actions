@@ -1,0 +1,105 @@
+Hatena2009-06-04
+code:hatena
+ <body>
+ *1244111079* Complete minimum hash
+ In the previous article "<a href='http://d.hatena.ne.jp/nishiohirokazu/20090602/1243912419'>I'm not good at arithmetic</a>," I mentioned that I wrote a program to calculate the number of possible phases because it would be tedious for a human to calculate the total number of possible phases. And I was going to "create a *function* in the C language sense to encode/decode from a phase to an integer in the smallest possible range", which is in essence a perfect minimum hash. I didn't connect the two in my head.
+ 
+ There is nothing difficult about And, Or, Choice, and Resource#take, but Unordered is difficult. Unordered(X + Y) is rewritten as Unordered(X) + X * Y + Unordered(Y) when it is generated, which is sufficient if you just want to count numbers, but if you want to encode them, the X * Y part is rewritten as "one argument is X and the second argument is Y" and vice versa. If you want to encode, however, you need a code to normalize the case where the first argument is X and the second argument is Y, and vice versa.
+ 
+ Oh, I tried to solve that problem by adding an option to And that spits out normalization code, but that doesn't work...the result of expanding Unordered has to be another special Or? Do we need a node that takes two flags for branching and splits the case three ways? But what if the node itself is also in And or Unordered? Hmmm...we need to group them together just like Or.
+ 
+ Let's get this straight: why was it necessary to group the Or's so that they were the outermost? Because when Resource#take is performed from the same resource, whether or not it is taken on one side affects the choices that can be made on the other side. Therefore, when we have And(And(Or(r.take(), X), Y)), we expand it to Or(And(r.take(), Y), And(X, Y))) and make it a parallel world by passing a deepcopy context at the branch of Or. And finally, add them together.
+ 
+ Oh, I see, I'm trying to do the conditional branching of Or with only the given flags, so (X, Y) and (Y, X) are split into different parts, and that's a problem. should I give Or an option to do that too?
+ 
+ <hr>
+ >|python|
+     x = Choice(3, "foo")
+     y = Choice(5, "bar")
+     rule = Unordered(Or(x, y, "is_bar"))
+ ||<
+ This is.
+ >|python|
+ Or(
+     And(Choice(3), Choice(5)), 
+     Or(
+         Unordered(Choice(3)), 
+         Unordered(Choice(5))))
+ ||<
+ in this way
+ 
+ (Deleted due to length)
+ 
+ It looks like this. It takes 6 arguments: foo_0, foo_1, bar_0, bar_1, is_bar_0, is_bar_1, is_bar_0, is_bar_1, and returns the value of or2.
+ 
+ And the decoder will put the passed integer into or2 and then
+ 
+ (Deleted due to length)
+ 
+ I guess I'm wrong about xor = False for now...just as encode computes the value of xor from the two flags before branching, decode must use the value of xor after branching to compute the value of the two flags. So now I'm just using a fixed name for xor because it's a temporary variable, but I need to give it a unique name because it could be nested.
+ 
+ 
+ Moo. Chaos. Maybe I should have made a graph of dependencies and then put it in code.
+ 
+ <hr>
+ 
+ The test started running to encode and decode the arguments I gave it. There are bumpy pitfalls. It's like solving a puzzle one by one.
+ 
+ <hr>
+ Let's see. As long as it's an error, it's still good. It's bad when you run to the end and the answer is wrong.
+ {'bar_1': 3, 'bar_0': 2, 'is_bar_1': True, 'is_bar_0': True} encoded as {'or2': 10}. Um, I guess this is right.
+ >||
+ □
+ □□
+ □□□
+ □□■
+ □□
+ ||<
+ Yeah, it's 0-origin, so it's the 10th. Why is this wrong when decoding this? The code for the relevant part of the decoder in the output
+ >|python|
+ is_bar_0 = False
+ if or2 < 21:
+     is_bar_xor = True
+     or1 = or2
+     if or1 < 15:
+         is_bar_0 = True
+         unordered1 = or1
+         n = 5
+         choice1_0 = 0
+         while unordered1 >= n:
+             unordered1 -= n
+             choice1_0 += 1
+         choice1_1 = unordered1
+         bar_0 = choice1_0
+         bar_1 = choice1_1
+ ||<
+ The decoder that is outputting is totally wrong. Mhm, the result still doesn't match. Oh, bar_0 = choice1_0 is correct bar_0 = choice1_0 + choice1_1? No. Is it correct that choice1_1 = unordered1 becomes choice1_1 = unordered1 + choice1_0? Yes, it is.
+ 
+ <hr>
+ 
+ What do I do next, I tested And(Or(Choice, Choice)) and then Unordered(Or(Choice, Choice)), so I guess I'm missing a test for Resource#take.
+ 
+ <hr>
+ 
+ I passed the test for that, and I was happy to get rid of the giraffe.
+ 
+ >||
+     if kirin_is_mochigoma_1:
+         ,  = _0, _1
+     else:
+         ,  = _1, _0
+     take0 = kirin
+ ||<
+ 
+ Ugh. The And marked "Converted with Unordered" as a result of term rewriting has another And directly under it, so the var_name attribute is empty. What to do with this? > Or(And(And(Take(Resource(X)), Choice(2)), And(Choice(1)), Choice(2))), Or(Unordered(And(Take(Resource(X))), Choice(2))), Unordered(And( Choice(1), Choice(2)))))
+ 
+ Ah, I see, it is not only the variable name corresponding to the node directly under it that is copied by Unordered, but the entire descendant node is copied.
+ >|python|
+         self.vars = [(typ, name + suffix, comment) 
+                      for (typ, name, comment) in rule.vars
+                      for suffix in ["_0", "_1"]]
+ ||<
+ So the subject to be restored here can also use this.
+ </body>
+
+[Hatena Diary 2009-06-04 https://nishiohirokazu.hatenadiary.org/archive/2009/06/04]

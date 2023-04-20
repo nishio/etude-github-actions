@@ -1,0 +1,194 @@
+Hatena2009-05-10
+code:hatena
+ <body>
+ *1241948231* It's already 6:30pm.
+ What? What?
+ 
+ I wrote only urls.py. I thought that since URLs and views are mapped, it would be possible to put the document in the view's docstring and automatically output the API reference, but I will hold out because if I start making a half-baked framework, I will never be able to produce a finished product. I'll hold off.
+ >|python|
+ # -*- coding: utf-8 -*-
+ from django.conf.urls.defaults import *
+ import views
+ urlpatterns = patterns(
+     'saichugen.views',
+     (r'^$', 'index'),
+     (r'^rule_ja.html$', 'rule_ja'),
+ 
+ ### API
+ 
+     (r'start_game/', 'start_game'),
+ # POST Start the game
+ # return game_id
+ 
+     (r'join/(?P<game_id>.*)/', 'join'),
+ # POST Seating in the game
+ # return seat_id
+ 
+     (r'add_player/(?P<game_id>.*)/(?P<player_id>.*)/', 'add_player'),
+ # POST Add a Passive player
+ # return seat_id(? FIXME)
+ 
+     (r'seat/(?P<seat_id>.*)/', 'seat'),
+ # GET Get board status
+ # return what? FIXME
+ 
+     (r'play/(?P<seat_id>.*)/', 'play'),
+ # POST Hand in Hand
+ # @arg hand=0..52 
+ # @return 0: no problem, 1: invalid move, randomly selected, 2: not in a position to make a move
+ 
+     (r'game/(?P<game_id>.*)/', 'game'),
+ # GET Spectator screen for non-players. You can't even see your cards until the game is over.
+ # After the game is over, make the display suitable for spectators (for html)
+ 
+ )
+ ||<
+ 
+ <hr>
+ I went out and had a drink and came back.
+ 
+ This one I wrote earlier, I thought I should do this.
+ # urls.py (omitted)
+ >|python|
+ api_urlpatterns = (
+     (r'start_game/', 'start_game'),
+     (r'join/(?P<game_id>.*)/', 'join'),
+     (r'add_player/(?P<game_id>.*)/(?P<player_id>.*)/', 'add_player'),
+     (r'seat/(?P<seat_id>.*)/', 'seat'),
+     (r'play/(?P<seat_id>.*)/', 'play'),
+     (r'game/(?P<game_id>.*)/', 'game'),
+ )
+ 
+ urlpatterns += patterns(
+     'saichugen.api_views',
+     *api_urlpatterns
+ )
+ ||<
+ 
+ # views.py Excerpts
+ >|python|
+ def api_doc(request):
+     import urls, api_views
+     api_list = []
+     for (url, view_name) in urls.api_urlpatterns:
+         view = getattr(api_views, view_name)
+         api_list.append(
+             (url, view.__doc__))
+                 
+     return render_to_response(
+         request, 
+         'saichugen/api_doc.html',
+         dict(api_list=api_list))
+ ||<
+ 
+ Rendering Result
+ <img src="http://gyazo.com/0cc24a003c7f4007eb1ca1a0c0168268.png">
+ 
+ I simply kept the list separate so that I could reuse it later only for objects to be included in the reference, and added a view that reads and displays the docstring.
+ 
+ >|python|
+ def start_game(request):
+     """
+     POST Start Game
+     @return game_id
+     """
+ (hereinafter abbreviated)
+ ||<
+ 
+ *1241974061*[GAE]key_name memo
+ - Foo(key_name=...) can be used to specify the name of the key
+ - I thought it was supposed to be foo.key_name, but it was foo.key().name()
+ - Foo.get_by_key_name(...) to access it by its "key name
+ - I wondered if an exception or something would fly if key_name was conflicted, but it didn't.
+ - I tried accessing the same key_name several times with DateTimeProperty(auto_add_now=True), and the date/time information changed each time it was added, but only one "entry with date/time information" appeared in the DataStore Viewer. However, there was only one "entry with date/time information" that appeared in the DataStore Viewer. This means that if there is a kay_name conflict, it will be overwritten without warning.
+ 
+ Note that all of the above research was done on a local development server, so it may be different in a production environment.
+ 
+ This is how I plan to use it:
+ >|python|
+ def generate_key(prefix="", salt=DEFAULT_SALT):
+     from datetime import datetime
+     import hashlib
+     time = str(datetime.now()) + salt
+     return prefix + hashlib.md5(time).hexdigest()
+ ||<
+ 
+ By the way, since key_name starting with a number is prohibited, I'm thinking of using "game_" or some other prefix. It is easy to understand.
+ 
+ *1241979467* Quote of the Day: The real fun is in the challenge.
+ "Real fun comes from challenges that are always at the margin of our ability."
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?t=nishiohirokaz-22&o=9&p=8&l=as1&asins=1932111972&md=1X69VDGQCMF7Z30FM082&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=AAFFAA&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1241980259*API Driven
+ When creating a web app, I usually follow the flow of screen transitions, but this time I started with the API specifications. The goal is to create a playground where as many people as possible can easily create bots, so I am thinking of using a simple format and exchanging as little information as possible to advance the game. This is a good way to look at it from a different perspective and make the separation clearer.
+ When thinking about screen transitions on a human-operated browser, we are drawn to such things as "It would be nice if this kind of information could be shown here," or "It would be nice if this one button could do this and that," and what should be divided into multiple processes becomes stuck in a single process. And they don't realize that the problem is that they are attached to each other.
+ To be more specific, because I first used /start_new_game in the middle limit to "create a game with two players seated, myself and a random AI", I could not come up with a natural design for selecting the opponents and the AI. I made the assumption that at the point of creating a new game, I would have to specify those 3 players to go. In reality, you could create a new game with no one seated in /start_game, create a permalink, and then join (join yourself) or add_player (add AI) from there. If it's a versus game, you can send that permalink to your opponent and they can join. It's obvious if you notice it, but I guess it's hard to notice when you're stuck in the old design.
+ 
+ *1241982225*LinCity is full of Homeless.
+ <img src="http://gyazo.com/b3757598a1e64128702ce5cb22e67a93.png">
+ If they had created a comfortable environment and left them alone, they would have no place to live, but they have been trying to give birth to more and more people. About 98% of the population is homeless.
+ 
+ I thought about having it die for a bit because it's too populated and annoying (things).
+ They don't let me starve to death by placing too many farms. at first I thought the concept of "wells" that was in 2.0 was not a good idea because it would add more things to waste, but if you crush the wells in this situation, people will keep dying!
+ 
+ <img src="http://gyazo.com/53834eddae90c67cf5ee2c9309a42c2f.png">
+ 
+ And somehow, in the midst of this catastrophic situation, technical capabilities are growing.
+ <img src="http://gyazo.com/3715077e90d4aac5d202669b42ebbd4b.png">
+ 
+ But they built hospitals so people wouldn't die, and when garbage piled up and caused pollution, they rushed to build recycling centers, but was it a mistake to create a comfortable environment in that way? Should we have made the environment more degraded so that the number of people would not continue to increase unilaterally? Or pollute it as much as possible. The amount of land is finite, so if the growth rate remains above 1, it will overflow one day. If the birth rate doesn't go down, the death rate has to go up to balance it out.
+ 
+ Games modeled after reality sometimes raise very serious issues.
+ 
+ <hr>
+ 
+ <img src="http://gyazo.com/a090d5aeb219214db7236454953e2c81.png">
+ About 200,000 people were slaughtered (50,000 of the population living in the house).
+ It is still not quite enough. But this method of slaughter is costly. We need a more sustainable slaughter.
+ 
+ So I built a high-density residential area in the most polluted area.
+ <img src="http://gyazo.com/c24198fcc2bfb98084f828a6a8e3989b.png">
+ 
+ Hmmm. I don't see any effect. It didn't look good, so I cut the wires leading to the recycling center.
+ <img src="http://gyazo.com/35f8298e3727211c7e8f592c856de38a.png">
+ 
+ <hr>
+ 
+ If left unchecked, the pollution would have nearly wiped out the human race.
+ <img src="http://gyazo.com/51a843b10d0bd526a62bcccc92fec60a.png"><img src="http://gyazo.com/9c90651c30b8945fbcda7b7552e01cd2.png">
+ This is bad, this is bad. The population is too small and there is no labor force to keep the recycling center running. We need cosmo cleaners.
+ 
+ There have been extensive fires in two locations due to the loss of labor to sustain the firefighting.
+ <img src="http://gyazo.com/1b61d3ff9027d3e592de6c384b445d7b.png">
+ 
+ Humanity began to revive!
+ <img src="http://gyazo.com/b09779b63d4f32ddb01df7d712b6c72a.png">
+ 
+ However, a new fire broke out!
+ <img src="http://gyazo.com/47cfe4ef954b88c67334e34d0a1cab4e.png">
+ 
+ I mean, I'm already tired of it, so I might as well just let it burn.
+ 
+ commemorative photograph
+ <img src="http://gyazo.com/383c7832218f9ea03c4bb59c815031ac.png">
+ But humanity surprisingly persisted, the population is back up to 30,000 and firefighting is back in <s>upper class society</s> windward lands. We're back in the black economically, too. Hmmm. Do we create an upwind community with a septic system and a good supply of food, and a downstream community where pollutants flow in and the food supply is occasionally interrupted? Then, when the population grows too large, the downstream environment would deteriorate and the population would be regulated, while the upstream would take care of the functions necessary to maintain the level of technology. What dystopian science fiction! But as long as the population is not allowed to grow, someone has to die.
+ </body>
+ <comments>
+ <comment>
+ <username>bgnori</username>
+ <body>We're going to use our technology to develop "Soylent Green". </body>
+ <timestamp>1242029509</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>I guess we have a surplus of food, actually. I'd rather not have enough electricity so I wonder if we could turn humans into batteries...(oh</body>)
+ <timestamp>1242036016</timestamp>
+ </comment>
+ <comment>
+ <username>Market Usage</username>.
+ <BODY>I was having trouble finding a Japanese language strategy, but you saved me. I was able to travel to space safely in 2630 A.D. thanks to the considerable help I received. <br>I was able to travel to space. <br>The bottleneck was the way I was using the market. <br>I had a hard time figuring out who I was dealing with, but I think I finally figured it out. <br>Also, to reduce homelessness, I think it is a good idea to pull the power grid. <br>I'm not analyzing the source, but (as a rule of thumb) if you do that, you'll find that civilized societies<br>won't be homeless. I will look in again often ^^^</body>.
+ <timestamp>1307640661</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-05-10 https://nishiohirokazu.hatenadiary.org/archive/2009/05/10]

@@ -1,0 +1,212 @@
+Hatena2012-04-10
+code:hatena
+ <body>
+ *1334019327*Alloy Girl 3
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20120409/1333928800'>Alloy Girl 1</a>, <a href='http://d.hatena.ne.jp/nishiohirokazu/ 20120409/1333979323'>Alloy Girl 2</a>.
+ 
+ JS: What's wrong? That's strange, isn't it?
+ Me: Hmm, what's wrong?
+ JS: Alloy, you said these two are equivalent, but what comes out is different, right?
+ 
+ >||
+ sig StateManager {
+ 	state: set State
+ }
+ 
+ sig State {}
+ 
+ run {
+ 	one StateManager
+ }
+ ||<
+ 
+ >||
+ one sig StateManager {
+ 	state: set State
+ }
+ 
+ sig State {}
+ 
+ run {}
+ ||<
+ 
+ Me: What? Oh, you're right. The first thing that comes out is different. But when you take it all out, it's the same.
+ JS: All?
+ Me: Ah, ok, I didn't explain. You know, when you hit the "Next" button, you get the next solution.
+ JS: Oh, I thought you would just pick one and tell me.
+ Alloy: There is no way you would do something so random. I'm giving you all the solutions in the scope.
+ JS: Scope?
+ Me: Oh, I didn't explain that either, Alloy's idea is "if you examine all the models with a small number of components, you should be able to find most of the bugs",
+ Alloy: "How many of each element should be verified in the scope" is the scope.
+ Me: (line taken...) and "run {}" is "search in a range of up to 3 elements each".
+ Equivalent to Alloy: run {} for 3.
+ JS: I see...for 3 means less than 3? What if I want exactly three?
+ Alloy: Why don't you just write that?
+ Me: You use exactly. Also, if I make all three exactly, I have to specify only State because it violates the constraint that there is only one StateManager.
+ 
+ >||
+ one sig StateManager {
+ 	state: set State
+ }
+ 
+ sig State {}
+ 
+ run {
+ } for exactly 3 State
+ ||<
+ 
+ ** Next notice
+ 
+ JS: Only three examples of State are now shown.
+ Me: Yeah, yeah, good for you.
+ JS: But - there is a State that is not connected to StateManager, is that OK?
+ Me: Ah, I see. I'd like to explain that...but I have to go to the infirmary, so I'll continue when I get back!
+ 
+ *1334023635*Alloy Girl 4
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20120409/1333928800'>Alloy Girl 1</a>, <a href='http://d.hatena.ne.jp/nishiohirokazu/ 20120409/1333979323'>Alloy Girl 2</a>, <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334019327'>Alloy Girl 3</a>, continued.
+ 
+ ** Is a State that is not connected to a StateManager good or bad?
+ JS: Only three examples of State are now shown.
+ Me: Yeah, yeah, good for you.
+ JS: But, I noticed when I displayed all the patterns earlier that some States are not connected to the StateManager.
+ 
+ [f:id:nishiohirokazu:20120410110831p:image]
+ 
+ Alloy: Is there a problem?
+ JS: What?
+ Alloy: Is there a state in the subject you are trying to model where the State does not belong to the StateManager? No? That depends, right?
+ JS: "Mi?
+ Me: So you're asking which of the below is best expressed in terms of implementation?
+ 
+ >||
+ // A:
+ var state = create_new_state();
+ state_manager.add("state_name", state)
+ ||<
+ 
+ >||
+ // B:
+ state_manager.create_new_state("state_name")
+ ||<
+ 
+ JS: I see, with A's implementation, it is not surprising that there are States that do not belong to the StateManager.
+ Me: That's what I mean. Which one to choose is a design decision. It depends on the situation.
+ JS: I'm going to go see how you implemented it. Oh, I was going for B!
+ Me: Okay, so there is the fact that "every State belongs to the StateManager".
+ JS: Yeah!
+ 
+ ** Declaration of Facts
+ 
+ Me: Then let me declare a fact.
+ 
+ >||
+ one sig StateManager {
+ 	state: set State
+ }
+ 
+ sig State {}
+ 
+ fact {
+ 	all s: State | s in StateManager.state
+ }
+ 
+ run {
+ } for exactly 3 State
+ ||<
+ 
+ JS: "fact" is "fact"?
+ Me: Yes. Here is an expression that is always true. The inside "all s: State | ..." means "for all State s... is true".
+ JS: So you are declaring that there is an s in StateManaer's state.
+ Me: Yes, yes. If I run it, I get a model with 1 StateManager and 3 States, because I scoped it as "actively 3 States", and when I press Next, it tells me there's only 1 solution.
+ JS: I don't see any more examples of State and StateManager being torn apart!
+ 
+ [f:id:nishiohirokazu:20120410111138p:image]
+ 
+ ** Next notice
+ 
+ Alloy: That's a bit of a muddle. Doesn't that mean "every State always belongs to one StateManager"?
+ 
+ >||
+ one sig StateManager {}
+ 
+ sig State {
+ 	belong: StateManager
+ }
+ 
+ run {} for exactly 3 State
+ ||<
+ 
+ JS: You say so?
+ Me: No, but you want to start from StateManager.
+ Alloy: Trace? I wonder what you are talking about. Maybe you misunderstand that StateManager.state is a member variable of StateManager or State.belongs to State?
+ Me: What, no?
+ Alloy: Not at all. You've been poisoned by object-orientation.
+ 
+ *1334024972*[summary]Alloy summary
+ ** Slides
+ - <a href='http://www.slideshare.net/konn/alloy-analyzer-9379488'>Alloy Analyzer thing</a> by @mr_konn
+ 
+ ** Alloy Girl
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120409/1333928800'>Alloy Girl 1</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120409/1333979323'>Alloy Girl 2</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334019327'>Alloy Girl 3</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334023635'>Alloy Girl 4</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120411/1334103370'>Alloy Girl 5</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120413/1334305940'>Alloy Girl Extravaganza "Illustration Logic"</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120417/1334670584'>Alloy Girl 6</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120425/1335363669'>Alloy Girl Complete</a>
+ 
+ ** Other
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120331/1333180917'>Diary of Studying Alloy (0)</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120403/1333439932'>Diary of Studying Alloy (1)</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120403/1333456316'>Alloy Book 4.2.2</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120403/1333461886'>Alloy: properties of binary relations</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120404/1333535751'>A library has been created to vivify Alloy's relationships</a>.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120405/1333636035'>Alloy Diary 2: State of Change Over Time</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120405/1333628554'>A story about trying to do combinatorial logic in Alloy and it didn't work</a>.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120405/1333593776'>Alloy: I don't know what all means</a>.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120406/1333684796'>Combinatorial Logic and Sequel in Alloy</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120407/1333763040'>Alloy Diary 3: Modeling Marriage and Divorce</a>
+ - Illustration Logic
+ -- <a href='http://d.hatena.ne.jp/nishiohirokazu/20120411/1334149939'>Solving Illustration Logic with Alloy</a> The story I couldn't solve
+ -- <a href='http://d.hatena.ne.jp/nishiohirokazu/20120413/1334305940'>Alloy Girl Extravaganza "Illustration Logic"</a> A story about how to solve it.
+ -- <a href='http://d.hatena.ne.jp/nishiohirokazu/20120416/1334576656'>Alloy's Refactored Illustration Logic Diary</a>
+ 
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120414/1334395379'>Read Alloy's output KodKod file</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120418/1334678046'>Second False Belief Assignment at Alloy</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120418/1334742488'>Make it easier to tinker with XML output by Alloy</a>.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120420/1334857551'>Language Girls' Club Murder at Alloy</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120420/1334902176'>Peterson's algorithm in Alloy</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120424/1335233091'>Language Girls' Club Murder at Alloy 2</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120424/1335276581'>What we want to do next at Alloy</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120425/1335320471'>Generate logical puzzles with Alloy</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120426/1335407845'>Generate logic puzzles of reasonable difficulty with Alloy</a>.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120427/1335523143'>Logic Puzzle: Cowardly Liars</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120428/1335615379'>Logic Puzzle: Cowardly Liar 2</a>
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20120511/1336731362'>Two Alloy-related tools are now available</a>.
+ 
+ ** Q&A
+ - The font is small! Lame! → You can change it from the Option menu
+ - Syntax highlighting in the source code doesn't work, so it's hard to read -> Alloy can use apostrophes in variable names, but if you don't use them, javascript syntax highlighting seems to be approximately OK.
+ - (Unresolved) Predicates cannot be recursively invoked, but how to define them ref: <a href='http://d.hatena.ne.jp/nishiohirokazu/20120406/1333684796'>Combinatorial logic and sequel in Alloy</a>.
+ - (Unresolved) How do I tweak the Alloy source and rebuild it?
+ -- Evaluator output is a pain in the ass because I can't copy and paste and I want to do something about it.
+ -- I want to output the results of Visualize as sequentially numbered images because it's a pain to take screenshots of each one.
+ -- I want to stop KodKod files from being output as temporary files.
+ -- I want to write in Emacs and output on the command line because the process of "write code on Alloy, run it, open Visualizer, and output as XML" is a pain in the ass.
+ 
+ ** TODO
+ - out of order execution
+ 
+ ** Textbooks
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274068587" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+ <comments>
+ <comment>
+ <username>inajob</username>
+ <body>Oh, I see, so it is natural to write State->StateManager...</body>.
+ <timestamp>1334068920</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-04-10 https://nishiohirokazu.hatenadiary.org/archive/2012/04/10]

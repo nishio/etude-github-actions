@@ -1,0 +1,121 @@
+Hatena2010-10-18
+code:hatena
+ <body>
+ **1287404332*C++ Design and Evolution (D&E) Leverage Memo 1
+ I tried to make a leverage memo so I could quickly find out which topic was written where, but as expected, I couldn't make it all at once... I ran out of steam before I got to the C++ talk. Whew, that's barely a quarter of the way through. Next time I'll start with the C++ chapter.
+ 
+ <hr>
+ 
+ ** ~Chapter 0
+ 
+ Some have called D&E just a history book...but understanding why C++ is the way it is helps programmers master it. A deep understanding of the tools is something that is not available to the professional skilled tradesman.
+ 
+ From the earliest days of Simula, containers were intrusive: they could only be stored if derived from a class such as Object; they could not contain base types such as int; and when retrieved, they became Object types and had to be cast. When retrieved, they became Object types and had to be cast. Arrays cannot store user-defined types, only references; Smalltalk, Java, and C# have similar problems.
+ 
+ The STL container looked very ugly, but it passed all but one of the list of properties that a container must satisfy.
+ 
+ Any container can be viewed as a sequence of elements. A container knows where its first element is and where its last element is. The object that points to an element is called an iterator. The iterator can be used to get a value to point to, just like a * in a pointer, or to point to the next element, like a ++.
+ 
+ Before STL, C++ supported three paradigms: "procedural programming," "data abstraction," and "object-oriented," and I thought templates supported data abstraction; after playing with STL for a while, I added a fourth: "generic programming."
+ 
+ The split and compile of templates is so difficult that it should not be left to the implementer, and the split and compile of templates is essential for correct organization of code based on the data hiding principle."
+ 
+ Java never replaced C++. I heard it a lot in 1996, "We'll kill C++ within two years."
+ 
+ Java's promotion of a "pure object-oriented" view of programming has led many C++ programmers to write unnecessary code
+ 
+ New languages always sell simplicity and then grow in size and complexity for real-world applications; neither C++ nor Java escaped this scenario --- nor Scheme.
+ 
+ Conventional books on programming languages explain the structure and usage of the language. However, the question is, "Why is it structured the way it is?" or "How did it get that way?" and "How did it come to be? This book answers both of these questions.
+ 
+ May 1979 C with Classes development begins → October first implementation in use
+ 1982 First external presentation
+ 1983 August, C++ implementation begins → named C++ in December
+ 1985 First external release
+ 1989 Cfront 2.0 released
+ 
+ The first practical implementation of ALGOL68 was introduced to the world in 1977
+ 
+ What is a programming language and what is the purpose of ~,
+ All of the "tools to command the machine," "tools for programmers to communicate," "tools to express the high-level design of the application," "tools to describe algorithms," "tools for experimentation," and "methods to control the equipment."
+ 
+ The first priority in designing a language is to serve the user. We will unrestrainedly incorporate what we think will be useful from all possible fields.
+ Successful language is not designed on certain principles but grows out of reality.
+ 
+ ** Chapter 1
+ 
+ Simula can easily express concurrency because multiple classes run as coroutines. In addition, the concept of class hierarchy can be used to express like-mix relationships of concepts at the application level. However, I did not use it that much. Concurrency is more important.
+ 
+ I am impressed with the expressive power of Simula's type system and the compiler's ability to supplement typing errors. They point out silly errors and design mistakes.
+ 
+ A program written in Simula is not one big program, but a collection of small programs. So it is easy to write, understand, and debug.
+ 
+ Simula's implementation system did not scale. The more classes you have, the more time it takes to link them. I had no choice but to rewrite it in BCPL.
+ 
+ The right tools for writing large programs are
+ - Ability to organize programs (classes, class hierarchies, concurrency, type checking)
+ - Ability to create fast programs. Ability to easily link units written in multiple languages in order to not be bound to a single language ---!
+ - Runtime support must not be too complex to ensure that there is not a large performance difference between implementations and that heterochromia is easy to achieve.
+ 
+ It is easier to think of the C syntax as a specialization of the general concepts of Algol68. I once wrote that the ideal language would be Algol68 plus the classes of Simula. But for practical purposes, C is much better than Algol68.
+ 
+ ** Chapter 2 C with Classes
+ 
+ Concurrency and Simula-like simulation capabilities were the main goals of C with Classes (hereafter CwC), but we decided not to include reserved words about concurrency in the language specification. However, we decided not to include reserved words for concurrency in the language specification, but to combine inheritance and a special way of defining member variables so that libraries can be built to support concurrency.
+ 
+ C++ still does not implement special features for special applications -- complex numbers, strings, matrices... -- in the language itself. Because they are supported by libraries.
+ 
+ The primary design objective of CwC was to improve the structure of the program. However, care was taken to ensure that the improved structure did not result in worse run-time performance, code size, or data size than C.
+ 
+ We should not remove the dangerously ugly elements that C originally had.
+ 
+ Then and now I believe that there can never be only one right way to write a program, so those who design languages should also not force one style on programmers.
+ 
+ The language supports a variety of styles and techniques that have proven effective and protects programmers from common traps and pitfalls.
+ 
+ Features that existed in 1980: classes, derived classes (w/o virtual functions), public/private, cstr/dstr, call/return functions (later obsolete), friend classes, type checking and function argument conversion 1981: inline functions, default arguments, assignment operators Overloading of
+ 
+ CwC was available on C-enabled machines; it was considered a dialect of C. Classes were called abstract data type facilities (Stroustrup 1980 "Classes: An Abstract Data Type Facility for the C Language") The term object-oriented was used in 1983 when virtual functions were introduced
+ 
+ ** The 2.3 class
+ 
+ A class is a user-defined data type (hereafter UDT). The members of a class define how variables of that class type (i.e., objects of that class) are represented. It also defines operations (functions) on those objects and specifies how to access them. Member functions are usually defined outside the class.
+ 
+ In CwC, C++, class is type. if class means user-defined type, why not call it type? Because we don't like to invent new terms and we decided that no one would be bothered with Simula's class as it is.
+ 
+ Unlike Simula pointers, CwC pointers can point to both UDT and built-in types.
+ 
+ Simula could not handle local or global variables of class type; use the new operator to place them in free memory.
+ 
+ In CwC, only member functions can be inlined, and the way to inline is to put the body of the function in the class declaration. A good side effect of this is that programmers will not abuse inlining because of the mess that can result from overuse.
+ 
+ Ability to split-compile using the traditional C/Fortran and UNIX/DOS Rika.
+ Easy and efficient linking of program components written in other languages
+ 
+ 
+ CwC objects were just C structures. the first implementation of CwC did not have this. It was quickly added. C++ version of THIS in Simula. Why pointers instead of references? When I introduced this, there was still no reference, and I borrowed the terminology mainly from Simula, not Smalltalk.
+ 
+ In C, when you write a function declaration as f(), it means that it takes any number of arguments and does not perform type checking. f(void) in CwC declared a function that takes no arguments, but the user demanded that f() take no arguments.
+ 
+ The problem with C declarations is that "*" is prefixed while "[]" and "()" are postfixed. Therefore, I proposed a postfixed pointer declaration "->". int v[10]->; array of pointers int p->[10] Pointer pointing to an array. Miscarried because of implementation failure.
+ 
+ In my opinion, too many people are so intent on syntax that they neglect typing, and the key issues in C++ design have always been typing, ambiguity, and access control, not syntax. The syntax of a language should follow the semantics of the language, and if we discuss only the form without it, we will degenerate into a discussion about personal preferences.
+ 
+ C++'s derived class is borrowed from Simula's prefixed class and Smalltalk's subclass; CwC has no virtual functions.
+ 
+ Versatility without virtual functions: cast explicitly using type fields. Container classes can be realized without templates by using macros. Eventually, these techniques matured into templates.
+ 
+ Even in the first version of CwC, the protection mechanism applied to both base class and members. The public/private discussion of the base class is about 5 years older than the discussion of implementation inheritance or interface inheritance: the
+ [Snyder, 1986] "Encapsulation and inheritance in object-oriented programming languages"
+ [Liskov, 1987] "Data Abstraction and Hierarchy,"
+ If only the implementation is inherited, private inheritance is used; if public inheritance is used, the interface is also inherited.
+ 
+ The new operator is called new because Simula had an operator of the same name. new calls the allocation function to allocate a memory area and then calls the constructor to initialize that area. The combination of these two tasks is now called instantiate or simply object creation. In other words, we create a logical thing called an object on top of physical memory.
+ 
+ CwC had call(), which is called before the member function is called, and return(), which is called before leaving ---! !!!AOP!
+ CLOS had :before and :after methods as well.
+ 
+ CwC had default arguments, which existed all the way up until the introduction of general function overloading in C++.
+ </body>
+
+[Hatena Diary 2010-10-18 https://nishiohirokazu.hatenadiary.org/archive/2010/10/18]

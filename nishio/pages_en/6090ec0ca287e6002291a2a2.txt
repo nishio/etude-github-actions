@@ -1,0 +1,102 @@
+Hatena2013-03-30
+code:hatena
+ <body>
+ *1364643108*Read VGA signal on Arduino
+ Referring to <a href='http://ja.wikipedia.org/wiki/VGA%E7%AB%AF%E5%AD%90'>VGA terminal - Wikipedia</a>, pins 5, 6, 7, 8, and 10 were connected to GND, pins 1, 2, and 3 to analog pins respectively, and pins 13 and 14 pins were connected to the digital pins. We could observe the output values fluctuating.
+ 
+ We should chant "Premature optimization is the root of all evil" when doing hardware. I had a hard time soldering because I optimized the size.
+ 
+ [f:id:nishiohirokazu:20130330220849j:image]
+ 
+ The three horizontal wires are called Display Data Channel, which are used to communicate the size and frequency of the monitor. I pulled them out thinking, "It should be OK even if I don't connect them, but since they are in the bottom row, it will be extremely difficult to solder them later if I have to connect them. As it turns out, these three pins were fine to leave open, so I connected the three RGB pins to the analog pins and the HSYNC and VSYNC pins to the digital pins.
+ 
+ [f:id:nishiohirokazu:20130330220847j:image]
+ 
+ And run a program like this.
+ 
+ >||
+ void loop()
+ {
+   valR = analogRead(pinR);
+   valG = analogRead(pinG);
+   valB = analogRead(pinB);
+   Serial.print(valR, HEX);
+   Serial.print(',');
+   Serial.print(valG, HEX);
+   Serial.print(',');
+   Serial.println(valB, HEX);
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20130330214738p:image]
+ 
+ They seem to be able to tell at least, "Is there a lot of white, yellow, and light green?"
+ 
+ By the way, the ATMEGA168's clock is 16 MHz, the VGA signal is 25 MHz, and I knew it would be impossible to read it in one pixel increments, but I thought that the horizontal signals are multiples of 8, so I thought I could thin out and read them. However, unlike outputting color bars, there is nothing interesting about just reading them. You have to output the result of the reading. And if I use the Serial library to send what I read, of course that's where it would eat up the clock count.
+ 
+ I tried to implement transmitting the horizontal synchronous signal as a single byte.
+ 
+ >|c|
+ void loop()
+ {
+   val = digitalRead(pinH);    // read the input pin
+   if(val == HIGH){
+     Serial.write(49); // ASCII for '1'
+   }else{
+     Serial.write(48); // ASCII for '0'
+   }
+ }
+ ||<
+ 
+ Put a line break every 78 characters in the result and replace 1 with . to make it easier to read:
+ 
+ >||
+ ..........................................................................0...
+ 0...0...0...0...0...0...0...0...0........................0.....0.........0....
+ ..0.........0......0.........0......0.........0......0.........0..............
+ ..0................0.........0......0.........0......0.........0..............
+ ..0......0.........0................0.........0......0.........0......0.......
+ ..0......0.........0................0......0.........0.........0......0.......
+ .........0.........0......0.........0......0.........0......0.........0......0
+ .........0................0................0.........0......0.........0......0
+ .........0................0................0................0................0
+ .........0......0.........0......0.........0................0................0
+ ................0.........0......0.........0......0.........0......0.........0
+ ................0................0................0.........0......0.........0
+ ......0.........0......0.........0......0.........0................0.........0
+ ......0.........0......0.........0......0.........0......0.........0..........
+ ......0................0................0................0.........0......0...
+ ......0......0.........0......0.........0................0................0...
+ ......0......0.........0......0.........0......0.........0................0...
+ ...0.........0.........0......0.........0......0.........0......0.........0...
+ .............0......0.........0......0.........0................0.........0...
+ ...0.........0......0.........0......0.........0................0.............
+ ...0.........0......0.........0......0.........0......0.........0......0......
+ ...0................0......0.0.......0................0.........0......0......
+ ...0......0.........0................0................0......0..0......0......
+ ...0......0.........0......0.........0......0.........0................0......
+ 0.........0......0.........0................0.........0......0.........0......
+ 0.........0......0.........0................0................0................
+ 0.........0......0.........0......0.........0................0................
+ 0.........0......0.........0......0.........0......0.........0......0.........
+ 0......0.........0......0.........0.........0......0.........0......0.........
+ 0......0.........0......0.........0......0.........0......0.........0.........
+ 0......0................0.........0......0.........0......0.........0......0..
+ .......0......0.........0.........0......0.........0......0.........0......0..
+ ||<
+ 
+ Hmmm, I feel that the sampling frequency is not enough at all.
+ 
+ >||
+ void loop(){
+   if(micros() < 1000000){
+     Serial.write(48); // ASCII for '0'
+   }
+ }
+ ||<
+ 
+ This sends 1089 zeros, 918 usec per character. 1 line of VGA signal is 31.8 usec at 800 clock / 25.175 MHz. I can't send it serially.
+ It might be possible to output to a digital pin when an area of the screen is a certain color, but let's not go too deep.
+ </body>
+
+[Hatena Diary 2013-03-30 https://nishiohirokazu.hatenadiary.org/archive/2013/03/30]

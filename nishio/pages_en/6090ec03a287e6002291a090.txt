@@ -1,0 +1,220 @@
+Hatena2010-04-07
+code:hatena
+ <body>
+ *1270609167*IRC logs pasted.
+ nishio: when you access @admin_required view
+ >||
+ google.appengine.ext.db.KindError
+ KindError: No implementation for kind 'main_user'
+ ||<
+ I have not found a way to reproduce this yet. Even if I have not modified anything in particular, it seems to appear when I access the site after a long time, and when I access the same URL after the view to show "what kind of user is logged in now" is hit, it appears without error, so I suspect the behavior is related to session expiration. I suspect that the behavior is related to session expiration. The line in question is
+ >||
+ File "…/kay/auth/backends/datastore.py", line 42, in get_user
+ return db.get(request.session['_user'])
+ ||<
+ It is. The same phenomenon occurs on the production server.
+ 
+ It is early for session expiration. I wonder if the session goes haywire when I do something wrong.
+ 
+ _tmatsuo: nishio: thanks. I have an idea of what's going on, so I'll look into it. I think it happens when I access /_ah/admin -> app after runserver locally. I'm thinking of turning it Off by default now, though. By the way, if you set settings.ADD_APP_PREFIX_TO_KIND to False, this behavior will stop and you won't get that error. However, please note that you will not be able to access your existing data!
+ 
+ <hr>
+ 
+ nishio: hmmm, if I could access both main_user and user, it would be an easy transition with Bulk Update or something, but maybe I can't access both at the same time, it's set in the settings. Actually, the behavior at hand is that if I access /admin with @admin_required and succeed, the next access to /admin will definitely occur and access /login_info which is not @no_session and then access /admin will probably succeed 100% of the time. I'm not sure. So I'm thinking of a totally non-essential work-around that I could just throw a GET from inside /admin to /login_info via Ajax.
+ 
+ <hr>
+ 
+ nishio: Hey, after a night's sleep, it behaves differently from yesterday... (yeah)
+ nishio: I don't get errors anymore...
+ mopemope: oh, session?
+ nishio: when you access @admin_required view
+ >||
+ google.appengine.ext.db.KindError
+ KindError: No implementation for kind 'main_user'
+ ||<
+ and
+ >||
+ /kay/auth/backends/datastore.py", line 42, in get_user
+ return db.get(request.session['_user'])
+ ||<
+ I'm not sure if this is a problem, but it's a problem that I'm getting at. I should paste the log somewhere.
+ 
+ <hr>
+ 
+ mopemope: is it being jumbled up? A story similar to this one? http://code.google.com/p/googleappengine/issues/detail?id=1133
+ nishio: nau reading the link. you mean that the key for searching Kind should be a byte sequence, but it was not found because it was unicode, I see. I can't tell if it's unicode because the error message is displayed in %s. I guess I'll just put logging.debug(type(kind)) or something in between and wait for it to reproduce...
+ mopemope: I haven't looked at the source at all, but maybe that's what's fishy. ouch since I'm connecting the VPN.
+ 
+ <hr>
+ 
+ nishio: When an error occurs, type is unicode, and when there is no error, class_for_kind is not called in the first place. I can't confirm whether unicode is correct or not because class_for_kind is not called in the first place during normal operation.
+ 
+ nishio: hmmm, request.session['_user'] is datastore_types.Key.from_path(u'main_user', 144L, _app=u'foobar') in correct and in error. unicode is the same. You should not pass unicode to class_for_kind because the key of _kind_map is str.
+ mopemope: I don't understand how it works or doesn't work.
+ nishio: yes. I wonder if it is cached somehow. I can't find any element that works or doesn't work. At any rate, just "convert to str if kind is unicode" at the beginning of class_for_kind would solve the problem, but it would make another big problem worse.
+ 
+ <hr>
+ _tmatsuo: I think it's ok to put import_string(settings.AUTH_USER_MODEL) in the first line of __init__ of kay.auth.backends.datastore.DatastoreBackend. I think the problem is somewhere else, since the key in Python's dict can be accessed as either unicode/str. Since db.get is done by key, I think it is just a matter of importing the Model definition before that. As for the case where the problem occurs on the server side and not on the server side, main.models.User is imported in the process on the server instance that has gone through the login screen and processed the login. As long as this instance is alive, it is fine (no error occurs), but when this instance is kicked out of memory, the error that is causing the problem occurs.
+ 
+ *1270612447*Werkzeug is awesome!
+ I have been using Jinja2+Werkzeug Kay-framework for a while now, and I had been thinking "I have realized how powerful Jinja2 is, but I don't really understand the advantages of Werkzeug", but I take back my previous comment.
+ 
+ They can read the source of the relevant part from the error screen and execute it interactively in the frame of each function!
+ <img src="http://gyazo.com/20cecc673865c414e55ba5bb0a1b4dca.png">
+ I've been plugging in logging.debug, etc. and doing print debugging, but now I can go through the code, the value of each variable, the return value of reading the method, etc. on the spot as soon as I get an error message without having to do that!
+ 
+ To use an analogy, it's like the difference between finding a murderer in a murder case based only on the screams of the deceased and having a forensic examiner examine the crime scene and the corpse! Until this morning I was thinking about whether to make my next app with Django+appenginepatch or Kay, but now I'm just going to choose Kay!
+ 
+ *1270620957*What happens if you put the same string in unicode and str in a Python dictionary.
+ >|python|
+ In [1]: {u"a": 1, "a": 2}
+ Out[1]: {u'a': 2}
+ ||<
+ 
+ Oh, I see. This is...
+ 
+ >|python|
+ In [2]: u"a" == "a"
+ Out[2]: True
+ ||<
+ 
+ So u "a" and "a" are identical. Of course.
+ 
+ >|python|
+ In [3]: u"a" is "a"
+ Out[3]: False
+ ||<
+ but the "is it the same key?" check in is
+ 
+ >|python|
+ In [4]: (1, 2) is (1, 2)
+ Out[4]: False
+ ||<
+ 
+ I'm not happy with the distinction between "and" tuples. This is a rather annoying part of designing a language. This automatic conversion between byte strings and Unicode strings causes all sorts of confusing bugs, so it was removed from Python 3.0.
+ 
+ >|python|
+ >>> b"a" == "a"
+ False
+ >>> {b"a": 1, "a": 2}
+ {b'a': 1, 'a': 2}
+ ||<
+ 
+ *1270634477* I hate this kind of bother.
+ I was about to press the link to the next page in my browser when the Skype icon jumped from the Dock just as I was about to press it!
+ 
+ *1270639662* cleaning up
+ I was going to make a second app using kay, but I couldn't find where I put kay. It's not in ~/tools/. It was in ~/cur/. I heard that if I moved it, I would have trouble breaking the link, so I mv'd it and then ln -s'd it. I wonder if there is a better way to put them in the right place, or a better way to clean them up. I can't do it because I can't clean up my desk.
+ 
+ 
+ The nice thing about computers is that they can search through clutter!
+ 
+ *1270648462*Memo for myself on how to create new apps using Django and Kay.
+ How to create a web app using Django and Kay
+ 
+ *** Name the service
+ - Talk to others. If they say, "That's lame," or "What do you mean? (misunderstanding)," then reconsider.
+ - Find out if you can get a domain name, and if Google App Engine is available, find out if you can create an app with that name. If not, reconsider.
+ - Get a domain name. Get a name for your app. You'll be disappointed if you can't get one after you've created it.
+ 
+ *** create project folder
+ I make it in a private Mercurial repository hosted on Bitbucket.
+ 
+ *** startproject in the folder
+ RATIONALE: The root of the folder created here will be cluttered with multiple files such as app.yaml, settings.py, etc., and it will be complicated to mix those files with "non-web apps" for that project. Eventually, there will be documents, images, scripts, etc. that don't need to be uploaded to GAE.
+ 
+ *** startapp core
+ RATIONALE: "appropriate name" for single app used to be main, but this is identical to manage.py up to the second character, so you have to type mai[TAB] when you move by cd, etc. For core, just use c[TAB].
+ 
+ *** hg add and hg commit
+ RATIONALE: Files may be copied in the wrong position in subsequent operations
+ 
+ *** Rewrite app.yaml
+ application and version. If you are going to use static later, you may as well use
+ >||
+ - url: /static
+   static_dir: static
+   expiration: 3000d
+ ||<
+ *** rewrite settings.py
+ Especially INSTALLED_APPS, APP_MOUNT_POINTS and SECRET_KEY. if you forget to specify APP_MOUNT_POINTS, you may get 404. if you plan to use auth or session, do it now.
+ >|python|
+ INSTALLED_APPS = (
+   'kay.sessions',
+   'kay.auth',
+   "core",
+ )
+ 
+ APP_MOUNT_POINTS = {
+     "core": "/"
+ }
+ 
+ MIDDLEWARE_CLASSES = (
+   'kay.sessions.middleware.SessionMiddleware',
+   'kay.auth.middleware.AuthenticationMiddleware',
+ )
+ 
+ AUTH_USER_BACKEND = 'kay.auth.backends.datastore.DatastoreBackend'
+ AUTH_USER_MODEL = 'core.models.User'
+ ||<
+ 
+ If you put this setting in AUTH, you need this in models.py
+ >|python|
+ from kay.auth.models import DatastoreUser
+ 
+ class User(DatastoreUser):
+     pass
+ ||<
+ 
+ *** Drag and drop into GoogleAppEngineLauncher, start the server and make sure it is visible in the browser
+ 
+ *** create static folder and put YUI reset-font-grid and JQueryUI
+ <a href='http://developer.yahoo.com/yui/'>YUI Library</a>, <a href='http://jquery.com/'>jQuery: The Write Less, Do More, JavaScript Library</ a>. There seems to be an option to use <a href='http://code.google.com/apis/ajaxlibs/documentation/'>Developer's Guide - Google AJAX Libraries API - Google Code</a>. <a href=''>Developer's Guide - Google AJAX Libraries API - Google Code</a>.
+ 
+ *** Put YUI and JQuery in the ignore list of .hgignore
+ *** Create a new profile in Google Analytics
+ *** Create template/_base.html
+ - Create template/_base.html by copying it from an existing application.
+ - Rewrite the Google Analitics track code.
+ - Rewrite title
+ - template/index.html to {% extends "core/_base.html" %}
+ - R: Template inheritance tree as (template with no inheritance) -> (_base: template with "show ready" (title, analytics, headers, etc.) but no content) -> (index: one complete template with top banner, columns, contact info at the end, etc.) This is a template that uses an iframe to display the login information. This was created when I was using an iframe to display login information and wanted a page with the same CSS and such but without a title.
+ *** Create README.txt
+ Put README.txt in the root of the project folder. Write down what you are going to make, what you need to do, etc.
+ - R: If I interrupt the work without having written it all down, and there is a pause for a while, I will think, "What was I going to do...?
+ - Prefix □ (TODO) with what can be done. When you are done, rewrite it as ■. If you accidentally write □ on a task, rewrite it as - if you think it is not feasible. How do you implement what? is not a TODO.
+ *** Change database storage location
+ On Mac, specify the database storage location for the development server in the project folder. In the launcher's Edit-Application Settings, set --datastore_path=/.... .projdir... /database_projname and so on.
+ - By default, it is created in /var and seems to be deleted when the machine is rebooted.
+ *** Make it from where you want to make it.
+ I started from the most important bookmarklet this time, though I need to write model.py for most of them. I think back to the last time, I started with a script to create content.
+ - Always write raise NotImplementedError for unimplemented parts. You are the one who gets in trouble if you don't write it.
+ - When writing models and views, open the models.py file of the new application and then open the models.py file created in the other application. This is to avoid the time-consuming error of writing "db.IntegerProperty" because the dynamic abbreviation completion completes "db.IntegerProperty" instead of "db.I".
+ *** CSS
+ >|python|
+ def css(request):
+   r = render_to_response(
+     'core/style.css', dict())
+   r.content_type = "text/css"
+   return r
+ ||<
+ *** Authentication
+  There have been many times when I tried to create my own certification from scratch because it was a little different from the norm, but in the end it was absorbed by existing products, so I will try to avoid creating it myself from now on.
+ *** /admin
+ Create /admin. Make sure to @admin_requied before publishing, and put ad hoc code (replacements, kicks, etc.) in here. Cut out ad hoc code (reassignments, kicks, etc.) into a separate file.
+ *** utils.py, etc.
+ If you implement the pages and functions you want, view.py will probably be the first to become bloated. When the size of view.py exceeds a certain level, it becomes hard to remember what was where in the brain, so the code that is covered by the view.py becomes shorter and shorter.
+ *** tests.py
+  When you have three or more page types, you start writing test cases because you are in a state of "I haven't tested all the features after fixing something. Otherwise, you will get a heart-wrenching situation like "I updated the page with a new feature, but I suddenly realized that the feature here is broken because I didn't fix just one line! This is a heartbreaking situation.
+ - Be aware that what you are operating and watching behavior in the local development environment is "manual testing.
+ 
+ *1270656170*[CSS}Centering block elements
+ margin-left:auto; margin-right:auto;.
+ 
+ *1270669400*[GAE] data on the development server disappeared after rebooting the machine.
+ Oh, it may be the same behavior as described here.
+ http://d.hatena.ne.jp/naskin/20100219/1266584289
+ Can we change where we store the data?
+ </body>
+
+[Hatena Diary 2010-04-07 https://nishiohirokazu.hatenadiary.org/archive/2010/04/07]

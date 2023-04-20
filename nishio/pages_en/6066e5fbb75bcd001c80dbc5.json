@@ -1,0 +1,25 @@
+✅Use logging for debugging output
+I debugged the output with print, and it was too much work to display what I wanted, so I felt it was a shame to delete it, so I left it commented out, and now I need it again.
+　You can use logging instead of print for that kind of thing.
+　	before
+   code:action.py
+    score = score_for_single_arg_question(env, qid, k, maxScore)
+    # print(repr(questions[qid](env, (k,))), k, score)
+ 	after
+  	code:action.py
+  	 import logging
+    logger = logging.getLogger(__name__)
+    ...
+    logger.debug((res, k, score))
+		 This is not the main topic here, but I've lumped it into a function to [✅ make it easier to see the debugging display of the question candidates
+
+If you set the log level to DEBUG only when a specific condition is met in the code on the side that calls the module, debug output will be generated only then.
+　Since `__name__` in action.py is `"server.keicho.action"` which represents the package hierarchy, you can use it to select a part of the entire source code and turn on/off debugging display.
+ code:python
+  import logging
+  logging.basicConfig()
+  ...
+  if some_condition:
+      logging.getLogger("server.keicho.action").setLevel(logging.DEBUG)
+  else:
+      logging.getLogger("server.keicho.action").setLevel(logging.INFO)

@@ -1,0 +1,20 @@
+Get OCR results from Gyazo Pro via API
+code:python
+ import requests
+ 
+ GYAZO_API_TOKEN = "..."
+ GYAZO_API_ROOT = "https://api.gyazo.com/api"
+ GYAZO_IMAGE_ID = "bf881c1e44d798978431f9a2af02acdb"
+ 
+ res = requests.get(
+     f"{GYAZO_API_ROOT}/images/{GYAZO_IMAGE_ID}", headers={
+         "Authorization": f"Bearer {GYAZO_API_TOKEN}"
+     }
+ )
+ print(res.json()["ocr"]["description"])
+
+PyPI has [python-gyazo], but it is not implemented to get a single image by specifying its ID, and "ocr" in the response is ignored, so you have to do a lot of work to use it for this purpose, and as mentioned above, you can achieve your goal in a few lines, so there was no need to use it.
+https://github.com/ymyzk/python-gyazo/blob/master/gyazo/api.py
+
+[OCR]
+[Gyazo API]

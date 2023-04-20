@@ -1,0 +1,203 @@
+Hatena2008-02-18
+code:hatena
+ <body>
+ *1203322931*BlockSorting
+ I have made a trial implementation based on <a href="http://homepage3.nifty.com/DO/blocksorting.htm">BlockSorting</a>.
+ 
+ >|python|
+ # -*- coding: cp932 -*-
+ # Blocksorting
+ 
+ # Conversion
+ data = "abracadabra"
+ 
+ mat = [
+     data[i:] + data[:i]
+     for i in range(len(data))]
+ 
+ for line in mat:
+     print line
+ print
+ 
+ mat.sort()
+ 
+ for line in mat:
+     print line
+ print
+ 
+ print "result:"
+ 
+ start = mat.index(data)
+ print start
+ 
+ tails = [line[-1] for line in mat]
+ print tails
+ 
+ # Restore
+ print "restore:"
+ 
+ heads = list(sorted(tails))
+ print heads
+ 
+ cur = start
+ i = 0
+ while True:
+     tails[cur] = None
+     c = heads[cur]
+     print c,
+     i += 1
+     if i == len(tails): break
+     cur = tails.index(c)
+ ||<
+ 
+ Of course, we should not feed this naive implementation with big data.
+ 
+ And the execution result. Comment after #.
+ 
+ >||
+ abracadabra # This is the original data
+ bracadabraa # Shift one piece at a time.
+ racadabraab
+ acadabraabr
+ cadabraabra
+ adabraabrac
+ dabraabraca
+ abraabracad
+ braabracada
+ raabracadab
+ aabracadabr
+ 
+ aabracadabr # Sort the table above
+ abraabracad
+ abracadabra
+ acadabraabr
+ adabraabrac
+ braabracada
+ bracadabraa
+ cadabraabra
+ dabraabraca
+ raabracadab
+ racadabraab
+ 
+ result:
+ 2 # Location where the original data was
+ ['r', 'd', 'a', 'r', 'c', 'a', 'a', 'a', 'a', 'a', 'b', 'b'] # List tails taken from the end of the table above
+ # Restore from these two
+ restore:
+ ['a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'd', 'r', 'r'] # Sort tails. That is, the list of heads in the second table
+ a b r a b r a c a d a # Restored
+ ||<
+ 
+ Oooh, restored!
+ The part about creating a table of one-character shifts is actually easy because you only have to read the appropriate part of the original string, but it's hard to sort the number of elements by the length of the string.
+ 
+ ------
+ Oh, there is a bug.
+ 
+ I tried to create the minimum input that would cause the bug, and found that "aabbaa" caused the bug.
+ 
+ >||
+ print start
+ print tails
+ print heads
+ while True:
+     tails[cur] = None
+     c = heads[cur]
+     result.append(c)
+     i += 1
+     if i == len(tails): break
+     print c, tails
+     cur = tails.index(c)
+ 
+ ||<
+ 
+ >||
+ print start
+ print tails
+ print heads
+ while True:
+     tails[cur] = None
+     c = heads[cur]
+     result.append(c)
+     i += 1
+     if i == len(tails): break
+     print c, tails
+     cur = tails.index(c)
+ ||<
+ 
+ Oh, well. I guess I shouldn't look for it off the top of my head.
+ 
+ >|diff|
+ -     cur = tails.index(c)
+ +    try:
+ +        cur = tails.index(c, cur)
+ +    except:
+ +        cur = tails.index(c)
+ ||<
+ 
+ Oh, no, it's still no good.
+ 
+ >||
+ aaaabb
+ aaabba
+ aabbaa
+ abbaaa
+ baaaab
+ bbaaaa
+ 2
+ ['b', 'a', 'a', 'a', 'b', 'a']
+ ['a', 'a', 'a', 'a', 'b', 'b']
+ a ['b', 'a', None, 'a', 'b', 'a']
+ a ['b', 'a', None, None, 'b', 'a']
+ b ['b', 'a', None, None, 'b', None]
+ a [None, 'a', None, None, 'b', None]
+ a [None, None, None, None, 'b', None]
+ 
+ Traceback (most recent call last):
+   File "c:/blocksorting.py", line 39, in <module>
+     cur = tails.index(c)
+ ValueError: list.index(x): x not in list
+ ||<
+ 
+ Hmmm, when you get to aab, the first one, b -> a, will be chosen first....
+ 
+ ------
+ Maybe I shouldn't have been doing that.
+ 
+ ------
+ And if you look closely, the first one wasn't restored properly either.
+ Are you tired?
+ 
+ *1203325857*[Procedure] Tax return
+ I inquired about the taxation of the prize money for my dissertation award, not knowing whether it was after or before the tax was deducted as miscellaneous income in the first place, and the place that gave me the prize money came back with a Word document within 4 hours. I guess it is a common question. And as it turns out, the prize money for the dissertation award is not miscellaneous income (200,000 deductible), but one-time income (500,000 deductible). Since this prize money is less than 500,000, the entire amount is deductible and I don't have to pay taxes. So, since no tax is deducted from the original amount, you don't have to do anything.
+ 
+ As for royalties, I don't have to declare them since they are withheld at source - is that correct?
+ 
+ -----
+ 
+ I heard that the notice "Application of the Standard Rate of Income for Royalties and Manuscript Fees" (Document No. 5-4) stipulates that 44% of manuscript fees can be unconditionally expensed, but the list on the IRS website seems to be missing some teeth.
+ http://www.nta.go.jp/shiraberu/zeiho-kaishaku/tsutatsu/kobetsu/sonota/000608/02.htm
+ 
+ The 44% can be expensed was mentioned here: http://d.hatena.ne.jp/akamac/20080214/1202976526
+ 
+ -----
+ For now, I will think about what to do after I see the withholding tax slips for the royalty. It's not much anyway, so I may just say, "It's too much trouble, so I don't care.
+ 
+ *1203342251* I despair!
+ 
+ I despaired of myself losing my concentration because I was distracted by people's new jobs!
+ I'm leaving now.
+ 
+ *1203345436*Gas
+ 
+ Oh, I completely forgot to pay the gas bill.
+ </body>
+ <comments>
+ <comment>
+ <username>akamac</username>
+ <body>Thanks for the late travail. <BR>I think it is "direct place 5-5". <br>You are right, the IRS website is missing this notice. </body>
+ <timestamp>1203757131</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-02-18 https://nishiohirokazu.hatenadiary.org/archive/2008/02/18]

@@ -1,0 +1,22 @@
+Why Google Bert's tokenizer can get muddled sounds?
+If you enter the string "model" for example in Google Bert's tokenizer, the muddled sound is removed and the string becomes "motel".
+This is the function below that is intended to remove accents, since all those in the category `Mn` (Mark, nonspacing) are discarded, but turbid signs, etc. are also included in this genre.
+code:python
+   def _run_strip_accents(self, text):
+     """Strips accents from a piece of text."""
+     text = unicodedata.normalize("NFD", text)
+     output = []
+     for char in text:
+       cat = unicodedata.category(char)
+       if cat == "Mn":
+         continue
+       output.append(char)
+     return "".join(output)
+
+code:python
+ >>> chars = list(unicodedata.normalize("NFD", "model"))
+ >>> chars
+ ['mo', 'te', '゙', 'le'].
+ >>> [unicodedata.category(c) for c in chars]
+	>>> ['Lo', 'Lo', 'Mn', 'Lo']
+

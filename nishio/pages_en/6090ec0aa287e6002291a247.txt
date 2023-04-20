@@ -1,0 +1,80 @@
+Hatena2012-06-24
+code:hatena
+ <body>
+ *1340507174*Diary not sure of initial order for EDSAC
+ EDSAC's initial order is a program that reads one character at a time from the tape, assembles it into a machine language form, and records it in memory, the "original assembler" so to speak. And I was implementing that because it was interesting, but I don't understand this part.
+ 
+ [f:id:nishiohirokazu:20120624120449p:image]
+ http://www.cl.cam.ac.uk/~mr/edsacposter.pdf
+ 
+ This is the part that reads the number of the address on the tape in decimal, multiplies the previous digit by 10, adds the new digit, and so on.
+ The memory is filled with 10 << 11 in advance, the previous digit is multiplied by it, then << 5 more, then the next digit is added, and so on. In total, the machine multiplies "10 << 16". However, this machine has a bit width of 17 bits, and the addition register (AB) has two 17-bit registers with a 1-bit padding in between, making it a 35-bit register. So you have to shift 18 bits to get to the point where you can multiply by 10 in the upper half.
+ 
+ To illustrate again with a real example, suppose the value of the previous reading is 1.
+ >||
+ m[1] == 00000000000000001
+ ||<
+ Then if you multiply 10 << 11
+ >||
+ 00000000000000000 0 00101000000000000
+ ||<
+ So, if you shift five
+ >||
+ 00000000000000010 1 00000000000000000
+ ||<
+ I try to add the next number 2 to the upper half, but I'm about 2 bits short, even though I think the upper half should be 1010 at that time.
+ 
+ The only misunderstanding I can think of that would cause a 2-bit shift is a combination of "bit shift does not use padding bits" + "most significant bit is a sign bit and is not used during the shift", but it seems like a pretty unreasonable interpretation. What is the correct answer?
+ 
+ -----
+ 
+ Postscript. I tried to refer to other implementations ( http://www.cl.cam.ac.uk/users/mr/Edsac/edsac.tgz ), but it looks like I'm shifting the entire 71 bits of the addition register (ABC), no matter how I look at it.
+ 
+ >||
+ AND shl(bits) BE
+ { { a0, a1, a2, a3, a4 := a0<<1, a1<<1, a2<<1, a3<<1, a4<<1
+     UNLESS (bits&1)=0 BREAK
+     bits := bits>>1
+   } REPEAT
+ 
+   a0 := a0 + (a1>>15) & #x7FFF
+   a1 := a1 + (a2>>15) & #x7FFF
+   a2 := a2 + (a3>>15) & #x7FFF
+   a3 := a3 + (a4>>15) & #x7FFF
+   a4 := a4            & #x7FF0
+ }
+ ||<
+ 
+ If I rewrite the 5-bit shift to a 7-bit shift, it would work as expected, but if the code is right about the 5-bit shift in the first place, then my implementation side of the processing system is wrong, and that kind of workaround will die later when I'm using the shift again. Nah.
+ 
+ -----
+ 
+ I thought it was necessary to verify whether my interpretation that "if I rewrite the program to shift 7 bits, it should work as expected here" was true or not, so I rewrote the program to try it out. As a result, the program that calculates the number of squares read from the tape now completes a loop of 100 times and terminates normally at ZS. However, the output of the program that terminated successfully was not correct, so I guessed that the shift or some other operation used in this area must be different from that of the actual machine. I think it is narrow-minded to think that the problem is caused by the shift, because it can be easily fixed by rewriting the shift.
+ 
+ -----
+ 
+ Okay, I get it. It's the multiplication that is wrong. That easily explains why it is a 5-bit shift. When I heard "multiply 10<<11", I implicitly assumed it was "integer multiplication", but it is a signed fixed-point number. See http://www.dcs.warwick.ac.uk/~edsac/Software/EdsacTG.pdf.
+ >||
+ 00101 0 0000000000 0 is
+ +.01010...
+ ||<
+ Then, multiplying this by +.000.... .001, the result will be 01010, 5 bits below the 1 place. If this is shifted by 5 bits, the result will be "multiply by 10 of an integer".
+ 
+ -----
+ 
+ We were able to confirm that all the patterns read in memory by the initial order matched. Blessed and happy. However, there are still errors in the execution results of the code I read, so there must be another bug left.
+ </body>
+ <comments>
+ <comment>
+ <username>metanest</username>
+ <body>I wonder if the numerical representation of EDSAC is actually a fixed point with a "MSB weight of 1", so the result of the multiplication might not be what you expect? (I haven't confirmed this) </body>.
+ <timestamp>1340511308</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>That was the reason! </body>
+ <timestamp>1340559854</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-06-24 https://nishiohirokazu.hatenadiary.org/archive/2012/06/24]

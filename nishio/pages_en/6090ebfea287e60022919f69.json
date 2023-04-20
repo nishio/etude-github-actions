@@ -1,0 +1,105 @@
+Hatena2009-04-05
+code:hatena
+ <body>
+ *1238879482*[Spamon]Programmer's Nightmare style game
+ I couldn't sleep, so I made a Programmer's Nightmare-style game. Before this, I had been thinking that I wanted to make a game in which the randomness is removed from Yu-Gi-Oh! style card battles and players win by making combos based on their reading. Well, the monsters are just for decoration. I don't know what to do about naming the game. I was thinking of putting spaghetti because it's a spaghetti code, but since it's a monster battle, it would be something else, like Spaghetti Monster or... something else.
+ 
+ - deal cards
+ -- This is shared information that should be called "place settings," and unlike many card games, there is no hand.
+ -bit placement phase
+ -- alternating between the first and the second player to place "bits" OPTION: I'm thinking "A, B, C, C, B, A" might be a good order for 3 or more players, but I haven't tried it yet.
+ -- In the bit placement phase, you may place bits on cards that already have bits placed on them. Of course, you can put your own bits on top of them.
+ --- RATIONALE: Reduce the disadvantage of the latecomers
+ -- Set a time limit of about one minute per move.
+ -Action Phase
+ -- OPTION: Roll the dice (or coin toss) to determine the order of execution with a probability of 1/2. In the case of reverse order execution, the action starts from the end of the row.
+ --- RATIONALE: Use this if you still have the first-mover advantage after the "bit stacking OK" modification.
+ -- Lose if HP goes to 0 or bit 0, win if HP goes to 20
+ 
+ Card Type
+ - MIMIC PC Copy two copies in the direction of travel
+ - ECHO Copy two copies in the opposite direction of PC progression
+ 
+ - INC Increase the Arabic numerals on any one card by 1
+ - DEC Decrease Arabic numbers on any one card by 1
+ -- I don't care if it's negative; reversing the ZAP and recovering myself is an option.
+ 
+ - ZAP 1 damage to 1 player
+ - HEAL Recovers 1 player's HP by 2
+ 
+ - KILL_CARD Remove the card immediately before or after this card
+ - KILL_BIT Remove any one bit
+ 
+ - MOVE_CARD Move a card to any location. If this card is moved, the PC is also moved.
+ - MOVE_BIT Move any one bit to any one card
+ 
+ - CHARM Change one bit to your color. This card disappears.
+ - WORM Add your bit to any card. However, the addition is at the end of the turn.
+ -- to avoid infinite bits being added to the set of WORM and copy
+ - JUMP PC to any card at least 3 cards away. Once jumped, the jump destination is fixed to that card. If the jump destination is deleted, the jump destination can be specified again.
+ - BOMB 1 player takes 4 damage and removes this card.
+ - REVERSE Reverses the direction of PC travel
+ - SPAWN Add a bit of your color to this card and any card with two or more bits on it.
+ - FLOAT Move one forward or backward and copy the next card in the direction of PC progression.
+ - SURGE 1 damage to anyone with bits on this card, 3 damage to anyone without.
+ 
+ These are one each, for a total of 18.
+ - Change name to short and clear.
+ - Other than WORM being weakened so that it is no longer subject to INC, quite a few cards have been strengthened.
+ -- RATIONALE: In Nightmare, there were "useless cards" that could be safely nullified by moving the opponent's bits to them, but if there was not much difference in power between the cards, the opponent might take advantage of it and turn the tables on you, so even if you were leading, you could not let your guard down. However, if there is not much difference in the strength of each card, the opponent may use it to turn the tables on you if you make an unintentional move.
+ -- For example, SPAWN was originally a MULTIPLIER, which was completely useless unless combined with BIT_MOVER, and BIT_MOVER, unlike the current MOVE_BIT, could only move to adjacent cards, making it a very "unwanted child". The enhanced SPAWN, even by itself, is a deterrent against "let's stack two of my colors and act twice". Of course, if you have it in combination with MOVE_BIT, you have a heinous situation. If it is too strong, cut "with this card".
+ - No more orders to draw cards from the deck.
+ -- We don't prepare decks in the first place. We hand them all out.
+ -- RATIONALE: The rules are easy to explain; in Nightmare, the draw was risky because there were some negative cards, but as a result of removing negative cards because of the complexity of the rules, the draw is not so meaningful anymore.
+ 
+ - Regarding copying
+ -- Copying "temporarily acts as if the contents of the card being copied were written on the card being copied."
+ -- This means that in the case of [MIMIC][JUMP][X], the PC moves with JUMP, but X is also executed because the instruction itself behaves as if [JUMP&X] is written on one card.
+ -- Also, in the case of [MIMIC (A)][SURGE (B)][X], A is -1 and B is -3 because the contents of SURGE are temporarily written to the MIMIC card in the execution of MIMIC.
+ -- Due to the temporary copying, [MIMIC][GOTO][X] does not cause a lock and can fly anywhere.
+ -- "PC's direction of travel," etc., indicating the copy target, are used as of the start of the card's execution.
+ --- RATIONALE: [MIMIC][REVERSE][ECHO] due to stack overflow caused by REVERSE
+ -- The execution order of multiple copies made is determined by the orientation of the PC at the time of copy execution.
+ 
+ Regarding the addition of -bits
+ -- Bits are added at the time the PC is moved.
+ --- RATIONALE: To prevent infinite bit proliferation through a combination of WORM, SPAWN, and copying
+ 
+ **1238885497* Thinking about how to play Cockroach Poker with playing cards.
+ Cockroach Poker is 8 cards of 8 different types, and you lose if you get 4 cards of the same type. Local rule is that you lose if all 8 cards of each kind are gathered. Playing cards are 13 cards of 4 different types.
+ 
+ How about if you get 7 of the same kind, you lose & if you get 2 of all 4 kinds, you lose.
+ 
+ Consideration. Under the original rules, a draw occurs with 3 or more players. When local rules are added, a tie occurs with 4 or more players.
+ >||
+ 3 3 3 3 3 3 3 0
+ 3 3 3 3 3 3 0 3
+ 2 2 2 2 2 0 3 3
+ 0 0 0 0 0 2 2 2
+ ||<
+ 
+ With the playing card rule, three players would be a tie, even with the addition of the local rule.
+ >||
+ 4 6 6 1
+ 4 6 1 6
+ 5 1 6 6
+ ||<
+ It would be good to modify it so that if you get *6* cards of the same type, you lose & if you get 2 cards of all 4 types, you lose.
+ 
+ The rules are explained again. Deal out the same number of playing cards to everyone and pass them face down to others while saying, "This is a heart. The person to whom the cards are handed can take one of three actions: "yes," "no," or "force it on someone else." If the card is "yes" and is indeed a heart, or "no" and is not a heart, it is placed face up in front of the sender. Otherwise, it is placed in front of the sender. In the case of "Forcing it on someone else," the card is looked at once and then handed to someone else, saying something like, "This is a spade. You may say again, "This is a heart. You lose when you have six cards of the same suit or two cards of each suit face up in front of you.
+ 
+ <hr>
+ 
+ After actually playing this game, I decided that 13 cards were too hard to settle the game, so I removed 7 cards and made it 6 cards x 8 types.
+ 
+ *1238909626*[SpaMon]Spaghetti Monster (tentative)
+ http://coderepos.org/share/browser/lang/python/spaghetti_monster/main.py
+ 
+ This is what I got when I expressed the rules of the game (http://d.hatena.ne.jp/nishiohirokazu/20090405/1238879482) I just played in code. It is not yet ready to be played and enjoyed.
+ 
+ Well, Float and Jump are the most complex cards with the most complex rules, and even so, they can be expressed in 9 lines. I don't care that Jump raises ProgramCounterChanged exception, I don't care.
+ 
+ The whole implementation could not be compressed to less than 100 lines, which is more complicated than the brainf*ck processing system. But it's less than 400 lines, so it's about the same as the Unlambda processing system before compression.
+ </body>
+
+[Hatena Diary 2009-04-05 https://nishiohirokazu.hatenadiary.org/archive/2009/04/05]

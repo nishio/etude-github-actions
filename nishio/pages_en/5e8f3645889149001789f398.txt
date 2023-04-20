@@ -1,0 +1,177 @@
+Word frequency in source code
+In [Modeling in the Agile Era], I learned that it is a good idea to analyze the frequency of words in the source code and create a terminology dictionary as the first step in creating a [maintenance model] when there is already code, so I will actually try it.
+
+	I made an analysis tool https://github.com/nishio/wordfreq
+	Applied to [Regroup] and discarded reserved words, etc.
+		https://gist.github.com/nishio/c386d7092c0ca5b0bf130372e71a62b4
+	From the top, I'll explain it on the assumption that someone who knows nothing about the project says, "What's this?" I'll explain it on the assumption that someone who knows nothing about the project says, "What's this?
+		item
+			Bad name
+			We call the model displayed on the canvas PaperItem, and the model separated from the view of it StateItem.
+		state
+		　This was when I started to use React as I saw it, so this is what I'm called for regarding State in the context of React.
+		　That's like naming a model "model" in MVC, so it's not a good idea.
+		　I initially thought, "This is serialized and stored on the server," but it actually contains a cache of time-consuming calculations, etc.
+  paper
+  　so-called "canvas
+  　canvas elements in HTML5-like context
+  　I'm using Paper.js as a wrapper library, so I'm dragging that name.
+  path
+  　Hand drawn lines on canvas
+  group
+  　A compilation of multiple ITEMS
+  piece
+  　Sticky notes, square boxes with letters
+  　Initially, it was just text, but now when that text is in a particular pattern, it's displayed as an image.
+  　　I think image stickies and text stickies should be separated as concepts.
+  stroke
+  　path line style, used in the form of strokeWidth, strokeColor, strokeOpacity, etc.
+  point
+  　two dimensional vector
+  　A point on the canvas
+  position
+  　Position of the item on the canvas
+  center
+  　Center of the canvas field of view (viewport)
+  　The model is supposed to show a portion of an infinitely large canvas.
+  zoom
+  　Zoom percentage of viewport
+  　The combination with center determines which area of the infinitely wide canvas is drawn.
+  tool
+  　User Mode
+  　Pen drawing mode = drawingTool
+  　We built it according to the Paper.js architecture, but we think it's a bad way to divide it, and we're fixing it.
+  　　[Change mouse event handling]
+  items
+  　Multiple items that a project or group has
+  update
+   Update state
+  width
+  　range (e.g. of voice)
+  mouse
+  　mouse
+  app
+  　A singleton instance of this program that exists in one tab on the browser
+  lasso
+   a lasso
+   Tool used to surround and select items on the canvas
+  canvas
+  　canvas
+  color
+  　variety
+  　So far, only the paths can change color, but you might want to change the color of the stickies.
+  open
+  　Open a dialog, open a link to a sticky in a separate tab, etc.
+  target
+  　ITEMs that are primarily the subject of mouse events
+  menu
+   menu
+   There's the one that appears as a menu bar at the top, the menu that appears from the 3-point button, and the balloon menu that appears on the canvas.
+  add
+  　add (e.g. annex)
+  text
+  　String written on a sticky note
+  view
+  　viewport
+  root
+  　I read rootItem as an item that is not a child of a group and is placed directly on the canvas.
+  　Since it is drawn in canvas, there is no event propagation in the DOM, so the rootItem is identified by tracing the inclusion relationship of PaperItem on its own.
+  style
+  　Style, either item or DOM.
+  create
+  　Make, mainly Item.
+  click
+  　click
+  height
+  　height
+  drag
+  　drag
+  line
+  　Lines, when the sticky text is on multiple lines, each of which
+  　In the Line, Style dialog, the straight line button that represents the thickness of the path is called a lineButton.
+  down
+  　Mouse down events.
+  dialog
+  　dialog
+  url
+  　Attributes that the external link sticky has
+  balloon
+  　Balloon Menu
+  parent
+  　Attributes that the item has that point to its own parent.
+  image
+  　image
+  selected
+  　The item must be selected.
+  old
+  　The state of the item to be updated, before the update
+  scale
+  　Magnification when scaling items, especially image stickies
+  　Viewport magnification is called ZOOM, so it's different.
+  top
+  　Top edge of PaperItem
+  left
+  　Left side of PaperItem
+  info
+  　Information not stored in the cloud in state in the form of local_info
+  　In the style change dialog, the information that the button has about what style it should be changed to.
+  buffer
+  　The buffer is temporarily stored in a buffer because it is not good if the entire redrawing process runs while writing text.
+  project
+  　Paper.js terminology, one for each canvas element. There are three in this application.
+  last
+  　Last
+  ghost
+  　Semi-transparent object that appears instead of the whole redraw when dragging an item, since it is jerky.
+  opacity
+  　transparency
+  dash
+  　Dotted line of path
+  present
+  　Current state
+  undo
+   cancel
+  start
+   Processing of mouse down events when mouse down and drag events must be handled separately, startMoveItem, etc.
+   Also, the mouse down position dragStartPoint
+  initial
+   initial value
+  points
+  　Each point of the path
+  button
+  　button
+  change
+  　Style Change
+  　Changes on the server
+  react
+  　React
+  close
+   dismiss a dialog
+  title
+  　The "actual string to display" is required by having notations such as links in the sticky's TEXT, and its value
+
+Thoughts on doing it
+　Sometimes you try to explain it and it's like, "No, it can mean two different things..."
+　I dared to explain everything this time, but I don't think I have to explain LAST or anything, it's an adjective, so it's not a specific entity and it's not a special usage, it's just an English meaning.
+　　Like the operation close, this one made me realize that "open" is used in two ways.
+　　I'm sure the actual code can distinguish between the two in context.
+　What is this? This is exactly what happened with line.
+　I thought I might forget to explain to the new member that the project has a canvas, 1:1 support, and three in the app when I explain it to him since it's no longer a rare thing to mess around with.
+　It had the effect of making me realize that.
+　And based on what I've said so far (and imported), I've organized a few things.
+[https://gyazo.com/3a25316e67733462fac607374b9068cc]
+　impressions
+	　I did it from the highest frequency of occurrence as a word, so it picks up the volume of implementation in the code and concepts that have a wide range of impact.
+　　Frequency of occurrence criteria, so for example, tool has drawing in addition to lasso, but it is not shown.
+　　Overly detailed] if you parse the source code and bring up all the graphs and so on.
+	　　A diagram like that, with a little tweaking of the code, becomes an "incorrect diagram".
+　　Frequently appearing concepts have a wide range of code impact when modifications are made to them.
+　　So it's not something we can easily fix."
+　　　As a result, the rate of change slows down.
+　　　So those that illustrate only the most frequently occurring concepts will have a longer lifespan.
+　　　[it's important that it's not exhaustive].
+　Words are entities, so they are a mixture of class-like (item), instance-like (app), and attribute-like (selected).
+　 Maybe the verbs you're putting in the corner without organizing them, or something like that, could be a relation.
+　　This is not strange, ER diagrams are drawn by extracting only some aspects of the source code, so not all frequent words in the entire source code should be written here
+　　Some things can be written in sequence diagrams.
+

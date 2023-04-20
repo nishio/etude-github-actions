@@ -1,0 +1,49 @@
+ABC180
+I didn't realize I made a mistake on D, concentrated on E, realized it with about 30 minutes left, and rushed to fix it.
+[https://gyazo.com/7a99a330842d06c816d8b2e7463ceefd]
+Continuing to step in front of the light blue...
+[https://gyazo.com/be704e75e3126bb5928898936b33951e]
+
+[C - Cream puff https://atcoder.jp/contests/abc180/tasks/abc180_c]
+	[https://gyazo.com/0ca2c8bea32656c1f05ffa66447bdffc]
+　In a nutshell, it's "List the Approximate Numbers."
+　I put the approximate enumeration in a homebrew library, so here's what it looks like
+	code:python
+	 def main():
+      N = int(input())
+      for x in get_divisors(N):
+          print(x)
+
+[D - Takahashi Unevolved https://atcoder.jp/contests/abc180/tasks/abc180_d]
+	[https://gyazo.com/8f06a617ab10a812d76a3db89b088612]
+　Since A is greater than or equal to 2, [$ (x + B) \times A > x \times A + B], we can say "it is more profitable to do xA first".
+　code:python
+　 def solve(X, Y, A, B):
+      AX = X
+      a_count = 0
+      ret = 0
+      while AX < Y:
+          rest = Y - 1 - AX
+          b_count = rest // B
+          ret = max(ret, a_count + b_count)
+          a_count += 1
+          AX *= A
+  
+      return ret
+　First, `a_count += 1` `AX *= A` was at the top of the loop, so it was a type of input that does A 0 times and it was WA.
+　　I could have fixed it as soon as I noticed the WA, but I was so focused on E that I didn't notice it and let it sit for an hour.
+
+[ABC180E] AC after contest
+
+F - Unbranched https://atcoder.jp/contests/abc180/tasks/abc180_f]
+	[https://gyazo.com/35303867fe0d84984d1e647509bfda0a]
+　Thoughts.
+　　The fact that the number of degrees is less than or equal to 2 means that each connected component is either a cycle or a path
+　　If the largest connected component is exactly L, there is at least one cycle or path of L
+　　　Take that away and it becomes a matter of placing it under L.
+　　Since there are no constraints that the labels of the vertices affect, I wonder if it would be a matter of first determining the shape of the graph and then distributing the labels to it.
+　　　If it is a cycle, it is a bead permutation.
+　　There are multiple edges, so there is an L=2 cycle.
+　Official Explanation
+	　[count(X=Y)=count(X<=Y)-count(X<=Y-1)]
+

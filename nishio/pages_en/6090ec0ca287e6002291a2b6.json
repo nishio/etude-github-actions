@@ -1,0 +1,69 @@
+Hatena2013-08-04
+code:hatena
+ <body>
+ *1375584264*Behavior of the new operator
+ In my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", p. 204, explains the process of object creation using the behavior of JavaScript's new operator as an example. However, it seems to be a source of confusion due to the fact that the number of enclosed numbers in the source code and the number of bullets immediately following the source code are both 4. We have therefore decided to reorganize this entire page.
+ 
+ ** Structure before modification
+ 
+ 　In addition, operators are provided to make it easier to write processes using prototypes. The following code calls the function Counter with the operator new.
+ 
+ (Sample code)
+ 
+ 　When a function is called with new, the following four processes are performed.
+ 
+ (bulleted)
+ 
+ 　In this code, the first step is (2)...(explanation of sample code below)
+ 
+ ** After correction
+ 
+ 　In addition, the operator new is provided to make it easier to write processes using prototypes. When the function f is called with new, the following four processes are performed.
+ 
+ - (a) Create a new object x
+ - (b) Change the prototype of the created object x to the prototype of the function f
+ - (c) Put the created object x into this and execute the body of function f.
+ - (d) Return object x
+ 
+ 　We will look at this in the actual code.
+ 
+ >|javascript|
+ var Counter = function() {
+     this.count = 0; //                        （1）
+ }
+ 
+ Counter.prototype.push = function(){ //       （2）
+     this.count++;
+     console.log(this.count + "animals");
+ }
+ 
+ var c1 = new Counter(); //                    （3）
+ c1.push(); //-> 1 animal
+ c1.push(); //-> 2 animals
+ var c2 = new Counter();
+ console.log(c1.push === c2.push) //-> true // (4) Same thing
+ ||<
+ 
+ 　This code first adds a new function named push to the prototype of function Counter in (2). Next, in (3), new Counter() performs the processes described in (a) through (d) above. First, an empty new object is created ((a)). Then, the prototype of that object is changed to the prototype of Counter ((b)). This prototype contains push. Next, Counter is called with this object in this ((c)), and since it is written as (1) in Counter, a value of 0 is added to this object here, with the name count. Finally, this "object with count in it that has a prototype with push in it" is returned ((d)). We have successfully created the structure shown in Figure 11.6 right. （The fact that (4) is true shows that we are able to share the push function.
+ 
+ ** Finally
+ 
+ My book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write supplemental articles to the questions and comments I received from readers. Please do not hesitate to send us your questions and comments.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+ <comments>
+ <comment>
+ <username>ukyo</username>
+ <body> Incorrect: (b) Change the prototype of created object x to the prototype of function f<br> Correct: (b) Change the prototype of created object x to the prototype property of function f<br> (Function.prototype.bind without). <br><br>Refer to:<br>http://www.ecma-international.org/ecma-262/5.1/#sec-13.2.2</body>
+ <timestamp>1375620527</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thanks for pointing that out! </body>
+ <timestamp>1375758300</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-08-04 https://nishiohirokazu.hatenadiary.org/archive/2013/08/04]

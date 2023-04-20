@@ -1,0 +1,55 @@
+Hatena2011-12-22
+code:hatena
+ <body>
+ *1324561616* Learning natural language with hidden Markov models
+ I used a hidden Markov model to train just under 10,000 posts on the company bulletin board.
+ [f:id:nishiohirokazu:20111222224531g:image]
+ First, let's talk about initial values. The transition probability is approximately a diagonal matrix. If the probability is 0, the transition is not interesting, so I normalized the diagonal component to 11, the diagonal one up to 2, and all other components to 1, so that the probabilities are correct. The output probability is random. However, since I wanted to pay attention to the structure of the end of the sentence, I doubled the output probability of the punctuation ". is doubled only for the last state because we wanted to focus on the structure of the end of the sentence.
+ [f:id:nishiohirokazu:20111222232854p:image]
+ The leftmost figure shows the size of the transition probability matrix, represented by the size of the black square. Since the values are normalized by the maximum and minimum values, the area where the black square is not visible does not mean that the probability is zero, but rather that it is a small value. The center panel is a twice enlarged version of the display. The center panel is a double magnified image of the display, since it is difficult to see the smallest probability values. The red color means that the probability exceeds 1 as a result of doubling the value. The rightmost panel has a black, red, green, and white scale. Well, this was the first one I made, but I thought it would offend the red-green color-blind people.
+ 
+ The list of characters below shows the 20 characters that each state outputs, in order of frequency.
+ 
+ The following is a one-step study.
+ [f:id:nishiohirokazu:20111222233403p:image]
+ Roughly all states now output the average frequency of character occurrence. (UNK)(RET)(SP) corresponds to "unknown character," "line feed," and "half-width space," respectively. Oh, I forgot to mention that only the top 90% of the characters are recognized as each character in order of frequency of occurrence, and the rest are treated as "unknown characters. You can see that there are subtle differences in the output characters for each state depending on the connection of the transition matrices and other factors.
+ 
+ [f:id:nishiohirokazu:20111222233938p:image]
+ It can be observed that clusters centering on English letters and clusters centering on hiragana are beginning to differentiate in this area.
+ [f:id:nishiohirokazu:20111222233937p:image]
+ The transition probability gradually flattens out and then rises all the way up here.
+ [f:id:nishiohirokazu:20111222233936p:image]
+ And we are looking for appropriate convergence patterns.
+ [f:id:nishiohirokazu:20111222233935p:image]
+ [f:id:nishiohirokazu:20111222233934p:image]
+ Among s2, s3, and s4, which were mainly English letters, only s4 leaps to second place in frequency of occurrence of 0.
+ 
+ It's hard to go through them one at a time, so let's go through them all at once. The next step is after the completion of 20 studies.
+ [f:id:nishiohirokazu:20111222234328p:image]
+ It is observed that s0 is katakana, s1 is uppercase English letters, s2 is symbols, s3 is lowercase English letters, s4 is numbers, and s5 is hiragana and punctuation marks. What is important to note is that the classification of character types was made by simply feeding in the data from the bulletin board posts, without providing any information such as the sequence of code points for each character. By summarizing the data, we were able to discover six clusters.
+ 
+ Now, since I want to observe the punctuation, I will duplicate s5 to make s6. In the animation, the red area widens for a moment, but this is due to the fact that the transition matrix is normalized by adding 0.1 to the values other than the one to be duplicated at the time of duplication. If you think about it, you don't have to go that far, so you can put 1.0 / K in the newly added right-most column, but for now, the probability values are averaged out because 0.1 is added to all of them. Well, it's okay, because the next step will separate the large and small again soon.
+ 
+ Here is what was learned 20 more times after that.
+ [f:id:nishiohirokazu:20111222235114p:image]
+ The s6 is in the state of being a two-top for line breaks and punctuation. Moreover, the transition to s0 is rather strong. s0 is supposed to collect characters close to the "beginning of the sentence" because it has a bias such that the first character of a bulletin board post is always s0. So, I discovered that when the punctuation mark appears, the transition to the beginning of the sentence is similar to that of the beginning of the message board. I see. Well, let's try to duplicate s6 again. Here is what I learned 40 times after that.
+ 
+ [f:id:nishiohirokazu:20111222235751p:image]
+ The punctuation dances to the top in s6. Not only that, but "...? ...?" which are very much like punctuation marks. The transition probability shows that s6 does not stay to itself but immediately transitions to s7. The punctuation ". is learning my writing pattern, that is, I often do not write several punctuation ".
+ 
+ I didn't notice this when I was learning this, but a certain distinctive character appears in s7. What is it?
+ 
+ After this, we duplicated s6, did the learning, duplicated the clusters with a lot of punctuation, and repeated several times, and here is what we got:
+ 
+ [f:id:nishiohirokazu:20111223000315p:image]
+ I can still see that s10 is a punctuation cluster and the transition from there is to s7. I can still see that there are a lot of line breaks and unknown characters, but what is that next full-width white space and middle black and white? Ah, well, that's the thing! When I do bullet points in a plain text environment where I can't use HTML tags, I use curly braces and full-width spaces. I guess I've learned that!
+ 
+ If you look at s9, which has many transitions to s10, you will see many characters like "です", "かなぁ", and "んだ". It's the end of a sentence.
+ I wonder what s8 is. s5 has many transitions to s5. s5...has the most unknown characters, but the rest are "ga", "de", and "te-no-ha", so it seems to be the main part. s7 contains bullet points and so on that precede sentences, and there are many transitions from there. s7 is an ornament before a sentence? But it's puzzling that it contains a lot of closing brackets. I guess there weren't enough states to split it up.
+ 
+ What would be interesting to do after this? Maybe add one more state that is flatly connected from all the states and initialized to the current probability and observe what role it starts to play. It will be interesting to see if it learns to distinguish between open and close brackets, or if it progresses to more subdivision around numbers and alphabets....
+ 
+ As usual, this image is licensed under CC-BY3.0, so you can use it freely as long as you indicate the author's name. However, it may not be as easy to use as the previous one (<a href='http://d.hatena.ne.jp/nishiohirokazu/20111122/1321925412'>Estimating clusters in a mixed Gaussian distribution model using the k-means method, EM algorithm, and variational Bayesian method</a> respectively). but it is not as easy to use as the previous one.
+ </body>
+
+[Hatena Diary 2011-12-22 https://nishiohirokazu.hatenadiary.org/archive/2011/12/22]

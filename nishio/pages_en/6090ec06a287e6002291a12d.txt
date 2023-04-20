@@ -1,0 +1,132 @@
+Hatena2011-01-01
+code:hatena
+ <body>
+ *1293870288* Recipe for doing useful things in Python in 5 minutes.
+ <a href='http://hiroki.jp/2011/01/01/1229/'>I wrote a 5-minute Python article to help people who don't know Python learn how to use it. I was saying on Twitter that it was not very good, because it was trying to do something PHP-like in the first place, and it was not very good.
+ 
+ >>
+ @bellonieta: I would really like @nishio to write the right 5 minute article here...
+ <<
+ 
+ I've been told. Well, it's not productive to complain, you know... There are many useful things in Python, but I'll try to explain the easiest one. For example, let's say you are creating a document like this.
+ >||
+ President: Taro Yamada
+ Branch Manager: Ichiro Tanaka
+ Director: Saburo Yamakawa
+ ||<
+ 
+ Let's say you only wrote for three people because it's tedious, but really there are many more, about 30 lines. Just when you think you've finished, your boss comes in and says, "Oh, no, that's not right, you have to write 'Taro Yamada (President). He said, "You should have told me first. I thought to myself, "Well, it doesn't matter which way you write it.
+ 
+ It is better for your mental health to use Python and finish it quickly and be happy and say "I'm awesome" than to fix 30 lines of code while complaining about it. Let's start up Python. The interpreter will display ">>>>" and ask you to "enter code." Type u""" and then copy and paste the list of names. u"""" marks the beginning of a "multi-line Unicode string," so after pasting the list of names, mark the end with """ and press the Enter key.
+ 
+ >|python|
+ >>> u"""President: Taro Yamada
+ ... Branch Manager: Ichiro Tanaka
+ ... Director: Saburo Yamakawa
+ ... """
+ u'\u793e\u9577: \u5c71\u7530\u592a\u90ce\n\u652f\u793e\u9577: \u7530\u4e2d\u4e00\u90ce\n\u90e8\u9577: \u5c71\u5ddd\u4e09\u90ce\n'
+ ||<
+ 
+ A Unicode string has been created. Let's give it a name. The last evaluated value is in the variable "_", so let's name it "data".
+ 
+ >|python|
+ >>> data = _
+ ||<
+ 
+ Now comes the interesting part. First, we use strip to cut off the useless whitespace before and after, and then use split("\n") to convert it into a newline character-separated list.
+ 
+ >|python|
+ >>> data.strip().split("\n")
+ [u'\u793e\u9577: \u5c71\u7530\u592a\u90ce', u'\u652f\u793e\u9577: \u7530\u4e2d\u4e00\u90ce', u'\u90e8\u9577: \u5c71\u5ddd\u4e09\u90ce']
+ ||<
+ 
+ The data was divided into one line at a time. For the sake of clarity, let's use a for statement here.
+ 
+ >|python|
+ >>> for line in _: print line
+ ... 
+ President: Taro Yamada
+ Branch Manager: Ichiro Tanaka
+ Director: Saburo Yamakawa
+ ||<
+ 
+ Next, let's further split line. Print line.split() for explanation.
+ 
+ >|python|
+ >>> for line in _: print line.split()
+ ... 
+ [u'\u793e\u9577:', u'\u5c71\u7530\u592a\u90ce']
+ [u'\u652f\u793e\u9577:', u'\u7530\u4e2d\u4e00\u90ce']
+ [u'\u90e8\u9577:', u'\u5c71\u5ddd\u4e09\u90ce']
+ ||<
+ 
+ Each line was divided into a list with a blank before and after each line. Now what's next? Let's use string formatting operations.
+ 
+ >|python|
+ >>> for line in _:
+ ...     items = line.split()
+ ...     print "%s(%s)" % (items[1], items[0])
+ ... 
+ Taro Yamada (President:)
+ Ichiro Tanaka(Branch Manager:)
+ Saburo Yamakawa (Director:)
+ ||<
+ 
+ Oops, a colon is left. You can remove the colon with items[0].strip(":"), for example, or you can discard the last character with items[0][:-1].
+ 
+ >|python|
+ >>> for line in _:
+ ...     items = line.split()
+ ...     print u"%s(%s)" % (items[1], items[0][:-1])
+ ... 
+ Taro Yamada (President)
+ Ichiro Tanaka (Branch Manager)
+ Saburo Yamakawa (General Manager)
+ ||<
+ 
+ We are happy, we are happy, we are happy. I wrote this in a slow and complicated way for the sake of explanation, but once you get used to it, you can easily write it like the one below. It only takes 5 minutes to do this.
+ >|python|
+ >>>> data = u"""(paste here)"""
+ >>> for line in data.strip().split("\n"):
+ ...     items = line.split()
+ ...     print u"%s(%s)" % (items[1], items[0][:-1])
+ ... 
+ ||<
+ 
+ <hr>
+ Postscript:.
+ - <a href="http://www.python.jp/doc/release/library/stdtypes.html#string-methods">6.6.1. string method</a>
+ - I'm using <a href="http://www.python.jp/doc/release/library/stdtypes.html#string-formatting">6.6.2. string formatting operations</a> because my brain is getting old, I heard that it is recommended to use <a href="http://www.python.jp/doc/release/library/stdtypes.html#str.format">format method</a> which was introduced in Python 2.6.
+ - It's easy to get tripped up, so I'll just write it down.
+ >|python|
+ >>> print u"{1}({0})".format(items[0][:-1], items[1])
+ Saburo Yamakawa (General Manager)
+ >>> print "{1}({0})".format(items[0][:-1], items[1])
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in <module>
+ UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-3: ordinal not in range(128)
+ ||<
+ This is caused by forgetting the u in u"{1}({0})". The code is supposed to convert a unicode string to a byte sequence with the implicit encoding ascii, but there are bytes in the given data that are not in the ascii range, causing the error.
+ <hr>
+ 
+ If anyone comes up with any other interesting recipes, please track back!
+ 
+ - <a href='http://am6.jp/hItacV'>5-minute recipe that makes Python seem useful</a> by @ueblog
+ -- A batch program for file manipulation. Recursively searches a directory and copies files with specific extensions to another directory
+ - <a href='http://blog.shibu.jp/article/42359540.html'>A渋 Diary: recipes for doing useful things in Python in 5 minutes</a>
+ -- Turn Python into a Windows exe file. This is useful for distributing programs in your business.
+ - <a href='http://d.hatena.ne.jp/t2y-1979/20110103/1294011330'>Recipes for system operation in Python in 5 minutes - forest book</a>
+ -- Reads csv format files and outputs SQL.
+ - <a href='http://d.hatena.ne.jp/heavenshell/20110103/1294039034'>Recipes for doing useful things in Python in 5 minutes - Heavens hell</a>
+ -- Throw POST and DELETE requests to the web app to check operation
+ - <a href='http://d.hatena.ne.jp/ymotongpoo/20110103/1294032545'>Web scraping in 5 minutes - YAMAGUCHI::weblog</a>
+ </body>
+ <comments>
+ <comment>
+ <username>xuwei</username>
+ <body>Written in scala<br><br>http://twitpic.com/3mmn0l</body>
+ <timestamp>1294050469</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-01-01 https://nishiohirokazu.hatenadiary.org/archive/2011/01/01]

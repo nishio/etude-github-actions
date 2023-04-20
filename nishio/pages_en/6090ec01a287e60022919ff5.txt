@@ -1,0 +1,117 @@
+Hatena2009-08-25
+code:hatena
+ <body>
+ *1251162285*Expanding the World
+ <a href='http://eleshop.jp/shop/c/c112064_ssp/'>[Kyoritsu Eleshop] eleshop.jp [Parts Floor] / Mechanism / Actuator: Mail order of electronic parts, semiconductor, kit</a>.
+ 
+ It's fun to learn the microcontroller and do all kinds of things with it.
+ 
+ **1251162355*Tidying up
+ -Buy a case with a threshold,
+ -Store capacitors sorted by capacity,
+ -I opened it with the lid down by mistake and it got scattered around,
+ -Some are missing ← here and now
+ 
+ kaizen (Japanese business philosophy of continuous improvement)
+ 
+ f:id:nishiohirokazu:20090825145440j:image
+ 
+ Oh, we are missing one 22uH coil!
+ 
+ *1251205498*Development Diary of Midterm 2.0
+ I've lost my concentration. I don't have a long enough time to concentrate.
+ 
+ <hr>
+ We were able to get to the point where three people were seated and three cards were displayed.
+ <hr>
+ The API that plays a card when you click on it should be hit.
+ >||
+ (r'^api/(?P<format>text|json|html)/play/(?P<seat_id>.*)/$', 'play'),
+ ||<
+ Is the API implemented in one way or another?
+ <hr>
+ I was using a custom tag to render the hand from the seat.hand, and I was trying to use filter because that was not enough information to make the link, and there were twists and turns. In the end, I gave the custom tag all the information it needed to make the link.
+ >|python|
+ @register.simple_tag
+ def render_hands(hands, seat_id, key):
+     ...
+     for c in hands:
+         url = reverse(api_views.play_html, args=[c, seat_id, key])
+         ...
+ ||<
+ What the heck, it's easy.
+ <hr>
+ When I first started using reverse and custom tags, I was confused about a lot of things, but as I got used to using them, I felt like I would find it hard to write without them.
+ Without reverse, you would have to manage which views are mapped to which URLs yourself and make a lot of modifications when URLs change.
+ Without custom tags, the template tries to force the rendering of complex content and becomes dirty.
+ <hr>
+ ack is useful
+ <hr>
+ The playAPI is now hit when a card is clicked.
+ <hr>
+ - ■(Not required) clean folding display
+ - Indicates who is currently face-down and who is not.
+ - □(Not required) Fix the card's rendering section that determines the height to be 5em.
+ - Processes a turn when all three cards are in hand.
+ <hr>
+ The hand was not reduced when the card was laid face down, but when the face down card was aligned. It is unnatural to have a card face down and still have it in hand. Correction.
+ I'm getting a card that's not the one I played.
+ >||
+ play = s.closed_card
+ if play not in s.hand:
+     from random import choice
+     play = choice(s.hand)
+ s.hand.remove(play)
+ ||<
+ Ah. Instead of getting angry when you put down a card that is not in your hand, it was supposed to get angry when you played a game with a card that is not in your hand (which seemed natural when the AI was playing via the API) and then remove it from your hand when you put it down, as is natural when a human plays it, so it was always " I'm playing with cards I don't have in my hand".
+ <hr>
+ Turns are now going correctly. It's hard to tell because the cards played during the last game are not shown, but oh well, I completed all the TODOs I wrote last night.
+ <hr>
+ List tasks.
+ - Display the result of opening a face-down card.
+ - □ (not required) Show current round score and overall game score
+ - □ Play by selecting a random AI at the game start screen
+ - □ Make sure that the game is played to the end and the winner is determined properly.
+ -- not done.
+ - □ Testing with real user data on a real server
+ - □ CGI to create an appropriate (order by size?) Create an AI and send it to www.nishiohirokazu.orgに置いてうまく動くことを確認する
+ - □ Writing documentation
+ - □ (not required)Carry over the win/loss information of Ver1
+ <hr>
+ After working with the backlight bright for about 3 hours, the battery ran out. It is important to find a dark cafe to prolong battery life.
+ <hr>
+ - If the game is over, the hand is not displayed in the SEAT (instead, the remaining cards are displayed).
+ -- If it is finished, is it ok for the SEAT to redirect to GAME? No, it's confusing if the center changes to say it's me, so I'll just leave it as it is.
+ 
+ Created game.is_finished
+ <hr>
+ - If the player's type is PASSIVE, you have to notify when the player is ready to play.
+ -- When did it become playable?
+ --- Immediately after all three cards are dealt
+ --- When all three face-down cards are aligned and the next turn is taken.
+ 
+ If you look at my previous Seat#invoke, you'll see that the entrypoint is http://で始まるかどうかを
+ It is used to determine if the AI is an AI on an external server.
+ Is that okay? Is that good enough?
+ <hr>
+ The invoke throws NotImplementedError when the player type is neither internal nor passive (http), but this means that I have to determine outside the invoke whether or not the player type should be invoked before invoking the invoke. This is not good.
+ <hr>
+ I made sure to hit INVOKE when the third person was seated.
+ 
+ Mwah, I got socked with a timeout. Oh, is that it, or is it blocking if I throw a request against myself while the request is being processed by the SDK? Anyway, let's deploy it up to the current state and go hit that.
+ <hr>
+ I played with internal randomAI as my 2 opponents. I got to the end of the game. When the game was over, I got a "Finished Game" message.
+ <hr>
+ - □ When it becomes Finished, display the score, winners and losers, etc.
+ - □ Create a shortcut to select two (unimportant) AIs to play
+ - □ It is annoying to have a drop down to choose when there are a lot of AIs.
+ - □ Display for spectators of finished games
+ - □ history
+ <hr>
+ I'm losing focus and my mind is getting confused, so I'm organizing and prioritizing tasks.
+ <hr>
+ I realized that it was my sleepy body that had lost focus.
+ Considering the documentation, I think the time limit is about 8 hours, since the specifications should be completely fixed by tomorrow and I should be ready to write a document that says, "You can create an AI using this API.
+ </body>
+
+[Hatena Diary 2009-08-25 https://nishiohirokazu.hatenadiary.org/archive/2009/08/25]

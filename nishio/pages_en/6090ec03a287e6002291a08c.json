@@ -1,0 +1,292 @@
+Hatena2010-04-02
+code:hatena
+ <body>
+ *1270200370*coverage calculation
+ I was looking at http://www16.atwiki.jp/tokoroten/pages/1211.html and I wanted to write mine.
+ 
+ I had MacBook work hard for about 10 minutes and did a round of all the problems from ZERO + ZERO = ZERO to TEN + TEN == TWENTY, but in the end I didn't find any very interesting problems.
+ 
+ I'll only list excerpts of questions that have answers:.
+ >||
+ Q: FOUR + FIVE = NINE
+ num_answer: 72
+ Q: FOUR + FOUR = EIGHT
+ num_answer: 56
+ Q: TWO + FIVE = SEVEN
+ num_answer: 36
+ Q: ONE + FOUR = FIVE
+ num_answer: 1200
+ Q: TWO + TWO = FOUR
+ num_answer: 19
+ Q: ONE + ONE = TWO
+ num_answer: 18
+ ||<
+ 
+ Source code below.
+ 
+ >|python|
+ # -*- coding: utf-8 -*-
+ 
+ WORDS = """ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN
+ ELEVEN TWELVE THIRTEEN FOURTEEN FIFTEEN SIZTEEN SEVENTEEN EIGHTEEN NINETEEN TWENTY""".split()
+ 
+ 
+ def compile_word(w):
+     "e.g. ZERO => (((Z) * 10 + E) * 10 + R) * 10 + O"
+     body = w[0]
+     for c in w[1:]:
+         body = "(%(body)s) * 10 + %(c)s" % locals()
+     return body
+ 
+ 
+ def perm(n, result):
+     n -= 1
+     for i in range(10):
+         if i not in result:
+             if n > 0:
+                 for r in perm(n, result + [i]):
+                     yield r
+                 
+             else:
+                 yield result + [i]
+ 
+ 
+ def solve(v0, v1, sum_):
+     print "Q: %s + %s = %s" % (v0, v1, sum_)
+     if len(sum_) > max(len(v0), len(v1)) + 1: return # no answer
+     if len(sum_) < max(len(v0), len(v1)): return # no answer
+ 
+     used_chars = set((v0 + v1 + sum_))
+     if len(used_chars) > 10: return # unsolvable
+ 
+     args = ", ".join(used_chars)
+     body = "%s + %s == %s" % (
+         compile_word(v0), compile_word(v1), compile_word(sum_))
+ 
+     prod = eval("lambda %(args)s: %(body)s" % locals())
+ 
+     _to_str = lambda w: " + ".join("str(%s)" % c for c in w)
+     to_str_body = "%s + ' + ' + %s + ' = ' + %s" % (
+         _to_str(v0), _to_str(v1), _to_str(sum_))
+     to_str_func = eval("lambda %(args)s: %(to_str_body)s" % locals())
+ 
+     num_answer = 0
+     for xs in perm(len(used_chars), []):
+         if prod(*xs):
+             print to_str_func(*xs)
+             num_answer += 1
+ 
+     if num_answer: print "num_answer:", num_answer
+ 
+ 
+ def main():
+ #    for sum_ in range(10, -1, -1):# real	2m13.308s
+     for sum_ in range(20, 10, -1):# real	7m20.159s
+         for v0 in range(sum_ / 2 + 1):
+             v1 = sum_ - v0
+             # 0 <= v0 <= v1 <= N
+             solve(WORDS[v0], WORDS[v1], WORDS[sum_])
+ 
+ main()
+ ||<
+ 
+ *1270203965* Maze shortest path problem
+ Some even <a href='http://okajima.air-nifty.com/b/2010/01/post-abc6.html'>rewrote their lives. : Talent Acquisition Strategy, 4 Exam Questions and Other</a>.
+ 
+ If I were a test taker and was given a question like this, there is one thing I would check first.
+ 
+ I have a question: "There is no set limit on the size of the maze, should I take into account the possibility that a 4 TB text file could give me a maze?" As long as it doesn't say that you don't have to consider it, you should consider it by default, and if you do, it is very annoying and you need to make sure the submitter is aware of it so they don't say later, "Oh, I didn't ask for that much.
+ 
+ And if they say "yes"...that's a pretty tough problem to crack!
+ 
+ Since it does not say anywhere that the maze is a square, a maze of 4 squares in height and 1 terrace in width is also valid. The first thing to do is to read from the beginning of the file in safe character lengths and check the position of the first line break that appears. The character code of the newline is not specified, so if you find a CR, you will need to check if it is followed by an LF.
+ 
+ Once the length of one line, LINE_WIDTH, and the length of a newline code, NL, are known in this way, then if you want to read the value of any coordinate (x, y), just seek to the position x + y * (LINE_WIDTH + NL), and you can process without having maze data in memory.
+ 
+ The next consideration would be "what is the maximum size of the search edges? The search edge can be taken to mean the same thing as the "list of next things to search" in the width-first search. Either way, this increases by 4 per step when there are no obstacles at all. The first megastep is the largest when the start is in the middle of a square with 2 megam squares each in length and width, and its size is 4 megam squares. So it looks like you can put up to 500KB per square of the search edge in memory. Of course, though, the entire "shortest path to get there" should not be put on memory (in the worst case, there could be a single 4-terramass path).
+ 
+ It's time to start thinking about pseudo codes around here. First of all, we will have to lick the entire data in the worst case during the first line feed code search, so let's look for the start at the same time.
+ >||
+ LINE_WIDTH, NL, START_POS = initial_search()
+ ||<
+ But then you make three lists: prev, cur, and next.
+ >||
+ prev = []
+ cur = [(START_POS, None)]
+ ||<
+ Iteration Start: For each element pos of cur, compute the coordinates of its neighbors in the 4 directions. For each of them, check if p is not included in the prev. For those not included, go to the data file and see if it is an obstacle or a goal. If it is neither, add (p, pos) to next. If it is a goal, we will write the process later.
+ 
+ When you have finished exploring all the elements of cur,
+ >||
+ Exporting prev to file
+ prev = cur
+ cur = next
+ next = []
+ ||<
+ The file will be written to a prev file with sequential integer numbers, etc., for easy return later. I'll check the memory usage here just to be sure, but if the x and y values can be up to 4 terabytes, well, 6 bytes should be enough, so 2 megamass * 3 * 4 * 6 bytes is 28 MB, which is plenty. Maybe even enough to write in Python.
+ 
+ Now, we return to the start repeatedly. In this way, the following files are output in sequence: "Start," "squares that can be reached in one step from the start (and the square one step before that)," and "squares that can be reached in two steps (and the square one step before that). The loop is exited when "the goal was reached when the specified coordinates in the file were read", which I omitted to explain earlier. In that case, the shortest path can be found by going back one step at a time while reading the exported files in reverse order.
+ 
+ And after explaining all this in natural language, I'll check one last thing. 'So, do I need to actually get this down to code?' ...because by the time I finished thinking this far, I was already bored. If I don't have to write it, I won't write it.
+ 
+ <hr>
+ 
+ >>
+ id:showyou 2010/04/03 11:50 4 terabytes is a level of detail that we should no longer even worry about file system specifications.
+ <<
+ 
+ At first I thought I could afford it since <a href='http://en.wikipedia.org/wiki/NTFS'>NTFS</a> Max file size is just under 16 exabytes. But if the maze size is 16 exabytes, I wonder how much the search edge will be. I don't need to have the next and curl in memory because I can write them out to a file or read them sequentially from the beginning of the file, but it would be very slow to put the prev in a file and search every square of the curl. It would be very slow if we put the prev in the file and search for all the cells of the cur.
+ 
+ *1270212193*Jinja2 filter and macro tweaking
+ Filters can be specified in settings and can be used from anywhere in the template. macro can be defined directly in the template or imported from a defined template.
+ 
+ Of the various things defined in filters, I'm going to move the ones that must be better to be MACRO. The simplest filter
+ >|python|
+ def q2img(q):
+     return '<img src="/q/image/%s.png">' % q.short_key
+ ||<
+ Usage.
+ >||
+ {{ q|q2img|safe() }}
+ ||<
+ Turn this into a macro.
+ >||
+ {% macro to_img(q) -%}
+ <img src="/q/image/{{ q.short_key }}.png">'
+ {%- endmacro %}
+ ||<
+ import at the beginning
+ >||
+ {% import "main/macro_for_quiz.html" as macro4q %}
+ ||<
+ And use it like this.
+ >||
+ {{ macro4q.to_img(q) }}
+ ||<
+ Hmmm... Macro is more natural on this one.
+ <hr>
+ I was going to use macros for the other filters if I thought they should be macros, but they include if, arithmetic operations, queries, etc., and I think the first two can be done with macros, but I think they are on the dark side, so I decided to use macros.
+ 
+ Dare to do it!
+ 
+ Original filter
+ >|python|
+ def q2buttons(q):
+     result = []
+     w = 100 / len(q.answer_arrangement.split()[0])
+     for c in q.answer_arrangement:
+         if c == " ":
+             result.append("<br/>")
+         else:
+             result.append('<input type=submit name="answer" value="%s" style="width:%d%%;font-size:200%%;">' % (c, w))
+     
+     return "".join(result)
+ ||<
+ 
+ Macro made
+ 
+ >||
+ {% macro to_buttons(q) -%}
+ {% set width = 100 / q.answer_arrangement.split()[0].__len__() %} 
+ 
+ {% for c in q.answer_arrangement -%}
+     {%- if c == " " -%}
+         <br/>
+     {%- else -%}
+         <input type=submit name="answer" value="{{ c }}"
+ 	       style="width:{{ width }}%; font-size:200%;">
+     {%- endif -%}
+ {%- endfor %}
+ 
+ {%- endmacro %}
+ ||<
+ 
+ Oh, something has been done. And it's surprisingly not ugly. I guess it's because the conditional expressions for addition, multiplication, division, and if are "normal grammar".
+ 
+ I tried to use len(xs) and got angry, so I used __len__ instead, but there is a builtin filters called length, so I guess I can use xs|length instead of xs.__len__().
+ 
+ <hr>
+ Let's take another step to the dark side. Original filter.
+ >|python|
+ def adj_quiz(q, typ):
+     "typ: newer | older"
+     from models import Question
+     assert isinstance(q, Question)
+     if typ == "newer":
+         adj = Question.all().filter("published_on >", q.published_on).order("published_on").get()
+     else:
+         adj = Question.all().filter("published_on <", q.published_on).order("-published_on").get()
+     
+     if not adj:
+         return ""
+     if typ == "newer":
+         return '<<<a href="/q/%s/">Newer Quiz</a>' % adj.short_key
+     else:
+         return '<a href="/q/%s/">Older Quiz</a>>>' % adj.short_key
+ ||<
+ 
+ I think I'm going to have trouble debugging when unexpected values are passed because there is no assert. is there a filter with assert_isinstance(cls) or something like that that would solve this problem (I'm not sure I want to write that in the template)?
+ 
+ from models import Question can't be done, but it can be done somehow (yeah).
+ 
+ >||
+ {% macro adj_quiz(q, typ) -%}
+     {% if typ == "newer" %}
+         {% set adj = q.__class__.all().filter("published_on >", q.published_on).order("published_on").get() %}
+     {% else %}
+         {% set adj = q.__class__.all().filter("published_on <", q.published_on).order("-published_on").get() %}
+     {% endif %}
+     
+     {% if not adj %}
+     {% elif typ == "newer" %}
+         <<<a href="/q/{{ adj.short_key }}/">Newer Quiz</a>
+     {% else %}
+         <a href="/q/{{ adj.short_key }}/">Older Quiz</a>>>
+     {% endif %}
+ {%- endmacro %}
+ ||<
+ 
+ Oh, come on, come on, come on, you can do it.
+ >|python|
+ def as_class(class_name):
+     import models
+     return getattr(models, class_name)
+ ||<
+ 
+ >||
+ {% set adj = "Question"|as_class().all().filter("published_on <", q.published_on).order("-published_on").get() %}
+ ||<
+ 
+ You can do it.
+ 
+ <hr>
+ 
+ Conclusion: Jinja2 is great, very flexible, very useful for people who know Python well to write templates. It is extremely flexible, which is very useful for someone who knows Python very well to write templates. If you let a person who uses Python features without any self-consciousness (e.g. me) write templates with Jinja2, you will end up with templates that cannot be modified unless you know enough about Python to meta-program in Python. And the as_class filter, which looks like black magic to me, is not documented because "it's obvious from the source (to me) and the name of the filter"!
+ 
+ It's dangerous! I smell danger! Jinja2 looks like a template engine, but it's actually a domain-specific programming language that makes it easy to output HTML and such! If we don't have strong self-control, a new dark lord of the Sith will be born!
+ 
+ *1270221382*iPhone + jQuery
+ I didn't know if I could use jQuery on my iPhone, so I'm looking into it NOW!
+ - iPhone UI http://iphone.hohli.com/
+ - jQTouch &#8212; jQuery plugin for mobile web development http://www.jqtouch.com/
+ I will look into this area tomorrow.
+ </body>
+ <comments>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>http://www.aoky.net/articles/david_pickett/stupid_interview_questions.htm<br>I'll leave this here. </body>
+ <timestamp>1270222980</timestamp>
+ </comment>
+ <comment>
+ <username>showyou</username>
+ <body>4 terabytes is a level of detail that I should no longer even be concerned about file system specifications. </body>
+ <timestamp>1270263001</timestamp>
+ </comment>
+ <comment>
+ <username>Passing by</username
+ <body>I'm working on some code to output ModelForm as <form> for twitter bootstrap in jinja2's macro. Wow, this is very useful. But you are doing a great job on the above. I think it's possible to code everything in macro without writing views.py for a small site.
+ <timestamp>1355424217</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-04-02 https://nishiohirokazu.hatenadiary.org/archive/2010/04/02]

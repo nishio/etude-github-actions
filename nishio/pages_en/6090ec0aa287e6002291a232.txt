@@ -1,0 +1,98 @@
+Hatena2012-05-21
+code:hatena
+ <body>
+ *1337589557*Diary of installing git-flow
+ I wanted to put git-flow in, port install git-flow, and it was still good until I started building iconvlib and gettext and perl 5.12 and said, "Hey, come on, this is taking forever.
+ 
+ >||
+ $ sudo port install git-flow
+ ...
+ --->  Extracting zlib 
+ Error: Couldn't determine your Xcode version (from '/usr/bin/xcodebuild -version'). 
+ ...
+ Error: Unable to execute port: upgrade git-core failed 
+ ||<
+ 
+ Mmmm....mocking up the zlib installation.... See the log.
+ 
+ >||
+ $ /usr/bin/xcodebuild -version
+ Error: No developer directory found at /Developer. Run /usr/bin/xcode-select to update the developer directory path.
+ ||<
+ 
+ How do I fix it? Google.
+ 
+ >||
+ $ sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+ ||<
+ I heard that you can do it. <a href='http://stackoverflow.com/questions/9621706/how-can-i-resolve-error-no-developer-directory-found-at-developer'>xcode - How can I resolve "Error: No developer directory found at /Developer"? - Stack Overflow</a>
+ 
+ Try port install zlib again.
+ 
+ >||
+ :info:build make: /Developer/usr/bin/clang: No such file or directory
+ :info:build make: *** [example.o] Error 1
+ ||<
+ 
+ <a href='https://trac.macports.org/ticket/33286'>#33286 (XCode 4.3 changed location of compilers) &#8211; MacPorts</a>
+ 
+ Ah. Oh, I haven't done selfupdate.
+ 
+ >||
+ $ sudo port selfupdate 
+ --->  Updating MacPorts base sources using rsync
+ MacPorts base version 2.0.3 installed,
+ MacPorts base version 2.1.1 downloaded.
+ ||<
+ 
+ Try port install zlib again.
+ 
+ >||
+ $ sudo port install zlib                                                                                                         
+ Warning: Your developer_dir setting in macports.conf points to a non-existing directory. Since this is known to cause problems, please correct the setting or comment it and let macports auto-discover the correct path.
+ ||<
+ 
+ <a href='http://guide.macports.org/chunked/internals.configuration-files.html'>6.2. Configuration Files</a>
+ 
+ >||
+ $ less /opt/local/etc/macports/macports.conf
+ ...
+ # Directory containing Xcode Tools
+ developer_dir       /Developer
+ ...
+ ||<
+ 
+ Rewrite this and try port install zlib again.
+ 
+ >||
+ :info:build sh: line 0: cd: /opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_archivers_zlib/zlib/work/zlib-1.2.7: No such file or directory
+ ||<
+ 
+ What are we going to do about this? What are we going to do about this?
+ 
+ >||
+ $ sudo port clean zlib
+ $ sudo port install zlib
+ ||<
+ 
+ Oh, it worked.
+ 
+ >||
+ Attempting to fetch llvm-3.0-3.0_4.darwin_11.x86_64.tbz2 from http://packages.macports.org/llvm-3.0
+ ||<
+ 
+ ...it is going to take longer than expected.
+ 
+ thereafter
+ >||
+ :info:build unable to execute /Developer/usr/bin/clang: No such file or directory
+ :info:build error: command '/Developer/usr/bin/clang' failed with exit status 1
+ ||<
+ 
+ Hmmm.
+ 
+ 
+ In the end, I found that there were many ports that did not work properly because Xcode moved from /Developrt to /Application, so I deactivated the ones that I did not seem to use, and git-flow started working somehow. I think it would have been better to add it from the source.
+ </body>
+
+[Hatena Diary 2012-05-21 https://nishiohirokazu.hatenadiary.org/archive/2012/05/21]

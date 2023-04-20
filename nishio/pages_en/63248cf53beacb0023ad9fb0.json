@@ -1,0 +1,134 @@
+Diary 2022-09-17
+
+>[https://twitter.com/nishio/status/1570983870337814528 @nishio]: iOS crop function, too much collage work!
+>[https://pbs.twimg.com/media/Fc1BTydaEAECZpV.jpg]
+
+memo
+　E: Instagram Posting Support
+　　✅[- try to see if you can post with a bot].
+　　✅[- post in style].
+　　✅[- if you can, do one post an hour or something].
+　　https://www.instagram.com/p/Cikt3eOPS9z/
+　　	>The first post that the AI directly post to instagram
+　　　I've made it to one post every 30 minutes for now, 48 per day.
+　　　The original 1500 images are generated per day and the review has a pass rate of about 6% so far, so 90 images per day.
+　　　　I put about twice the number of safety times because I don't review consistently and the pass rate might change.
+　　　　If the inventory is piling up, you can do it every 15 minutes.
+　　I've made it so that now it moves from the GOOD folder to PUBLISHED when it's published.
+　　　That would take the FINAL (the one you made EXCELLENT) out of the automatic submission.
+　　　This is the essential problem with "expressing attributes according to the folder that contains the file".
+　　　　Because "good" and "very good" and "published" and "not yet published" are orthogonal attributes
+　　　I wonder how I'll save the attributes...
+
+
+	C: Thompson sampling
+  It is not artistic to generate images that are popular on Instagram, but I think it is a necessary evil because human painters also draw pictures that are popular with the public in order to eat. Let's try to have two evaluation functions instead of mixing them, so that we can use one mode to draw pictures with an external flavor for the general public and another mode to draw what we think is good!
+　　The basic algorithm was implemented yesterday.
+　　Do the connecting part.
+
+[Facebook https://www.facebook.com/nishiohirokazu/posts/pfbid0Q36LT6U9uZXpyzBEK8jzEhTaywhyoVAcHWXhg7tAVmf3JvK79ZFQyKjwA4iYQAGZl]
+	I could get to the point where the program creates a prompt, the program draws a picture based on it, the program creates a title and hashtag for Insta based on that picture, and the program posts it!
+ Next step is for me and my wife to review (and in the future, insta-reactions?) to modify the distribution of prompts the program makes (Thompson sampling).
+	It is not artistic to generate images that are popular on Instagram, but I think it is a necessary evil because human painters also draw pictures that are popular with the public in order to eat. Let's try to have two evaluation functions instead of mixing them, so that we can use one mode to draw pictures with an external flavor for the general public and another mode to draw what we think is good!
+	But if, for example, the drawing AI improves and the probability of producing a good picture increases, or if the AI makes the first selection using the data collected on my wife and I's preferences (1,500 entries each day), or if the automatic prompt creation process that is being implemented now works well and the probability of producing a good picture increases, the "human contribution" will decrease more and more. As the automatic creation of prompts goes well and the probability of producing good pictures increases, the "human contribution" will decrease more and more. It would be interesting to see if at some point they could outwardly say, "I'm doing the selection," and then quietly automate the whole process, and the outside world wouldn't notice it.
+
+
+	info not found
+		why
+		✅
+
+	A: Ability to move to "not good" collectively
+	　I'd like to get rid of the obvious failures before reviewing with my wife.
+	　I've added a ✅ button.
+	　Attach file movement API
+	　display none with delete feedback
+	　Dropbox is clogged
+	　　Probably because I moved 6,000 files for two days after the last review, and the sync is jammed.
+	　　Now "2300 files are being synchronized".
+	　　The mysterious "info not found" error above is also caused by data files not being synchronized
+	　　I've finished implementing Thompson sampling, but I can't test it because the data files I put in Dropbox are not syncing.
+　　　This is also related to the above [" This is inherently problematic where "attributes are expressed by the folder containing the file"].
+　　　And this one, which I wrote down below.
+   	B: Write destination switching function
+   　　Make it easy to initiate a review with my wife.
+   　　Press the Start button to make a separate folder from the next save.
+   　　I pressed "month, day, hour," okay?
+				Why did you feel the need to "switch folders to write in"?
+				　It has the implicit assumption that "after reviewing the contents of a folder, the folder is moved to the reviewed folder".
+				　So, "If a post is made there while I'm reviewing, the non-reviewed stuff gets involved when I move on".
+　　　Is it safe on Dropbox's part to use it at this pace in the first place?
+　　　　[https://gyazo.com/9585cc6eaf75b27cd5d0508a274238a5]
+　　　　[- No, looks like a no-no]
+　　　　30,000 cases is 6 GB, making 3,000 cases per day, so 0.6 GB daily.
+　　　　I can increase 1TB for 800 yen/month and Dropbox side is not a problem, local storage is more of a problem.
+　　　　　Well, but at this rate, it'll be 25 months or so before I use 500GB, and I'll probably buy a new gaming PC before it becomes a problem.
+　　　I stopped generation at 20:00 to see what was going on later.
+　　　　It's 10pm and it's still "syncing 2300 files"?
+　　　　Quit and restart the application
+　　　　It's starting to get dazzlingly synchronized.
+　　　　Everything synced up in 10 minutes.
+
+　Image first created by Thompson Sampling
+		[https://gyazo.com/2c80ff970bd659f9d12a25b456b5c57e]
+　　The term "Thompson sampling" is too engineer oriented, we need to make it more art consumer oriented.
+　　I'm thinking "an AI that learns from the behavior of the Nishio couple and generates prompts that are likely to be judged as 'good'."
+　　　Thompson sampling is a reinforcement learning algorithm, so I'm not saying anything crazy.
+
+
+	Data export from Instagram
+	　Oh, we can get data on human behavior.
+		[https://gyazo.com/c1a34bfefccb787cf9595b438d79f328]
+　　In a few months, they could create an AI that uses data from Instagram reactions to create images that are popular with the general public.
+
+[Folder overwrite content disappearance issue]
+　When I tried to merge the contents of folders and dragged f1 of folder b/f1 into a while a/f1 existed, a day's worth of files disappeared.
+　　sadness
+　　This is probably the reason why some of the images are showing errors of missing data when they were generated, because the data files have been lost.
+  code::
+   $ tree tmp 
+   tmp
+   ├── a
+   │   └── f
+   │       └── 1
+   └── b
+       └── f
+           └── 2
+  [https://gyazo.com/dc84e8de57a7dfffe8c234e5d39938f4]
+  code::
+   $ tree tmp
+   tmp
+   ├── a
+   │   └── f
+   │       └── 2
+   └── b
+		Oh well - I was hoping it would be the following
+		code::
+		 $ tree tmp
+   tmp
+   ├── a
+   │   └── f
+   │       ├── 1
+   │       └── 2
+   └── b
+　　Cannot restore even with Dropbox's "Restore Deleted Files".
+
+　Upload to Scrapbox
+
+　[https://www.palmie.jp/courses/309/lp How to Draw Cats Lecture｜Palmy the Drawing Class]
+　[https://www.palmie.jp/lessons/264 Explanation of how to do photobash. How to make a background illustration from a photo material｜Palmy's drawing course].
+
+　Create NFT?
+	[Facebook https://www.facebook.com/nishiohirokazu/posts/pfbid0zRGbu3Zwmr5g1F4q4NiqCfVFygqYCfKonxmdNiG73eb7XQHFBH76q3zoZ5T8mqiml]
+		It just occurred to me that if AI sells the NFT to pay for the maintenance of the machine it's running, if the savings are about to come due and AI screams, "No sequel to the work = limited circulation = price increase" and it won't hold up (...)
+
+Other
+	✅[Virtual Star]
+ 　Updated Facebook and Twitter covers
+ 		[https://gyazo.com/47273ae2da2af2f95e2defd9cf720786]
+ 		[https://gyazo.com/23db1a929b25b04e0206ac4e2127f34f]
+ 		Feel the evolution of smartphone cameras.
+　□Post a real photo on the Pasta Logic page.
+
+[Diary 2022-09-16]←Diary 2022-09-17→[Diary 2022-09-18]
+100 days ago [Diary 2022-06-09].
+1 year ago [Diary 2021-09-17].

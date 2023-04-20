@@ -1,0 +1,54 @@
+Hatena2013-04-04
+code:hatena
+ <body>
+ *1365060376*Drew BESOM ver. 2.0.
+ Dr. Ichisugi's BESOM was an invited talk at the recent 19th Annual Conference of the Association for Natural Language Processing (NLP2013), and it is now available on UStream. see: <a href='http://besom1.blog85.fc2.com/blog-entry- 115.html'>BESOM Blog Ustream Distribution Starts "The Brain is Waiting for Computer Scientists to Figure It Out"</a>.
+ 
+ So I immediately started reading <a href='http://staff.aist.go.jp/y-ichisugi/j-index.html'>the list of papers</a>, including "Algorithms of the Cerebral Cortex BESOM Ver. 2.0," but it took me quite a while to understand it. I had quite a hard time understanding it. Finally, I started to understand a little and drew a picture to confirm my understanding, so I will share it with you.
+ 
+ ** Bayesian nets for discrete variables
+ 
+ [f:id:nishiohirokazu:20130404161957p:image]
+ 
+ First, in BESOM, the model is that there is a Bayesian net in the brain. Here we will consider and look at a Bayesian net such that the random variable x has three parents and three children, as shown on the left. (If you are already unsure at this point, read PRML Chapter 8, "Graphical Models," first.)
+ 
+ Zooming in on the dark-colored area in the middle figure, we see that BESOM assumes that random variables take discrete values, so a random variable is represented by a collection of units of the type of values it can take (3 in the figure).
+ 
+ ** What does a unit correspond to in the brain?
+ 
+ [f:id:nishiohirokazu:20130404162725p:image]
+ 
+ Let's zoom in on one unit (small circle) in x as shown on the left. I initially thought this "unit" was a neuron, but I was mistaken. This will be one column of the 6-layer model of the cortex. Can I say that it will be a mini-column? I am a little unsure about this.
+ 
+ ** Inter-unit coupling and inter-area coupling in the cerebral cortex
+ 
+ [f:id:nishiohirokazu:20130404163026p:image]
+ 
+ If we look at the connections between units, this corresponds to the connections between cortical areas.
+ 
+ ** Correspondence with approximate Belief Revision algorithm equation
+ 
+ [f:id:nishiohirokazu:20130404163236p:image]
+ 
+ In the diagram of the coupling between the domains used in the presentation, it was written that the normalization factor Z also comes across from the lower layers, but as far as the equation is concerned, it does not come across. On the contrary, ρ, which is not written in the figure, appears in the equation. It is not clear what this mismatch means.
+ 
+ → Addendum: In the approximate probability propagation algorithm in the presentation slides, compared to the one introduced in BESOM ver. 2.0, "In BESOM ver. 2.0, two lambda appear, but in the slides, one l" and "In addition to the capital letter z in BESOM ver. 2.0, on the slide side a lowercase z is introduced, which is propagated to the upper domain".
+ 
+ ** continued
+ 
+ [f:id:nishiohirokazu:20130404163407p:image]
+ 
+ In general, there can be more than one upper and lower domain, so there can be more than one κ and λ. Aggregating λ is also complicated because it is expressed in terms of λ (albeit with different subscripts). The calculation proceeds and ρ is obtained.
+ 
+ I have not written the diagram from here on, but ρ exists for each of the units representing the random variable X. Therefore, the circuitry that adds up and normalizes for all the units representing X goes in and its output is BEL(x).
+ 
+ ** extra
+ 
+ Hatena Diary makes the images smaller on its own, so I've put a PDF with all the diagrams here that you can print out in A4 format https://dl.dropbox.com/u/370621/BESOM_print.pdf
+ 
+ Ah, yes, I think Belief Revision can be considered a special case of max-sum, since it says on p. 117 of PRML that belief propagation can be considered a special case of the sum-of-products algorithm.
+ 
+ I made a story the year before last, "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111227/1324988047'>I made Neurony, a language based on the motif of the cranial nervous system</a>," and I was wondering if it would be interesting to make a language that describes the same kind of thing. I think it would be interesting to create a language that describes the BESOM model. In the future, of course, it would be interesting to compile a network described in that language to build a hardware circuit in FPGA.
+ </body>
+
+[Hatena Diary 2013-04-04 https://nishiohirokazu.hatenadiary.org/archive/2013/04/04]

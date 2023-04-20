@@ -1,0 +1,28 @@
+Hatena2012-02-27
+code:hatena
+ <body>
+ *1330333168*wget options memorized
+ I think everyone knows that you can crawl recursively with wget -r, but I added -np to crawl only under a specific path because there are some targets on the same server that do not need crawling.
+ 
+ >||
+   -np, --no-parent Don't target parent directories for fetching.
+ ||<
+ 
+ Then, the layout was broken because the CSS was separately located in /style/common.css or something like that! The story of this diary is how I solved that.
+ 
+ If you simply do wget http://example.com/style/common.css, it will create common.css in the current directory. So, first of all, we need to create a -x
+ 
+ >||
+   -x, --force-directories Force the creation of a directory
+ ||<
+ 
+ Secondly, if the crawled side with -r is a relative path from the original, it is not necessary, but in this case, src="/style/common.css" or something like that, so the link will be broken. -In this case, src="/style/common.css" or something like that, so the link would be broken as it is.
+ 
+ >||
+   -k, --convert-links Change links in HTML and CSS to point to local
+ ||<
+ 
+ So it took a little time, but I was able to successfully keep the JavaScript part of the MDN in a clean form at hand. I'm so happy.
+ </body>
+
+[Hatena Diary 2012-02-27 https://nishiohirokazu.hatenadiary.org/archive/2012/02/27]

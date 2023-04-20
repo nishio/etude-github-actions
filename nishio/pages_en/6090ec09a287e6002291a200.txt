@@ -1,0 +1,16 @@
+Hatena2012-03-05
+code:hatena
+ <body>
+ *1330956600*Diary of quitting omake and using watchdog
+ I was thinking of doing a continuous monitoring build "$ omake -P --verbose" with omake. However, what I wanted to do was to run gjslint and closurebuilder to growlnotify warning messages when JS files are modified. I was thinking "I want to notify even if the build is messed up" or "I want lint to run before build", which is not the right way to use make.
+ 
+ That's why I decided to use watchdog: http://packages.python.org/watchdog/installation.html
+ 
+ >>
+ shimizukawa: Python watchdog is good. You can use watchmedo command after installing it. $ watchmedo shell-command --command="make html" source to make it work when updating --- https://twitter.com/#! /shimizukawa/status/16753713131391172608
+ <<
+ 
+ watchmedo shell-command --command=". /build.sh" main.js" main.js, then build.sh will run when main.js is changed. In this build.sh, only the important parts of the message are extracted and growlnotify is performed.
+ </body>
+
+[Hatena Diary 2012-03-05 https://nishiohirokazu.hatenadiary.org/archive/2012/03/05]

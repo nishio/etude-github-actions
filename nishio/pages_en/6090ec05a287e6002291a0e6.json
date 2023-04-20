@@ -1,0 +1,181 @@
+Hatena2010-07-30
+code:hatena
+ <body>
+ *1280470233*Translated excerpt from PEP 238: Changing the Division Operator
+ **Outline
+ The current division operator (/) is ambiguous in its meaning when numeric values are used as arguments. If the argument is an int or long, it returns the truncated result of mathematical division. However, if the argument is a float or a complex, it returns a reasonable approximation of the result of the division.
+ 
+ We propose to correct this problem by introducing different operators for these different operations: let x/y be a division that returns a reasonable approximation of the result of mathematical division (true division), and let x//y be a division that returns a truncated value (truncated division). The current, mixed-meaning x/y is called "conventional division."
+ 
+ ** Motive
+ With conventional division instructions, it is difficult to write a formula that returns the correct result for any numerical input. For all other operators, it is possible to write expressions such as x*y**2 + z, where the result of any numeric input (int, long, float, or complex) is close to the mathematical result (within the limits of computational precision, of course), but division creates problems. If, unluckily, both arguments of the division are integer types, you end up with a truncated division instead of a true division.
+ 
+ This problem is specific to dynamically typed languages: in statically typed languages such as C, the input (often function arguments) would be declared as double or float. And if an integer is passed as an argument and called, it will be converted to a double or float at the time of the call.
+ 
+ **Translation Note
+ This is a PEP about the change to 1 / 2 == 0.5, which I personally thought was a mystery as to why they made such a change. It became clear to me what the problem was and why they made this change.
+ 
+ However, there are opinions such as OCaml, which says, "In the first place, integer arithmetic and floating-point arithmetic are different, so we should separate operators in general," or Haskell, which says, "Isn't it a problem that we allow integer and floating-point arithmetic in the first place? Some people say, "No, it's already not a correct calculation when 1/10 is set to 0.1.
+ 
+ So the conundrum is how to model the structure of numbers in the language.
+ 
+ *1280488787* Oh shit!
+ You already translated PEP238 this morning.
+ http://homepage3.nifty.com/text/script/python/pep-0238.ja.html
+ 
+ I thought I might have missed it in the PEP Index, but it's not listed.
+ http://sourceforge.jp/projects/pythonjp/wiki/PEPIndex
+ 
+ Check out the upcoming translation schedule below!
+ >||
+ Rough SF 236 Back to the __future__ Peters
+ Approximate SF 227 Statically Nested Scopes Hylton
+  SF  255  Simple Generators                                       Schemenauer, Peters, Hetland
+ Approximate SF 238 Changing the Division Operator Zadka, GvR
+ Overview SF 328 Imports: Multi-Line and Absolute/Relative Aahz
+  SF  343  The "with" Statement                                    GvR, Coghlan
+  SF 3105  Make print a function                                   Brandl
+  SF 3112  Bytes literals in Python 3000                           Orendorff
+ http://docs.python.org/library/__future__.html
+ ||<
+ 
+ Simple Generators has already been translated. 343 has been searched but I can't find it anyway. 3105 and 3112 are the same, but this one doesn't look very interesting. I think 3141 is more interesting.
+ 
+ *1280503032*[en]learned it today.
+ final blow, final blow
+ rant, rant, rant, rant, rant
+ 
+ *1280503194*Translated excerpt from PEP 343: The "with" Statement
+ **Outline
+ 
+ This PEP adds a new statement "with" to the Python language so that it is possible to carve out a standard usage of try/finally statements.
+ 
+ Within this PEP, the "context manager" provides the methods __enter__() and __exit__(). These are methods that are called when entering and exiting a with statement.
+ 
+ **Introduction
+ 
+ After much discussion on PEP 340 and its alternatives, I decided to withdraw PEP 340. I then proposed a slightly modified version in PEP 310. After further discussion, I re-added the ability to throw exceptions in a stopped generator using the throw() method, and a close() method that throws a new exception GeneratorExit. These additions were originally proposed by python-dev [2] and fully endorsed. Also, the keyword has been changed to with.
+ 
+ **Motivation and Summary
+ 
+ PEP 340, the anonymous block statement, tied together several powerful ideas. It was a very powerful idea that was introduced in the first draft of PEP 340: using generators as templates for blocks, adding exception handling and exit handling to generators, and so on. Beside some praise, many objections were raised. They did not like the potential loop structure that was originally there, but not clearly visible. That is, a break or continue in a block statement breaks or continues that block statement. Even if it was being used as a non-looping resource management tool.
+ 
+ But the final straw came when I read Raymond Chen's rant about flow control macros [1], in which Raymond convincingly argued that hiding flow control in macros makes the code incomprehensible. And then I realized that his argument applies to Python as well as C. The templates in PEP 340 can hide all kinds of control flow. For example, PEP 340 example 4 (auto_retry()) catches an exception and repeats the block up to three times.
+ 
+ In this regard, the with statement in PEP 310 does not, in my view, hide the control flow; the finally clause would temporarily stop the control flow, but eventually it would return to the same form as if there had been no finally clause at all.
+ 
+ *1280507367*Translated excerpt from: Python Reference Manual: Lexical analysis
+ >>
+ 'Isn't it hard to wrap long lines in Python?'
+ It's not hard at all. The official coding style guide even recommends keeping it under 79 characters.
+ How do I indent then?"
+ What? I'm free to do that."
+ What? Really?"
+ <<
+ Translated from an exchange that took place between
+ 
+ 2. Lexical analysis &#8212; Python v2.7 documentation
+ http://docs.python.org/reference/lexical_analysis.html
+ 
+ ** Logical line
+ The end of a logical line is represented by a NEWLINE token. A statement may not cross a logical line boundary except where the syntax rules permit NEWLINE tokens. A logical line consists of one or more physical lines. Its composition is subject to the explicit and implicit line continuation rules described below.
+ 
+ (The explicit line continuation rule is the rule that a backslash at the end of a line connects the lines. It does not translate.)
+ 
+ ** Implicit line continuation
+ 
+ Expressions enclosed in parentheses, braces, or brackets can be split into multiple physical lines without a backslash. For example: ...
+ 
+ >|python|
+ month_names = ['Januari', 'Februari', 'Maart',      # These are the
+                'April',   'Mei',      'Juni',       # Dutch names
+                'Juli',    'Augustus', 'September',  # for the months
+                'Oktober', 'November', 'December']   # of the year
+ ||<
+ 
+ Continuation lines can have comments. Indentation of continuation lines is unimportant. Blank continuation lines are permitted. There is no NEWLINE token between implicit continuation lines. Implicit continuation lines can also be within a "triple-quoted string" (see below), but these cannot be commented.
+ 
+ ** Indentation
+ The indentation level of the subsequent line is used to create INDENT and DEDENT tokens using the stack.
+ 
+ One zero is pushed onto the stack before the first line is read. This zero is never popped. Values pushed onto the stack are always incremented from the bottom of the stack to the top. At the beginning of each logical line, the indentation level of that line is compared to the top of the stack. If they are the same, nothing is done. If the indentation level of the line is greater, the value is pushed and an INDENT token is created. If it is less, the indent level must be one of the numbers in the stack, and any value in the stack that is greater than the indent level is popped, producing a DEDENT token for each pop. At the end of the file, as many DEDENT tokens are created as there are remaining values greater than zero.
+ 
+ <hr>
+ Now, as you may have already guessed, such indentation is allowed, for example.
+ >|python|
+ >>> if True:
+ ...     print (1 +
+ ...   2)
+ ... 
+ 3
+ ||<
+ In Python terms, the line following print is a continuation of the print line, so it is no different than writing print (1 + 2).
+ 
+ Therefore, it is safe to say that Python's rules will not be a hindrance in situations where a person with normal nerves would want to lay out the code for ease of viewing. At least, it is a free layout to the extent that a crazy person would do square programming. <a href='http://www.nishiohirokazu.org/blog/2007/08/post_323.html'>Yasukazu Nishio's blog: One-liners are the dark side. You should include line breaks</a>.
+ 
+ **1280509687*Recommendations for PEP
+ Lecture Materials continued
+ 
+ ** Recommendation for PEP
+ Now, while it is important to learn about the differences in language design, we must avoid wasting time with sterile discussions.
+ 
+ What then should we do?
+ 
+ There's no right answer, but one idea is to read the PEP.
+ 
+ What is **PEP?
+ Python Enhancement Proposals
+ http://www.python.org/dev/peps/
+ How could Python be improved? Suggestions
+ Sometimes adopted, sometimes rejected.
+ 
+ Details are defined in PEP 1. http://sphinx-users.jp/articles/pep1.html
+ 
+ Some of the suggestions sound like they're serious.
+ PEP 3117:Postfix type declarations
+ Let's add type declarations with Unicode pictograms."
+ >||
+ def normpath&#411;(path&#9998;)&#9998;:
+     """Normalize path, eliminating double slashes, etc."""
+     if path&#9998; == '':
+         return '.'
+     initial_slashes&#10003; = path&#9998;.startswith&#411;('/')&#10003;
+ ||<
+ This is Rejected.
+ 
+ (Can't you display it in Hatena?)
+ 
+ ** Overhead view of PEP list
+ - Meta-PEPs: PEPs related to the PEP itself and procedures
+ - Informational PEP: Guidelines, etc.
+ - Accepted PEPs: Accepted and not yet implemented
+ - Open PEPs: under discussion
+ - Finished PEPs: Implemented
+ - Deferred, ... and Rejected PEPs: Deferred, ...
+ - Numbered List
+ 
+ Let's read Accepted PEPs and Finished PEPs, with emphasis on changes that would also make them incompatible.
+ Because if a proposal that discards compatibility is being adopted,
+ - The issue is so important that we have to abandon compatibility to adopt it.
+ - Persuasive = clearly explains why it is important
+ Because that is what it means.
+ 
+ ** _
+ -I'll give a quick rundown here with some PEP summaries, etc.
+ -I'll pick up a few things and explain them.
+ -- True division, talk about the difficulties of reducing ideal models of reality from type hierarchies of numbers to other language comparisons, IEEE754, etc., etc., into something programmable?
+ -- String Representation to talk about the importance of communicating in English, and how programmers don't just change the world by programming, but that sometimes natural language can be a very powerful tool?
+ 
+ ** I'll list other options.
+ - JSR
+ - SFRI
+ - EEP
+ - RFC
+ 
+ ** _
+ Response to the claim that "source code is documentation."
+ The source code only describes "what is happening now. It does not say "what happened in the past and what is happening now" or "how the implementation should be changed in the future.
+ PEP is a written statement about Python's past and future.
+ </body>
+
+[Hatena Diary 2010-07-30 https://nishiohirokazu.hatenadiary.org/archive/2010/07/30]

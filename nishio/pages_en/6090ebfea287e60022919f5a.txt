@@ -1,0 +1,241 @@
+Hatena2009-03-21
+code:hatena
+ <body>
+ *1237594566*Diary
+ I woke up at a healthy hour, but it was a holiday.
+ 
+ 
+ http://mognavi.jp/food/181637 Omoriya's Various Vegetable Side Soup Soup Curry Bag 250g
+ The expiration date was November 2007. It was delicious, but it was already discontinued. If I had eaten it after I knew it was discontinued, would it have tasted better because of the sentiment of "I'll never eat it again! I wonder if I could have eaten it more delicious with such sentimentality.
+ 
+ *1237628125*Programmer's Nightmare Rules
+ Original rules: http://www.silcom.com/~tomjolly/pnrules.htm
+ Chat: http://www.lingr.com/room/programmers_nightmare
+ 
+ - Game to control the program (Ver.2 will make it)
+ - If you start with 10 points and reach 20 points, you win; if you reach 0 points, you lose.
+ - Lose all "control tokens" (Bit)
+ 
+ - Ver.1 is easier to learn the rules, but requires more strategy (then that's fine. Only Ver.1 is described below)
+ - First remove the following cards from the deck: the Break (3), Run (4), Secret (2), Insert (1).
+ - The cards contain various instructions, which are first distributed face up in a circle on the desk. This is the program.
+ - Each player places a "Bit" on it to mark that he/she "owns" the order.
+ - Only one Bit can be placed on one card (instruction).
+ - When everyone has finished getting up Bit, the program is "executed".
+ - It starts executing from the first card dealt, and when it gets to the last card, it starts from the beginning again, and so on, in an infinite loop. Of course, smaller infinite loops occur depending on the type of program.
+ - If a stalemate occurs, shuffle and start over.
+ - If no Bit is on the card, it is not executed (except for OVERSIGHT).
+ - If a Bit is on the card, the owner of the Bit can decide whether to execute the instruction (PROGRAM_ERROR is an exception)
+ - If a card has multiple Bits on it (as occurs with cards that move Bits), they are executed in the order in which they are placed first; the first player's action can destroy the second player's Bit before it is activated. If the card is changed during the first player's execution, the second player executes a new card.
+ 
+ >||
+  2 3 4 5 6 // Number of Players
+ 14 18 18 18 21 // Cards to be distributed
+  6 5 4 3 3 // Number of Bits per Player
+ ||<
+ 
+ - If a person reaches a score of 0, that person loses. All Bits for that person will be removed (geez! That changes the program quite a bit!)
+ - If all Bit is removed, it also loses.
+ - Loops that do not contain cards that increase or decrease scores may only be repeated a maximum of three times (the instruction causing the loop is skipped after the third loop is completed)
+ - Loops with increasing or decreasing scores are looped indefinitely (of course, someone wins or loses during the repetition).
+ 
+ >>
+ 11:34 nishio: I will look at the cards I am dealt and decide whether to play them or not, so you have the right to choose whether to play first or second, is that correct?
+ 11:35 nishio: to avoid playing with too bad cards.
+ 11:35 tokorote_: OK
+ <<
+ http://d.hatena.ne.jp/nishiohirokazu/20090323/1237768121
+ 
+ >>
+ 01:44 nishio: I was thinking, if it's first move -> second move -> first move -> second move, the first move would take the good one first, and then the second move would take the card to nullify it when the first move takes the good one. It would be better to make it first hand -> second hand -> first hand -> second hand -> first hand. Catan style.
+ <<
+ 
+ There are many more rules, but let's look at the card list here for now. You don't have to translate the card names, I'm a programmer.
+ 
+ **ACQUIRE
+  Gain 2 points. (3 cards)
+ 
+ **BIT MAKER
+  Place a new Bit of any color except yours on any card. (This will most commonly be placed on top of a PROGRAM ERROR). place a new marker of any color except yours on any card.(This will most commonly be used with "PROGRAM ERROR"). (1 card).
+ 
+ **BIT MOVER
+  Move one marker on any card to the card next to it.2 cards
+ 
+ >>
+ 11:36 tokorote_: BIT MOVER by moving the bit on card X next to card X.
+ 11:36 nishio: OK
+ <<
+ http://d.hatena.ne.jp/nishiohirokazu/20090323/1237768121
+ 
+ **BIT SWAPPER
+  Swap the two markers. However, they must not be either of the same color or on the same card. (1 card)
+ **BUG
+  Everyone takes 1 point of damage." Unlike "Program Error", the card owner can decide whether to activate this card. 2
+ **COPY
+  This essentially replaces the "copy" action with those 2 commands, as though you had the These instructions might refer to other cards, which duplicate other cards. The Program Counter doesn't move while you are performing these 2 copied commands. If the COPY is later moved out of range of the SUBROUTINE card, then the COPY's subroutine is discarded. cards)
+ **DECREMENT
+  Reduce by one the number written on a certain "one" card. If a card has more than one number written on it, you can decide which one to reduce. two cards. For example, "move one Bit" can be rewritten to "zero" to neutralize it.
+ **DEFEND
+  Instead of taking 1 point of damage, it nullifies the damage caused by the following two cards. Passed cards are not included in the two; if SUBROUTINE is played, SUBROUTINE and its first card are nullified.
+ **DELETE
+  Remove 1 Bit of any color on any 1 card. 1
+ **ERASE
+  Remove the immediately preceding card from the program. Of course, the target changes depending on whether the program is executed in reverse order or not. (2 cards)
+ **FLOATER
+  Move this card forward or backward 1 space in the sequence, then copy the next action. The Program Counter moves with it. (2 cards)
+ 
+ >>
+ 12:06 tokorote_: Um, question FLOATER if it's executed even if you don't put your bits?
+ 12:07 tokorote_: Move this card forward or backward 1 space in the sequence, then copy the next action.
+ 12:07 nishio_: I'm not sure how FLOATER behaves, but with COPY it would be "run as if it were written in FLOATER"
+ 12:07 nishio_: so it has nothing to do with the presence or absence of bits
+ 12:08 tokorote_: Is NEXT referring to the NEXT to the program counter or to the card that was replaced?
+ 12:08 nishio_: hmmm, I'm not sure but the program counter works about FLOATER, right?
+ 12:09 nishio_: when the order was FLOATER X Y
+ 12:09 nishio_: X FLOATER The question is whether it is X or Y that is executed after reordering to Y?
+ 12:09 tokorote_: then next action. so I guess that means the next instruction will be executed when the SWAP is finished.
+ 12:10 tokorote_: Yes.
+ 12:10 nishio_: then so finish the exchange, then copy the next action, I guess
+ 12:10 nishio_: i.e. Y i think
+ 12:10 tokorote_: So.
+ <<
+ http://d.hatena.ne.jp/nishiohirokazu/20090323/1237785061
+ 
+ **FUTURE
+  Perform the immediate next 2 actions in the sequence. Perform the next 2 actions in the sequence. This essentially replaces the "future" action with those 2 This essentially replaces the "future" action with those 2 commands, as though the instructions from those 2 cards were written on this one card, with your marker on it. The Program Counter does not move from the Future card while it is duplicating the next 2 cards. FUTURE acts very much like COPY where the SUBROUTINE is concerned.
+ 
+ >>
+ nishio: in my one player, when FUTURE copied GOTO and OVERWRITE, GOTO moved the program counter and OVERWRITE was also executed
+ nishio: "instructions from those 2 cards were written on this one card" was interpreted as "one undividable instruction is generated to OVERWRITE after rewriting the program counter"
+ tokorote_: Treat the two cards as if they were on one card.　That's what I mean.
+ tokorote_: I think you're probably right.
+ <<
+ http://d.hatena.ne.jp/nishiohirokazu/20090323/1237785061
+ 
+ **GOTO
+  Advance the program counter by 6. Once used, the GOTO jump destination is not changed even if the program is subsequently rewritten. If the instruction at the jump destination is deleted or replaced, GOTO is disabled.
+ This sends the Program Counter 6 cards forward in the program, and then, once used, "locks" it to that instruction, that is, if that instruction moves around in the program, then the GOTO still jumps to it. If the instruction is removed or replaced, then the GOTO goes nowhere. The program continues to run in the same direction in which it was running (clockwise or counterclockwise). If GO TO is duplicated and used at the start of a FUTURE or COPY command, then the statement to which it is linked is the second command executed. If a GOTO is inside a SUBROUTINE, it jumps 6 cards forward in the main body of the program, after the SUBROUTINE card. (3 cards) 
+ **INCREMENT
+  Any number on any card is +1. However, except for this. (2 cards)(Translation: If two INCREMENT cards are in the program, is it possible to increase the INCREMENT of the other one? It reads as none.)
+ **MULTIPLIER
+  Put it on this card. This may seem useless at first, unless you happen to have a Bit Mover, too. This may seem useless at first, unless you happen to have a Bit Mover, too.
+ **OVERSIGHT
+  This is the only card that activates if no Bits are there, and does nothing if Bits are there. If it's empty when the Program Counter gets there, everyone loses a point. Any player with a Bit on it does not get a choice as to whether or not it is activated, it is automatic.(2 cards)
+ **OVERWRITE
+  Change a color Bit on any 1 program instruction to your color Bit. this card (OVERWRITE) is used only once, then replaced with another random card from the deck. This card (OVERWRITE) is used only once, then replaced with another random card from the deck. The color Bit on the replacement card remains the same as before. (2 cards)
+ **POINTER
+  Redirect any damage done by the previous 2 cards to a player of your choice. If one of these cards is a SUBROUTINE, this includes the cards inside the SUB.(1 card)
+ All players with no Bits on this card lose 3 points. All players with no Bits on this card lose 3 points. Players with a Bit here lose only 1 point.
+ :PROGRAM ERROR: You can place another player's Bit here when placing the Bit before execution. When the program counter arrives at this card, it takes 1 point of damage without choice. This Bit is used by taking a new Bit of the same color, not from the first Bit given.
+ When claimed (Version 1) or played (Version 2), you get to take an opponent's Bit and put it here. When the Program Counter reaches this instruction, the player there does not have an option as to whether or not it executes, it does automatically, and he or she loses 1 point. If there is any Bit on this card, it activates. In Version 1 this bit does not come from the group of bits that the player has available to play, but from any extra available of the same color, and this must be done before your last bit is played. (3 cards) 
+ 
+ >>
+ 12:15 nishio_: I'm wondering about the PROGRAM_ERROR behavior
+ 12:16 nishio_: Am I correct in understanding that if I declare that I take PROGRAM_ERROR, my opponent's bits are placed in addition to the 6 bits given and my bits are not consumed?
+ 12:17 nishio_: PROGRAM ERROR; When claimed (Version 1) or played (Version 2), you get to take an opponent's Bit and put it here.
+ 12:18 nishio_: In Version 1 this bit does not come from the group of bits that the player has available to play, but from any extra available of the same color, and this must be done before your last bit is played.
+ 12:18 nishio_: that's the description.
+ 12:19 nishio_: If so, then CLAIM PROGRAM ERROR and put the tokoro bit there.
+ 12:19 nishio_: and i can put one more bit down.
+ 12:19 tokorote_: If the bit is on PROGRAM ERROR, you can't choose to run or not, unconditional execution.
+ 12:19 tokorote_: When executed, the other bit is placed.
+ 12:20 tokorote_: I guess if there's more than one bit on it, it means that they all get executed and then we put the additional bits, I don't know if it's to execute the PLAY card or to put the bits.
+ 12:21 nishio_: Since it's version1, the process of placing the opponent's bit is triggered at the CLAIMED timing, not at the PLAYED timing,
+ 12:22 nishio_: I am aware that claimed means "put the bit here" in the phase where you go to put the first bit.
+ 12:22 nishio_: Each player has a number of colored markers (Bits) with which they may "claim" a program instruction (a card).
+ 12:25 tokorote_: I thought "Claimed" meant "bits are placed", but I guess not.
+ 12:27 nishio_: in the tokiten interpretation, if I CLAIM here, my bits are placed, and what happens when the program counter comes here at runtime?
+ 12:28 tokorote_: One point is taken away from Nishio's score and my bit is placed in addition.
+ 12:28 tokorote_: And I feel like they were both executed in the second week.
+ 12:29 nishio_: second round they are both executed and two bits are placed?
+ 12:29 nishio_: hmmm. If bits are placed during play, I don't think I would say it in a special way here, since it is done in other BIT_MAKERs and so on.
+ 12:31 tokorote_: It sure would be a mess.
+ 12:31 nishio_: My interpretation is that when you say "place here" in the bit placement phase, the opponent's color is placed, not your color, and each time the program counter comes in during execution, the person of that color is damaged by 1 point.
+ 12:31 tokorote_: Well, it's less out of control that way.
+ 12:32 tokorote_: Then that's it.
+ 12:32 nishio_: I'm also wondering if "my bits are not consumed so I can put more" is true or false
+ 
+ 12:34 tokorote_: PROGRAM_ERROR N T
+ 12:35 nishio_: will mine be placed in PROGRAM_ERROR?
+ 12:36 nishio_: for now, a point I'd like to sort out before we start executing
+ 12:38 nishio_: 1: If you CLAIM PROGRAM_ERROR, your opponent's bits are placed and your bits are not consumed (my interpretation)
+ 12:38 nishio_: 2: when you CLAIM ROGRAM_ERROR, your opponent's bits are placed and your own bits are not placed but are consumed
+ 12:38 nishio_: 3: when you CLAIM ROGRAM_ERROR, your opponent's bits are placed and your own bits are also placed
+ 12:39 nishio_: 4: when you CLAIM PROGRAM_ERROR, your bits are placed and the other guy's bits are placed on each execution
+ 12:40 nishio_: I mean which of the following is correct
+ 12:40 nishio_: so far, the interpretation of the node is (3), but that would only make both of us -1, so there is no advantage to placing it at all
+ 12:42 nishio_: I'm not sure why bother introducing PROGRAM_ERROR since the instruction that makes all players -1 usually comes in 3 pieces in the form of BUG
+ 12:46 tokorote_: No, doesn't it change with more than three people?
+ 12:47 tokorote_: only two specific people will be damaged
+ 12:47 nishio_: but the damage is done with no choice for you, right?
+ 12:47 tokorote_: You can MOVE yourself.
+ 12:47 nishio_: I see.
+ <<
+ http://d.hatena.ne.jp/nishiohirokazu/20090323/1237785061
+ 
+ **REPLACE
+  Replace any card in the program; INCREMENT and DECREMENT effects disappear. replace any card in the sequence. the Bit color on it remains the same. Increment or decrement tokens on the removed card are discarded.
+ 
+ 
+ **REVERSE PROGRAM
+  Reverses the order of execution of the program. Note that if more than one player has a Bit on this card, its possible for the second player to further reverse the order of execution that the first player reversed. Note that if 2 players have tokens on this card, its possible for the second player to cancel out the REVERSE of the first player.
+ **SELF DESTRUCT
+  Causes 4 points of damage to 1 player, then you discard this card along with any Bits on it. Causes 4 points of damage to 1 player, then you discard this card along with any Bits on it. here, only the first Bit on the card gets to blow up.
+ **SEQUENCE MOD
+  Move one instruction card to any position in the program. That, of course, includes this one. That, of course, includes this one. If you move this If you move this one, the Program Counter goes with it.
+ 
+ **SUBROUTINE
+ When the program counter first reaches this card, it draws two cards and sets them aside in the main loop; no bits are placed on the two cards, but the SUBROUTINE card performs the functions of both cards. When SUBROUTINE is first executed, the functions of both cards must be performed in sequence. But thereafter, when the program counter comes to SUBROUTINE, it can decide whether to execute the two cards or not.
+ 
+ If there are cards in a subroutine that move along the program, such as FLOATER, they are not allowed to move outside the subroutine; cards that trigger effects on any card in the entire program, such as SEQUENCE MOD, may trigger effects either in the main program or in a subroutine. Cards that trigger effects on "any number of cards before or after" such as COPY, FUTURE, SWAP INSTRUCTIONS, POINTER, etc., are allowed to trigger their effects inside the subroutine, but not outside the subroutine. They only affect cards within the subroutine, with the exception of GOTO; if the ownership of a card within the subroutine is updated by UPGRADE, a bit is placed to indicate the new owner. And whenever a SUBROUTINE is executed, the card must be executed.
+ 
+ >>
+ NISHIO The card is lined up when the program counter first arrives; does activate refer to that, or when y is answered to "Do you want to execute (y/n)"?
+ Tnzk I've seen the word activate several times on other cards, like only when OverSight answers with y, considering activate = activate since this is the only card that activates if no Bits are there.
+ I think so, too. I think so too.
+ <<
+ http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25#msg-63539269
+ 
+ >>
+ Tnzk In the case of GOTO, is it 6 instructions ahead from the location of the Subroutine instruction?
+ Tnzk Oh, the program counter doesn't move from the subroutine instruction in the first place.
+ Nishio I agree with the argument that the program counter has not moved, so it is six ahead of SUBROUTINE.
+ <<
+ http://www.lingr.com/room/programmers_nightmare/archives/2009/03/25#msg-63539979
+ 
+ **SWAP INSTRUCTIONS
+  Swap the previous or next 2 cards in the sequence with each other, OR swap the next 2 cards in the sequence with each other. If the number is INCREMENT to a "3", then you can rearrange the 3 cards in any sequence: Swap the previous 2 cards with each other, OR swap the next 2 cards in the sequence with each other. this is changed to a "3", then you can switch around 3 cards before or behind you, in any manner you wish.(1 card)
+ 
+ **TIME DELAY
+  SKIP" token. You may skip one of your turns at any time, regardless of whether the card is subsequently removed or Bit is removed. After skipping, the token is discarded. Get a "SKIP" token. this token may be saved for later use, assuming that the Program Counter activates this card, even if TIME DELAY is This is, in essence, telling a player that he "loses his turn" for 1 card. It is possible to accumulate more than 1. (1 card)
+ 
+ **UPGRADE
+  Choose a position on the program, draw a card, and place it there. Except if there are no cards left in the deck. Then change the color of the Bit to the color of the person to your right. If it is the first of two cards whose UPGRADE is triggered by COPY or FUTURE, the color of the Bit on COPY changes before the second card is played, forcing the new owner to play the second card. Choose a location in the program, draw a new card (if there are any left in the deck) and place it there. Then move your Bit to the newly placed card. If you COPY (or use FUTURE on) an UPGRADE, and it's the first of the 2 instructions, then the Bit on the COPY (or FUTURE) changes before the 2nd instruction is performed, and the new owner of COPY is forced to perform that instruction, since the COPY has already been activated.
+ **WORM
+  Add a Bit of yours to any card, except this one. the first owner of that card, if any, performs the action on that card first when it is next activated.
+ **ZAP
+  1 point of damage to others. (3 cards)
+ 
+ The rules for SUBROUTINE are complicated. It became a pain in the ass, so I played it and stopped reading until it actually happens that way itself, which I don't like because it introduces UPGRADE, SUBROUTINE, and randomness, which makes it unreadable.
+ In the meantime, I want to make a card of this with word cards or something and play it with someone who is good at programming.
+ 
+ *1237655659*oGFx Diary
+ http://web.media.mit.edu/~black/ogfx/
+ http://ogfx.mitplw.com/
+ 
+ Oh wow, not even help. It's a great alpha version.
+ </body>
+ <comments>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>http://groups.yahoo.co.jp/group/kampo_gamers/files/Games/<br>Why not just print this out without bothering to make it? </body>
+ <timestamp>1237630135</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I saw it on a Mac and the size was messed up, so I had to go through it</body>.
+ <timestamp>1237752753</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-03-21 https://nishiohirokazu.hatenadiary.org/archive/2009/03/21]

@@ -1,0 +1,55 @@
+Hatena2008-06-23
+code:hatena
+ <body>
+ *1214184996*Transfer station wrong.
+ 
+ When going to the head office and to the lab, we inadvertently make a mistake because the route is the same all the way to the head office and to the lab.
+ 
+ *1214219747*Hudson tinkering
+ [f:id:nishiohirokazu:20080623201517p:image]
+ 
+ It's a look-at-me, look-at-me, look-at-me.
+ 
+ I'm getting the "No page found 'sidepanel.jelly'" error mentioned in <a href="http://osdir.com/ml/java.hudson.user/2007-02/msg00131.html">here</a>. I have getOwner and so on, and even if I change it to &lt;st:include it="${it.owner.project}" page="sidepanel.jelly" />, it still gives me the error, hmm? I changed it to "${it owner.project" and it still fails. So I commented out the sidebar in this screenshot. And also &lt;st:include page="body.jelly" />.
+ 
+ To briefly summarize just what I understood, first of all, plug-ins are registered in PluginImpl as shown below.
+ >||
+ BuildStep.PUBLISHERS.add(HelloWorldPublisher.DESCRIPTOR);
+ ||<
+ 
+ Then the plugin perform is called. Call build's getLog(int) passed as an argument to get the console output, where int is the number of lines you want to read from the log. getLog(), which is deprecated but reads all lines, is also available.
+ 
+ If I do build.setResult(Result.UNSTABLE); or something like that, the build result is UNSTABLE and the orb turns yellow. At first I thought it would setResult to the test result (how many out of how many succeeded, etc.), but it does not. The test results are displayed in a separate "action". For example, add an action as shown below. I copied this from the original hudson.tasks.junit.
+ 
+ >||
+ MyTestResultAction action;
+ MyTestResult result = new MyTestResult();
+ action = new MyTestResultAction(build, result, listener);
+ build.getActions().add(action);
+ ||<
+ 
+ For some reason the original TestResult class takes Ant's directory scanner in the constructor, TestResult(long buildTime, DirectoryScanner results). And there is getPassCount and so on, but no setPassCount. So I decided to create MyTestResult because it is hard to use for the need to parse the console output of command execution results and return the number of successful tests.
+ 
+ As for the display, I'm using the default as it is. <I expected to see a "test history graph" as introduced in <a href="http://gihyo.jp/dev/feature/01/hudson/0002?page=3">Introduction to Agile Development with Hudson: Part 2 Hudson Beginnings｜gihyo.jp ... Gijutsu hyoronsha, Inc. I expected to see a "test history graph" like the one shown in <a href="/test-history/gihyo.jp" mce_hudson.html>, but I was wrong. I'll find out how it works next time.
+ 
+ -----------
+ 
+ Well, I think it's one of the easy ones to understand that you can get to the point in one day where you have "a screen for now" and "I just need to solve this and that to get what I want". Where can I check out Hudson's source code? and then id:cactusman showed me how to do it.
+ 
+ 
+ I had always thought of it as a tool for committing Java projects or building them using Ant or Maven, but I found it to be a useful tool that can be used in a more general purpose way.
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>This is interesting. </body>
+ <timestamp>1214221409</timestamp>
+ </comment>
+ <comment>
+ <username>kkawa</username>
+ <body>Would you like to publish this plugin in Hudson's Subversion repository? </body>
+ <timestamp>1214271256</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-06-23 https://nishiohirokazu.hatenadiary.org/archive/2008/06/23]

@@ -1,0 +1,175 @@
+Hatena2009-01-31
+code:hatena
+ <body>
+ *1233361044*Amazo-nuki - Cheap DVD's on Amazon.co.uk - Amazon.co.uk
+ PS: The name starting with amazon is now <a href='http://ikunozama.appspot.com/'>Ikunozama - cheap items on Amazon overseas</a> because it is trademark sensitive.
+ <hr>
+ 
+ <a href='http://amazonuki.appspot.com/'>Amazon.co.uk - the site for cheap DVDs on Amazon.co.uk -</a>
+ 
+ 
+ As announced yesterday, I made a service and rehabbed it to the point where I could make it in one night, just to list it with Japanese yen when I put in my ASIN. and write about 5 lines in urls.py. And a template that is about the size of a single HTML repetition.
+ 
+ 
+ It's charming that even CDs and MacBook Pros are registered, even though the site says it's a cheap DVD introduction site. Well, anyone can register.
+ 
+ *1233393861*After an all-nighter
+ I worked all night to create a rehab service, published it, came home, went to bed, and when I woke up, it was broken as soon as I got up. I mean, none of the inputs were validated! I was like, "This is not the way to do it! I was immediately seeing "">"" being inputted. Fortunately, no harmful code was embedded.
+ 
+ So let's get right to it.
+ >|python|
+     # validation
+     import string
+     if len(uk_asin) != 10: raise RuntimeError("Invalid ASIN")
+     acceptable_letter = string.ascii_uppercase + string.digits
+     if not all(c in acceptable_letter for c in uk_asin):
+         raise RuntimeError("Invalid ASIN")
+ ||<
+ What a code I wrote. You should have written it from the beginning, yourself.
+ 
+ *1233399693* Is it time to mention the example project?
+ I had a chance to read the source code of one of the systems before, and it was so bad. It is hard to believe that the system is working just fine with that terrible code. We were talking about it over lunch today, and it seems that people don't know about it, so I'll try to explain how bad it is as much as I can.
+ 
+ 
+ First of all, there are roughly 37.5 million lines of source code, of which only 3% function properly, and there are systems that achieve the same level of functionality with only a tenth of the source code, so it is no exaggeration to say that the code for that system is garbage.
+ 
+ 
+ As a programmer, I'm wondering how the project got into such a state, but, well, like many projects, no one knows the truth. But, well, I am sure that there was a lot of copying and pasting going on, judging from the fact that there were what looked like copies of actual functioning code scattered all over the place. That and about 40% of the garbage code is not even "copy and paste, rewrite and implement new functionality". Just copy and paste and leave it at that. It is not useful at all. (*2)
+ 
+ 
+ The Python code explains
+ >|python|
+ def func_a(...):
+     # code of A
+     # code of A
+     # code of A
+ ||<
+ The copy and paste is done where there is a function called
+ >|python|
+ def func_a(...):
+     # code of A
+ def func_b(...):
+     # code of B
+     # code of B
+     # code of B
+     # code of A
+     # code of A
+ ||<
+ For example, func_a opens a file but does not read it, or creates an SQL query but does not issue it, or some such useless code. It's not written in Python, but this is the level of quality I'm talking about. It is unbelievable that it is working properly, isn't it?
+ 
+ 
+ The reason why it continues to work without stopping is because the designers were either mad or crazy and designed the framework to "call all functions that satisfy certain conditions in a module," so that even if there is a broken copy of A, if even one copy of A that is not broken remains, the functionality is not lost. If there is a copy of A that is broken, but there is still one copy of A that is not broken, the functionality is not lost. Well, it's not 100% safe. And because of this design, it does not matter if there are a lot of broken functions that no longer satisfy the conditions. In a web app, for example, accessing /add_item will bring up the add item screen, but actually accessing /append_item will bring up the old, now non-functional add screen.
+ 
+ 
+ Oh yeah, the version control of the source code is also terrible. Or rather, there is no version control. There is no repository. If you want to modify the code, you have to ask someone to copy the code. Then, they tweak it. If the code gets broken and stops working, there is no one to debug it, so you delete the whole code and get a new copy. Of course, if there are copies of important code all over the place, it is more likely to be taken over because it is harder to break. Recently, there is a saying: "Have two copies of the source code that are almost the same. When you take over the code, you should get one copy from each of the two people. (*3) When merging the two sets of code, they often merge the two copies of the same code set, so they often put in two copies of the same code set, or even lose it. For example, one function originally accepted four types of input formats, but before they knew it, it had been reduced to two, and they had no choice but to copy one of them and make a third one, and in some cases, they actually went back to four... (*4)
+ 
+ 
+ I don't know how this is working. I wonder if someone could refactor it. Impossible?
+ 
+ <hr>
+ References
+ 
+ -1: "Approximately 97% of the human genome has been shown to be "junk". In contrast, the tiger pufferfish (Fugu rubripes) genome is only about 1/10th the size of the human genome, but 1/3 of its genome is encoded as valid genes and is thought to have roughly the same number of genes as humans." <a href='http://ja.wikipedia.org/wiki/%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AFDNA'>Junk DNA - Wikipedia</a>
+ -2: "Transposons are sequences that can transpositionally change genomic location within a cell. The Genome Project has revealed that less than 1% of the human and mouse genomes contain protein-coding regions, while transposons make up the remaining 40% or more." <a href='http://ja.wikipedia.org/wiki/%E3%83%88%E3%83%A9%E3%83%B3%E3%82%B9%E3% 83%9D%E3%82%BE%E3%83%B3'>Transposon - Wikipedia</a> " Retrotransposon transitions involve the replication of DNA sequences." LTR-type retrotransposons comprise about 8% of the human genome." "The human genome contains about 500,000 LINEs, which is 21% of the entire genome." SINEs make up 13.5% of the human genome.
+ -3: "Have two copies of the source code with nearly identical content. When you take over, you must get one from each of two people" Operation: <a href='http://ja.wikipedia.org/wiki/%E6%9C%89%E6%80%A7%E7%94%9F%E6%AE%96'>Sexual reproduction - Wikipedia</a>.
+ -4: "It is thought that after mammals lost two of their original four types of color vision, they gained M cones by slightly altering the characteristics of their L cones, thereby reacquiring their once-lost three-color vision." In humans and closely related primates, which normally have three types of cone cells and trichromatic color vision, it is possible for a woman to be born with tetrachromatic color vision with four types of cone cells [1]. It has been reported that 2-3% of women in the world have tetrachromatic color vision [2]. But other studies suggest that as many as 50% of women and 8% of men may have tetrachromatic pigmentation [1]." <a href='http://ja.wikipedia.org/wiki/%E8%89%B2'>Color - Wikipedia</a>
+ 
+ *1233405258*Housekeeping
+ - Food procurement
+ -- 2 bottles of vegetable juice 316
+ --3 packs of natto (fermented soybeans) 118
+ -- 6 yogurt 256
+ --Kimchi 278
+ - Rice with natto
+ 
+ 
+ Yah, I've run out of energy, so I can't do much today. I'll just go to bed and get up as soon as possible.
+ 
+ *1233412910* This site may damage your computer.
+ <img src="http://gyazo.com/59ccab6b88cc6bfca2a82d69bbb90116.png">
+ Something like this message on every link. It's an educational campaign that says, "All sites can damage your computer." (It's not.)
+ 
+ 
+ 
+ <img src="http://gyazo.com/206cf52a8e1f9ca365b6ca9807402a9f.png">
+ iPhone is also dangerous.
+ </body>
+ <comments>
+ <comment>
+ <username>GOOGLE goes crazy</username>.
+ <body>I was surprised too, I think I'll go with BAIDU. </body>
+ <timestamp>1233413621</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>Seriously? (Holy shit! I thought it was. <BR>I'm relieved to hear that other people are getting it too. <br>I think I'll hold off on gppgle for a while. </body>
+ <timestamp>1233414264</timestamp>
+ </comment>
+ <comment>
+ <username>tatatanta</username>
+ <body>Good, I see I'm not the only one. </body>
+ <timestamp>1233414266</timestamp>
+ </comment>
+ <comment>
+ <username>Arrived by direct link</username>.
+ <body>I thought it was a virus too. <br>I was so scared!
+ <timestamp>1233414556</timestamp>
+ </comment>
+ <comment>
+ <username>？？？</username>
+ <body>Are you guys also? <BR>I thought I was infected with a strange virus... <br>About 20 minutes ago? </body>
+ <timestamp>1233414627</timestamp>
+ </comment>
+ <comment>
+ <username>Name</username>.
+ <body>You are disturbed...<br>What happened? </body>
+ <timestamp>1233414807</timestamp>
+ </comment>
+ <comment>
+ <username>zen2009</username>
+ <body>I wasn't the only one who thought it was strange. </body>
+ <timestamp>1233414815</timestamp>
+ </comment>
+ <comment>
+ <username>xig</username>
+ <body>How do you do? <br>I too wondered about this and came across this site while doing some research. <BR>It seems to have somehow been cured while running. <br>How about you guys? </body>
+ <timestamp>1233415836</timestamp>
+ </comment>
+ <comment>
+ <username>bak_a_mono</username>
+ <body>Because I got the disk dump from two random people and reorganized the system instead of the source code to begin with, the lack of inodes and such are already incomprehensible.
+ <timestamp>1233452048</timestamp>
+ </comment>
+ <comment>
+ <username>bravo</username>
+ <body>I used to use CCFinder (http://www.ccfinder.net/ccfinderx-j.html)... </body>
+ <timestamp>1233500821</timestamp>
+ </comment>
+ <comment>
+ <username>Ouch-Ouch-Ouch</username>
+ <body>I thought it was interesting that the reference was gene-related. If the code is 97% junk, like the human genome, it would be interesting to see how mutating a comment (or inadvertently making an editing error) would cause it to behave completely differently. However, since a program is originally designed to optimize for a certain purpose, it will never be better than the result, and will probably fall apart. However, from the perspective of artificial life (genetic programming), I think it is an interesting code that includes diversity.
+ <timestamp>1233532525</timestamp>
+ </comment>
+ <comment>
+ <username>jbking</username>
+ <body>Wouldn't it be better to stand on the Amazon Web Service API? </body>
+ <timestamp>1233554086</timestamp>
+ </comment>
+ <comment>
+ <username>hituji</username>
+ <body>Oh, I have heard about this system too. I think it's the same one. <br>The person who is said to be the designer is really a multi-talented person, but I hear that he is always unreachable and everyone is in trouble.
+ <timestamp>1233557058</timestamp>
+ </comment>
+ <comment>
+ <username>mwada</username>
+ <body>In a sense, a persistent unplanned refactoring project. <br>Nowadays, the users are the developers, and on top of that, open testers.............................forever beta testing? <br>The world's largest human(?) <br>The Obake project continues to invest the world's largest human(?) resources. <br>What was the purpose of the project in the first place...to take over and keep it moving? <br>(Thoughts: Interesting!) </body>
+ <timestamp>1233576451</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>I hear that people are always having trouble getting in touch with each other<br><br>My son used to come as a proxy, but he left because he was not too desirable</body>.
+ <timestamp>1233642293</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-01-31 https://nishiohirokazu.hatenadiary.org/archive/2009/01/31]

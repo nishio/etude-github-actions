@@ -1,0 +1,87 @@
+ABC194
+It was 5 questions...F is the digit DP, right? and I implemented it, but "record if 16 different numbers are already available" got me to 60,000, and N is 2 x 10^5, so it's tough...TLE didn't solve it, contest ended...
+
+[https://gyazo.com/60d03daf198fba56b1a72463113643a4]
+
+[C - Squared Error https://atcoder.jp/contests/abc194/tasks/abc194_c]
+	[https://gyazo.com/75ae6711a0784a14cd1e2aada2b3a514]
+	I made a mistake once and asked for [$ \sum\sum A_iA_j [i<j]] and realized the sample didn't match at all.
+　This time the problem is [$ \sum\sum (A_i-A_j)^2 [j < i]]
+　I tried to interpret it graphically and it didn't work, so I calmly and naively transformed the equation
+　 [$ \sum\sum (A_i-A_j)^2 [j < i] ] 
+　 [$ = \frac{1}{2} \sum\sum (A_i-A_j)^2 ] ... [half of the matrix].
+　 [$ = \frac{1}{2} \sum\sum ( A_i^2 - 2 A_iA_j + A_j^2 ) ] ... Expansion
+　 [$ = \frac{1}{2} \left( \sum\sum A_i^2 - 2 \sum\sum A_iA_j + \sum\sum A_j^2 \right)] ... [Order of sums].
+  [$ = \frac{1}{2} \left( 2N \sum A_i^2 - 2 \sum\sum A_iA_j \right) ] 
+  [$ = N \sum A_i^2 -  \sum\sum A_iA_j ] 
+  [$ = N \sum A_i^2 -  (\sum A_i)^2 ] 
+	code:py
+	 def main():
+      N = int(input())
+      AS = list(map(int, input().split()))
+      sumAS = sum(AS)
+      sumSq = sum(a * a for a in AS)
+      print(N * sumSq - sumAS * sumAS)
+
+[D - Journey https://atcoder.jp/contests/abc194/tasks/abc194_d]
+[https://gyazo.com/b7fb1c291a8f309086e785be3c2ceac1]
+	[Expected DP] [DP J]
+	Let f(x) be the expected number of operations until the size of the connected component goes from x to N. f(N) = 0. We want to find f(1)
+	Given f(x), find f(x-1)
+	　Consider one step after the size of the connected component is x-1
+	　(x-1) / N probability that an already connected vertex is chosen and the remaining expected value is f(x-1)
+	　(N - (x-1)) / N probability that a new vertex is chosen and the remaining expected value is f(x)
+	　[$ f(x-1) - 1 = \frac{x-1}{N} f(x-1) + \frac{N-(x-1)}{N} f(x)] 
+	　[$ \frac{N - (x-1)}{N} f(x-1)   =  \frac{N-(x-1)}{N} f(x) + 1] 
+	　[$  f(x-1)   = \left( \frac{N-(x-1)}{N} f(x) + 1\right) \frac{N }{N - (x-1)}] 
+　　Transformed to this point and dropped into code.
+	code:py
+	 def main():
+      N = int(input())
+      ret = 0
+      for i in range(1, N):
+          ret = (ret * (N - i) / N + 1) * N / (N - i)
+      print(ret)
+	Official Explanation
+	　[$ f(x-1) = \left( \frac{N-(x-1)}{N} f(x) + 1\right) \frac{N }{N - (x-1)}] to organize one more step
+	　[$ f(x-1) = f(x) + \frac{N }{N - (x-1)}
+
+[E - Mex Min https://atcoder.jp/contests/abc194/tasks/abc194_e]
+[https://gyazo.com/30b4c6898261c7affd5dc6dd32589442]
+　Thoughts.
+　　I want to find the smallest number that does not appear in a sequence of m
+　　But a naive loop would check the sequence 10^6 times 10^6 lengths, so there's no way to get there in time.
+　　If you make a [frequency table], you just increase one place and decrease one place, so you know what and how many are in constant order.
+　　The smallest number that does not appear is the leftmost number that is zero in the frequency table. If you look for this in a loop, you still won't find it in time.
+　　Speaking of finding the left-most one that is a specific value [phoenix tree].
+　　　When the frequency table is 0, the corresponding position in the phoenix tree should be 1. The leftmost 1 is obtained by a binary search and is of logarithmic order
+　　　This is already implemented in our own library
+	code:py
+	 def main():
+      N, M = map(int, input().split())
+      AS = list(map(int, input().split()))
+      ft = FenwickTree(N)
+      for i in range(N):
+          ft.set(i, 1)
+      count = [0] * N
+      ret = INF = 9223372036854775807
+      for i in range(M):
+          v = AS[i]
+          count[v] += 1
+          ft.set(v, 0)
+      ret = ft.find_next(-1)
+      for i in range(M, N):
+          v = AS[i]
+          count[v] += 1
+          ft.set(v, 0)
+          v = AS[i - M]
+          count[v] -= 1
+          if count[v] == 0:
+              ft.set(v, 1)
+          ret = min(ret, ft.find_next(-1))
+  
+      print(ret)
+
+[ABC194F]
+
+[AtCoder202103]

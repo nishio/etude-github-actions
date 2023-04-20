@@ -1,0 +1,24 @@
+Tapping Scrapbox's private project API
+The API for public projects can get data by simply GETing it, but doing so in a private project will result in a 401. (No wonder).
+
+When you access a private project while logged in, authentication information is set in a cookie. Use this.
+
+This cookie is [Secure] and [HttpOnly], so it is not known by looking at document.cookie.
+>To prevent cross-site scripting (XSS) attacks, HttpOnly cookies are inaccessible to JavaScript's Document.cookie API
+	[HTTP cookies | MDN https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies]
+
+With Chrome Devtools, you can see it here.
+	[https://gyazo.com/ce08d69ca4712edf038c17fb9f8f2bd2]
+
+Specifically, the name "connect.sid" contains authentication information. This can be passed to [requests], for example.
+code:python
+ cookies={"connect.sid": "..."}
+ r = requests.get("https://scrapbox.io/api/pages/...", cookies=cookies) 
+
+This connect.sid is the one that doesn't expire until 2020 as of 2018, so we can access it for the time being.
+We need to be careful because I don't know if there is a way to reset this information if it is inadvertently divulged.
+	I logged out and logged back in and it was different.
+
+thanks moriyoshi
+
+[ScrapboxAPI] [Scrapbox]

@@ -1,0 +1,59 @@
+Hatena2015-01-18
+code:hatena
+ <body>
+ *1421563789* Two-tiered keyphrase sampling.
+ This time the log is uncorrected.
+ 
+ he> What would you like to see happen in this conversation?
+ I> changed the way I sample key phrases, so I tested that.
+ He> How do you know how to do that?
+ I> I know it well because I implemented it myself. Until now, the system has been IDF-based scoring, with gradual decay so that key phrases in the previous input are more likely to be selected, but this time, I made a two-stage system so that if there is a key phrase in the previous input with a fairly high score, it will always be selected.
+ Stage 2
+ he> What type of implementation is that?
+ Me> I simply changed it to have two sets of key phrases, and the other thing I did was to do something tricky in the previous version to make the high-scoring words appear with high probability, but to consider it as sampling from a multinomial distribution with probability proportional to the score in a straightforward manner.
+ He> Where are the odds of that?
+ I> have a set of key phrases that I score and normalize by the sum of their score values to a probability.
+ He> What is it that you value?
+ I> The fact that the key phrase is chosen from the previous utterance strengthens the feeling that you are listening, and the implementation for this is simpler.
+ Stage 3
+ he > multinomial distribution is what should happen?
+ I> NG
+ he> Where does that feeling come from?
+ I> The sense of being heard is created by responding to the user's input.
+ He> Is a key phrase the same as a tricky one? Are they different?
+ I> No, it is not.
+ He> Where are the two steps?
+ I> When the program creates a response, it samples words to be included in the question template from a distribution created from existing utterances, and if the distribution is large enough, it samples from the common subset of "keywords in the previous utterance". If it is not large enough, the original sampling is used.
+ he> What happens to the key phrase at the time of its utterance?
+ I>
+ He> Is there anything else about the input?
+ I> New keywords are added by the user's utterance, or the score of existing keywords is increased. In this case, I have chosen to have no attenuation, so each time it appears, the IDF is added to the score, resulting in a score of TF-IDF. The only other thing to say about the input is, well, we haven't converted it to real-time chat yet. That's why I get a lot of questions when Enter is outburst.
+ he> Where is that input?
+ I> What was in the user was brought out by the question.
+ When he> scores, what happens to the blame?
+ I> ng "Sei" is not a key phrase.
+ he> What happens next?
+ I> I don't know.
+ he> What is the relationship between keywords and consequential?
+ I> NG "consequential" is not a key phrase.
+ What is his> TF's relationship to the addition?
+ I> By adding the IDF each time a key phrase appears, you are consequently counting the number of times that key phrase appears, which is a TF.
+ he> What type of keywords?
+ I> In the same sense as a key phrase, it is a component to verbalize an image that has not yet been verbalized in the user's mind.
+ He> Where are the key words?
+ I> It will gradually emerge through dialogue with users.
+ he> What happens just before that?
+ I> The user is presented with a short-term goal of answering a question, and produces sentences to satisfy that goal. At that point, users themselves may not recognize keywords as keywords, but as they collect user responses, they will find words that occur frequently after the fact.
+ he> What do you hope will happen with that presentation?
+ Me> It would be nice to be able to elicit a valid response from the user to flush out keywords. In that light, I was thinking yesterday that the longer the user's utterance, the better, but that's not necessarily equal to that. The longer it is, though, the more likely it is to be useful in identifying keywords. Is it better to introduce a measure that allows us to compare the state in which keywords are well known with the state in which they are not, and optimize that measure? Is entropy sufficient?
+ He> What needs to happen to the presentation for that to happen?
+ I> Right now, the question templates themselves are randomly selected, and the keywords to be included in the templates are also randomly selected, weighted by score, but this should really be based on an understanding of the user's condition, so that appropriate ones can be selected.
+ Can he> present it?
+ Me> I can't do this right now. To achieve this in the future, I guess, yes, it is a hidden Markov model because the internal state of the user is a hidden state that cannot be observed. But then a question is given to it by the program and it responds, so I wonder what it is. Let's put aside the Markovian state transitions for the moment, and estimate the user's unobservable internal state as a variable of several dimensions based on the past several questions and answers that can be observed, and then use the variable to estimate whether the user will respond well or not when a certain question is asked. Is this the perceptron?
+ He> Then what happens?
+ I> First, log the information available before asking a question, then log which questions are randomly selected and how the user responds to them, and after a certain amount of time, use it to train some model. I'm not talking about a perceptron, but maybe a logistic regression to see if individual questions are good or bad.
+ 
+ Findings: I was thinking that the next thing to do would be to convert to real-time chat, but it looks like I need to at least output training data for later training. Also, I'm doing fuzzing tests to find bugs in the state transitions, but I need to output different outputs when the input is a human and when it is a random sequence of fuzzing tests.
+ </body>
+
+[Hatena Diary 2015-01-18 https://nishiohirokazu.hatenadiary.org/archive/2015/01/18]

@@ -1,0 +1,248 @@
+Hatena2009-04-26
+code:hatena
+ <body>
+ *1240722718* Organizing the "I'll do it someday" list.
+ I realized that the essence of GTD is "visualization" and "invisibility," so I "invisibilized" the "I'll do it someday" list on my TODO list.
+ >||
+ Someday: (in order of desire)
+ - (Continued on next 3 pages)
+ ||<
+ indicates object of desire, like, hate, etc.
+ 
+ >||
+ Someday: (in order of desire)
+ - To be continued [[I'll do it someday]] You don't have to do it.
+ ||<
+ 
+ and moved them all to the "Someday I'll do it" page. When I have a list of things I will do someday, I move it to the "Someday" page as I see fit. I can look back at it at any time because it is saved. And I usually don't see it. I'm happy and satisfied.
+ 
+ *1240732191* "Hiragana Shiritori Sphere" in Python
+ <a href='http://d.hatena.ne.jp/m-hiyama/20090424/1240552575'>Sent again with full implementation, Shiritori no sphere - Masayuki Hiyama's Chimera Breeding Chronicles</a> of the JavaScript implementation of Shiritori no sphere. I read it while porting it to Python. I think I understand the sphere theory!
+ 
+ If I understand correctly.
+ - <del>"constant projection with respect to object a" is not necessarily one
+ -- the constant projection for the target "a" may be "ah ah"</del>.
+ -- I was only thinking about first and last.
+ 
+ 
+ I did it in Python, which doesn't distinguish between characters and strings, so it might be misleading; you might want to create an Object class and a Morphism class to make it clear that they are different things.
+ 
+ I think I understand it, so I will implement it again from scratch without looking at this.
+ 
+ >|python|
+ # -*- encoding: utf-8 -*-
+ """
+ Hiragana Shiritori Sphere" in Python
+ http://d.hatena.ne.jp/m-hiyama/20090424/1240552575
+ Porting to Python of
+ """
+ 
+ def _force_unicode(s):
+     if isinstance(s, str):
+         s = unicode(s, "utf-8")
+     return s
+ 
+ def _print(s):
+     if isinstance(s, unicode):
+         s = s.encode("utf-8")
+     print s
+     
+     
+ def _is_hiragana(x):
+     utility function that returns whether or not a single hiragana character is used.
+     >>> _is_hiragana('a')
+     True
+     >>> _is_hiragana('ahh')
+     False
+     >>> _is_hiragana('x')
+     False
+     """
+     if not isinstance(x, basestring): return False
+     x = _force_unicode(x)
+     if len(x) != 1: return False
+     if u'a' <= x <= u'wa': return True
+     if x in u "nn": return True
+     return False
+ 
+ 
+ class Category(object): 
+     u "A property that a sphere should have in common: empty in this case."
+ 
+ class SiritoriCategory(Category):
+     u "Implementation of Hiragana Suritori Sphere."
+ 
+ 
+     @staticmethod
+     def is_object(x):
+         Whether or not the argument x is an "object" of this sphere.
+         The object of the Hiragana Suritori area is a one-character Hiragana.""""
+         return _is_hiragana(x)
+ 
+     @staticmethod
+     def is_morphism(x):
+         """Whether the argument x is a "morphism" of this sphere.
+         Hiragana slithering area objets are non-empty character strings composed of hiragana.
+         >>> SiritoriCategory.is_morphism("tanuki")
+         True
+         >>> SiritoriCategory.is_morphism("Tanuki")
+         False
+         >>> SiritoriCategory.is_morphism("")
+         False
+         """
+         if not isinstance(x, basestring): return False
+         if len(x) == 0: return False
+         if all(_is_hiragana(char) for char in _force_unicode(x)): return True
+         return False
+ 
+     @staticmethod
+     def get_domain(morph):
+         Find the domain of """morphism
+         >>> _print(SiritoriCategory.get_domain("Tanuki"))
+         distance between outstretched thumb and middle finger (approx. 18 cm)
+         """
+         assert SiritoriCategory.is_morphism(morph)
+         return _force_unicode(morph)[0]
+ 
+     @staticmethod
+     def get_codomain(morph):
+         Find the codomain of a morphism
+         >>> _print(SiritoriCategory.get_codomain("Tanuki"))
+         counter for installed or mounted objects (e.g. stone lanterns, gravestones, satellites)
+         """
+         assert SiritoriCategory.is_morphism(morph)
+         return _force_unicode(morph)[-1]
+ 
+     @staticmethod
+     def compose(m1, m2):
+         Compose a morphism
+         >>> _print(SiritoriCategory.compose("tanuki", "fox"))
+         tanuki (Nyctereutes procyonoides)
+         """
+         assert SiritoriCategory.is_morphism(m1)
+         assert SiritoriCategory.is_morphism(m2)
+         m1 = _force_unicode(m1)
+         m2 = _force_unicode(m2)
+         assert m1[-1] == m2[0]
+         return m1 + m2[1:]
+ 
+     @staticmethod
+     def id(x):
+         """object x and returns the identity projection
+         >>> _print(SiritoriCategory.id("A"))
+         Uh-oh
+         """
+         assert SiritoriCategory.is_object(x)
+         return x
+ 
+ def _test():
+     import doctest
+     doctest.testmod()
+ 
+ if __name__ == "__main__":
+     _test()
+ ||<
+ 
+ *1240738355*buying
+ f:id:nishiohirokazu:20090426183231j:image
+ 
+ -Koshihikari produced in Tochigi Prefecture 5kg 1780 yen
+ -Spaghetti 500g, 105 yen for two.
+ 
+ It seems that we will have no trouble finding staple foods for the time being. I also bought some 55 yen bread that is nearing its expiration date. I hate the fact that I have to go out tomorrow. I'll have to act a little more in advance.
+ 
+ 
+ Vegetables are difficult. Even if I buy a lot of vegetables, they end up rotting. In the end, I just bought a pack of kimchi. On the other hand, protein sources are not a problem. Canned mackerel, for example. There are also plenty of vitamins, so in the end it's just a matter of feeling "I don't have fresh vegetables.
+ 
+ 
+ After this I bought vegetables, dairy products, and 40% off frozen pilaf & mixed vegetables. The fridge is now fuller than it has ever been in recent years.
+ 
+ **1240750416* How to Organize Braintrust
+ What we brainstormed on Twitter, let's transcribe it now because it will be too much trouble to transcribe it when it gets old.
+ 
+ 
+ 
+ Think programmatically about how to make the room tidy.
+ 
+ 
+ First of all, "throwing things away" is a last resort. It is like saying, "I don't care about this O(n^3) algorithm as long as the value of n is small.
+ 
+ 
+ A method often mentioned is "make a place for everything". This is a good way to get things out in O(1). Organizing keys, wallets, and cell phones in this way compresses the overhead of going out. On the other hand, it is not appropriate to apply this method to socks. If socks 1, 2, .... n, each of which is allocated an area of the same size, is a waste of volume. In this case, one solution is to create a "sock compartment" of a "generous size" where the probability of overflow is negligible. This design is based on the premise that "individual socks are not specified and acquired," but if the sock pouch is small enough, the contents can be listed, and selection from the list is O(1).
+ 
+ 
+ I packed a lot of books in a clear container. This was not a good design. I was naive in thinking that the transparent container would be easy to see the contents, but the spines were turned this way and that, so I had to open it to see what was inside. However, compared to packing everything together in cardboard boxes, it is still better in terms of ease of movement. Putting books in a bookcase is similar to the method described in O(1) above. However, bookshelves are not flexible in size, so if books of widely different sizes are placed on a single shelf, a large amount of space is lost due to padding. In particular, the amount of space wasted in the depth direction is problematic.
+ 
+ 
+ Of course it is important not to buy what you don't need, but the problem is that you have to buy what you do need. Someone who says, "I won't buy new books because my room is full of books," can't go on learning new things. It would be fatal for a programmer.
+ 
+ 
+ The desk top is a VOLATILE area and should not be expected to stay that way when left unattended for long periods of time. It may overflow and go behind the desk while you are working on something else, or it may become extremely inaccessible because you put something on top of it for a temporary period of time. The stuff that was out on the desk was accessed just before, so there is a good chance it will be accessed again in the near future. It is clear how "stacking" is a bad design that compromises searchability. It is better to have an empty document case and "put everything on the desk when another task interrupts while you are working. It's like a context switch.
+ 
+ 
+ I have yet to solve the problem that my room is too small to build a bookshelf where all books can be accessed by O(1). I think the only way to solve this problem is to pack infrequently accessed information into a container box. The reason for my previous failure was that I did not put up an index because I thought, "It's transparent, so I can see what's inside. The "you can see what's inside because it's transparent" is only true in situations where the density of information is low, such as "everything inside the box is a sweater. If you need to access individual instances, like a book, you need an index. Conversely, if you don't need to access each individual instance, you don't need an index, even if it is a book. For example, "Everything in the box is a slam dunk.
+ 
+ The index must be accessible with the boxes stacked. This means it must be on the side.
+ 
+ Manga and paperbacks are at the top of the list of things you'll want to arrange when you buy a bookshelf, but unless you're writing about manga culture, you lack the "need for quick access" to them. The first candidate to go to the container. Or it should be placed on a less accessible shelf at the top or bottom of the bookshelf. It should not be placed at eye level.
+ 
+ The index itself should also be compact. For example, do not write the ISBN of each book on the box containing all the Death Note volumes. If all Death Note volumes are in the same box, you can find the Death Note box first and then find the volume you need. Data that tends to be read out at the same time should be summarized, and data that cannot be summarized are the ones for which indexes are important.
+ 
+ Now, take the book out of the box, put it temporarily on your desk, etc., read it, and then don't leave it on your desk. If you need to access it again quickly, for example, go to the bookshelf, if not, go back to the original box. There must always be free space on the bookshelf for this to be possible.
+ 
+ 
+ If there is no free space on the bookshelf, the books that should go in will be placed somewhere else, and the system will fail. This is like a server that has only 2 gigabytes of memory but needs 3 megabytes of memory. Thrashing occurs and performance is disastrous. And search performance is very poor. It is necessary to design the bookcase to include "room for new books" rather than just barely enough room.
+ 
+ The human brain is an extremely unreliable storage device, so don't try to store the index in the brain, just print it out on A4 paper and stick it on the wall. The problem is that some areas (like the refrigerator) are extremely frequently updated. If the system requires printing, the system operation cost is going to be too high and it will break the bank.
+ 
+ Perhaps the most visible position on the bookshelf should be the "newly arrived bookcase". If I see it, I want to read it. If I pile them up, I forget to read them. But putting various sizes of books on one shelf is not space efficient...or is it? The shelf is a shelf that should not be packed tightly to begin with.
+ 
+ 
+ (In response to the comment that I wished I had not set rules when moving bookshelves and now I have no rules) There is no doubt that there is another problem when moving bookshelves. But the frequency of moving bookshelves is small enough compared to the frequency of taking books off the bookshelf. On the other hand, if you don't have a problem when you get rid of the rules, then the rules you had in place in the first place were more detailed and expensive to maintain than they needed to be.
+ 
+ Well, basically, my idea is *not* that bookshelves should be classified in detail. In fact, bookshelves don't need to be categorized because you can find what you are looking for just by running your eyes over them. The problem is that bookshelves consume valuable resources such as wall space, so they can't be added to the wall without limit, and there are books that would not fit even if the entire wall were made into bookshelves.
+ 
+ Whether it is a bookshelf or not, the "place where the books you buy go" needs to be allocated before you buy the books. Otherwise, the books will be piled up or left in bags, and the room will be in a mess.
+ 
+ @hkondo That's a pretty good way to do it! > Write the date and time on the box and take a photo with a digital camera with the books that can be packed
+ 
+ When assigning unique IDs, it is necessary to look up "what was the last ID" if sequential integers are used, which is expensive. The method of creating IDs based on date and time is less expensive. I also started out assigning sequential integers to my research notebooks, but eventually I lost track and decided to use year, month, day, and date + number.
+ 
+ **1240762021*Scientific worst case scenario for swine flu
+ Note: I wrote the title of this article and then went a bit off-topic while writing the main text. If the "worst-case scenario" is as the title says, then of course there would be a pandemic of the new influenza, and the world's population would be reduced by about half. The possibility is not zero. But I am not so sure it will happen. The article below is my line of thinking that it might happen.
+ 
+ <hr>
+ If you write "science fiction-y," you can say "it's science fiction" even if you write terrible things about lifehacks.
+ 
+ I would have preferred that either the swine flu was so infectious that it would have converged with no confirmed cases on other continents, or if it was dangerous, that there would have been an outbreak a little earlier so that everyone would be aware of the danger of it.
+ 
+ The "worst-case scenario" is one that you don't want to think will happen, but you can't rule out the possibility that it will. For example, if you are walking on the edge of a cliff, you may think, "Well, if I don't stumble, I won't fall. You'll probably make it safely," but the worst-case scenario is the one that makes you feel anxious, like, "Well, if I don't stumble, I won't fall.
+ 
+ At this point, there have been cases not only in Mexico and the U.S., but also in New Zealand and France, indicating a certain degree of infectivity. Which do you think is more common, tourists traveling between New Zealand and Mexico, or tourists traveling between Japan and Mexico? Isn't it natural to assume that there are already infected people in Japan who have not yet developed the disease?
+ 
+ The worst-case scenario is that those infected people do not develop the disease and spread the virus on tomorrow's commuter trains, increasing the number of infected people considerably. According to statistics from the Japan National Tourism Organization, there were 24,194 travelers from Mexico in 2008. Japanese travelers to Mexico numbered 69946. The total is 258 people per day. Since the Yamanote Line has a capacity of 168 passengers, the number of passengers per car during rush hour is approximately 300. 10% of the travelers are infected, and if 10% of the passengers in the same car as the infected person are infected, the total number of infected people is approximately 800. Mexico has reported 1,324 infected people and 81 deaths, so if the same ratio of people die, about 50 people will die. Since the deaths in Mexico were in the 25-45 age range, the cause of death is likely to be <a href='http://d.hatena.ne.jp/nishiohirokazu/20071229/1198903510'>cytokine storm</a>, and the same is true in Japan. The deaths will be mainly in the young and healthy working age group.
+ 
+ The question is how much it can spread during the incubation period when the onset of the disease is not confirmed and everyone is on their guard. It is important to assume that there is an infected person and take precautions even before the onset of symptoms is confirmed. In addition to wearing a mask and washing your hands, you should also consider off-peak commuting and taking time off if possible.
+ 
+ <hr>
+ 
+ Since some people have been talking about pork and such, let me reiterate and clarify. Swine flu is a "<strong>new strain of influenza that can be transmitted from person to person and for which no one is immune</strong>, and in Mexico, where it originated, it is a dangerous epidemic that has killed one out of every 16 people infected, mainly in the working age group of 25-45 years. This is not the time to be talking about not eating pork or anything like that.
+ </body>
+ <comments>
+ <comment>
+ <username>bgnori</username>
+ <body>What if the same thing happens with the Spanish flu? </body>
+ <timestamp>1240768289</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>If I was asked to bet 1,000 yen on whether it would happen or not, I would put my money on it not happening. But if the virus is more contagious than I imagine and Tamiflu doesn't work, I wouldn't be surprised if the same thing happened. </body>
+ <timestamp>1240804453</timestamp>
+ </comment>
+ <comment>
+ <username>trshugu</username>
+ <body>I knew there were people saying they were afraid of pork...wow, that's so stupid I don't even want to look for it</body>.
+ <timestamp>1241142677</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-04-26 https://nishiohirokazu.hatenadiary.org/archive/2009/04/26]

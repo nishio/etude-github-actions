@@ -1,0 +1,191 @@
+Hatena2010-09-19
+code:hatena
+ <body>
+ *1284860321* Logic circuits with programmine
+ http://www.mext.go.jp/programin/app/
+ 
+ I was told that "programming is difficult because there is no state" and "it's impossible because you can only use 9 GOTOs. You don't even need GOTOs.
+ 
+ What about the fact that movement is in the global coordinate system? Also, there are too few conditional branches, and the only thing that can be used in a real program is collision detection.
+ 
+ I made a NOT circuit for now.
+ 
+ <img src="http://gyazo.com/c023f1f868a567fabf5a6f7937db28e1.png">
+ 
+ The green square spits out the blue ball and shifts its location when it hits the red ball, so if you place an object at "the position where the ball flies when it does not hit the red ball", the collision event for that object will have the value "when the red ball does not appear" NOT.
+ 
+ Oh, if I publish it, can I post a link to http://www.mext.go.jp/programin/share/?share_id=be612f8f3bf4b925886c454813772c84 Oh, but I can play with the finished app, but I can't read or rewrite the code. But I can only play with the apps I've made. Too bad.
+ 
+ Then AND
+ 
+ <img src="http://gyazo.com/d793a27ecb58d73bbda5b4d6b019fe6e.png">
+ 
+ The blue ball is emitted from the bottom arrow and the red ball from the top arrow, and the purple ball is emitted only when both of them hit the green square.
+ 
+ Here's the key code:.
+ <img src="http://gyazo.com/c5ce7e3c297e2c5cc0439b17c71e5b3f.png">
+ 
+ Simply put, the green square only goes up and into the path of the red ball when the blue ball hits it, and hits the purple ball when it hits the red ball (because that means the blue ball has also hit it). The other two rules are to handle collisions with the walls (pentagons and hexagons) that are placed to prevent the green ball from going somewhere else. By putting an infinite number of executions in parallel execution and using collision detection to wait at the beginning of each execution, we can write code that triggers a collision event.
+ 
+ 
+ Things here: http://www.mext.go.jp/programin/share/?share_id=eecbde1436a30bcc6401b886ade368fe
+ 
+ Now, if I can make NOT and AND, I can add binary numbers, but I've already lost the motivation to do it because I just have to work harder. If anyone feels up to it, do it (yeah).
+ 
+ References: <a href='http://ja.wikipedia.org/wiki/%E5%8A%A0%E7%AE%97%E5%99%A8'>Adder - Wikipedia</a>
+ An OR can be made by adding NOT to the inputs and outputs of an AND. Ah, but in programing, making an OR is less expensive than making an AND. It seems to be better to make it directly.
+ 
+ **1284885238*Leverage memo: Scala scalable programming
+ Language grows like a temple and bazaar--Steele "Growing a language" 1999
+ 
+ Trait = similar to interface but with method implementation, fields, and mix-in synthesis
+ 
+ When you notice that there is no toInt in Java String, refer to the implicit type conversion to RichString and call that toInt
+ 
+ Alan Kay: "I am not against type. I'm in favor of dynamic tidying up because I've never seen a type system that wouldn't be a 'complete pain'. "2003 <a href='http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en'> Dr. Alan Kay on the Meaning of "Object-Oriented Programming"</a>
+ 
+ Dijkstra, "What the test can prove is the presence of errors, not their absence" 1970 http://www.cs.utexas.edu/users/EWD/ewd02xx/EWD249.PDF
+ 
+ The idea of "languages with extensibility to different applications" 1966 The next 700 Programming Languages http://www.thecorememory.com/Next_700.pdf
+ 
+ I don't feel comfortable calling it "partial application of a function" when I can write (arg: String) => println(arg) as println. P.51
+ 
+ operators ending in a colon are methods of the right operand
+ 
+ Companion Objects 4.3
+ 
+ It's both a tuple and a list, both immutable, think of it as a Haskell tuple and list, and you're about right.
+ 
+ Fields and methods are collectively called members. Members default to public
+ 
+ There are var and val. val is not reassignable.
+ 
+ Scala classes cannot have static members. Instead, they have singleton objects, which use the object keyword instead of the class keyword. When a singleton object has the same name as a class, it is called a companion object or companion class. A singleton object that does not have a class with the same name is a standalone object.
+ 
+ Members can be imported from any object with the import statement.
+ 
+ All methods can be operators; s.indexOf('o') can be written as s indexOf 'o'.
+ 
+ Boolean operators are also methods -> Then how do you do short circuits? →In fact, all methods can be passed by name (9.5) -> Yes!
+ 
+ 
+ 
+ Tradeoffs for Immutable Objects p. 105
+ Pros: no complex state changes so behavior is easy to infer, no need to copy to avoid destruction when passing to other code, not broken even if threads access it concurrently, can be safely keyed into a hash.
+ Cons: May require copying of large objects
+ 
+ P108 Class parameters can only be accessed from within the constructor? → Resolve by assigning class parameter to field → What is the class parameter for... Resolved by parameter field in 10.6?
+ 
+ def this(n: Int) = this(n, 1) to create an auxiliary constructor that calls the constructor with 1 as its second argument. Only the base constructor can call the constructor of the superclass. This is slightly more restrictive than in Java. see sec.10
+ 
+ Using operator methods makes code concise, but readability depends on the client programmer's ability to understand and remember the meaning of the individual operators. p. 120
+ 
+ Scala removes break and continue, which are incompatible with function literals. It is explained that equivalent code can be written without break and continue by using tail recursion, putting a toExit-like variable in the condition of while, and enclosing the latter half of the loop in if. Well, that's true. I'd like to know how they are incompatible, but I don't know where it is written.
+ 
+ Scala can define variables that shadow outer variables inside nested scopes.
+ 
+ First-class functions.
+ 
+ (x: Int) => x > 0" can also be written as "_ > 0". _ + _" is not a function that doubles one argument, but a function that adds two arguments
+ 
+ Java's inner classes do not have access to variables that can be rewritten in the outer scope; Scala's closures are, intuitively, "closed" by grabbing the variable situation.
+ 
+ Scala converts tail recursion to jumps, so a number of functions do not appear on the stack trace when a tail recursive function fails. If it is confusing, use the -g:notailcalls option to turn it off. The tail recursion optimization can only be used for recursions that literally call themselves. Mutual recursion and calls to other functions are not optimized.
+ 
+ def foo(f: () => Boolean) = ... The function defined by can be called foo(() => x > 0). The difference with foo(v: Boolean) is the timing of evaluation. This is the name passing parameter.
+ 
+ What is a simple object, how can we make more interesting objects out of simple objects, how are combinators (composite operations) combined, what are the most common combinators? If you can answer these questions, your library design is on the right track. p. 173
+ 
+ Difference between subclass and subtype: For class traits that do not take type arguments, subclass and subtype are the same. If it has a type argument, it is covariant (e.g. List is List[+A], so List[Cat] <: List[Animal]), then it is a subtype.
+ 
+ Parameter fields: In essence, you can create a field by writing class Foo(val arg: Type), with modifiers such as class Foo(override val x) or private.
+ 
+ Constructors of the parent class can only be called from the base constructor. class Foo(.... .args...) extends SuperClass(.... .args for superclass...)
+ 
+ Override of a concrete member requires override modifier
+ <a href="http://www.amazon.co.jp/gp/product/4844327453?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=7399& leverage-memo for <a href="creativeASIN=4844327453">Scala Scalable Programming</a>
+ 
+ 
+ The definition of the method to be called is determined by the class of the runtime object, not the type of the variable. Dynamic Binding.
+ 
+ Before using inheritance, think about whether it is an is-a relationship (Mayers, "Effective C++" 1991) and whether you want to use subclass types as superclass types (Eckel, "Thinking in Java" 1998).
+ 
+ Bottom types: Null, Nothing, where Null is a subclass of all reference classes (classes inheriting from AnyRef class) and Nothing is a subclass of all subclasses. Nothing is a subclass of all subclasses, e.g., the return value of error. Don't set the type of a function that returns an Int that can fail as Maybe Int, etc. If it returns an Int and an error occurs, the exception mechanism will skip to another process before using Nothing as an Int.
+ 
+ P.204 Trait Trait is like a class. The difference is what super refers to: a call to super in a trait is determined by linearization after it is mixed in with the class. Therefore, in the abstract method of a trait, super.a_method can be accessed. This states that a_method must be mixin after the class that provides the concrete definition of a_method.
+ 
+ This allows us to accumulate "differences of changes" expressed in the form of traits (although I am not sure that a coding style that accumulates differences is a good idea).
+ 
+ Scala imports can be written anywhere. Objects can be imported. Imported members can be renamed.
+ 
+ Class and companion object ignore mutually private. Use this instead of static members.
+ 
+ Case Class.
+ >||
+ abstract class Expr
+ case class Var(name: String) extends Expr
+ case class Number(...) extends Expr
+ case ...
+ ||<
+ 
+ Used for pattern matching.
+ 
+ Since both Scala and Java are generic programming of the elimination model (erasure model), there is no way to know whether a given Map object is a Map<Int, Int> or not.
+ 
+ If you make it a SEALED class, you will not be able to create subclasses other than the subclasses defined in the same file.
+ 
+ The combination of type parameters and subtypes poses an interesting problem: if S <: T (S can be used type-safe where T is expected), Foo[S] <: Foo[T], then Foo is covariant and is represented as Foo[+T]. Foo[S] <: Foo[T] when T <: S. Java arrays are covariant. This means that a String[] can contain an Integer via Object[], which causes a runtime error. Goslin says he wanted a way to handle arrays generically (p. 358), but now that Java includes generics functionality, array covariants are not necessary. It is left for compatibility.
+ 
+ Lower bound. def append[U >: T](x: U), etc. It means that it takes T or something that is a superclass of T as an argument. There is also an upper bound. [T <: Ordered[T]]
+ 
+ lazy val x = ... lazy val x = ...; lazy val x = ...; lazy val x = ...
+ 
+ Implicit type change; checks if convert(x) + y is possible when x + y is not. Compilation error if there are more than two ways to do this. Type conversion is done only once. If it works as written, it is not converted.
+ 
+ I'm too tired to read it all at once. I still have some covariant/antivariant talk and implicit type conversion left, but I'll continue next time. (Added)
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as1&m=amazon&f=ifr&md=1X69VDGQCMF7Z30FM082&asins=4844327453" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1284889612* Half adder with programmine
+ My head was tired, so I made this for relaxation http://www.mext.go.jp/programin/share/?share_id=4ade3b8667ce044112ec9001c9998cb4
+ 
+ Clicking the arrow on the far left toggles the input between 1 and 0. The state with the ball on the right is 1, so the initial state is 1 + 1. The black circle that appears upward at the right end is the result of the calculation, with the left side being the 2's and the right side being the 1's. In the binary system, 1 + 1 = 10, so initially the ball appears only on the left. If you click the left arrow and set 0 + 1 or 1 + 0, the result will be 01, and if you set 0 + 0, the result will be 00.
+ 
+ I updated Gyazo to 1.0 and for some reason it stopped working, so I omitted the screenshot.
+ 
+ The trap of writing yourself that it would be easier to use OR and then forgetting to use it...
+ </body>
+ <comments>
+ <comment>
+ <username>ukstudio</username>
+ <body>The code will be copied to you from "Edit this program" so you can read and modify it. </body>
+ <timestamp>1284878758</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh! </body>
+ <timestamp>1284884429</timestamp>
+ </comment>
+ <comment>
+ <username>cocoatomo</username>
+ <body>I made Half Adder. <br>I'm tired for now... </body>...
+ <timestamp>1284915943</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>Scala's Traits are nanchatte Traits that use the same inheritance mechanism as before, so they do not deal with the multiple inheritance problem that is one of the strengths of the original Traits (Smalltalk-style Traits) (e.g., they are only as good as Python). If you are new to Traits via Scala, or if you are discussing Traits in the context of multiple inheritance, you may need to be a little careful in this area. →Reference: http://publius-ovidius.livejournal.com/314737.html</body>
+ <timestamp>1284946189</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, excellent. The lines are named and easy to read! </body>
+ <timestamp>1284957551</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you. I guess I should preface my reading with "*Scala's* traits". </body>
+ <timestamp>1284957726</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-09-19 https://nishiohirokazu.hatenadiary.org/archive/2010/09/19]

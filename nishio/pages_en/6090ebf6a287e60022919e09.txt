@@ -1,0 +1,255 @@
+Hatena2008-03-20
+code:hatena
+ <body>
+ *1205964172* I'm back.
+ Oh, it's already 31:00. It's been quite a while since I've stayed up this late. Then I went to bed.
+ 
+ *1206000435*Coming to work
+ No one is here! Today is the first day of spring?
+ 
+ 
+ (It's a story.)
+ 
+ *1206004506*Let's not let doukaku.org fall down!
+ I don't think so.
+ >||
+ $ top | grep "httpd"
+   913 www         1 108    0 34156K 31120K select   0:45 49.76% httpd
+   912 www         1   4    0 35204K 32292K accept   0:11  2.78% httpd
+   861 www         1   4    0 32636K 29716K accept   0:08  0.78% httpd
+   942 www         1   4    0 32392K 29468K accept   0:03  0.78% httpd
+   813 www         1   4    0 32464K 29544K accept   0:57  0.73% httpd
+   907 www         1   4    0 31672K 28408K accept   0:54  0.73% httpd
+   814 www         1   4    0 32576K 29520K accept   0:09  0.63% httpd
+   729 www         1   4    0 33636K 30440K accept   0:58  0.00% httpd
+   728 www         1   4    0 32692K 29412K accept   0:19  0.00% httpd
+   711 www         1   4    0 33196K 30116K accept   0:14  0.00% httpd
+   947 www         1   4    0 32016K 28800K accept   0:04  0.00% httpd
+   596 root        1   8    0 15896K 12496K nanslp   0:00  0.00% httpd
+ ||<
+ 
+ I set apache's MaxClient setting to 25.
+ 
+ *1206005371* Reasons for falling
+ If I understand correctly, the trigger is a badly behaved bot access from China or Korea, and the reason for the drop is that the number of Apache processes increases too much to handle the access, causing thrashing. Maybe not.
+ At any rate, I have lowered the limit on the number of processes in Apache considerably so that thrashing does not occur.
+ 
+ *1206007339*[Gauche]marco Part 2
+ More of this > http://d.hatena.ne.jp/nishiohirokazu/20080319/1205923818
+ 
+ >|scheme|
+ gosh> (define-syntax chain (syntax-rules ()
+ 	((chain arg func) (func arg))
+ 	((chain arg func ...)  
+ 	 (chain (func arg) ...))))
+ #<undef>
+ gosh> (macroexpand '(chain 1 inc inc inc))
+ (((inc 1) #0=(inc 1)) ((inc 1) #0#))
+ ||<
+ 
+ Geez.
+ ." behavior seems to be different from what I expected.
+ 
+ >|scheme|
+ gosh> (macroexpand '(chain 1 inc))
+ (inc 1)
+ gosh> (macroexpand '(chain 1 inc inc))
+ ((inc 1) (inc 1))
+ gosh> (macroexpand '(chain 1 foo bar))
+ ((bar 1) (foo 1))
+ ||<
+ 
+ Hmm.
+ 
+ >|scheme|
+ gosh> (define-syntax chain (syntax-rules ()
+ 	((chain arg func) (func arg))
+ 	((chain arg func ...)  
+ 	 (quux (func arg) ...))))
+ 
+ 
+ gosh> (macroexpand '(chain 1 foo bar))
+ (#<identifier user#quux> (foo 1) (bar 1))
+ ||<
+ 
+ Okay.
+ 
+ >|scheme|
+ gosh> (macroexpand '(chain 1 foo bar))
+ (#<identifier user#quux> (foo 1) (bar 1))
+ gosh> (define-syntax t0 (syntax-rules ()
+ 	((t0 a b ...) ((+ a b) ...)))
+ )
+ #<undef>
+ gosh> (macroexpand '(t0 1 2 3 4 5 6))           
+ ((#0=#<identifier user#+> 1 2) (#0# 1 3) (#0# 1 4) (#0# 1 5) (#0# 1 6))
+ gosh> +
+ #<subr +>
+ gosh> (define-syntax t1 (syntax-rules ()
+ 	((t1 (a b) ...) ((+ a b) ...))))
+ #<undef>
+ gosh> (macroexpand '(t1 (1 2) (3 4) (5 6)))
+ ((#0=#<identifier user#+> 1 2) (#0# 3 4) (#0# 5 6))
+ ||<
+ 
+ I see. I thought "..." I thought "..." was just an expression that matched an indefinite number of things, but I guess not.
+ 
+ >|scheme|
+ gosh> (define-syntax chain (syntax-rules ()
+ 	((chain arg func) (func arg))
+ 	((chain arg func rest ...)  
+ 	 (chain (func arg) rest ...))))
+ #<undef>
+ gosh> (macroexpand '(chain 1 inc inc inc))
+ (inc (inc (inc 1)))
+ ||<
+ 
+ It ended up being the same as id:hayamiz's.
+ 
+ -----
+ 
+ By the way, what I wanted to do was to parse the string arg.foo().bar().baz() and make a tree (foo (bar (baz arg))) and then eval it, which would probably use something like reader-macro. So, I tried to learn macro for now.
+ 
+ >|scheme|
+ gosh> (define (facto n)
+ 	(if (= n 0)
+ 		1
+ 		(* n (facto (- n 1)))))
+ facto
+ gosh> (facto 5)
+ 120
+ ||<
+ 
+ *1206008094*Re: Apache MaxClients calculation formula
+ http://yutuki.blogspot.com/2007/08/apache-maxclients.html
+ >>
+ How to calculate, approximate, or estimate the value of MaxClients, which is the gimmick of Apache's configuration.
+ 
+ MaxClients value = (total server RAM - parent Apache process memory consumption) / memory consumption of one child Apache process
+ <<
+ 
+ Reference:+1
+ 
+ >>
+ At the same time, the following formula should be satisfied
+ 
+ Amount of memory consumed by one child Apache process x MaxClients value + Amount of memory consumed by parent Apache process < Total server RAM
+ <<
+ 
+ Funny: +5
+ 
+ I almost blew vegetable juice.
+ 
+ -----
+ Note that this entry is a story, as it should be, so don't refer to the formula at the top "verbatim"!
+ 
+ *1206011551*something
+ Maybe it's the rain, or maybe it's because it's my day off and I'm at work, but I don't feel motivated. I should go home.
+ 
+ *1206013543*tiarra
+ I installed tiarra, but tiarra.conf is a mess... I wonder what character code starts with 89...
+ 
+ >||
+ >>> "<89><A5><89><B5><89><A5><F3><89><A5><89><D7><89><A5><EB>"
+ '<89><A5><89><B5><89><A5><F3><89><A5><89><D7><89><A5><EB>'
+ >>> _.replace("<", "\\x")
+ '\\x89>\\xA5>\\x89>\\xB5>\\x89>\\xA5>\\xF3>\\x89>\\xA5>\\x89>\\xD7>\\x89>\\xA5>\\xEB>'
+ >>> _.replace(">", "")
+ '\\x89\\xA5\\x89\\xB5\\x89\\xA5\\xF3\\x89\\xA5\\x89\\xD7\\x89\\xA5\\xEB'
+ >>> print _
+ \x89\xA5\x89\xB5\x89\xA5\xF3\x89\xA5\x89\xD7\x89\xA5\xEB
+ >>> "\x89\xA5\x89\xB5\x89\xA5\xF3\x89\xA5\x89\xD7\x89\xA5\xEB"
+ '\x89\xa5\x89\xb5\x89\xa5\xf3\x89\xa5\x89\xd7\x89\xa5\xeb'
+ >>> file("c:\\tmp.html", "w").write(_)
+ ||<
+ 
+ Something is not sjis, jis, euc, utf-8, or any of the others. I wonder what this is.
+ 
+ -----
+ I hit tiarra svn and made sure the conf file was written in EUC.
+ 
+ >||
+ >>> unicode("sample", "sjis").encode("euc-jp")
+ '\xa5\xb5\xa5\xf3\xa5\xd7\xa5\xeb'
+ 
+ The garbled string you just saw is
+ <89><A5><89><B5><89><A5><F3><89><A5><89><D7><89><A5><EB>
+ ||<
+ \I think the ޣx89 is kind of mixed up in the middle.
+ 
+ -----
+ I can get into freenode but not ustream. Is there some special setting I need to do?
+ 
+ -----
+ Ah. I have to write the password in plain text in the configuration file?
+ 
+ -----
+ Now I can share one account between my MacBook and Windows, so I can access the same page from either. Logs are also saved. Logs of my absence are also stored.
+ 
+ It is more convenient than skype or lingr. But it's hard to promote it to my friends. I have to have at least a server that is always running, even if it is rented.
+ 
+ *1206019633* Today.
+ I was going to finish the manuscript of the remaining chapters (half of the chapters are already finished) to clear my mind, but I lost all motivation when the editor told me that he was in no hurry because he would not be able to assemble it in time even if I came now (oy!).
+ 
+ *1206037347* 3rd 1000 Speakers Conference
+ Finally, tomorrow Saturday.
+ http://ja.doukaku.org/wiki/index.php/1000speakers:3
+ The theme for the three high school students for the keynote speech was "I want to do an introduction to programming in assembler, don't you?
+ 
+ I wonder if assembler is popular among middle and high school students these days?
+ 
+ *1206038002*www, my abs hurt.
+ the other day
+ http://d.hatena.ne.jp/nishiohirokazu/20080318/1205860822
+ >>
+ How to buy genuine brand-name products at discount prices.
+ A Gucci bag that cost 10,500 yen can actually be bought for 31,500 yen? No way, that's not true!
+ <<
+ 
+ I was told that there are more and more of them. I was asked where the source was, and I said, "Oh, it's a spammy site that I found when I was searching for folding bicycles.
+ 
+ >>
+ Results 1 - 10 of about 114,000 Japanese pages for "Can a Gucci bag that cost  \10500 actually be bought for Ǿ31500?
+ <<
+ 
+ Awww, check the text before you make a 110,000 page spam site, you'll get a stomach ache.
+ </body>
+ <comments>
+ <comment>
+ <username>jbking</username>
+ <body>I think there was one that put a limit on the Apache module if it was accessed intensively for a short period of time. </body>
+ <timestamp>1206034695</timestamp>
+ </comment>
+ <comment>
+ <username>keisuke_n</username>
+ <body>I would like to attend the 1000 speakers conference, but it is too far away (for speaking or listening). <br>I would like it to be held in the Kansai region, but that would be too much work for the organizers. </body>.
+ <timestamp>1206077843</timestamp>
+ </comment>
+ <comment>
+ <username>koguro</username>
+ <body>Gauche allows you to use a procedure called compose to do things like the chain macro. For example, the equivalent of (chain 1 inc inc inc inc) can be written as ((compose inc inc inc inc) 1). I may have missed the point that the purpose of this is to study MACRO in the first place... </body>
+ <timestamp>1206099834</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>That's function composition. What "equivalent" means is up to the individual, but what I wanted to do is "argument before and function after". </body>
+ <timestamp>1206103609</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>And now I realize that this entry was unfinished...</body>.
+ <timestamp>1206103648</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Branches are created only after the trunk is stable~</body>.
+ <timestamp>1206152170</timestamp>
+ </comment>
+ <comment>
+ <username>keisuke_n</username>
+ <body>Oh, yes, I understand~. </body>
+ <timestamp>1206162719</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-20 https://nishiohirokazu.hatenadiary.org/archive/2008/03/20]

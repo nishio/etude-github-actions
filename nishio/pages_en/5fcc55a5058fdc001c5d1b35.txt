@@ -1,0 +1,25 @@
+Binomial coefficient for huge n
+If we want to find the binomial coefficient for a huge n(10^9), we will not be able to calculate n! in time because O(n)
+[$ \binom{n}{k} = \frac{n!}{k!(n-k)!} = \frac{n!}{(n-k)!} \frac{1}{k!}]
+and transforming each of them into O(k), we obtain
+
+Mounting example
+	code:python
+	 def naive_comb(n, k, MOD=MOD):
+      assert n >= 0
+      assert k >= 0
+      if n < k:
+          return 0
+      k = min(k, n - k)
+      a = 1
+      b = 1
+      for i in range(k):
+          a *= (n - i)
+          a %= MOD
+          b *= (i + 1)
+          b %= MOD
+      return (a * mod_inverse(b, MOD)) % MOD
+	For mod_inverse, see [inverse source in mod P].
+
+[combination about huge n].
+from [combination in mod P].

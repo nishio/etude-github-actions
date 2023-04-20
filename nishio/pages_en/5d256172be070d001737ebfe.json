@@ -1,0 +1,8 @@
+BUG: Adding a sticky while a selection is being made with lasso selection creates a garbage sticky that cannot be moved on the screen.
+from [pRegroup-done-2019]
+	BUG: Adding a sticky while a selection is being made with lasso selection creates a garbage sticky that cannot be moved on the screen.
+		Because the overlay canvas is the current project for drawing the lasso selection, and stickies are created on the overlay canvas.
+	The problem with bugs caused by the wrong active project is that there is a global state called "active project" in the first place, and the overhead of switching the active project is not high, so functions that touch something other than the default project should temporarily switch it in the function, return it, and then exit. should switch to the "active project", switch back, and then exit.
+ Instead, we should use decorator-like functions that do that, and stop tampering with the global state directly.
+		onOverlayCanvas
+	→done

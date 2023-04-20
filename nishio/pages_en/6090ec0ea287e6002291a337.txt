@@ -1,0 +1,129 @@
+Hatena2015-09-02
+code:hatena
+ <body>
+ *1441130571*Raspberry Pi 2 B Diary
+ I've been doing this in a Facebook friends-only public forum, but I've been pressured to put it on my blog, so I'm going to put it together in bits and pieces.
+ 
+ ** First.
+ 
+ It is a Raspberry Pi 2 B & Raspbian. I do not know about other environments. When I write RasPi below, I also refer to Raspberry Pi 2 B.
+ >||
+ $ uname -a
+ Linux nishio 3.18.11-v7+ #781 SMP PREEMPT Tue Apr 21 18:07:59 BST 2015 armv7l GNU/Linux
+ ||<
+ 
+ ** What to prepare
+ 
+ The proposition "RasPi can be used without a keyboard, HDMI cable or monitor" is true. Since sshd is running by default, you can use it by logging in with the user pi and password raspberry. I also took it to heart and started playing around with that configuration at first.
+ 
+ However, the moment a problem occurs, such as sshd not booting, without an HDMI there is no way to learn the details of the problem, and without a keyboard there is no way to rewrite the settings, leaving the only recourse to "burn an image and start over from scratch".
+ 
+ I ended up with an HDMI cable and a USB keyboard.
+ 
+ <a href="http://www.amazon.co.jp/gp/product/B003L1ZYYM/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B003L1ZYYM& linkCode=as2&tag=nishiohirokaz-22">Amazon Basic High Speed HDMI Cable 2.0m (Type A male - Type A male)</a>.
+ 
+ ** Things I regretted buying
+ 
+ When I looked at RasPi on Amazon, the following two items are recommended as commonly purchased together. I bought them without thinking about it, but in the end I regretted buying them and bought another one.
+ 
+ - <a href="http://www.amazon.co.jp/gp/product/B010EGTPVY/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B010EGTPVY& linkCode=as2&tag=nishiohirokaz-22">BUFFALO Air Station 11n/g/b 150Mbps for USB2.0 WLI-UC-GNME</a
+ - <a href="http://www.amazon.co.jp/gp/product/B008UR8TS0/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B008UR8TS0& linkCode=as2&tag=nishiohirokaz-22">Transcend microSDHC card 32GB Class10 TS32GUSDHC10E (FFP)</a>
+ 
+ ** microSD
+ 
+ Transcend microSD, but after using it for a while, I started to experience the following phenomenon.
+ 
+ - Immediately after burning the image, it works fine, but when rebooting, kernel panic
+ - It doesn't work even right after the image is burned in.
+ 
+ The kernel panic was "Unable to mount root fs" The bootloader ran and then tried to mount root and failed. Later, I found a blog by someone who was having the exact same kernel panic (<a href='http://www.1ft-seabass.jp/memo/2015/03/31/raspberry-pi-sdcard-error/'>SD card compatibility on Raspberry Pi MEMO</a>) I suspected that the microSD hardware might be the cause and switched to a microSD (Panasonic class10 8GB RP-SMNB08GJK) that was sold at a convenience store. I switched to a microSD (Panasonic class10 8GB RP-SMNB08GJK) sold at a convenience store and it worked easily, so I thought it was most likely a problem with the Transcend microSD.
+ 
+ A very similar report of the same kernel panic with Transcend, working right after repairing the disk and burning an image, but not while rebooting (<a href='http://nillpo.hatenablog.com/entry/2015/ 02/16/204908'>Raspberry Pi dead - Nirupoppo</a>), I ruined two Transcend disks, then switched to Toshiba, and it seems it hasn't recurred since.
+ 
+ Friend's Opinion:
+ 
+ - In the meantime, use Sandisk. Think about it after you get Toshiba or Sandisk.
+ - I use Sandisk.
+ - I use Toshiba, the FS can break, but if you re-burn the image, it works fine.
+ 
+ I will use Sandisk for now in the future. <a href="http://www.amazon.co.jp/gp/product/B0137QEEVO/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B0137QEEVO& linkCode=as2&tag=nishiohirokaz-22">Raspberry Pi 2 Recommended 16GB SanDisk MicroSDHC Card SDSDQUAN-016G-Z4A</a>
+ 
+ ** USB Wifi
+ 
+ <a href="http://www.amazon.co.jp/gp/product/B010EGTPVY/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B010EGTPVY& linkCode=as2&tag=nishiohirokaz-22">BUFFALO's WLI-UC-GNME</a>, but the maximum power consumption is 2.5W.
+ 
+ On the first day of my RasPi experience, I was using the 1A (=5W) AC adapter that came with my iPhone, which means that the USB Wifi consumes half of the power supplied. Incidentally, the above problem of the microSD breaking when rebooting occurred after the USB Wifi was installed, so the high power consumption of the USB Wifi may have been the cause. I have not verified this.
+ 
+ Well, whatever it was, I was surprised at how hot it was when I touched it, so I decided to use a 1.3W <a href="http://www.amazon.co.jp/gp/product/B00ESA34GA/ref=as_li_ss_tl?ie=UTF8&camp=247&creative= 7399&creativeASIN=B00ESA34GA&linkCode=as2&tag=nishiohirokaz-22">PLANEX wireless LAN child GW-USNANO2A (FFP)</a> I bought again.
+ 
+ ** AC adapter
+ 
+ Regarding the above mentioned lack of power possibly leading to the microSD corruption mentioned above, I thought that using a 1A AC adapter would most likely destabilize the RasPi, so I changed it to a 2.2A one. I can't find the same product on Amazon because I took it from my wife who was using it <a href="http://www.amazon.co.jp/gp/product/B00A3K1KBU/ref=as_li_ss_tl?ie=UTF8&camp=247& creative=7399&creativeASIN=B00A3K1KBU&linkCode=as2&tag=nishiohirokaz-22">YAZAWA table tap type 1AC+2USB2A 0.5m black H3005BK2U2A</a> of USB port. It is an AC tap with USB port like H3005BK2U2A</a>.
+ 
+ PS: Someone who runs more than 10 RasPi's told me "I use Transcend and have never had a problem. I use Anker power supplies". <a href="http://www.amazon.co.jp/gp/product/B00MWOB8X0/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B00MWOB8X0& linkCode=as2&tag=nishiohirokaz-22">Anker 20W 2-Port USB Fast Charger 71AN7109-W2A</a>
+ 
+ 
+ ** Zeroconf on Windows
+ 
+ If the IP address is assigned by DHCP, the question is how to identify it. ahavi-deamon is running by default on RasPi, so <a href='https://ja.wikipedia.org/wiki/Zeroconf'>Zeroconf </a> to name raspberry.local. So you can log in with "ssh pi@raspberry.local".
+ 
+ If your network is fixed, you can always choose to assign a static IP, but Zeroconf is more useful, especially if you plan to move your network or if you are not the network administrator yourself. By the way, I want to tinker with it at home and take it to the office to connect to the wireless LAN.
+ 
+ I haven't tried it on a Mac, but Bonjour is running by default, so that should do the name resolution. on Windows, I can install iTunes to do the name resolution.
+ 
+ In my environment, avahi-daemon sometimes stopped with an error message "avahi-daemon disabled because there is a unicast .local domain" at startup. My wife was using a MacbookAir at about the same time, so that may have created an unicast .local domain. I rewrote /etc/default/avahi-daemon to ignore it as follows see: <a href='http://www.jackenhack.com/raspberry-pi-avahi-daemon-disabled-because-there-is-a-unicast-local-domain-solved/'> Raspberry Pi avahi-daemon disabled because there is a unicast .local domain - solved - JackenHack</a>
+ 
+ >||
+ AVAHI_DAEMON_DETECT_LOCAL=1
+ ||<
+ 
+ 
+ You should edit /etc/hostname and /etc/hosts because if multiple RasPi can exist in the same network, they will not be identified by name.
+ 
+ ** Wifi setup
+ 
+ If you are using only via ssh, it is not a good idea because if you fail to set up the network and lose connection, you will have no choice but to "re-burn the image". I ended up getting a keyboard.
+ 
+ Official Description: <a href='https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md'>Setting WiFi up via the command line - Raspberry Pi Documentation</a>. Adafruit's explanation: <a href='https://learn.adafruit.com/adafruits-raspberry-pi-lesson-3- network-setup/setting-up-wifi-with-occidentalis'>Setting up Wifi with the Command Line | Adafruit's Raspberry Pi Lesson 3. Adafruit Learning System
+ 
+ There are two ways to do this: by writing the SSID and password directly in /etc/network/interfaces (hereafter referred to as "direct writing"), or by using wpa_supplicant. I first tried using wpa_supplicant, which is already installed by default in RasPi.
+ 
+ >||
+ $ ps -ef | grep wpa
+ root 3239 1 0 14:28 ? 00:00:00 /sbin/wpa_supplicant -s -B -P /var/run/wpa_supplicant.wlan0.pid -i wlan0 -D nl80211,wext -c /etc/wpa_supplicant/wpa_supplicant.conf
+ ||<
+ 
+ 
+ I did not have an HDMI cable or keyboard when I was doing this setup, so I have not verified the details, but /etc/network/interfaces says iface eth0 inet manual by default, and if you leave this unedited when setting up wifi, the DHCP client will not start with an error and the entire wired connection will not work. If I set /etc/network/interfaces to iface eth0 inet dhcp, it is OK.
+ 
+ I often see the explanation "the first time you plug in USB Wifi, the wlan0 item is written", but wlan1 interface was also written in interfaces. I think that if I leave this without erasing it, the DHCP client will not start with an error. I have not verified this.
+ 
+ If you write detailed information in wpa_supplicant, of course it should be the same as the router's configuration. if the SSID is not stealth, you can use iwlist wlan0 scan to scan. If your SSID is not stealthy, you can use iwlist wlan0 scan to scan your router. <a href='https://www.raspberrypi.org/forums/viewtopic.php?f=28&t=79824'>Raspberry Pi &#8226; View topic - wpa supplicant config file</a>
+ 
+ If you are using wpa_supplicant and your wireless LAN does not work well, it is a good idea to first try the direct writing method without wpa_supplicant and isolate the problem to see if the problem is in wpa_supplicant or not. In my case, the method without wpa_supplicant worked fine.
+ 
+ In many cases it says to reboot if you change the settings, but you can turn it on and off with sudo ifdown wlan0; sudo ifup wlan0 or sudo service networking restart.
+ 
+ Also, wpa_supplicant should automatically reload the configuration file in a few seconds when you change it, and you can reload the configuration manually with wpa_cli reconfigure. Once, when I reloaded the configuration with a direct write connection, it displayed an error message and the wpa_supplicant process died, so I had to start it again with the command line options when I checked with ps -ef above.
+ 
+ It is easier to understand the situation if you turn it on and off from the command line rather than rebooting, so that you can observe the results of the change, including subsequent DHCP activity.
+ 
+ ** Directly connected to cable
+ 
+ (WRITTEN)
+ 
+ avahi_autoipd
+ 
+ ** Serial connection
+ 
+ ** How to read analog data
+ 
+ ** Unorganized raw data
+ 
+ https://www.facebook.com/nishiohirokazu/posts/10206808077057036
+ https://www.facebook.com/nishiohirokazu/posts/10206825122043150
+ https://www.facebook.com/photo.php?fbid=10206831537123523&set=a.1175498944176.2027303.1129148772&type=1
+ https://www.facebook.com/nishiohirokazu/posts/10206874568039269
+ </body>
+
+[Hatena Diary 2015-09-02 https://nishiohirokazu.hatenadiary.org/archive/2015/09/02]

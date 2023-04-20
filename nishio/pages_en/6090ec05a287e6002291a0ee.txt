@@ -1,0 +1,71 @@
+Hatena2010-08-13
+code:hatena
+ <body>
+ *1281681093*Makefile
+ I felt like I was told to make it, so I did.
+ >||
+ $ make love
+ make: *** No rule to make target `girlfriend', needed by `love'. Stop.
+ ||<
+ 
+ *1281706360* What is considered identical as a hash key?
+ http://blade.nagaokaut.ac.jp/cgi-bin/vframe.rb/ruby/ruby-list/47272?47272-47298+split-mode-vertical
+ >|ruby|
+ # ruby
+ p({1 => true}[1.0]) #=> nil
+ ||<
+ 
+ Ahh, Python is so loose there.
+ >|python|
+ # python
+ >>> {1: True}[1.0]
+ True
+ >>> {1: 1, 1.0: 1.0}
+ {1: 1.0}
+ ||<
+ 
+ It is interesting to calculate the hash of floating point numbers in Python
+ >|python|
+ >>> hash(1.0)
+ 1
+ >>> hash(1.5)
+ 1610645504
+ >>> hash(2.0)
+ 2
+ ||<
+ The hash value is matched only when it is exactly an integer, which is clearly stated in _Py_HashDouble(double v) in object.c: "If the decimal part is 0, the hash value should be the same as the integer".
+ >|c|
+ if (fractpart == 0.0) {
+     /* This must return the same hash as an equal int or long. */
+ ||<
+ The basis for this decision is not stated here.
+ 
+ This is because the hash value of the integer 1 and the floating point 1.0 are the same, and the key of the hash is ==, not is.
+ 
+ >|python|
+ >>> 1 == 1.0
+ True
+ >>> 1 is 1.0
+ False
+ ||<
+ 
+ <hr>
+ Reprinted from Twitter:.
+ 
+ >>
+ @sumim Smalltalk is the same as Python. dictionary new at: 1 put: true; at: 1.0 "=> true"
+ <<
+ 
+ >>
+ @kmizu This http://bit.ly/9dFbOO I don't see 1.0 and 1 as the same key in Java.
+ <<
+ </body>
+ <comments>
+ <comment>
+ <username>Yoshiori</username>
+ <body>Hey (dry reply)</body>.
+ <timestamp>1281682273</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-08-13 https://nishiohirokazu.hatenadiary.org/archive/2010/08/13]

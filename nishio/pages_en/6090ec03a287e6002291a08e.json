@@ -1,0 +1,135 @@
+Hatena2010-04-05
+code:hatena
+ <body>
+ *1270451834*Monthly Enumeration
+ <a href='http://d.hatena.ne.jp/Yoshiori/20100405/1270449443'>Trying to find the next month in Python was a pain, so I went with Ruby - Yoshiori's Blog</a>.
+ <a href='http://d.hatena.ne.jp/atsuoishimoto/20100405'>2010-04-05 - Diary of atsuoishimoto</a>
+ 
+ I don't think datetime and calendar are necessary according to the requirements I read from Yoshiori's blog, so I'll keep it simple:)
+ 
+ >|python|
+ year, month = 2005, 4
+ 
+ while (year, month) <= (2007, 04):
+     print "%d%02d" % (year, month)
+     month += 1
+     if month == 13: 
+         month = 1
+         year += 1
+ ||<
+ 
+ I wrote that. In today's calendar, there are no leap months, so there are only 1~12 months each year.
+ 
+ *1270468620* Battle Combinator 0.1
+ warp and weft
+ >>
+ It is kinaba. It was very popular, including this one. It's still strange. RT @/kinaba (.) (.)) (.) (.) (.) (.) (.) (.) (.) (.) (.) (.) (.) == == (.) (.) (.) (.) (.) (.) (.) (.) (.) (via @/ksknac) http://twitter.com/ksknac/statuses/11587543440
+ <<
+ >>
+ nishio @/kinaba I want to make a puzzle or something using this kind of thing, but I haven't come up with anything yet.
+ <<
+ >>
+ kinaba @/nishio "(.) → Alternate between first and second moves, rewriting the syntax tree in only one place per move (by some predetermined method) → First move that returns the function semantically the same as the original wins"... I don't think it will be settled and one of the first and second moves will have a huge advantage...(^^)... ...(^^;
+ <<
+ My brain had been fixated on "puzzle = one player," but I started thinking that it would be nice to play a competitive game where we take turns doing something.
+ 
+ Here is what I said
+ >>
+ B is this: http://en.wikipedia.org/wiki/B,C,K,W_system I have various functions as magic cards in my hand...(I still have a feeling it will never be settled)
+ <<
+ >>
+ If we limit it to functions that do not increase, we can implement it as a card game, so we can repeatedly give arguments to functions on the board in turn and simplify the beta. What to score it with is a mystery, though.
+ <<
+ >>
+ Since the table is two-dimensional, it cannot be expressed if more than two parentheses are nested... → Should only one function that can generate parentheses be included in the deck?
+ <<
+ >>
+ I think I can go with "When there are no more cards left to play, you lose. I'm thinking that I can use "When the function of the table becomes Identity, the total score of the functions in hand is added up and the winner is decided".
+ <<
+ I'm missing an explanation, but I'm thinking that cards removed from the table by beta-simplification will go into the hand of the beta-simplifier. I think it would be better to change this to "win points" instead of "cards in hand" and remove "you lose if there are no more cards left to play" and "the game ends if no more functions on the table can be beta-simplified". This would end the game more quickly.
+ 
+ Hereafter, I will refer to the "put in hand" version as long and the "make it a winning point" version as short. The short version is not long enough to overcome the element of luck due to the tiles dealt.
+ 
+ >>
+ I'm thinking that I need to include the S combinator in the game, but surprisingly I can get by without it. And of all the rules, understanding the behavior of the S combinator is the most difficult. It is also difficult to express on the table.
+ <<
+ 
+ So this is how the card came to be.
+ 
+ <img src="http://gyazo.com/208f6ddda8ae8581b65dccae85b374cb.png">
+ 
+ The "1p" is the number of cards & the score. Some people may wonder why cards with fewer cards have lower scores, but this is because the lower the score and the fewer the number of cards, the more powerful and more cards you can get at once. In a long game, the dilemma is whether to play the weak high-scoring card in hand (if you are wrong, the high score goes to your opponent) or leave it until the end of the game. In short, you may not have much to worry about.
+ 
+ There are 15 cards in total, so five cards are dealt out and the remaining five cards are opened on the table. The opened cards are in the "queue". Think of them as being kept side by side. Let's say it's IKTII now. The table has a queue and a "evaluation space". The evaluation space can be anywhere that does not conflict with the queue. It should be somewhere where there is room underneath because it extends vertically. Maximum of 4 cards.
+ 
+ >||
+ [(evaluation space)] IKTII
+ ||<
+ 
+ Alternate turns are played. A turn consists of three phases: the "function out phase," the "move the head of the queue to the evaluation space," and the "evaluation phase.
+ On the first player's turn, the first player adds a function card from his or her hand to the end of the queue in the "function out phase". Let's assume here that it is C.
+ 
+ >||
+ [(evaluation space)] IKTIIC
+ ||<
+ 
+ Next, in the "move phase," the I at the head of the queue is moved to the evaluation space.
+ 
+ >||
+ [I] KTIIC
+ ||<
+ 
+ And nothing happens in the "evaluation phase" (see below). The turn of the late player. The late player adds a function card from his hand to the end of the queue in the "Function Out Phase", assuming he has added K.
+ 
+ >||
+ [I] KTIICK
+ ||<
+ 
+ Next, in the "move phase," the first K in the queue is moved to the evaluation space.
+ 
+ >||
+ [IK] KTIICK
+ ||<
+ 
+ Then in the "Evaluation Phase" we look at the function at the head of the evaluation space. The card I shows the evaluation method "IX→X". Therefore, IK in the evaluation space is changed to K. I, which is no longer needed on the table, becomes the latter.
+ 
+ >||
+ [K] KTIICK
+ ||<
+ 
+ First player's turn. Play a function card. Let's see, let's think about this for a moment. KK is not evaluated this turn, KKT -> K in the later hand, KI in the earlier hand, no evaluation, KII -> I in the later hand, IC -> C in the earlier hand, CK in the later hand, no evaluation. Whatever I play here, C is not evaluated because it takes 3 arguments, CKx, and on the latter's turn, CKxy→Kyx→y. Is it definite to the point where the latter can make a combo? (Oh, I didn't explain combo, but in short, it evaluates until it can't evaluate any more, so using T, C and S can cause multiple evaluations. That's the combo.) Hmmm. And the only card left is y, so I guess whatever I play here will just be meaningless and put me in the back of the pack. So since this is a short game, I'll just play the lowest scoring S.
+ 
+ >||
+ [KK] TIICKS
+ ||<
+ 
+ The late player's turn. The late player will have only one y to play later, and it will be the first player's turn to play, so for example, if the late player plays I here, that I will be taken by the early player for sure.
+ 
+ <hr>
+ 
+ The game progresses like that. I'll have to play it to see if it's interesting or not.
+ 
+ In addition, I'll write about how to solve the problem of increasing z to two cards in the evaluation of S. Introduce "pointer cards" and "pointer marks" (like coins).
+ >||
+ S
+ X
+ Y
+ Z
+ ||<
+ This is the reason why P is a pointer card and * is a pointer mark.
+ >||
+ X
+ Z*
+ YP
+ ||<
+ P does the same thing as the function to which the pointer points. If Z is removed from the table while P is still there, Z is placed at P. So if the pointer is still there, it won't be GC'd. I'll have to play to see if the introduction of this S-card will add depth to the game or just complicate it. If it's merely complicated, I might replace it with λwxyz.zyxw or something like that. Also, I wonder what would happen if I introduced Vx=V or something like that. If it's too deterministic and uninteresting to play in order, then instead of playing a card in the "play card phase" once for each user, you could have "reverse order the evaluation space". Maybe even "queue in reverse order."
+ </body>
+ <comments>
+ <comment>
+ <username>atsuoishimoto</username>
+ <body>I would have written something like this in this case, but this is just an example of using timedelta, and the datetime documentation is quite long and hard to read. </body>
+ <timestamp>1270465630</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-04-05 https://nishiohirokazu.hatenadiary.org/archive/2010/04/05]

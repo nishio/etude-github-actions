@@ -1,0 +1,27 @@
+ABC173F
+　Tree has exactly the number of vertices - 1 edge
+　Therefore, the number of trees in the forest is obtained from the number of vertices v and the number of edges e
+　 [$ f(L,R) = v(L,R) - e(L,R)]
+　 [Number of connected components in [graph without closed path].
+　[Change order of operations]
+　　[$ \sum_L \sum_R f(L,R) = \sum_L \sum_R v(L,R) - \sum_L \sum_R e(L,R)]
+		[$ \sum_L \sum_R 1_{L \le i \le R}  = (N - (i-1)) ((i-1) + 1)]
+
+code:python
+ def main():
+     v = 0
+     e = 0
+     N = int(input())
+     for i in range(N):
+         v += (N - i) * (i + 1)
+ 
+     for i in range(N - 1):
+         v1, v2 = sorted(map(int, input().split()))
+         v1 -= 1
+         v2 -= 1
+         e += (N - v2) * (v1 + 1)
+ 
+     debug(": e, v", e, v)
+     print(v - e)
+
+https://atcoder.jp/contests/abc173/submissions/15029754

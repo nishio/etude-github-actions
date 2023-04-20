@@ -1,0 +1,27 @@
+Recently unopened pages
+from [/kuboon/open-recently].
+code:script.js
+ const title = 'Least Visited'
+ scrapbox.PageMenu.addMenu({
+   title,
+   image: 'https://i.gyazo.com/e71773a00dadd7bb6811206df59790c7.png',
+   onClick: () => {
+     if(scrapbox.PageMenu().menus.get(title).items.length === 0) addItems()
+   }
+ });
+ async function addItems(){
+   const proj = scrapbox.Project.name
+   const pages = scrapbox.Project.pages.filter(x=>x.exists).length
+   const count = 5
+   const res = await fetch(`/api/pages/${proj}?sort=accessed&limit=${count}&skip=${pages-count}`).then(x=>x.json())
+   const menu = scrapbox.PageMenu(title)
+   //menu.removeAllItems()
+   for(const page of res.pages){
+     const { title } = page
+     menu.addItem({
+       title,
+       onClick: () => location.href = `/${proj}/${encodeURIComponent(title)}`
+     })
+   }
+   console.log(`${title} loaded`)
+ }

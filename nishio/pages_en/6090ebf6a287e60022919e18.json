@@ -1,0 +1,354 @@
+Hatena2008-04-05
+code:hatena
+ <body>
+ *1207348103* I woke up.
+ 
+ *1207351449* Hachi Roku Generation Development Camp Day 2
+ - "How much "Mr. Ueno" are you writing?
+ 
+ -$otool -tv /usr/bin/sed
+ -- Disassembly
+ 
+ >>
+ $ otool -tv /usr/lib/libSystem.dylib | grep "sysenter"
+ __sysenter_trap:
+ 00001237	sysenter
+ <<
+ 
+ - int80? When an interrupt is applied, the contents of the registers are saved and passed to the kernel for processing, but the performance is bad because all the registers are stored and restored after the process is finished. However, since sysenter does not save the kernel, you can put only what you need in the stack and restore only what you need.
+ 
+ 
+ - http://www.opensource.apple.com/darwinsource/
+ -- xnu is the Mac kernel source code
+ -- Take an Apple ID to download.
+ 
+ 
+ - "Please sleep after you commit! What am I supposed to do?"(Mr. Ueno)
+ 
+ >||
+ $ cat > hoge.c
+ void main(char* argv){
+   printf("Hello!");
+ }
+ $ gcc hoge.c
+ $ otool -tv a.out 
+ a.out:
+ (__TEXT,__text) section
+ start:
+ 00001f74	pushl	$0x00
+ 00001f76	movl	%esp,%ebp
+ 00001f78	andl	$0xf0,%esp
+ 00001f7b	subl	$0x10,%esp
+ 00001f7e	movl	0x04(%ebp),%ebx
+ 00001f81	movl	%ebx,0x00(%esp)
+ 00001f85	leal	0x08(%ebp),%ecx
+ 00001f88	movl	%ecx,0x04(%esp)
+ 00001f8c	addl	$0x01,%ebx
+ 00001f8f	shll	$0x02,%ebx
+ 00001f92	addl	%ecx,%ebx
+ 00001f94	movl	%ebx,0x08(%esp)
+ 00001f98	movl	(%ebx),%eax
+ 00001f9a	addl	$0x04,%ebx
+ 00001f9d	testl	%eax,%eax
+ 00001f9f	jne	0x00001f98
+ 00001fa1	movl	%ebx,0x0c(%esp)
+ 00001fa5	calll	0x00001fd6
+ 00001faa	movl	%eax,0x00(%esp)
+ 00001fae	calll	0x00003000
+ 00001fb3	hlt
+ dyld_stub_binding_helper:
+ 00001fb4	calll	0x00001fb9
+ 00001fb9	popl	%eax
+ 00001fba	pushl	0x00000057(%eax)
+ 00001fc0	movl	0x0000005b(%eax),%eax
+ 00001fc6	jmp	*%eax
+ __dyld_func_lookup:
+ 00001fc8	calll	0x00001fcd
+ 00001fcd	popl	%eax
+ 00001fce	movl	0x0000004b(%eax),%eax
+ 00001fd4	jmp	*%eax
+ _main:
+ 00001fd6	pushl	%ebp
+ 00001fd7	movl	%esp,%ebp
+ 00001fd9	pushl	%ebx
+ 00001fda	subl	$0x14,%esp
+ 00001fdd	calll	0x00001fe2
+ 00001fe2	popl	%ebx
+ 00001fe3	leal	0x00000015(%ebx),%eax
+ 00001fe9	movl	%eax,(%esp)
+ 00001fec	calll	0x00003005
+ 00001ff1	addl	$0x14,%esp
+ 00001ff4	popl	%ebx
+ 00001ff5	leave
+ 00001ff6	ret
+ ||<
+ Hmmm? There's no "Hello" literal to begin with, is there?" I wonder if the "Hello" string or the reference to printf is somewhere else in a constant table or something.
+ 
+ - Vista's blue screen is translucent and gradient.
+ 
+ - 10:56 I've reached the point where I can watch the standard output of the child process and play the specified sound when a particular pattern of strings appears. The spur-of-the-moment project, as is typical at training camps, is over, and it's back to ActionScript.
+ 
+ - It turns out that Rascut, like sed, blocks at the point where it reads the standard output of the child process. Disappointing.
+ 
+ - Option -t in -otool to display the text section and -d to display the data section
+ - No objdump.
+ - I did a hexdump -C a.out and it was in there.
+ - I did strings a.out and got it right.
+ - It seems that it is in there but just not being captured properly by otool. I wonder if there is some option that is different.
+ 
+ 
+ - If I downloaded a Zip file on my Mac and unzipped it and found a single executable file, I would start it thinking it was an installer, which is a Windows habit, but it usually isn't. Cmd+N to open a new Finder and copy it to Applications. Copy to Applications.
+ 
+ -display the path in the title bar of each window in the finder - yes > /dev/null
+ --http://d.hatena.ne.jp/elim/20080403/show_the_path_in_the_windows_title
+ - I see that when I killall Finder, the desktop icons disappear too. So the transparent window is at the bottom.
+ - I can see the POSIX path in the title bar, but I guess I can't copy and paste this. on Windows, I can use Explorer favorites and WSH to do bookmarklet-like things, but what if I want to extend the Finder on a Mac?
+ 
+ 
+ - install Gimp2.2.11
+ -- http://gimp-app.sourceforge.net/
+ 
+ - Opt+Cmd+Eject will put Mac to sleep.
+ - Putting it to sleep disconnects the e-mobile connection.
+ - Activate the screensaver
+ 
+ - "Yasukazu Nishio" is a pseudonym.
+ 
+ -Strolling
+ -Kurobe River
+ --Where is the Kurobe Dam?
+ f:id:nishiohirokazu:20080405123131j:image
+ 
+ -Encountering the festival
+ --I'm going home for lunch.
+ 
+ -Ama is sleeping so I have one extra lunch. Can I leave it there?
+ 
+ - via @KKI_ Introduction to Mach-O Practical http://d.hatena.ne.jp/mteramoto/20070121/p2
+ >||
+ $ otool -s __TEXT __cstring -v a.out
+ a.out:
+ Contents of (__TEXT,__cstring) section
+ 00001ff7  Hello!
+ ||<
+ -Oh, there it is.
+ 
+ -How do you ssh from a Mac with public key cryptography, I've only done it with putty.
+ 
+ -I concluded that buying a large, properly blurring camera would produce better photos than doing HDR with a compact digital camera.
+ 
+ -I can't start GIMP. Died with error.
+ >>
+ Process:         gimp-2.2 [89722]
+ Path:            /Applications/Gimp.app/Contents/Resources/bin/gimp-2.2
+ Identifier:      gimp-2.2
+ Version:         ??? (???)
+ Code Type:       X86 (Native)
+ Parent Process:  Gimp [89702]
+ 
+ Date/Time:       2008-04-05 16:43:03.940 +0900
+ OS Version:      Mac OS X 10.5.2 (9C2015)
+ Report Version:  6
+ 
+ Exception Type:  EXC_BREAKPOINT (SIGTRAP)
+ Exception Codes: 0x0000000000000002, 0x0000000000000000
+ Crashed Thread:  0
+ 
+ Dyld Error Message:
+   Library not loaded: /usr/X11/lib/libfontconfig.1.dylib
+   Referenced from: /usr/X11R6/lib/libXft.2.dylib
+   Reason: Incompatible library version: libXft.2.dylib requires version 3.0.0 or later, but libfontconfig.1.dylib provides version 2.0.0
+ 
+ <<
+ 
+ Wii
+ f:id:nishiohirokazu:20080405170427j:image
+ I lost to hayamiz in both bowling and tennis. At any rate, if you don't hit a rocket serve, it will return to a position where you can't hit it 100% of the time, and it seems to be able to aim at "a position where it will go out if you hit it in a rush in the vanguard".
+ 
+ - I put in a bot that makes a sound when Mario increases or decreases when I say ++ or -- on the 86 camp channel.
+ -- I was saying who will be the first to figure out what's going on, and it was faultier. faultier++.
+ -- hayamiz does not understand the situation and plays itkz audio, etc. hayamiz --.
+ 
+ -Mac's Terminal.app is convenient to create tabs, but I wonder if it is possible to rename the tabs. I forget which tab is which.
+ 
+ -An iPod touch was broken, for example, because sotarok, who understood that sound would be made when he spoke in the 86 development camp chat, put up a +++ barrage of bullets.
+ 
+ -Eating dinner, etc.
+ 
+ -The command to copy in the Mac console is pbcopy, short for paste board.
+ 
+ -A program that reads the standard output of a child process, line by line, expects the readline to complete each time a newline comes in, but some programs block until the program terminates and the standard output is closed, and some don't.
+ -- What is not
+ --- cat
+ --- ruby p
+ -- To be
+ --- python print, sys.stdout.write
+ --- ruby logger
+ --- sed
+ -Rascut does not read well because it uses logger
+ -P after the logger output will also read the logger output itself.
+ -Theories of what flushes output and what does not
+ -Adding stdout.flush to a Python script that does not show up will make it show up.
+ -It is probably impossible to prompt a child process to flush, or for the recipient of a pipe to prompt the sender to flush.
+ -I thought it would be useful to have a script that would look at the standard output and play a sound or growl if it contained a particular pattern, but I was not so naive. Hmmm... Let's give up for now.
+ 
+ The flow of creating a handy server for local use that spits out -crossdomain.xml in web.py.
+ 
+ I wonder if it is possible to change the text that appears on the tabs in -Terminal.app.
+ 
+ - "It's a bug in the OS," (Mr. Ueno)
+ - "It's a Leopard bug, not mine" (Mr. Ueno)
+ 
+ -crossdomain.xml and CSRF Vulnerability
+ --http://d.hatena.ne.jp/secondlife/20070718/1184716398
+ 
+ -How to refer to crossdomain.xml of various sites
+ --Search for "inurl:crossdomain.xml
+ 
+ http://www.adobe.com/crossdomain.xml
+ >||
+ <cross-domain-policy>
+     <allow-access-from domain="*.macromedia.com"/>
+     <allow-access-from domain="*.adobe.com"/>
+ </cross-domain-policy>
+ ||<
+ Adobe only allows it for its own people.
+ 
+ http://api.flickr.com/crossdomain.xml
+ >||
+ <cross-domain-policy>
+     <allow-access-from domain="*"/>
+ </cross-domain-policy>
+ ||<
+ Flickr is bare. However, it has a subdomain called api.filckr.com, which is www.flickr.comのクッキーとかは見えないんだと思う.
+ 
+ -Interact with the server
+ --http://d.hatena.ne.jp/nishiohirokazu/20080405/1207415479
+ -At least we have made the first step in what we were going to do.
+ 
+ -I was actually supposed to hear the sound of Mario's death when I get an error in rascut.
+ 
+ -It's already 26:00. I'm sleepy. Let's go to bed.
+ 
+ *1207358809*[Ruby]Ruby name resolution does not check for siblings of the module you are in.
+ >|ruby|
+ module Foo
+   quux = 1
+   class Bar
+     def baz
+       print quux
+     end
+   end
+   p Bar.new.baz 
+   # undefined local variable or method `quux'
+ end
+ ||<
+ The same is true if you def quux. It seems that the name used in a method of a class without modification is first checked to see if it is a local variable, then traced to its own method, then to a method of the parent class, and so on, stopping at Object.
+ 
+ In Python, an unqualified name checks local variables, traverses to the outer scope, and stops at the global (module scope). self.quux traverses to its own members, to members of the parent class, and so on, stopping at object.
+ 
+ Java allows you to omit this, but I wonder what is going on. I thought that if you created nested classes, you could access variables in the outer classes without modification.
+ 
+ By the way, I was able to call it after modifying it with module_function, but do I have to do it this way? Is there an easier way?
+ >|ruby|
+ module Foo
+   def quux
+     1
+   end
+   class Bar
+     def baz
+       print Foo::quux
+     end
+   end
+   module_function :quux
+   p Bar.new.baz
+ end
+ ||<
+ 
+ *1207380657*Saito-san
+ f:id:nishiohirokazu:20080405162843j:image
+ 
+ *1207415479*[AS3] Communicate with server
+ First, the AS3 code. since it is developed in rascut, the server is up and running on number 3001.
+ >|actionscript|
+ package {
+   import flash.display.*;
+   import flash.events.*;
+   import flash.net.*;
+   
+   [SWF(width="400", height="300", backgroundColor="#eeffee")] 
+   public class Client extends Sprite {
+     public function Client() {
+       var url:String = "http://localhost:8080/api/foo";
+       var loader:URLLoader = new URLLoader();
+       loader.addEventListener(
+ 	Event.COMPLETE, loadCompleteHandler
+       );
+       loader.load(new URLRequest(url));
+     }
+     public function loadCompleteHandler(e:Event):void{
+       log(e.target.data);
+     }
+   }
+ }
+ ||<
+ 
+ 
+ And the other is the server code using web.py. It runs on the local 8080 port.
+ 
+ >|python|
+ import web
+ 
+ urls = [
+ #    "/", "Index",
+     "/crossdomain.xml", "CrossDomainXML",
+     "/api/(.+)", "Api",
+ ]
+ 
+ CROSS_DOMAIN_XML = """<?xml version="1.0"?>
+ <!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
+ <cross-domain-policy>
+     <allow-access-from domain="localhost:3001" />
+ </cross-domain-policy>
+ """
+ class CrossDomainXML(object):
+     def GET(self):
+         print CROSS_DOMAIN_XML
+ 
+ class Api(object):
+     def GET(self, value):
+         print value
+ 
+  
+ if __name__ == '__main__':
+     web.webapi.internalerror = web.debugerror
+     web.run(urls, globals(), web.reloader)
+ ||<
+ 
+ Now you can throw a request from Flash to /api/foo on the server, and the returned "foo" will be displayed in the Firebug console.
+ We are happy and satisfied. Static files can be delivered with rascut -m, and cgi can be added under the api. The first step of prototyping is done.
+ </body>
+ <comments>
+ <comment>
+ <username>nyaxt</username>
+ <BODY>After all, I was mistaken and it was properly committed. My apologies. </body>
+ <timestamp>1207360229</timestamp>
+ </comment>
+ <comment>
+ <username>walf443</username>
+ <body>If you want to use constants, you could make them constants. <BR><BR>Or you can refer to a local variable in the outer scope by setting the class definition to class_eval and the method definition to define_method</body>.
+ <timestamp>1207370204</timestamp>
+ </comment>
+ <comment>
+ <username>gomi-box</username>
+ <body>(o^Wa^o)Wow</body>.
+ <timestamp>1207384885</timestamp>
+ </comment>
+ <comment>
+ <username>yugui</username>
+ It's the same reason why you can't refer to a top-level local variable from within a <body> method. I also think the Python way is more natural, but in Ruby the local variable scope is broken by class and def expressions anyway. <br><br>Although already mentioned, constants will work as expected. </body>
+ <timestamp>1207398204</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-05 https://nishiohirokazu.hatenadiary.org/archive/2008/04/05]

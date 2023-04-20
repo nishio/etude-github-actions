@@ -1,0 +1,32 @@
+Hatena2010-05-16
+code:hatena
+ <body>
+ *1274019204*[Haskell]Monad review in progress.
+ >|haskell|
+ main = do
+   x <- rollDice
+   print x
+ ||<
+ Remove <- from
+ >|haskell|
+ main = do
+   rollDice >>= print 
+ ||<
+ Remove do from
+ >|haskell|
+ main = rollDice >>= print 
+ ||<
+ Simple and easy.
+ http://www.sampou.org/haskell/report-revised-j/exps.html#sect3.14
+ 
+ *1274022280* Changing the medium of expression helps us organize our thoughts.
+ While writing code for Monte Carlo tree search in Python, I realized that it is important not to destructively modify objects that have information about the game board in order not to generate bugs that are ultimately a pain in the ass.
+ 
+ Another thing I noticed is that "a human looks at the board and inputs moves" and "a computer receives a list of possible moves, selects one, and returns it" are essentially the same thing, just with different entities of thought, so they should be the same in the code. I've seen cases where only human input/output is made ad hoc and multiple "decisions" are tied together, but that's not right.
+ 
+ And when I was writing it in Haskell, I thought about the type of "a human looks at the board and inputs a move" and "the computer receives a list of possible moves and returns a random selection", both of which are IO monads. It's [Hand] -> IO Hand.
+ 
+ In Python, there is an argumentless function create_game to initialize a game, but in Haskell, there is no such thing as an argumentless function, because it always returns the same value. In Python, there is an argumentless function create_game to initialize the game, but in Haskell, there is no such thing as an argumentless function, because it always returns the same value, so you can just define that value as the "initial state of the game". But destructive rewriting is the source of bugs.
+ </body>
+
+[Hatena Diary 2010-05-16 https://nishiohirokazu.hatenadiary.org/archive/2010/05/16]

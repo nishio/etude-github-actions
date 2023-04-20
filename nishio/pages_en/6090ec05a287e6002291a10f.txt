@@ -1,0 +1,141 @@
+Hatena2010-10-08
+code:hatena
+ <body>
+ *1286507906*Review of Ruby modules.
+ >|ruby|
+ module Foo
+   def hello
+     puts "hello"
+   end
+ end
+ 
+ Foo::hello 
+ #-> undefined method `hello' for Foo:Module (NoMethodError)
+ ||<
+ 
+ I guess I have to INCLUDE it to use it...
+ 
+ >|ruby|
+ module Foo
+   def hello
+     puts "hello"
+   end
+ end
+ 
+ module Bar
+   include Foo
+   def hello2
+     hello
+     hello
+   end
+ end
+ 
+ def tmp
+   include Bar
+   hello2
+ end
+ 
+ tmp
+ 
+ hello # I can call it.
+ ||<
+ 
+ Well, if you include it, you can use it, but including adds the methods in the module to the class, which is different from importing the function object as a local variable of the method. This is effectively saying, "The contents of the imported module will be dumped into the global scope.
+ 
+ >|ruby|
+ module Foo
+   def hello
+     puts "hello"
+   end
+ end
+ 
+ module Bar
+   include Foo
+   def hello
+     Foo::hello
+     Foo::hello
+   end
+ end
+ 
+ include Bar
+ Bar::hello
+ #-> stack level too deep (SystemStackError)
+ ||<
+ 
+ Ahhhh. I guess I forgot which module it came from and simply mixed it into the Object when I included it. Is the final answer that you can't inherit & override in a module?
+ >>
+ @knu っmodule_function
+ <<
+ 
+ >|ruby|
+ module Foo
+   def hello
+     puts "hello"
+   end
+   module_function :hello
+ end
+ 
+ module Bar
+   def hello
+     Foo.hello
+     Foo.hello
+   end
+   module_function :hello
+ end
+ 
+ Bar.hello
+ ||<
+ 
+ I see, I have to call module_function to become a member of the module object.
+ 
+ *1286540000* Three roles of the class
+ It was discussed in a certain chat room and seemed to drift away, so I reprinted it because it was a waste of time. I reprinted it because it was a waste of time.
+ <hr>
+ MIYAMOTO Daisuke: There is no way to distinguish between type inheritance and implementation inheritance.
+ 
+ Yasukazu Nishio (nishio.hirokazu): I want to inherit the implementation without inheriting the type.
+ 
+ MIYAMOTO Daisuke: Tolerance. For a long time, I didn't realize that a class has two or more responsibilities, "role as type" and "role as implementation". Without realizing this, I can't sort out type inheritance and implementation inheritance in my mind.
+ 
+ Nishio.hirokazu: Adding to what I have recently realized, classes have three roles: user-defined type, tool for creating instances, and unit for reusing implementations.
+ 
+ MIYAMOTO Daisuke: Ah, the instance generator.
+ 
+ Yasukazu Nishio(nishio.hirokazu): Java's interface is simple because it only takes out the role of "type", while scripting languages with weak types are simple because there is no role of "type". Ruby makes multiple inheritance easy to understand by treating modules as "units of implementation reuse" without the ability to "instantiate" them.
+ 
+ MIYAMOTO Daisuke: I see... I'm not familiar with Ruby, but I see... Java's abstract class also abandons its role as a tool to create instances.
+ 
+ Yasukazu Nishio(nishio.hirokazu): I see. So it's not just the interface. I see... "type" also plays a role, which makes it complex... I see. I now understand why it's easier to learn object-oriented programming in a scripting language.
+ 
+ MIYAMOTO Daisuke: Yeah, I got the same idea, "In a weakly-typed scripting language, it's simpler only because there is no role of "type"". ↑I'd like to get up to speed on this.
+ 
+ <hr>
+ 
+ The reason I wrote about my recent realization is that I read in a paper by Traits that classes have the role of "tools for creating instances" and "units for reusing implementations," and that these two roles are in conflict with each other. Then, as I realized after being told in the chat room, statically typed languages also have the role of "user-defined type," which of course does not necessarily match the role as a "unit of reuse. But there are many cases where inheritance is used for the sake of reuse, which is why Liskov's substitution principle and the like are often mentioned.
+ 
+ In that sense, the idea of putting an interface into a dynamically typed language may not have been so bad.
+ </body>
+ <comments>
+ <comment>
+ <username>knu</username>
+ <body>module_function is an instruction that makes the specified instance method private and still creates a singleton method of the same name in the module. <br>(<module/class> method = singleton method of that <module/class> object)<br><br><br>include Foo<br>hello<br><br>is called by the former, <br><br>Foo.hello<br> is called by the The latter is the one called by <br><br>Foo. <br><br>include If you are not using it to do Foo, just define the latter, so simply <br><br>def Foo.hello<br> # . <br><br>end<br><br> is OK. However, normally, you would want to write it in a module Foo ... end. end<br><br>module Foo<br> def self.hello # self here refers to Foo<br> end<br><br> def do_smtn # this will be an instance method<br> end<br><br>end<br><br><br><br>. >. </body>
+ <timestamp>1286538976</timestamp>
+ </comment>
+ <comment>
+ <username>otn</username>
+ <body>< weak type<br>> variable of untyped or dynamic type</body>
+ <timestamp>1286634129</timestamp>
+ </comment>
+ <comment>
+ <username>otn</username>
+ <body>The third line of code, line 10, <br> Foo::hello<br>, is super if you want to call hello defined in the module Foo. <br><br>Foo::hello is the same as Foo.hello, which calls Foo as self (at that point) and calls hello, so it is a recursive call. </body>
+ <timestamp>1286639533</timestamp>
+ </comment>
+ <comment>
+ <username>Too</username>
+ <body>module is a mechanism for limited multiple inheritance, and include plugs the module into the inheritance path. <br>module B;end<br>class A;end<br>p A.ancestors # => [A, Object, Kernel]<br>class A<br> include B<br>end<br>p A.ancestors # => [A, B, Object, Kernel]<br>So you can't just take individual methods. Kernel]<br>So you can't do things like fetch individual methods. <br>Also, it is not possible to overwrite methods of your own class. <BR><BR>Class (module) methods have little to do with instance methods. <BR><BR>A class (module) method is not really related to an instance method, it is just a specific method defined in the class (module) itself. <BR>That makes it cumbersome to use modules namespace-wise, which is why we have the module_function method. <BR><BR>The top level is the same as being inside an Object class. <br>Including at the top level will include you in the Object class, so you can call methods globally. <br>As a result, you can call them even from class objects. <br>module Foo<br> def bar() :Foo_bar end<br>end<br>include Foo<br>class Bazz; end<br>bar #of course you can call it from the top level<br>Bazz.new.bar #of course you can call it from instances<br Foo.bar # of course you can call it from the module object<br>p Foo.class.ancestors # => [Module, Object, Foo, Kernel]<br><br>By the way<br>the top level methods are defined in Object because they are It is a global function-like private method, but<br>it is only a method. A receiver exists. <br>def tmp<br> include Math<br>end<br>tmp # It means self.tmp() but it is a private method, so you cannot make a method call with a receiver. <br>In this case Math is included at the top level (Object class). </body>
+ <timestamp>1287988337</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-10-08 https://nishiohirokazu.hatenadiary.org/archive/2010/10/08]

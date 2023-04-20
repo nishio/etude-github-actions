@@ -1,0 +1,46 @@
+Hatena2009-06-05
+code:hatena
+ <body>
+ *1244176717* Guess the hidden identity type game
+ In a game where the identity is hidden and the clues are collected to guess the identity in a logical puzzle style, if the player mistakenly answers "not p" to a question that should really be answered with "p", a big problem will occur, right? So why not make it a bluff from the beginning? You can lie, but if it is pointed out that you are lying, you will die immediately. Of course, if the person who pointed it out is also wrong, it is an instant death. I wonder if we can make a new game with that kind of design.
+ 
+ 
+ As a simple example, consider a game in which the hidden information is an integer between 0 and 99, and the players are asked a question that can be answered in y/n. Aside from how many people play, everyone has one number each. The best solution is obviously to cut the number in half and half, which is not interesting, but here we have an idea: "The answer in y/n can be lied as many times as you want. The person who receives the solution can declare a Doubt, in which case the hidden information is disclosed only to the person who declared it to confirm whether the solution is correct or not. It would be interesting to introduce a rule that "the person whose claim is wrong loses on the spot.
+ 
+ 
+ Games not converging?
+ 
+ 
+ Does it become less interesting when someone plays completely random?
+ 
+ *1244217724*Perfect Shuffle
+ >|python|
+ >>> def shuffle(xs):
+ ...     before = xs[:len(xs) / 2]
+ ...     after = xs[len(xs) / 2:]
+ ...     shuffled = []
+ ...     for i in range(len(xs) / 2):
+ ...             shuffled.append(before[i])
+ ...             shuffled.append(after[i])
+ ...     return shuffled
+ ... 
+ >>> shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+ [1, 6, 2, 7, 3, 8, 4, 9, 5, 10]
+ >>> def check(n):
+ ...     cards = range(n)
+ ...     xs = cards
+ ...     for i in range(n * 2):
+ ...             xs = shuffle(xs)
+ ...             if xs == cards:
+ ...                     return i + 1
+ ... 
+ >>> check(52)
+ 8
+ >>> check(54)
+ 52
+ >>> [check(x) for x in range(2, 200, 2)]
+ [1, 2, 4, 3, 6, 10, 12, 4, 8, 18, 6, 11, 20, 18, 28, 5, 10, 12, 36, 12, 20, 14, 12, 23, 21, 8, 52, 20, 18, 58, 60, 6, 12, 66, 22, 35, 9, 20, 30, 39, 54, 82, 8, 28, 11, 12, 10, 36, 48, 30, 100, 51, 12, 106, 36, 36, 28, 44, 12, 24, 110, 20, 100, 7, 14, 130, 18, 36, 68, 138, 46, 60, 28, 42, 148, 15, 24, 20, 52, 52, 33, 162, 20, 83, 156, 18, 172, 60, 58, 178, 180, 60, 36, 40, 18, 95, 96, 12, 196]
+ ||<
+ </body>
+
+[Hatena Diary 2009-06-05 https://nishiohirokazu.hatenadiary.org/archive/2009/06/05]

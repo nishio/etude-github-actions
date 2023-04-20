@@ -1,0 +1,133 @@
+ARC115
+[https://gyazo.com/b8d7fb3553b8ace653c7aceddae22b35]
+
+[A - Two Choices https://atcoder.jp/contests/arc115/tasks/arc115_a]
+	[https://gyazo.com/212f28de9c9de61956362931745f2ad3]
+	Where there is a discrepancy between the answers for Si and Sj [$ S_i \oplus S_j].
+　If the discrepancies are even, the number of correct answers may match, if they are odd, there is no possibility.
+　So for each digit we can take xor and see if it is 1: [$ \bigoplus (S_i \oplus S_j)]
+	where xor is an operation that satisfies [the coupling rule], so the order can be changed: [$ \bigoplus (S_i) \oplus \bigoplus (S_j)]
+　This still loops for i and j, so it would take 10^10 calculations.
+　　What to do with this?
+　　 →Typical approach [frequency table].
+　　 　A technique that can be used when the value type K is much less than N
+　　 　[$ O(N)] Pay to get the number of pieces of each type first
+　Then the computation of the same value combination can be performed together, so [$ O(N^2) \to O(K^2)].
+　　This time K=2
+　　Pay [$ O(N)] and find the number x of those for which [$ \bigoplus (S_i)] is 1 first
+　　	[$ \sum_{ij} \left(\bigoplus S_i\oplus \bigoplus S_j\right) = x^2(1 \oplus 1) + x(N-x)(1 \oplus 0) + (N-x)x(0 \oplus 1) + (N-x)^2(0 \oplus 0) = 2x(N-x)]
+   This does not distinguish between large and small i, j, so the answer can be obtained by [half of the matrix
+	code:python
+	 def main():
+      N, M = map(int, input().split())
+      s1 = 0
+      for i in range(N):
+          S = input().strip()
+          s = S.count(b"1")
+          if s % 2:
+              s1 += 1
+      print(s1 * (N - s1))
+
+[B - Plus Matrix https://atcoder.jp/contests/arc115/tasks/arc115_b]
+	[https://gyazo.com/a694c4a33447bb3a70860025f720bf3f]
+	If there exist A, B satisfying the condition [$ R_j = \sum_i C_{ij} = \sum_i A_i + NB_j]
+	[$ \min(R_j) = \sum_i A_i + N\min(B_j)], but can be set as [$ \min(B_j) = 0
+	　[$ \min(B_j) = m > 0], since subtracting m from all Bs and adding m to all As does not change the result
+	So [$ \min(R_j) = \sum_i A_i ], so [$ B_j = (R_j - \min(R_j)) / N ], [$ A_i = C_{i1} - B_1]
+	Find C again with the obtained A and B, and check if it is constructed correctly.
+	code:python
+	 def solve(N, CS):
+      sums = [sum(row) for row in CS]
+      m = min(sums)
+      if any((x - m) % N for x in sums):
+          return ()
+  
+      AS = [(x - m) // N for x in sums]
+      BS = [x - AS[0] for x in CS[0]]
+      if any(x < 0 for x in BS):
+          return ()
+      NCS = [tuple(AS[i] + BS[j] for j in range(N)) for i in range(N)]
+      if NCS != CS:
+          return ()
+      return (AS, BS)
+
+[C - ℕ Coloring https://atcoder.jp/contests/arc115/tasks/arc115_c]
+	[https://gyazo.com/286922e95294477de92fa09d8e95ba10]
+	Think small first.
+	　[https://gyazo.com/7cd9acefc328bf0af985f0ba690b1463]
+	　When you draw this far, you realize, "Oh, the number of prime factors.
+	proof
+	　Items with K prime factors cannot be divisors of each other.
+	　　So you can paint them the same color.
+	　Those with K prime factors always have at least one divisor with prime factors less than K.
+	　　So it has to be a different color than those
+	code:python
+	 def main():
+      N = int(input())
+      ret = []
+      for i in range(1, N + 1):
+          f = get_factors(i)
+          x = sum(f.values()) + 1
+          ret.append(x)
+      print(*ret)
+
+[D - Odd Degree https://atcoder.jp/contests/arc115/tasks/arc115_d]
+	[https://gyazo.com/bb3e3f994e962d2cb44889a9428d5ff3]
+	I looked at it for a while and thought, "I guess I need to find the connected components," but I didn't know where to go from there, so I first created a code to solve it with a full search.
+	code:python
+	 def blute(N,M,edges,edgelist):
+      ret = [0] * (N + 1)
+      for i in range(2 ** M):
+          deg = [0] * N
+          for j in range(M):
+              if i & (1 << j):
+                  a, b = edgelist[j]
+                  deg[a] += 1
+                  deg[b] += 1
+          r = sum(x % 2 for x in deg)
+          ret[r] += 1
+      return ret
+　What we learned from observation
+　　[https://gyazo.com/c07f96ce39dd2afdbcf7bda1862bf1e9]
+　　[https://gyazo.com/36e9f877df3d307abe3561d27a346dcd]
+　　If not connected, find each and fold
+　mounting
+　　Count the number of vertices and edges of connected components with UnionFind
+　　Create and set up an inverse/factorial table and calculate for each connected component
+　　Fold each of them in.
+　Result TLE
+　Post-Contest AC
+　　Cause of TLE: Using FFT library to compute convolution
+　　　If you folded in a rustic loop, it was AC.
+　code:py
+　 def solve(N,M,edges,edgelist):
+      init_unionfind(N)
+      for x, y in edgelist:
+          unite(x, y)
+      comps = []
+      for x in range(N):
+          if find_root(x) == x:
+              comps.append((num_edges[x], num_vertex[x]))
+  
+      MOD = 998_244_353
+      comb = CombinationTable(N + 10, MOD).comb
+  
+      ret = None
+      for e, v in comps:
+          xs = [0] * (v + 1)
+          xs[0] = 1
+          for i in range(1, (v // 2) + 1):
+              xs[i * 2] = comb(v, 2 * i)
+          if e > v - 1:
+              m = pow(2, e - (v - 1), MOD)
+              xs = [x * m % MOD for x in xs]
+          if ret is None:
+              ret = xs
+          else:
+              ys = ret
+              ret = [0] * (len(xs) + len(ys) - 1)
+              for i in range(len(xs)):
+                  for j in range(len(ys)):
+                      ret[i + j] += xs[i] * ys[j]
+                      ret[i + j] %= MOD
+      return ret            

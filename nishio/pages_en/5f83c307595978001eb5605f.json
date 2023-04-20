@@ -1,0 +1,152 @@
+ARC105
+A and B were solved and the rate increased slightly. The rest of the time was spent reading and discussing all the problems.
+[I am thinking about how to develop the "ability to come to a conclusion" by verbalizing my thinking process on difficult problems and comparing it to official explanations and articles by strong people in order to find discrepancies.
+
+By the way, I am in 956th place with a performance of 1357, but the fastest person with the same score is in 599th place with a performance of 1657, so it may actually be effective in the short term to increase the speed of answering gray difficulty questions.
+
+[A - Fourtune Cookies https://atcoder.jp/contests/arc105/tasks/arc105_a]
+	[https://gyazo.com/965ded9d0465682f4ac72c2cd98a84b0]
+	Thoughts.
+	　There are four, so there is plenty of room for a total hit.
+	　code:python
+	　 def solve(XS):
+       S = sum(XS)
+       if S % 2 == 1:
+           return False
+       goal = S // 2
+       for i in range(16):
+           s = 0
+           for j in range(4):
+               if i & 1:
+                   s += XS[j]
+               i >>= 1
+           if s == goal:
+               return True
+       return False
+   
+   
+   def main():
+       # parse input
+       XS = list(map(int, input().split()))
+       if solve(XS):
+           print("Yes")
+       else:
+           print("No")
+	　I'm exploring the entire subset in bits.
+　Official Explanation
+　　[Sorting does not lose generality].
+　　There are only two patterns that satisfy the equality condition when sorted
+　　D and C, D and B can't be in the same group.
+　　　D + C > B + A (D > B, C > A)
+　　　D + B > C + A (D > C, B > A)
+
+[B - MAX-=min https://atcoder.jp/contests/arc105/tasks/arc105_b]
+	[https://gyazo.com/7d51225e7e98ca2a831dfb93e0d14dfa]
+	Thoughts.
+	　Consider N=2
+	　Three patterns of what happens after X is set to X-x
+	　　When still large → -x
+	　 　In short, mod x
+	　 Time of equal -> End
+	　 When small → replace
+	　 　This [Euclid's reciprocal division].
+		code:python
+		 def solve(XS):
+       from math import gcd
+       from functools import reduce
+       return reduce(gcd, XS)
+
+[C - Camels and Bridge https://atcoder.jp/contests/arc105/tasks/arc105_c]
+	[https://gyazo.com/869d181ba8e1c413aad6abdaae58d06b]
+	Thoughts.
+	　N is 8, so you can check against all the sequences.
+	　　Since 8!=40320
+	　If there is one bridge
+	　　We can divide them into groups of less than v and l intervals.
+	　　Unfeasible only when there is a camel heavier than v
+	　What if there is more than one?
+	　　For example, a bridge of the same length with a higher load-bearing capacity can be ignored.
+	　　Short bridges with the same load-bearing capacity can be ignored.
+	　　Is the whole order established on the strength of the condition?
+	　　　thoughtless person
+	Official Explanation
+	　I'm not sure.
+　　>Pre-calculate the minimum distance between the right and left ends of all camel subsets and then search for all permutations with DP
+　　 https://twitter.com/googol_s0/status/1315308927156846593?s=21
+　　I see, so if the "sum of their weights" for all the sub-columns exceeds the load-bearing vi, then "the ends are more than li apart", and if not, then 0 is fine.
+　　　The sum of the weights of the subcolumns is a cumulative sum of constant order
+　　From M=100000 bridges, we need to find the longest one with a load capacity less than a given weight w
+　　　If we do this naively with O(M), we're not going to make it.
+　　　Keep sorted by load capacity and search dichotomously.
+　　　Range max...segment tree?
+　　　One end of the Range is fixed, so you can take the cumulative max beforehand.
+　　　Now logarithmic order
+　　What then?
+　　　They say DP [longest path search].
+　　　If I'm going to use a library, I guess I can use [least cost flow] with [negative cost].
+
+[D - Let's Play Nim https://atcoder.jp/contests/arc105/tasks/arc105_d]
+	[https://gyazo.com/0c7dfdbf04c7708f8ea734260f888b1c]
+　Thoughts.
+ 　Nim, so if xor is 0 after the action, you win.
+ 　Based on this, a game to compete for the placement of coins.
+ 　Can't it be reversed if xor on the way is large enough?
+ 　　No, for example, 4 and 3 can be 0 at +1 when xor is 7
+　　There are so many possible distribution methods that some kind of compression would work, but I can't think of any.
+　Official Explanation
+　　The evenness of N changes the game.
+　　　[I should have done that.
+　　>The first player repeats the move "choose the plate with the most coins on it and the bag with the most coins in it".
+　　 How could we have recognized this strategy?
+　　>To try it out, I implemented the all-search solution method when the number of 3 is less than 10, and as a result, the first move does not win at all!
+　　 https://maspypy.com/atcoder-参加感想-2020-10-12arc105
+　　　I see [solving small problems by force and observation].
+　　>I have a hard time judging when there are so many mountains.
+  > If you don't want to have too many mountains, you must want to consolidate the opposite side in one place as much as possible, and in such cases, it is often important whether you have a majority or not
+　　　https://beet-aizu.hatenablog.com/entry/2020/10/12/140532
+　　　I see
+
+[E - Keep Graph Disconnected https://atcoder.jp/contests/arc105/tasks/arc105_e]
+	[https://gyazo.com/b574e16286d6e80922242bcf36153666]
+	Thoughts.
+　　Isn't there a fixed number of tree edges in the whole area, so it's not a game?
+　　Ah, well, it's not always a tree.
+　　If you keep avoiding connecting 1 and N on your turn, you end up with two complete graphs
+　　The number of vertices in the final complete graph changes depending on which vertex is connected to which vertex that is not connected to 1 or N in the starting phase.
+　　　Games to compete in this
+　　　Not a "vertex" but a "connected component"?
+　　even-odd edges of a complete graph
+　　　Odd when the remainder of the number of vertices divided by 4 is 1,2
+　　I don't know where to go from here.
+　Official Explanation
+　　When does the first move win?
+　　Even-odd cases of the number of vertices in the original graph
+　relevance
+　　I hear it's similar in structure to [Tutte's theorem].
+
+[F - Lights Out on Connected Graph https://atcoder.jp/contests/arc105/tasks/arc105_f]
+	[https://gyazo.com/7e2b618d0324a5fd22cea014ba400fc2]
+　Thoughts.
+　　Select a vertex and invert the color of the connected edges.
+　　The color of the edges can be blue.
+　　When can it be done?
+　　　write for the purpose of examining
+　　　Two-part graph?
+　　Yes
+　　 It's an inversion, so it doesn't make sense to pick the same vertex over and over again.
+　　 Separate selected and unselected vertices.
+　　 There is no edge connecting the selected vertices to each other and the not selected vertices to each other (it would be red).
+　　 This is a two-part graph
+　　Must also be consolidated.
+　　To determine whether a graph is bipartite or not, it is OK if it is painted by DFS and no inconsistency occurs [bipartite graph determination].
+　　17 vertices, so it's not that slow to DFS.
+　　Try all 2^17 graphs, about 130,000 of them, so ants (wrong).
+　　 2^136, no, because the shoulder of 2 is the number of sides.
+　　Can we compress the search space in DP terms?
+　　Can't we just add and subtract one edge and make it work?
+　　　A bipartite graph with edges taken from it is also bipartite
+　　　Graphs that are connected and whose edges are added are also connected
+　　　I don't know what to do with it since it's both.
+　Official Explanation
+　　Good to the point where I thought of it as a consolidated bipartite graph.
+　　I have no idea even after looking at the official explanation.

@@ -1,0 +1,84 @@
+Hatena2011-06-16
+code:hatena
+ <body>
+ *1308227965* English Vocabulary Diary 7
+ **Past Articles
+ -<a href='http://d.hatena.ne.jp/nishiohirokazu/20110607/1307450595'>I started the "After 30, I memorized 3000 words English vocabulary memorization system"</a>.
+ -<a href='http://d.hatena.ne.jp/nishiohirokazu/20110608/1307535139'>"After 30, I memorized 3,000 words, English vocabulary memorization system" Day 2 Diary</a>.
+ -<a href='http://d.hatena.ne.jp/nishiohirokazu/20110609/1307630086'>"After 30, I memorized 3,000 words, English vocabulary memorization system" Day 3 Diary</a>.
+ -<a href='http://d.hatena.ne.jp/nishiohirokazu/20110610/1307715975'>English Word Diary 4</a> <a href='http://d.hatena.ne.jp/nishiohirokazu/20110612 /1307885250'>English Vocabulary Diary 5</a> <a href='http://d.hatena.ne.jp/nishiohirokazu/20110615/1308097323'>English Vocabulary Diary 6</a>
+ 
+ ** Previous
+ >||
+ 7/7  1m 29
+ 6/22 8d 35
+ 6/19 4d 10
+ 6/17 2d 16
+ 6/16 4d 26
+ working 19
+ ||<
+ 
+ **Test today (16th)
+ Day 4 review test 26 sheets, time required 2m40, OK 26 sheets. rescheduled to 6/24. The test took about 5 to 10 seconds per piece.
+ 
+ **I'm starting to lose a sense of accomplishment...
+ I'm talking about how to produce a sense of accomplishment, but anyway, today is the 9th day since I started on 6/7, and in those 9 days, "61 of the word cards that I made mistakes on in the past or made new ones from the dictionary have been successfully tested 3 times in a row". Review, and then the second successful review, and then the fourth successful review, so what is now the 8th review is the one that has been successfully tested three times. So you're remembering at a rate of 7 cards per day.
+ 
+ This pattern of writing down all the information about what and how much is scheduled doesn't give me a sense of accomplishment, because it's too much information. Let's score it as follows: 1 point per card being studied, 2 points for one successful card, 3 points for two successful cards....
+ >|python|
+ import sys
+ import re
+ data = sys.stdin.read()
+ PAT_NUM = re.compile(r".* (\d+)$")
+ labels = {"working": 0, "2d": 1, "4d": 2, "8d": 3, "16d": 4, "1m": 5, "2m": 6, "4m": 7}
+ num_cards = [0] * 10
+ total = 0
+ for line in data.strip().split("\n"):
+     num = int(PAT_NUM.match(line).groups()[0])
+     total += num
+     for k in labels:
+         if k in line:
+             num_cards[labels[k]] += num
+ 
+ print num_cards
+ print "total:", total
+ print "score:", sum((i + 1) * num_cards[i] for i in range(len(num_cards)))
+ ||<
+ As of yesterday, I had a total of 135 cards and a score of 473. The score is now 499, an increase of 26 points due to the fact that I just answered all 26 cards correctly on the Day 4 review test. Oh. One point to go!
+ 
+ To increase your score, you need to study new words and add cards, or answer correctly on a test. You have to wait a certain amount of time before you can try the test, so the game is structured like a ranching game. In this game, you can easily increase your score by adding new words. Well, that's okay.
+ 
+ ** Today's final state
+ >||
+ 7/7  1m 29
+ 6/24 8d 26
+ 6/22 8d 35
+ 6/19 4d 10
+ 6/18 2d 23
+ 6/17 2d 16
+ working 1
+ 
+ [1, 39, 10, 61, 0, 29, 0, 0, 0, 0]
+ total: 140
+ score: 527
+ ||<
+ 
+ I added a new card to WORKING today and then tested it, but then the card I added would suddenly start with a review 2 days later. I should test the cards I added yesterday before adding them.
+ 
+ - A:working test
+ - B: Test of the day's review items
+ - C: Make word cards for words you did not understand by reading English sentences, etc.
+ The order should be.
+ 
+ **Target Setting
+ Scores will increase by one point for each correct answer to the test and one point for each additional card. There are 49 tests to be done in the next 3 days, so there should be room for about 80 more in the next 4 days (Friday, Saturday, Sunday, and Monday) and a score over 600 if we maintain the current status. Let's make this the minimum. So, let's set another goal that is a bit more challenging and I don't know if I can do it or not. I thought, "Well, I don't know how much I should set a goal, but I should simply try to beat my previous record every day. Today I got 28 points, so tomorrow I'll aim for 30 points.
+ 
+ Oh, no, no, no, no, no. Every day I have to surpass the previous day's score" is an unattainable goal. Bad pattern of goal setting. Also, I didn't study on Saturday last week.
+ 
+ - Current Goal: 600+ points by the end of Monday
+ - Challenge goal: 30 points tomorrow
+ - Challenge Goal: Study on Saturday and earn at least 32 points.
+ - Challenge Goal: Study on Sundays and earn at least 34 points.
+ </body>
+
+[Hatena Diary 2011-06-16 https://nishiohirokazu.hatenadiary.org/archive/2011/06/16]

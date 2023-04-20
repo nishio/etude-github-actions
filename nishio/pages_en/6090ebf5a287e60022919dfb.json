@@ -1,0 +1,290 @@
+Hatena2008-03-06
+code:hatena
+ <body>
+ *1204768780*I'm in the Prudential Tower.
+ 
+ For some reason, I suddenly felt hungry. I went to the restroom at the station, but had to run right back in again. Would I make it to the office?
+ 
+ *1204774379*[Mac]MacBook Day 2
+ -Summary of what I did after buying a MacBookAir - devlog.holy-grail.com
+ --http://d.hatena.ne.jp/HolyGrail/20080305/1204729899
+ --- HolyGrail++ for reference
+ 
+ >>
+ First things first.
+ 
+ Reinstall OSX.
+ <<
+ 
+ I'm in tears!
+ 
+ Brilliantly passed through.
+ 
+ >>
+ Basically, applications are launched from QuickSilver, so remove the icon from the Dock.
+ <<
+ 
+ Yesterday I didn't like all the weird stuff in iMovie or whatever, so I Ctrl+Clicked it and found "Remove from Dock", so I deleted it.
+ I didn't delete "System Preferences" because I didn't know how to do it in QuickSilver, but I typed "sys" to try it out and it came up, so I deleted that too.
+ Oh, what the heck, just drag it out of the dock and it will disappear.
+ 
+ >>
+ Disable Spotlight shortcut keys (→ to assign Ctrl+Space to invoke QuickSilver)
+ <<
+ 
+ Yeah, this was the first thing I did when I installed QuickSilver.
+ 
+ >>
+ Check to automatically hide/show the Dock (→ always show because it gets in the way at MacBook resolution).
+ <<
+ Changed in sys→Personal→Dock.
+ 
+ >>
+ Corner setting in Expose
+ <<
+ 
+ I've set this up but haven't used it much. Can't I just use the key "all windows" to bring up Expose?
+ 
+ - Keyboard -> "Use all keys such as F1, F2 as standard function keys" turned ON
+ -- The dashboard is now assigned to F12, but pressing F12 would turn off mute, which was a discouraging initial state, but has been resolved.
+ - Expose and Dashborad were assigned to F3 and F4, so F2 was set to Desktop and F5 to Spaces.
+ 
+ Oh, it says.
+ >>
+ Enable "Use all keys, including F1 and F2, as standard function keys" in keyboard settings
+     * F1 and F2 behavior has been changed since the new iMacs (black-rimmed Vine and Techa LCDs).
+ <<
+ 
+ Continued.
+ 
+ >>
+ Security requires a password when waking from sleep or screen saver (→ as it is often carried outside).
+ <<
+ 
+ OK.
+ 
+ >>
+ Change the screen saver (→ I think the default setting was to use the Picture library as the screen saver).
+ <<
+ It was the one with the beautiful things undulating.
+ 
+ >>
+ Turn off Bluetooth (→ as there are few situations where it is needed)
+ <<
+ 
+ I tried it with a Wiimote I had on hand, but it didn't connect because it asked me to input the passkey on the Wiimote side, so I just turned it off for now.
+ 
+ >>
+ Trackpad settings (-> only the parts that have been set since I don't remember the default settings)
+ <<
+ 
+ I just noticed that if I open the preferences screen and type in track, I can narrow down the list by Ctrl+Space, then sys, Enter, track, Enter. I'll use ^Sp,sys,En,track,En hereafter.
+ 
+ And the settings screen looks very different from mine. At first, I turned on "click operation" and now I can click by tapping. I turned on "Drag operation", but I don't really understand the change. Oh, I can zoom in by holding down Ctrl and dragging with two fingers.
+ 
+ >>
+ Enable full keyboard access (Ctrl+F7 to enable)
+ <<
+ 
+ Oh wow.
+ 
+ - Witch in.
+ - Also available at http://www.ustream.tv/nishio/
+ - PyOSA was added (by mistake).
+ - Carbon Emacs is installed.
+ - I noticed while writing this article that there is no Page Down. I was able to sukuroor it, so that's okay.
+ 
+ -AppFresh
+ --http://osx.iusethis.com/search?q=appfresh
+ --I've heard that this makes it so people don't have to manually write down what they've installed or anything like that.
+ --This site iusethis seems to be a place where everyone can publish information about what they are using.
+ 
+ -Cmd+BS to delete files, Cmd+E to Eject
+ -It turned out that Firefox was not installed (it had been started from within the dmg) (I couldn't eject it).
+ 
+ ----
+ >>
+ >To assign Ctrl+Space to a QuickSilver call
+ I vote for getting teary-eyed trying to select a range in Emacs.
+ (I assign it to Option+Space > QS)
+ <<
+ 
+ Oh, yeah. Indeed. I did too.
+ 
+ ----
+ 
+ I don't know what key to use to display the menu.
+ Firefox location bar is Cmd+L
+ 
+ ----
+ From the comments on the Hatebukes
+ >>
+ HolyGrail I feel like I am training Mr. Nishio! Hahahaha...
+ <<
+ Wait, wait, it's MacBooks we're training, not BL. t
+ 
+ ----
+ I gave up because AppFresh was crashing.
+ 
+ Oh, I got it: http://osx.iusethis.com/user/nishio
+ 
+ ----
+ If we have a highly customizable tool (e.g., MacBook), what would be the appropriate format for a site to share information about its customization? It would be nice to share not only information about the software installed, but also about how it was configured and for what purpose it is useful.
+ 
+ *1204787305*[Python][Mac]IPython
+ InstallationOSXLeopard - IPython
+ http://ipython.scipy.org/moin/InstallationOSXLeopard
+ Something is failing to compile, so let's drop egg by wget and put it in /Library/Python/2.5/site-packages.
+ 
+ I didn't have wget, but I had curl, so I looked up how to use it.
+ http://www.big.or.jp/~crane/cocoa/0800_internet/curl/
+ They say curl -O URL will get the URL and save it.
+ 
+ Done, done, IPython is up and running. Hmmm...it ignores me when I use Japanese input.
+ 
+ http://ipython.scipy.org/doc/manual/node4.html
+ 
+ *1204792451*[Python]__hash__ can be in the hash without
+ From http://d.hatena.ne.jp/morchin/20071130/p1.
+ 
+ >|python|
+ >>> class Foo: pass
+ 
+ >>> f = Foo()
+ >>> d = {}
+ >>> d[f] = 1
+ >>> d[f]
+ 1
+ >>> hash(f)
+ 32015344
+ >>> id(f)
+ 32015344
+ ||<
+ 
+ Hoho.
+ The code for the hash part in object.c looks like this:
+ >|c|
+ long
+ PyObject_Hash(PyObject *v)
+ {
+ 	PyTypeObject *tp = v->ob_type;
+ 	if (tp->tp_hash != NULL)
+ 		return (*tp->tp_hash)(v);
+ 	if (tp->tp_compare == NULL && RICHCOMPARE(tp) == NULL) {
+ 		return _Py_HashPointer(v); /* Use address as hash value */
+ 	}
+ 	/* If there's a cmp but no hash defined, the object can't be hashed */
+ 	PyErr_Format(PyExc_TypeError, "unhashable type: '%.200s'",
+ 		     v->ob_type->tp_name);
+ 	return -1;
+ }
+ ||<
+ It is a mystery why this kind of implementation is used, such as an error only when a hash function is not defined, even though a comparison method is defined.
+ 
+ *1204793507*Calories in HARIBO
+ Rumored to have 343 kcal per 100 grams. 156 kcal for a slice of 6 slices of bread. is this id;hayamiz metabolic flag?
+ 
+ *1204793914*not much to do with readline
+ 1: Read http://d.hatena.ne.jp/jbking/20071222/readline_on_leopard
+ 2: Do easy_install readline
+ 3: ...I'm going to write DEADLINE
+ 4: Oh no, I don't have time to write about how to run IPython on a Mac, I have a deadline for my Jython book! Gasp!
+ 
+ *1204795198*Task and Motivation Management
+ -1: Time consuming, small amount of content, and a lot of learning for me.
+ -2: Large quantities of content that can be made with simple tasks.
+ -3: Checking existing work to improve quality
+ 
+ I should be doing 2 or 3 but I find myself doing 1. I am writing an explanation of how to use multiple inheritance, this term. I'm writing an explanation of how to use multiple inheritance, at this point in time. Aaaaahhh.
+ 
+ *1204796842* Japanese is difficult to understand
+ Inheritance is not necessarily good, or universal, or you can't use inheritance for everything, or multiple inheritance is not necessarily bad, or you can't use multiple inheritance for everything, etc. Well, my understanding is not that wrong in the writings of several people including matz-san I don't want to disparage Java's inability to do multiple inheritance, but it is difficult to convey this to others without causing them to misunderstand.
+ 
+ Reading back, I see scattered passages where it looks like I'm DIS'ing Java when I didn't mean to...
+ 
+ *1204798158*Old text Wikipedia
+ http://incubator.wikimedia.org/wiki/Wp/jpn-classical?uselang=ja
+ 
+ It's funny.
+ 
+ *1204799904*Matsumoto
+ I looked up how to get to Matsumoto. I heard that I could take the Super Azusa from Shinjuku. It seems that I don't have to take a reserved seat, so I don't.
+ 
+ *1204804005* Are you okay with mixing them?
+ >|python|
+ >>> class Foo: pass
+ 
+ >>> class Bar(object): pass
+ 
+ >>> class Baz(Foo, Bar): pass
+ 
+ >>> map(type, [Foo, Bar, Baz])
+ [<type 'classobj'>, <type 'type'>, <type 'type'>]
+ ||<
+ 
+ Oh no, I thought I was getting an error when defining Baz. I have a feeling this will make for some weird puzzles.
+ 
+ *1204814367*A
+ 
+ I forgot the infrared LED.
+ 
+ *1204816816*Mac Book
+ 
+ I have both sinkpad and sinkpad, but it's omoi. I'll take it to DebutCan, but it's omoi.
+ 
+ *1204819046* I want to say this out loud.
+ World ranking of TANTRIX online games in a cool way
+ http://www.tantrix.com/cgi-bin/gs_rankings2.cgi?&myname=nishio
+ There is no way that NISHIO, ranked 15th in the world (1st in Japan) in the world, is me!
+ 
+ TANTRIX itself is interesting and recommended.
+ </body>
+ <comments>
+ <comment>
+ <username>Yoshiori</username>
+ <body>>I vote to assign Ctrl+Space to QuickSilver calls<br>I vote to get teary-eyed trying to select a range in Emacs<br>(I assign it to Option+Space>QS)</body>.
+ <timestamp>1204776929</timestamp>
+ </comment>
+ <comment>
+ <username>Yoshiori</username>
+ <body>By the way, since it is *nix, you can use Emacs keybindings normally even in the text area of a browser...</body>.
+ <timestamp>1204781616</timestamp>
+ </comment>
+ <comment>
+ <username>uemu</username>
+ <body>10.5 and IPython needs jbking's<br><br>http://d.hatena.ne.jp/jbking/20071222/readline_on_leopard</body>
+ <timestamp>1204791601</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I'm wondering if the situation is different than it was then because import readline does not give an error. </body>
+ <timestamp>1204794018</timestamp>
+ </comment>
+ <comment>
+ <username>jbking</username>
+ <body>nishio burns sublimating into a story. </body>
+ <timestamp>1204796509</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>(True story)</body>
+ <timestamp>1204796626</timestamp>
+ </comment>
+ <comment>
+ <username>kuma8</username>
+ <BODY>Ours and the company's gave an error. <br>jbking supported. </body>
+ <timestamp>1204805806</timestamp>
+ </comment>
+ <comment>
+ <username>morchin</username>
+ <body>>The reason for this kind of implementation is described below. It seems to me that they are toppling the specification to the safe side. <br>http://d.hatena.ne.jp/morchin/20071202#p1</body>
+ <timestamp>1204856853</timestamp>
+ </comment>
+ <comment>
+ <username>tkuro</username>
+ <body>2, 3 are done by others...</body>.
+ <timestamp>1204856983</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-06 https://nishiohirokazu.hatenadiary.org/archive/2008/03/06]

@@ -1,0 +1,124 @@
+Hatena2008-10-19
+code:hatena
+ <body>
+ *1224360218*[最中限]最中限オンライン2.0 Delusional Design
+ - Google App Engine is quit.
+ -- because I can't use sockets.
+ - Flash for human-operated clients
+ -- I considered AIR or PyGame, but I want to go install-less.
+ - Protocol is XML-based
+ -- it's easier if the client is Flash.
+ -- I was thinking that people who write AI in C++ or something could at least use libxml.
+ --- If you find it difficult to parse the protocol, you can prepare your own protocol.
+ - Notify client at start of turn (no distinction between AI/Human)
+ - If a time limit is set, if no response is received by then, it will be randomly sent out on its own.
+ - If a player violates a rule (such as playing a card he/she does not have), it is basically assumed that the card was played at random.
+ -- Because it is unpleasant when an AI bug interrupts a game that humans are halfway through.
+ -- Ah, but in the case of a purely AI-on-AI fight, you can lose on the spot.
+ - Chat information can't be sent to humans, but AI doesn't need it.
+ -- or "you can't send them"? To prevent collusion.
+ -- Well, for now, it would be more interesting to not tighten the regulations until there is an AI that can do some real harm.
+ - urgent message
+ -- A message saying that another client has played a card is necessary to play a card that has been hidden by the human client.
+ -- I was thinking of setting up a game with no time limit and saying "AI does not want to make the humans wait, so as soon as the human makes a move, I will make a move too". Especially in Monte Carlo systems, the more time spent, the stronger the AI is, so while the human is struggling, the AI wants to think.
+ - Is there a standard way to describe the protocol?
+ - Draw a state transition diagram for now.
+ 
+ -----
+ - <= Request to start game by specifying AI OR
+ - <= Human opponents
+ - <= Join the "Human Opponent Town" place
+ - => Notification of participant's arrival
+ - <= Game start request
+ - => timeout or
+ - => A: Turn start notification (with various status information)
+ - <= Playing a card
+ - => (repeat A 14 times)
+ - => Game End Notification
+ 
+ -----
+ 
+ 
+ References
+ - <a href='http://journal.mycom.co.jp/articles/2008/07/18/protocolbuffer/'> [How To] No More XML! Protocol Buffer, a Serialization Tool from Google (1) New Technology for Converting Structured Data into Byte Strings | Enterprise | My ComiJournal</a>.
+ -- Interesting, but I can't use it in Ruby or ActionScript.
+ 
+ *1224403658*[Midterm] How can we be strong?
+ I was going to write about how to win at <a href='http://saichugen-online.appspot.com/'>Saichugen Online</a>, but first of all, I don't want you to make a mistake. I don't want you to make the mistake of thinking that I have not yet figured out a clear strategy for how to win. This is a game that has only been around for a short period of time. So, what I'm talking about here is just that "I'm currently playing the game thinking that this is the way to win, and I'm winning against random players.
+ 
+ 1: First, about 6 of the people I've taught the rules of this game to so far have pointed out that card counting works for this. In other words, they pointed out that it would be advantageous to count and remember how many 13s are left and how many 1s are left. Although I think it would be more advantageous to remember than not to remember, card counting is not essential for the time being, since neither I nor AI have learned it at all at present.
+ 
+ 2: At the meeting of Young Information Science players, I was aware that the cards on both ends are trump cards, so it is better to leave them for the end. However, when Mr. tmatsuo, who is now ranked No. 2, pointed out to me that "it is difficult to use big cards in the endgame, so you should rather use them aggressively in the first half," I thought he was right. Now, even if I have three 13s in my hand, I never carry them over to the fifth round.
+ 
+ 3: If there is a tie in scores in a round, the person with the tie gets that score because it is the median. I don't think this rule is being used very effectively.
+ 
+ For example, a situation like this
+ <img src="http://gyazo.com/c152d5c2384ed2f9d13109a5cd9e4d84.png">
+ In this third turn, I wanted to avoid a situation in which I would have to play a 7 to cover the 7 points each. Of course, it is also possible to play a "card with low probability of being taken" such as 13 or 1 and let someone else score a point. In this case, I had an extra card in the middle.
+ 
+ Example of using the tactic of stacking round scores twice and thinking "Okay, I won" and then at the last minute the AI makes a "stacking game scores" move and everyone ends up in a tie: http://saichugen-online.appspot.com/game/1842/
+ 
+ 4: The other thing to consider is how much damage can be done when the opposite of what is expected happens. For example, let's say that by the second turn of the first round, someone has scored a total of 14 points. You don't want to score too many points, but which would cause more damage if the hand goes the other way: a player who says, "I don't want to score too many points, so I'll play the edge card," and plays 13, or a player who plays 4 or so?
+ For example, if someone has 13 on the first turn, and you don't want to score as many points as possible, and you have 3, 5, 7, 9, or 11 in your hand, what should you play first? Opinions may differ. I would play 11. The lowest probability of going through is 3, 11, but if it goes through, you have to play more cards to get over 14 points, so if 3 goes through, you have to play 11, which is less successful, but if 11 goes through, you can play 7, so it is safer to play 11 at first. It is safer. That is what I would do. But of course, if the situation is "I can take up to 5 points, but I don't want to take as much as possible," I would play 3 first. If it passes, I would play 11. If not, I would play 5.
+ 
+ 5: I forgot to add: turn 3 is important, rounds 4 and 5 are important. Conversely, turns 1 and 2 and rounds 1, 2 and 3 are relatively unimportant, so I discard cards I don't need here. Now, I am putting out cards "so that the distribution of cards is even" in the early stages of the game. Specifically, I get rid of cards that have the same number and overlap early.
+ 
+ -----
+ 
+ At any rate, I have written a brief story about how I am doing at the moment.
+ 
+ Well, I wondered as I wrote this if the reason my opponent is so weak is because he can get behind this kind of thing.
+ 
+ *1224415186*Remove spam trackbacks.
+ >||
+ 1: I get an email saying I got a trackback.
+ 2: Press the link to view that entry.
+ 3: Press the Edit button. You'll be editing on the fly.
+ 4: Press the Edit Details link.
+ 5: Turn on the check for spam trackbacks in question
+ 6: Press the Delete button
+ ||<
+ 
+ Hmmm. It's a hassle.
+ 
+ >||
+ 1: I get an email saying I got a trackback.
+ 2: Click on the "Click here to delete" link
+ 3: Are you sure you want to delete it? Press OK on
+ ||<
+ 
+ I think it would be possible to shorten it to something like "I'm sorry, but I'm not sure if this is possible. By the way, the reason why we don't make the deletion of e-mail links immediately after clicking on them is because we are opportunistic and think it might be dangerous if we can delete them by GET, so we might be able to support one-shot deletion.
+ 
+ *1224415591*Anti-insomnia
+ I'm a little sleepy after walking 10,000 steps to combat insomnia, but it's only 8:00 am. Should I go to bed or not? Or should I go to bed? It is still better to wake up around 3:00 a.m. than to go to the office without sleeping. It's really hard to go to work without sleeping.
+ 
+ *1224434402*Tea
+ Round.
+ 
+ f:id:nishiohirokazu:20081020014017j:image
+ 
+ It spread much larger than I had imagined.
+ 
+ f:id:nishiohirokazu:20081020014046j:image
+ 
+ It's beautiful, isn't it? It's tea.
+ </body>
+ <comments>
+ <comment>
+ <username>Voluntas</username>
+ <body>> Standard way to describe the protocol<br>asn.1<br><br>http://pyasn1.sourceforge.net/</body>
+ <timestamp>1224360564</timestamp>
+ </comment>
+ <comment>
+ <username>soundkitchen</username>
+ <body>That's exactly the time for something like "Infinite Sheep @beinteractive". </body>
+ <timestamp>1224418292</timestamp>
+ </comment>
+ <comment>
+ <username>SHNSK</username>
+ <body>Well, the strategy is totally different between versus and against random. </body>.
+ <timestamp>1224685954</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-19 https://nishiohirokazu.hatenadiary.org/archive/2008/10/19]

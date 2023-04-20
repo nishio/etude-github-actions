@@ -1,0 +1,31 @@
+Expose ReactN
+2021-06-28
+　No need to manage global values yourself, let ReactN do it for you.
+　Only the interface for reading and writing values needs to be exposed.
+
+Previous Discussions
+ [Add a new property to the window with TypeScript.]
+ [Considerations on how to expose an object].
+
+code:ts
+ import { getGlobal, setGlobal } from "reactn";
+ 
+ const movidea = {
+   setGlobal,
+   getGlobal,
+ };
+ 
+ const debug = {};
+ 
+ declare global {
+   interface Window {
+     debug: any;
+     movidea: typeof movidea;
+   }
+ }
+ 
+ export const initializeGlobalVariables = () => {
+   window.movidea = movidea;
+   window.debug = debug;
+ };
+

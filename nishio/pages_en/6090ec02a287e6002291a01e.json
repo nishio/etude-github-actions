@@ -1,0 +1,41 @@
+Hatena2009-10-13
+code:hatena
+ <body>
+ *1255425157*[ObjC]Difference between NSTimer and NSThread
+ >|objc|
+ [[NSTimer scheduledTimerWithTimeInterval:10.0
+   target:self
+   selector:@selector(aMethod:)
+   userInfo:aInfo repeats:NO] fire]
+ ||<
+ 
+ The argument of aMethod is an instance of NSTimer, which is called when you do
+ 
+ >|objc|
+ [NSThread detachNewThreadSelector:@selector(aMethod:)
+  toTarget:self withObject:aInfo];
+ ||<
+ 
+ The argument of aMethod is aInfo itself.
+ 
+ So, for example, if aInfo is an NSDictionary at the time of NSTimer
+ >|objc|
+ NSDictionary* info = [timer userInfo];
+ ||<
+ I'll do something like that.
+ 
+ Also, NSTimer is a main thread that schedules an event to occur later, while NSThread is a separate thread, so it is necessary to create a separate autoreleasepool at the beginning of aMethod.
+ For example.
+ >|objc|
+ NSLog(@"enter aMethod");
+ NSAutoreleasePool pool = [[NSAutoreleasePool alloc] init];
+ ||<
+ If you make the mistake of
+ >>
+ 2009-10-13 17:57:32.845 Camera[4465:4717] enter aMethod
+ 2009-10-13 17:57:32.850 Camera[4465:4717] *** _NSAutoreleaseNoPool(): Object 0x3d79530 of class NSCFString autoreleased with no pool in place - just leaking
+ <<
+ I get angered that "I'm not sure what to do. You created a thread but did not create an AutoreleasePool, so you say, "You tried to autorelease an NSCFString when there is no pool!" So you're saying.
+ </body>
+
+[Hatena Diary 2009-10-13 https://nishiohirokazu.hatenadiary.org/archive/2009/10/13]

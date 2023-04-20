@@ -1,0 +1,102 @@
+Hatena2010-08-26
+code:hatena
+ <body>
+ *1282781888* English mistranslated by the majority of Japanese
+ I was reading a paper on prettier print, and the opening sentence
+ >>
+ Here &lt;> is the associative operation that concatenates two documents, which has the empty document nil as its left and right unit.
+ <<
+ I looked at it and thought that someone who just wants to implement prettier print would be frustrated from the beginning. That's because mathematicians shouldn't be using namespace math and shadowing names around.
+ 
+ *1282796867*Lunch today (Parentheses number golf)
+ The two people I usually have lunch with were off.
+ 
+ >>
+ [10/08/26 13:05:30]: Is this what you were talking about with the brackets?
+ [10/08/26 13:05:31]: http://e-arrows.sakura.ne.jp/2010/08/is-lisp-really-has-too-many-parenthesis.html
+ [10/08/26 13:07:51]: if you make fact a lambda, you can remove the parentheses around the dummy argument, but
+ [10/08/26 13:07:59]: I can't get rid of the function call brackets.
+ [10/08/26 13:08:28]: I've already seen on twitter that print brackets can be removed.
+ [10/08/26 13:08:47]: tuple brackets can be removed with "%d, %%d" % x % y
+ [10/08/26 13:09:02]: and if you don't use range and use while
+ [10/08/26 13:09:54]: 6 or 2 calls for int and fact
+ [10/08/26 13:10:36]: it's hard to get rid of the int one, I wonder if fact can do something about it.
+ [10/08/26 13:11:30]: should we stop recursive calls?
+ 
+ [10/08/26 13:16:34]: now there are two > brackets
+ <<
+ 
+ I'm going out to buy some rice...it's hard to get rid of the parentheses in int...I wish I could do something like 0+"10" but I can't...and regular expressions need parentheses too...
+ 
+ >>
+ [10/08/26 13:24:14]: ah
+ [10/08/26 13:25:06]: I was thinking that you need parentheses to eval, but with exec you don't need parentheses.
+ <<
+ 
+ So all the brackets are gone.
+ 
+ >|python|
+ import sys
+ 
+ exec "N = " + sys.argv[1]
+ mem = [[1, 1]]
+ n = 1
+ while n < N:
+     n += 1
+     mem += [[n, mem[-1][1] * n]]
+ 
+ for i, f in mem:
+     print "%s! = %%s" % i % f
+ ||<
+ 
+ I thought for a minute that if there was a way to call a function in general without parentheses, I could say, "I'm tired of parentheses golf," but it was easy if I took advantage of the fact that tuples can be created without parentheses.
+ 
+ >|python|
+ >>> x = 1, 2
+ >>> x
+ (1, 2)
+ >>> `x`
+ '(1, 2)'
+ >>> exec "y = max" + `x`
+ >>> y
+ 2
+ ||<
+ 
+ When calling a function that takes no arguments, you can use slicing to create an empty tuple.
+ 
+ >|python|
+ >>> x[:0]
+ ()
+ ||<
+ 
+ I'm tired of bracket golf. I still have about 20 minutes left of my lunch break.
+ 
+ *1282828185*PrettyPrint 1
+ At any rate, I translated the implementation written in Haskell of the paper into Python verbatim in a spirited manner on the train home. I'm still not running it yet, so there may be syntax errors. I'll think about the Python-oriented design from now on. I'll continue on the train tomorrow.
+ 
+ http://gist.github.com/551349
+ </body>
+ <comments>
+ <comment>
+ <username>pokarim</username>
+ <body>If you use exec, you can make brackets with "\x28\x29 </body>.
+ <timestamp>1282802757</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>That is indeed lame</body>.
+ <timestamp>1282806540</timestamp>
+ </comment>
+ <comment>
+ <username>yugui</username>
+ <body>"where <> is a conjunctive operation joining two documents, with the empty document as the left and right unit source"? </body>
+ <timestamp>1283157962</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Yeah, my translation, which I was going to publish when someone else translates it, is<br>"where <>is an operation that joins two documents, satisfying the join rule, with the empty document nil as the left unit source and right unit source"<br>. Almost the same. </body>
+ <timestamp>1283215313</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-08-26 https://nishiohirokazu.hatenadiary.org/archive/2010/08/26]

@@ -1,0 +1,155 @@
+Hatena2012-01-20
+code:hatena
+ <body>
+ *1327030220*Talking about a third argument in Python's pickle.dump
+ I saw a usage like cPickle.dump(obj, f, -1) and wondered what the -1 was, so I looked it up. Briefly, it is a format specification, and if not specified, the file is saved in the initial ASCII format for backward compatibility. The -1 means use the latest version, which in this case is version 2.
+ 
+ >>
+ There are currently 3 different protocols which can be used for pickling.
+ 
+ -   Protocol version 0 is the original ASCII protocol and is backwards compatible with earlier versions of Python.
+ -   Protocol version 1 is the old binary format which is also compatible with earlier versions of Python.
+ -   Protocol version 2 was introduced in Python 2.3. It provides much more efficient pickling of new-style classes.
+ <<
+ http://docs.python.org/library/pickle.html
+ 
+ So, I'm wondering about file size and speed.
+ 
+ ** Measurement method
+ I used Numpy's ndarray to create a matrix of 0-1 random numbers of size 1000x1000, serialized it into a string, and measured the size and time. The size was measured by the length of the string, and the time was measured by iterating an appropriate number of times with ipython's %timeit.
+ 
+ ** Time
+ 
+ Well, it is roughly 100 times different.
+ 
+ >||
+ %timeit s = cPickle.dumps(m)
+ 1 loops, best of 3: 1.14 s per loop
+ 
+ %timeit s = cPickle.dumps(m, 1)
+ 100 loops, best of 3: 18.4 ms per loop
+ 
+ %timeit s = cPickle.dumps(m, 2)
+ 100 loops, best of 3: 18.4 ms per loop
+ ||<
+ 
+ ** Size
+ 
+ The difference here is less than three times.
+ >||
+ len(cPickle.dumps(m))
+ 22217167
+ 
+ len(cPickle.dumps(m, 1))
+ 8000141
+ 
+ len(cPickle.dumps(m, 2))
+ 8000136
+ ||<
+ 
+ ** Summary
+ The difference between version 1 and 2 is not clear when the target is ndarray, but at least if there is no clear reason to continue using version 0, it would be better to use the newer version.
+ 
+ ** extra
+ If you use the pickle one, which is not written in C, there is not much difference in speed in version 0, but 2 to 3 times slower in version 1 or later.
+ >||
+ %timeit s = pickle.dumps(m)
+ 1 loops, best of 3: 1.16 s per loop
+ 
+ %timeit s = pickle.dumps(m, 1)
+ 10 loops, best of 3: 42.3 ms per loop
+ 
+ %timeit s = pickle.dumps(m, 2)
+ 10 loops, best of 3: 42.1 ms per loop
+ ||<
+ 
+ *1327031473*What happens when you put a big binary file in git.
+ I was curious to find out what would happen if I put a large binary file in git.
+ 
+ Use the 112 meg avi file in which your presentation was recorded as the subject of the experiment.
+ 
+ ** cp
+ First, measure the time for a normal cp without git.
+ >||
+ real    0m0.744s
+ user    0m0.001s
+ sys     0m0.179s
+ ||<
+ 
+ ** git add
+ A git add takes 10 times longer than a copy.
+ >||
+ real    0m9.339s
+ user    0m7.989s
+ sys     0m0.490s
+ ||<
+ 
+ ** git commit
+ The git commit took surprisingly little time.
+ >||
+ real    0m0.055s
+ user    0m0.002s
+ sys     0m0.031s
+ ||<
+ 
+ ** git clone
+ Try cloning the repository where you just committed the video file. It takes less than three times longer than a simple file copy.
+ 
+ >||
+ real    0m1.943s
+ user    0m0.932s
+ sys     0m0.433s
+ ||<
+ 
+ ** git add has three patterns
+ 
+ If you add something that has already been committed again without changing it, you surely look at the timestamp and immediately assume that it has not been changed.
+ >||
+ real    0m0.020s
+ user    0m0.001s
+ sys     0m0.004s
+ ||<
+ 
+ I tried TOUCH and then ADD to change the timestamp. Still, it doesn't take as long as it did the first time I added it. I wonder what it's judging it by?
+ >||
+ real    0m0.616s
+ user    0m0.507s
+ sys     0m0.094s
+ ||<
+ 
+ Of course, if you change the file contents a little bit by appending cat, it will take as much time as the first add.
+ >||
+ real    0m9.159s
+ user    0m7.994s
+ sys     0m0.490s
+ ||<
+ 
+ PS: I did time md5 ... I did a "time md5 ..." and it was real 0m0.617s, so I guess that the second example is running about the same kind of process. So it is rather strange that the third example is taking so long. Is it calculating the difference regardless of whether it is a binary file or not?
+ 
+ Further postscript: It was pointed out to me that it's not a difference calculation because it takes the same amount of time the first time I add it, but that's absolutely right. I was also pointed out that it takes about the same amount of time the first time I add, so it's not the difference calculation. So I tried time zip ... It was real 0m9.792s. I see, that means it is taking a long time to compress.
+ 
+ ** Summary
+ The time taken to add a file is mostly the time taken to compress it with zlib. The time taken to add the file is mostly the time taken to compress it with zlib, and cloning over the network is not measured. We did not try to measure the time for different file sizes.
+ 
+ *1327044073*Logging exceptions in Python.
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20080403/1207194255'>Common errors</a> are referenced unexpectedly. Then it occurred to me that it would be interesting to keep a record of all the exceptions that occur using exception hooks, and aggregate them after a large number have accumulated. So I added the following to site.py.
+ 
+ >|python|
+ def setup_exc_hook():
+     "record exceptions"
+     import sys, traceback
+     def hook(type, value, tb):
+         sys.__excepthook__(type, value, tb)
+         lines = traceback.format_exception(type, value, tb)
+         file("/Users/nishio/exclog.txt", "a").write(
+             "".join(lines) + "\n" + "=" * 40 + "\n")
+ 
+     sys.excepthook = hook
+ 
+ setup_exc_hook()
+ ||<
+ 
+ However, I'd rather have data from someone who is unfamiliar with Python and programming... anyone have such an idea? Oh, I should just let my wife use it?
+ </body>
+
+[Hatena Diary 2012-01-20 https://nishiohirokazu.hatenadiary.org/archive/2012/01/20]

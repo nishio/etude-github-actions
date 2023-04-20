@@ -1,0 +1,18 @@
+Flask Blueprint
+ code:python
+  from flask import Flask, Blueprint
+  
+  bp = Blueprint('server', __name__)
+  
+  
+  def create_app():
+      app = Flask(__name__)
+      app.register_blueprint(bp)
+      return app
+  
+  
+  @bp.route('/', methods=['GET'])
+  def root():
+      return "OK"
+
+It is minimalistic to do routing in app.route, but it is difficult to do when you want to separate files, so create a blueprint and add it to the app later.

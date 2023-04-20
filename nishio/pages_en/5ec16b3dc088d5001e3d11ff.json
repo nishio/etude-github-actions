@@ -1,0 +1,58 @@
+ABC168
+[AtCoder Beginner Contest] 168 #Atcoder
+https://atcoder.jp/contests/abc168
+
+[https://gyazo.com/3151b3beb6dedcdae82ad056d80d5cbd]
+Result of the first try. I don't know why I couldn't solve B. For E, I got the correct answer to the sample code, but I didn't think I could do the "2**20000 mod P" calculation with 5 minutes left, so I gave up. I guess I should have submitted it and made sure I could get to the halfway point.
+
+After the contest is over, you can check what kind of input you rubbed off.
+	https://atcoder.jp/posts/20
+Conclusion, because of reading in `sys.stdin.readline`, the line feed code at the end of the line was also included in S
+`input` takes line feed codes, so this one looks better.
+[VsCode snippet recommendations - Qiita https://qiita.com/xx2xyyy/items/fd333368db548167f15a]
+code::
+   "read ints": {
+     "scope": "python",
+     "prefix": "readints",
+     "body": ["$1 = [int(x) for x in input().split()]"]
+   },
+
+Wrote an O(log n) implementation of "2 ** n mod P" after the end, but timed out.
+I was just messily plugging fractions.Fraction into collections.defaultdict, but it takes 63us to count up, so 200,000 cases takes 12 seconds and times out....
+code::
+ Line #      Hits         Time  Per Hit   % Time  Line Contents
+ ==============================================================
+     11                                           @profile
+     12                                           def foo():
+     13    200001      87415.0      0.4      0.6      for i in range(N):
+     14    200000     549187.0      2.7      3.7          A, B = [int(x) for x in sys.stdin.readline().split()]
+     15    200000      88256.0      0.4      0.6          if B == 0:
+     16                                                       angle = "I"
+     17                                                   else:
+     18    200000    1450133.0      7.3      9.8              angle = Fraction(A, B)
+     19    200000   12591985.0     63.0     85.3          count[angle] += 1
+[pyutils/line_profiler: Line-by-line profiling for Python https://github.com/pyutils/line_profiler]
+It's an order of magnitude different since it's 1us for math.gcd and tuples.
+
+>E is more complicated than it seems. I noticed that 0,0 is treated specially during the process, but it is not in the sample, so many people might get stuck.
+https://twitter.com/hamamu_kyopro/status/1262030222716661761
+I'm hooked.
+
+I made something like this.
+code::
+ def pow2(n):
+     if n < 30:
+         return 2 ** n
+ 
+     p = pow2(n // 2)
+     pp = (p * p) % P
+     if n % 2 == 1:
+         return (2 * pp) % P
+     else:
+         return pp
+`pow(2, x, P)` was good.
+
+I thought if I fixed it up a bit, it would pass, but it's not easy.
+[https://gyazo.com/f044fcf8bb984abf7d6df572cf73d3e5]
+I was getting errors in special cases such as vertical, so it would be better to test the corner case at hand before submitting.
+The last remaining bug is the type that forgets that division is no longer integer division in Python 3 and mocks the precision of floating point numbers.

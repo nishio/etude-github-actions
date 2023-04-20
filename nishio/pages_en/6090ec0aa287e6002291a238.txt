@@ -1,0 +1,131 @@
+Hatena2012-05-31
+code:hatena
+ <body>
+ *1338449206*Diary failed with SSL dynamic link when trying to install JSX
+ I got the error below, but sudo port upgrade openssl fixed it.
+ 
+ >||
+ JSX[master]$ make setup           
+ npm install
+ npm http GET https://registry.npmjs.org/browserbuild
+ dyld: lazy symbol binding failed: Symbol not found: _SSL_CTX_set_next_proto_select_cb
+   Referenced from: /opt/local/bin/node
+   Expected in: /opt/local/lib/libssl.1.0.0.dylib
+ 
+ dyld: Symbol not found: _SSL_CTX_set_next_proto_select_cb
+   Referenced from: /opt/local/bin/node
+   Expected in: /opt/local/lib/libssl.1.0.0.dylib
+ 
+ make: *** [setup] Trace/BPT trap: 5
+ ||<
+ 
+ *1338456208*Get DOM information from JSX using jQuery
+ Can we use third-party libraries from JSX that don't think anything of static typing, such as jQuery?
+ 
+ Reported because it worked.
+ 
+ I thought it would be more complicated, but it was surprisingly straightforward: the first and last two lines of main do the "get the first p tag with jQuery, get its innerText, edit it as a string, and output it to the console". The 5 lines of log in between are left for the process of getting to the answer.
+ 
+ >||
+ import "js.jsx";
+ class _Main {
+     static function main(args : string[]) : void {
+         var jQuery = js.global["$"] as function(:string):variant;
+ 
+         log jQuery;
+         log jQuery("p");
+         log (jQuery("p") as __noconvert__ Map.<variant>);
+         log (jQuery("p") as __noconvert__ Map.<variant>)["0"];
+         log ((jQuery("p") as __noconvert__ Map.<variant>)["0"] as Map.<variant>)["innerText"];
+ 
+         var value : string = ((jQuery("p") as __noconvert__ Map.<variant>)["0"] as Map.<variant>)["innerText"] as string;
+         log value + "---" + value;
+     }
+ }
+ ||<
+ 
+ A little explanation for those who want to try it out, I compiled this with the name main.js and called it from HTML like below. When you run it, you should see "hoge---hoge" in the console, I checked with Chrome. (PS: I cleaned up the code and put it on github https://github.com/nishio/learning_jsx/tree/master/use_jquery)
+ 
+ >||
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+ <script src="main.js"></script>
+ <script>
+   $(function(){
+     _Main$main$AS([]);
+   })
+ </script>
+ 
+ <p>
+ hoge
+ ||<
+ 
+ There are four places where I got hooked.
+ 
+ Reposting the code because it is hard to read apart from the code:.
+ >|javascript|
+         var jQuery = js.global["$"]
+             as function(:string):variant;
+         var value : string = (((
+             jQuery("p") as Map.<variant>)
+             ["0"] as Map.<variant>)
+             ["innerText"] as string);
+ ||<
+ First of all, the type of a function that takes a string as an argument is function(:string):variant, not function(string):variant.
+ 
+ Second, "Map requires [] operator like ["console"]" by @kazuho
+ 
+ The third is where jQuery("p") as Array.<variant> is null. I wonder if this tries to convert it to an Array but fails and becomes null because it is not an Array.
+ 
+ So I added __noconvert__, but then jQuery("p") instanceof Array == false, which causes an assertion and calls the debugger. This is the fourth one, and since Map has a fixed key type of string, what should I do with an "Array-like object" that is indexed numerically like jQuery? I often wondered how to do an "Array-like object," which is indexed numerically like jQuery, but I thought "0" == 0 might work. I tried accessing it with the string "0", and it worked without any problem. I was happy and satisfied.
+ 
+ So as far as the question "Can I mix JSX with third-party libraries such as jQuery that don't think about static typing? I would say yes without a doubt. Here I used variants and explicit casts to avoid type checking, for example:
+ 
+ https://github.com/jsx/JSX/blob/master/lib/js/js/web.jsx
+ 
+ If you declare a native class Hogehoge in the form of something like "native class Hogehoge" and tell JSX what type of members Hogehoge has, it should go easily. I'll try that next time.
+ 
+ With Google Closure Compiler, you can only use extern declarations like this native class declaration, or you can open a big hole by /** @suppress {checkType} */ for the whole function that uses an uncluttered third-party library. Since the only way to do this is to use a small loophole in the form of a variant or cast, I really like the fact that JSX can create a small loophole in the form of a variant or cast.
+ 
+ Sequel: <a href='http://d.hatena.ne.jp/nishiohirokazu/20120531/1338462986'>Manipulating DOM information from JSX with jQuery Part 2</a>.
+ 
+ *1338462986* Manipulating DOM information from JSX using jQuery Part 2
+ I made jquery-1.7.jsx and it looks much better than the version I had cast all by myself earlier.
+ 
+ >||
+ import "jquery-1.7.jsx";
+ class _Main {
+     static function main(args : string[]) : void {
+         var value : string = jQuery.as_func("p").get(0).innerHTML;
+         log value + "---" + value;
+         jQuery.as_func("p").get(1).innerHTML = "piyo";
+     }
+ }
+ ||<
+ 
+ The first thing that stumped me was that there was no way to define a union type that is both a function and has members. I tried to use jQuery.as_func method to return the casted value as a function. (However, it may not be able to be a native class if it has such a method with an entity.)
+ 
+ Next, what is the return type of $("p")? If $("p") is x, it must be able to return x[0] and also be able to return x.click. But if I want to make it a class, I can't create a member named 0 or 1... Should I make it a class and create a method named get only for array access?
+ 
+ I was wondering why I was so worried about it when it was already 8:00 p.m., so I'm just going to show you what I've done.
+ https://github.com/nishio/learning_jsx/tree/master/use_native_class
+ 
+ I wrote "use_native_class" but I haven't used native class yet. And the one in the develop branch seems to get the same thing as $("p").css, but for some reason it returns Window when I call it.
+ https://github.com/nishio/learning_jsx/blob/ac1ffde2d515d4d8a09a94ed3cbac2f023e81569/use_native_class/jquery-1.7.jsx
+ (PS: Oh, I get it, you took the function and then called it so that this in $("p").css points to Window. So casting to Map is a mistake. (Sequel -> <a href='http://d.hatena.ne.jp/nishiohirokazu/20120601/1338479302'>To tell JSX "this object should have foo"</a>)
+ 
+ I think the problem is that jQuery is too dirty in terms of types. Like the way it says "both a function and an object" just to cut down on the number of characters.
+ </body>
+ <comments>
+ <comment>
+ <username>yksoft</username>
+ <body>It seems to be undefined---undefined in Firefox.... </body>
+ <timestamp>1338458220</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I guess you don't put too much emphasis on Firefox support, I heard web.jsx is too heavy to run. </body>
+ <timestamp>1338472473</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-05-31 https://nishiohirokazu.hatenadiary.org/archive/2012/05/31]

@@ -1,0 +1,84 @@
+ABC197
+5 questions without solving 1WA of F. Instead of searching all of C 2^20 times, "Just narrow it down from the top bits first!" and lost time by going ahead with a mysterious and complicated solution.
+[https://gyazo.com/eea10722a2bd37aeecc3b655bb307f20]
+
+C
+	I thought to myself, "Why not just narrow it down from the top bits first!" but I'm glad I did the whole search.
+	23 minutes for initial implementation, 12 minutes for re-implementation, and 7 minutes for implementation after realizing that a full search is sufficient. 35 minutes wasted.
+	code:python
+	 def main():
+      N = int(input())
+      AS = list(map(int, input().split()))
+      if N == 1:
+          print(AS[0])
+          return
+  
+      ret = INF = 9223372036854775807
+      for s in range(2 ** N):
+          xor_ed = 0
+          or_ed = 0
+          for i in range(N):
+              or_ed |= AS[i]
+              if s & (1 << i):
+                  xor_ed ^= or_ed
+                  or_ed = 0
+          xor_ed ^= or_ed
+          ret = min(ret, xor_ed)
+      print(ret)
+
+D
+ Geometry problems, complex numbers were taught in middle school or high school when I was a kid, but what about these days?
+	code:python
+	 def main():
+      N = int(input())
+      x0, y0 = map(int, input().split())
+      x2, y2 = map(int, input().split())
+      cx = (x0 + x2) / 2
+      cy = (y0 + y2) / 2
+      v = (x0 - cx) + (y0 - cy) * 1j
+      from math import sin, cos, pi
+      rot = cos(2 * pi / N) + sin(2 * pi / N) * 1j
+      v *= rot
+      x1 = cx + v.real
+      y1 = cy + v.imag
+  
+      print(x1, y1)
+
+E
+ Problems to be explored in order of decreasing number
+ Never end up in the middle of a group of numbers, always end up on the edge, lower cost than that.
+ I don't know if it's better to end up on the right end or the left end.
+ 　So we'll calculate both patterns.
+ 　Cost if ending at left end and final position in that case, same for right end
+　　It can be interpreted as a DP with only four variables.
+	code:py
+	 def main():
+      N = int(input())
+      INF = 9223372036854775807
+      MAX = [-INF] * (N + 1)
+      MIN = [INF] * (N + 1)
+      for i in range(N):
+          X, C = map(int, input().split())
+          MAX[C] = max(MAX[C], X)
+          MIN[C] = min(MIN[C], X)
+  
+      lx = 0
+      rx = 0
+      lt = 0
+      rt = 0
+      for c in range(N + 1):
+          if MIN[c] == INF:
+              continue
+          l = MIN[c]
+          r = MAX[c]
+          lt2 = min(lt + abs(r - lx), rt + abs(r - rx)) + (r - l)
+          rt2 = min(lt + abs(l - lx), rt + abs(l - rx)) + (r - l) 
+          lx, rx, lt, rt = l, r, lt2, rt2
+          # debug(lx, rx, lt, rt, msg=":")
+      print(min(lt + abs(lx), rt + abs(rx)))
+
+F
+	1WA not resolved
+	I see that if you treat a vertex pair as a vertex, it becomes Dijkstra. I explicitly treated the vertex pairs and put them in the priority queue and searched from the shortest one, but I guess I'm implementing Dijkstra in effect and there's some kind of bug in it...
+		I compared it with Dijkstra and I don't know what's wrong... I guess I'll wait for the test case to be published...
+ If you're a TLE, you probably forgot to skip the visited pairs.

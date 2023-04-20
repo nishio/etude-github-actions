@@ -1,0 +1,68 @@
+Hatena2011-04-14
+code:hatena
+ <body>
+ *1302765428*Troubled with TeX identifiers.
+ TeX has tokens divided between alphabets and numbers (for those who don't know, I should write it down).
+ >||
+ \newcommand{\foo}{FOO} [\foo][\foo21]   %-> [FOO][FOO21]
+ \newcommand{\baz42}{BAZ} [\baz][\baz42] %-> 42BAZ [][42]
+ ||<
+ 
+ I'm wondering if I should make a parser that is faithful to this behavior. The parser I wrote yesterday is faithful, but it's a stumbling block because it's hard to think of a modern language that doesn't allow numbers in identifiers.
+ 
+ I was going to chop it into tokens, because I don't want it to match the ЈSigma when I create ЈS as a local name, but if I allow multiple tokens to come on the left side of the define, I'll have the same problem, and if I don't allow this, I can't use a name like ЈS1. Hmmm. Hmmm.
+ 
+ *1302766410* Regarding substitution
+ Reposting what I wrote yesterday.
+ - I'm replacing them now, starting with the root scope, is this appropriate?
+ -- →I designed it this way because I thought it was correct that the nearest rule should be applied last, considering the case where a substitution is further substituted...
+ --- A: I don't think it's a good idea to replace the substituted item with another substituted item, since that would make it difficult to understand. Even variable resolution is done by looking from the inside, and if it is found, that's the end of it. (I'm of the "name resolution" school of thought.)
+ --- B: Considering the use case "\x→\bm x is defined on the outside and phix→\bm \phi(\x) is defined on the inside", the idea is that we should apply them in order from the inside. Otherwise, when we create a rule that reuses the rule defined on the outside, we will have to write \bm x again. (This is the school of thought that since it is the application of a function, it is necessary to apply it sequentially from the near side.)
+ --- !B: That's a school of thought that just applies the rules defined at that time to the body of the rule at the time of the rule definition.
+ --- C: (original idea) We want to define the use case "Ex→\mathbb{E}(x) on the outside, and when x changes to\hat{x} in the inner context, we want to 'inherit & override' with x→\hat{x}" from the outside...
+ --- !C: That is a problem that should be solved by a macro that takes arguments.
+ -- I wonder if B is the right answer.
+ 
+ So, after a night's sleep, I thought that !B, which I prepared as a rebuttal to proposal B, was correct.
+ 
+ In scripting languages that do not require variable declarations,
+ >||
+ print (f(x[1]) + f(x[2])) * (f(x[1]) + f(x[2]))
+ ||<
+ and introduce temporary local variables rather than writing
+ >||
+ t = f(x[1]) + f(x[2])
+ print t * t
+ ||<
+ It would be easier to understand if it said If so, wouldn't it be easier to understand in TeX as well? I want to use "short names" in a "limited scope in code. That means introducing lexical scope, right?
+ 
+ This means that this is what Python calls an assignment statement. If it is an assignment statement, it is natural that the right-hand side is evaluated using the environment at the time of the assignment statement. B is affirmed.
+ 
+ Furthermore, if the name of the right-hand side is evaluated at the time of substitution, there is no need for "further substitution of the substituted one" for practical purposes, because when you define \x \a\b If you define \a and \b are defined, they will be substituted and then the definition of \x The only thing that changes is the behavior of the \x. The behavior changes when you define \x and then define \a, but you don't have to think about using it for practical purposes. It is more straightforward to introduce a macro with arguments.
+ 
+ I have not been able to determine if it is necessary to export the defined name outside of the defined scope. If it were necessary, I would have to associate the macro with the environment in which I was defined. Like a closure.
+ 
+ *1302792834* I put a preprocessor for TeX on github.
+ My ghost whispers to me that I should be able to ignore compatibility and include numerical values in identifiers, but I'm not quite sure. I should just cut a branch to develop something like that. That's why I put it on github https://github.com/nishio/pp4tex/tree/alnum_tokens
+ 
+ >||
+ % define S X
+ \[ SN \]
+ % define SN S_N
+ \[ SN \]
+ ||<
+ with this
+ <img src="http://gyazo.com/ffcbbe4e841e5c1b7e41b954a18602a8.png">
+ It goes like this. The first one is not substituted because SN is not an exact match for S, and SN becomes X_N because S is defined to be X at the definition of SN.
+ 
+ >||
+ % define S^ \hat{S}
+ ||<
+ 
+ This consists of multiple tokens on the left side. It would be more flexible if it could be done, but on the other hand, it would be complicated because it would be necessary to introduce a system to prevent the S part of S^ from being substituted, and if we consider this as an assignment to a name, it is not necessary that the left side is not an identifier, so an error is fine. That's why I decided to use "RuntimeError: line 15: key 'S^' should have only one token but has ['S', '^']".
+ 
+ 
+ Now I want to create a macro that takes arguments. Once I have a macro that takes arguments, I want to make a multi-line macro. I may have some other trouble around names that I don't anticipate now when I make that area.
+ </body>
+
+[Hatena Diary 2011-04-14 https://nishiohirokazu.hatenadiary.org/archive/2011/04/14]

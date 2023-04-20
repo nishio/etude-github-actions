@@ -1,0 +1,121 @@
+Hatena2010-12-07
+code:hatena
+ <body>
+ *1291734422* I wrote: Fundamentals of Language Design
+ f:id:nishiohirokazu:20101203174005j:image
+ <a href="http://www.amazon.co.jp/gp/product/4774144606?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=7399&creativeASIN=4774144606">WEB+DB PRESS Vol.60</a>
+ 
+ The reason I have been saying "the manuscript is heeey the manuscript is heeey" lately is because I was writing this. Yesterday, I was able to submit the manuscript safely. I am relieved.
+ 
+ Chapter 1 is an introduction written by Matsumoto, and I wrote the remaining chapters 2-6. To give you a rough idea of the keywords:.
+ 
+ - Chapter 1 (Mr. Matsumoto)
+ - Chapter 2: History of Programming What are Programming Languages for? Programming languages were created by humans.
+ - Chapter 3: Grammar Development What's the Grammar for? FORTH Lisp Structured Programming
+ - Chapter 4: History of Variables and Scope What are Variables for? Dynamic Scope Static Scope Nesting Single Assignment Closure
+ - Chapter 5: History of Object Oriented Objects What are Objects for? ALGOL Module Perl's OOP hash JavaScript's OOP class C++'s OOP Smalltalk's OOP class has three roles
+ - Chapter 6: History of Inheritance Multiple Inheritance Rhombic Inheritance Single Inheritance C3 Serialization Mix-in Trait
+ - Outside Columns Programming Language Version of the Innovation Dilemma, etc.
+ 
+ It will be released on December 23, so stay tuned!
+ 
+ *1291734665*tmp.py
+ I looked in the disposable tmp.py and found some code that I'm sorry to throw away, so I'll put it here.
+ >|python|
+ mem = [([], []), (["()"], [])]
+ 
+ for n in range(2, 11):
+     result_one = []
+     for x in mem[n - 1][0]:
+         result_one.append("(%s)" % x)
+     for x in mem[n - 1][1]:
+         result_one.append("(%s)" % x)
+ 
+     result_multi = []
+     for i in range(n):
+         j = n - i
+         for x in mem[i][0]:
+             for y in mem[j][0]:
+                 result_multi.append("%s%s" % (x, y))
+             for y in mem[j][1]:
+                 result_multi.append("%s%s" % (x, y))
+ 
+     print n
+     print ", ".join(result_one)
+     print ", ".join(result_multi)
+     mem.append((result_one, result_multi))
+     print len(mem[n][0]) + len(mem[n][1])
+ ||<
+ 
+ *1291736111*tmp.py Part 2
+ You asked me to translate, so I did.
+ 
+ >|python|
+ from threading import Thread
+ 
+ max = 3
+ lmax = 50000000
+ 
+ ary = [[0, 0]]
+ 
+ class MyThread(Thread):
+     def run(self):
+         for _i in range(lmax):
+             e = ary[-1]
+             if e[0] != self.name:
+                 e = [self.name, 0]
+                 ary.append(e)
+             e[1] += 1
+ 
+ threads = [MyThread(name=i) for i in "123"]
+ for th in threads: th.start()
+ for th in threads: th.join()
+ 
+ for p in ary:
+     print "%s\t%d" % (p[0], p[1])
+ 
+ print len(ary)
+ ||<
+ 
+ I got permission to reprint the original because it would disappear.
+ 
+ >|ruby|
+ max = 3
+ lmax = 50_000_000
+ 
+ # test fairness
+ ary = [[0, 0]] # [[Tid, num], [Tid, num], ...]
+ (1..max).map{|i|
+   Thread.new(i){|tid|
+     lmax.times{
+       e = ary[-1]
+       if e[0] != tid
+         e = [tid, 0]
+         ary << e
+       end
+       e[1] += 1
+     }
+   }
+ }.each{|t|
+   t.join
+ }
+ ary.each{|(t, c)|
+   puts "#{t}\t#{c}"
+ }
+ puts ary.length
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>language shop</username>.
+ <body>Please provide bibliographic information such as publisher, ISBN, etc. </body>
+ <timestamp>1291796560</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I have added the bibliographic information as it appears to be available on Amazon. </body>
+ <timestamp>1291822732</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-12-07 https://nishiohirokazu.hatenadiary.org/archive/2010/12/07]

@@ -1,0 +1,70 @@
+ABC174
+[AtCoder Beginner Contest 174 - AtCoder https://atcoder.jp/contests/abc174]
+[https://gyazo.com/4bdeee80ec6bac50babb6ec3cedc3c53]
+
+[B - Distance https://atcoder.jp/contests/abc174/tasks/abc174_b]
+ We don't use square roots.
+	code:python
+	 def main():
+      N, D = map(int, input().split())
+      count = 0
+      for _i in range(N):
+          X, Y = map(int, input().split())
+          if X * X + Y * Y <= D * D:
+              count += 1
+  
+      print(count)
+
+[C - Repsept https://atcoder.jp/contests/abc174/tasks/abc174_c]
+	[https://gyazo.com/3065cf7fe8d8bcf6873bc5e4c2ff0838]
+	It's 10^6 at the highest, so we just need to look at them in order, but the problem is that some cases are not reached.
+　　Marked visited surplus and serious loop detection.
+　　If you can get there, you will get there by the Kth time, so "If you don't get there by the Kth time, it's considered unreachable" would have been fine.
+　I've been reading on Twitter, and some people have been asking, "Why the surplus?" I'd like to add a little more.
+　　This number sequence is a repetition of the operation "multiply the previous number by 10 and add 7
+　　A "multiple of K" is "a number whose remainder divided by K is zero."
+　　The remainder of the previous number gives the remainder of the next number.
+ 　　You don't have to specifically create each term of a sequence of numbers, you just need to know the remainder of it.
+ 　　No need to deal directly with large numbers
+ 　When the remainder reaches zero, that's the "multiple of K" you're looking for.
+ 　If the remainder is found again before the number with a remainder of 0 is found, it will never reach 0 because it is the same thing over and over again from that point on.
+ 　There are only K ways left over, so the conclusion is reached by the Kth time.
+	code:python
+	 def solve(K):
+      visited = [False] * K
+      p = 7 % K
+      for i in range(K):
+          if p == 0:
+              return i + 1
+          if visited[p]:
+              return -1
+          visited[p] = True
+          p = (p * 10 + 7) % K
+	Q: "Since we know we'll get to the kth, would it have been okay to say, "If we don't get there, we'll assume it's a loop"?"
+		Yes, confirmed to AC by the following
+		code:python
+			def solve(K):
+       p = 7 % K
+       for i in range(K):
+           if p == 0:
+               return i + 1
+           p = (p * 10 + 7) % K
+       return -1
+　I noticed you mentioned it.
+　　http://vvvvvv.sakura.ne.jp/ds14050/diary/20200803.html
+　　Well, that's an interesting way to solve it.
+　　[https://gyazo.com/02c7ed56b882f0e212f9b53a84b60761]
+　　When considering this kind of writing, the first place is fixed to 7 because there is one hatena, and if there is also an X1 where the first place of K X1 is 7, then it is one way.
+　　When X1 is fixed, the top line is fixed, so the next step is to say about the second line, "The tenth place is fixed because there is one hatena".
+　　I was trying to figure out if this algorithm would shut down and realized.
+　　　We can use another expression for "cycles" in "the remainder column is either zero by the kth column or cycles."
+　　　If the remainder in K is the same for a number A followed by n 7s and a number B followed by more 7s, then B-A is a multiple of K
+　　　Since B-A is the number obtained by multiplying 10^n by the number followed by 7 smaller than B, K is the divisor of 10^n under the condition that "no remainder 0 is found before B
+　　　The last digit of K is even or 5 except when K is 1
+　　　The algorithm promptly stops because "the last digit of the multiplication result is not 7."
+　　　For those that did not stop there, they are guaranteed not to enter a short loop, so they will reach a solution by the Kth time.
+
+	[ABC174D] AC
+	[ABC174E] AC after contest
+
+	[ABC174F]

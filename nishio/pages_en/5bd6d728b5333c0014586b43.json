@@ -1,0 +1,24 @@
+Physics keeps slides from getting too close.
+from [physics improvements].
+
+	Phenomenon of slides approaching each other in [Physics].
+ 	In the first place, it's not right to get close to the slides, because if the physics happens, it means the slides are crowded and colliding.
+  This is why I stayed away from it. Like this
+code:cs
+ // update position
+ for (int i = 0; i < slides.Count; i++)
+ {
+     GameObject obj = slides[i] as GameObject;
+     // current position and distance
+     Vector3 cpos = obj.transform.position;
+     float cdist = (cpos - eye).magnitude;
+     // next position and distance
+     Vector3 npos = cpos + updateVec[obj];
+     float ndist = (npos - eye).magnitude;
+     if(ndist < cdist)
+     {
+         npos = eye + (npos - eye).normalized * cdist;
+     }
+     obj.transform.position = npos;
+ }
+

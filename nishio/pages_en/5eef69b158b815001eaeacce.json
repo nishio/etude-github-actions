@@ -1,0 +1,129 @@
+ABC171
+I've solved 5 problems, but it's still brown.
+[atcoder]
+[https://gyazo.com/b81eb1913373507d1f7a1e427771c71a]
+[https://gyazo.com/37317e3afb8ef7fc433bd0a0e03a9d2d]
+A Problem to determine upper or lower case, start 63 sec.
+code:python
+ from string import ascii_lowercase
+ s = input()
+ if s[0] in ascii_lowercase:
+     print("a")
+ else:
+     print("A")
+B, problem of adding together K of N numbers, the smaller of the N numbers, 100 sec.
+code:python
+ N, K = map(int, input().split())
+ PS = list(map(int, input().split()))
+ PS.sort()
+ print(sum(PS[:K]))
+
+C The problem of expressing numbers in an Excel-like anomalous 26th decimal system.
+This problem is eating up more time than the D problem across the board for people in the observation range. Trap.
+I wrote down to three digits while writing the test case in doctest, then summarized it in while. 13 minutes.
+code:python
+ def solve(N):
+     q = N
+     ret = ""
+     while True:
+         q, r = divmod(q - 1, 26)
+         ret = ascii_lowercase[r] + ret
+         if q == 0:
+             print(ret)
+             return
+The entire code is here: https://atcoder.jp/contests/abc171/submissions/14549017
+I wrote a detailed description of the development process [test-driven implementation of the transformed 26th decimal system].
+
+
+D. The problem of having 100,000 numbers and "substituting one number for another" 100,000 times and outputting the sum each time.
+First, count the number of all the numbers, find the sum, and then update. 5 minutes.
+code:python
+ count = [0] * (10 ** 5 + 10)
+ 
+ def main():
+     N = int(input())
+     AS = map(int, input().split())
+     sum = 0
+     for a in AS:
+         count[a] += 1
+         sum += a
+     Q = int(input())
+     for q in range(Q):
+         B, C = map(int, input().split())
+         sum += (C - B) * count[B]
+         count[C] += count[B]
+         count[B] = 0
+         print(sum)
+
+E, the problem of guessing the original number when given a maximum of 200,000 numbers "xor other than yourself".
+First move "Huh? Can't I just return this input as is?" I submitted it, but it didn't work. In the end, I divided the cases into N=2, 3, and others, but there seemed to be no need to do so.
+Since the solution may not be unique, write test code to see if it is the correct solution, look carefully at the N=4 test case in binary notation, twist out an expression that makes sense, and submit to confirm that it is the correct solution.
+I'll put the goof up as it is below. I thought I had the correct answer in the first half of the loop, but I got it wrong, compared it to the correct answer, and flipped the bits where it was wrong. It's forced. 42 minutes. [Binary notation]
+code:python
+ """
+ input
+ 0b00000000000000000000000010100
+ 0b00000000000000000000000001011
+ 0b00000000000000000000000001001
+ 0b00000000000000000000000011000
+ 
+ output
+ 0b00000000000000000000000011010
+ 0b00000000000000000000000000101
+ 0b00000000000000000000000000111
+ 0b00000000000000000000000010110
+ 
+ myanswer
+ 0b00000000000000000000000000000
+ 0b00000000000000000000000011111
+ 0b00000000000000000000000011101
+ 0b00000000000000000000000001100
+ """
+ # for a in AS:
+ #     print(f"{a:#031b}")
+ r = [0] * N
+ for i in range(1, N):
+     r[i] = r[i - 1] ^ AS[i - 1] ^ AS[i]
+ 
+ # for a in r:
+ #     print(f"{a:#031b}")
+ 
+ rest = reduce(xor, r[1:])
+ d = AS[0] ^ rest
+ for i in range(N):
+     r[i] ^= d
+ 
+ print(*r)
+ # check
+ # total = reduce(xor, r)
+ # for i in range(N):
+ #     print(total ^ r[i] == AS[i])
+ 
+I didn't know reduce had moved to [functools].
+
+Let's look at the code of someone writing more concisely, someone with the shortest AC...
+code:python
+ _,a=open(x:=0)
+ *a,=map(int,a.split())
+ for i in a:x^=i
+ for i in a:print(x^i)
+https://atcoder.jp/contests/abc171/submissions/14588050
+This is... golf...
+First, the walrus operator introduced in 3.8 is used to open(0) with 0 in x. This is open with the file descriptor specified, and 0 is the standard input.
+The opened file is a line-by-line iterator in Python, so the second line of input goes into a with an unpacked assignment.
+Since the result of map is an iterator, we force it to be evaluated by receiving it with a star to turn it into a list. If we don't do this, the iterator will be eaten up by the for in the third line, and the for in the fourth line will not turn.
+The third line takes the entire xor, and the fourth line outputs the xor between it and Ai. Since this is line feed delimited, it is surprising that it passes the "output as blank delimited" condition in question.
+
+Here's what I would write in my opinion based on this
+code:python
+ from functools import reduce
+ from operator import xor
+ 
+ _N = int(input())
+ AS = list(map(int, input().split()))
+ total = reduce(xor, AS)
+ print(*[a ^ total for a in AS])
+
+I studied the data structure and it's not showing up at all!
+F re-solve it and write an explanation after it is solved.
+[ABC171_F]

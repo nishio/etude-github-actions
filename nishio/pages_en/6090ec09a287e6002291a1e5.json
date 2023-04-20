@@ -1,0 +1,151 @@
+Hatena2011-12-26
+code:hatena
+ <body>
+ *1324881140*git checkout -p use case
+ Especially when you are writing prototypical code, you may embed things that you plan to be able to change in the future, such as options, directly in the code. For simple code, it may be a single line, or for complex code, it may be a mock class.
+ 
+ This use case is a case of thinking, "I don't need this mock anymore," and deleting it, only to realize after a while that I shouldn't have deleted it yet.
+ 
+ Delete the "CODE" part of the following code.
+ >|python|
+ sIDENTIFIER = "[^-+#: ]+"
+ IDENTIFIER = re.compile(sIDENTIFIER)
+ ENHANCER = re.compile("\+\s*(%s)" % sIDENTIFIER)
+ SUPPRESSOR = re.compile("-\s*(%s)" % sIDENTIFIER)
+ BODY = re.compile(":\s*(%s)" % sIDENTIFIER)
+ CODE = """
+ +START :OUT_H
+ +OUT_H :OUT_E
+ +OUT_E :OUT_L
+ -SUP_L +OUT_L :OUT_L
+ +OUT_L :SUP_L
+ -SUP_O +SUP_L :OUT_O :SUP_O
+ """
+ NONE = "NONE" # it always be in environment
+ ||<
+ 
+ Hi erased, saved. But I shouldn't have deleted it yet! And by the time I realized I shouldn't erase it, I had rewritten many other parts of the page, so I can't just undo it and put it back in easily. What to do now!
+ 
+ >|python|
+ sIDENTIFIER = "[^-+#: ]+"
+ IDENTIFIER = re.compile(sIDENTIFIER)
+ ENHANCER = re.compile("\+\s*(%s)" % sIDENTIFIER)
+ SUPPRESSOR = re.compile("-\s*(%s)" % sIDENTIFIER)
+ BODY = re.compile(":\s*(%s)" % sIDENTIFIER)
+ NONE = "NONE" # it always be in environment
+ ||<
+ 
+ I know many people think the solution is to write it again, or show the old version and copy and paste from there, but what I want to explain here is git checkout -p, which is mentioned in the title.
+ 
+ >|diff|
+ --- a/main.py
+ +++ b/main.py
+ @@ -7,12 +7,4 @@ IDENTIFIER = re.compile(sIDENTIFIER)
+  ENHANCER = re.compile("\+\s*(%s)" % sIDENTIFIER)
+  SUPPRESSOR = re.compile("-\s*(%s)" % sIDENTIFIER)
+  BODY = re.compile(":\s*(%s)" % sIDENTIFIER)
+ -CODE = """
+ -+START :OUT_H
+ -+OUT_H :OUT_E
+ -+OUT_E :OUT_L
+ --SUP_L +OUT_L :OUT_L
+ -+OUT_L :SUP_L
+ --SUP_O +SUP_L :OUT_O :SUP_O
+ -"""
+  NONE = "NONE" # it always be in environment
+ Discard this hunk from worktree [y,n,q,a,d,/,e,?]?
+ ||<
+ 
+ For each chunk, you will be asked if you want to discard the changes and revert to the state you committed last time. Press "y" where you want to revert, "n" otherwise, and "q" if you don't want to revert any more.
+ If the clump is larger than the unit you want to return and you want to split it more, use s to split it more finely. If you want to split the chunk more finely, use "s" to split it more finely, or "e" to specify which chunks to put back and which not, line by line. For a description of these commands, press ? to see the explanation of these commands.
+ 
+ I was just writing code when I encountered this use case, so I blogged about it as a record.
+ 
+ *1324887163* Created Genomy, a language based on gene motifs.
+ Recently, I was reminded of a mention on Twitter about "<a href='http://d.hatena.ne.jp/nishiohirokazu/20090131/1233399693'>Is it time to mention the example project</a>" that I wrote about 3 years ago I remembered it. I was thinking of implementing concept proofing because people don't seem to get the idea that a program can be written with the design concept of "call everything that satisfies the conditions".
+ 
+ That's why we made it. https://github.com/nishio/genomy
+ 
+ ** Description
+ Textbooks often mention that "genes are the blueprints of proteins. However, the blueprint also contains information on "under what circumstances it should be made" and "under what circumstances it should not be made.
+ 
+ Let me explain how this "should not be made" (suppression of expression) is achieved. When a protein is present in the body, it clings to the periphery of a gene and interferes with the process of making protein from that gene. This prevents the protein from being made from that gene.
+ 
+ In other words, if S is the protein that interferes and P is the protein that is interfered with, then P is produced only when S is absent and P is not produced when S is present. In other words, P := not(S). Using this mechanism, logical negation can be implemented.
+ 
+ Conversely, a protein E can cling to the periphery of a gene and increase the expression of that gene. If we make it so that when a protein E1 is present, a lot of protein P is produced, and when a protein E2 is present, a lot of protein P is also produced, this means that P := E1 or E2. Using this mechanism, logical OR can be implemented.
+ 
+ With logical disjunction and logical negation, you could implement a half adder! Sample of a half adder > https://github.com/nishio/genomy/blob/master/sample/half_adder.gnm
+ 
+ Life uses these mechanisms to program responses to external stimuli, to build complex body structures, and so on.
+ 
+ Now, let's actually run the program: let's put the organism with the gene in sample/hello.gnm in an environment containing the protein START.
+ 
+ >||
+ genomy$ python2.7 main.py -f sample/hello.gnm START
+ 0 START
+ 1 OUT_H
+ 2 OUT_E
+ 3 OUT_L
+ 4 OUT_L SUP_L
+ 5 OUT_O SUP_L SUP_O
+ 6 
+ 7 
+ 8 
+ 9 
+ 10 
+ ||<
+ 
+ Yes, it outputs HELLO in response to the START stimulus. Now let's look at the gene.
+ 
+ >||
+ +START :OUT_H
+ +OUT_H :OUT_E
+ +OUT_E :OUT_L
+ -SUP_L +OUT_L :OUT_L
+ +OUT_L :SUP_L
+ -SUP_O +SUP_L :OUT_O :SUP_O
+ ||<
+ 
+ When there is a stimulus of START, the body of this organism starts to make OUT_H. The stimulus of OUT_H makes OUT_E, and the stimulus of OUT_E makes OUT_L. If OUT_L is made by the stimulus of OUT_L, OUT_L is made all the time, so it is suppressed by making the protein SUP_L. The protein SUP_L is created to suppress it. These "OUT_L" and "SUP_L" are just identifiers for human understanding, and the actual control is determined by the +, -, and : prefixes. The identifier starting with ":" is the "protein being made," and the + and - are, well, you guessed it.
+ 
+ The important point to note in reading this code is that the order of the rows is completely irrelevant. Shuffling the rows does not change the behavior. On the contrary, mixing them with other genetic organisms does not cause any grammatical problems. If you are unlucky and the identifiers you are using overlap, you will get an unexpected execution flow. But perhaps the flow will produce individuals that are more adaptable to the environment. The unsuccessful individuals will be eliminated by dying without leaving any offspring, and only the successful ones will remain.
+ 
+ The processing system implemented this time is intended to prevent syntax errors even if the code is mixed in units finer than a line, or if a single character is deleted, added, or rewritten as a mutation. It might be interesting to experiment with such things.
+ 
+ The other direction for a more programming language-like challenge is how to represent numbers in terms of proteins. All values are proteins, so it's protein-oriented programming.
+ </body>
+ <comments>
+ <comment>
+ <username>nowokay</username>
+ <body>Imagine, it looks like a DNA computer. </body>
+ <timestamp>1324898011</timestamp>
+ </comment>
+ <comment>
+ <username>shiro</username>
+ <body>"Triggered when conditions are met" sounds like Prolog, but I wonder how variables would be handled by analogy with genes. <BR>It is probably possible to extend the use of variables as a language, but I am not sure if it is possible to think of it in terms of real genes. <br>But if mutation is possible, it would be interesting to evolve it if we can create an appropriate evaluation function. </body>
+ <timestamp>1324904759</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Since it is grammatically VALID to cut and paste source code and insert text, it could evolve in a realistic amount of time to a half adder if all we need is a suitable evaluation function. <br>About variables. In this case, we have used discrete time to simplify the model, but in reality, proteins exist continuously for a certain amount of time after they are made, until they disappear through diffusion or degradation. Therefore, there are many values with expire that can only be written as bool values. <br>In this model, the degradation enzyme is so strong that all proteins are degraded in one step, so in half_adder.gnm, a rule "create protein X when protein X is present" is included to keep the input values. If we tweak this rule a bit by adding a suppressor term "when protein RESET_X is not present" and so on, we can create the same structure as a flip-flop. </body>
+ <timestamp>1324950710</timestamp>
+ </comment>
+ <comment>
+ <username>shiro</username>
+ <body>Oh, I wasn't thinking of a variable as simply a mechanism for holding state, but rather something that parameterizes a chunk of code. I should have said parameters or arguments. I was wondering if it would be possible to write a piece of code that would act as "a piece of code for an arbitrary protein X, Y, or Z, which would express Z when X and Y are expressed". (I mean, was it possible to do Turing completely without parameters? I have a feeling that it can only be used up to finite state machines, but I haven't really thought about it.) <br><br>So my specific questions were (1) is there an equivalent to parameterization as a DNA mechanism, and (2) if not, is it powerful enough to do the calculations without it? </body>
+ <timestamp>1324970123</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see. Am I correct in understanding that you are referring to the kind of abstraction where common processes are grouped into functions? If so, I don't think there is an equivalent. <BR><BR>The reason we need that kind of abstraction mechanism in the first place is because of the limitations of human cognitive abilities, and if we don't abstract, we can't fully understand it. But DNA-based coding is done without understanding the code, so abstraction is not necessary. At least in implementing a finite state machine of human degree. <BR><BR>It seems that functions similar to on/off on a module-by-module basis were needed, and some long DNA is wrapped around proteins to make them inexpressible, and DNA is methylated to flag it as "not in use for the time being," but well, that's quite different from parametrization. Basically, the image is that everything is placed in a global namespace. </body>
+ <timestamp>1324977824</timestamp>
+ </comment>
+ <comment>
+ <username>shiro</username>
+ <body>I see > "At least in implementing a finite state machine of human size."<br><br>Abstraction increases the information density of the code, so the effect of mutation may be too great. It may not be very compatible with genetic evolution. <br><br>A finite state machine implemented in this way works Turing-complete on one layer above, well, it's like saying that a Turing machine can be emulated by a finite state machine implemented in a circuit on silicon. </body>
+ <timestamp>1324979389</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-12-26 https://nishiohirokazu.hatenadiary.org/archive/2011/12/26]

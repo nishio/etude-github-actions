@@ -1,0 +1,80 @@
+Hatena2009-04-27
+code:hatena
+ <body>
+ *1240821719*Yogurt with an expiration date of a month ago.
+ It was delicious. The texture is a little different.
+ 
+ 
+ f:id:nishiohirokazu:20090427174257j:image
+ 
+ *1240828251*[SpaMon] card Ver 1.4
+ Maybe the manuscript could be made in a size that would be playable as is if printed on a business card card, and even better if it were put in a hard sleeve with a blank card if desired, to make it easier for those who want to play to get it. All I would have to do is put the PDF on the site.
+ 
+ Considering that A4 allows for 10 cards, would adding 5 cards as an expansion to the current 15 cards for regular play be just fine? Let's level the playing field by talking about which ones we would remove further from the current situation. The previous minimal game had RemoveBit in it, but that is replaced with MoveBit because it is more likely to cause a thousand-day hand. That's 5 cards and the regular game has 15 cards, so we can remove about 5 cards.
+ 
+ :MoveBit: [Bit] @
+ :Crack: [Life] @
+ :Jump: [Flow] @
+ :Reverse: [Flow] @
+ :Float: [Copy] @
+ 
+ :AddBit: [Bit] @@
+ :RemoveCard: [Card] @@
+ :MoveCard: [Card(Flow)] @@
+ :Bomb: [Life] @@
+ :CopyPast: [Copy] @@
+ 
+ :RemoveBit: [Bit] @@@
+ :CopyFuture: [Copy] @@@
+ :Surge: [Life] @@@
+ :Inc: [Numeric] @@@
+ :Dec: [Numeric] @@@
+ 
+ Like this.
+ 
+ Expansion proposal in. <a href='http://d.hatena.ne.jp/nishiohirokazu/20090419/1240121206'>Rule Amendments - Yasukazu Nishio's Hatena Diary</a>
+ 
+ :Heal: [Life] Restore life to the current number of bits.
+ :ChangeBit: [Bit] Change one bit that is not on this card to any color and remove the bit that was activated.
+ :ReverseBits: [Flow(Bit)] Reverse the bits on one card other than this card.
+ :AddCard: [Card] Return a discarded card to any position after the game starts.
+ Invert: [Numeric] Multiply any single Arabic numeral by -1.
+ 
+ *1240849403*I can't select sentences in Hatena Diary in Firefox 2.
+ I was having trouble with the "click to unfocus" phenomenon in the search window above and in the edit textarea until recently, and that seems to have been fixed, but at least now when I select a sentence, it deselects it.
+ 
+ <img src="http://gyazo.com/ee276e170a8d19ec09cc859d0e8a5b0a.png">
+ 
+ Geez, when I click on the body, it says to hide the palette and focus on the body when it's under 2 in Firefox! What the heck is that? Can't I just get whether the color star palette is visible or not, and only do that when it is visible?
+ 
+ *1240850465*[emacs] When you want a particular file to be in the specified major-mode and minor-mode.
+ I wrote this in todo.howm because I wanted it to be major: taskpaper, minor: howm.
+ >|lisp|
+ (add-to-list 'auto-mode-alist (cons "todo.howm$" 'taskpaper-mode))
+ (add-to-list 'auto-mode-alist (cons ".howm$" 'howm-mode))
+ ||<
+ Then I get only howm-mode, and when I try F1 v auto-mode-alist, it seems that the later additions come first. So I wrote this.
+ >|lisp|
+ (add-to-list 'auto-mode-alist (cons ".howm$" 'howm-mode))
+ (add-to-list 'auto-mode-alist (cons "todo.howm$" 'taskpaper-mode))
+ ||<
+ This time I only get taskpaper-mode. It seems it applies the first match and doesn't look at the rest. I'll look at F1 v auto-mode-alist again.
+ >>
+ Each element looks like (REGEXP . FUNCTION)
+ <<
+ Hmmm.
+ 
+ >|lisp|
+ (defun taskpaper-and-howm-mode ()
+   (taskpaper-mode) ; major-mode
+   (howm-mode) ; minor-mode
+ )
+ 
+ (add-to-list 'auto-mode-alist (cons ".howm$" 'howm-mode))
+ (add-to-list 'auto-mode-alist (cons "todo.howm$" 'taskpaper-and-howm-mode))
+ ||<
+ 
+ It was done. We were happy and satisfied.
+ </body>
+
+[Hatena Diary 2009-04-27 https://nishiohirokazu.hatenadiary.org/archive/2009/04/27]

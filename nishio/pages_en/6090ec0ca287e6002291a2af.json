@@ -1,0 +1,148 @@
+Hatena2013-05-26
+code:hatena
+ <body>
+ *1369574725* string parsing 2
+ This is a sequel to <a href='http://d.hatena.ne.jp/nishiohirokazu/20130510/1368196109'>Parsing Strings</a>. This time we will go to regular expressions.
+ 
+ ** Status
+ 
+ The last one I made was a very simple string analysis, just cutting out the "0-9 character" followed by the "0-9 character. But even then, the processing to be done when a character with "characters other than 0-9" appeared depended on whether it was before or after the "range of characters 0-9".
+ 
+ Before we move on to more complex string analysis in the future, let's first organize the process we created in the previous section in a diagram.
+ 
+ [f:id:nishiohirokazu:20130526221750p:image]
+ 
+ The previous process had two states: "before the range followed by the characters 0-9" and "after the range followed by the characters 0-9. In this figure, "before the range followed by 0-9 characters" is represented by "state 0" and "after the range followed by 0-9 characters" is represented by "state 1.
+ 
+ (Footnote: There are many words to describe this kind of thing, such as deterministic finite automaton (DFA) or finite state machine (FSM), but here we call it a state transition diagram because it will be easier to imagine. We call it a state transition diagram because it is easy to visualize. In addition, we use the UML notation to represent the start and end states because it is close to the program flow and therefore easier to understand).
+ 
+ ** More complex string analysis
+ 
+ Let's write a process to cut out floating-point numbers. This time, the floating-point numbers are
+ 
+ - Followed by one or more "0-9" characters.
+ - Then came the "period."
+ - At least one "0-9 character" follows.
+ 
+ Let's make the specification that the pattern is Let's write a program to cut out this pattern.
+ 
+ (Footnote: Depending on the programming language and locale, ".123" may be an OK representation of a floating point, "123." may be OK, or the decimal point may be a comma instead of a period, but these are not relevant to our discussion here, so we are simplifying.)
+ 
+ First, let's draw a state transition diagram. In this case, we need four states. The four states are: "looking for 0-9 (skipping all other characters)," "at least one 0-9 found," "followed by a period," and "followed by at least one 0-9 found.
+ 
+ [f:id:nishiohirokazu:20130526221749p:image]
+ 
+ The source code of the code is as follows. We introduce a variable called state to represent the state, read one character, and depending on the value of the current state, branch, and then depending on the type of character, add to the result (result), move to another state, or reset the result.
+ 
+ >|python|
+ def find_float(string):
+     result = ''
+     state = 0
+     for char in string:
+         print 'state=%r, char=%r, result=%r' % (state, char, result)
+         if state == 0:
+             if char in '0123456789':
+                 result += char
+                 state = 1
+         elif state == 1:
+             if char == '.':
+                 result += char
+                 state = 2
+             elif char in '0123456789':
+                 result += char
+             else:
+                 result = ''
+                 state = 0
+         elif state == 2:
+             if char in '0123456789':
+                 result += char
+                 state = 3
+             else:
+                 result = ''
+                 state = 0
+         elif state == 3:
+             if char in '0123456789':
+                 result += char
+             else:
+                 return result
+ 
+ 
+ print find_float("a0b12.c34.56d")
+ ||<
+ 
+ The execution result looks like this.
+ 
+ >||
+ state=0, char='a', result=''
+ state=0, char='0', result=''
+ state=1, char='b', result='0'
+ state=0, char='1', result=''
+ state=1, char='2', result='1'
+ state=1, char='.', result='12'
+ state=2, char='c', result='12.'
+ state=0, char='3', result=''
+ state=1, char='4', result='3'
+ state=1, char='.', result='34'
+ state=2, char='5', result='34.'
+ state=3, char='6', result='34.5'
+ state=3, char='d', result='34.56'
+ 34.56
+ ||<
+ 
+ You can see that it is properly cut out as expected.
+ 
+ ** regular expression
+ 
+ It's pretty hard to implement, even though it's such a simple pattern to cut out. Couldn't it be easier? If I declare what kind of pattern I want to cut out, can't the computer do the trick?
+ 
+ Actually, using the Python regular expression library re(*), the previous code becomes so much shorter. In this code, "\d+. \d+" expresses the pattern "one or more numbers followed by a period, followed by one or more numbers". This is a regular expression.
+ 
+ (Footnote: re stands for Regular Expression)
+ 
+ >|python|
+ import re
+ 
+ def find_float(string):
+     return re.search('\d+\.\d+', string).group()
+ 
+ print find_float("123a.b.314.159c25d")
+ ||<
+ 
+ A program that searches for a string of "patterns expressed in regular expressions" from a given string is called a regular expression engine from now on.
+ 
+ Many languages today have regular expression engines: some, such as Python and Java, use strings to write regular expressions, while others, such as Perl and JavaScript, have grammars for writing regular expressions in their language processors.
+ 
+ >||
+ JavaScript(Node.js)
+ 
+ > /\d+/.exec('abc123def')[0]
+ '123'
+ 
+ Python
+ 
+ >>> import re
+ >>> re.search('\d+', 'abc123def').group()
+ '123'
+ ||<
+ 
+ <hr>
+ 
+ I would like to write a supplemental article to the questions I received from readers of my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write a supplementary article like this. Please feel free to ask any questions or comments.
+ 
+ I think it would be appropriate to enter this commentary as a new chapter between chapters 3 and 4 of my book. As for the rest of the story in that chapter.
+ 
+ - History of Regular Expressions
+ - Diagrammatic representation of regular language stories, union sets, joins, and kleine closed envelopes.
+ - Can nested parentheses be cut out with a regular expression?
+ - PCRE talk, Talk about stepping out of the bounds of regular language
+ - context-free grammar
+ - How do you do it? (recursive descending parser, yacc)
+ - How would you describe it? (BNF)
+ 
+ I guess.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2013-05-26 https://nishiohirokazu.hatenadiary.org/archive/2013/05/26]

@@ -1,0 +1,24 @@
+Resolution: Uncaught TypeError: use_force_update_1.default is not a function
+
+2023-01-13 Kozaneba now gives the following runtime error in the browser, even though it was built and deployed without error
+ `Uncaught TypeError: use_force_update_1.default is not a function`
+
+cause
+　I rebuilt the environment for the first time in six months at [Create Kozaneba's development environment].
+　Latest [react-scripts] and [use-force-update] used internally by [ReactN] conflict.
+　The latter offers both esm and cjs, a bug that prevents the former from properly understanding the situation, the latter author claims!
+ 　>Downgrade react-scripts to ^4 until they resolve it in ^5.
+  >Downgrade use-force-update to 1.0.8.
+		[https://github.com/CharlesStover/reactn/issues/227 Dependency Use force update 1.0.10 causes a Type Error · Issue #227 · CharlesStover/reactn · GitHub]
+
+Resolution (for [Yarn]1)
+	Downgraded use-force-update
+　code:package.json
+  {
+    "resolutions": {
+      "use-force-update": "1.0.8"
+    }
+  }
+　There are other solutions on Github.
+
+[ReactN] [use-force-update]

@@ -1,0 +1,512 @@
+Hatena2010-07-24
+code:hatena
+ <body>
+ *1279982968*Summary of Haskell's "fib = 1:1:zipWith (+) fib (tail fib)" which is very slow
+ I almost summarized the previous day's story in chronological order, but there is so much information that it may be difficult for those who have not followed the story to catch up, so I will summarize it again. (For those who prefer more information: <a href='http://d.hatena.ne.jp/nishiohirokazu/20100720/1279595270'>Continued: Haskell's fib is slow</a>)
+ 
+ 
+ One way to define the Fibonacci sequence in Haskell is
+ >|haskell|
+ fib = 1:1:zipWith (+) fib (tail fib)
+ ||<
+ is well-known and Wikipedia introduces it as "The following definition generates a list of Fibonacci sequences in linear time. However, at least in the range of n = 10000 to 300000 or so, it takes about O(n^2.6) computation time, which is not true. (See the graph here: <a href='http://shinh.skr.jp/m/?date=20100719#p01'>Hajimete no Niki (2010-07-19)</a>)
+ 
+ 
+ Where did the value of 2.6 come from? It appears to be about O(n^2.6) because the GC took about O(n^3), which is mixed in with the original computation time O(n^2) by a small factor.
+ 
+ 
+ Why does GC take about O(n^3) time?Haskell's GC is a generational GC, which starts GC when the fixed-length minor heap is full. At this time, objects on the stack are used as the root of GC, so it takes O(m) time when the stack depth is m. In this case, when the stack depth is m, O(m) memory is allocated, so the consumption time m when the i-th GC occurs is i^0.5 ignoring the coefficient, and since this is added up for i, it integrates to i^1.5, and how much i increases is determined by dividing the memory consumption by the minor Since it is divided by the size of the heap, it is n^2 ignoring the coefficient, so n^3 is obtained by substituting this. So the computational complexity of GC is O(n^3).
+ 
+ 
+ This behavior is not reproduced in GHC 6.10.1 or earlier, so it is likely due to a GC fix in 6.10.2 (<a href='http://hackage.haskell.org/trac/ghc/ticket/2747'>#2747 (Excessive Memory Usage: space leak with foldl' on Integer) &#8211; GHC</a>). In 6.10.1, it seems to be on the order of n squared.
+ 
+ 
+ Also, the "situation with a huge number of huge Integers on the stack" is causing problems, so even in Haskell, if you write it naively with tail recursion, it will be O(n^2). The behavior changes depending on the order of computation (<a href='http://d.hatena.ne.jp/mkotha/20100623/1277286946'>In fib with infinite list, it is faster to take the sum up to 300,000th than to take the 300,000th</a>), and the evaluation strategy It changes (<a href='http://d.hatena.ne.jp/kazu-yamamoto/20100624/1277348961'>it is faster</a> to make a zipWith' that evaluates positive).
+ 
+ 
+ The apparent complexity of the infinite list involved makes this a simpler "it takes O(n ^ 2.6) time when trying to allocate memory that grows in proportion to n in a non-tail-recursive recursive call" case (<a href='http://d.hatena.ne.jp/ nishiohirokazu/20100721/1279687613'>It takes O(n ^ 2.6) time to simply multiply by 7 n times in Haskell</a>) might be easier to understand if you look first
+ 
+ 
+ Some people air-read the claim that "Haskell is slow," but it's just that "fib = 1:1:zipWith (+) fib (tail fib) is slower (at n = 100000 than code written in Python in a naive loop!" So please don't misunderstand me. In fact, the first entry is faster with simple tail recursion.
+ 
+ 
+ 
+ I guess it is something like this. If I am wrong in any way, please let me know.
+ 
+ *1279985270* Summary of personal lessons learned in this case.
+ ** How to use gnuplot
+ - fit a*(x**b) "data.txt" via a, b
+ - plot a*(x**b) "data.txt"
+ - using (log ($1)):(log ($2))
+ - set log x
+ - unset log x
+ 
+ ** GC
+ - GC affects the order of various processes more than you can imagine.
+ 
+ ** Facts and Interpretation
+ When you have a disagreement with another person about an interpretation, especially when you are looking at and interpreting one fact X, it is easy to assume that the other person may not be looking at the facts, but may be looking at a different fact Y. We need to share facts promptly to avoid unproductive discussions.
+ 
+ *1279985390* Methods for blogging manuscripts.
+ I should have started a little earlier. When I found out about the deadline, the deadline was a week away.
+ 
+ It is faster to write something that is likely to cause a firestorm and then revise it after receiving a rebuttal than to write something that is carefully written to be fair and unbiased, but mmmm.
+ 
+ *1279999839* Incomplete and rather wordy comparative programming linguistics.
+ Programming languages are man-made. People make mistakes. Therefore, there is no perfect programming language.
+ 
+ People make mistakes, but it is a fool's errand to persist in error." (Cicero) Programming languages have also developed through the repetition of incorrect designs, which are then corrected by people who are not idiots.
+ 
+ So, I am collecting information on design decision discrepancies and design failures between languages. I plan to include some excerpts in my lecture materials, so if you know of other examples, I would be very grateful for any information you can provide.
+ 
+ ** if(x = 0)
+ In C, the assignment is an expression, so you would write if(x = 0) with the intention of if(x == 0), which is always false.
+ 
+ - The value of x = 0 must be an int, and the conditional expression must be a bool, so it's a type error school: Java
+ - x = 0 is not an expression, so it's a syntax error to include it in a conditional expression: Python
+ - If x = 0 in the conditional expression, it is interpreted as x == 0: HMMMML ((http://twitter.com/HomeiMiyashita/status/19575507867))
+ 
+ ** pass by value, pass by reference
+ In C, the only way to pass arguments when calling a function was to pass by value, which could be done by obtaining the address of a variable, passing it by value, and then indirectly accessing that address at the destination. C++ introduced pass-by-reference, which does not require indirect access by the caller.
+ 
+ Java removed the "method of getting the address of a variable". Access to the object was made to look like a C++ reference, but when passing it to a function, it was done by passing the address by value (reference passing by value). That was sufficient. Non-objects (primitive types) are still passed by value.
+ 
+ Because everything in Python is an object, everything is now passed by value by reference. Primitives such as integers and strings were made unalterable objects, making it impossible to "make destructive changes at the caller's end. This made it possible for references to be passed by value as if they were just passed by value.
+ 
+ ** Define a range of values
+ In Java, the language specification defines the size and value range of primitive types such as int.
+ 
+ ** Array
+ Arrays in C have no length. They are simply "pointers to the beginning of a memory area that happens to contain data of the same type. Java arrays have a fixed length at the time of creation, and out-of-range access throws an exception.
+ 
+ Arrays in Java are first-class objects and can be passed by themselves as function arguments.
+ 
+ ** pointer to function
+ C can create pointers to functions. Since pointers are first-class objects, they can be passed to functions as function arguments.
+ In Java, there are no functions to begin with. It is possible to get a method object by reflection.
+ In C++, it is possible to create classes that define function call operators.
+ Functions in Lisp, Haskell, and Python are first-class objects and can be passed as function arguments without any concern.
+ Python also allows you to create classes that define function call operators.
+ 
+ ** Function call parentheses
+ To call a function (method)
+ - Parentheses are necessary even if there are no arguments: Python
+ - Parentheses are necessary even if there are no arguments, but outside of them: Lisp
+ - You can omit the parentheses only when there is no argument: D (thanks id:Dubhead)
+ - Parentheses are not necessary: Perl, Ruby
+ - Zero argument function? What's that, it's a constant: Haskell
+ - Don't need parentheses, function with 0 arguments? Pass () to the argument school: OCaml
+ - You don't need parentheses to change the concatenation order of operators, let alone functions, (1 + 2) * 3 should be written 1 2 + 3 *: Postscript, Forth
+ - The order of operator concatenation? Why don't you just decide that the calculation is from the left? 1 + 2 * 3 is fine for the group: Smalltalk
+ - The order of operations is from right to left: APL, J (thanks: straggler)
+ 
+ In a language where function calls with no arguments do not require parentheses and functions are first class, a new syntax is needed to create expressions that mean "the function itself," as opposed to the other way around.
+ 
+ For example, where you could write this in Python:.
+ >|python|
+ >>> def foo():
+ ...     print "foo!"
+ ... 
+ >>> bar = foo
+ >>> bar()
+ foo!
+ ||<
+ 
+ In Ruby, it would be written like this
+ >|ruby|
+ >> def foo
+ >>   p "foo!"
+ >> end
+ => nil
+ >> bar = Object.method(:foo)
+ => #<Method: Class(Object)#foo>
+ >> bar.call
+ "foo!"
+ => nil
+ ||<
+ 
+ ** operator overloading
+ 
+ C++ allows multiple definitions of operators. For example, "+" can be redefined. This can lead to very difficult-to-read code if abused.
+ 
+ Java does not allow multiple definitions of operators. As a result, even if you wanted to write x + y for a class of your own definition, you would have to write x.add(y), which would have resulted in a loss of program readability.
+ 
+ Python, Ruby, and others again allow multiple definitions of operators. The stance is "don't abuse it, we are all adults.
+ 
+ ** Multiple inheritance
+ C++ allows multiple inheritance of any class. This raises the question of which implementation will be chosen if there happen to be multiple method implementations of the same signature. ((<a href='http://ja.wikipedia.org/wiki/%E8%8F%B1%E5%BD%A2%E7%B6%99%E6%89%BF%E5%95%8F%E9%A1%8C'>Rhombic inheritance problem - Wikipedia</a>))
+ Java avoids this problem by limiting inheritance of classes with implementations to one. Java avoids this problem by limiting inheritance of classes with implementations to one. Classes (interfaces) without implementations can inherit from any number of classes. In Java, in such a situation, you can write a class with a reference to Foo, which has an implementation, and when your bar method is called, call Foo's bar method and leave the processing to Foo. When your bar method is called, you call Foo's bar method and let it take over the processing.
+ Ruby introduced the concept of mix-in to allow partial implementation inheritance. Ruby provides a syntax for "mixing in" modules, which are "special classes that cannot be instantiated and cannot inherit from a class," into a class.
+ Python supports multiple inheritance and uses a relatively natural algorithm called C3-Linearization to determine the order in which methods are resolved. This usually doesn't cause problems. ((PEP 283 -- Python 2.3 Release Schedule http://www.python.org/dev/peps/pep-0283/))
+ Perl used to be able to use C3 together with Python; since Perl 6, the default is C3. (( http://perldoc.jp/docs/modules/mro-1.00/mro.pod ))
+ 
+ ** GC
+ - You need GC, you don't need to worry about memory, it's a pain in the ass: Lisp, Java, Python, Ruby, and most other modern languages.
+ - There is no such thing as slowing down by adding functions for relaxation like GC: C
+ - It's impossible to slow down the system by adding a function like GC, which is for relaxing the system, and a smart pointer can do most of the work: C++.
+ - AutoreleasePool can be used for most purposes, but it would be easier to use GC: Objective-C (thanks id:jmuk)
+ - I usually use GC, but I can malloc/free if needed: D (thanks id:Dubhead)
+ - I tried region inference but region inference alone was not fast enough. So I also use GC: Haskell (thanks id:shelarcy)
+ 
+ 
+ ** Initialize variables
+ - If initialization is necessary, programmers can do it when necessary. The default functionality is not a good way to slow down the process: C, C++.
+ - The existence of uninitialized (unknowable value) variables is a dangerous bug and should not be tolerated; initialize on your own: Java, D (thanks id:Dubhead)
+ - I mean, you can only create a variable by assigning a value to it, so there is no such thing as an uninitialized variable.
+ - It's no good to have a mysterious value in an undefined variable, just put the value "undefined": JS
+ 
+ ** Global Variables
+ The C language allows global variables to be defined. Problems resulting from abuse of global variables are the responsibility of the programmer.
+ Java does not allow defining global variables. If you need a global variable that can be accessed from anywhere, you can use the fact that the class name can be accessed from anywhere, a trick that is still sometimes abused and causes problems.
+ Although Python appears to allow global variables to be defined, they are file-wise in scope. Rewriting a global variable requires a special "this function rewrites global variable foo" declaration. If you really want a variable that can be referenced from any file, add it dynamically in the __builtins__ module.
+ 
+ ** Direction of rounding for rectification
+ In C and C++, it is environment-dependent whether integer division rounds toward zero or toward negative infinity when the division is not divisible. In other words, -1/2 can be either 0 or -1.
+ Java always rounds to zero; C99 does the same.
+ In Haskell, integers cannot be divided by "/"; there are two integer division functions, div and quot, which return -1 for div and 0 for quot.
+ 
+ ** x / 0.0
+ Whether x / 0.0 should be an error or not
+ 
+ In Ruby 1.8, it should be NaN or Infinity.
+ Python throws an exception.
+ 
+ ** octal literals of type 0xxx
+ 
+ >|python|
+ >>> 1000 + 0100 + 0010 + 0001
+ 1073
+ ||<
+ 
+ - 0100 is 64 for: Python2.*, Java, Scala
+ - 0o100 and 0O100 are 64. School: Python 3.0, Haskell
+ 
+ I looked at the Haskell spec and thought it was a no-no to allow a capital O, but it's the same in Python 3.0.
+ 
+ ** allow lowercase els in long int literals
+ 
+ I came up with the capital O. So:.
+ >|python|
+ >>> 100l == 100
+ True
+ ||<
+ - Yes: Python2.6
+ - No: D (>= 0.154 http://www.digitalmars.com/d/1.0/changelog2.html#new0154 ) thanks id:hzkr
+ 
+ ** Automatically change to a more expressive type when the result of an integer operation exceeds the int range
+ 
+ The trap is that if you copy the bit operation code written in C or something like that, the result will not match because it changes to a long integer type where the upper bits are discarded by "<<<".
+ 
+ But for those who don't recognize numbers as a mass of bits, the argument that "it's strange that the upper limit is set for human convenience, and if you exceed it, it becomes a strange value without throwing an exception" is, well, reasonable.
+ 
+ -Schools that should be integers with no upper limit: Python, Ruby
+ -Any conversion is not a good idea: C, Java
+ -I mean, there is no such thing as an integer: JS
+ -The default is to have no upper limit in the first place: Haskell.
+ 
+ ** Whether to allow reassignment to variables
+ - What are you talking about?
+ - It's better to have constants. Constants start with a capital letter. Well, it only gives a warning if you reassign it, but I'm with the group: Ruby.
+ - Why don't you just add const or final to the ones you don't want to reassign: C++, Java
+ - Reassignment to variables is the root of all evil.
+ -- So I don't approve of it at all: Haskell
+ -- but it's not practical to ban it completely, so I've prepared a place where you can write in it, or I've created a way to do so: Erlang, OCaml.
+ 
+ ** operator precedence
+ In Pascal, addition operators (+, -, or, etc.) have lower precedence than multiplication operators (*, /, and, etc.), and comparison operators (==, >, etc.) have even lower precedence. In other words, "4 + 1 * 2 == 3 * 2" is interpreted as "(4 + (1 * 2)) == (3 * 2)". This is natural. But "0 < x and x < 9" becomes "0 < (x and x) < 9" and compile error
+ 
+ In many other languages, conditional operators (and, or) have a lower precedence than arithmetic operators (*, /, +, -, etc.).
+ 
+ In C, x == y & z becomes (x == y) & z (thanks @mametter)
+ 
+ ** On the continuation of comparison operators
+ - 0 < x && x <= 9" is a frequent pattern, so let's use the syntax "a sequence of multiple comparisons is an expression". You can write 0 < x <= 9 in Python.
+ 
+ ** minus unary operator
+ 
+ In Haskell, "f -1" is interpreted as "f - 1" and must be written as "f (-1)". Conversely, by partial application of the operator, (/ 2) is interpreted as "a function that divides by 2," but (- 1) is interpreted as -1.
+ ~1 in SML, _1 in J-language.
+ 
+ ** Loop
+ - There are many ways to loop, such as for, while, goto, and so on.
+ - goto is evil, just use for and while: Java
+ - The school of thought that tail recursion can be replaced by jumps, so you can loop with a recursive call: Lisp.
+ - I'd rather not need a loop since we have map and foldl: Haskell
+ 
+ ** type of empty list
+ Cambridge LCF ML used to be able to create a polymorphic \forall a. a list ref by let x = ref [].
+ 
+ It would be possible to put an int value in x and then retrieve it as a pointer and access it.
+ 
+ SML '97 Types and Type Checking http://www.smlnj.org/doc/Conversion/types.html
+ thanks id:camlspotter
+ 
+ ** Discrepancy between indentation and actual structure
+ 
+ In C, if statements can be written as shown below.
+ >|c|
+ if (x > 0)
+   when_x_is_positive();
+ ||<
+ 
+ Don't write it this way, thinking to add another process when x > 0
+ 
+ >|c|
+ if (x > 0)
+   when_x_is_positive();
+   another_task();
+ ||<
+ 
+ This means as shown below, another_task() is always executed.
+ >|c|
+ if (x > 0) {
+   when_x_is_positive();
+ }
+ another_task();
+ ||<
+ 
+ There is also a discrepancy between indentation and structure in the code below.
+ >|c|
+ if (x > 0) 
+     if (y > 0)
+ 	all_positive();
+ else 
+     x_isnt_positive();
+ ||<
+ x_isnt_positive() is not called when x == -1. Instead, it is called when x == 1 and y == -1. This code has the following structure.
+ >|c|
+ if (x > 0) {
+     if (y > 0) {
+ 	all_positive();
+     } else {
+         x_isnt_positive();
+     }
+ }
+ ||<
+ 
+ In C, the programmer should be careful, or get around it with a coding convention that says to add braces {} & indent correctly.
+ In Ruby, close with end.
+ In Python, the idea is reversed and the structure is determined based on indentation. The following code works as it appears.
+ >|python|
+ if x > 0:
+     if y > 0:
+ 	all_positive()
+ else:
+     x_isnt_positive()
+ ||<
+ 
+ In QuickBASIC and HMMMML (( http://miyashita.com/HMMMML.pdf )), "If ~ End If" (QB), "&lt;/if >" (HMMMML) is used.
+ 
+ ** How to receive the receiver
+ Talking about how to access obj in method when executing obj.method(arg)-like code.
+ 
+ - Receivers are the school of thought that explicitly accepts them as optional arguments: Python, C (thanks @mametter)
+ - In a method, another_method() means obj.another_method(), so you don't have to be aware of the receiver, but if you want to do something with the receiver itself, it's in this: Java.
+ - Receivers? That's just an argument, nothing special: Common Lisp with CLOS, Haskell
+ 
+ ** Can string objects be modified destructively?
+ 
+ - Yes: Ruby, C++
+ - No: Python, Java
+ - String? What is that, a char*? C
+ 
+ ** Convert strings and numbers automatically?
+ 
+ For PHP
+ >||
+ $ php -r 'print "1" + "2";'
+ 3
+ $ php -r 'print "1" . "2";'
+ 12
+ $ php -r 'print "1" . 2;'
+ 12
+ $ php -r 'print "1" + 2;'
+ 3
+ ||<
+ Same for Perl.
+ 
+ - Strings and numbers are automatically converted, so string concatenation and number addition are different operators: Perl, PHP
+ - It's a type error: Python, Ruby
+ - I'm sure objects, not just numbers, know how to convert themselves to strings (toString), so why not just convert them to strings? School: Java
+ 
+ ** What would 1/2 be?
+ - Integer 0's: Python2.*, Ruby, OCaml
+ - It's 0.5 of a floating point number. school: Python3.*
+ - It's 1/2 of a rational number: Scheme
+ - Just to make sure, the 1 or 2 is (Num a) => a, not Int, right? Then the result is (Fractional a) => a. This is a typeclass that can be either a floating-point number or a rational number, and which one is determined by type inference. Incidentally, when it cannot be determined by type inference, it is called Defaulting and (omitted. Read more <a href="http://www.haskell.org/onlinereport/decls.html#sect4.3.4">here</a>): Haskell
+ - Numerical values are BigDecimal by default: Groovy
+ 
+ ** OO
+ - It's a hassle to manage data and procedures separately, so I think you'll be happy if there are objects or classes that unify them. : Simula
+ - Everything can be expressed in terms of objects and the messages exchanged between them! Messages! Messages! : Smalltalk
+ - What's that slow...: C
+ - Hmmm, the concept of Simula classes is a good one. Adopted! In essence, it's an extension of the struct concept of combining existing types to create new types, and if we can combine functions into a single type, that's all we need, right? Oh, and inheritance. This is also useful. Adopt it! Access restrictions? Hmmm... I'll include that too. Messages? ...What's that good for? C++ : C++
+ - Programming is all about defining classes and creating objects! Objects! Objects! What? Primitive types are not objects? Well, it's just for performance or something... (giggle): Java
+ - Ta-da! I've converted integers and other types into objects! Primitive types are also converted to objects automatically! Objects! Objects! Java 5
+ - Or, in short, all you need is a hash to hold the data and a way to paste the module containing the function: Perl.
+ - If the function is a first-class object to begin with, why not put it in a hash? This is fine, right? : JavaScript
+ - Namespaces themselves are dictionaries (hashes), right? You can easily create a namespace, put in functions, and add convenient functions such as inheritance and method/instance binding! That's it! Python : Python
+ - No need for private: Perl, JavaScript, Python
+ - The scripting languages of the world disregard PRIVATE too much! Unforgivable! School: Ruby
+ 
+ ** boolean
+ 
+ - We provide the true and false values. If you put anything else in the conditional expression, it's a type error.
+ - 0 is false, all others are true: C
+ - #f is false and all others (including 0) are true: Scheme
+ - False and nil are false, all others (including 0) are true: Ruby
+ - false, null, undefined, 0, empty string, and NaN are false: JavaScript
+ - False, None, zero and empty objects are false: Python (( http://www.python.jp/doc/2.4/lib/truth.html ))
+ 
+ ** Scope
+ - Static scope, because dynamic scope is hard: ALGOL, C, Pascal
+ - Dynamic Scope: Early Lisp, Early Perl
+ - It would be nice to have both dynamic and static scopes: CommonLisp, Perl(my/local)
+ - Lisp's dynamic scope is a mistake, isn't it? Faction: Scheme, Python
+ - Scope? What's that good for? : BASIC
+ 
+ ** Array out-of-range access
+ 
+ - Return something appropriate: Ruby(nil), JavaScript(undefined)
+ - Throwing Exceptions: Python, Java
+ - May die: C
+ </body>
+ <comments>
+ <comment>
+ <username>shinichiro_h</username>
+ <body>O(n^2) on the stack is wrong. The maximum stack size should be proportional to N. Similarly, I don't think there is a huge Integer on the stack. <br><br>The frequency of calling GC appears to be behaving more like O(N), and the reason for this is that in the beginning it was about once every k times, but in the second half we are talking about GC being triggered every time allocation is made. </body>
+ <timestamp>1279984844</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>It is natural that the frequency of GC calls is more than O(n) because "GC occurs when the fixed-length minor heap is filled" and "since fib is almost exponential, the memory allocated per call is O(n), so overall, O(n^2) memory is allocated. I think it's obvious, but what does it mean that there is no Integer on the stack? </body>
+ <timestamp>1279986873</timestamp>
+ </comment>
+ <comment>
+ <username>shinichiro_h</username>
+ <body>Well, isn't Integer on the heap? Or do you mean that it is on the stack in the sense that it is referenced from the stack? In any case, I don't think that GC in a language like Haskell would be able to lick through multiple integers, so I think the cost of one GC would be O(N). </body>
+ <timestamp>1279989620</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see, I see, I misunderstood why it is O(N^3), the GC itself is O(N) but the frequency of it increases so it is O(N^3). </body>
+ <timestamp>1279999950</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Fixed. </body>
+ <timestamp>1280000658</timestamp>
+ </comment>
+ <comment>
+ <username>ujihisa</username>
+ <body>> Function calls need parentheses only when there are more than two arguments: Ruby<br><br>f(a, b)<br>f a, b</body>
+ <timestamp>1280021712</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, well, thanks. I fixed it! </body>
+ <timestamp>1280022337</timestamp>
+ </comment>
+ <comment>
+ <username>qnighy</username>
+ <body>J language has an interesting specification with - as an operator and _ as a literal, and it is really interesting and I really think everyone should be interested in it<br>Example -2 3 4 5 is the same as _2 _3 _4 _5 (because - is applied to all vector values)</body>.
+ <timestamp>1280032290</timestamp>
+ </comment>
+ <comment>
+ <username>Doyoubi</username>.
+ <body> Can string objects be modified destructively? <br>Please add C++ to "Yes"</body>.
+ <timestamp>1280043571</timestamp>
+ </comment>
+ <comment>
+ <username>I just happened to be here</username>.
+ <body>>> def foo<br>>> p "foo!"<br>>> end<br>=> nil<br>foo # => "foo"<br><br> is enough</body>
+ <timestamp>1280059226</timestamp>
+ </comment>
+ <comment>
+ <username>kudzu_naoki</username>
+ <body>At the end of the passing-by-value and passing-by-reference section, regarding Python, "passed-by-value is now the same as just passing-by-value" is "passed-by-value is now the same as just passing-by-reference". Sorry for the limiting comment. </body>
+ <timestamp>1280105530</timestamp>
+ </comment>
+ <comment>
+ <username>Dubhead</username>
+ <body>Only unusual parts of the D language<br>○ If you have zero arguments, you can omit parentheses in function and method calls<br>○ Usually GC is used, but malloc/free can be used if necessary<br>○ Initialization of variables: initial values are determined by the type (e.g. int i; then i is 0. The compiler will do its best to avoid setting initial values that are not used. Of course, int i = 42; is also possible.) </body> </> </> </body> </> </body> </> </body
+ <timestamp>1280108937</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>qnighy><br>I agree that the J-language is very interesting (in a perverse way, of course)<br><br>Doyoubi><br>I added it! Thank you! <BR><BR>I came here by accident<BR>I don't understand the intent of the claim. <BR><BR>kudzu_naoki><BR>No, if a reference is passed by value as in Java, the caller's object will be affected if a destructive method is called on the calling object, but Python does not attach destructive methods to primitive classes. Python does not add destructive methods to primitive classes, so the caller's object is not affected. <br><br><br>I'm not sure how to fix this, but if you have any suggestions, please let me know. <BR><BR>Dubhead><BR>I'll add it! Thank you! </body>
+ <timestamp>1280110756</timestamp>
+ </comment>
+ <comment>
+ <username>Torisugi</username>.
+ <body>>I don't think it's possible to include a feature like GC by default, <br>>I think smart pointers are almost always sufficient: C++<br>According to the design and evolution of C++, the reason why GC is not (or was not) included in C++ is because it violates the principle of zero overhead (additional support for using a feature has no effect when that feature is not used)<br <br>So I was thinking more along the lines of "smart pointers are almost always sufficient" or "it's impossible for smart pointers to be slow or impossible"</body>.
+ <timestamp>1280115827</timestamp>
+ </comment>
+ <comment>
+ <username>eldesh</username>
+ <body>>In the C language, the programmer was forced to waste a lot of effort because "how many bits are in an int" and so on varied depending on the environment. <BR>That may be true, but I think you have it backwards. <BR>In other words, isn't the bit length of an int defined so that code that doesn't depend on the bit width can be exchanged between platforms with different register bit lengths? <BR>While this may be an unnecessary effort for programmers in the current situation, I don't think it's an example of "the old guys got it wrong". <br>(We could just use int32_t or something like that.)</body>
+ <timestamp>1280132620</timestamp>
+ </comment>
+ <comment>
+ <username>dankogai</username>
+ <body>#Perl:Basic parentheses not required for function calls<br>system 'rm', '-rf', '/';<br># Also, I'd like a school of air-readers and non-readers, like perl and scala's _<br>Dan the Man with Too Many Languages to Speak </body>
+ <timestamp>1280141742</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <BODY>Torisugari><BR>I added this because it seems that it is difficult to convey the purpose of "it is impossible because the default setting slows things down". <BR><BR>eldesh><BR>If you know of a more obvious "example of how people made mistakes in the past", I would be very grateful if you could share it with me. <BR><BR>dankogai><BR>Thank you. I have added it! </body>
+ <timestamp>1280143691</timestamp>
+ </comment>
+ <comment>
+ <username>straggler</username>
+ <body>>Order of operator concatenation? Why don't we just decide that the calculation is from the left? 1 + 2 * 3 is fine: Smalltalk<br>Arithmetic is from the right: APL, J</body>.
+ <timestamp>1280340334</timestamp>
+ </comment>
+ <comment>
+ <username>Tsumuji</username>.
+ <body>The "function call parentheses" ......<br>In Ruby also, <br>irb(main):001:0> def foo<br>irb(main):002:1> p "foo!"<br>irb(main):. 003:1> end<br>=> nil<br>irb(main):004:0> bar = foo<br>"foo!"<br>=> "foo!"<br>irb(main):005:0> bar<br>=> "foo!"<br> This is the same as Python Isn't this the same as Python? <br><br>By the way<br>irb(main):006:0> foo = "abc"<br>=> "abc"<br>irb(main):007:0> foo<br>=> "abc"<br>In case the method name and variable name conflict, the variable name has priority, but <br In such cases, the variable name will take precedence, but if you call the method with parentheses, it will be recognized<br>as a method name. <br>irb(main):008:0> foo()<br>"foo!"<br>=>"foo!"</body>
+ <timestamp>1280396426</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Tsumuji> Isn't this the same as Python? <br>No. <br>Try to figure out why <br>irb(main):004:0> bar = foo<br>"foo!"<br>=> "foo!"<br> is being output. Also, you could try bar.class. </body>
+ <timestamp>1280397295</timestamp>
+ </comment>
+ <comment>
+ <username>Tsumuji</username>.
+ <body> After you pointed this out, I realized my mistake. In my code, the return value of the foo method, "foo!", was just bound to bar. <br><br>By the way, I read the blog post again and got stuck<br>so I went to ...... in addition. <br><br>Because Ruby is a purely object-oriented language, methods are not<br>alone first classes like they are in functional languages. <br>A method defined at the top level, as in this case, becomes a pra<br> ive method of the Object class. If you define a foo method at the top level, you can check it by running <br>Object.private_methods. </body>
+ <timestamp>1280461562</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>straggler><br>Added! Thank you! <BR><BR>Tsumuji>Ruby is a purely object-oriented language, so methods are not <BR>alone first classes like in functional languages. <BR><BR>I don't understand your assertion in two ways. <br>- The point that I don't understand the meaning of the term "pure object oriented language"<br>- "Methods are never first class by themselves"<br><br>>> bar = Object.method(:foo)<br>=> #<Method: Class(Object )#foo><br><br><br>This method object appears to be first class, but is it an assertion that it is not? <BR><BR>It is not a contradiction between being object oriented and a method or function being first class, Ruby is compatible, but since it does not emphasize such a functional language style of coding, it has adopted a syntax that makes it harder to write in that way than Python, I understand that. </body>
+ <timestamp>1280465633</timestamp>
+ </comment>
+ <comment>
+ <username>Tsumuji</username>.
+ <body>Since I couldn't write in the comments section, I wrote a blog post: http://tsumuji.cocolog-nifty.com/tsumuji/2010/08/ruby-python-108.html</body>
+ <timestamp>1280606229</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see what you mean, you don't mean Method object by the word "method". If you mean that a method (without instance information) cannot be a first class by itself, then you are right. Therefore, you need to do Object.method(:foo), Foo.new.method(:bar), etc. to create a "(instance-bound) method," which was the intent of the main text. You omitted the parentheses, which is the cause of the misunderstanding. </body>
+ <timestamp>1280645253</timestamp>
+ </comment>
+ <comment>
+ <username>Tsumuji</username>.
+ <body>In the Ruby world, the word "method" usually brings to mind "class method" or "instance method. I don't think there are many people who suddenly think of Method object when they hear the word "method". </body>.
+ <timestamp>1280659864</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Hey, I didn't know that. I didn't know that. So you are claiming that "such an interpretation is normal in the Ruby world". Thank you for your opinion. </body>
+ <timestamp>1280673473</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>Tsumuzi,<br><br>Smalltalk, like Ruby, only supports an object-oriented paradigm, but unlike Ruby, methods are first class (f := Integer compiledMethodAt: #factorial ...) and static calls can be made regardless of the class to which they belong. For reference. </body>
+ <timestamp>1280833322</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-07-24 https://nishiohirokazu.hatenadiary.org/archive/2010/07/24]

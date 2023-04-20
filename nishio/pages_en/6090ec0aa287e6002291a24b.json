@@ -1,0 +1,59 @@
+Hatena2012-07-05
+code:hatena
+ <body>
+ *1341494412*Learn operator precedence and associativity on the browser.
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20120501/1335846610'>What we want to make: a site to learn core concepts of programming languages</a>, <a href='http://d.hatena.ne.jp/ nishiohirokazu/20120619/1340115934'>sequel to part 2</a>.
+ 
+ We will introduce the finished parts little by little. If we wait until all the parts are available before introducing them, it will be too late.
+ 
+ So here first <a href='http://nhiro.org/learn_language/Parser-on-browser.html'>Parser on browser &#8212; Learn Languages 1.0 documentation</a a>
+ 
+ This demo allows you to experiment with the behavior of the parser in your browser. You can try to see how the parsing results change depending on operator precedence and connectivity.
+ 
+ The source is only a little more than 200 lines, so it would be good to read it. It would be nice if there was an explanation of how to read it, but I'm going to open it to the public as it is now, as a small start.
+ 
+ PS: 1 * 2 + 3 should be ( (1 * 2) + 3 ) and 1 + 2 * 3 should be ( 1 + (2 * 3) ). This is operator precedence: 1 - 2 - 3 should be ( (1 - 2) - 3 ) and 1 ** 2 ** 3 should be ( 1 ** (2 ** 3) ). This is the associativity of operators.
+ 
+ *1341494911*How to assert that the git workspace is clean
+ Reprinted from Twitter because it would be a waste if it drifted away:.
+ >>
+ &#8207;@nishio: I'd like to ASSERT that "git workspace is clean" before I run it in the Makefile.
+ <<
+ >>
+ @n0kada: test -z "`git status --porcelain`"
+ <<
+ 
+ It worked perfectly! Thank you very much!
+ 
+ >||
+ $ make deploy 
+ # TODO assert workspace is clean
+ test -z "`git status --porcelain`"
+ make: *** [deploy] Error 1
+ ||<
+ 
+ *1341495327*Story of failure due to lack of rsync power.
+ Correct.
+ 
+ >||
+ rsync -r -v public_html/foo/ server:/home/nishio/public_html/foo
+ ||<
+ 
+ I was trying not to fall into the trap of forgetting to add / to the SRC and creating foo/foo, but my attention span was exhausted and I made a DST mistake.
+ 
+ >||
+ rsync -r -v public_html/foo/ server:/home/nishio/public_html
+ ||<
+ 
+ Gee, the contents of foo are scattered all over public_html!
+ 
+ Also, I should have added --exclude=.git.
+ 
+ PS
+ >>
+ @knok Recent rsync also excludes .svn, .git, .bzr, etc. with -C/--cvs-exclude
+ <<
+ Thanks for the information!
+ </body>
+
+[Hatena Diary 2012-07-05 https://nishiohirokazu.hatenadiary.org/archive/2012/07/05]

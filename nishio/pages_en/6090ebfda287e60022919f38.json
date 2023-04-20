@@ -1,0 +1,252 @@
+Hatena2009-02-13
+code:hatena
+ <body>
+ *1234474483*Housekeeping
+ I woke up.
+ 
+ 
+ What we do today
+ - Wake up in the morning
+ - Wash dishes
+ - □ Wash PET bottles
+ - □ Collecting mail that had accumulated in the mailbox
+ -- □ Throw away what you don't need
+ - □ Write a reply to your email
+ - □ My credit card was not accepted and maybe the amount of deposit in the bank is short. I go to bookkeeping. But usually you get a phone call or an e-mail or something.
+ -- ■ I tried to view my Rakuten KC statement on the web, but the system had changed, so I am registering as a member. □ I change my address after moving.
+ - □ Clean up the room
+ - Map
+ - Headphones
+ - □ Summarize how to create a GAE project
+ - □ About Mercurial's bisect
+ 
+ the others
+ - 15 Receive keys to new house
+ - 18 Resource Trash Day. Throw away as much unwanted newspapers, magazines, etc. as possible.
+ - 20 pots / debit your Rakuten card
+ - 28 Return of keys to current address
+ - I'll get a haircut soon (maybe next time I'm in Akihabara).
+ 
+ *1234475993*[Python] type declaration and assert in constructor
+ When you are designing with a Java-like mind, you may want to write something like this. Hit points are integers. In reality, Python is not written in this way.
+ 
+ >|python|
+ class Monster(object):
+     hitpoint = int
+     defense = int
+     attack = int
+ 
+ ||<
+ 
+ So, since I had developed the design in this way of writing without writing the code out of the blue, I thought, since I'm here, how about putting it to good use? Use it for assertions at the end of the constructor.
+ 
+ >|python|
+ class Monster(object):
+     field_types = dict(
+         hitpoint=int,
+         defense=int,
+         attack=int,
+     )
+     def __init__(self, **kw):
+         self.__dict__.update(kw)
+ 
+         for k, v in self.field_types.items():
+             assert isinstance(getattr(self, k), v)
+ ||<
+ 
+ If you mistype "Monster(attack=1, defence=1, hitpoint=1)", it will stop on assert. fail-fast. you can automatically add a metaclass that says "do this at the end of __init__", but it's a bit much. I think it's a bit too much.
+ 
+ *1234477277*Favorite Quote "You don't need anything that you have to worry about whether you need it or not."
+ I'm always having to search for the exact wording, so I'll just write it here.
+ >>
+ "Metaclasses are deeper magic than 99% of users should ever worry about. If you wonder whether you need them, you don't (the people who actually need them know with certainty that they need them, and don't need an explanation about why). -- Python Guru Tim Peters"
+ <<
+ 
+ 'If you're wondering if you need it, you don't need it. If you really need it, you are convinced that you 'need it. ' I don't have to explain to you why you need it."
+ 
+ I'm talking about Python's metaclasses, but I think it's a more universal truth, not just a feature of the language. Let's clean the room while tweeting this.
+ 
+ *1234478455* Missing pills
+ A pill that I dropped and lost while trying to drink fell out when I scratched my head! Magic!
+ 
+ *1234536216*Rehabilitation
+ I've been feeling good for a while now, but then I suddenly started to feel bad. I need to go to rehab.
+ 
+ *1234536787*Quick Sort
+ Rehab Part 2 (ref. <a href='http://d.hatena.ne.jp/nishiohirokazu/20090120/1232461815'>Slump Escape Method</a>, <a href='http://d.hatena.ne.jp/ nishiohirokazu/20090120/1232476435'>Fibonacci Sequence</a>)
+ 
+ <img src="http://gyazo.com/c92b099f37f2009a8dff3278b393c63e.png">
+ 
+ >|python|
+ from random import shuffle
+ data = range(100)
+ shuffle(data)
+ 
+ # recursion
+ def qsort(data):
+     if not data: return data
+     pivot = data[0]
+     rest = data[1:]
+     greater = [x for x in rest if x > pivot]
+     lesser = [x for x in rest if x <= pivot]
+     return qsort(lesser) + [pivot] + qsort(greater)
+ 
+ print qsort(data)
+ ||<
+ 
+ 
+ Loop version difficult. This one only has one pivot to swing in and out...
+ >|python|
+ # loop
+ def qsort_loop(data):
+     """
+     ... pivot a b c ... last done ... When
+     if a < pivot:
+         ... a pivot b c ...
+     else:
+         ... pivor b c ... last a done ...
+         is naive, but there are many copies of this one.
+         ... pivor last b c ... a done ...
+ 
+     """
+     if not data: return data
+     pivot = data[0]
+     cur = 1
+     done = len(data)
+     while cur != done:
+         v = data[cur]
+         if v < pivot:
+             data[cur - 1] = v
+             data[cur] = pivot
+             cur += 1
+         else:
+             data[cur] = data[done - 1]
+             data[done - 1] = v
+             done -= 1
+     
+     return data
+ 
+ print qsort_loop(data)
+ ||<
+ 
+ <hr>
+ I was able to do it.
+ >|python|
+ # loop
+ def qsort_loop(data):
+     """
+     ... pivot a b c ... last done ... When
+     if a < pivot:
+         ... a pivot b c ...
+     else:
+         ... pivor b c ... last a done ...
+         is naive, but there are many copies of this one.
+         ... pivor last b c ... a done ...
+ 
+     """
+     stack = [(0, len(data))]
+     while stack:
+         start, end = stack.pop()
+         print (start, end)
+         if end - start <= 1: continue
+         pivot = data[start]
+         cur = start + 1
+         done = end
+         while cur != done:
+             v = data[cur]
+             #print data
+             #print cur, done, pivot, v
+             if v < pivot:
+                 data[cur - 1] = v
+                 data[cur] = pivot
+                 cur += 1
+             else:
+                 data[cur] = data[done - 1]
+                 data[done - 1] = v
+                 done -= 1
+ 
+             #print data
+             #print
+         stack.append((start, cur - 1))
+         stack.append((cur, end))
+     
+     return data
+ 
+ print qsort_loop(data)
+ ||<
+ 
+ first
+ >||
+ -        stack.append((start, cur - 1))
+ -        stack.append((cur, end))
+ +        stack.append((start, cur))
+ +        stack.append((cur + 1, end))
+ ||<
+ The result was usually messed up at the end of the sorting. I added a commented-out print statement to make it a range(5) and followed the flow.
+ 
+ <hr>
+ Speed Comparison
+ >|python|
+ from time import clock
+ 
+ def profile(n):
+     print n,
+     original_data = range(n)
+     shuffle(original_data)
+     data = original_data[:]
+ 
+     t = clock()
+     qsort(data)
+     print clock() - t,
+ 
+     data = original_data[:]
+     t = clock()
+     qsort_loop(data)
+     print clock() - t
+ 
+ for i in range(13):
+     profile(100 * (2 ** i))
+ ||<
+ 
+ >||
+ 100 0.000448 0.000429
+ 200 0.000967 0.001027
+ 400 0.002129 0.002277
+ 800 0.004327 0.005072
+ 1600 0.00907 0.011751
+ 3200 0.018466 0.022997
+ 6400 0.039396 0.050003
+ 12800 0.085261 0.112591
+ 25600 0.171988 0.224489
+ 51200 0.362911 0.484281
+ 102400 0.767855 1.092627
+ 204800 1.677372 2.279966
+ 409600 3.564921 4.905796
+ ||<
+ 
+ That, that. Surprisingly, the recurrence call is doing well. The recursive version should waste more memory, but I wonder if the high cost of the pointer operation in the loop version is the reason why I can't see it.
+ </body>
+ <comments>
+ <comment>
+ <username>nowokay</username>
+ <body>You hid it in the sleeve of your clothes! </body>
+ <timestamp>1234494606</timestamp>
+ </comment>
+ <comment>
+ <username>jbking</username>
+ <body>Wouldn't zope.interface be fine? </body>
+ <timestamp>1234494765</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I don't think it's a good idea to reveal the seeds of magic! </body>
+ <timestamp>1234496948</timestamp>
+ </comment>
+ <comment>
+ <username>Delegation</username>.
+ <body>I don't think it's overkill, but the above code is hardly practical. For realistic use, it is necessary to support delegation, etc., and then checking the interface becomes mandatory, and it will end up being something like zope.interface. </body>
+ <timestamp>1234744318</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-02-13 https://nishiohirokazu.hatenadiary.org/archive/2009/02/13]

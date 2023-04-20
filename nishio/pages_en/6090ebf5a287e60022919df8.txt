@@ -1,0 +1,69 @@
+Hatena2008-03-03
+code:hatena
+ <body>
+ *1204531790*Python Developer Camp
+ Study pyspec, buildbot and Gainer.
+ 
+ *1204538646*[CommonLisp][OOP] made a counter.
+ I thought it was too much for me, but it was not difficult at all. It took me less than an hour, including the installation of the processing system.
+ >|commonlisp|
+ > (defclass counter () 
+     ((count 
+         :initform 0 
+         :accessor counter-value)))
+ 
+ #<STANDARD-CLASS COUNTER>
+ 
+ > (setq c (make-instance 'counter))
+ #<COUNTER #x19F0E4B1>
+ 
+ > (defmethod push-button ((x counter)) 
+     (setf
+         (counter-value x) 
+         (+ 1 (counter-value x))))
+ 
+ #<STANDARD-METHOD (#<STANDARD-CLASS COUNTER>)>
+ 
+ > (push-button c)
+ 1
+ > (push-button c)
+ 2
+ > (setq c2 (make-instance 'counter))
+ #<COUNTER #x19F16E95>
+ > (push-button c2)
+ 1
+ > (push-button c)
+ 3
+ ||<
+ This was used as a reference:
+ http://www.geocities.jp/m_hiroi/clisp/clisp01.html
+ 
+ In both Python and Java, the type of x in x.method(y, z) determines the entity of the method, but in CommonLisp, the types y and z can also be used to refine the method.
+ 
+ -----
+ 
+ But at first I thought "wow" but in what kind of situation would this be useful? If we have all base class-like objects (let's say Obj), we can use (defmethod method((x Obj) (y Foo) ...) If there are all base class-like objects (let's say Obj), we can use (defmethod method((x Obj) (y Foo) ...) to do the same thing if the argument y is Foo, regardless of what the receiver is, but I think that should be a Foo method.
+ 
+ Even though the implementation does not belong to a specific object, if you specify the class of the first argument like ((x Obj) ...) From the user's point of view, it is no different from "a method belongs to a specific class, but all classes can add methods".
+ 
+ -----
+ 
+ Can't we create methods with different number of arguments? It's a mystery to me what kind of technical problem prevents us from creating such methods. And it is inconvenient.
+ 
+ *1204540903* By the way.
+ I installed Squeak to try it with Smalltalk, but was frustrated because I couldn't figure out where to type the code.
+ </body>
+ <comments>
+ <comment>
+ <username>sumim</username>
+ <body>>Where to type the code...<br>Wherever you can type the characters is fine. <BR><BR>...but that is too much freedom, so you usually type in the workspace (in the Japanese version, desktop click -> open...-> workspace; in the English version, desktop click -> open...-> workspace. In English environment, desktop click -> open... -> workspace) is better. →workspace) is better. To execute the code, select it and press alt(Win)/cmd(Mac) + d. </body>
+ <timestamp>1204551000</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>If Squeak's unique GUI and operating style bother you, we recommend GNU Smalltalk for CUI. <br><br>If you are using Win, it may not work well.... <br><br>http://smalltalk.gnu.org/</body>
+ <timestamp>1204551728</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-03 https://nishiohirokazu.hatenadiary.org/archive/2008/03/03]

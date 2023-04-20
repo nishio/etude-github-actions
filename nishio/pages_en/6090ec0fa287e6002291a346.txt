@@ -1,0 +1,42 @@
+Hatena2016-03-12
+code:hatena
+ <body>
+ *1457767121*Log of Amazon purchases used for tax return (2016)
+ To make next year's tax return easier to file, I'd like to make a note of what I experienced in March 2016 and what I thought about what kind of design would make me happy. If I could afford it, I would implement it, but I probably won't be able to afford it.
+ 
+ ** freee
+ 
+ First of all, Freee has the ability to import from Amazon, so I thought it would be easy to use this and do all my tax returns with Freee. <a href='https://support.freee.co.jp/hc/ja/articles/202847550-Amazon-%E8%B3%BC%E5%85%A5%E5%B1%A5%E6%AD%B4%E3%82%92%E5%8F%96%E3%82%8 A%E8%BE%BC%E3%82%80'>Amazon - Import Purchase History &#8211; Help Center</a>.
+ 
+ I tried to create an account, but with no luck, I got an "Amazon sync failed due to temporary error" message. But since today is the last weekend before the deadline, I couldn't wait that long and decided to give up.
+ 
+ I think it would be best if this works easily, so I will try again next January. I think it is important for the sustainability of the service and the happiness of the engineers to pay a fair price for a valuable service, and to use that as a source of funds to pay engineers a fair salary for maintenance.
+ 
+ On the other hand, I had to go through the process of trying to log in to Amazon, which seemed like a lot of trouble, such as "answer the image verification within a minute" and "answer what is your zip code". It seems to be a thorny road.
+ 
+ ** TSV output bookmarklet
+ 
+ Tried this next: <a href='http://qiita.com/koyopro/items/d8b259f1eb75a01d3a0b'>Bookmarklet to output TSV of money spent on Amazon over the year and order history [2015] - Qiita</a>.
+ 
+ This one works by plugging JS into the Amazon screen where the user has logged in at hand, thus avoiding the thorny path of "authentication to Amazon". On the other hand, the DOM structure is still a thorny path.
+ 
+ When I first ran this script in Chrome's developer tools console, I got an error that $("<div/>") was not the correct selector, but it worked fine when run as a bookmarklet. However, the popup was blocked and I had to run it again. Maybe it would be better to use a rewrite type with document.write instead of popups?
+ 
+ I've seen some people say, "I want to load a script externally, but I can't serve it over HTTP and put it in Amazon's HTTPS server". It might not be a bad idea for businesses that already provide services over HTTPS to serve it. If they advertise their services after the output, they can advertise to the segment of "people who file tax returns" at a low cost.
+ 
+ When I pasted the output TSV into Excel, Excel converted tabs to spaces, which was sad. Also, because I tend to "buy books in bulk," there are many cases where the amount of money is not output. In addition, the correspondence between books and authors is not correct, and there is a phenomenon that "I did too many things around the DOM and could not keep up with the subsequent changes on Amazon's side.
+ 
+ I decided to ignore the amounts output by this script and enter them myself, looking at my purchase history. However, I had already entered the name of the item, so all I had to do was enter the numbers. It is much easier because I don't have to do "select and copy/paste" or "kana-kanji conversion".
+ 
+ However, the total of the "price of that item" written under the item is not necessarily the total amount of the order. Due to shipping costs, etc. So the columns are "date, total amount, individual amount, and item name". Also, since I was typing manually, I did not post the amounts for items that were not expenses (food, entertainment, etc.). With that kind of input, the input was completed in one pomodoro. Out of 311 total purchases, the total amount entered was 106. So, I was able to organize the expenses purchased on Amazon in about an hour of research and inputting the amounts.
+ 
+ If implemented, we would like to have the ability to output the total amount and the individual amounts separately. If this could be done, it would reduce the amount of labor even more.
+ 
+ However, there were a few exceptions. First, when seven orders were placed at one time, only four were displayed, and the rest were grouped on a separate page. In this case, the TSV did not output the names of the items. However, this is a rare case, and in my case, all the items were books, so I treated them as "Books A, B, C, D, and 3 other books" because they would all be added up as book expenses anyway.
+ 
+ Another exception to the process was a case in which a non-expense grocery item and a non-expense reference book were sent together, which was unlucky. In this case, we manually entered the individual amounts for each item and skipped the groceries. In such a case, the shipping cost was also included in the expense, and I was not able to include the full amount of the shipping cost in the expense.
+ 
+ I wonder if these two points should be handled by hand exception handling without mechanical support.
+ </body>
+
+[Hatena Diary 2016-03-12 https://nishiohirokazu.hatenadiary.org/archive/2016/03/12]

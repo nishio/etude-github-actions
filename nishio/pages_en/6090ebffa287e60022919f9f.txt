@@ -1,0 +1,70 @@
+Hatena2009-05-27
+code:hatena
+ <body>
+ *1243408962*Cannot prove address with copy of license.
+ When you change your address, it is written on the back of the license, but even if you send a copy of both sides of the license, you cannot be sure that it is really the front and back of one license. If I send a copy of the front side of someone's license and the back side of my license with the address change, it would mean that the person lives at my address. Why don't you write the license number on the back? It would have been enough if I had just written one line.
+ 
+ *1243427856*[GAE]TemplateDoesNotExist when trying to port something made with app-engine-patch to local Django.
+ - This should have been done before this error first.
+ >|diff|
+ -    from ragendja.template import render_to_response
+ +    from django.shortcuts import render_to_response
+ ||<
+ - TemplateDoesNotExist at / <WSGIRequest GET:<QueryDict: {}>,... and a large number of messages
+ -- ragendja.template.render_to_response has request as first argument, but django.shortcuts.render_to_response's first argument is the template name
+ - They say "there is no foo/index.html"
+ -- This is a function of app_prefixed_loader defined in rajendra.template.
+ >|python|
+ # The following defines a template loader that loads templates from a specific
+ # app based on the prefix of the template path:
+ # get_template("app/template.html") => app/templates/template.html
+ # This keeps the code DRY and prevents name clashes.
+ def app_prefixed_loader(template_name, template_dirs=None):
+     packed = template_name.split('/', 1)
+     if len(packed) == 2 and packed[0] in app_template_dirs:
+         path = os.path.join(app_template_dirs[packed[0]], packed[1])
+         try:
+             return (open(path).read().decode(settings.FILE_CHARSET), path)
+         except IOError:
+             pass
+     raise TemplateDoesNotExist, template_name
+ app_prefixed_loader.is_usable = True
+ ||<
+ And where is the information about using this loader registered in settings_pre.py?
+ >|python|
+ TEMPLATE_LOADERS = (
+     'django.template.loaders.filesystem.load_template_source',
+     'ragendja.template.app_prefixed_loader',
+     'django.template.loaders.app_directories.load_template_source',
+ )
+ ||<
+ So, if you bring the following minimum required items and write the settings in TEMPLATE_LOADERS, it will work. When I saw "app_template_dirs = get_app_dirs('templates')" I thought "I don't want to import this module" and decided to cut it out, but it turned out that the line I didn't like was required. I found out that the line I didn't like was required after all, so I might not have had to cut it out and create a new module. It's too much trouble, so I won't look into it.
+ 
+ >|python|
+ import settings
+ import os
+ 
+ # from common/appenginepatch/ragendja/apputils.py
+ def import_module(module_name):
+     ...
+ 
+ def get_app_modules(module_name=None):
+     ...
+ 
+ def get_app_dirs(subdir=None):
+     ...
+ 
+ # from common/appenginepatch/ragendja/templates.py
+ def app_prefixed_loader(template_name, template_dirs=None):
+     ...
+ 
+ app_template_dirs = get_app_dirs('templates')
+ ||<
+ 
+ So, the screen came up anyway.
+ 
+ -The link to CSS or whatever is broken.
+ -- django.views.static.serve in urls.py.
+ </body>
+
+[Hatena Diary 2009-05-27 https://nishiohirokazu.hatenadiary.org/archive/2009/05/27]

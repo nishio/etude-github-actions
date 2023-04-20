@@ -1,0 +1,177 @@
+Hatena2009-06-10
+code:hatena
+ <body>
+ *1244605798*Complexity
+ Debugging a Python script that spits out a complete minimum hash in C++ is coming to a climax. The minimum hashing of the giraffe arrangement does not give the correct value when one of the pieces is a holding. I'll try to write the problem down to get my head around it.
+ 
+ Let's make it the smallest pattern to reproduce the problem, Unordered(And(Or(Choice(3), Choice(1)), Choice(2)))), and let's name the variables three, two, and one for Choice's 3, 2, and 1, respectively. In this case, first, And(Or(...)) The next step is to rewrite the pattern to make it into Or(And(three, two), And(one, two)). Next, the rewriting pattern of Unordered(Or(...)) by the rewriting pattern
+ >|python|
+ Or(
+   Or(
+     Unordered(And(three, two)),
+     Unordered(And(one, two))
+   ),
+   And(
+     And(three, two),
+     And(one, two)
+   )
+ )
+ ||<
+ It goes like this.
+ This outer Or range is working fine. The problem is the second half. Let's look at the source for the relevant part of the integer to phase decoder
+ >|cpp|
+     }else{
+         // And(And(Choice(3), Choice(2)), And(Choice(1), Choice(2)))
+         is_choice2_1 = false;
+         and2 = or3 - 24;
+         and0 = and2 / 2;
+         and1 = and2 % 2;
+         // And(Choice(3), Choice(2))
+         choice1 = and0 / 2;
+         choice0 = and0 % 2;
+         // Choice(3)
+         three = choice1;
+         // Choice(2)
+         two = choice0;
+         // And(Choice(1), Choice(2))
+         choice2 = and1 / 2;
+         choice0 = and1 % 2;
+         // Choice(1)
+         one = choice2;
+         // Choice(2)
+         int two2 = choice0; // HERE
+         if(is_choice2_0){
+             three_1 = three;
+             two_1 = two;
+             one_0 = one;
+             two_0 = two2; // HERE
+         }else{
+             three_0 = three;
+             two_0 = two;
+             one_1 = one;
+             two_1 = two2; // HERE
+         }
+ ||<
+ The part marked HERE was fixed by hand. The original was "two", which means that if there are variables with the same name in X and Y of Unordered(Or(X, Y)), they will collide and overwrite each other.
+ 
+ <hr>
+ 
+ I wrote it and took a walk and found out! The if(is_choice2_0) was originally put together to equate when the encoder is (ture, false) and when it is (false, true), and I put it on the decoder as a reverse conversion without thinking too much about it, but first of all The decoder doesn't need a branch (because it only needs to return one of the two).
+ Also, although it is done together at the end, // if three_1 = three; two_1 = two; immediately after And(Choice(1), Choice(2)), it doesn't hurt or itch if two is overwritten in the subsequent process.
+ 
+ The fundamental problem is doing it all together at the end. OK, let's fix it.
+ 
+ The Python code looks something like this
+ >|python|
+     result += Renderer.multiline_if(
+         oname + "_0",
+         [Renderer.assign(v + "_1", v) for typ, v, com in self.r1.args] +
+         [Renderer.assign(v + "_0", v) for typ, v, com in self.r2.args],
+         [Renderer.assign(v + "_0", v) for typ, v, com in self.r1.args] +
+         [Renderer.assign(v + "_1", v) for typ, v, com in self.r2.args])
+ ||<
+ 
+ And, of course, the encoder has the same problem.
+ >|cpp|
+         if(is_choice2_1){
+             three = three_0;
+             two = two_0;
+             one = one_1;
+             two = two_1;
+         }else{
+             three = three_1;
+             two = two_1;
+             one = one_0;
+             two = two_0;
+         }
+ ||<
+ 
+ <hr>
+ 
+ Fixed! OK, test passed!
+ 
+ <hr>
+ 
+ I attacked the last boss at once, but the test failed. There are some negative values. I'll cut it down as much as possible to reproduce the problem.
+ 
+ <hr>
+ It is considerably smaller.
+ 
+ >|python|
+     All = And(
+         Unordered(
+             Or(
+                 Choice(2, "foo"),
+                 Choice(1, "bar"),
+                 "is_bar")
+             ),
+         Choice(2, "baz"))
+ ||<
+ If you test this (0 is fail)
+ >||
+ 111111110000
+ ||<
+ >||
+ 1@0(0): 1, 1, 0, 0, 0, 12345, 12345, 
+ 1@1(1): 1, 1, 0, 0, 1, 12345, 12345, 
+ 1@2(2): 0, 1, 12345, 12345, 0, 0, 0, 
+ 1@3(3): 0, 1, 12345, 12345, 1, 0, 0, 
+ 1@4(4): 0, 1, 12345, 12345, 0, 0, 1, 
+ 1@5(5): 0, 1, 12345, 12345, 1, 0, 1, 
+ 1@6(6): 0, 1, 12345, 12345, 0, 1, 1, 
+ 1@7(7): 0, 1, 12345, 12345, 1, 1, 1, 
+ 0@8(49388): 1, 0, 12345, 0, 0, 0, 12345, 
+ 0@9(49389): 1, 0, 12345, 0, 1, 0, 12345, 
+ 0@10(49388): 1, 0, 12345, 0, 0, 1, 12345, 
+ 0@11(49389): 1, 0, 12345, 0, 1, 1, 12345, 
+ ||<
+ It's kind of overflowing (12345 is an undef alternative).
+ So for now, we can just follow when i = 8.
+ 
+ Well, the encoder's conditional branch is wrong, and it is picking up the undef value. I don't know how this worked until now.
+ 
+ <hr>
+ OK, got it; Unorder(Or(...)) is rewritten to become Or(Or(Unordered(.....)))) then Or has a "flag rewritten by Unordered", but when And(Or(...)) When rewriting Or(And(Or(...))) does not inherit that flag when it is rewritten to I fixed it and the little child test passes. I tried the last boss after all....
+ 
+ >||
+ 1@59(59): 0, 0, 12345, 12345, 0, 2, 3, 3, 
+ 1@60(60): 0, 1, 12345, 0, 0, 12345, 1, 1, 
+ 1@61(61): 0, 1, 12345, 0, 0, 12345, 1, 2, 
+ 1@62(62): 0, 1, 12345, 0, 0, 12345, 1, 3, 
+ 1@63(63): 0, 1, 12345, 0, 0, 12345, 2, 2, 
+ 1@64(64): 0, 1, 12345, 0, 0, 12345, 2, 3, 
+ 1@65(65): 0, 1, 12345, 0, 0, 12345, 3, 3, 
+ 0@66(-1610694590): 0, 1, 12345, 0, 0, 12345, 65541, -2147385340, 
+ 0@67(-1610792896): 0, 1, 12345, 0, 0, 12345, 65541, -2147385339, 
+ 0@68(-1610891203): 0, 1, 12345, 0, 0, 12345, 65541, -2147385338, 
+ 0@69(-1610989511): 0, 1, 12345, 0, 0, 12345, 65541, -2147385337, 
+ 1@70(70): 0, 1, 12345, 1, 0, 12345, 1, 1, 
+ 1@71(71): 0, 1, 12345, 1, 0, 12345, 1, 2, 
+ 1@72(72): 0, 1, 12345, 1, 0, 12345, 1, 3, 
+ 1@73(73): 0, 1, 12345, 1, 0, 12345, 2, 2, 
+ 1@74(74): 0, 1, 12345, 1, 0, 12345, 2, 3, 
+ 1@75(75): 0, 1, 12345, 1, 0, 12345, 3, 3, 
+ 0@76(-1610694580): 0, 1, 12345, 1, 0, 12345, 65541, -2147385340, 
+ 0@77(-1610792886): 0, 1, 12345, 1, 0, 12345, 65541, -2147385339, 
+ 0@78(-1610891193): 0, 1, 12345, 1, 0, 12345, 65541, -2147385338, 
+ 0@79(-1610989501): 0, 1, 12345, 1, 0, 12345, 65541, -2147385337, 
+ 1@80(80): 0, 1, 12345, 0, 1, 12345, 0, 0, 
+ ||<
+ If we look at the last two numbers, we see 1,1 1,2 1,3 2,2 2,3 2,3 3,3, coming to four garbage in.
+ 
+ *1244620423* Does it make sense to keep the "idea" to yourself?
+ <a href='http://d.hatena.ne.jp/kawango/20090605/1244190501'>He who wants to keep his ideas to himself - A diary that won't die until he uses up his 30,000 Hatena points</a> via id:takano32
+ >>
+ If the idea is truly groundbreaking, the background knowledge and experience will be different from others, and you will never be understood when you talk about it.
+ <<
+ 
+ Interesting point of view.
+ 
+ *1244640773* [Inkscape] drawing
+ 
+ It's a mysterious object.
+ <img src="http://gyazo.com/d28bf72dd5be4551930e5454f08269ab.png">
+ 
+ </body>
+
+[Hatena Diary 2009-06-10 https://nishiohirokazu.hatenadiary.org/archive/2009/06/10]

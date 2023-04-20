@@ -1,0 +1,34 @@
+Function components cannot be given refs
+>Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+[Material-UI]'s Menu tries to inject a ref into a child element and is warned when it is a function component.
+code:ts
+       <Menu ... >
+         <MyMenuItem onClick={exportForRegroup}>Export for Regroup</MyMenuItem> 
+
+code:ts
+   const MyMenuItem = (props: any) => {
+     const { children, onClick, ...other } = props;
+     const f = () => {
+       onClick();
+       setAnchorEl(null);
+     };
+     return (
+       <MenuItem onClick={f} {...other}>
+         {children}
+       </MenuItem>
+     );
+   };
+
+revision (e.g. of a rule, regulation, etc.)
+Forward ref with React.forwardRef as per warning message
+code:ts
+   const MyMenuItem = React.forwardRef((props: any, ref) => {  // here
+     ...
+     return (
+       <MenuItem onClick={f} {...other} ref={ref}>  // here
+         {children}
+       </MenuItem>
+     );
+   });
+

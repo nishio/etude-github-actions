@@ -1,0 +1,66 @@
+ABC186F
+from [ABC186]
+ABC186F
+	[https://gyazo.com/ecac49bfec2162e0a6e196eff9d3cd89]
+	[F - Rook on Grid https://atcoder.jp/contests/abc186/tasks/abc186_f]
+　unfinished
+　Thoughts.
+　　There are two ways to get there: vertically and horizontally.
+　　If you count and add them individually, you get a double count where you can get there in two different ways.
+　　Consider efficient counting of double-counted objects.
+　　Wouldn't it be easier to [subtract the extra event]?
+　　　In other words, "count the squares you can't reach and subtract from the whole.
+　　　[https://gyazo.com/0bfc6272ea8fb38766722b788bda44bb]
+　　　This intersection is the "mass you can't reach."
+　　Let `minY[x]` be the smallest y at each x
+　　　What I want is the number of `minX[y] <= x` in the range `minY[x] < y
+　　I've seen these patterns before...
+　　　Search for related items from Scrapbox
+	　　[Inequality condition on deletable set]
+	　　	[ACL1A]
+	　　The following elements could be used, although they are not entirely consistent with the purpose of this project
+	　　　Use [phoenix tree].
+   　The value range is 0/1, representing the absence or presence of a value
+　　Summary [rectangular section count].
+　　Write code that naively counts the number of `minX[y] <= x` in the range `minY[x] < y` and implement a version that uses a phenic tree to achieve the same result
+　　Submission → WA
+　　While examining the discrepancy between the naive implementation and the phoenic tree implementation in a random test, I realized that the naive implementation was wrong.
+　　　this kind of pattern
+　　　[https://gyazo.com/3fc29bf88b7be3fcc5ccbe6a7b25690e]
+　Official Explanation
+　　Policy of using phenic trees is OK.
+　　I'm not counting the places I can't get to, I'm counting the places I can get to in two different ways.
+　　AC
+  	code:python
+  	 def solve(H, W, M, PS):
+        minX = [H] * W
+        minY = [W] * H
+        for x, y in PS:
+            minX[y - 1] = min(minX[y - 1], x - 1)
+            minY[x - 1] = min(minY[x - 1], y - 1)
+    
+        ret = 0
+        # horizontal -> vertical
+        for x in range(0, minX[0]):
+            ret += minY[x]
+    
+        # grouping
+        from collections import defaultdict
+        P2 = defaultdict(list)
+        for i in range(M):
+            x, y = PS[i]
+            P2[y - 1].append(x - 1)
+    
+        bit_init(H + 1)
+        x0 = minX[0]
+        for y in range(0, minY[0]):
+            x1 = minX[y]
+            if x1 > x0:
+                ret += x1 - x0
+                x1 = x0
+            ret += bit_sum(x1)
+            for x in P2[y]:
+                bit_set(x, 1)
+    
+        return ret
+

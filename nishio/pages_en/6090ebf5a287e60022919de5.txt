@@ -1,0 +1,158 @@
+Hatena2008-02-13
+code:hatena
+ <body>
+ *1202871697* Got up at 7am today.
+ And I came to work about 20 minutes earlier than usual. I could have come to work two hours earlier if I hadn't done the Internet. I came to the office early because I had finished my work while doing internet.
+ A sound mind begins with a sound rhythm of life.
+ A sound mind is a sound body.
+ 
+ -----
+ When I searched for confirmation of what I meant when I wrote "I wish that a sound mind would dwell in a sound body," I found that Masayuki Tamaki, who pointed out the error in the saying "A sound mind dwells in a sound body," wrote "Juvenalis (Juvenalis 60-136) laments that young people only train their bodies and do not study. He lamented that young people only train their bodies and do not study, saying, 'A sound body also has a sound mind! (It is no good to train only the body!). I looked up the original text at hand for the first time in a long time, but it seems that this is not the case, so I would like to report it here. juvenal_intro.html">sentence</a>. Hmmm. I tried to read the original but failed. http://www.thelatinlibrary.com/juvenal/10.shtml can be found by searching mens sana in corpore sano.
+ 
+ *1202892802* Differences between MySpace and facebook
+ While facebook shows the strength of the password, MySpace has a ridiculous limit, like 10 characters or less. And yet, it has to include each of the number signs and English letters. There must be a lot of people who say, "My usual password is not good enough, so I changed it a little bit, but I forgot it. Some of them must hate MySpace even before they start using it. At any rate, here's one.
+ 
+ ------
+ 
+ Ugh, MySpace, they sent me a plain text email with my password! A sdfg fujikolp!
+ 
+ *1202894504*Final Tax Return
+ Oh, I remember now. And I looked it up. The Funai Young Scientist Award is dated March 28, 2007, so I have to file and pay income tax on the prize money = miscellaneous income now. I don't remember how much I received...I guess around 200,000. I wonder if I have to pay 40,000. I wonder if I should just go to the tax office and ask them about all this. Anyway, there are a lot of magazines on sale that say "tax return," so I guess I'll just buy one and go home.
+ 
+ http://www.funai.or.jp/sinko/ipsj.html At least I got confirmation that it was 200,000. Well, I don't really feel like I got it at all since it was transferred to the bank, but I have to pay taxes. It is the duty of a citizen.
+ 
+ *1202897430*del.icio.us
+ So del.icio.us is social bookmarking? I often hear people say "digg is digg", so I thought digg was the equivalent of Hatena bookmarking.
+ 
+ *1202897968* Feb 26 Asiajin Meeting Tokyo #1
+ Asiajin Meeting Tokyo #1 will be held at Cybozu Labs.
+ <a href="http://asiajin.com/blog/2008/02/12/asiasin-meeting-tokyo-1/">Asiajin Meeting Tokyo #1 on 26th(Tue), Feb. | Asiajin</a>
+ 
+ I wrote in my blog that I will participate in it and talk about it.
+ <a href="http://nishiohirokazu.blogspot.com/2008/02/ill-speak-on-asiajin-meeting-tokyo-1.html">NISHIO Hirokazu's blog: I'll speak on Asiajin Meeting Tokyo #1</a>
+ 
+ I've only verbally said I'll attend, is that okay?
+ 
+ *1202899095* By the way.
+ I have created MySpace, del.icio.us and facebook accounts. I wrote the links to each here -> http://www.nishiohirokazu.org/
+ 
+ I wrote about it here -> <a href="http://nishiohirokazu.vox.com/library/post/hi-long-time-no-see.html">Hi, long time no see! - Vox</a>.
+ 
+ I'll make a cool photo in the near future, since there seems to be a culture of revealing facial photos on Western web services. (The reason why I say "make" instead of "take" is as follows.)
+ 
+ *1202901917* It occurred to me.
+ What is the difference between an article that is hatested but not hatested and an article that is hatested but not hatested?
+ 
+ -----
+ 
+ >>
+ kazuhooku buzzwords are reason, stars are emotion.
+ <<
+ 
+ Well, that may be.
+ 
+ *1202903913* fast
+ ujihisa is very fast (in the sense of adding facebook friends).
+ 
+ So I looked at his friends and saw a lot of faces I knew, so I thought about adding him, but then he asked me for capcha every time, which broke my heart. Programmers can't repeat a monotonous task 3 times.
+ 
+ *1202907958* Whether it's offensive or not is subjective.
+ As a general rule, suppose there is a person X nearby who engages in a type of behavior that is offensive to some people and not offensive to others. And suppose that no one warns X that his behavior may be offensive to others, so X continues to behave in that way. One day, as soon as person Y says to X, "You're annoying," X is told, "I thought you were annoying too," "Me too, me too," "You have no manners," "I ignored you for a long time," "If you're going to do X, you should do X first," "Your behavior is confusing, so you should put a sign on your back saying '△ △△'" and so on. You should put it on your back with a sign on it.
+ The first one is fine because it's just a point of view, but after the second one, I think you should be a little more considerate of X's feelings. And it makes me very uncomfortable when people come in after a group of people have started to bash one person and feel superior by throwing stones as one of the many without taking the risk of being rebutted.
+ I dared to write this because there might be a second X who doesn't realize that there is at least one person here who is offended. I won't post the link because it is a general statement.
+ 
+ *1202912207*[Python] Simple implementation of the Bloom filter.
+ <a href="http://en.wikipedia.org/wiki/Bloom_filter">Bloom filter</a> is a data structure that returns True if the specified item is included in the list and False if not. Of course, it is possible to determine whether something is included in the list by simply keeping the list, but the advantage of the Bloom filter is that it does not need to keep the original list. The advantage of the Bloom filter is that it does not need to store the original list. However, the price of memory efficiency is a slight loss of accuracy: the Bloom filter occasionally returns True even if the specified item is not in the list. However, the probability of wrongly returning True can be calculated in advance, so it can be used without any problem as long as the margin of error is acceptable.
+ 
+ The following is a simple implementation for algorithm study.
+ 
+ >|python|
+ SIZE = 1987
+ def hashes(s):
+     xs = [0, 0, 0]
+     for c in s:
+         o = ord(c)
+         xs[0] = xs[0] * 137 + o
+         xs[1] = xs[1] * 69 + o
+         xs[2] = xs[2] * 545 + o
+ 
+     return [x % SIZE for x in xs]
+ 
+ class BloomFilter(object):
+     def __init__(self):
+         self.bitarray = [0] * SIZE
+ 
+     def add(self, s):
+         for x in hashes(s):
+             self.bitarray[x] = 1
+ 
+     def query(self, s):
+         return all(
+             self.bitarray[x] == 1
+             for x in hashes(s))
+ ||<
+ 
+ The hashes function computes and returns three hash values using three different hash functions. bloomFilter has a bit array, but here we substitute a list for brevity of implementation. This greatly detracts from the benefits of Bloom filter, so this code should not be used for practical purposes.
+ 
+ The following is the result of a test in the Python interactive shell.
+ 
+ >|python|
+ >>> bf = BloomFilter()
+ >>> bf.add("hoge")
+ >>> bf.query("hoge")
+ True
+ >>> bf.query("hoga")
+ False
+ >>> bf.add("foo")
+ >>> bf.add("bar")
+ >>> bf.add("baz")
+ >>> bf.query("hoga")
+ False
+ >>> bf.query("foo")
+ True
+ ||<
+ 
+ When a string is added, the Bloom filter computes a hash value and writes 1 to the corresponding location in the bit array. When a string is queried, it again computes the hash value and returns True only if the corresponding locations are all 1s. As you can imagine, as you add more and more strings, the bit array becomes more and more full of 1s, making it easier for BloomFilter to answer True. The probability of a wrong answer True can be easily estimated. If the size of the bit array is m, the number of hash functions is k, and the number of strings to be added is n, the probability of the problem is (1 - exp(-float(k * n) / m)) ** k. In the case of this code, m is 1987 and k is 3. So when n is 100, the probability is 0.003, and when n is 1000, the probability is 0.47. If you want to add 1000 strings, you need to increase the size of the bit array.
+ 
+ You can see the English version here: <a href="http://nishiohirokazu.blogspot.com/2008/02/pythonsimple-impl-of-bloom-filter.html">NISHIO Hirokazu's blog: [Python]Simple Impl. of Bloom Filter</a>
+ 
+ *1202913016*Youth
+ RE: I want to do something adolescent - IT War Diary - UK is not Britonish - The Hachiroku Generation
+ http://generation1986.g.hatena.ne.jp/ukstudio/20080213/1202865198
+ >>
+ (Development) Youth discussing late at night at a training camp, "What do you like about him (language)?
+ <<
+ 
+ A: "Ya, I guess indentation..."
+ B: "Ew, what's so great about indentation? It's gross that you don't endend at the end of the block."
+ A: "What the heck, you're making fun of Python? What's so great about end?
+ B: "What is this, Pascal brain? Oh dear, that's why people with a "P" in their name~".
+ C: "Did you just make fun of Perl? (--#)"
+ 
+ Like this? I don't know! (><)
+ # I'm afraid that if I continue, I'll simply wind up with an interlanguage frame, so I'll abbreviate below.
+ 
+ *1202920234*facebook
+ >>
+ Here are some friends of your friends that you might know
+ <<
+ 
+ Oh, I know 6 out of 7 people, including takesako, higepon, and dankogai-dan. But I wonder what kind of criteria they used to select koizuka, who I am sure I don't know.
+ 
+ *1202920299* Shit.
+ I ate a dried sweet potato that I had left next to my computer, even though it was after 9 o'clock!
+ </body>
+ <comments>
+ <comment>
+ <username>ujihisa</username>
+ <body>Umph</body>.
+ <timestamp>1202956777</timestamp>
+ </comment>
+ <comment>
+ <username>ujihisa</username>
+ <body>HINT: ujihisa's friend</body>.
+ <timestamp>1202956833</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-02-13 https://nishiohirokazu.hatenadiary.org/archive/2008/02/13]

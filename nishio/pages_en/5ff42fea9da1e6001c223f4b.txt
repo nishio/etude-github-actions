@@ -1,0 +1,57 @@
+Only one of the divs lined up in ✅flexbox is scroll
+When two divs are lined up on the left and right in flexbox, I want the left one to scroll because it is long vertically depending on the content in the text area, but I want the right one to ignore that scrolling because it is a menu -> Done!
+[https://gyazo.com/760ddd3af20adee6fd532bc56601c690]
+
+I thought I could do it with maxHeight: 100%, overflowY: scroll on the left, but no luck.
+	[https://gyazo.com/96c3a387e2a4efdae1229f30061920a6]
+
+　Why?
+　Is it because the MaterialUI dialog is changing its behavior based on the size of the contents?
+　	[React Dialog component - Material-UI https://material-ui.com/components/dialogs/]
+　I changed to a fullscreen dialog that doesn't change size, but it doesn't seem to matter because it behaves the same.
+　If maxHeight: 300px, I got the expected movement.
+　But this 300px part varies depending on the environment, so I don't know what to do...
+
+I set maxHeight: 75vh thinking that since I set it to →fullscreen dialog, I could make it viewport based.
+
+[Flexbox]
+
+Code. The width has changed from the time of the screenshot, which is not the main issue here.
+　[Minimum width side menu].
+code:ts
+ <div style={{ display: "flex" }}>
+   <div
+     style={{ flexGrow: 1, maxHeight: "75vh", overflowY: "scroll" }}
+   >
+     <TextareaAutosize ... />
+   </div>
+   <div
+     style={{
+       background: "#eee",
+       padding: "2px",
+     }}
+   >
+     Menu
+   </div>
+ </div>
+
+[pRegroup-done]
+
+I was given the idea of using [position: sticky] after making it
+code:ts
+ <div style={{ display: "flex" }}>
+   <div style={{ flexGrow: 1 }}>...</div>
+   <div>
+     <div
+       style={{
+         position: "sticky",
+         top: "0px",
+         background: "#eee",
+         padding: "2px",
+       }}
+     >
+       Menu
+     </div>
+   </div>
+ </div>
+[Sticky item needs sibling factor, is a hoax].

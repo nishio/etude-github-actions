@@ -1,0 +1,55 @@
+Ising formulations of many NP problems
+ [Ising formulations of many NP problems https://arxiv.org/abs/1302.5843]
+ Number Partitioning
+  There are N numbers. We want to divide this into two parts so that the sum of each part is the same.
+  [$ H= \left(\sum_i^N n_i s_i \right)^2]
+		s is a +1/-1 value indicating which group
+		Expect the contents of the parentheses to be zero.
+  In addition, just to be clear, if you expand
+  [$ H= \left(\sum_i^N n_i s_i \right)^2 = \sum_i^N\sum_j^N n_in_js_is_j]
+		Therefore, J is [$ n_i n_j].
+
+	Graph Partitioning
+ creek
+ How to reduce spin to log(N)
+ 4.1 Exact Cover
+ 	Given a set V of subsets of a set U of some size n, is there a subset of V such that any two elements are disjoint and if all are unions, then U?
+  [$ H_A = A \sum_{\alpha=1}^n \left( 1 - \sum_{i: \alpha \in V_i } x_i  \right)^2 ]
+  Alpha runs the apex of the U.
+  The second sum "adds up xi for i such that Vi contains the vertex α"
+  In other words, up to (1-sum)^2 expresses "only one selected (xi=1) Vi that contains the vertex α".
+ 4.2 Set Packing
+ 	How do I increase the size of a subset of V under the condition that it is disjoint?
+ 	maximal independent set (MIS)
+   [Adiabatic Quantum Algorithms for the NP-Complete Maximum-Weight Independent Set, Exact Cover and 3SAT Problems https://arxiv.org/abs/1004.2226] Defined in
+   [https://gyazo.com/e3937c51ed22ebe2f0376768263820e2]
+			The highlighted V(G) must be an S mistake.
+   Return the subset S of V(G) that has the largest sum of weights among those with no edges between opposite vertices i, j in S
+  Set Packing
+   Suppose there is an edge (i, j) in the edge set E when Vi and Vj are not disjoint
+   It is not good if there is an edge between the chosen Vi (xi=1) and Vj
+   [$ H_A = A \sum_{ij\in E} x_i x_j]
+   In addition to this, put in effects that should increase in number.
+   [$ H_B = -B \sum_i x_i]
+   Can be interpreted as a case of "all length points have a weight of 1" in MIS
+	4.3 Vertex Cover
+  Given a graph
+  Paint the minimum number of vertices with color, so that every edge is painted with the color of at least one of the vertices
+  [$ H_A = A\sum_{ij\in E} (1 - x_i)(1 - x_j) ]
+  This is a 2-vertex or
+ 4.4 Satisfiability
+ 	Any SAT can be written in 3 SATs.
+  [$ \Psi = C_1 \wedge \ldots \wedge C_m ]
+		[$ C_i = y_{i1} \vee y_{i2} \vee y_{i3} ]
+ 	3SAT can be attributed to MIS.
+		>For each clause Ci, we add 3 nodes to the graph, and connect each node to the other 3.
+			I think it should be "the other 2", but, well, it means to make a triangle with 3 vertices.
+   Hamiltonian will be 3 terms or if you include Vertex Cover's.
+   Then wouldn't it be strange to write "can be attributed to MIS"?
+   But the original paper does indeed say it's attributed to MIS.
+    [https://gyazo.com/608683db0729b4618efa58529b798285]
+		>Since the graph is made up of m connected triangles, the only way to color m vertices if each vertex is in a distinct triangle, so there must be an element of each clause Ci which is true
+			I have no idea how to explain this place.
+   Isn't it a 1-in-3 SAT?
+   (x1, x2, x3) is equivalent to (not(x1), a, b), (x2, b, c), (not(x3), c, d) plus 1-in-3SAT.
+   	This can be seen by writing down the 8 ways, since the contradiction occurs only when (x1, x2, x3) = (0, 0, 0)

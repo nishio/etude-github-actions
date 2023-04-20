@@ -1,0 +1,99 @@
+Hatena2010-11-05
+code:hatena
+ <body>
+ *1288954444*Nibbling on Smalltalk
+ I want the font to be 16 point...
+ 
+ Fibonacci for now.
+ >|smalltalk|
+ x := 0. y := 1. 
+ 10 timesRepeat: [|z| 
+ 	z := x + y.
+ 	x := y. 
+ 	y := z. 
+ 	Transcript show: x; cr]
+ ||<
+ I thought I couldn't break lines in a block because of the syntax error, but it turns out that if I didn't select everything before DoIt(Cmd+D), it tried to execute only the line with the cursor and the parentheses were mismatched.
+ 
+ I learned to browse and explore and inspect.
+ 
+ I'm having a hard time finding a break, I guess I have to create a for with while first to make something break-like.
+ 
+ >|smalltalk|
+ xs := {1. 2. 3. 4. 5}.
+ i := 1.
+ [i <= xs size] whileTrue: [
+ 	Transcript show: (xs at: i); cr.
+ 	i := i + 1].
+ ||<
+ 
+ 1-origin traps!
+ 
+ = trap! If I mistakenly set := to =, it is not an error because UndefinedObject has =, but it is an error that what I should have defined afterwards is Undefined.
+ 
+ Gee, I don't know how to stop the infinite loop!
+ 
+ They say you can stop it with Cmd+. to stop it, apparently.
+ 
+ Oh, there is a method called "detect"!
+ 
+ >|smalltalk|
+ puts := [:x | Transcript show: x; cr].
+ xs := {1. 2. 3. 4. 5}.
+ 
+ xs detect: [:x |
+ 	puts value: x.
+ 	x == 3.
+ ] ifNone: [  ].
+ ||<
+ 
+ I was able to break. So here we go.
+ 
+ >|smalltalk|
+ puts := [:x | Transcript show: x; cr].
+ primes := OrderedCollection new.
+ primes add: 2; add: 3; add: 5.
+ 
+ (7 to: 100) do: [ :n |
+ 	primes detect: [:p |
+ 		n \\ p = 0.
+ 	] ifNone: [
+ 		puts value: n.
+ 		primes add: n.
+ 	]
+ ]
+ ||<
+ 
+ I was able to find prime numbers up to 100. Whew, I guess I understand the basic mechanism for now. Next, I'll finally get around to classes and the like.
+ 
+ summary
+ - Undefined error: ":= is =" or typo
+ - Error with wrong number of arguments: [:x | ...]. should be [x | ...], but [x | ...]. and it's not grammatically wrong in the sense that it sends a message "|" to x in a block that takes no arguments.
+ - I get a syntax error by saying foo :value bar when I should say foo value: bar.
+ - Error with semicolon even though the sentence is separated by a period.
+ - Error in closing the block with {}.
+ - How do you type a backslash?
+ - Infinite loop is stopped by Cmd+. to stop it.
+ - 7 to: Ruby disease that writes 100 as 7...100
+ - Can't we use underscores for identifiers?
+ - LinkedList can't contain objects as is? I don't know what to use instead, but I could do it with OrderedCollection!
+ </body>
+ <comments>
+ <comment>
+ <username>sumim</username>
+ <body>As for the loop break function, there was a method called #valueWithExit that was used like Scheme's call/cc, but it seems to have been forgotten in the process of block closure, and is not usable in the current 4.1 version (probably a bug). <br><br>The original method is like this (replace all spaces in the indentation with tabs, etc. as appropriate). <br><br>World findATranscript: nil.<br>[:exit |<br> 1 to: 10 do: [:each |<br> Transcript cr; show: each.<br> each = 5 ifTrue: [exit value]<br> ]<br>] valueWithExit<br><br>4.1 also has the old BlockContext>>#valueWithExit, so copy this definition (it's so simple I don't even need to copy and paste it - ^^;) and paste it into BlockClosure (BlockClosure → evaluate → Cmd+V → Cmd+S in the class browser) and copy and paste it into BlockClosure. Please give it a try if you like. </body>
+ <timestamp>1288955734</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>>>Underscores in identifiers<br><br>Normally you cannot use them, but in 4.1 you can<br><br>Appearance... → Preferences... → Allow underscore assignments enabled off → Allow underscore selectors enabled on<br><br>or<br>Scanner prefAllowUnderscoreAssignments : false; prefAllowUnderscoreSelectors: true<br><br>Do it and you can use it. </body>
+ <timestamp>1288959867</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>>>typo<br><br>Of the three buttons on the right hand side of the workspace window title bar, click on the blue button on the far left and select "automatically create variable declaration" from the menu that pops up to turn it off (■→□ ), the compiler's spell checker will function properly by eliminating the automatic definition of variables and pointing out any forgotten variable declarations or misspellings. </body>
+ <timestamp>1288964467</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-11-05 https://nishiohirokazu.hatenadiary.org/archive/2010/11/05]

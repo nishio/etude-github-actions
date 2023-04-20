@@ -1,0 +1,159 @@
+Hatena2009-04-22
+code:hatena
+ <body>
+ *1240349665*[erlang]Studying 2
+ >|erlang|
+ 77> F = fun(X, Y) -> X + Y end.
+ #Fun<erl_eval.12.113037538>
+ 78> F(1, 2).
+ 3
+ ||<
+ 
+ Functions are first-class objects.
+ 
+ >|erlang|
+ 79> X = io.
+ io
+ 80> X:format("hoge~n").
+ hoge
+ ok
+ ||<
+ 
+ The module also looks like a first class object. In fact, they are atoms.
+ 
+ >|erlang|
+ 81> Y = X:format.
+ * 1: illegal expression
+ ||<
+ 
+ Huh. I wonder if I can do this.
+ 
+ http://erlang.org/doc/man/erlang.html#apply-2
+ 
+ >|erlang|
+ 82> Y = format.
+ format
+ 83> apply(X, Y, ["hoge~n"]).
+ hoge
+ ok
+ ||<
+ 
+ It's a bit sloppy, but it can be done in a way.
+ 
+ *1240389207*[erlang] I made a counter for now.
+ In the meantime, I'm going to try to make a counter once I learn some Perl: <a href='http://d.hatena.ne.jp/nishiohirokazu/20080220/1203524977'>OOP - Yasukazu Nishio's Hatena Diary</a>. or a JS version. I think there was an AS version, but I couldn't find it.
+ 
+ Now, when it comes to creating counters in Erlang, the single assignment seems to be a stumbling block.
+ 
+ >|erlang|
+ 15> CounterValue = 0.
+ 0
+ 16> CounterValue = CounterValue + 1.
+ ** exception error: no match of right hand side value 1
+ ||<
+ 
+ It is true that it is "surprising" to most people that Erlang's ordinary variables behave in this way, so it is understandable that they would draw attention to this feature when writing articles and the like. But since there is a process dictionary, single assignment is not something that needs to be mentioned.
+ 
+ >|erlang|
+ 17> put(counter_value, 0).
+ undefined
+ 18> get().                
+ [{counter_value,0}]
+ 19> put(counter_value, get(counter_value) + 1).
+ 0
+ 20> get().                                     
+ [{counter_value,1}]
+ ||<
+ 
+ Even in the processes that everyone uses "assignment" for some reason or another, if you take a closer look, you will find that there are some that require rewriting the value called by that name and others that are just temporarily called by that name and do not need to be rewritten. In Erlang, all variables are const from the beginning, and only those that are not const are written in a different notation.
+ 
+ So, as the name "process dictionary" suggests, this dictionary is in units of processes, so if you think in terms of "one program, one process", this corresponds to the global scope. But Erlang is a very cheap language for processes, so if you don't want to pollute the global scope, just create a new process and make it a "new scope". Since counters are expected to "run multiple counters at the same time without interference", multiple "counter objects" become multiple processes in Erlang.
+ 
+ Now, it is time to end the background explanation and move on to the implementation. I used gen_fsm for implementation. This time, there is only one type of state, counting, so there was not much reason to use gen_fsm, but I did not think it would be too short even if I did not use it. I thought it would be easier to make it on the framework of gen_fsm, considering that this code can be reused when I need to create multiple instances in the future. In a word, it is a hassle to do "receive" by myself. It's also messy to modify the process dictionary by myself.
+ 
+ Behaviour is the "Template Method" pattern in Java, where you "inherit" from the gen_fsm "class" and implement "methods" such as init/1 and terminate/3, and gen_fsm will call them to perform a series of tasks. The words in parentheses are Java words.
+ 
+ >|erlang|
+ -module(counter).
+ -behaviour(gen_fsm).
+ 
+ -export([start_link/1]).
+ -export([push/1, reset/1, counting/2]).
+ -export([init/1, terminate/3]).
+ 
+ start_link(Name) ->
+     gen_fsm:start_link({local, Name}, counter, 0, []).
+ 
+ push(Name) ->
+     gen_fsm:send_event(Name, {push, 1}).
+ 
+ reset(Name) ->
+     gen_fsm:send_event(Name, {reset, 0}).
+ 
+ 
+ init(Num) ->
+     {ok, counting, Num}.
+ 
+ counting(Event, Data) -> 
+     case Event of
+     	 {push, Num} -> NewData = Data + Num;
+     	 {reset, Num} -> NewData = Num
+     end,
+     io:format("vaulue=~p~n", [NewData]),
+     {next_state, counting, NewData}.
+ 
+ 
+ terminate(_WhatsThis, _StateName, _StateData) ->
+     ok.
+ ||<
+ 
+ Use it like this. You can see that multiple instances are working properly without interference.
+ 
+ >|erlang|
+ 8> counter:start_link(c1).
+ {ok,<0.53.0>}
+ 9> counter:push(c1).      
+ vaulue=1
+ ok
+ 10> counter:push(c1).
+ vaulue=2
+ ok
+ 11> counter:start_link(c2).
+ {ok,<0.57.0>}
+ 12> counter:push(c2).      
+ vaulue=1
+ ok
+ 13> counter:push(c1).      
+ vaulue=3
+ ok
+ 14> counter:push(c2).
+ vaulue=2
+ ok
+ ||<
+ 
+ If multiple processes are launched (<0.53.0> or <0.57.0>), it is not possible to press a button on the counter process without remembering the Pid of each individual process. However, since raw Pids and raw pointer values are difficult to handle, we want to name them, so we pass a name as an argument and let the process register with that name.
+ 
+ Since the counter Pid is "a value that does not need to change," it may be better behaved to design it to be written as shown below. But it is troublesome.
+ 
+ >||
+ {_Status, Counter1} = counter:start_link().
+ ||<
+ 
+ *1240408068*a^2 - b^2 = (a - b) * (a + b)
+ <img src="http://gyazo.com/fc15dfacd7417e99d3606d3d78e921c2.png">
+ 
+ *1240423136* that
+ I drew this for commentary.
+ 
+ <img src="http://gyazo.com/c134e270e97ad44cebcfcac3c5ff5ee2.png">
+ 
+ *1240425286* How many vertices does a four-dimensional hypercube have?
+ Figure drawn to explain the problem of
+ 
+ <img src="http://gyazo.com/ec1d5b9b1afb01482fe1b21d3abcec54.png">
+ 
+ *1240428559* Something like a quadratic function solution.
+ <img src="http://gyazo.com/234fb5bc55e5b5e92aba46b58bcf8cdc.png">
+ </body>
+
+[Hatena Diary 2009-04-22 https://nishiohirokazu.hatenadiary.org/archive/2009/04/22]

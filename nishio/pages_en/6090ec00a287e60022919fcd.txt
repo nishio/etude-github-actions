@@ -1,0 +1,74 @@
+Hatena2009-07-13
+code:hatena
+ <body>
+ *1247458741*Electronics Workshop (summary)
+ see also: http://d.hatena.ne.jp/inajob/20090712, http://d.hatena.ne.jp/tgbt/20090713/1247500951, http://www16.atwiki.jp/tokoroten/pages/1166.html
+ Had an electronics festival with id:tgbt, id:inajob, id:nyaxt, id:TOKOROTEN, <a href="http://www.mbin.jp/~masa-u/">masa-u</a> and others.
+ 
+ Made available: http://www.youtube.com/watch?v=Segch217C0w
+ 
+ I had only decided to "make something that makes sound for now," but before I knew what it was, I had to buy a sound source chip or something like that. Yamaha sound source IC (YMZ294) for 500 yen.
+ 
+ I started with an Atmega168 from <a href='http://ja.wikipedia.org/wiki/Atmel_AVR'>Atmel AVR</a>, an FT232RL USB serial conversion module (950 yen), and a breadboard to make an Arduino-compatible board. The breadboard was a puzzle. The breadboard was a puzzle.
+ 
+ I tested it with the power supply. It worked! It seems that the Arduino bootloader was burned into the AVR by Mr. masa-u in advance. Maybe.
+ 
+ f:id:nishiohirokazu:20090711200722j:image
+ 
+ The top right corner is the USB serial converter circuit, and from there it is properly wired to the AVR. The silver component is a crystal oscillator, which goes into the AVR's 9 and 10 XTAL (crystal) legs, and GND and VCC are connected to both in the same way since there are two for some reason. Also, connect TXD and RXD for transmitting and receiving to the USB serial circuit.
+ 
+ <img src="http://gyazo.com/6cb3795be2e8166bd6bca7c61a4c6862.png">
+ f:id:nishiohirokazu:20090713133114j:image
+ 
+ Now that it works, the next step is to install the development environment and other things. Well, if you go to the official Arduino website and read Getting Started, you can find all about it.
+ 
+ I quickly rewrote the program to blink the LEDs. The sample code to make the LEDs blink is included, so just follow it: <a href='http://arduino.cc/en/Tutorial/Blink'>Arduino - Blink</a>.
+ 
+ Now writing. However, there is no change in behavior. After much trouble, I found that the wiring was wrong, and that TXD and RXD were off by one square, so that "a program that has already been written can be executed by receiving power supply, but a new program cannot be written. Fixed.
+ 
+ Now that we have a blinking LED, the next step is to try PWM (Pulse Width Modulation, <a href='http://ja.wikipedia.org/wiki/%E3%83%91%E3%83%AB%E3%82%B9%E5%B9%85%E5%A4%89%E8%AA%BF Pulse Width Modulation, <a href=''>Pulse Width Modulation</a>) is the next challenge. The documentation is well written, so I just followed the instructions. I got an LED that blinks like a firefly.
+ 
+ The next step is to build an amplifier to produce sound, apparently an LM368 chip. I was told, "Go to the website and read the datasheet. I was told to "go to the web and read the datasheet and apply for what you need", so id:inajob and I read it together. The minimum configuration seems to be sufficient, so we applied for three parts: 250 microF, 0.05 microF, and 10 ohms. The parts I received are 220microF, 0.1microF, and the resistor is, let's see, brown-green-black-gold, so I guess 15 ohms.
+ 
+ f:id:nishiohirokazu:20090713140403j:image
+ The top is a schematic close to what was written in the document. Below is a schematic close to the actual assembly.
+ <img src="http://gyazo.com/f268f7ae6437142af227a8c82f9c3a0d.png">
+ Circuit photo.
+ 
+ Now that the amp is ready, let's start pouring something into it. I tried "Why don't you put the signal of this LED, which is adjusting brightness by PWM, into the sound input?
+ 
+ After about three hours from the start of the event, everyone was getting hungry, so we cleaned up and had dinner. I watch Uenotan eat a lot.
+ 
+ I connected a pushbutton switch and wrote a code that says "the sound only comes on while you press it", but the sound also comes on while you don't press it. The sound changes when pressed. If I make the code to start when it is pressed, it starts even though it is not pressed. Is it being pushed by noise? I thought it was a noise being pushed, but I made a mistake in putting the switch between Vcc (I thought it was 0 when the switch is off = open, but it's not. indefinite value), so I made a circuit for such a thing that says "when the switch is pressed, it connects to GND" and the code does a <a href='http://www.wdic.org/w/SCI/%E3%83%97%E3%83%AB%E3%82%A2%E3%83%83%E3%83%97'> pull-up</a> in the code, apparently. You can do pull-ups in the circuit, but with Arduino, you can do it internally by just writing one line of code.
+ 
+ Next was the sound source IC. I was the only one who bought a sound source IC, so I am a lone soldier. I don't know how to read it. It's so complicated! It's impossible to read and understand it! But now that I think about it, all the important information is here.
+ 
+ f:id:nishiohirokazu:20090713141426j:image
+ 
+ Put the clock signal in φM, use 4/6 to specify whether the clock is 4 or 6 megs, and set the reset to H, assuming it is not used for now (I stumbled here! In electronic circuits, H is often false and L is true. The opposite of programmer's shipping)
+ 
+ <img src="http://gyazo.com/6d5ff7cfa6923b8a87346d03a2d8b061.png">
+ 
+ In the picture, the crystal one is wired to something, but it can be open.
+ 
+ I thought I had done the circuit correctly, but for some reason the sound was not coming out. I was troubled for a while, but became sleepy, so I went to bed.
+ 
+ I wake up. They seem to have checked the circuit while I was asleep and tell me that there is nothing wrong with the circuitry. I look at the code. There are three things to do: set channel A to the tone setting, set the volume on channel A to maximum, and write 0b000100011100 (=284. 440Hz) to channel A.
+ I wrote 0b11111 to the $08 register at the volume setting, but the fifth bit should be 0b111111 because it is the envelope setting. I wrote 0b000001 to the $07 register when setting channel A to tone, but should have written 0b111110 because 0 is True and 1 is False. I failed to read it even though it is written correctly in the documentation. The process of "writing y to address x" is complicated, so I created a function to write it, but there was a bug in it. However, there was a bug in the function, and it was doing both with AD=H. Furthermore, the data to be written should be 0b000100011100, but it was 0x000100011100, which is not correct at all.
+ 
+ So there were tons of bugs, but the sound finally came out. Yay.
+ 
+ Play the tete-a-tete endlessly.
+ 
+ I bought another volume so I could change the tempo with it. it was very easy since all I had to do was analogRead. However, I wrote it in a non-interrupt style, so it only reads and sets at the beginning of the song, so moving it smoothly does not make it smoothly faster.
+ 
+ Masa-u told me, "Chords, right?" So I did my best. I did my best. I read the score incorrectly and played the accompaniment a semitone out of tune.
+ 
+ Video of the finished product: http://www.youtube.com/watch?v=x8Z8at9PRDs
+ 
+ Something like that. What I haven't done yet are things like interrupting with sensor input, returning sensor input to the PC side, and so on.
+ 
+ PS: I got the sheet music from here. http://www.nicovideo.jp/watch/sm1237915
+ </body>
+
+[Hatena Diary 2009-07-13 https://nishiohirokazu.hatenadiary.org/archive/2009/07/13]

@@ -1,0 +1,430 @@
+Hatena2009-04-07
+code:hatena
+ <body>
+ *1239065579*Card game "Spaghetti Monsters" vs.
+ The AI is almost random, but I made it so I'll give it a handicap and try to fight with it. I put 6 bits each in turn, but I let the AI put 9 bits first, and then I put 3 bits.
+ 
+ >||
+  0: Bomb       | (C) 
+  1: Crack      | (C) 
+  2: MoveBit    |  
+  3: Float      |  
+  4: Charm      | (C) 
+  5: Inc        |  
+  6: Jump       |  
+  7: RemoveCard | (C) 
+  8: MoveCard   | (C) 
+  9: Zap        | (C) 
+ 10: Dec        | (C) 
+ 11: Heal       |  
+ 12: RemoveBit  | (C) 
+ 13: MakeBit    |  
+ 14: CopyPast   |  
+ 15: CopyFuture |  
+ 16: Surge      | (C) 
+ 17: Reverse    |  
+ which card?> 
+ ||<
+ 
+ I thought about it a lot. 3, 6, 13.
+ 
+ >||
+ Player: Computer @ Bomb Deal 4 damage to 1 player and discard this card.
+ ACTIVATE True
+ SELECT_PLAYER You
+ You:6 Computer:10
+ (Abbreviation)
+ Player: Computer @ Crack Reduces 1 player's life points by 2
+ ACTIVATE True
+ SELECT_PLAYER You
+ You:4 Computer:10
+ (Abbreviation)
+ Player: You @ Float Move forward or backward one place and copy the next card in the direction of PC progression.
+ activate Float?> 
+ ||<
+ 
+ Of course yes. jump over Charm and copy the next Inc. RemoveBit to increase the number.
+ 
+ >||
+ Crack      | (C) 
+ MoveBit    |  
+ Charm      | (C) 
+ Float      | (Y) 
+ Inc        |  
+ Jump       v (Y) 
+ RemoveCard | (C) 
+ MoveCard   | (C) 
+ Zap        | (C) 
+ Dec        | (C) 
+ Heal       |  
+ RemoveBit  | (C)  mod: x+1
+ MakeBit    | (Y) 
+ CopyPast   |  
+ CopyFuture |  
+ Surge      | (C) 
+ Reverse    |  
+ You 4 Computer 10
+ ||<
+ 
+ >||
+ Player: You @ Jump Jumps the PC to any card 3 or more cards away. Once jumped, the jump destination is fixed and can be specified again when the card disappears.
+ activate Jump?> 
+ ||<
+ 
+ Activate Jump and jump to MakeBit.
+ 
+ >||
+ Player: You @ MakeBit Add your bit to any card.
+ ||<
+ 
+ Activate MakeBit and add bits to CopyPast immediately after.
+ 
+ >||
+ RemoveBit  | (C)  mod: x+1
+ MakeBit    | (Y) 
+ CopyPast   v (Y) 
+ CopyFuture |  
+ Surge      | (C) 
+ Reverse    |  
+ You 4 Computer 10
+ Player: You @ CopyPast Copy two cards in the opposite direction from this card
+ ||<
+ 
+ Activated; CopyPast effect copies RemoveBit and MakeBit; RemoveBit is x+1 so two bits can be removed; RemoveBit and Dec bits are removed.
+ 
+ >||
+ copy MakeBit
+ (Abbreviation)
+ 11: RemoveBit  |   mod: x+1
+ 12: MakeBit    | (Y) 
+ 13: CopyPast   | (Y) 
+ 14: CopyFuture |  
+ 15: Surge      | (C) 
+ 16: Reverse    |  
+ which card?> 14
+ ||<
+ 
+ Add bits to CopyFuture immediately after with MakeBit.
+ >||
+ Player: You @ CopyFuture Copy the two cards in the direction of travel from this card
+ ||<
+ 
+ Activated, of course; Surge and Reverse are triggered by CopyFuture's effect. Life 3:7
+ 
+ >||
+ RemoveBit  |   mod: x+1
+ MakeBit    | (Y) 
+ CopyPast   ^ (Y) 
+ CopyFuture | (Y) 
+ Surge      | (C) 
+ Reverse    |  
+ You 3 Computer 7
+ Player: You @ CopyPast Copy two cards in the opposite direction from this card
+ activate CopyPast?> 
+ ||<
+ 
+ CopyPast effect is triggered, Surge and CopyFuture are copied, and MakeBit and RemoveBit are also triggered by the effect of CopyFuture.
+ 
+ >||
+ activate CopyPast?> 1
+ copy Surge
+ copy CopyFuture
+ copy MakeBit
+ (Abbreviation)
+ 11: RemoveBit  |   mod: x+1
+ 12: MakeBit    | (Y) 
+ 13: CopyPast   | (Y) 
+ 14: CopyFuture | (Y) 
+ 15: Surge      | (C) 
+ 16: Reverse    |  
+ which card?> 11
+ copy RemoveBit
+ (Abbreviation)
+  7: MoveCard   | (C) 
+  8: Zap        | (C) 
+ (Abbreviation)
+ which card?> 8
+ (Abbreviation)
+ which card?> 7
+ Crack      | (C) 
+ MoveBit    |  
+ Charm      | (C) 
+ Float      | (Y) 
+ Inc        |  
+ Jump       | (Y) 
+ RemoveCard | (C) 
+ MoveCard   |  
+ Zap        |  
+ Dec        |  
+ Heal       |  
+ RemoveBit  | (Y)  mod: x+1
+ MakeBit    ^ (Y) 
+ CopyPast   | (Y) 
+ CopyFuture | (Y) 
+ Surge      | (C) 
+ Reverse    |  
+ You 2 Computer 4
+ Player: You @ MakeBit Add your bit to any card.
+ activate MakeBit?> 
+ ||<
+ Add more bits to RemoveBit with MakeBit. Now you can delete 2 bits twice, so you can delete all 4 remaining opponent bits. Victory.
+ 
+ *1239066693*Card game "Spaghetti Monsters" vs.
+ >||
+  0: Zap        | (C) 
+  1: CopyPast   | (C) 
+  2: MakeBit    |  
+  3: Reverse    |  
+  4: Float      | (C) 
+  5: Bomb       |  
+  6: Dec        |  
+  7: Crack      |  
+  8: MoveBit    | (C) 
+  9: Inc        | (C) 
+ 10: Jump       |  
+ 11: Charm      | (C) 
+ 12: CopyFuture |  
+ 13: Heal       | (C) 
+ 14: Surge      | (C) 
+ 15: MoveCard   |  
+ 16: RemoveBit  | (C) 
+ 17: RemoveCard |  
+ ||<
+ Hmmm, CopyPast copies RemoveCard, so if I put it on MakeBit, it has a 1/2 chance of being erased (the AI is still not smart enough to erase with a probability of 1).
+ 
+ I wonder if Float copies Reverse, chaos ensues. I'm not sure if I can win with 9 pieces on the table. If there is no danger of MakeBit being erased, I can make a loop with MakeBit, Reverse, and CopyPast of the weak AI and make a lot of bits in Crack. I'd pile up a lot of bits in Crack, and then pass Reverse, but I'm afraid that there's a 1/2 chance that it will be erased.
+ 
+ Execution.
+ >||
+ Zap        v (C) 
+ CopyPast   | (C) 
+ MakeBit    |  
+ Reverse    |  
+ Float      | (C) 
+ Bomb       |  
+ Dec        |  
+ Crack      | (Y) 
+ MoveBit    | (C) 
+ Inc        | (C)(Y) 
+ Jump       | (Y) 
+ Charm      | (C) 
+ CopyFuture |  
+ Heal       | (C) 
+ Surge      | (C) 
+ MoveCard   |  
+ RemoveBit  | (C) 
+ RemoveCard |  
+ ...
+ Player: Computer @ Zap Reduce 1 life point per player
+ ACTIVATE True
+ SELECT_PLAYER You
+ You:9 Computer:10
+ ...
+ Player: Computer @ CopyPast Copy two cards in the opposite direction from this card
+ ACTIVATE True
+ copy RemoveCard
+ SELECT_CARD MakeBit
+ copy Zap
+ SELECT_PLAYER Computer
+ You:9 Computer:9
+ ||<
+ 
+ I guess MakeBit has been erased. But you hit yourself in the Zap. This must be a bug.
+ >|diff|
+ - if repr(game.cur_card) in "Zap Crack Bomb":
+ + if repr(game.cur_card) in "Zap Crack Bomb".split():
+ ||<
+ It was a bug.
+ 
+ >||
+ Reverse    |  
+ Float      v (C) 
+ Bomb       |  
+ Dec        |  
+ Crack      | (Y) 
+ ...
+ Player: Computer @ Float Move one forward or backward and copy the next card in the direction of PC progression.
+ ACTIVATE True
+ SELECT_CARD Bomb
+ ...
+ copy Dec
+ SELECT_CARD MoveCard
+ SELECT_VARIABLE x
+ Zap        | (C) 
+ CopyPast   | (C) 
+ Reverse    |  
+ Bomb       |  
+ Float      | (C) 
+ Dec        |  
+ Crack      v (Y) 
+ MoveBit    | (C) 
+ Inc        | (C)(Y) 
+ Jump       | (Y) 
+ Charm      | (C) 
+ CopyFuture |  
+ Heal       | (C) 
+ Surge      | (C) 
+ MoveCard   |   x-1
+ RemoveBit  | (C) 
+ RemoveCard |  
+ You 9 Computer 9
+ Player: You @ Crack Reduces 1 player's life points by 2
+ activate Crack?> 
+ ||<
+ 
+ yes
+ 
+ >||
+ You 9 Computer 7
+ Player: Computer @ MoveBit Move 1 bit to any card
+ ACTIVATE True
+ SELECT_CARD Heal
+ SELECT_BIT 0
+ SELECT_CARD RemoveBit
+ Zap        | (C) 
+ CopyPast   | (C) 
+ Reverse    |  
+ Bomb       |  
+ Float      | (C) 
+ Dec        |  
+ Crack      | (Y) 
+ MoveBit    | (C) 
+ Inc        v (C)(Y) 
+ Jump       | (Y) 
+ Charm      | (C) 
+ CopyFuture |  
+ Heal       |  
+ Surge      | (C) 
+ MoveCard   |   x-1
+ RemoveBit  | (C)(C) 
+ RemoveCard |  
+ You 9 Computer 7
+ Player: Computer @ Inc Increase the Arabic numerals on any one card by 1.
+ ACTIVATE True
+ SELECT_CARD MoveCard
+ SELECT_VARIABLE x
+ Player: You @ Inc Increase the Arabic number on any one card by 1.
+ activate Inc?> 
+ ||<
+ Inc Crack, Jump back to Crack. If you can get back safely one more time, you win, but there is a MoveBit in between, so you never know what they will do to you.
+ 
+ >||
+ Player: You @ Crack Reduce 2 life points for 2 players
+ activate Crack?> 1
+  0: You
+  1: Computer
+ which player?> 1
+ You:9 Computer:5
+  0: You
+  1: Computer
+ which player?> 1
+ You:9 Computer:3
+ ||<
+ 
+ MoveBit was a waste of money.
+ >||
+ Crack      | (Y)  x+1, y+1
+ MoveBit    | (C)  x+1
+ Inc        | (C)(Y) 
+ Jump       v (Y) 
+ Charm      | (C) 
+ CopyFuture |  
+ Heal       |  
+ Surge      | (C) 
+ MoveCard   |   x-1, x+1
+ RemoveBit  | (C)(C) 
+ RemoveCard | (C) 
+ You 9 Computer 3
+ ||<
+ 
+ Return to Crack and win.
+ 
+ *1239067678*Card game "Spaghetti Monsters" vs.
+ I took the handicap off.
+ >||
+   : Dec        | (Y) 
+   : Charm      | (Y) 
+   : Jump       | (Y) 
+  3: RemoveBit  | (C) 
+  4: Float      |  
+  5: Bomb       | (C) 
+  6: MoveBit    |  
+  7: Reverse    |  
+  8: Surge      |  
+  9: Crack      |  
+ 10: Heal       |  
+ 11: MakeBit    | (C) 
+ 12: MoveCard   |  
+ 13: CopyFuture |  
+ 14: Inc        | (C) 
+ 15: Zap        |  
+ 16: CopyPast   |  
+   : RemoveCard | (Y) 
+ ||<
+ Hmmm...weak...I can win by repeatedly jumping to RemoveCard with Jump without using Charm. If I want to stop that, I need to take Dec and disable RemoveCard, but I don't think the current AI can do that.
+ 
+ *1239069204* Card game "Spaghetti Monsters" vs.
+ Slightly enhanced AI.
+ >||
+ Dec        v  
+ Zap        | (C) 
+ RemoveCard | (C) 
+ Heal       |  
+ CopyPast   | (Y) 
+ Inc        | (C) 
+ Bomb       | (Y) 
+ Crack      | (Y) 
+ Float      | (Y) 
+ RemoveBit  | (Y) 
+ MoveCard   | (Y) 
+ CopyFuture |  
+ Reverse    |  
+ MoveBit    | (C) 
+ Jump       | (C) 
+ Surge      |  
+ Charm      | (C) 
+ MakeBit    |  
+ ||<
+ With the alternating placement rule, I'd have to win by about the 4th piece against the current AI. I'm too weak at the beginning of the game. Well, let's play it as a check of operation.
+ 
+ >||
+ Player: Computer @ Zap Reduce 1 life point per player
+ ACTIVATE True
+ SELECT_PLAYER You
+ Computer:10 You:9
+ ...
+ Player: Computer @ RemoveCard Remove the card immediately before or after this card.
+ ACTIVATE True
+ SELECT_CARD Zap
+ ...
+ Player: You @ CopyPast Copy two cards in the opposite direction from this card
+ ||<
+ 
+ Bomb, Crack, Float(Crack), Crack, and that's it? I didn't even feel like organizing the logs. It is too bad that there is no strategy at all at the beginning of the game, because the game is decided at the beginning of the game. Maybe I should try to implement Monte Carlo.
+ 
+ *1239081211* Oh my god.
+ We can find many problems by letting the AIs fight each other automatically. At the same time, they forgot to check the cases that meet the death conditions.
+ 
+ The error that the card cannot be found is due to CopyPast disappearing in [Charm][MoveCard][CopyPast (Y)] and then MoveCard causing the move, followed by "reconfigure PC with the location of the currently running card".
+ 
+ {'draw': 29, "ValueError('list.remove(x): x not in list',)": 35, "RuntimeError('Too Long Play',)": 120, "ValueError('list.index(x): x not in list',)": 18, "IndexError('list index out of range',)": 57, 'Computer': 370, 'You': 371}
+ 
+ {'draw': 33, "ValueError('list.remove(x): x not in list',)": 34, "RuntimeError('Too Long Play',)": 125, "ValueError('list.index(x): x not in list',)": 17, "IndexError('list index out of range',)": 35, 'Computer': 380, 'You': 376}
+ 
+ {'draw': 35, "ValueError('list.remove(x): x not in list',)": 34, "RuntimeError('Too Long Play',)": 128, "ValueError('list.index(x): x not in list',)": 17, "IndexError('list index out of range',)": 21, 'Computer': 382, 'You': 383}
+ 
+ It is slowly being resolved, though.
+ 
+ Hmm.
+ 
+ in the end
+ >>
+  Is it acceptable for the rule [MIMIC][BOMB][x] to execute x after MIMIC is removed? In other words, the interpretation is that the atomic instruction [BOMB & x] has already been fetched. If [GOTO & x] triggers x, it would be less exceptional if it also triggers this one.
+ <<
+ So this design decision was wrong. When something like [MIMIC][BOMB][FLOAT], the card that should have been moved has already disappeared. Should I have thrown an exception for card disappearance?
+ 
+ *1239106361*Hacker + Blog
+ <a href='http://blog.hackers-cafe.net/'>Hacker's Cafe Blog</a> is now on the first page of Google hl=en for hacker + blog!
+ </body>
+
+[Hatena Diary 2009-04-07 https://nishiohirokazu.hatenadiary.org/archive/2009/04/07]

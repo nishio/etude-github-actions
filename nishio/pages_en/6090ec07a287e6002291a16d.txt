@@ -1,0 +1,53 @@
+Hatena2011-04-15
+code:hatena
+ <body>
+ *1302833161*pp4tex: now you can define macros that take arguments
+ >|tex|
+ % define sq[1] #1 * #1
+ \[ sq{x} + sq{y} \] 
+ ||<
+ <img src="http://gyazo.com/03e75001360726662a5287496767408f.png">
+ 
+ https://github.com/nishio/pp4tex/tree/alnum_tokens
+ 
+ *1302879430*pp4tex: multi-line macro now works
+ Now you can do multi-line macros (with arguments, of course) and include from other files. So if you include a file like the one below, you can easily use it by simply writing \BayesForGauss.
+ >|tex|
+ % define \BayesForGauss:
+ 
+ % define \x \vec{x}
+ % define \y \vec{y}
+ % define \A \mat{A}
+ % define \b \vec{b}
+ % define \m \vec{\mu}
+ % define \Lam \mat{\Lambda}
+ % define \L \mat{L}
+ 
+ \ϵbegin{itembox}[l]{Bayes' theorem on Gaussian distribution (PRML p.90)}
+ % push
+ % define \S \mat{\Sigma}
+ 
+ given:
+ \[ p(\x) = \Gauss{\x | \m, \Lam\inv } \]
+ \[ p(\y|\x) = \Gauss{\y | \A\x + \b, \L\inv } \]
+ marginal and conditional distributions are:
+ \[ p(\y) = \Gauss{\y| \A\m + \b, \L\inv + \A \Lam\inv \A^T } \]
+ \[ p(\x|\y) = \Gauss{\x | \S (\A^T \L (\y - \b) + \Lam \m), \S\inv} \]
+ where
+ \[ \S = (\Lam + \A^T \L \A)\inv \]
+ 
+ % pop
+ \end{itembox}
+ % end
+ ||<
+ 
+ The \S enclosed in push/pop are local variables of this macro and are not imported into the namespace of the location where the macro is used. On the other hand, names outside of push/pop are imported into the namespace of the place where the macro is used. If you don't like it, you can enclose the macro use itself in push/pop. The reason why I do this is because I want to use some of the symbols outside of the macro, as in the example below.
+ 
+ <img src="http://gyazo.com/e2846ef43f3fcbc61faa3133f308f517.png">
+ 
+ Now I've finished implementing all the features I had in mind, and merged them into the master branch, which is a good thing in terms of git practice, since I created a branch for new features and worked on them there before merging them into master. However, it was a bad idea to start a multi-line macro implementation in alnum_tokens, which was supposed to be a topic branch for "tokens containing numbers". It was a good learning experience.
+ 
+ https://github.com/nishio/pp4tex/tree/master
+ </body>
+
+[Hatena Diary 2011-04-15 https://nishiohirokazu.hatenadiary.org/archive/2011/04/15]

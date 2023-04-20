@@ -1,0 +1,29 @@
+Hatena2010-05-15
+code:hatena
+ <body>
+ *1273885579*[OCaml]Triple fast counter
+ I forgot. When I created the counter, I decided to inherit it and create a 3x faster red_counter as well.
+ >|ocaml|
+ # class red_counter=  
+     object
+       inherit counter as super
+       method push = super#push; super#push; super#push; 
+     end;;
+ Warning S: this expression should have type unit.
+ Warning S: this expression should have type unit.
+ class red_counter : object val mutable count : int method push : int end
+ # let rc = new red_counter;;
+ val rc : red_counter = <obj>
+ # rc#push;;
+ - : int = 3
+ # rc#push;;
+ - : int = 6
+ ||<
+ Is there a warning if I connect expressions that are not units with a semicolon?
+ 
+ http://itpro.nikkeibp.co.jp/article/COLUMN/20061107/252787/?ST=develop
+ 
+ 「inheritance is not subtyping」
+ </body>
+
+[Hatena Diary 2010-05-15 https://nishiohirokazu.hatenadiary.org/archive/2010/05/15]

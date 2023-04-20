@@ -1,0 +1,144 @@
+ABC177
+I was aware of the symptoms of being sick before it started, but I'm a wreck. 3 completions in and the rating has dropped for the first time.
+[https://gyazo.com/a1c1ce807b5c48bb8acf5b1378021952]
+[https://gyazo.com/157cbe9e3a257f5f09ef30b0ce3a73ef]
+
+[B - Substring https://atcoder.jp/contests/abc177/tasks/abc177_b]
+[https://gyazo.com/31963897ac43a0a816ff702807ccfb41]
+　When comparing a 1000 letter S to a 500 letter T, you need to compare 500 x 501, which is about 250,000 letters, but you can do it because that's about as high as you can go.
+ code:python
+  def solve(S, T):
+      buf = []
+      for i in range(len(S) - len(T) + 1):
+          diff = 0
+          for j in range(len(T)):
+              if S[i + j] != T[j]:
+                  diff += 1
+          buf.append(diff)
+      return min(buf)
+ Forgot +1 in `len(S) - len(T) + 1` run-time error
+ 　When the lengths are equal, it stops looping and the target of min becomes empty.
+
+[ABC177C]
+
+[D - Friends https://atcoder.jp/contests/abc177/tasks/abc177_d]
+	[https://gyazo.com/3c84120da2969ef35f6b0afd857a4453]
+　I saw the problem statement and thought [UnionFind] was asking for the number of friend groups.
+　　Should have asked for the size of the largest group instead of asking for the number of groups
+　　We will break up that group one by one.
+　I had implemented it in UnionFind, but the answer doesn't match due to the above misunderstanding.
+　So I tried to confirm it by drawing Sample 1 in the diagram.
+　I saw the input for sample 1 and mistook 5 3 for "5 and 3 are friends" (really 3 relationships between 5 people).
+		[https://gyazo.com/689970ee403670a824ab06cbf43739f8]
+　Diagrams actually drawn during the contest
+　[https://gyazo.com/416dd244072893bb42a898bd7c4153f3]
+　　Reinterpret the question so that the answer is 3 and assume "I see, friendships are not symmetrical.
+　　I thought this was a trap to make me think it was UnionFind, but actually it's not! Or so I thought.
+　　If the friendship is one-way, the question becomes one of finding the length of the longest path.
+　　Even with this wrong policy, samples 1 and 2 will be correct.
+　　　I kept thinking the policy was right, and sample 3 was stuck because it didn't fit.
+	code:python
+	 def main():
+      global parent, rank
+      # parse input
+      N, M = map(int, input().split())
+      parent = [-1] * N
+      rank = [0] * N
+      for q in range(M):
+          a, b = map(int, input().split())
+          unite(a - 1, b - 1)
+  
+      xs = list(find_root(x) for x in range(N))
+      # debug(": xs", xs)
+      # print(len(set(xs)))  # WRONG!
+      from collections import Counter
+      print(max(Counter(xs).values()))
+　I crossed out the one wrong line for the number of groups and added the two lines for the size of the largest group, and I got AC.
+　Implementation of unite, find_root is here: https://github.com/nishio/atcoder/blob/master/yosupo/unionfind.py
+
+[E - Coprime https://atcoder.jp/contests/abc177/tasks/abc177_e]
+[https://gyazo.com/3f83c85c25e404bbf5ad558341687eb7]
+	[Eratosthenes' sieve] to determine the prime numbers from the smallest to the largest, and then divided N numbers by the prime numbers.
+		No need to retain the result of prime factorization, since it is obtained by paying attention to each prime factor for the determination of the problem
+		When there are d numbers out of N that have some prime factor p,
+		 Cannot be PAIRWISE if d is greater than or equal to 2
+		 If d is N, it is fixed to NOT COPRIME.
+	 Unfortunately, TLE
+	 　Eleven of the ones in between were the right answers.
+	code:python
+	 def solve(N, AS):
+      is_pairwise = True
+      maxAS = max(AS)
+      sieved = [False] * (maxAS + 10)
+      for p in range(2, maxAS + 1):
+          if sieved[p]:
+              continue
+          # p is prime
+          x = p + p
+          while x <= maxAS:
+              sieved[x] = True
+              x += p
+          sum_div = 0
+          for i, a in enumerate(AS):
+              dividable = 0
+              while a % p == 0:
+                  a //= p
+                  dividable = 1
+              AS[i] = a
+              sum_div += dividable
+          if sum_div >= 2:
+              is_pairwise = False
+          if sum_div == N:
+              return "not coprime"
+  
+      if is_pairwise:
+          return "pairwise coprime"
+      return "setwise coprime"
+  
+　Fast prime factorization of multiple numbers seems to finish Eratosthenes first.
+　　It seems to build a tree of divisors by writing the divisor prime first, rather than simply bool
+　I easily AC'd it with [fast prime factorization].
+　　I wrote the above because I didn't want to keep the result of [prime factorization], but I had no problem with the policy of plugging it into the list in a messy way.
+	code:python
+	 def solve(N, AS):
+      maxAS = max(AS)
+      eratree = [0] * (maxAS + 10)
+      for p in range(2, maxAS + 1):
+          if eratree[p]:
+              continue
+          # p is prime
+          eratree[p] = p
+          x = p * p
+          while x <= maxAS:
+              if not eratree[x]:
+                  eratree[x] = p
+              x += p
+  
+      count = defaultdict(int)
+      for a in AS:
+          factors = []
+          while a > 1:
+              d = eratree[a]
+              factors.append(d)
+              a //= d
+          for f in set(factors):
+              count[f] += 1
+  
+      if any(x == N for x in count.values()):
+          return "not coprime"
+      if any(x >= 2 for x in count.values()):
+          return "setwise coprime"
+      return "pairwise coprime"
+
+Counted and compared the number of divisions.
+　100000 100001 100003, I found that my original version had 28792 times while the fast prime factorization had 13 times, so they are not comparable at all!
+Computational Considerations
+　Let N be the number of numbers and M the largest number (this time both 10^6).
+　The number of prime numbers is [$ M / \log(M)] about
+　No, you can't find a prime number and then divide it because [$ NM/\log(M)].
+　　I was under the impression that the prime numbers were much smaller, [$ \log(M)] about
+　Fast prime factorization finds prime factors without trial division.
+　　This can really be done [$ \log(M)] times
+　　The most common case is at 2^x, but at most 20.
+　　I'm not sure why it wasn't a problem to shove them into a messy list, or why it was only that many pieces in the first place.
+　　　In this case, I only wanted to know whether it existed or not, so I uniq'd it with set, but if I wanted to know the number of pieces, it would be better to just put it into Counter.

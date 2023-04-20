@@ -1,0 +1,418 @@
+Hatena2009-02-08
+code:hatena
+ <body>
+ *1234041062*TopCoder SRM434 Div1
+ <img src="http://gyazo.com/34f04265549e70405ef3928f23e3f3a5.png">
+ Moo, I finally fell into the second army.
+ 
+ ** 250-points FindingSquareInTable
+ Given a grid containing the numbers 0 to 9, return the largest square number of the numbers formed by connecting the numbers in the grid such that the x-coordinate and y-coordinate form an equi-difference sequence. If not, return -1. If not, return -1.
+ 
+ >|cpp|
+   bool is_square(size_t n){
+     size_t m = sqrt(n);
+     if(m * m == n || (m + 1) * (m + 1) == n){
+       return true;
+     }
+     return false;
+   }
+ 
+   int findMaximalSquare(vector <string> table) {
+     const size_t HEIGHT = table.size();
+     const size_t WIDTH = table[0].size();
+     int result = -1;
+     for(size_t sy=0; sy < HEIGHT; sy++){
+       for(size_t sx=0; sx < WIDTH; sx++){
+         for(int dx= -int(WIDTH) + 1; dx < int(WIDTH); dx++){
+ 	  for(int dy= -int(HEIGHT) + 1; dy < int(HEIGHT); dy++){
+ 	    if(dx == 0 && dy == 0) continue;
+ 	    int x = sx, y = sy;
+ 	    int seq = table[y][x] - '0';
+ 	    if(is_square(seq) && seq > result){
+ 	      result = seq;
+ 	    }
+ 	    while(true){
+ 	      x += dx;
+ 	      y += dy;
+ 	      if(!(x < int(WIDTH) && x >= 0 && y < int(HEIGHT) && y >= 0)) break;
+ 	      seq *= 10;
+ 	      seq += table[y][x] - '0';
+ 	      if(is_square(seq) && seq > result){
+ 		result = seq;
+ 	      }
+ 	    } 
+ 	  }
+ 	}
+       }
+     }
+     return result;
+   }
+ ||<
+ 
+ Now, there must be a very obvious mistake, because I was shot down immediately after the challenge started.
+ >||
+ Args:
+ {{"0"}}
+ 
+ Expected:
+ 0
+ 
+ Received:
+ -1
+ ||<
+ 
+ Buha. Is this wrong? Am I missing a check for a 1x1 square that has no room to move and is already a square number with only one square without moving because it doesn't go into the dx or dy for statement? I fixed it and it went through.
+ 
+ ** 500-points HexatridecimalSum
+ Given a list of numbers expressed in 36 decimal, the question was to replace k of the 36 different numbers with Z to maximize the total and return the largest total in 36 decimal. At first I misunderstood the problem statement and thought k=1, and in my haste, I submited it barely 90 seconds before the end by corresponding to k=2 or more.
+ 
+ First, the k=1 version
+ >|cpp|
+   unsigned long long from36(string s){
+     char** endptr;
+     return strtoull(s.c_str(), endptr, 36);
+   }
+   string to36(unsigned long long x){
+     string ret = "";
+     while(x){
+       if(x % 36 < 10){
+ 	ret = ret.insert(0, 1, char('0' + x % 36));
+       }else{
+ 	ret = ret.insert(0, 1, char('A' + (x % 36 - 10)));
+       }
+       x /= 36;
+     }
+     return ret;
+   }
+   string maximizeSum(vector <string> numbers, int k) {
+     unsigned long long max_sum = 0;
+     for(size_t i=0; i<35; i++){
+       unsigned long long sum = 0;
+       char query = to36(i)[0];
+       for(size_t j=0; j<numbers.size(); j++){
+         string tmp = numbers[j]; // copy
+ 	for(size_t k=0; k<tmp.size(); k++){
+ 	  if(tmp[k] == query) tmp[k] = 'Z';
+ 	}
+ 	DP(tmp);
+ 	sum += from36(tmp);
+       }
+       if(sum > max_sum) max_sum = sum;
+     }
+     return to36(max_sum);
+   }
+ ||<
+ 
+ No, I thought it was wacky because it was easier than 250!
+ For k = 2 or more, each substitution is independent, so you don't need to search 35 times at all. But for some reason I was getting double free or some such nasty error, so I thought I must be using strtoull incorrectly and rewrote it myself.
+ 
+ >|cpp|
+   unsigned long long from36(string s){
+     //char** endptr;
+     //return strtoull(s.c_str(), endptr, 36);
+     unsigned long long ret = 0;
+     for(size_t i=0; i<s.size(); i++){
+       ret *= 36;
+       if('0' <= s[i] && s[i] <= '9'){
+ 	ret += s[i] - '0';
+       }else{
+ 	ret += s[i] - 'A' + 10;
+       }
+     }
+     return ret;
+   }
+ 
+   string to36(unsigned long long x){
+     if(x == 0) return "0";
+     string ret = "";
+     while(x){
+       if(x % 36 < 10){
+ 	ret = ret.insert(0, 1, char('0' + x % 36));
+       }else{
+ 	ret = ret.insert(0, 1, char('A' + (x % 36 - 10)));
+       }
+       x /= 36;
+     }
+     return ret;
+   }
+ 
+   string maximizeSum(vector <string> numbers, int k) {
+     unsigned long long max_sum = 0;
+     vector<pair<unsigned long long, char> > candidates;
+     unsigned long long base = 0;
+     for(size_t j=0; j<numbers.size(); j++){
+       base += from36(numbers[j]);
+     }
+     
+     for(size_t i=0; i<35; i++){
+       unsigned long long sum = 0;
+       char query = to36(i)[0];
+       for(size_t j=0; j<numbers.size(); j++){
+         string tmp = numbers[j]; // copy
+ 	for(size_t k=0; k<tmp.size(); k++){
+ 	  if(tmp[k] == query) tmp[k] = 'Z';
+ 	}
+ 	sum += from36(tmp);
+       }
+       candidates.push_back(make_pair(sum - base, query));
+     }
+     sort(candidates.begin(), candidates.end());
+     max_sum = base;
+     if(k == 36) k = 35;
+     for(size_t i = 35 - k; i < 35; i++){
+       max_sum += candidates[i].first;
+     }
+     return to36(max_sum);
+   }
+ ||<
+ 
+ So, what was wrong with the test?
+ >||
+ Args:
+ {{"93K7XFUCPTGJWUDCPQY9TW0Y9B7Q2PWXQUUTFEZEHIFRIB03HW", "NX73A16PXA5LUE6QUQGN7N6BU67EUBZ0OICX1KBI9FA2CL12DW", 
+ (omitted)
+ "1JBNQ0CTVE9LF2V10FPIRMQC3R9IWDVD3NW6R4EOT6C3DPD57G", "SBSW40X7KMPVFRWG0NHYVZXO3NRK4RC9J9VNF1W9I1B70XBBZO"}, 18}
+ 
+ Expected:
+ "1B9KG009JCTTFOMNN3QI86HEHJENK39KL7NM34FCP3JZ7AYXF6H1"
+ 
+ Received:
+ "3ONMBDMI72QM0"
+ ||<
+ 
+ Uh, yes, there is no way that 50 digits in hexadecimal can fit in an unsigned long long. This is what happens when you haven't developed a rough sense of size.
+ 
+ >||
+ >>> 2 ** 64 
+ 18446744073709551616
+ >>> 10 ** 19
+ 10000000000000000000
+ >>> 36 ** 12
+ 4738381338321616896
+ >>> 36 ** 13
+ 170581728179578208256
+ ||<
+ 
+ It doesn't fit at all! I wonder how they did it...I wonder if they implemented addition of 36th decimal...Java is good because of BigInteger.
+ 
+ http://www.topcoder.com/stat?c=problem_solution&rm=300143&rd=13696&pm=10266&cr=22664055
+ 
+ Wow. They made a struct bignum that is 3 times as long as the main body. I wonder if this is made in advance and copied and pasted as needed.
+ 
+ *1234043848* I'm thinking of creating a TopCoder repository on Bitbucket.
+ reason
+ - C++ code is so long that it's rather annoying to post it on a blog.
+ -It's easier to see "here's how we fixed it" with diffs.
+ - I still want to make a commitment before I make a "fix that might break it".
+ - I want to REVERT that when I go back into the practice room to test again, I inadvertently overwrite the source to a plugin.
+ - There's a repository on coderepos, but I don't want to commit to a repository across the net during a time trial.
+ - If I'm going to write a library, I want to make it public.
+ - Why don't you just use a dispersion repository for that?
+ 
+ http://bitbucket.org/nishio/topcoderja/overview/
+ I made it. I felt that the name "topcoder" was not good for trademark purposes, so I named it "ja".
+ 
+ I just made a directory. I'll put something in there when I feel like it.
+ 
+ 
+ For now, I think I'll just make it so that I can create my own development environment right away after hg clone.
+ 
+ 
+ I noticed when I was playing around with the settings that there is an option called "uncheck if you want to keep existing files". If you uncheck this option, the file will not be overwritten.
+ 
+ I got sleepy, so I'll continue next time.
+ 
+ *1234088051*[TopCoder] About include.py
+ There is no verbalized explanation, so I will describe it appropriately.
+ 
+ >|cpp|
+ // BEGIN CUT HERE
+ #include "../lib/debugprint/debugprint.hpp"
+ #include "../lib/toolbox.cpp" /*** AUTO_INCLUDE ***/
+ // END CUT HERE
+ 
+ int main(){
+   DP(IsPrime()(97));
+ }
+ ||<
+ 
+ DP is a macro for debug printing, so think of it as a printf. IsPrime is a class in toolbox.cpp for determining prime numbers. When you run this program, you will get "IsPrime()(97): 1", which means "true".
+ 
+ >||
+ $ ../tool/include.py tmp.cpp
+ ||<
+ 
+ Then, of the files included in the line marked /*** AUTO_INCLUDE ***/, only the definitions used will be pasted into the source code.
+ 
+ >||
+ $ less tmp.cpp
+ // BEGIN CUT HERE
+ #include "../lib/debugprint/debugprint.hpp"
+ // END CUT HERE
+ class IsPrime{
+ (omitted)
+ };
+ // BEGIN CUT HERE
+ // END CUT HERE
+ 
+ int main(){
+   DP(IsPrime()(97));
+ }
+ ||<
+ 
+ I use gcov to determine if a method is being used or not. The current problem is that it is a function unit, so it is not possible to "copy and paste only the necessary methods from the class. If that problem were solved, I would create a BigInteger class with lots of functions without any worries.
+ 
+ The repository is here: http://bitbucket.org/nishio/topcoderja/overview/
+ The toolbox.cpp is now just randomly plugging in everything and commenting out and writing notes, but eventually I should just cull out the properly tested stuff.... Well, I'll do it when I feel like it.
+ 
+ <hr>
+ Hmmm, so this is what happens.
+ >||
+         -:   34:class Residual{
+         -:   35:public:
+         1:   36:  Residual(){
+         1:   37:    value = 1;
+         -:   38:  }
+         1:   39:  void foo(){
+         1:   40:    value = 2;
+         -:   41:  }
+         -:   42:  void bar(){
+         -:   43:    value = 3;
+         -:   44:  }
+         -:   45:  LL value;
+         -:   46:  LL modulo;
+         -:   47:  
+         -:   48:};
+ ||<
+ I can't examine unused variable declarations from this result. I can't determine whether the variable is used or not in the coverage because it doesn't correspond to the instructions. I guess I should just give up on that and generate code with only the unused method bar removed.
+ 
+ <hr>
+ 
+ Oh, it's done.
+ 
+ *1234094010*[cpp]Talking about rounding of square numbers or not, and rounding of double.
+ http://topcoder.g.hatena.ne.jp/nitoyon/20090208/1234068839
+ 
+ I thought, "what is a c++ 1.0 type?" Well, sqrt can take a double argument, so I decided to pass it as a double, since the precision of the mantissa part of a double is 52 bits, which is roughly 12 bits less than 3 and a half digits in decimal. So, 10**18 should not fit.
+ 
+ >|cpp|
+ int main(){
+   ULL n;
+   cin >> n;
+   DP(n * n);
+   DP(ULL(double(n * n)));
+   DP(sqrt(double(n * n)));
+   ULL rt = ULL(sqrt(double(n * n)));
+   DP(rt);
+   DP(rt * rt);
+ }
+ ||<
+ >||
+ 4200000001
+ n * n: 17640000008400000001
+ ULL(double(n * n)): 17640000008400001024
+ sqrt(double(n * n)): 4.2e+09
+ rt: 4200000001
+ rt * rt: 17640000008400000001
+ ||<
+ >||
+ 4200000002
+ n * n: 17640000016800000004
+ ULL(double(n * n)): 17640000016800000000
+ sqrt(double(n * n)): 4.2e+09
+ rt: 4200000002
+ rt * rt: 17640000016800000004
+ ||<
+ 
+ In the second example, the unsigned long long 17640000016800000004 cannot be expressed with double precision, so it is a little smaller than 176400000168000000000000, so the result of taking sqrt is also a true sqrt I was hoping that the result would be a little smaller than 4200000002, and that when I convert it back to unsigned long long, the result would be one less than the correct value, but it doesn't. What am I doing wrong? What am I doing wrong?
+ 
+ 
+ At first I didn't take it from cin, but I thought it might have been calculated at compile time, so I tried taking it from cin, but it still behaved this way, so I tried compiling it again with -O0, but it still didn't make any difference.
+ 
+ >|python|
+ >>> 4200000001 * 4200000001
+ 17640000008400000001
+ >>> from math import log
+ >>> log(_) / log(2)
+ 63.935484364442317
+ ||<
+ Hmmm, it's not like I'm accidentally missing a digit or something. The first number that returns an incorrect value, which I looked for starting at 4200000001 and working my way up, is
+ >||
+ n: 4294967296
+ n * n: 0
+ ||<
+ I guess so.
+ 
+ <hr>
+ <img src="http://gyazo.com/7f53b363c8fff637f40702d14bb23b32.png">
+ 
+ I see, I tried to display the value of FLT_ROUNDS and it outputs "(__builtin_flt_rounds ()): 1", where 1 means "round to the nearest number". (ref. <a href='http://www.linux.or.jp/JM/html/LDP_man-pages/man3/fenv.3.html'>Manpage of FENV</a>)
+ 
+ >>
+ ISO C specifies that the rounding mode should be set to round to the nearest value (FE_TONEAREST), clear all exceptions, and be in non-stop mode (continue even if an exception occurs).
+ <<
+ 
+ So my <del>"rounding when converting double to unsigned long long long is truncation" understanding was wrong.
+ 
+ # I don't see any mention of the behavior of the case where there are multiple "nearest integers", but well, I'm getting off topic, so I'll leave it at that for today.
+ </del>
+ Correction: no, no, no, not at all. I'm not talking about rounding a double to an integer, but how to round the exact result of a sqrt calculation when it is represented by a sporadic double that can't handle exact values.
+ <img src="http://gyazo.com/f336cff4112b5532ac96a9f1c83342a8.png">
+ <hr>
+ 
+ So, back to the main topic, "If you judge whether it is a square number or not by that method, it becomes slightly smaller when it is 52 bits or more and truncated to the lower integer, so you can't judge it correctly!" The "It can't be judged correctly!" was an empty response.
+ 
+ But in the end, I don't know if I should "convert to double, sqrt, and square to determine if it is a square number by whether it is the original value or not" or if I shouldn't do it at all: ......
+ 
+ *1234120568*[cpp]Determining if it is a square number
+ You should have done this quickly.
+ >|cpp|
+ int main(){
+   ULL n = 0;
+   ULL oldn;
+   ULL i = 0;
+   while(true){
+     ULL rt = ULL(sqrt(double(n)));
+     if(rt * rt != n || rt != i){
+       MSG(NG);
+       DP(i);
+       break;
+     }
+     i++;
+     oldn = n;
+     n += i * 2 - 1;
+     if(oldn > n) break;
+   }
+   MSG(END);
+ }
+ ||<
+ 
+ After 2 and a half minutes of CPU running, I confirmed that there is no case where a square number is judged not to be a square number even though it is a square number. On the other hand, since rt * rt == n, there is no "case where it is judged to be a square number even though it is not a square number" (unless it overflows by multiplication, which we know it does not in this case).
+ 
+ 
+ Therefore, I have concluded that it is sufficient to determine whether an unsigned long long integer is a square number by making it a double, sqrt it, and see if it returns to the original value when the result is squared. I'm not going to try to figure out the fastest way to do this. I'm pretty worn out from too much C++ today.
+ </body>
+ <comments>
+ <comment>
+ <username>Isoparametric</username>
+ <body>With a double, <br>17640000008400000001 cannot be expressed due to lack of precision, so it becomes <br>1.76e+19<br>, and when converted back to an integer, the digit that could not be expressed becomes <br>17640000008400001024<br> due to the margin of error. <br><br>These are not particularly strange. <br>Would it make you happy to see DBL_MAX or something like that? </body>
+ <timestamp>1234096968</timestamp>
+ </comment>
+ <comment>
+ <username>k.inaba</username>
+ <BODY>I'm not quite sure either, but I think I understand "rounding when converting double to unsigned long long long" to mean truncation. <BR><BR>Not that, but when the square root of double(17640000016800000004) cannot be expressed as a double, do you use a larger value (just 4200000002) or a smaller value (4200000002-ε) as the returned value of sqrt? The closer value (4200000002) is chosen by rounding </body>.
+ <timestamp>1234099142</timestamp>
+ </comment>
+ <comment>
+ <username>showyou</username>
+ <body>>ULL rt = ULL(sqrt(double(n)));<br>if(rt * rt ! = n || rt ! = i){<br>if(rt ! = i); <br>wouldn't it be slightly less costly to evaluate rt ! <br><br>i * 2<br>i<<<1 and so on. <br><br>I know it's not an essential solution. </body>
+ <timestamp>1234136313</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>No,<br>ULL rt = ULL(sqrt(double(n)));<br>if(rt * rt ! = n)<br>So that's two and a half minutes to see if it can be determined. </body>
+ <timestamp>1234184639</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-02-08 https://nishiohirokazu.hatenadiary.org/archive/2009/02/08]

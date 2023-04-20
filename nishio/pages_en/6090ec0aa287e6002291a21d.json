@@ -1,0 +1,318 @@
+Hatena2012-04-25
+code:hatena
+ <body>
+ *1335320471*Alloy to generate logic puzzles
+ Instead of solving logic puzzles with Alloy, we want Alloy to create logic puzzles.
+ 
+ I have been thinking about it for a while now, but I couldn't solve it because I couldn't sit down on the train going to the destination (yeah), but today the train was strangely empty, so I could sit down and think about it slowly.
+ 
+ When I compared "finding a constraint that makes the solution unique" with the usual Alloy usage of "finding an example that satisfies the constraint," I realized that the example Alloy gives is, in this case, a "constraint. It was good up to that point, but I didn't understand what happened next for a while.
+ 
+ >|javascript|
+ enum Person {X, Y, Z}
+ 
+ // Restrictions
+ abstract sig Constrain{}
+ // Constraint that "X said 'Y is a liar'"
+ sig is_liar extends Constrain {
+ 	by: one Person,
+ 	who: some Person
+ }
+ ||<
+ 
+ It is a constraint that should be included in this Alloy program, i.e., how to express "the solution is unique". When written normally, Alloy will only answer "there is no solution" or "there is a solution, e.g., this one. How can we list all possible solutions and declare that the number of solutions is one?
+ 
+ The key is to write the enumeration implicit in Alloy explicitly in code. Once the crux is realized, implementation is surprisingly simple. The key is to write the code explicitly in Alloy: "Among all possible combinations of parameters, answers is the one that satisfies the constraint. It is just a matter of saying "let answers = {x, y, z: Bool | satisfy[constrains, x, y, z]}". The reason I'm passing the constraints themselves as arguments is that in the future I want to add a constraint that says, "This is the smallest constraint that makes the solution unique. It is lame to have clues that are not necessary for the puzzle.
+ 
+ So the code is only 33 lines; it's hard to believe I've been worrying about it for almost a week.
+ 
+ >|javascript|
+ enum Person {X, Y, Z}
+ enum Bool {T, F}
+ 
+ // Restrictions
+ abstract sig Constrain{}
+ // Constraint that "X said 'Y is a liar'"
+ sig is_liar extends Constrain {
+ 	by: one Person,
+ 	who: some Person
+ }
+ 
+ // returns whether a given pair of boolean values x, y, z satisfies the constraint
+ // Must be nested in a predicate in order to try different arguments
+ pred satisfy(cs: Constrain, x, y, z: Bool){
+ 	let p2b = (X -> x) + (Y -> y) + (Z -> z) {
+ 		// only one liar
+ 		one p2b.F
+ 		// All constraints are satisfied if the speaker is honest
+ 		// Now there is only "WHO is a liar"
+ 		all c: cs{
+ 			(c.by.p2b = T) => (c.who.p2b = F)
+ 		}
+ 	}
+ }
+ 
+ run {
+ 	let answers = {
+ 		x, y, z: Bool | 
+ 		satisfy[Constrain, x, y, z]}{
+ 
+ 		one answers
+ 	}
+ }
+ ||<
+ 
+ 
+ 
+ Running this will output "X says X is a liar" (X is a liar because it contradicts if X is honest) or "X says Y and Z are liars" (X is a liar because the rule says there is only one liar). Indeed. I'd prefer a more complex puzzle, so let's put in the constraints "I don't say I'm a liar" and "Only one person at a time can point out that I'm a liar".
+ 
+ >|javascript|
+ fact {
+ 	all c: Constrain {
+ 		c.by not in c.who
+ 		one c.who
+ 	}
+ }
+ ||<
+ 
+ This will output the puzzle "X says Y is a liar and Y says Z is a liar.
+ 
+ I'd like to increase the puzzle difficulty with more people, but with the current implementation, it's a pain to increase the number of people. We will think about how to do that in the future.
+ 
+ *1335363669*Alloy Girl Complete
+ JS: I've been talking about difficult things lately...
+ Me: Sorry, sorry, what was that?
+ Alloy: I'd like to try modeling JS's "event dispatcher with state transitions" design with Alloy to see if I can get any useful insights.
+ Me: I don't know...
+ JS: It's been two weeks now. <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334023635'>Alloy Girl 4</a>
+ 
+ ** Recall previous design
+ 
+ Me: Let's see, the StateManager is a singleton (one sig) and has more than 0 State instances. Last time I did this, I said that all State instances belong to the StateManager and that there are exactly three States for now, but for the sake of brevity, I'll skip that this time.
+ 
+ >|javascript|
+ one sig StateManager {
+ 	state: set State
+ }
+ 
+ sig State {}
+ 
+ run {}
+ ||<
+ 
+ JS: Yeah, so StateManager has current_state.
+ Me: You only have one.
+ 
+ >|javascript|
+ one sig StateManager {
+ 	state: set State,
+ 	current_state: one State
+ }
+ ||<
+ 
+ Alloy: You don't have to write "one State", it's one by default.
+ Me: Oh, I see. But well, you can make it explicit.
+ JS: So, you create a StateManager and add States one by one.
+ Me: "add" means change with time.
+ JS: Yeah!
+ Me: Then let's introduce time.
+ 
+ ** Introduce time
+ 
+ >|javascript|
+ open util/ordering[Time]
+ sig Time{}
+ ||<
+ 
+ Me: I introduced Time and used the util/ordering library to express that it has an order in it.
+ JS: So now it changes with time already?
+ Me: No, I just declared that there is a set of atoms named Time with an ordering relation.
+ JS: ？？
+ Me: If "current_state changes with time", then "current_state is what at one time and what at another time", right?
+ JS: Yeah!
+ Me: So current_state is a set of time/state pairs
+ JS: A set of pairs?
+ Me: In JavaScript terms, I guess you could call it an Array of Arrays. I'm talking about the fact that at time 1 it was state 2, and at time 2 it changed to state 1 can be expressed as [[Time1, State2], [Time2, State1]].
+ JS: I see!
+ Me: So here's what happened
+ 
+ >|javascript|
+ one sig StateManager {
+ 	state: State -> Time,
+ 	current_state: State -> Time
+ }
+ ||<
+ 
+ JS: What? Shouldn't it be Time -> State?
+ Me: Either one is fine. It's the difference between writing [[Time1, State2], [Time2, State1]] or [[State2, Time1], [State1, Time2]].
+ JS: I guess the order is just different. But isn't Time -> State more natural?
+ Me: I agree, but in the textbook it was written in the form * -> Time, so foo at time t would be foo.t. If I wanted to make it in the form Time -> *, I would have to write foo[t].
+ JS: I still think foo[t] is more natural.
+ 
+ ** Constraint of one at each time
+ 
+ JS: Also, you wrote earlier that state is set (0 or more) and current_state is one (1), but now it's gone?
+ Me: Well, one and the like can actually only be used for unary sets.
+ JS: unary？
+ Me: Well, just think of it as a normal set without the pairs.
+ Alloy: State -> Time is a set of tuples whose length is 2, which is expressed as "arity is 2." State has an arity of 1, so you could do one State, but not State -> Time.
+ JS: Really? Then what do you do?
+ Me: Let's declare "there is one current_state for each time t".
+ 
+ >|javascript|
+ one sig StateManager {
+ 	state: State -> Time,
+ 	current_state: State -> Time
+ }{
+ 	// 1 current_state at all times
+ 	all t: Time {
+ 		one current_state.t
+ 	}
+ }
+ ||<
+ 
+ Me: What about state?
+ JS: There are no restrictions, okay?
+ Me: Okay, let's change the question. Do you have any "this is how it is at a particular time?"
+ JS: Ahhh, so right after the StateManager is created, the state is empty, and eventually all the states are in the state.
+ 
+ >|javascript|
+ one sig StateManager {
+ 	state: State -> Time,
+ 	current_state: State -> Time
+ }{
+ 	// 1 current_state at all times
+ 	all t: Time {
+ 		one current_state.t
+ 	}
+ 	// state is empty at first
+ 	no state.first
+ 	// Finally, all States are added to the StateManager
+ 	all s: State {
+ 		s in state.last
+ 	}
+ }
+ ||<
+ 
+ Me: You do a run like this, adding constraints, as if you were making a save, to make sure there are no contradictions in the declarations you have written up to that point.
+ JS: So far there seems to be no contradiction!
+ I: Well, even if there is no contradiction, it only means that "there exists a solution that satisfies at least one constraint," so we cannot deny the possibility that the solution may have a completely unexpected form.
+ JS: I guess I should do a Show Latest Instance once in a while to see if I can find something that makes me cringe.
+ Me: Well, your choice. I'll post the entire source code once around here.
+ 
+ >|javascript|
+ open util/ordering[Time]
+ sig Time{}
+ 
+ one sig StateManager {
+ 	state: State -> Time,
+ 	current_state: State -> Time
+ }{
+ 	// 1 current_state at all times
+ 	all t: Time {
+ 		one current_state.t
+ 	}
+ 	// state is empty at first
+ 	no state.first
+ 	// Finally, all States are added to the StateManager
+ 	all s: State {
+ 		s in state.last
+ 	}
+ }
+ 
+ sig State {}
+ 
+ run {}
+ ||<
+ 
+ ** Doubt!
+ 
+ Alloy: By the way, this constraint means that current_state doesn't have to be in a state to be OK, is that OK?
+ JS: Oh, no!
+ Me: I'll add that too!
+ >|javascript|
+ open util/ordering[Time]
+ sig Time{}
+ 
+ one sig StateManager {
+ 	state: State -> Time,
+ 	current_state: State -> Time
+ }{
+ 	// 1 current_state at all times
+ 	all t: Time {
+ 		one current_state.t
+ 	}
+ 	// state is empty immediately after creating StateManager
+ 	no state.first
+ 	// Finally, all States are added to the StateManager
+ 	all s: State {
+ 		s in state.last
+ 	}
+ 	// current_state is in state at all times
+ 	all t: Time {
+ 		current_state.t in state.t
+ 	}
+ }
+ 
+ sig State {}
+ 
+ run {}
+ ||<
+ 
+ Alloy: Yes duh!
+ JS: What?
+ Me: What?
+ Alloy: There is no solution that satisfies this set of constraints!
+ Me: Ah, I see.
+ JS: Well, what is it?
+ Me: In other words, "the number of states is 0 immediately after creating the StateManager" and "current_state is an element of state and there is always 1 state" are incompatible.
+ JS: Ah, I see. So I should set current_state to "0 or 1"?
+ Alloy: That would be declaring it lone, but that's not the only solution. There's also "don't make the state an empty set at the time you create the StateManager.
+ Me: Yeah, that's a design decision. In JavaScript, "set current_state to 0 or 1" means that the variable has a value, or is null or undefined.
+ 
+ >|javascript|
+ /** @type {State?} */
+ var current_state = null;
+ ||<
+ 
+ JS: I see, so "not to make empty set of state at the time of creating StateManager" means to create an appropriate state at the time of initialization and add it to the state.
+ 
+ >|javascript|
+ /** @type {State} */
+ var current_state = create_new_state();
+ ||<
+ 
+ Me: That's what I meant. <a href='http://www.hyuki.com/dp/dpinfo.html#NullObject'>Null Object pattern</a>.
+ JS: So it's a design decision which method to use. Let's see, my current design is to use null, and I only check if the previous state is not null during the state transition go...
+ 
+ >|javascript|
+ function go(state) {
+     if (current_state != null) {
+         if (current_state.exit != null) {
+             current_state.exit();
+         }
+     }
+     var current_state = state_table[state];
+     nhiro.assert(current_state != null);
+     if (current_state.enter != null) {
+         current_state.enter();
+     }
+ }
+ ||<
+ 
+ Me: Hmmm. So, you are currently using go to transition to the state you registered before you start using StateManager?
+ JS: Yeah. And it's working fine.
+ Me: But just because you have ad hoc squashed the patterns that cause problems, doesn't mean that you have checked all possible patterns to make sure that the current code is OK. What happens if you start using it without transitions, for example?
+ JS: Hmmm, I hadn't thought about that.
+ Me: If it has a way to fail, it will eventually fail ((<a href='http://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%BC%E3%83%95%E3%82%A3%E3%83%BC%E3%81%AE%E6%B3%95%E5%89%87 '>Murphy's Law</a>))) and I think you should keep it in the Null Object pattern.
+ 
+ ** Aside.
+ 
+ Author: By the way, when I made another prototype using this state transition library, I completely forgot to set the state transition in go, and while I was making it, I only tried the path to read the state properties after the state transition happened. I made the mistake of accessing the property with current_state null and dying with Uncaught TypeError: Cannot read property of null... "What can go wrong, will go wrong in the worst case", right?
+ Alloy: You were planning to make a story like this one by comparing "one current_state with one state.first" when you wrote about StateManager two weeks ago, but you are stupid enough to keep the badly designed code at hand. I can't help but think you're an idiot.
+ Author: Gnu...you are absolutely right, at that time I had just cut out the state transition code and was just like "it's a bit messy, but it's working fine, so it's OK". Well, two weeks ago I was a stranger.
+ Alloy: So, have I convinced you that you can do better with my help in the design?
+ Me: Yeah, well, for me personally, I'm convinced enough. But there is too much of a gap between the current mainstream language and the vocabulary used. I think we need to accumulate more know-how on how to handle such situations and be able to translate them more smoothly.
+ </body>
+
+[Hatena Diary 2012-04-25 https://nishiohirokazu.hatenadiary.org/archive/2012/04/25]

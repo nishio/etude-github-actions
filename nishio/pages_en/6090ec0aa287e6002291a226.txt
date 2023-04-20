@@ -1,0 +1,144 @@
+Hatena2012-05-01
+code:hatena
+ <body>
+ *1335846610* What we want to create: a site to learn core concepts of programming languages.
+ Masui's <a href='http://www.scribd.com/doc/91645150/%E4%BD%9C%E3%82%8A%E3%81%9F%E3%81%84%E3%82%82%E3%81%AE%E3%83%AA%E3%82%B9%E3%83%88% E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86'>Let's make a list of things we want to make</a> I saw Masui's slide and thought, "It's true that just putting things on a 'to do someday' list will not develop, so it would be good to make public those that are safe to make public. So I did it. However, my "Someday I'll do it" list contains various designs and ideas in one list element, and it would be hard to read if I put all of them on the list at once. I'll just put the first one here for now. I added some motives.
+ 
+ 
+ ** A site to learn core concepts of programming languages
+ 
+ Sometimes it is easier to understand something by actually moving it than by reading an explanation written in Japanese or English.
+ 
+ 
+ However, the widely used language has already been improved over the years and has become as complex as an old inn that has been repeatedly renovated and expanded.
+ 
+ 
+ We need a small, simple, easy-to-understand and easily visualized "implementation of the language" for learning, which is easy to understand and visualize the whole picture.
+ 
+ ** Don't we already have something like that?
+ 
+ In the past, various methods (Java applets, Flash, etc.) have been used to visualize various algorithms.
+ 
+ 
+ Appropriate visualization methods change with the times. On the other hand, it is not the case that everyone who has implemented algorithmic visualization in a certain era will port to another visualization method 5 or 10 years later. We do not know why this is. Is it because the cost of learning the visualization part is high?
+ 
+ 
+ How can the problem of uninterrupted maintenance be resolved? Is the problem caused by the fact that the code is not publicly available, or that even if it is, the license is unknown? If so, wouldn't releasing the code under the GPL ensure that the license is reusable, including future ports?
+ 
+ 
+ Also, the implementation and visualization portions of the algorithm should be loosely coupled. This increases portability and reusability.
+ 
+ ** Appropriate size
+ It is easy to add functionality, but considering that the readability of the implementation is also valuable, the optimal size is quite small. For example, if you are implementing a parser for the inverted notation, the appropriate size would be "addition, multiplication, and priority change using parentheses" only.
+ 
+ >>
+ It is finished when there is nothing more to add, not when there is nothing more to take away.
+ <<
+ 
+ ** List of things to be implemented
+ 
+ If everything is in place, the power will be dispersed. We should concentrate first. In this case, we will concentrate on "implemented in JavaScript, without installation, and running in the browser.
+ 
+ - Syntax Tree Visualization Section
+ -- A: A component to visualize the syntax tree in SVG or canvas. A generic tree display library could be used.
+ -- A component that parses a simple inverted notation code to create a syntax tree, which can be combined with A to demonstrate how to "write 1 * 2 + 3 in the browser and see the tree transform in real time".
+ -- an adapter that combines the syntax tree building parts of a practically used language with A. There is a parser that runs on JavaScript browsers http://esprima.org/demo/parse.html All that's left is to send the output of this to A for visualization.
+ -- Parser for Lisp S-expressions. At a minimum, only numbers and addition/multiplication are required. This can also be connected to A
+ -- Forth's parser (or whatever it's called) to be able to connect to A
+ 
+ - Stack Machine Division
+ -- B: Visualization of "where in the instruction sequence is being executed" and "stack status" in an easy-to-understand manner
+ -- D: Forth implementation This is almost synonymous with a stack machine implementation. At a minimum, only numbers and addition/multiplication are required; must be combined and visualized with B
+ -- Execute the bytecode of a language that uses a stack machine For example, with Python, you can write an HTTP server that compiles source code received as a string into bytecode and returns it, so you can write a JS that executes Python bytecode and step through it in the browser To be combined and visualized with B
+ -- Compile the output of the Lisp parser into Forth and run it in D
+ 
+ - Syntax Tree Rewriting Section
+ -- C: computation by partially rewriting the syntax tree; to be combined and visualized with A
+ -- Connect output from Lisp parser to C and run
+ -- Lazy K implementation, combined with A to visualize the execution process.
+ 
+ - Machine Language Section
+ -- EDSAC Simulator. Simple machine to learn machine language. However, there is no need to preserve the readability of the instructions, so an easy-to-understand alias is added.
+ -- Brainf*ck: However, there is no need to preserve readability, so add an easy-to-understand alias, add an instruction to STORE a number, etc.
+ -- In the future, implement the above feature-limited Forth and Lisp to machine language compiler. Visualize the compilation process.
+ 
+ - Other
+ -- Object system implementation
+ -- Scope implementation
+ -- garbage collection (thanks id:nisemono_san)
+ 
+ *1335865812*What I want to make: a game where you can learn how to use Git by completing missions one step at a time.
+ Masui's <a href='http://www.scribd.com/doc/91645150/%E4%BD%9C%E3%82%8A%E3%81%9F%E3%81%84%E3%82%82%E3%81%AE%E3%83%AA%E3%82%B9%E3%83%88% E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86'>Let's make a list of things we want to make</a>, and I thought, "It's true that just putting things on the 'to do someday' list will not develop, so it's good to make public the things that are safe to make public. I did it.
+ 
+ ** A game where you can learn how to use Git by completing missions one step at a time.
+ 
+ Why do you think that the "What a Ville" type games capture people's hearts and minds?
+ 
+ 
+ Does "a system in which missions of small granularity are presented and the next mission is displayed upon completion of the mission" capture people's hearts by frequently rewarding them with a "sense of accomplishment"?
+ 
+ 
+ Come to think of it, the content I wrote a long time ago about learning Python by using an interactive interpreter step by step was also very popular. I thought it would be interesting to make it possible to learn how to use git by completing missions step by step in an interactive manner.
+ 
+ ** Learning User Use Cases
+ In fact, it is already on github. You can play with it. https://github.com/nishio/academy/blob/master/README_ja.rst
+ 
+ - 1: Users who want to learn git clone this repository
+ - 2: Run git/test.py. If you can do this, you have completed the first mission of "cloning".
+ - 3: test.py presents the next mission. Solve it, and repeat.
+ - 4: Yay, I completed the whole mission, I understand git!
+ 
+ ** What is missing?
+ 
+ - Appearance is pretty awful.
+ - Happy to see a list of missions accomplished?
+ - It is a hassle to make sure it works correctly in each environment (especially Windows)
+ - There is no way to see what the user has entered (check history?).
+ - Currently, there is no way to help those who have stumbled along the way, or rather, no way for me to know what they are stumbling over.
+ - Should we just go ahead and hijack the shell with Python, termios?
+ - Right now, when I complete a mission, I just get a CONGRATULATION!!! and the next question appears immediately. I think it would be better to just give a congratulations message and a brief explanation here, and then one more action to display the next mission.
+ - I have a lot of ideas for missions, but I haven't made them yet https://github.com/nishio/academy/blob/master/git/README.rst
+ 
+ *1335883422* Wanted to make: guardrails to keep the quality of JavaScript code.
+ Masui's <a href='http://www.scribd.com/doc/91645150/%E4%BD%9C%E3%82%8A%E3%81%9F%E3%81%84%E3%82%82%E3%81%AE%E3%83%AA%E3%82%B9%E3%83%88% E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86'>Let's make a list of things we want to make</a> I saw Masui's slide and thought, "It's true that just putting things on a 'to do someday' list will not develop, so it's good to make public the things that are safe to make public. So I went ahead and did it.
+ 
+ ** Guardrails for JavaScript code quality
+ 
+ JavaScript is a soft language, and typos and forgotten variable names do not become errors until runtime. Moreover, it is often embedded in the path string of HTML or SVG, and debugging costs a lot of time. Human beings are fallible creatures, and mistakes cannot be eliminated. Therefore, it is necessary to have a system that allows us to recognize mistakes as soon as possible.
+ 
+ 
+ Google Closure Compiler verifies JavaScript source code statically and reports errors. If this is the case, why don't you just compile it in the background while you are editing your source code and report errors as soon as you find them?
+ 
+ ** jscc: JavaScript Continuous Compilation
+ 
+ In fact, I've already made it and published it. http://nishio.github.com/jscc/
+ 
+ <img src="http://nishio.github.com/jscc/screenshot.png">
+ 
+ When you edit the file, watchmedo will run Google Closure Compiler and Lint, and the graph will automatically update. It turns red if there are compile errors, yellow if there are warnings, and green if there are neither. When I code in JS, I display this on the edge of my dual monitors, and I usually write code without gazing at it, and when it changes to red or yellow, I notice the color change even if it is at the edge of my field of view, so I check the error log.
+ 
+ ** Problems
+ 
+ - The installation area is terrible. It only creates three symbolic links in the project root directory. And one of them is a Makefile.
+ - The compile and lint results are created in compile.log and lint.log in the project root. A lock file is also created there to prevent the compiler from running multiple times. I think it is better to put them in a different place because they pollute the project a lot.
+ 
+ 
+ - watch area
+ -- There was a report that watchmedo does not work well on Windows (cygwin).
+ -- Currently, there is no way to kill the process that is WATCHING. What should we do?
+ -- Mystery of using watchmedo to start compiling with git status or git add -p
+ -- →Should I quit using watchmedo and write code in Python to poll the modified date and time of files periodically?
+ 
+ - Client Tools
+ -- I know the design is to ln -s the current directory for makefile, build.sh and client.py, but since makefile is the only file that needs to be rewritten according to the contents of the project, shouldn't I just leave the other two in jscc/client/? It would be better to make compile.log and lint.log in jscc as well. I think it's better to make compile.log and lint.log in jscc.
+ -- integrate with flymake? Show error lines on emacs to make me happy?
+ -- In the future, when multiple people use the software for multiple projects, the project name and user name need to be sent for identification purposes. For now, single user, single project, assuming it is used by one person.
+ -- growlnotify is not required (although I use it) and I would like to determine if it is installed and use it, but how do I write it?
+ 
+ - Visualization Server
+ -- Right now, the graph is visible on the top page because it is a single-user, single-project project, but in the future, when multiple projects and multiple people use it, the top page should be a list of projects and the URL should be /project_name/nishio/ or something like that.
+ -- We don't have a history right now, we need to store it in sqlite or something. Need an API to get the latest n records.
+ -- Right now I'm polling the server once a second with JS, but the requests are piling up if the server is down because it's not timing out? What should we do, Comet?
+ </body>
+
+[Hatena Diary 2012-05-01 https://nishiohirokazu.hatenadiary.org/archive/2012/05/01]

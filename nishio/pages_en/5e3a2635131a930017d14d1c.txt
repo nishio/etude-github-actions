@@ -1,0 +1,34 @@
+Can't TypeScript define types recursively?
+[TypeScript type]
+
+summary
+	With named types like interface, tree definitions, etc. could be done before.
+	Since 3.7, type alias can be done in some cases.
+	But we can't define recurrently in the way we wanted to do it this time.
+	You can't even make it an INTERFACE.
+	Resolution [TypeScript types to create natural numbers].
+
+I just wanted to add...
+code:ts
+ type N0 = [];
+ type succ<N> = [any, N];
+ type N1 = succ<N0>
+ type N2 = succ<N1>
+ type N3 = succ<N2>
+ type pred<N> = N extends [any, infer R] ? R : never;
+ type NEQUAL<Na, Nb> = Na extends Nb ? any : never;
+ type testNEQUAL = NEQUAL<pred<N2>, succ<N0>>  // any
+ type add<Na, Nb> = Nb extends N0 ? Na : add<succ<Na>, pred<Nb>>
+ // Type alias 'add' circularly references itself.
+
+https://stackoverflow.com/questions/36966444/how-to-create-a-circularly-referenced-type-in-typescript
+https://github.com/microsoft/TypeScript/pull/33050
+[TypeScript] In 3.7
+code:ts
+ type ValueOrArray<T> = T | Array<ValueOrArray<T>>;  // OK
+	type ValueOrArray<T> = T | ValueOrArray<Array<T>>;  // NG
+
+code:ts
+ type add<Na, Nb> = Nb extends N0 ? Na : add2<Na, Nb>;
+ interface add2<Na, Nb> extends add<succ<Na>, pred<Nb>> { };  // NG
+ // An interface can only extend an object type or intersection of object types with statically known members.

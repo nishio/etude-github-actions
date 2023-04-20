@@ -1,0 +1,57 @@
+Hatena2012-10-16
+code:hatena
+ <body>
+ *1350381252*Using __slots__ in Python to save memory
+ I did an experiment like this the other day and confirmed that when you create a large number of objects, the 1048 bytes of __dict__ that the object has becomes negligible: <a href='http://d.hatena.ne.jp/nishiohirokazu/20121013 /1350093216'>Profiling memory consumption in Python</a>
+ 
+ Today's solution. Let's add a line to the code from the other day. The line starting with __slots__ is it.
+ 
+ >|python|
+ from guppy import hpy
+ h = hpy()
+ N = 100000
+ 
+ class Hoge(object):
+     __slots__ = ['x', 'y', 'z', 'a', 'b', 'c']
+     def __init__(self):
+         self.x = 1
+         self.y = 1
+         self.z = 1
+         self.a = 1
+         self.b = 1
+         self.c = 1
+ 
+ x = [Hoge() for x in range(N)]
+ 
+ print h.heap()
+ ||<
+ 
+ This means that each instance of Hoge used 1048 + 64 = 1112 bytes before the change, but only 96 bytes after the change.
+ 
+ >||
+ Before change
+ $ time python tmp.py
+ Partition of a set of 225737 objects. Total size = 115386656 bytes.
+  Index  Count   %     Size   % Cumulative  % Kind (class / dict of class)
+      0 100000  44 104800000  91 104800000  91 dict of __main__.Hoge
+      1 100000  44  6400000   6 111200000  96 __main__.Hoge
+ (...)
+ python tmp.py  3.90s user 0.23s system 89% cpu 4.596 total
+ ||<
+ 
+ >||
+ After change
+ $ time python tmp.py
+ Partition of a set of 125743 objects. Total size = 13788280 bytes.
+  Index  Count   %     Size   % Cumulative  % Kind (class / dict of class)
+      0 100000  80  9600000  70   9600000  70 __main__.Hoge
+ (...)
+ python tmp.py  1.51s user 0.07s system 90% cpu 1.747 total
+ ||<
+ 
+ It is interesting to note that the addition of this one line reduces the execution time by less than half. This means that a good portion of the execution time was spent allocating memory.
+ 
+ See what __slots__ does here: http://www.python.jp/doc/release/reference/datamodel.html#slots
+ </body>
+
+[Hatena Diary 2012-10-16 https://nishiohirokazu.hatenadiary.org/archive/2012/10/16]

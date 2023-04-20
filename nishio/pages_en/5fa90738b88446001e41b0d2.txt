@@ -1,0 +1,41 @@
+PAST4I
+from [The 4th Algorithm Practical Skills Test].
+PAST4I
+[I - Pizza https://atcoder.jp/contests/past202010-open/tasks/past202010_i]
+ Thoughts.
+  Finally, a huge N problem.
+  　Find the point where [Range Sum of circumference] is the largest.
+  　Double the cumulative sum
+  　Still, if the starting and ending points are free, the order of the square
+  　[Shakudori method].
+  　Which one should I do at the time of equalization?
+  　　Shrink?
+  　　When it's equal, the answer is zero, so you're done.
+  　　I went through it, so I'm good.
+	code:python
+	 def solve(N, AS):
+      import sys
+      INF = sys.maxsize
+  
+      from itertools import accumulate
+      acc = list(accumulate(AS + AS)) + [0]
+  
+      def rangeSum(start, end):
+          return acc[end - 1] - acc[start - 1]
+  
+      start = 0
+      end = 1
+      ret = INF
+      total = rangeSum(0, N)
+      while True:
+          x = rangeSum(start, end)
+          y = total - x
+          d = x - y
+          ret = min(abs(d), ret)
+          if d < 0:
+              if end == 2 * N - 1:
+                  break
+              end += 1
+          else:
+              start += 1
+      return ret

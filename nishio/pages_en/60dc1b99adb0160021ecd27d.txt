@@ -1,0 +1,30 @@
+2021-06-30
+[https://gyazo.com/d07514b6dfc0497ba911331f8aa711cb]
+[Macbook trackpad scaling parallelism].
+I can't tell if the GyazoGIF playback is choppy, even if it runs smoothly.
+　441 sheets out, so zooming out is sluggish.
+　In other words, just by using overflow: hidden, the browser is pruning the branches of the rendering.
+　Almost entirely thrown into the browser's native implementation.
+　Well, since we are using React to update the status, we can manage this part on our own (which is what we did last time), but I'm not sure if there was any benefit to doing so.
+　[https://gyazo.com/c6e0f8d95cbf7aafb6e531acd36fd247]
+　　Hmmm, I don't know what to do.
+
+Font size adjustment is failing on some stickies.
+　Fixed.
+　When I changed the sticky to styled, I forgot to take care of the hidden sticky for font size measurement, which shared the style based on the class name.
+
+Test group rendering
+　Do we create a test case first?
+　I've been testing stickies by making a messy list of objects, but if we're going to do groups, it's time to import the JSON.
+　First, you can create an import with only stickies before the group or
+　Import from JSON only stickies, done!
+　　Should really branch by looking at the JSON version number.
+　　But the test made me feel like I could refactor it when I needed it.
+　　Again, I started with the list of objects needed to draw stickies in fusens, and then moved on with the help of types.
+　Once "I could read stickies from JSON, but the position is wrong" occurred.
+　　In the original structure `{x: number, y: number}`.
+　　In the new structure `{position: number[]}`.
+
+The reason why it should be a type error because the structure is different, but it wasn't, is because the test code is JS, so it crosses in the state of any.
+　Maybe I should TS the test code.
+　I think we need a "function that checks if the structure is as expected and returns it with a type" since it is the same when reading from the Firestore without a type.

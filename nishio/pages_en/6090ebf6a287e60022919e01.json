@@ -1,0 +1,169 @@
+Hatena2008-03-12
+code:hatena
+ <body>
+ *1205286191*Much calmer.
+ An article I wrote when I was not calm was not sent due to a bad network, and when I got calm and connected to the Internet, it was sent (smiles).
+ 
+ *1205288863* Handling of Japanese in Jython 2.2.1
+ I don't have time to summarize it exactly, so I'll just write it down.
+ 
+ >||
+ >>> print "Good day"
+ good day (daytime greeting)
+ ||<
+ 
+ This works, so at first glance it looks fine. However, this is treated as a byte sequence and just happens to print properly in Python print.
+ 
+ >||
+ >>> repr("Good day")
+ "'\\x82\\xB1\\x82\\xF1\\x82\\xBF\\x82\\xCD'"
+ >>> from java.lang import *
+ >>> s = "Good day"
+ >>> System.out.println(s)
+ ?±??????
+ ||<
+ 
+ So I would like to try to use unicode strings, but there is no codec for sjis.
+ >||
+ >>> System.out.println(unicode(s, "sjis"))
+ Traceback (innermost last):
+   File "<console>", line 1, in ?
+ LookupError: unknown encoding sjis
+ ||<
+ 
+ incidentally
+ >||
+ >>> sys.defaultencoding
+ 'ascii'
+ ||<
+ 
+ Put the codec I made and set the default encoding to sjis in site.py (this may not work. I'll look into it later)
+ 
+ >||
+ >>> s = "Good day"
+ >>> s
+ '\x82\xB1\x82\xF1\x82\xBF\x82\xCD'
+ >>> print s
+ good day (daytime greeting)
+ >>> unicode(s, "sjis")
+ u'\u3053\u3093\u3061\u306F'
+ >>> print _
+ good day (daytime greeting)
+ ||<
+ 
+ It worked.
+ 
+ You can also pass a Unicode string in System.out.println
+ 
+ >||
+ >>> System.out.println(_)
+ good day (daytime greeting)
+ >>> System.out.println(s)
+ ?±??????
+ ||<
+ 
+ Oh, I wrote "sjis" in site.py, so it's OK below.
+ 
+ >||
+ >>> System.out.println(unicode("Hello"))
+ Hello. - Hello.
+ ||<
+ 
+ Up to this point, it is OK. So, for practical use, if Japanese can be included, it is only necessary to explicitly enclose it in unicode. The problem is here.
+ 
+ >||
+ >>> u "Hello"
+ u'\x82\xB1\x82\xF1\x82\xC9\x82\xBF\x82\xCD'
+ ||<
+ 
+ Unicode literals are still in Unicode as byte strings.
+ 
+ One more thing, the string formatting operation for Unicode strings drops the upper byte
+ 
+ >||
+ >>> unicode("A == %s")
+ u'\u3042 == %s'
+ >>> _ % unicode("A")
+ u'B == B'
+ ||<
+ 
+ Well, here's what I know at the moment (although I'm not sure if I should blog about it while I'm writing).
+ 
+ In the chapter of "hello, world", I have included the story of "unicode conversion", but in the chapter of "hello, world", I have included the story of "hello, world! I think it would be a good solution to stop using Japanese and change it to "Hello, world! However, the source code and the manuscript are all code clones, so there are double the number of places to fix, and since the explanation method is to rewrite the code little by little, there are even more clones.
+ 
+ The most important thing I have emphasized in teaching programming is "don't create code clones," because Python's for statement with an "else" and Java's "for statement with a colon" are not essential knowledge that changes over time and cannot be used when you move to a different language. It changes over time and cannot be used when you move to a different language. On the other hand, "don't clone code" and "don't let humans do mechanical work" are more general-purpose knowledge.
+ 
+ I felt a sense of self-loathing for having spoken so glibly about such things and not realizing that I was covered in code clones and that there were so many things to fix when a specification change occurred. But since I can't finish the manuscript even if I talk about it, I'll think about it after I finish the work in front of me for now.
+ 
+ *1205296617*Jython Book
+ I had initially proposed the title of the book as "Shikakui Java to Yarakai Python" or something along those lines, but it ended up being the stiff title "Jython Super Manual" and I was dragged along by the title and tried to write a serious book like a reference manual.
+ 
+ I wrote the explanation of Jython for those who don't know Python and don't know Jython, but I don't think it is a "super manual" by any stretch of the imagination.
+ It is more of a collection of essays. I think something like "Shikakui Java to Yarakai Python ~Etcetera about Jython~" would probably be the most accurate description of the contents. But I was told, "You can't use a title like that, which sounds like a feature article in a magazine.
+ 
+ *1205296860*Maintainability
+ On a whim, I wc-l'd the manuscript and found that it was over 10,000 lines long. It is terrible to have 10,000 lines of source code written in ambiguous Japanese with no type checking or regression testing. I guess there must be a lot of defects, even though they are doing their best to maintain the quality of the code. Can't we improve the quality of the writing in a way similar to how we improve the quality of software? Especially copy and paste should be banned.
+ 
+ *1205305024*Exposed.
+ If you are used to exposing yourself on a blog and getting feedback, you will feel highly anxious and stressed about writing one piece of content for an extended period of time without feedback.
+ Nobody would have given me feedback in the past. When did this happen?
+ 
+ *1205322529* Amazon Wish List
+ Ahh. I heard a fuss about it being published with my real name by default, so I checked it out and found that it includes a lot of books I've already bought. There are 71 books on my wish list, including some I don't remember putting on my wish list, but I guess I just forgot to put them there, like Molecular Cell Biology.
+ 
+ There are a lot of books that I've already bought, and I think the books that I left on my wish list and never ended up buying are the ones I don't need to buy. I'd like to delete this list in bulk because it's simply too much noise to keep it public.
+ 
+ When all the fuss dies down, it might be interesting to form a group to put together a list of books we'd like to read but not enough to buy and say, "If you have it, please lend it to us." Amazon tears.
+ 
+ -----
+ 
+ >>
+ New Product Development Marketing Learning from 80,000 Products
+ Date added to the list September 13, 2002
+ <<
+ 
+ Heh. Took it to the cashier.
+ 
+ *1205323295* Real-time shared whiteboard "Twiddla".
+ <a href="http://www.100shiki.com/archives/2008/03/twiddla.html">Easy-to-use real-time shared whiteboard "Twiddla" | 100SHIKI.COM</a>.
+ I'm feeling a little impatient now that more and more things are being released that are similar in concept to what I wanted to create, such as Hatena Serif. At any rate, I'm going to try ↑ when I'm done writing.
+ 
+ Well, the core must not be there, because a shared whiteboard is probably something that about 100,000 people in the world must be thinking about making someday.
+ 
+ *1205333771* Yes.
+ For the first time in a long time, let's go to bed before the date changes.
+ </body>
+ <comments>
+ <comment>
+ <username>mktn</username>
+ <body>I am an IT book editor. <BR><BR>It's no secret that Japanese is more verbose than computer languages, so if you include error handling so that the reader doesn't get lost<BR>it will take longer to write. <BR><BR>But if you are writing a book for the first time, it is more important to write everything you think about it and have the editor look at it<BR>than it is to make it long. <BR><BR>But if this is your first time writing a book, it is more important that you write what you think is best and have the editor look at it<BR>rather than the length. <br><br>If you see a novice programmer struggling<br>with "I just can't write a pretty algorithm," wouldn't you want to say to him, "If you work hard to a certain extent, have a senior colleague take a look at it once?　<BR><BR>I think that even if beginners aim for perfection from the beginning, they will often end up<BR>far away from perfection. <br><br>In that sense, it is probably<br>closer to think of book production as pair programming with an editor. </body>
+ <timestamp>1205299041</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>The book production is pair programming with an editor<br><br>I see. I feel much better now. Thank you. <BR>For now, I'll work as hard as I can and refactor later. </body>
+ <timestamp>1205301159</timestamp>
+ </comment>
+ <comment>
+ <username>amachang</username>
+ <body>Terra Symposium</body>.
+ <timestamp>1205305447</timestamp>
+ </comment>
+ <comment>
+ <username>mwada</username>
+ <body>In relation to unexplored youth and such, <br>I think Nishio-san is suited to be a teacher somewhere. </body><br><br>I think Nishio-san is suited to be a teacher somewhere.
+ <timestamp>1205308495</timestamp>
+ </comment>
+ <comment>
+ <username>mktn</username>
+ <body>I think you have very good taste. <BR>I think the title best describes the content since it was given by the author who is writing the content, and <BR>it is also very catchy. <BR><BR>This alone makes me think that python is flexible and can be written in many ways, and that it may save us from Java's inflexibility<BR>(sorry if I'm wrong). <BR><BR>However, I think such an atmospheric title may suffer<BR>sales-wise, unless the subject is well known. <BR><BR>I think this title would limit the number of "people<BR>who don't know python"<BR>who would pick up the book. <BR><BR>For example, when people see the title "Introduction to Lua Programming," if they don't know Lua, they will think, "There's a new programming language called Lua, I've never heard of it," and they will take a quick look at what it's all about (or even look at it because they've never heard of it). (If you've never heard of it, you've probably never even seen it, so it's probably outside the scope of the python book, so I won't even consider it here). <BR><BR>There is a sort of hand<BR>over in the title that says it's a programming language. <BR><BR>But if it were "My Memories of Lua," only people who know Lua would open it<BR>(unless you can get a very good position in a bookstore). <BR><BR>If it were "Shikaku<BR>i Java to Yarakai C," for example, I think it would work because no clues are needed (Java<BR>and C are both majors). <BR><BR>However, I do not agree with the "Jython Super Manual" that the publisher may have added. It seems very mediocre and clerical. <BR><BR>I think the "manual" should be used for a book for people who are familiar with the elephants, but don't know how to use them. <br>In that sense, I think it should be used<br>in a book about applications that you have to learn on the job, like Excel or something like that. <br>The target readers have already come to the book under the compulsion to use it,<br>so there is no need to arouse their interest with the power of the title. <br><br>Titles are always a point of contention, as they are <br>related to the accuracy of the content, the sales effect, and the preferences of the people involved. </body>
+ <timestamp>1205324549</timestamp>
+ </comment>
+ <comment>
+ <username>kuboon</username>
+ <body>I voted for the nishio proposal. </body>
+ <timestamp>1205739417</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-12 https://nishiohirokazu.hatenadiary.org/archive/2008/03/12]

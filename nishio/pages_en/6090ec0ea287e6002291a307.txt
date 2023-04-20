@@ -1,0 +1,87 @@
+Hatena2014-11-07
+code:hatena
+ <body>
+ *1415286729* What does "simplify a string to be considered a sequence of characters" mean? An Explanation
+ The other day I Tweeted in response to @shyouhei's Tweet about how whether a string is a sequence of characters differs from language to language.
+ 
+ Posts by shyouhei:.
+ >>
+ I don't know about Python, but Ruby's design philosophy is that the world is not simple. The very idea of considering a string as a sequence of characters is already an oversimplification of the world from Ruby's point of view.
+ <<
+ https://twitter.com/shyouhei/status/528106973565165568
+ 
+ 
+ >>
+ To put it another way, Ruby, which has no chance to win in numerical computation, is focusing on string processing. String processing is Ruby's main battlefield. There is a good reason why Ruby handles strings as a solid body. In other words, it's more trouble than it's worth to try to decompose them, like IVS.
+ <<
+ https://twitter.com/shyouhei/status/528108890152386560
+ 
+ 
+ My post:.
+ >>
+ I think it should be better known that there are languages in the world that consider strings as strings of characters, such as Java and Python, and languages like Ruby that do not, and that the design of strings itself is different in each language. In my book The Technology Behind Coding, I compare the design of strings in five languages(ad).
+ <<
+ https://twitter.com/nishio/status/529105331511492608
+ 
+ 
+ There have been a few responses to this, "What, a string is not a sequence of letters? I would like to add some additional explanation.
+ 
+ The simplest way to think of a string is as "an array of 8-bit (0-255) values. Some people may think of this as a "string of characters. However, this way of thinking means that "A" in Hiragana is not a character. So, we had no choice but to interpret "A" as a letter when multiple letters are arranged in a specific sequence. But this was inconvenient.
+ 
+ Then, there were people who thought that hiragana and kanji were also one character, and thought of assigning a 16-bit numerical value to each. This is how Unicode was created. Both Python and Java treat a string as a sequence of characters. So it is very easy to extract a single character from a string. Congratulations, it's a win-win situation.
+ 
+ Unfortunately, the world is not that simple. The number of 16-bit characters is not enough to express all the kanji in the first place." "What about variants?" "Is "ga" a single character by itself, or is "ka" a character with a muddled dot? !" The lack of black as a color choice for emoticons is discriminatory!
+ 
+ Ruby gave up on the Unicode line early on and took its own line, defining a string as "an 8-bit sequence with information about the encoding scheme. I don't know about this because I have never done any work where this difference in design would affect my work, but I hear that Ruby makes things a lot easier.
+ 
+ In my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I start talking about "what is a character" from p.150 and explain how the design of strings differs among the five languages after writing more about this area. The article then explains how the design of strings differs among the five languages.
+ 
+ ** Postscript
+ Where do we find out about these things? The question seems to be. I don't remember where I learned about it. Maybe RUBIMA? But I thought it should at least be in the manual, so I looked it up.
+ 
+ Java says: use UTF-16 and use surrogate pairs for characters that don't fit in 16 bits.
+ >>
+ A String represents a string in the UTF-16 format in which supplementary characters are represented by surrogate pairs
+ <<
+ http://docs.oracle.com/javase/7/docs/api/java/lang/String.html
+ 
+ 
+ Python only says it is a sequence of Unicode code points. This is a bit unkind.
+ >>
+ Strings are immutable sequences of Unicode code points.
+ <<
+ https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str
+ 
+ 
+ This is because since long ago (Python 2.2, released in 2001), there has been a system in which 16-bit and 32-bit can be selected as compile options.
+ >>
+ Python 2.2 will allow the 4-byte implementation as a build-time option. Users can choose whether they care about wide characters or prefer to preserve memory.
+ <<
+ http://legacy.python.org/dev/peps/pep-0261/
+ 
+ 
+ Ruby, on the other hand, is a sequence of bytes, it says.
+ >>
+ A String object holds and manipulates an arbitrary sequence of bytes, typically representing characters.
+ <<
+ http://www.ruby-doc.org/core-2.1.4/String.html
+ 
+ ** Postscript
+ 
+ I received a supplement.
+ >>
+ I'm sure @nishio was using my post as a muckraking book staple while I was away for a bit, but I want to say out loud that Unicode strings are not strings of characters by definition to begin with, because Unicode contains "non-characters", which is why I'm not sure how to describe them. http://www.unicode.org/faq/private_use.html#noncharacters ...
+ <<
+ https://twitter.com/shyouhei/status/530601364225679360
+ 
+ I received a trackback with a detailed explanation. http://d.hatena.ne.jp/nurse/20141107#1415355181
+ </body>
+ <comments>
+ <comment>
+ <username>Kinta</username>.
+ <body>The topic of "simplification of strings as strings of characters" was very interesting. <BR><BR>There are restrictions that prevent unlimited use of something, and the question of how to treat it within those restrictions has taken on the aspect of a religious debate. <BR><BR>I think it would be better to keep it like this: string chunks that have meaning + string chunks that produce information (image data) for viewing, including decorative expressions. <br><br>It all depends on the practical constraints. </body>
+ <timestamp>1415413156</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2014-11-07 https://nishiohirokazu.hatenadiary.org/archive/2014/11/07]

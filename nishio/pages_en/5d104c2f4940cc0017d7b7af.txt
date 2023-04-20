@@ -1,0 +1,18 @@
+Examples of generics needed
+Minimal code to reproduce the problem
+code:ts
+ type X = "A" | "B";
+ const f = (x: X): X => (x);
+ const a: "A" = f("A");  // error
+
+error
+ Type 'X' is not assignable to type '"A"'.
+  Type '"B"' is not assignable to type '"A"'
+
+solution
+code:ts
+ const f = <T extends X>(x: T): T => (x);
+ const a: "A" = f("A");  // ok
+
+[Generics] [TypeScript]
+[Using Type Parameters in Generic Constraints https://www.typescriptlang.org/docs/handbook/generics.html#using-type-parameters-in-generic-constraints]

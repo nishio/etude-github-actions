@@ -1,0 +1,30 @@
+Hatena2011-12-03
+code:hatena
+ <body>
+ *1322897353*Drawing line segments in matplotlib
+ If I write it like this, it becomes AttributeError: 'Line2D' object has no attribute 'get_patch_transform'.
+ 
+ >||
+ line = matplotlib.lines.Line2D([0, 1], [1, 0])
+ ax.add_patch(line)
+ ||<
+ 
+ The reason is that if you read <a href='http://matplotlib.sourceforge.net/api/artist_api.html'>artists &#8212; Matplotlib v1.1.0 documentation</a> properly, you will see that " Line2D is not a subclass of Patch", you need to use ax.add_line.
+ 
+ Since speed is not a critical issue for drawing APIs, I think it would be more helpful to design a "ValueError" when something different from what is expected is given.
+ 
+ *1322898563*Matplotlib's Line2D coordinate specification order is different from BASIC's LINE instruction.
+ In BASIC it was LINE (x1, y1)-(x2, y2), and I think many other things are in that order, but matplotlib is
+ >||
+ Line2D(self, xdata, ydata, ...)
+ ||<
+ That is, Line2D([x1, x2], [y1, y2]). It is probably intended for drawing polygonal lines, since there are options such as marker.
+ 
+ *1322899711* I made a diagram of the least common denominator figure.
+ [f:id:nishiohirokazu:20111203170937p:image]
+ I made this because I wanted to see deepgreen's results presented in GPCC's "<a href='http://hp.vector.co.jp/authors/VA003988/gpcc/11p2.htm'>Solutions for Least Common Denominator Figures</a>" in a diagram.
+ 
+ Source code here: https://gist.github.com/1426526
+ </body>
+
+[Hatena Diary 2011-12-03 https://nishiohirokazu.hatenadiary.org/archive/2011/12/03]

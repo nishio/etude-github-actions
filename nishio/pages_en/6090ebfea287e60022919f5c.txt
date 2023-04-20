@@ -1,0 +1,812 @@
+Hatena2009-03-23
+code:hatena
+ <body>
+ *1237752502*Re: 10 Tips to Avoid Mengele
+ <a href='http://d.hatena.ne.jp/xevra/20090322#1237691564'>10 Tips to Avoid Mengele - xevra's Diary</a>
+ 
+ Well organized.
+ 
+ >>
+ Well-balanced, regular daily, vegetable-based, less animal meat.
+ <<
+ 
+ I've been running a little short on vegetables lately (due to a missing knife when I moved).
+ I don't like meat much to begin with.
+ 
+ >>
+ Personally, I recommend yogurt and white water (just hot water)
+ <<
+ 
+ It's good to buy yogurt in small portions so you can consume it consistently every day. Dairy products contain tryptophan, which is the raw material for serotonin and melatonin. If you consume meat and natto (fermented soybeans), there is no particular need to consume yogurt, but you often fall into a bad loop of "feeling down → eating sweets and junk food → lack of various nutrients → feeling even worse".
+ 
+ >>
+ It is known that if you do not walk at least 4,000 steps every day, you will become depressed.
+ <<
+ 
+ I've heard that rhythmic exercise, such as walking, stimulates serotonin secretion, although I think "known to cause depression" is indeed an exaggeration. If you go out for a certain amount of walking during the day, it's about 4,000 light steps, so conversely, not walking 4,000 steps is pretty much a state of being cooped up. Even if you think you have the lights on and it is bright, it is quite dark compared to outside. It is easy to see how difficult it is to see the LCD when you look at it outside. According to <a href='http://www.sci-museum.kita.osaka.jp/publish/text/koyomi/66.html'>Illumination and Brightness Guide</a>, an eight-mat room with two 30W fluorescent lamps is 300 lux, while 32,000 lux in cloudy daylight. lux. In other words, if you stay at home all the time, you are placed in "fairly dark conditions" all the time, and it is not surprising that this disrupts the body clock cycle and causes insomnia. It would be a good idea to walk out with the intention of <a href='http://ja.wikipedia.org/wiki/%E5%85%89%E7%99%82%E6%B3%95'>light therapy</a>.
+ 
+ Also, I have noticed that my eyesight has been deteriorating at a rapid rate when I am confined to my house. I used to have 1.5 vision, so it's easy to see, but the range of my vision has narrowed considerably.
+ 
+ >>
+ Greetings are an important protocol of interaction between the minds and hearts of people. Greetings can help to eliminate blockages in the mind. When meeting or parting with others, it is always a good idea to get into the habit of greeting people loudly and wholeheartedly.
+ <<
+ 
+ I'll keep this in mind.
+ 
+ *1237761526*Programmer's Nightmare 1st
+ Rules here: http://www.silcom.com/~tomjolly/pnrules.htm
+ For now, I just wrote the code for the part where the cards are dealt. Let's see what the play process looks like alone. Cards dealt:
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM 
+ OVERWRITE 
+ GOTO
+ OVERWRITE 
+ COPY
+ ERASE
+ FUTURE
+ POWER_SURGE
+ ZAP
+ DELETE 
+ ACQUIRE
+ COPY 
+ BUG 
+ ||<
+ 
+ Hmmm. So, let's say it's a 2-player game and we take turns placing 6 Bits. I wonder what to place first. In this program, ACQUIRE, POWER_SURGE, BUG, and ZAP are the 4 pieces that can move up and down the point. I think this is the best choice.
+ 
+ What to do about the latter? If I put it in OVERWRITE, it will only be moved by BIT_MOVER. But if the next move takes OVERWRITE, that's a problem, too. The first OVERWRITE is selected.
+ 
+ The first move is clearly in our favor. I'll hold on to DELETE.
+ 
+ Backward. I just realized that if I press COPY, the copy range extends to BIT_MOVER! (Note: I realize later that I misunderstood the function of COPY.)
+ 
+ First move. Hmmm, you can't use BIT_MOVER to disable both OVERWRITE and COPY on the first round. Either you have to OVERWRITE again what was OVERWRITE'd by the later player, or...you can use REVERSE_PROGRAM to suddenly reverse the order and trigger BIT_MOVER twice before it's your opponent's turn to play.
+ 
+ Backward. Hmmm... Assuming the first hand uses REVERSE, do we hold the OVERWRITE behind it? When moving this with BIT_MOVER, it can't be moved on top of COPY, so it has to be moved to GOTO, and BIT_MOVER can't be used after that.
+ 
+ Current status (first move bit: +, second move bit: -)
+ >||
+ BIT_MOVER +
+ REVERSE_PROGRAM +
+ OVERWRITE -
+ GOTO
+ OVERWRITE -
+ COPY
+ ERASE
+ FUTURE
+ POWER_SURGE
+ ZAP
+ DELETE +
+ ACQUIRE
+ COPY -
+ BUG 
+ ||<
+ 
+ I'll place three more bits on each. So far neither of us has placed a bit on the scoring card, but that's probably not the point. Gaining control comes first.
+ 
+ The first hand. I can't help but see the thinking of the later hand because I'm working alone, but essentially if the later hand makes a mistake and I'm not sure if it's a mistake or not, I have to worry about it. I put it on the later OVERWEITE assuming the latter hand will be nullified by BIT_MOVER, but I have DELETE held, so I feel like I should just use that. No. If we don't jump, we need to disable the OVERWRITE because it is still in effect. If we disable it with BIT_MOVER, if we don't put it on GOTO, we will put it on REVERSE. Is that bad, if it is REVERSE'd and then executed downward again, or is there a DELETE before it gets to COPY, so this should erase the COPY bit? No, no, no. If you don't disable COPY first, the effect of DELETE will be copied. BIT_MOVER moves the COPY bit onto the BUG, and the second BIT_MOVER moves the COPY bit onto the BUG. Then a second BIT_MOVER moves the top OVERWRITE bit onto the REVERSE bit, and a DELETE deletes the bottom OVERWRITE bit. This should do it. Ummm, let's hold the GOTO so that it can't be taken away to avoid giving the second hand the option to stir up the flow of processing any further.
+ 
+ LATER. I just realized that the function of COPY is Execute the *previous* 2 instructions in order. Both the first and the second hand are fundamentally wrong. Can the first mover deal with either using REVERSE or not using REVERSE? If they use REVERSE, they can disable COPY, if they don't use REVERSE, they can trigger GOTO, if they use GOTO, they jump to ZAP, so there's not much point in holding it in between. If not, REVERSE will happen, so...hmmm...hold the FUTURE. If the order of execution is reversed, FUTURE will trigger ERASE and COPY, so POWER_SURGE will disappear and the effect of COPY will trigger DELETE and ZAP. Not bad.
+ 
+ First move. Now, we have two more bits to put in place. Hmmm...I wonder if I can stop the OVERWRITE from triggering if I try to stop the DELETE from being triggered by the FUTURE. No. Can I just skip the OVERWRITE above with a GOTO? I can't use BIT_MOVER but I can use DELETE, so I can disable OVERWRITE with DELETE and then stop GOTO. I just realized that DELETE is more powerful than BIT_MOVER. Well, let's assume that we have the advantage and let our guard down and hold ACQUIRE. It's a card that can put two points difference between the two of us. The other card, POWER_SURGE, which makes a 2-point difference, is gone.
+ 
+ The back hand. Is there any way left for the back hand to control the back hand? Is there some kind of control method that hasn't been thought of yet? Oh, there is one: copy the FUTURE by COPYing the FUTURE without executing the FUTURE. Then you can copy the GOTO, so what happens? Not very happy? No. The first COPY will make ERASE disappear so you can trigger POWER_SURGE. choose COPY.
+ 
+ First move. As the back hand, I would like the first hand to be on its guard, but, well, I realize the possibility that POWER_SURGE will not be erased. On the other hand, putting it on POWER_SURGE is also in danger of being ERASE'd. I'll take a step back and put it in ZAP. It should not be bad.
+ 
+ The back of the line. Last bit. The choices are ERASE, POWER_SURGE, and BUG. Well, it would be POWER_SURGE.
+ 
+ Bit placement complete (first bit: +, second bit: -, cards with the same name are numbered to distinguish them): (first bit: +, second bit: -, cards with the same name are numbered to distinguish them)
+ >||
+ BIT_MOVER +
+ REVERSE_PROGRAM +
+ OVERWRITE1 -
+ GOTO +
+ OVERWRITE2 -
+ COPY1 -
+ ERASE
+ FUTURE -
+ POWER_SURGE -
+ ZAP +
+ DELETE +
+ ACQUIRE +
+ COPY2 -
+ BUG 
+ ||<
+ 
+ Well, here is where the program execution finally starts. Well, the first one is BIT_MOVER, REVERSE, BIT_MOVER, as the first hand has already read off. The first move moves the COPY2 bit to BUG and the OVERWRITE1 bit to REVERSE.
+ 
+ >||
+ BIT_MOVER +
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ OVERWRITE2 -
+ COPY1 -
+ ERASE
+ FUTURE -
+ POWER_SURGE -
+ ZAP +
+ DELETE +
+ ACQUIRE +
+ COPY2
+ BUG -↑
+ ||<
+ 
+ The latter hand does not invoke BUG. The first player invokes ACQUIRE. Score 12 to 10. First player DELETEs the OVERWRITE2 bit.
+ 
+ >||
+ BIT_MOVER +
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ OVERWRITE2 
+ COPY1 -
+ ERASE
+ FUTURE -
+ POWER_SURGE -
+ ZAP +
+ DELETE +↑
+ ACQUIRE +
+ COPY2
+ BUG -
+ ||<
+ 
+ First player activates ZAP. Score 12 to 9. Later, he activates POWER_SURGE. Score 9 to 8.
+ Later move: Should we invoke FUTURE?
+ If activated, POWER_SURGE is lost, but DELETE and ZAP can be activated. If you leave POWER_SURGE without activating, you will only regain 2 points while the first player has a 3-point difference. Let's activate it. The special effect of FUTURE executes ERASE and COPY1. ERASE deletes POWER_SURGE. Next, DELETE and ZAP are triggered by COPY1.
+ DELETE what bits?
+ I just noticed that the later marker is on REVERSE_PROGRAM, so the later can override the first move's decision. Assuming that the order of execution is restored in the next REVERSE_PROGRAM, the first hand makes a jump with GOTO to avoid triggering OVERWRITE2 at COPY1. The jump destination is the first hand's DELETE, so the point difference only increases unilaterally. That doesn't make sense. So let's just delete the BIT_REMOVER bit.
+ The score 8-8 at ZAP, back to a tie.
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ OVERWRITE2 
+ COPY1 -
+ ERASE
+ FUTURE -↑
+ ZAP +
+ DELETE +
+ ACQUIRE +
+ COPY2
+ BUG -
+ ||<
+ 
+ Program counter goes to _COPY1. Does it trigger? If it's triggered, FUTURE is copied and... oh, OVERWRITE2 is triggered. (See log above.) Ah, it says "GOTO can be copied, but I'm not too happy about it! Oops, I should have left BIT_MOVER in place if OVERWRITE is triggered. Oh well. I can still see a reversal in this one.
+ Activates COPY1; FUTURE and ERASE are copied; the effect of FUTURE activates OVERWRITE2 and GOTO; OVERWRITE2 rewrites the DELETE bit. OVERWRITE2 loses its effect and is replaced by a card drawn from the deck. That card is...ZAP. The jump destination of GOTO is then fixed to ACQUIRE. The program counter moves to ACUIRE. Furthermore, ERASE disappears under the effect of ERASE.
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ ZAP2 
+ COPY1 -
+ FUTURE -
+ ZAP1 +
+ DELETE -
+ ACQUIRE +↑
+ COPY2
+ BUG -
+ ||<
+ 
+ The ACQUIRE effect makes the score 10 to 8. The effect of the rear DELETE is triggered to remove the ZAP1 bit.
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ ZAP2 
+ COPY1 -
+ FUTURE -↑
+ ZAP1
+ DELETE -
+ ACQUIRE +
+ COPY2
+ BUG -
+ ||<
+ 
+ Rear player FUTURE is triggered to copy COPY1 and ZAP2; the effect of COPY1 triggers DELETE and ZAP1; DELETE deletes the ACQUIRE bit; ZAP2 scores 9 to 8; ZAP2 scores 9 to 8; ZAP2 scores 9 to 8; ZAP1 scores 9 to 8.
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ ZAP2 
+ COPY1 -↑
+ FUTURE -
+ ZAP1
+ DELETE -
+ ACQUIRE
+ COPY2
+ BUG -
+ ||<
+ 
+ The back hand further invokes COPY1 to copy ZAP1 and FUTURE, ZAP1 brings the score to 8-8, FUTURE invokes ZAP2 and GOTO, the score 7-8, and the program counter goes ACQUIRE. The score is now 7 to 8, and the GOTO causes the program counter to move to ACQUIRE.
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM +-
+ OVERWRITE1
+ GOTO +
+ ZAP2 
+ COPY1 -
+ FUTURE -
+ ZAP1
+ DELETE -
+ ACQUIRE↑
+ COPY2
+ BUG -
+ ||<
+ 
+ DELETE deletes the GOTO bit; FUTURE is triggered to copy COPY1 and ZAP2; the effect of COPY1 triggers DELETE and ZAP1; DELETE deletes the REVERSE_PROGRAM bit; the first player loses all bits; the second player wins. The first player loses all bits and the second player wins.
+ 
+ >||
+ BIT_MOVER 
+ REVERSE_PROGRAM -
+ OVERWRITE1
+ GOTO
+ ZAP2 
+ COPY1 -
+ FUTURE -
+ ZAP1
+ DELETE -
+ ACQUIRE
+ COPY2
+ BUG -
+ ||<
+ 
+ Thoughts. I thought it was very complicated, but COPY and FUTURE are very important. I would like to try this same program again with me as the first player and someone else as the second player. It would be interesting to play against someone else, not just one round, but the winner takes the loser's seat.
+ 
+ *1237766420*Programmer's Nightmare 2nd
+ Second time because it was fun.
+ >||
+ BUG1
+ BUG2
+ PROGRAM_ERROR
+ ACQUIRE1
+ COPY
+ GOTO1
+ GOTO2
+ OVERWRITE
+ ACQUIRE2
+ DECREMENT
+ ACQUIRE3
+ REPLACE
+ GOTO3
+ REVERSE_PROGRAM
+ ||<
+ 
+ The reverse comes last, so it's easy to think about the order of execution in the early stages. three GOTOs; PROGRAM_ERROR can put someone else's bits on it, minus 1 point. three ACQUIREs; this one is plus 2 points. If you copy PROGRAM_ERROR with COPY, you must be the one who copied it. Moo, it's hard to incorporate this into the strategy because of the randomness factor. I wonder if OVERWRITE is the key, though I am not sure if it can be used when you are surrounded by GOTO. But it can only be used once. Is REVERSE actually the key?
+ 
+ If I took REPLACE, I'd disable it with GOTO 2. If I took REVERSE, they'd just take GOTO 3 above it. No, if I take REPLACE and they take GOTO2, I can just jump in with GOTO1.
+ 
+ The first move REPLACE is selected.
+ 
+ If the player takes the REVERSE, the first player will be in trouble if the second player takes the GOTO3, and the first player will have to hold the GOTO3. If the player takes GOTO3, the opponent will have to hold REVERSE. Hmmm. I think this game depends on the draw of REPLACE. I guess I'll have to settle for GOTO3 in the back, REVERSE in the front (to prevent REPLACE from being skipped), GOTO1 in the back, GOTO2 in the front (to prevent REPLACE from being skipped), and ACUIRE1 in the back.
+ 
+ >||
+ BUG1
+ BUG2
+ PROGRAM_ERROR
+ ACQUIRE1 -
+ COPY
+ GOTO1 -
+ GOTO2 +
+ OVERWRITE
+ ACQUIRE2
+ DECREMENT
+ ACQUIRE3
+ REPLACE +
+ GOTO3 -
+ REVERSE_PROGRAM +
+ ||<
+ 
+ The situation remains the same, but the first hand still holds the important card REPLACE, and the second hand takes advantage of the fact that the first hand is defending it to the death to have the first two bits placed where they would be skipped by the GOTO. The latter has the option of whether ACUIRE2, 3 is called or not.
+ I guess the first move is DECREMENT, because if I hold COPY and score one point, it will be wiped out by the -1 point of PROGRAM ERROR. No, that's OK, because the more bits you have, the better to use REPLACE effectively. COPY first, PROGRAM_ERROR second, DECREMENT first.
+ 
+ >||
+ BUG1
+ BUG2
+ PROGRAM_ERROR +
+ ACQUIRE1 -
+ COPY +
+ GOTO1 -
+ GOTO2 +
+ OVERWRITE
+ ACQUIRE2
+ DECREMENT -
+ ACQUIRE3
+ REPLACE +
+ GOTO3 -
+ REVERSE_PROGRAM +
+ ||<
+ 
+ I won't do it because if I rewind it, it will never end, but now I think the latter hand's ACQUIRE1 should have been OVERWRITE. Then, when the latter did not invoke GOTO1, the former would have to invoke GOTO2 to avoid the "REPLACE is rewritten by OVERWRITE and then it is called". No, but then the first move would just put it on ACQUIRE1 next. No, then we can just take COPY and use GOTO3. I mean, OVERWRITE is still there, so the later hand can still take OVERWRITE.
+ 
+ >||
+ BUG1
+ BUG2
+ PROGRAM_ERROR +
+ ACQUIRE1 -
+ COPY +
+ GOTO1 -
+ GOTO2 +
+ OVERWRITE -
+ ACQUIRE2
+ DECREMENT +
+ ACQUIRE3
+ REPLACE +
+ GOTO3 -
+ REVERSE_PROGRAM +
+ ||<
+ 
+ Hmmm. It turned out to be a terrible thing. To review again, the later hand does not invoke GOTO1. The first player activates GOTO2 to avoid OVERWRITE and jumps to GOTO3. The late player does not trigger GOTO3 because only the early player gains one point if he jumps at GOTO3. The first player does not trigger REVERSE because if he does, the second player will use GOTO1 and lose his scoring chance. No? Then, only the late player gains 2 points. Then, the player should REVERSE, GOTO3 is triggered, GOTO2 is triggered, and the rule "the maximum number of loops that do not include a scoring card is 3" is triggered! I see. We go into a GOTO3->GOTO2->GOTO3 loop with reverse order execution, and the third jump of GOTO2 is forbidden. Ah. And in the end, the back hand gets 2 points.
+ Both the first and second players have one bit left, but the only chance for the first player to win is to bet that OVERWRITE, which expires and is replaced by REPLACE in exchange for the second player's REPLACE, may be the card that breaks the situation. First player ACQUIRE2, second player ACQUIRE3, end of bit placement.
+ 
+ >||
+ BUG1
+ BUG2
+ PROGRAM_ERROR +
+ ACQUIRE1 -
+ COPY +
+ GOTO1 -
+ GOTO2 +
+ OVERWRITE -
+ ACQUIRE2 +
+ DECREMENT +
+ ACQUIRE3 -
+ REPLACE +
+ GOTO3 -
+ REVERSE_PROGRAM +
+ ||<
+ 
+ Execution Phase. First move PROGRAM_ERROR forced activation. Score 9 vs. 10. latter hand ACQUIRE. score 9 vs. 12. first hand COPY invocation. Score 10 vs. 12. not invoking LATER GOTO1. The first move GOTO2 is not triggered. REPLACE is rewritten by the late move OVERWRITE. Instead of OVERWRITE, which has expired, the player draws...COPY!
+ 
+ <hr>
+ Therefore, the latter wins.
+ 
+ *1237768121*Programmer's Nightmare vs.
+ >||
+ BUG
+ BIT_SWAPPER
+ OVERSIGHT
+ ZAP
+ BUG
+ BIT_MAKER
+ MULTIPLIER
+ POWER_SURGE
+ OVERWRITE
+ BIT_MOVER
+ DECREMENT
+ SEQUENCE_MOD
+ GOTO
+ SWAP_INSTRUCTIONS
+ ||<
+ 
+ >>
+ 09:09 nishio: you can go ahead or backward w
+ 09:09 tokorote_: It has started?
+ 09:10 nishio: well, it's not something with a time limit, and it's logged.
+ 09:10 tokorote_: Do we alternate the bits initially?
+ 09:10 nishio: alternating
+ 09:10 nishio: http://www.silcom.com/~tomjolly/pnrules.htm
+ 09:10 nishio: I put a link to the rules in case anyone wants to read the log
+ 09:11 nishio: go with alternating 6 bits
+ <<
+ 
+ >>
+ 09:12 nishio: there's a BIT_MAKER this time
+ 09:12 nishio: you'll get more bits!
+ 09:13 nishio: you also have MULTIPLIER!
+ 09:13 nishio: flow of large increase in bits
+ <<
+ 
+ >>
+ 09:23 tokorote_: Then we should play first.
+ 09:23 nishio: go ahead
+ <<
+ 
+ I guess BIT_MAKER can't create its own color bits. I guess I'll have to throw this away since it doesn't have PROGRAM_ERROR.
+ I would like BIT_MOVER, but BIT_SWAPPER comes first; if you take BIT_MOVER, they'll just take BIT_SWAPPER and SWAP it.
+ I would like a set of BIT_MOVER and MULTI, but I don't think it's possible. I guess it would be BIT_SWAPPER for the first hand, either the second hand, or the other for the first hand.
+ 
+ Then you would want to put it in BIT_MOVER, but it would be SWAPPED before it reaches you at runtime. So would you then write it back in OVERWRITE? Yep, that's right. If the first move BIT_SWAPPER, the second move BIT_MOVER, the first move MULTI, the second move OVERWRITE. But the first move won't like that. So, instead of MULTI, I would have OVERWRITE. Then I would have only MULTI in my hand. I don't like that. I'll play BIT_SWAPPER first and OVERWRITE second. Then BIT_SWAPPER will rewrite OVERWRITE. Hmmm, can't win, huh?
+ 
+ I guess there is no COPY or FUTURE. Hmmm...maybe I'll push POWER_SURGE given that it's skipped by GOTO. And maybe DECREMENT.
+ First player BIT_SWAP, second player OVERWRITE, first player BIT_MOVER, second player POWER_SURGE. If the ZAP was also held, the score would be -4 points.
+ If OVERSIGHT had not been crushed by two BUGs, the score would be -7 points. At this point, the score is 3-6.
+ Let's say BIT_SWAP turns off OVERWRITE, OVERWRITE turns off POWER_SURGE, and BIT_MOVER moves the ZAP bit to OVERSIGHT.
+ 2 vs 5 in BUG, 2 vs 4 with ZAP exchanged in BIT_SWAP, 1 vs 3 in BUG, 0 vs 0 in POWER_SURGE. ooh. Oh...they're all dead at the same time. Well, I guess they don't exercise POWER_SURGE: BIT_MOVER moves the BUG to BIT_SWAP, BIT_SWAP takes care of the other BUG, ZAP shaves off 1 point each, death, and so on.
+ You can't win after all....
+ 
+ >>
+ 09:58 tokorote_: I hardly think about it, by the way.
+ 09:59 tokorote_: It's like if you can kill it with damage.
+ 10:00 tokorote_: Also, I'll be writing a paper, so it'll be a pretty random play.
+ <<
+ 
+ Oh? Is this a trend to catch a mistake and reverse it?
+ 
+ I could use a move of moving BIT_SWAP in SEQ_MOD. That would eliminate the ZAP from being replaced at the beginning of the second round...or maybe the ZAP bit has already been moved to OVERSIGHT...I guess I could use SEQ_MOD to move GOTO to just after BUG and disable BIT_MOVER. I can disable it with DECREMENT too. Hmmm. Might be able to shave some points off and win.
+ Let's sort it out. The cards I want to get are BUG1, ZAP, BUG2, POWER_SURGE, OVERWRITE, DECREMENT, SEQ_MOD, GOTO...I'll give up GOTO...O/W, P/S, ZAP, SEQ_MOD, DEC, BUG1 in that order. If I could get all of them, I might be able to fight, but I don't think so.
+ 
+ <hr>
+ >>
+ 10:39 tokorote_: OK, then put one on the POWER SURGE
+ <<
+ 
+ Oh wow, suddenly unimaginable...what if we get BIT_MOVER in OVERWRITE?
+ Let's put the last one in BIT_MAKER and exchange it for POWER_SURGE in BIT_SWAP. That will eliminate the opponent's chance of winning.
+ 
+ >>
+ 10:40 nishio: put in BIT_SWAPPER
+ 10:41 tokorote_: put it on DECREMENT
+ 10:42 nishio: is this a trend to be disabled by DEC?
+ 10:42 nishio: put it on OVERWRITE
+ 10:45 tokorote_: leave it in GOTO
+ <<
+ 
+ Let's crush SEQ_MOD to eliminate room for turbulence.
+ 
+ >>
+ 10:48 nishio: put it in SEQ_MOD
+ 10:49 tokorote_: put it in the ZAP
+ 10:50 nishio: put it on BUG2
+ 10:51 nishio: last one
+ 10:52 tokorote_: put it on BUG1
+ 10:52 nishio: put it in BIT_MAKER
+ <<
+ 
+ >||
+ BUG1 (T)
+ BIT_SWAPPER (N)
+ OVERSIGHT
+ ZAP (T)
+ BUG2 (N)
+ BIT_MAKER (N)
+ MULTIPLIER (N)
+ POWER_SURGE (T)
+ OVERWRITE (N)
+ BIT_MOVER (T)
+ DECREMENT (T)
+ SEQUENCE_MOD (N)
+ GOTO (T)
+ SWAP_INSTRUCTIONS
+ ||<
+ 
+ >>
+ 10:54 nishio: Then start executing.
+ 10:54 nishio: please start by deciding whether to activate BUG1
+ 10:55 tokorote_: I noticed that BIT SWAPPER is ghastly w
+ 10:55 tokorote_: This is not good.
+ 10:55 nishio: or maybe I win?
+ 10:57 nishio: I was actually reading the whole time Tokoroten was preparing cards and such, so I was really surprised that the first player didn't hold BIT_SWAPPER on his first move
+ 10:59 tokorote_: I was wondering if BIT_SWAPPER can be disabled once because GOTO survives even if DECREMENT is replaced, and even if GOTO is destroyed, DECREMENT lives.
+ 11:00 nishio: well, my reading will be posted on my blog later so you can read it
+ 11:00 nishio: do you want to run BUG1? (y/n)
+ 11:01 tokorote_: y
+ 11:01 tokorote_: 9:9
+ 11:01 nishio: invoking BIT_SWAP
+ 11:01 nishio: swap bits in POWER_SURGE and BIT_MAKER
+ 11:02 nishio: do you want to run ZAP? y/n
+ 11:02 tokorote_: OVERSIGHT is triggered if no one has placed a bit
+ 11:02 nishio: oh, that's right. 8:8
+ 11:03 tokorote_: ZAP executed 8:7
+ 11:03 nishio: will not run BUG2.
+ 11:03 nishio: do you want to run BIT_MAKER?
+ 11:04 tokorote_: N
+ 11:04 nishio: run MULTI and my bits on MULTI will be 2
+ 11:04 nishio: followed by POWER_SURGE. 5:6
+ 11:05 nishio: run OVERWRITE to rewrite the bits in BIT_MOVER
+ 11:06 nishio: the tokodate bit on BIT_MOVER will change to my bit
+ 11:06 nishio: OVERWRITE has expired, so a new card is drawn from the deck
+ 11:07 nishio: it is now DECREMENT!
+ 11:07 tokorote_: wait!
+ 11:08 nishio: I will activate the effect of BIT_MOVER
+ 11:08 nishio: move the tokodate bit on GOTO above SWAP_INSTRUCTION
+ 11:08 nishio: turn end w
+ 11:09 nishio: do you want to invoke DECREMENT (y/n)
+ 11:11 tokorote_: Awww, that's terrible!
+ 11:11 nishio: I feel like the first command to be executed in a program is very strong. It's always my turn.
+ 11:13 tokorote_: run DECREMENT and rewrite "move 1 instruction card to any location" in SEQUENCE MOD to "0 instruction cards"
+ 11:14 tokorote_: So the SEQUENCE MOD is effectively disabled, which is OK, right?
+ 11:14 nishio: yeah
+ 11:14 nishio: I was going to move GOTO to the front of SEQ_MOD, but w
+ 11:15 nishio: well it's disabled and won't run
+ 11:15 nishio: do you want to run GOTO (y/n)
+ 11:16 tokorote_: no, GOTO is moving to SWAP INSTRUCTION.
+ 11:16 nishio: hmm?
+ 11:16 tokorote_: 11:08 (nishio) BIT_MOVER is in effect
+ 11:16 tokorote_: 11:08 (nishio) move tokoroten bit on GOTO above SWAP_INSTRUCTION
+ 11:16 nishio: oops, that's right
+ 11:17 tokorote_: SWAP INSTRUCTION will not run.
+ 11:17 nishio: OK
+ <<
+ 
+ >||
+ BUG1 (T)
+ BIT_SWAPPER (N)
+ OVERSIGHT
+ ZAP (T)
+ BUG2 (N)
+ BIT_MAKER (T)
+ MULTIPLIER (N) (N)
+ POWER_SURGE (N)
+ DECREMENT (N)
+ BIT_MOVER (N)
+ DECREMENT (T)
+ SEQUENCE_MOD (N) -1
+ GOTO 
+ SWAP_INSTRUCTIONS (T)
+ ||<
+ 　
+ >>
+ 11:17 tokorote_: BUGs don't run either.
+ 11:17 tokorote_: wow, that's terrible!
+ 11:17 nishio: that's terrible!
+ 11:18 nishio: I will invoke BIT_SWAPPER and swap Tokoroten's DECREMENT bit for my BUG2 bit
+ 11:20 tokorote_: OVERSIGHT executed 4:5
+ 11:21 tokorote_: running ZAP 4:4
+ 11:21 tokorote_: BUG will not run
+ 11:21 tokorote_: BIT MAKER does not run
+ 11:22 nishio: I'll run MULTI just in case. My bits will be three.
+ 11:22 nishio: running POWER_SURGE 1:3
+ 11:23 nishio: DECREMENT reduces the damage that POWER_SURGE does to me by 1
+ 11:23 nishio: move one bit above MULTI in BIT_MOVER to POWER_SURGE
+ 11:23 tokorote_: hmm?
+ 11:24 tokorote_: BIT_MOVER can move because it is on the next instruction,
+ 11:24 nishio: hmm?
+ 11:24 nishio: >BIT MOVER; Move any 1 marker from any card to an adjacent card.
+ 11:24 nishio: move any bit to the card next to it
+ 11:25 tokorote_: POWER SURGE|DECEREMENT|BIT MOVER|DECREMENT
+ 11:25 tokorote_: isn't that the order?
+ 11:25 nishio: oh you mean next to what "next to"?
+ 11:25 tokorote_: Oh, that's what I meant.
+ 11:26 tokorote_: I thought it was next to BIT MOVER.
+ 11:26 nishio: i was thinking "move the bit on any card X to next to X" but
+ 11:26 nishio: can it also be interpreted as "move the bit on any card X next to the BIT MOVER"?
+ 11:26 nishio: well, you don't have to move, the next surge will kill you
+ 11:26 tokorote_: yeah w
+ 11:26 nishio: I don't want to move this time
+ 11:27 tokorote_: Is it death by moving SURGE in SEQUENCE MOD?
+ 11:27 tokorote_: BIT SWAPPER is too powerful.
+ 11:27 nishio: hmm? Movement?
+ 11:28 tokorote_: Oh, I had disabled it myself.
+ 11:28 nishio: it's 1:3 now, so we're going to be brought into the match
+ 11:28 nishio: 1 less damage for BUG1 on the second DECRESE
+ 11:29 nishio: SEQUENE_MOD does nothing
+ 11:29 tokorote_: I'd die OVERSIGHT if I left it alone.
+ 11:29 nishio: turn end
+ 11:29 nishio: I forgot about OVERSIGHT!
+ 11:29 tokorote_: SWAP INSTRUCTION does not run; BUG does not run; BUG does not run; BUG does not run; SWAP INSTRUCTION does not run; BUG does not run.
+ 11:29 tokorote_: If nothing is done with BIT SWAPPER, OVER SIGHT is executed and death.
+ 11:30 tokorote_: Fubokko w
+ 11:30 nishio: not executing BIT_SWAP. 0:2 in OVERSIGT
+ 11:30 nishio: done~!
+ <<
+ 
+ >>
+ 11:34 nishio: I will look at the cards I am dealt and decide whether to play them or not, so you have the right to choose whether to play first or second, is that correct?
+ 11:35 nishio: to avoid playing with too bad cards.
+ 11:35 tokorote_: OK
+ 11:36 tokorote_: BIT MOVER by moving the bit on card X next to card X.
+ 11:36 nishio: OK
+ <<
+ 
+ *1237785061*Programmer's Nightmare 2nd vs.
+ >||
+ INCREMENT
+ BIT_MAKER
+ PROGRAM_ERROR
+ FLOATER
+ ZAP
+ BIT_MOVER
+ REVERSE_PROGRAM
+ FUTURE
+ GOTO
+ OVERWRITE
+ ACQUIRE
+ MULTIPLIER
+ BUG
+ SEQUENCE_MOD
+ ||<
+ 
+ Hmmm...I wonder if OVERWRITE is the key. But is it not an either/or thing because FUTURE covers it? No. Or rather, is it FUTURE that triggers OVERWRITE and overwrites the OVERWRITE bit?
+ 
+ >>
+ 11:44 nishio: in my one player, when FUTURE copied GOTO and OVERWRITE, GOTO moved the program counter and OVERWRITE was also executed
+ 11:45 nishio: interpreted "instructions from those 2 cards were written on this one card" as "one undividable instruction to OVERWRITE is generated after rewriting the program counter"
+ 11:46 tokorote_: Treat the two cards as if they were on one card.　That means.
+ 11:46 tokorote_: I think you're probably right.
+ <<
+ 
+ First move BIT_MOVER, I FUTURE, first move OVERWRITE, I SEQUENCE_MOD, if the execution was done from the top, I can rewrite it in FUTURE, if the opposite, I can jump to the front of FUTURE in SEQUENCE_MOD. Ah, but I hadn't thought about being moved by BIT_MOVER, or having the FUTURE bit removed. I take the first move BIT_MAKER. I take INCREMENT. First move FLOATER. I take ZAP.
+ 
+ >>
+ 12:06 tokorote_: Um, question FLOATER if it's executed even if you don't put your bits?
+ 12:07 tokorote_: Move this card forward or backward 1 space in the sequence, then copy the next action.
+ 12:07 nishio_: I'm not sure how FLOATER behaves, but with COPY it would be "run as if it were written in FLOATER"
+ 12:07 nishio_: so it has nothing to do with the presence or absence of bits
+ 12:08 tokorote_: Is NEXT referring to the NEXT to the program counter or to the card that was replaced?
+ 12:08 nishio_: hmmm, I'm not sure but the program counter works about FLOATER, right?
+ 12:09 nishio_: when the order was FLOATER X Y
+ 12:09 nishio_: X FLOATER The question is whether it is X or Y that is executed after reordering to Y?
+ 12:09 tokorote_: then next action. so I guess that means the next instruction will be executed when the SWAP is finished.
+ 12:10 tokorote_: Yes.
+ 12:10 nishio_: then so finish the exchange, then copy the next action, I guess
+ 12:10 nishio_: i.e. Y i think
+ 12:10 tokorote_: So.
+ 12:10 tokorote_: FLOATER evil.
+ 12:11 nishio_: I guess I shouldn't have gone through with the unfamiliar order
+ 12:11 nishio_: I guess I should have taken it...
+ 12:12 tokorote_: take REVERSE PROGRAM
+ 12:12 nishio_: that was a mistake, i should have taken the FLOATER and triggered the BIT_MOVER function to move the bit on the BIT_MOVER (oh)
+ 12:13 nishio_: I have a feeling that BIT_MOVER will run amok and I will die
+ <<
+ 
+ 
+ >>
+ 12:13 nishio_: take ACQUIRE
+ 12:14 tokorote_: take MULTIPLIER
+ <<
+ 
+ >>
+ 12:15 nishio_: I'm wondering about the PROGRAM_ERROR behavior
+ 12:16 nishio_: Am I correct in understanding that if I declare that I take PROGRAM_ERROR, my opponent's bits are placed in addition to the 6 bits given and my bits are not consumed?
+ 12:17 nishio_: PROGRAM ERROR; When claimed (Version 1) or played (Version 2), you get to take an opponent's Bit and put it here.
+ 12:18 nishio_: In Version 1 this bit does not come from the group of bits that the player has available to play, but from any extra available of the same color, and this must be done before your last bit is played.
+ 12:18 nishio_: that's the description.
+ 12:19 nishio_: If so, then CLAIM PROGRAM ERROR and put the tokoro bit there.
+ 12:19 nishio_: and i can put one more bit down.
+ 12:19 tokorote_: If the bit is on PROGRAM ERROR, you can't choose to run or not, unconditional execution.
+ 12:19 tokorote_: When executed, the other bit is placed.
+ 12:20 tokorote_: I guess if there's more than one bit on it, it means that they all get executed and then we put the additional bits, I don't know if it's to execute the PLAY card or to put the bits.
+ 12:21 nishio_: Since it's version1, the process of placing the opponent's bit is triggered at the CLAIMED timing, not at the PLAYED timing,
+ 12:22 nishio_: I am aware that claimed means "put the bit here" in the phase where you go to put the first bit.
+ 12:22 nishio_: Each player has a number of colored markers (Bits) with which they may "claim" a program instruction (a card).
+ 12:25 tokorote_: I thought "Claimed" meant "bits are placed", but I guess not.
+ 12:27 nishio_: in the tokiten interpretation, if I CLAIM here, my bits are placed, and what happens when the program counter comes here at runtime?
+ 12:28 tokorote_: One point is taken away from Nishio's score and my bit is placed in addition.
+ 12:28 tokorote_: And I feel like they were both executed in the second week.
+ 12:29 nishio_: second round they are both executed and two bits are placed?
+ 12:29 nishio_: hmmm. If bits are placed during play, I don't think I would say it in a special way here, since it is done in other BIT_MAKERs and so on.
+ 12:31 tokorote_: It sure would be a mess.
+ 12:31 nishio_: My interpretation is that when you say "place here" in the bit placement phase, the opponent's color is placed, not your color, and each time the program counter comes in during execution, the person of that color is damaged by 1 point.
+ 12:31 tokorote_: Well, it's less out of control that way.
+ 12:32 tokorote_: Then that's it.
+ 12:32 nishio_: I'm also wondering if "my bits are not consumed so I can put more" is true or false
+ 
+ 12:34 tokorote_: PROGRAM_ERROR N T
+ 12:35 nishio_: will mine be placed in PROGRAM_ERROR?
+ 12:36 nishio_: for now, a point I'd like to sort out before we start executing
+ 12:38 nishio_: 1: If you CLAIM PROGRAM_ERROR, your opponent's bits are placed and your bits are not consumed (my interpretation)
+ 12:38 nishio_: 2: when you CLAIM ROGRAM_ERROR, your opponent's bits are placed and your own bits are not placed but are consumed
+ 12:38 nishio_: 3: when you CLAIM ROGRAM_ERROR, your opponent's bits are placed and your own bits are also placed
+ 12:39 nishio_: 4: when you CLAIM PROGRAM_ERROR, your bits are placed and the other guy's bits are placed on each execution
+ 12:40 nishio_: I mean which of the following is correct
+ 12:40 nishio_: so far, the interpretation of the node is (3), but that would only make both of us -1, so there is no advantage to placing it at all
+ 12:42 nishio_: I'm not sure why bother introducing PROGRAM_ERROR since the instruction that makes all players -1 usually comes in 3 pieces in the form of BUG
+ 12:46 tokorote_: No, doesn't it change with more than three people?
+ 12:47 tokorote_: only two specific people will be damaged
+ 12:47 nishio_: but the damage is done with no choice for you, right?
+ 12:47 tokorote_: You can MOVE yourself.
+ 12:47 nishio_: I see.
+ <<
+ 
+ I stopped putting it in PROGRAM_ERROR and put it in GOTO at
+ 
+ >||
+ INCREMENT (N)
+ BIT_MAKER (T)
+ PROGRAM_ERROR
+ FLOATER (T)
+ ZAP (N)
+ BIT_MOVER (T)
+ REVERSE_PROGRAM (T)
+ FUTURE (N)
+ GOTO (N) 
+ OVERWRITE (T)
+ ACQUIRE (N)
+ MULTIPLIER (T)
+ BUG
+ SEQUENCE_MOD (N)
+ ||<
+ 
+ >>
+ 12:49 nishio_: INCREMENT.
+ 12:50 nishio_: I'm assuming you're trying to jump over the ZAP with FLOATER
+ 12:52 nishio_: +1 for ACQUIRE recovery
+ 12:52 nishio_: ACQUIRE will now recover 3 points
+ 12:52 tokorote_: Nishio bit generation in PROGRAM ERROR with BIT MAKER
+ 12:53 nishio_: well, you use it that way
+ 12:53 nishio_: 10:9 in PROGRAM ERROR
+ 12:53 tokorote_: run FLOATER replace FLOATER and ZAP, run BITMOVER
+ 12:53 tokorote_: It's an outlier.
+ 12:54 nishio_: storm of BIT MOVER, should have kept the FLOATER.
+ 12:54 tokorote_: move FUTURE bit to GOTO
+ 12:55 tokorote_: BIT MOVER activated ZAP moved to PROGRAM ERROR
+ 12:55 nishio_: sad w
+ 12:56 tokorote_: invoke REVERSE PROGRAM
+ 12:56 tokorote_: program counter is facing the opposite direction
+ 12:56 tokorote_: invoking BIT MOVER
+ 12:56 nishio_: another BIT MOVER
+ 12:56 tokorote_: ｗｗｗ
+ 12:57 tokorote_: move SEQUENCE MOD bit to BUG
+ 12:57 nishio_: oh no, I didn't know that BIT MOVER can be activated in FLOATER
+ 12:57 tokorote_: Exactly w
+ 12:58 nishio_: ohawata
+ 12:58 tokorote_: Replace FLOATER with BIT MOVER
+ 12:58 tokorote_: This is a FLOATER outlier, isn't it?
+ 12:59 nishio_: no way, the FLOATER brings the program counter so the BIT MOVER is triggered 2 more times
+ 12:59 nishio_: a little too out there, don't you think?
+ 12:59 nishio_: Well, it's my fault for not reading the FLOATER specs properly.
+ 12:59 tokorote_: BIT MOVER triggered two consecutive ACQUIRE bits to BUG
+ 12:59 tokorote_: terrible terrible terrible.
+ 13:00 nishio_: terrible
+ 13:00 nishio_: 10:7 with PROGRAM ERROR
+ <<
+ 
+ >||
+ INCREMENT (N)
+ BIT_MAKER (T)
+ PROGRAM_ERROR (N) (N)
+ ZAP
+ BIT_MOVER (T)
+ FLOATER (T)
+ REVERSE_PROGRAM (T)
+ FUTURE
+ GOTO (N) (N) 
+ OVERWRITE (T)
+ ACQUIRE  +1
+ MULTIPLIER (T)
+ BUG (N) (N)
+ SEQUENCE_MOD
+ ||<
+ 
+ >>
+ 13:01 tokorote_: Too bad.
+ 13:01 tokorote_: Add one to PROGRAM ERROR in BIT MAKER
+ 13:02 nishio_: w no more winning!
+ 13:02 tokorote_: The combo of reverse and FLOATER was too out there.
+ 13:03 nishio_: +1 for PROGRAM_ERROR damage with INCREMENT
+ 13:03 tokorote_: he's going to kill himself w
+ 13:03 nishio_: 2 BUGs activated, 8:5
+ 13:04 tokorote_: bit multiplication with MULTIPLIER
+ 13:04 nishio_: You don't want that!
+ 13:04 tokorote_: OVER WRITE invoked, exchanging INCREMENT for its own bit
+ 13:05 nishio_: jump into PRGRAM_ERROR with GOTO and commit suicide w
+ 13:05 nishio_: end w
+ <<
+ 
+ >>
+ 13:05 nishio_: I understood it up to the point where it triggers REVERSE, but the FLOATER behavior was unexpected w
+ 13:06 nishio_: I was going to draw attention to ACQUIRE and increase the number of possible SEQ_MOD changes in INCREMENT and move the problematic card behind GOTO w
+ 13:06 tokorote_: If it were alone, it's just an irregular card, but when the combo explodes, it's my turn.
+ 13:08 nishio_: FLOATER something strong card REVERSE is a crazy combo
+ 13:08 tokorote_: FLOATER by itself is a useful card like a simple GOTO
+ 13:08 tokorote_: I can't help it if they invoke four BITMOVERs in a row.
+ 13:09 nishio_: double times two!
+ <<
+ </body>
+ <comments>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>I've been trying to figure out what SUBROUTINE is. <BR>I think this game is supposed to be played by three or more people. <BR>If we assume there is no SUBROUTINE, then with three or more players, it becomes a multi-person non-zero sum finite definite perfect information game. <BR>(If you fall into an infinite loop, you exit the loop in three times, so it is finite.)<BR>So, indeterminacy appears in the outcome of the game. <BR>But with two players,<BR>but when played by two players, it is a two-person zero sum finite deterministic perfect information game, so it can be read off. <BR><BR>Then, by introducing a subroutine, the game that was definite becomes indefinite, and can be turned into a two-person zero-sum finite indefinite perfect information game. <BR>Then it becomes an indeterminate game, which creates ambiguity in the outcome. <BR><BR>To sum up,<BR>Programmer's Nightmare is probably designed to be played by three or more people. <br>If that is the case, we want to give the same level of fun when two players play as when three or more play. <BR>But with two players, it becomes a two-person zero sum finite definite perfect information game, which is a different game. <BR><BR>Therefore, we introduced the subroutine to make it an indeterminate game, so that the same quality of fun as when played by three or more players can be achieved in a two-player game. <BR><BR>In the meantime, I'd like to play it myself, but it looks like I won't have time until April. </body>
+ <timestamp>1237766016</timestamp>
+ </comment>
+ <comment>
+ <username>monjudoh</username>
+ <body>On weekdays I only walk around Musashiurawa station, Shibuya station, Shibuya station ⇔ workplace, workplace ⇔ good restaurants, <br>On weekends I mostly sleep, but I am not depressed. </body>
+ <timestamp>1237809744</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-03-23 https://nishiohirokazu.hatenadiary.org/archive/2009/03/23]

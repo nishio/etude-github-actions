@@ -1,0 +1,192 @@
+Hatena2012-03-21
+code:hatena
+ <body>
+ *1332318661* I implemented "Hierarchical Clustering with Normalized Cut evaluation criteria".
+ When hierarchical clustering is done with the strategy of "let's put the closest ones together" (shortest distance method), the ones at a little distance from each other are sometimes left behind and categorized into two groups: "a single one v.s. all the rest. I should have made them in color, so you can see that there is a single fat one.
+ 
+ [f:id:nishiohirokazu:20120321172959p:image]
+ 
+ So what if we take the strategy of "let's measure the distance between the farthest points in the cluster" (longest distance method)? Well, it's hard to be only one pothole...
+ 
+ [f:id:nishiohirokazu:20120321172958p:image]
+ 
+ So, using the Normalized Cut evaluation criteria, it would look something like this. I implemented the following. A nice separation.
+ [f:id:nishiohirokazu:20120321173001p:image]
+ 
+ 
+ By the way, the Ward method also gives the same nice separation, but what kind of data should I try to use it on to see the difference between the two methods? The reference says "Ward method tends to extract spherical clusters"...
+ 
+ [f:id:nishiohirokazu:20120321173002p:image]
+ 
+ ** Normalized Cut v.s. Ward
+ When two distributions with different variances were superimposed in the same position, the middle was hollowed out!
+ [f:id:nishiohirokazu:20120321175205p:image][f:id:nishiohirokazu:20120321175206p:image]
+ 
+ 
+ ** References
+ - <a href='http://ci.nii.ac.jp/naid/110006533727'>CiNii Article - Proposal for Hierarchical Clustering Using Normalized Cuts Evaluation Criteria</a>
+ - <a href='http://www.kamishima.net/jp/clustering/'>What is Clustering (What is Cluster Analysis)</a>
+ 
+ *1332333583* Language Girls 2: Do we need var? No /private?
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20120316/1331906887'>Language Girls: do we need both undef and null? This is a sequel to </a>.
+ 
+ ** Do we need var?
+ At a women's meeting where a certain programming language is gathered:.
+ 
+ Python: JavaScript-chan, why are you full of var?
+ JavaScript: What, weird?
+ Python: Don't you need var? I don't have any at all.
+ JavaScript: Uh, so how do you declare variables?
+ Python: I don't mean declarations... isn't it obvious that you need a variable x if you have an assignment statement like "x = 1"? Do I need to declare it?
+ Ruby: I don't need it. I mean, aren't variable declarations old-fashioned?
+ JavaScript: I don't know.
+ Python: Maybe a little tacky. You see, we're in the midst of a decluttering boom, so we have to get rid of what we don't need!
+ JavaScript: I wonder if it's necessary to declare variables, Python, how do you assign to a variable in the outer scope when functions are nested?
+ Python: What, it... declares nonlocal at the beginning of a function...
+ JavaScript: Uh, what's that, isn't declaration at the beginning of a function a dead language?
+ Python: (gulp)
+ JavaScript: I'm not sure, but I believe that assigning to a variable in the global scope also requires a global declaration at the beginning of the function. At that point, it's like saying that the "assignment is sufficient without a variable declaration" approach was a mistake, isn't it?
+ Python: (T_T)
+ 
+ Python Silence
+ 
+ ** Don't you need nested functions?
+ 
+ Ruby: No, that's not right around nested functions. Why do you need nested functions? Are you a pervert?
+ JavaScript: What, for example, Closi...
+ Ruby: You should spend a little more money on object-oriented JavaScript, instead of using a lousy closure like this one!
+ JavaScript: ...closure's not too shabby, right?
+ Ruby: Shoddily designed. They don't have proper classes, so they are forced to be object-oriented by nesting functions.
+ JavaScript: eh. Classes are just cosmetic. What's wrong with prototypes?
+ Ruby: Uh, let's see... that's ...... yeah, there's no private! You're all about PUBLIC, aren't you? That's so hilarious!
+ JavaScript: private…
+ Ruby: even that shameless Python hides it with Unsco! ((( The undercourt that hides the PRIVATE parts of female tennis players... not the "names beginning with two underscores are pseudo-hidden by name mangling": <a href='http://en.wikipedia.org/ wiki/Name_mangling#Name_mangling_in_Python'>Name mangling</a> thanks @suno88 ))
+ JavaScript: But you know, Ruby is an open class, so even if you put "private" on it and say "not accessible from other classes", you can still add methods to the class itself, can't you? That's like saying, "I only take off my clothes in my house! but the door to the house is fully open, and everyone is welcome.
+ Ruby: (gulp)
+ 
+ Ruby Silence
+ 
+ ** No need for type declarations?
+ At that time, at the next table:.
+ 
+ Java: From my point of view, it's also loose and fluffy enough to use only var... I wonder why they neglect the kata so much. Even though it may seem useless at first glance, by respecting types, Yamato Nadeshiko's graceful behavior is...
+ Haskell: Having a type and requiring a type declaration are two different things. You old ladies should get out of here.
+ Java: Hmmm, they say you don't need type declarations, but they say the error messages become unintelligible, and you end up having to declare the type for each function.
+ Haskell: I hope stupid boys who can't understand my feelings die!
+ Java: You'll miss your marriage if you keep talking like that!
+ Haskell: …(-_-)
+ Java: Men are stupid creatures. They are too proud to admit their mistakes. So when a man makes a mistake, you have to take the initiative and give him a clear error message.
+ Haskell: I can't tarnish my purity by flirting with such a stupid man!
+ Java: Huh... you seem to be drunk on your mask of purity, but in the end you allow guys to use unsafePerformIO and such (( see: <a href='http://itpro.nikkeibp.co.jp/article/ COLUMN/20090512/329783/'>31st Forbidden Feature "unsafePerformIO" Abyss - Real Programmers Use Haskell: ITpro</a> ))
+ Haskell: (-_-) 
+ 
+ Haskell Silence
+ 
+ JavaScript: (moving over from the next table) Java, no, no, no... unsafePerformIO is traumatic for Haskell! If you mess with it too much, it will break your heart!
+ 
+ ** Java's private roundabout case
+ 
+ Java: People have too much access control in the first place. I do my private changing in my own bedroom so that my kids can't see it. ((( I meant that if the kids can see it, it's protected, not private. Well, Ruby has that distinction, too. )))
+ JavaScript: What is it? Are you unaware of this, Java?
+ Java: What?
+ JavaScript: Didn't you buy a big mirror recently?
+ Java: Yeah, I bought it, but...
+ JavaScript: I heard that you can see the bedroom from the main street by the reflection of the mirror (( if you setAccessible(true) in reflection, you can access it even if it is private )).
+ Java: Gone (-o-|||)
+ 
+ Java Silence
+ 
+ ** Summary
+ While Python, Ruby, Haskell, and Java are all doldrums, JavaScript is in high spirits.
+ 
+ JavaScript: hmmm, private... I wonder if there is anything that can't be rewritten... Oh, that's right! Local variables can't be rewritten from the outside! Yay, I'm not so haunted!
+ 
+ (But no one is listening.)
+ 
+ ** Added: Perl is now available!
+ Mr. Perl, who was out of the office for a while on business, has returned!
+ 
+ Perl: JavaScript's var is like my my, right?
+ JavaScript: Hmmm, let's see, I don't know*.
+ Ruby: Perl-sister is saying that we should not adopt the strategy of "the scope is all in the source code" (( my declaration is a lexical scope )), but "the scope is conveyed to the caller" (( local declaration is a dynamic scope )), and so on. I mean, it's better to have other things. I don't know. I don't know about you, but...
+ Python: I can't help but see that there are cases where it would be useful to use it, but I don't think you need to use scopes to do that. You're better off <a href='http://d.hatena.ne.jp/nishiohirokazu/20120317/1331989155#c'>doing it explicitly</a>.
+ Perl: hmmm, you guys can't do that in the first place, so our conversation is parallel...
+ JavaScript: Oh, you're talking about scope! If you omit var, you get global scope!
+ All others: ..........
+ 
+ (thanks @mattn_jp, id:delphinus35)
+ 
+ ** Added: Ruby and closures
+ 
+ Ruby: Oh, did I mislead you into thinking I can't make closures? Of course I can, nothing is impossible for me. I can do anything JavaScript can do!
+ Python: Well, but in Ruby, if you write foo, it calls foo with zero arguments, right? With me and JavaScript, it's easy because it's the function foo itself.
+ Ruby: It's...
+ Python: Oh, I know, you're messing around with symbols or something. Well, yeah, you can't do it!
+ Ruby: (grunting...)
+ 
+ ** Summary of Reactions
+ 
+ - Assembly grandma (we couldn't even hide behind var and private, and our clothes were in full view) by id:raitu thanks! (( everything is global (registers and memory)))
+ 
+ - <a href='http://blog.livedoor.jp/dankogai/archives/51780443.html'>404 Blog Not Found:Self-serving sequel - Language Girls 2.1: Do we need var? No /private? </a>
+ 
+ - In case you're wondering, neat (Strict mode) JS-chan has the will to be less of a bitch as PRIVATE will come forward as FutureReservedWords. Let's call it that. w (by id:teramako thanks!)
+ 
+ - JavaScript should be a little more aware of the fact that he has a powerful stylist, jQuery, to maintain his attitude (by id:yosuke_furukawa thanks!).
+ 
+ - Perl "You have to be able to use at least no strict according to TPO" by @muimiPro thanks!
+ 
+ - Vim script-chan "If you don't have nested functions, you don't need declarations - (but in my case I need let for assignment)" by @thinca thanks!
+ 
+ - Ruby uses a lot of procs and block syntax and is rather airy with private and such, so I'm losing myself (by @uu59 thanks!)
+ 
+ - Both perl and VB6 can be used without variable declarations, but there are declarations that force variable declarations... Option Explicit and so on, and perl6 is forced (by @imatake_jp thanks!)
+ 
+ - Python and Ruby are both in the "criticism" role, but while Python is the one who blurts it out, Ruby is the one who says "Well, I can do it, but I think this way of thinking is better" (by @mongrelP thanks!) --- I see, I was unaware of that. But I guess that kind of characterization is good.
+ 
+ - I could see Python 2 chans crying because they can't even use nonlocal and fool around with lists and dictionaries. (by @raimon49 thanks!)
+ 
+ - JavaScript Chan variable declarations at the beginning of a function dis if you want to do something about hoisting (by @kei_s thanks!) --- I see, there is such a phenomenon: ref: <a href='http://d.hatena.ne.jp/calpo/ 20110301/p1'>JSLint and JSHint and hoisting</a>.
+ 
+ - I think the reason Haskell writes type declarations is for documentation, not error messages. If the programmer's documented type and the compiler's inferred type don't match, the documentation probably won't be happy. (by @tanakh thanks!)
+ 
+ - I was thinking that JavaScript-chan could learn to block scope by let if she were to wear fox ears or become a bit more of a sissy (by @dynamitter thanks!).
+ 
+ - Pyhon could also control access with __slots__ ("__foo","__bar")?　Or a descriptor? (by @kusanoha thanks!)
+ ** Postscript
+ 
+ There were some unintended reactions to the last women's meeting, such as "Python wins hands down," so I decided to hold the second meeting with a topic that would make Python leave the stage early. However, Ruby has too many good points... I have to think of a topic that Ruby can win this time...
+ 
+ As for "declaration at the beginning of a function," it was more accurate to say "must be declared before assignment," although Python's global declaration cannot be set with an assignment statement and must be declared before referencing the variable, which JS-chan says is "lame, I was slightly exaggerating.
+ 
+ >|python|
+ def good_function():
+     global x
+     x = 1
+ 
+ def bad_function():
+     global x = 1  # SyntaxError: invalid syntax
+ 
+ def bad_function():
+     print x
+     global x  # SyntaxWarning: name 'x' is used prior to global declaration
+     x = 2
+ ||<
+ 
+ For those interested, I recommend the WebDB Press Compilation, which contains 60 PDFs in one volume, including my "Fundamentals of Language Design" book: WebDB Press Compilation.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774148318" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+ <comments>
+ <comment>
+ <username>l2345679x81</username>
+ <body>>Python global declarations can only be placed at the beginning of a function. <br><br>Really? </body>
+ <timestamp>1367415829</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body> Mistake. It does not have to be at the beginning of the function. <br>I was trying to say that it needs to be declared before the assignment. <br>Thanks for pointing that out. I will fix that. </body>
+ <timestamp>1367464212</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-03-21 https://nishiohirokazu.hatenadiary.org/archive/2012/03/21]

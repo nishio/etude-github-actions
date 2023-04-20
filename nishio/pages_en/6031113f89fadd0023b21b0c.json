@@ -1,0 +1,217 @@
+ABC192
+It was five questions.
+F: I DP'd as described, but it was a TLE in Python (WA was still there, so that's not enough).
+[https://gyazo.com/f2e118fa49ab00fdb89fcf2c1c96746b]
+Slight increase. Will there be any growth without diligence?
+[https://gyazo.com/c93bbfb428ebc5acd746c40f54c87fcd]
+
+[B - uNrEaDaBlE sTrInG https://atcoder.jp/contests/abc192/tasks/abc192_b]
+code:python
+ def main():
+     S = input().strip().decode('ascii')
+     from string import ascii_uppercase, ascii_lowercase
+     if all(c in ascii_uppercase for c in S[1::2]) and all(c in ascii_lowercase for c in S[::2]):
+         print("Yes")
+     else:
+         print("No")
+
+[C - Kaprekar Number https://atcoder.jp/contests/abc192/tasks/abc192_c]
+[https://gyazo.com/8097ec006474aceeb4c5dd630171199a]
+　I looked at the constraints and decided that if it was 10 digits high and 10^5 times, then it was OK to use a string.
+	code:python
+	 def main():
+      N, K = map(int, input().split())
+      for _i in range(K):
+          s = str(N)
+          g1 = int("".join(sorted(s, reverse=True)))
+          g2 = int("".join(sorted(s)))
+          N = g1 - g2
+  
+      print(N)
+
+[D - Base n https://atcoder.jp/contests/abc192/tasks/abc192_d]
+[https://gyazo.com/20de3e3b0cb898e05578754ebb60eea9]
+	Thoughts.
+	　When it is a single digit, the value does not change in any number of decimal places, 0 or 1 street
+	　When n is more than 2 digits, increasing n always increases the value, so the problem is to find the largest n that satisfies the condition less than or equal to M.
+	　Given the worst-case scenario, when the input is 10, the maximum is 10^18 decimal.
+	　　→ No linear search.
+	　　Looks good for a bifurcated search.
+	mounting
+	　I tried to use the base specification for int, but it only supported up to 36 decimal digits.
+	　I tried to implement `int(s, base)` on my own, but then I reconsidered that I don't need to find the exact number, I just need to know if the number exceeds M or not.
+	　　If they had implemented their own, I think they would have TLE'd.
+	　Implemented by looking at the [Bicubic Search Checklist
+	　WA
+			I was looking at the checklist and I did the failure pattern 4, "the initial value of RIGHT meets the condition".
+		　I had set the initial value to M, but when the input is 10, M satisfies the condition, it should be M+1 (`# (1)`)
+	code:py
+	 def lessEqual(s, base, limit):
+      ret = 0
+      for c in s:
+          ret *= base
+          ret += int(c)
+          if limit < ret:
+              return False
+      return True
+  
+  
+  def solve(X, M):
+      sX = str(X)
+      if len(sX) == 1:
+          if X <= M:
+              return 1
+          else:
+              return 0
+  
+      d = max(int(c)for c in str(X))
+      v = int(sX, d + 1)
+      if M < v:
+          return 0
+  
+      left = d + 1
+      start = left
+      right = M + 1  # (1)
+  
+      while left < right - 1:
+          x = (left + right) // 2
+          if lessEqual(sX, x, M):
+              left = x
+          else:
+              right = x
+      return right - start
+	A proposal I saw on Twitter
+		When X is w+1 digits and base is b, `int(X, b)` is [$ x_1b^w + x_2b^{w-1} + \cdots \ge x_1b^w].
+			[$ M \ge x_1b^w] and solve [$ \exp(\log(M / x_i) / w) \ge b], that b can be found by a linear search
+		Unfortunately, in the range of this problem condition, there's not enough precision in double precision floating point numbers.
+			`10 ** 18 - exp(log(10 ** 18)) == 1408.0`
+			10 ** 18 is just under 64 bits, but the mantissa part of doubled floating-point numbers is 52 bits.
+
+[E - Train https://atcoder.jp/contests/abc192/tasks/abc192_e]
+[https://gyazo.com/2ccd302fb095dbce2a184c8be4dcd279]
+	Thoughts.
+	　It's Dijkstra with no predetermined distance.
+	　The Dijkstra method determines the fastest time to reach one vertex and then calculates the time to the other vertices.
+	　In this problem, the distance isn't initially determined, but once the arrival time is determined, it's determined when you'll arrive in the next town.
+	mounting
+	　It took me a long time to debug `# (1)` because I got T and K mixed up, or `-currentTime % K` for `-currentTime % K` for time until departure.
+	code:py
+	 def one_to_one(
+          start, goal, num_vertexes, edges,
+          INF=9223372036854775807, UNREACHABLE=-1):
+      distances = [INF] * num_vertexes
+      distances[start] = 0
+      queue = [(0, start)]
+      while queue:
+          d, frm = heappop(queue)
+          if distances[frm] < d:
+              # already know shorter path
+              continue
+          if frm == goal:
+              return d
+          for to, T, K in edges[frm]:
+              # distance depends on currentTime
+              currentTime = distances[frm]
+              dist = (-currentTime % K) + T  # (1)
+              new_cost = currentTime + dist
+              if distances[to] > new_cost:
+                  # found shorter path
+                  distances[to] = new_cost
+                  heappush(queue, (distances[to], to))
+  
+      return UNREACHABLE
+ 	
+ 	def main():
+      N, M, X, Y = map(int, input().split())
+      from collections import defaultdict
+      edges = defaultdict(list)
+      for _m in range(M):
+          A, B, T, K = map(int, input().split())
+          edges[A - 1].append((B - 1, T, K))
+          edges[B - 1].append((A - 1, T, K))
+  
+      INF = 9223372036854775807
+      r = one_to_one(X - 1, Y - 1, N, edges, INF)
+      if r == INF:
+          r = -1
+      print(r)
+
+[F - Potion https://atcoder.jp/contests/abc192/tasks/abc192_f]
+[https://gyazo.com/54e3cfc010ef6ef10274535dd6e407d5]
+	Thoughts.
+	　At first I thought it was "over X".
+	　　But that would make it the obvious solution to include them all, since they're all positive.
+	　　I thought it was funny, but it was "just X".
+		When k are chosen to be S, it must be [$ \sum_{i\in S} A_i \equiv X \pmod{k}].
+		　If you think about the whole subset of A, it will be 2^50 and you won't make it in time.
+		Crush the state with DP
+		We can update the table `(n, k, V % k) -> V` with the maximum value as the number n chosen so far, the number k chosen finally, and the sum V so far
+　　　Because anything other than the maximum won't affect the answer.
+　　　Each is 1-100, so the table size is 10^6, the number of updates is 100, and the total is 10^8...just barely.
+　mounting
+　　Sample came through, 6WA 14TLE.
+　　Speeding up the system as it is in WA will only make debugging more cumbersome.
+　　Fixed the bug, still 9WA 11TLE, timeout here.
+　Official Explanation
+　　I see no difference in policy.
+　Compare with AC people
+　　Uh, you know, when you submitted this the second time, you said, "Fix the bugs and make it lighter and faster," and then you put the bugs in that faster version.
+　　Don't make multiple changes at once, it's the basis of software development!
+　　15 TLEs to fix bugs.
+		11TLE by changing the subscripts from tuples to integers.
+		I had to fix the dictionary to the list... oh, well, I had to be careful about the order of updating this, I was using two dictionaries, that's too slow.
+		The order in which they are packed into integers was devised so that updating from the largest to the smallest would not cause problems, and the list, AC
+	code:python
+	 def solve(X, AS):
+      from collections import defaultdict
+      INF = 9223372036854775807
+      N = len(AS)
+  
+      def to_key(mod, num, k):
+          return num * (N + 1) * (N + 1) + k * (N + 1) + mod
+  
+      def from_key(key):
+          num, km = divmod(key, (N + 1) * (N + 1))
+          k, mod = divmod(km, N + 1)
+          return (mod, num, k)
+  
+      SIZE = (N + 1) ** 3
+      table = [-1] * SIZE
+      sumAS = sum(AS)
+      for k in range(1, N + 1):
+          table[to_key(0, 0, k)] = 0
+  
+      for a in AS:
+          for key in reversed(range(SIZE)):
+              if table[key] == -1:
+                  continue
+              mod, num, k = from_key(key)
+              v = table[key] + a
+              num += 1
+              if num > k:
+                  continue
+              mod = v % k
+              key = to_key(mod, num, k)
+              table[key] = max(table[key], v)
+  
+      ret = INF
+      for key in range(SIZE):
+          if table[key] == -1:
+              continue
+          mod, num, k = from_key(key)
+          if num == k and num > 0:
+              v = table[key]
+              if mod == X % k:
+                  assert (X - v) % k == 0
+                  s = (X - v) // k
+                  ret = min(ret, s)
+  
+      return ret
+ 1942 ms... that's close enough.
+  If this is a problem, maybe inline expansion of the key conversion function...
+　Read other people's code
+　　Ah, I see, there is a way to check from the one with the larger k (i.e. faster acceleration) and then break when it becomes impossible to take them all [a2stnk https://atcoder.jp/contests/abc192/submissions/20351481].
+　　First, by dividing it by K, we can reduce it to 1238 ms.
+　　And adding branch trimming brings it to a whopping 331 ms!
+　　　It's the third fastest in Python.
+　　　So this branch trimming works very well.

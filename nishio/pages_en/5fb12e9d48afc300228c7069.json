@@ -1,0 +1,177 @@
+ABC183
+Finally, I got all the questions right! And no mistakes.
+It was the first time I had ever finished all the questions during a contest, so I was washing dishes and the bathtub because I didn't know what to do with the 21 minutes or so of time I had left (lol).
+[https://gyazo.com/c3a83f04dc6802c2d35d8b209448675b]
+F was not intended to be a correct answer, but rather "I think it's no good, but let's check if the speed is the only problem and not the answer," and I was surprised that it was sent within a surprisingly short period of time. In other words, the consideration was wrong, but the mistake was "estimating the speed slower than it actually is," so I submitted the wrong answer and it was accepted.
+
+A
+	Some people thought of max(0, x) or something, but I did it naively. 40sec
+	code:python
+	 x = int(input())
+  if x > 0:
+      print(x)
+  else:
+      print(0)
+
+B
+	I was surprised that the billiard ball had a radius of zero.
+	I thought I didn't get my best math problem this time, but it seems some people melted 30 minutes or did a bifurcated search on this problem.
+	I thought a little worried about what happens when dx is negative, but don't worry about it 5min
+	Official Explanation
+		Endogenize the change from Sx to Gx to Sy:Gy
+			[$ \frac{S_x G_y+G_x  S_y}{S_y+G_y}]
+		My solution
+			[$ \frac{S_y (G_x - S_x)}{G_y + S_y} + S_x]
+	code:python
+  SX, SY, GX, GY = map(int, input().split())
+  dx = GX - SX
+  dy = GY + SY
+  ret = SY / dy * dx + SX
+  print(ret)
+
+C
+	The factorial of 8 is 40320.
+	All searches are OK.
+	code:python
+	 def solve(N, K, dist):
+      from itertools import permutations
+      ret = 0
+      for order in permutations(range(1, N)):
+          d = 0
+          prev = 0
+          for x in order:
+              d += dist[prev][x]
+              prev = x
+          d += dist[prev][0]
+          if d == K:
+              ret += 1
+      return ret
+
+D
+	Note that it cannot be stored.
+	Since it cannot be stored, it is necessary to find out the amount of demand at each point in time and not to exceed the supply
+	I almost sorted by putting the start and end in a list, but when the start and end overlapped at the same point, I thought it would be troublesome to implement it properly without bugs, so I looked at the problem condition again and found that the time axis resolution was about 10^5, so I decided to use the [Imosu method].
+	code:python
+  N, W = map(int, input().split())
+  diff = [0] * 20_0010
+  for _i in range(N):
+      S, T, P = map(int, input().split())
+      diff[S] += P
+      diff[T] -= P
+  usage = 0
+  for v in diff:
+      usage += v
+      if usage > W:
+          print("No")
+          return
+  print("Yes")
+
+E
+	Thoughts.
+	　A normal DP would be 2000x2000x3000x2000, which is not going to make it.
+	　If the range sum in the three directions is made constant order using the cumulative sum, it looks good because it's 2000 x 2000.
+	　First confirm that the sample case passes with straightforward DP, then change to cumulative summation [DP while cumulative summation].
+	　　Like this
+			code:python
+    # hvalue = 0
+    # p = pos
+    # while True:
+    #     p -= 1
+    #     if data[p] == 0:
+    #         break
+    #     hvalue += table[p]
+    # debug(divmod(pos, WIDTH), hvalue, msg=":pos")
+    hvalue = h_accum[pos - 1]
+    # debug(divmod(pos, WIDTH), hvalue, msg=":accum")
+　　Deals with cumulative sums in three directions: horizontal, vertical, and diagonal.
+　　What you can't do through the wall, you can do by setting the cumulative sum to zero at the wall.
+　　The map is [insert map into 1D array].
+	code:python
+	 def solve(H, W, data):
+      MOD = 1_000_000_007
+      N = len(data)
+      table = [0] * N
+      h_accum = [0] * N
+      v_accum = [0] * N
+      d_accum = [0] * N
+  
+      table[WIDTH + 1] = 1
+      h_accum[WIDTH + 1] = 1
+      v_accum[WIDTH + 1] = 1
+      d_accum[WIDTH + 1] = 1
+      for pos in allPosition():
+          if pos == WIDTH + 1:
+              continue
+          if data[pos] == 0:
+              table[pos] = 0
+              h_accum[pos] = 0
+              v_accum[pos] = 0
+              d_accum[pos] = 0
+              continue
+  
+          h_value = h_accum[pos - 1]
+          v_value = v_accum[pos - WIDTH]
+          d_value = d_accum[pos - WIDTH - 1]
+  
+          ret = h_value + v_value + d_value
+          ret %= MOD
+          table[pos] = ret
+          h_accum[pos] = (h_accum[pos - 1] + ret) % MOD
+          v_accum[pos] = (v_accum[pos - WIDTH] + ret) % MOD
+          d_accum[pos] = (d_accum[pos - WIDTH - 1] + ret) % MOD
+  
+      return ret
+
+F
+	Thoughts.
+	　There are 200,000 possible class types.
+	　Doesn't look like it can be done with UnionFind?
+	　　Can you do it in logarithmic order?
+	　When using UnionFind, have the representative source have the number of each class.
+	　　If we naively have an array of values for "how many are in class x," then O(N)
+	　　Readout is in constant order
+	　　　I can drop this down to logarithmic order, so I want to speed up the merge instead.
+	　　Set the readout to logarithmic order → binary search
+	　　　What if we have it as a sorted array?
+	　　　Merging is linear order of content quantity
+	　　If you just want to order the contents, a hash table is fine.
+	　　　Defaultdict because there may be no key, or no, it's a piece count, so Counter.
+	　　Let's try sending with it once and see if there are any other bugs -> AC surprisingly easily.
+	mounting
+	　Modify the UnionFind library to update Counter at merge time
+  	code:python
+  	 def unite(x, y):
+        x = find_root(x)
+        y = find_root(y)
+        if x == y:
+            return  # already united
+        if rank[x] < rank[y]:
+            parent[x] = y
+            cls[y].update(cls[x])  # ***
+        else:
+            parent[y] = x
+            if rank[x] == rank[y]:
+                rank[x] += 1
+            cls[x].update(cls[y])  # ***
+  body (of a machine)
+  	code:python
+  	 def main():
+        global cls
+        from collections import Counter
+        N, Q = map(int, input().split())
+        init_unionfind(N)
+        CS = list(map(int, input().split()))
+        cls = [Counter([CS[i] - 1]) for i in range(N)]
+        for _q in range(Q):
+            typ, a, b = map(int, input().split())
+            if typ == 1:
+                unite(a - 1, b - 1)
+            else:
+                root = find_root(a - 1)
+                print(cls[root].get(b - 1, 0))
+　Official Explanation
+　　If you merge the smaller one into the larger one, the size will more than double with each merge, so at worst it will be merged only logN times, so it will fit less than NlogN
+　　Worst-case computational complexity can be improved by [moving from the smallest to the largest
+　　This estimate was not made.
+　　　I knew it was a worst case scenario and I knew it wasn't working, but I hadn't come up with a solution.
+　　　However, the UnionFind implementation "merges the lower ranks into the higher ranks" to compress the height of the tree, thereby causing a similar effect, but in time.

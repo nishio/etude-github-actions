@@ -1,0 +1,79 @@
+Hatena2008-10-18
+code:hatena
+ <body>
+ *1224315256*[Midterm] How much can you win by luck?
+ I thought that the recent high score of <a href='http://saichugen-online.appspot.com/'>Middle Limit Online</a> proved that "Middle Limit is not just a game of luck like rock-paper-scissors-paper," but I realized that people who are not familiar with probability theory may not be so sure. I realized that people who are not familiar with the theory of probability might not understand it, so I will try to calculate how much the score of 36 points in 60 games is "not luck".
+ 
+ The final score for the most-mediocre is calculated roughly according to the "2 points for a win, -1 point for a loss" system. In reality, there is a process for when someone has a tie, but that is a small probability, so let's turn a blind eye to it this time to simplify the story.
+ 
+ A 1/3 chance is +2 points and a 2/3 chance is -1 point, so the average of my scores is 2 * 1/3 + (-1) * 2/3 = 0 points. But the information that the average is 0 is not enough to know if my score of 36 points in 60 rounds is due to luck or ability. I need to know how much the score varies only by luck. To know this, we need information on "variance. Variance is "the average of the square of the difference between the average and the variance", but in this case, since the average is zero, we can simply use "the average of the square". 2 * 2 * 1/3 + (-1 * -1) * 2/3 = 2.
+ 
+ When there is a variance of 2 in one win, the total variance of the two wins is 2 + 2, which is 4.
+ Let's do the math. Probability of winning both: 1/9, Probability of losing both: 4/9, Probability of winning one is 4/9 since the rest is 4. 4 * 4 1/9 + (-2 * -2) * 4/9 + 1 * 1 * 4/9 = (16 + 16 + 4) / 9 = 4. (If you are not satisfied with an actual example, prove it for the general distribution.)
+ So if you play the game with variance 2 60 times, the variance of the total score will be 120.
+ 
+ Now, how difficult is it to get 36 points by luck alone when the distribution of scores has variance 120? To calculate this, we approximate the distribution of scores with a normal distribution. When the distribution is normal, we know how difficult it is to get 36 points if they are separated by a factor of standard deviation (square root of variance). Also, it is known that a distribution that adds up a number of identical distributions approaches a normal distribution.
+ 
+ The standard deviation (SD) is the square root of 120, which is 10.95. Dividing 36 points by this gives 3.29. If you look at the 3.29 column of the normal distribution table (e.g. <a href='http://www.biwako.shiga-u.ac.jp/sensei/mnaka/ut/normdisttab.html'>Appendix: Normal distribution table</a>), it says 0.9995. It is written as 0.9995. In other words, the probability of getting a score less than 36 points after 60 plays by luck alone is 0.9995. Conversely, the probability of getting a score greater than 36 points by luck alone is 0.0005.
+ 
+ If you play 8 times, the line is 12 points; if you play 32 times, the line is 24 points.
+ 
+ Summary: You can't score this high on luck!
+ Next notice: I would like to write an explanation of how to get points.
+ 
+ *1224354650*[TopCoder]SRM422
+ I couldn't write the algorithm "return all subsets whose total weights do not exceed a given upper limit" in a nutshell, so I did my best after I was done.
+ >|cpp|
+ void find_all_subset(
+   const vector<size_t> &elems, const vector<int> &weight, 
+   int weightLimit, vector<vector<size_t> > &result,
+   int start=0, vector<size_t> already_member=vector<size_t>()){
+   for(size_t i=start; i<elems.size(); i++){
+     if(weight[elems[i]] <= weightLimit){
+       result.push_back(already_member); // copy
+       result.back().push_back(elems[i]);
+       find_all_subset(
+ 	elems, weight,
+ 	weightLimit - weight[elems[i]], result,
+ 	i + 1, result.back()); /* result.back() is copied */
+     }
+   }
+   
+ 
+ } 
+ int main(){
+   vector<int> weight;
+   weight.push_back(1);
+   weight.push_back(2);
+   weight.push_back(3);
+   weight.push_back(4);
+   vector<size_t> member;
+   for(size_t i=0; i<4; i++){
+     member.push_back(i);
+   }
+   vector<vector<size_t> > result;
+   find_all_subset(member, weight, 6, result);
+ }
+ ||<
+ This Div 1 Normal problem was to solve a complex version of a common puzzle: "Form a team of people who do not exceed the maximum total weight and also trust each other, and one of the team that reaches the goal must return and take the least amount of time to get there. Puzzles like "only two people can be on a boat" or "a wolf and a sheep can't be carried together" or something like that.
+ 
+ I am very sad that Boost is no longer available, and it is too barren to write content that can be done with Boost using a degraded version of my own Boost.
+ 
+ 
+ In the meantime, I made a degraded copy of boost/assign.hpp.
+ >|cpp|
+ template<class T>
+ vector<T>& operator <<(vector<T> &xs, T x){
+   xs.push_back(x);
+   return xs;
+ } 
+ 
+ int main(){
+   vector<int> weight;
+   weight << 1 << 2 << 3 << 4;
+   DP(weight);
+ }
+ ||<
+ </body>
+
+[Hatena Diary 2008-10-18 https://nishiohirokazu.hatenadiary.org/archive/2008/10/18]

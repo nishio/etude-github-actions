@@ -1,0 +1,360 @@
+Image Generation AI Study Group (Digest October 2022)
+Cybozu Labs Study Session 2022-11-11
+	In the month since the last [Stable Diffusion Study Group] on 9/30, there have been intense story developments around image generation AI.
+	 I'll recap it in this digest and explain how [Imagic] and [Aesthetic Gradients] work in the remaining time.
+ 10/3 NovelAI, a provider of novel creation AI services, releases paid image generation AI NovelAIDiffusion
+ 　Animation picture specializing in high quality and noisy
+ 　Capable of learning and generating images with arbitrary aspect ratios, which was not possible with Stable Diffusion
+ 　In the Japanese-speaking world, people became angry because the study source was an unauthorized reproduction site.
+ 10/7 NovelAIDiffusion source code and models leaked and shared via Torrent
+ 10/12 NovelAI announces that the number of images generated has exceeded 30 million in the first 10 days since its release.
+ 　Roughly speaking, the image is of sales of 3 million yen per day.
+ 10/17 NovelAI Prompt Manual "Code of Elements" in Chinese
+ 　Sideline evidence that the use of NovelAI's spill model is major in Chinese-speaking countries.
+ 10/18 Imagic is the talk of the town.
+ 　Some say it's very useful and can be used properly, others say it's not quite as useful as expected.
+ 　I'm the latter, but this could be "I just don't understand how to use it well".
+ 10/20 Stable Diffusion 1.5 is released by Runway, not by Stability AI, which released 1.4; Stability AI files for temporary removal, but later withdraws it.
+ 10/21 Stability AI, (in a big hurry?) Released new VAE, one that improves eye and face decoding
+	10/22 Strange people came to the home of a person who was sending out information related to NovelAI in Japanese, resulting in police action
+	11/3 "NovelAI Aspect Ratio Bucketing" released under MIT license
+
+NovelAIDiffusion Release
+	NovelAI, a provider of novel creation AI services, releases NovelAIDiffusion, a paid image generation AI
+　In Stable Diffusion, the prompt was censored at 77 tokens, but in NovelAIDiffusion, it triples to 231 tokens
+　Stable Diffusion used to crop the training data into a square, but NovelAI's ingenuity has made it possible to train and generate data in any aspect ratio.
+　　Unlike university laboratories that aim to publish papers, this is a service of a for-profit company, so details were not disclosed (they were later made public).
+ 　Aspect ratio strongly affects composition.
+ 　 code: NAI Curated
+ 　  girl, blue eyes, blue long hair, blue cat ears, chibi
+			[https://gyazo.com/ec303056563dd0308f6530af5549d053][https://gyazo.com/a8a40c57789dea0cd4e523c2ed84999c][https://gyazo.com/e34a2583abf1105d02ba614f08c2877d]
+　　The distribution of pictures generated is severely skewed.
+	　Prompt "black cat" generated 5 cards and 2 of them are cat ear girls [Diary 2022-10-07].
+	　[https://gyazo.com/487f8d241846f06d4a34770a344703db][https://gyazo.com/65e72a194351fed5c17fc59eb07d4961]
+　　　　I almost blew tea when I saw the first one with "Let's just put in 'black cat' for comparison with Stable Diffusion.
+　　　SNS was abuzz with the overwhelming strength against "anime-style women," a field in which the company excels.
+　　　　The day's Tweet is recorded here: https://note.com/yamkaz/n/nbd9a028d625a
+　　　　Most of the Tweets recorded here are "anime style women".
+　　　　Specializing and devoting resources to a narrow area of the diverse distribution of "pictures" has led to a watershed in user value in that area.
+　　　　　In other areas, the expressive power is reduced, but the extended features have stuck with the customer.
+　　　　　[Blue Ocean Strategy.
+　Controversy erupted over the dataset used for the study.
+　　Data from Danbooru, a service that allows volunteers to tag images and search for images by tag, is used for training.
+　　Pros and cons (or at least negative opinions were loudly transmitted on the Japanese-language SNS).
+　　　Negative: I would not recommend this hotel to anyone.
+　　　Danbooru is an unauthorized reproduction site and is illegal.
+　　　AI trained on illegal data is evil, it is the enemy.
+　　　This AI is a paid service, any profit made from it is stolen from us.
+　　By the way, Danbooru itself clearly states the source of the original image and links to it, so it is quite difficult to determine whether this "unauthorized reproduction" is illegal or not.
+			[https://gyazo.com/18161037994ef05c4645892aeac400f7][https://gyazo.com/f06398234bfe68c7bda296b4c332b7ed]
+　　　　It is clearly stated that it was reprinted from Pixiv.
+　　　The theory that it is [fair use] [https://ja.wikipedia.org/wiki/フェアユース Fair use - Wikipedia]
+    [" the use of the reproductions will adversely affect the market (including potential markets)"]?
+    It is difficult to argue that the act of reprinting something that was originally published free of charge with a clear statement of the source is detrimental to the market.
+　　　Relation to the display of a duplicate image cache on Google's servers in search results in Google searches.
+　　　　If the image is small, it will be "This is a thumbnail of search results.
+　　　　If the image is a direct link, it will say "No duplication.
+　　　　The image is so large that it seems to divide opinions.
+　　　Of course, since this is user-submitted content, some of it may have been uploaded illegally
+　　　(e.g., reprints from digital comics that are not published online).
+　　　 But as long as they operate in accordance with the Digital Millennium Copyright Act (DMCA), the service operators are not charged with any crimes.
+　　　  Notice and Takedown Procedure (DMCA Notice)
+　　　  >If the operator of a website is notified that a copyrighted work has been posted on a website by a third party without the permission of the copyright holder, the website operator is exempt from liability for damages if the work is promptly removed (takedown).
+　　　 Even though Danbooru will be hated by those who are victims of the reprinting of non-public content, as if Danbooru is to blame, legally Danbooru is not to blame, notis responsibility on the part of the victim.
+　　　10/5 [https://gigazine.net/news/20221005-novelai-danbooru/ Danbooru official, the source of the training, released a statement about NovelAI, an automatic illustration generation AI - GIGAZINE]
+   	Roughly "Tell NovelAI about AI, we have nothing to do with it. If we have proof that you are the copyright holder, we will agree to remove it."
+   	From a DMCA perspective, the burden of proof is on the party claiming unauthorized reproduction, so I would say so.
+ 　The world says, "What's wrong with using Danbooru?" in the world.
+ 　　>[https://twitter.com/MutedGrass/status/1576861235458424833?ref_src=twsrc^tfw|twcamp^tweetembed|twterm^1576861235458424833|twgr^669f7044c21e6b7686422c72bc25ca959dc4862c|twcon^s1_&ref_url=https%3A%2F%2Fnote.com%2Fyamkaz%2Fn%2Fnbd9a028d625a @MutedGrass]: 
+   >/StableDiffusion...LAION 5B has Danbooru's image URL
+   >/WaifuDiffusion...Danbooru 2021 dataset use clearly stated.
+   >/NovelAI...stated Danbooru use.
+   > Mid Journey...collaborate with WaifuLabs to use Safebooru-derived data (planned)
+   >In other words, everyone is using Danbooru! that means everyone is using Danbooru!
+   In other words, the reaction of the Japanese-speaking world to NovelAI's use of Danbooru is a [group polarization] phenomenon.
+  　　Opposition shouted louder, so neutral - proponents shut up for fear of damage.
+  　　Heard on multiple channels that "we're trying, but we're not disseminating information."
+  　　　[New Technology and Publication Bias]
+  　　Some people have advised me to refrain from expressing logically correct opinions because "even logically correct opinions can get you tangled up with crazy people."
+  　10/22 [https://note.com/852wa/n/nee6da6dd577b regarding house convexity | episode 852 |note]
+  　　A case of a strange person coming to the home of a person who was actively disseminating information.
+	  10/29 [https://anond.hatelabo.jp/20221029165248 AI painter started but numbers are egregious]
+	  	>On twitter, there are many people who say, "I hide pictures with AI tags. Some people say, "After all, pictures must be drawn by humans," but this was just "the opinion of a vocal minority," a fact that I felt clearly when I looked at the numbers of my own account on pixiv.
+	  10/31 [https://www.pixiv.net/info.php?id=8728 pixiv News - Features for handling AI-generated works have been released].
+   	Pixiv has landed on the "don't eliminate AI-generated works, but let them segregate themselves with separate rankings.
+   	Meanwhile, Danbooru has banned the submission of AI works as of confirmation on 11/10.
+
+NovelAI Leakage
+	10/7 NovelAIDiffusion source code and models leaked and shared via Torrent
+		Only 4 days after release, w
+	10/12 NovelAI announces that the number of images generated has exceeded 30 million in the first 10 days since its release.
+		[https://gyazo.com/d969383120e2b7534cfa13e28d8e4fda]
+		[https://gyazo.com/009042f555c1f5f34189e86c14faade1]
+	 The smallest of the preset sizes is 512x512, and if you produce 4 pieces with default parameters, it's 20anlas, so about 2000 pieces for $11.
+	 　(The default parameter was changed after this to 16anlas.)
+	 　It's probably used for higher resolution and such, so roughly speaking, it's about a penny a piece.
+ 　　Roughly speaking, the image is of sales of 3 million yen per day.
+ 10/17 NovelAI Prompt Manual "Code of Elements" in Chinese
+ 	[https://gyazo.com/f2732d53db16958208ab0c02fe9369cf][docs https://docs.qq.com/doc/DWHl3am5Zb05QbGVs]
+		>[https://gyazo.com/d6123280b089eedc35c54fa78baf0c58]
+  >Easily done [Diary 2022-10-17].
+ 	[https://gyazo.com/7ea88e2f341de202cf6061ce045bb6a3]
+			This round bracket used for vector emphasis in tokens, does not work for NovelAI's service.
+				[No point in using round brackets in NovelAI].
+			　The round brackets are the de facto standard AUTOMATIC1111/stable-diffusion-webui functionality for running Stable Diffusion locally
+		 　In other words, this is a major proof that in Chinese-speaking countries, the local runoff model is used instead of NovelAI's service.
+		 　The use of leaked models, some people say something like "it's illegal, so don't do it" in Japan, but what kind of law does it violate? I'm not sure.
+		 　　In Japanese law, is it Article 2, Paragraph 1, Item 5 of the Unfair Competition Prevention Law?
+		 　　* acquires a trade secret or uses or discloses a trade secret without knowledge [* with knowledge that an act of wrongful acquisition of a trade secret has intervened] or without knowledge due to gross negligence
+		 　　I think NovelAI was in Delaware, maybe there is a similar law.
+		 　　Well, even if there were, it would be hard to sue Chinese users.
+　Without the spill, the Elements Code would not have been created.
+　　Time may have to tell if the leak was a bad thing for NovelAI.
+
+Imagic
+ 10/18 Imagic is the talk of the town.
+	>[https://twitter.com/AbermanKfir/status/1582218210547757056?ref_src=twsrc^tfw|twcamp^tweetembed|twterm^1582218210547757056|twgr^93858c6e839b7b851b90c90aa0cade388dbeadde|twcon^s1_c10&ref_url=https%3A%2F%2Fnote.com%2Fyamkaz%2Fn%2Fn55c3ac365f34 @AbermanKfir]: The combination of #dreambooth and embedding optimization paves the way to new image editing capabilities. Love it. Congrats on this nice work!
+  [DreamBooth] + [embedding optimization]
+	[https://gyazo.com/c4b331f315d8d71419e2fb58ada3a5c7]
+　Some say it's very useful and can be used properly, others say it's not quite as useful as expected.
+ 　I'm the latter, but this could be "I just don't understand how to use it well".
+		[https://gyazo.com/905cdfcbae8f2199b00fbb470fd7db67] + "a woman wearing black suit" = [https://gyazo.com/a0f9ca631a50c9c47882cdb6ac64cb05]
+			[https://birdmanikioishota.blog.fc2.com/blog-entry-12.html Understanding Imagic - Hoge Hoge]
+			The remarkable thing is that "the face is preserved to the extent that it would not be out of place if people said it was the same person."
+		>[https://twitter.com/npaka123/status/1582696004414939137?ref_src=twsrc^tfw|twcamp^tweetembed|twterm^1582696004414939137|twgr^ 80908a8905a2b157f0902fc3a878d9d3d3b5735e|twcon^s1_c10&ref_url=https%3A%2F%2Fnote.com%2Fyamkaz%2Fn%2Fn7a7394323358 @npaka123]: I was trying to get my cat Imagic Stable Diffusion, but the cat didn't change and moved to a bedroom-like place.
+  >[https://pbs.twimg.com/media/FfbbX54VsAAUp2Z.jpg][https://pbs.twimg.com/media/FfbbZARVUA0ydqG.png]
+		　The cat is saved.
+		[Imagic 2022-10-31]
+			[https://gyazo.com/6b7beb6c41765ff93c1bdede39f5d14a][https://gyazo.com/ece7c6d8f55c16a421c86b70afdf5204]
+			Prompt with flower.
+			The default strength is 0.9, but that didn't change at all, so I increased it and it flowered.
+		[/villagepump/2022/10/30#635eaefae2dacc0000f46cc2]
+			[https://gyazo.com/bdd1d9b05d5d826c4b5b623fdd88fb70]
+		Opinion that it is easier to function in live action [/villagepump/2022/11/01#6360b5eee2dacc0000329928].
+		　Well, surely it's more amazing that something generated by a NovelAI model is Imagic with a Stable Diffusion model and working properly?
+		　>[nishio.icon]It's about two orders of magnitude more time-consuming than img2img, but it doesn't maintain the original picture that well.
+		　　Different models, so it's normal not to maintain them.
+　Principles and other stories were added at the end of this presentation.
+
+Stable Diffusion 1.5
+ 10/20 Stable Diffusion 1.5 is released by Runway, not by Stability AI, which released 1.4.
+ 	Stability AI applies for temporary removal, but later withdraws
+ 　I'm guessing it was a mistake on Stability AI's part to not properly grasp the scope of the rights to the joint research work product.
+ 　　The kind of thing where you thought you had exclusive rights, but you didn't.
+ 　On Runway's part, it's reasonable to release it because it's a chance to raise awareness.
+ 　　I think a lot of people are starting to know and be aware of Runway because of this, myself included.
+ 　consideration
+ 　　https://note.com/yamkaz/n/n165fa3922570
+ 　　Stability AI side wants to promote NSFW countermeasures, but also wants to release models without countermeasures, so Runway released them.
+ 　　I think it's too much to ask.
+ 　　　Runway is also a private company, so there is no incentive to take on risk.
+ 　　　If that's the purpose, why not just leak it with the same pose as NovelAI, that it was leaked by an anonymous hacker attack?
+ 10/21 Stability AI, (in a big hurry?) Released new VAE, one that improves eye and face decoding
+　　I interpret this as "we're not ready to release 1.6, but we don't want Runway to stay up-to-date for too long, so let's release what we can as soon as we can.
+　　Combining the 1.5 model from Runway with the VAE from Stability AI at hand, "The facial expressions are so much better!" some people are saying.
+　　is personally distancing myself from the feeling that "DEPENDENCY HELL is about to start..."
+　Runway: AI Magic Tool
+　 We provide a variety of useful services centered on video editing.
+		Infinite Image
+			So-called outpainting
+			[https://gyazo.com/e2ba3a5007a13db2ed0b672d38e628be][https://gyazo.com/2f924b10840f6848a8abba45616879c5]
+		　Can't you tell it's a composite from a distance?
+		　Specify the area you want to composite.
+		　[https://gyazo.com/afd13ca995fbfe6726ee3e8be4d36a03]
+		　Press the generate button to make 4 sheets and choose one.
+	　[https://gyazo.com/ff857109afe0720fb5009cd51f811f71][https://gyazo.com/24c6ac45328412eb8f770c16c801ea99][https://gyazo.com/27b221e 146cc92face56920c611b8243][https://gyazo.com/8b9aec27e53f5feed3f48a488f19017f]
+			He doesn't seem to be very good at cartoon style.
+		　[https://gyazo.com/6b49334374d1adfffa61f036768f12ca]→[https://gyazo.com/65af1d0f78bebbb48de566a423ceb535]
+　　　　NovelAI img2img Noise 0 Strength 0.5
+　　　　Outpainting does not change the original image (facial expressions and so on).
+　　　　img2img is roughly the same, but the details change.
+		Erase and Replace
+			So-called inpainting
+		　Probably because it fills with noise [Runway's inpaint is good and beautiful].
+		　　Tends to make mysterious things appear in the erased area
+　　Other assortments include object tracking for video and noise reduction for audio.
+
+Technology behind NovelAIDiffusion
+	10/11 [NovelAI Improvements on Stable Diffusion | by NovelAI | Oct, 2022 | Medium https://blog.novelai.net/novelai-improvements-on-stable-diffusion-e10d38db82ac]
+	10/22 [The Magic behind NovelAIDiffusion | by NovelAI | Oct, 2022 | Medium https://blog.novelai.net/the-magic-behind-novelaidiffusion-b4797e0d27b2]
+	11/3 "[NovelAI Aspect Ratio Bucketing https://github.com/NovelAI/novelai-aspect-ratio-bucketing]" published under MIT license.
+	On 10/11, I wrote a technically pointed talk, but the world fundamentally doesn't understand how image generation AI works, and they keep saying things like, "We're just patching images from a database" and other bullshit, so I said, "No, we're not! I gave a basic explanation on 10/22.
+	The Magic Behind NovelAIDiffusion (10/22)
+ 	The original Stable Diffusion was trained on the approximately 150 TB LAION dataset
+ 	Fine tuning with 5.3 million records and 6 TB data set.
+ 	　This dataset has detailed text tags
+ 	　(This is probably Danbooru origin)
+ 	The model itself is 1.6 GB and can generate images without reference to external data
+ 	　The size doesn't change during learning (= so it doesn't remember the image! I'm just saying)
+ 	The model took three months to learn.
+ 	　I don't mean that they've had the learning process running for 3 months, but that they've developed a human to look at the progress along the way and fix the problems - and repeat the process.
+ 	　The goal is not to write a paper, but to create a good model and make money through service development, so it's okay to do some human trial and error along the way.
+ 	The model was trained using eight A100 80GB SXM4 cards linked via NVSwitch and a compute node with 1TB of RAM
+	Improvement of Stable Diffusion by NovelAI (10/11)
+　　Use the hidden state of CLIP's penultimate layer
+　　　[nishio.icon]penultimate layer is "one layer before the final layer"
+　　　Stable Diffusion is a mechanism that uses the hidden state of the final layer of CLIP's transformer-based text encoder for guidance on classifier free guidance
+			Imagen (Saharia et al., 2022) uses the hidden state of the penultimate layer for guidance instead of the hidden state of the final layer.
+			Discussion in the EleutherAI Discord
+				The final layer of CLIP is prepared to be compressed into a small vector for use in similarity searches
+				That's why the value changes so rapidly.
+				So using that one previous layer might be better for CFG's purposes.
+			experimental results
+			　Using the information from the layer before the final one in Stable Diffusion, I was able to generate an image that matched the prompt, albeit with slightly less accuracy.
+			　　[nishio.icon]This is not obvious, because Imagen is not LDM
+			　Color leaks are more likely to occur when using values from the final layer
+			　　For example, in "Hatsune Miku, red dress", the red color of the dress leaks into the color of Miku's eyes and hair.
+　　aspect ratio bucket
+　　　Existing image generation models have a problem of creating unnatural cropped images.
+　　　　[nishio.icon] things like the lack of a neck in the portrait.
+　　　The problem is that these models are trained to produce square images
+　　　　Most training source data is not square
+　　　　It is desirable to have squares of the same size when processing in batches, so only the center of the original data is extracted for training.
+　　　　Then, for example, the painting of the "knight with crown" would have its head and legs cut off, and the important crown would be lost.
+　　　　[https://gyazo.com/13aa293442bfe496be831c2c15fd1e69]
+　　　　This can produce a human being without a head and legs, or a sword without a handle and tip.
+　　　　I was trying to create an ancillary service to a novel generating AI service, so this wasn't going to work at all.
+　　　　Also, studying "The Knight with the Crown" without the crown is not a good idea because of the mismatch between the text and the content
+　　　Tried random crop instead of center crop, but only a slight improvement.
+　　　It is easy to train Stable Diffusion at various resolutions, but if the images are of different sizes, they cannot be grouped into batches, so mini-batch regularization is not possible, and the training becomes unstable.
+　　　Therefore, we have implemented a batch creation method that allows for the same image size within a batch, but different image sizes for each batch.
+　　　　That's aspect ratio bucketing.
+　　　To put the algorithm in a nutshell, we have buckets with various aspect ratios, and put the image in the closest aspect ratio.
+　　　　I mean, a little bit of discrepancy is fine.
+　　　　Random crop for a slight displacement.
+　　　　　In most cases, less than 32 pixels need to be removed.
+　　Triple the number of tokens
+　　　StableDiffusion has up to 77 tokens
+　　　　75 with BOS and EOS
+　　　This is a limitation of CLIP
+　　　So, round up the prompt to 75, 150, or 225, split it into 75 tokens each, run them through CLIP individually, and combine the vectors
+　　hypernetwork
+　　　Totally unrelated to the method of the same name proposed in 2016 by Ha et al.
+　　　　[nishio.icon]You didn't know and you named it and covered it.
+　　　Techniques used to correct hidden states using small neural nets from multiple points in a larger network
+　　　Can have a greater (and clearer) impact than prompt tuning, and can be attached or detached as a module
+　　　　[nishio.icon] This means that the ability to provide switches that end users can recognize as components and attach and detach is an advantage in service provision.
+　　　　From our experience in providing novel generation AI to users, we knew that users could understand (and perhaps improve user satisfaction) with regard to providing them with a function switch
+　　　　[https://gyazo.com/4ba1538c98f240966cbc4120215db499]
+					https://novelai.net/
+　　　Performance is important
+　　　　Complex architecture increases accuracy, but the resulting slowdown is a major problem in a production environment (when the AI is actually a service that end-users touch).
+　　　Initially, we tried to learn embedding (just as we had already tried with the novel generation AI)
+　　　　This is the equivalent of a Texual Inversion
+　　　　But the model did not generalize well enough.
+　　　So we decided to apply hypernetting.
+　　　　After much trial and error, I decided to touch only the K and V parts of the cross-attachment layer.
+　　　　I won't touch the rest of U-net.
+　　　　Shallow attention layers overlearn, so penalize them during learning.
+　　　　This method performed as well as or better than fine tuning.
+　　　　　Better than fine tuning, especially when data for the target concept is limited
+　　　　　I think it's because the hypernet can find sparse regions that match the data in the latent space while the original model is preserved.
+　　　　　Fine tuning with the same data will reduce generalization performance by trying to match a small number of training examples
+　　　　　　[nishio.icon]Maybe fine tuning of the entire model gives too many degrees of freedom and tries to represent the training data a little by little with the overall weights
+　　　　　　By limiting it to adjusting the attention only, the "denoising mechanism by condition vector" is preserved in a decent state learned with a lot of data, but the input vector to it changes more drastically than the one created by a mere transformer, I thought.
+
+[Imagic]
+ Mechanism for generating a new image based on a single image and text prompt
+ Input is similar to StableDiffusion's img2img, but features the ability to make global pixel changes that img2img does not
+	[https://gyazo.com/ded80c6786c8a03b034121c7e7c793ff][PDF https://arxiv.org/pdf/2210.09276.pdf]
+　How does it work?
+　[https://gyazo.com/62f14b20e57c5aea68ef4c72e0269af7]
+
+　StableDiffusion is broadly defined as "text as input and image as output, learned in text/image pairs."
+　But when I opened the box, I found a frozen [CLIP] inside.
+　Text is in the form of embedded vectors before being passed to [LDM
+　　Learning SD is the process of fixing the embedding vector e and output image x and updating the LDM model parameters θ to minimize the loss L
+			[https://gyazo.com/91545820622700ae4ba48769e2685776]
+ 　　Imagic is divided into three steps
+ 　　　1: First, fix the image and model parameters and optimize the embedding vector
+ 　　　　Losses here are the same as StableDiffusion, the usual definition of [DDPM].
+ 　　　2: Then fix its embedding vector and optimize the model parameters
+ 　　　(An auxiliary network is added to preserve the high-frequency component.)
+ 　　　3: Output image by linear interpolation of e and eopt as input to a new LDM
+　schematic
+　Step 0
+ 	[https://gyazo.com/1328e4f076205f6937e2f97086c19bc5]
+　　A picture of the cake and the prompt "pistachio cake" are given.
+　　Of course, the image created from the prompt "pistachio cake" is completely different from the image you gave
+　Step 1
+　　[https://gyazo.com/2f6bdf14c72b0623d4f45bd9ac89a664]
+	　Update the embedding vector e so that the output image is closer to the input image x
+	　I think the images in this diagram are too similar.
+	　　(The paper does not clearly show the image at this time, it says it looks roughly like this, but it appears to include the influence of the auxiliary model described below.)
+　Step 2
+ 	[https://gyazo.com/e6794fbaf4198641b9d9acf04de66f94]
+	　Update model parameter θ so that the difference between the image generated from eopt and the input image x is reduced by combining auxiliary models
+	　In this case, the auxiliary model part learns and absorbs the details that cannot be represented by LDM, resulting in almost the same image.
+　　The auxiliary model is attached to preserve the high-frequency component.
+ 　　The detail is well preserved!" This is because the network preserves high-frequency components that are not preserved by LDM.
+ 　　LDM collapses 8x8 pixels into 1 pixel, so the high-frequency component of the information given by the image is lost.
+ 　　Since the details are restored by the VAE decoder, that does not preserve the face of the individual given by the image. The auxiliary model absorbs the differences.
+　Step 3
+	 [https://gyazo.com/c816daacb1972684d04fc7e8d0bf1cdc]
+　　He claims that somewhere in the one-dimensional space that this new model generates, "there is something relatively close to what we want to get.
+　　The assumption here is that "a small space would be considered flat".
+　　Argument that a mixing factor of about 0.7 looks good.
+　　　Well, this is the case with photographs. When I experimented with an animated picture I used in NovelAI, it was almost identical to the original image even at 0.9 (the background color was different).
+	consideration
+		Unlike img2img, dynamic changes happen, right? but it does.
+	　　Input is the same as img2img, but unlike img2img, the given image is not used as the initial value when generating the image later.
+	　　　Generation process is txt2img with auxiliary model
+		　img2img downscales the given image (VAE encode) and paints the picture with it as the initial value.
+		　　It's like a person with bad eyesight drawing a picture while referring to the original picture.
+		　　So it's absurd to give him a picture of a red dress and ask him to make it blue.
+		　Imagic passes the picture of the red outfit and says, "This is the picture of the blue outfit."
+		　　The meaning of the word "blue" is moved to "red" by updating the embedding vector.
+		　　Update the LDM and auxiliary models to reproduce the "picture of red clothes" given on it.
+		　　And if you change the meaning of the word "blue" back from "red" to "blue", a "picture of blue clothes" is generated.
+ 　High-frequency components such as the face are preserved because the "auxiliary model" absorbs facial details that would be erased if SD were used normally.
+	　Why is it that even at 0.9, an animated picture is almost identical to the original image (the only difference is the background color)?
+		　In the same way in photography, there are cases where the background has changed, not the object to be changed.
+  		>[https://twitter.com/npaka123/status/1582696004414939137?ref_src=twsrc^tfw|twcamp^tweetembed|twterm^1582696004414939137|twgr^ 80908a8905a2b157f0902fc3a878d9d3d3b5735e|twcon^s1_c10&ref_url=https%3A%2F%2Fnote.com%2Fyamkaz%2Fn%2Fn7a7394323358 @npaka123]: I was trying to get my cat Imagic Stable Diffusion, but the cat didn't change and moved to a bedroom-like place.
+    >[https://pbs.twimg.com/media/FfbbX54VsAAUp2Z.jpg][https://pbs.twimg.com/media/FfbbZARVUA0ydqG.png]
+ 	　I think the auxiliary model absorbed most of the object's information.
+ 	　　Considered "information that should be kept outside the LDM" similar to the face
+ 	　　The algorithm doesn't determine what is the object it wants to change.
+ 	　　For objects that occupy a large portion of the screen and that SD cannot produce at a high rate because of the prompt, "SD cannot produce, so let's use an auxiliary model to absorb it.
+ 	　Mixing ratioη can be changed and tested later.
+ 	　 It's negligible light here because it's just a vector mixing of prompts.
+ 	　 Can be done not only internally but also externally.
+
+Aesthetic Gradient
+	/ɛsˈθɛt.ɪk ˈɡɹeɪdiənt/
+	[https://gyazo.com/45c6ce5f020171485b09f1355715ece5][PDF https://arxiv.org/pdf/2209.12330.pdf]
+	Research on extracting users' aesthetic senses and using them for personalization
+	structure
+	　Text prompts are vectorized with CLIP text embedding. c
+	　StableDiffusion's default would be a 768-dimensional vector.
+	　The average of the user's favorite N images corresponding to that prompt, which are vectors in the CLIP image embedding. e
+	　If the vector is normalized, the inner product can be regarded as the similarity.
+	　　So if we just take e, we can optimize the weight of the text embedding part of CLIP by gradient descent.
+	　　A learning rate of 1e-4 should be about 20 steps.
+	consideration
+	　A method to fine-tune what vectors each token is embedded in CLIP
+	　Textual Inversion gives meaning to meaningless tokens, but this method only takes a vector of tokens that already have meaning and moves it slightly in the direction of the user's preference.
+	　　Instead, learning is extremely light.
+	　Another advantage is that unlike TI, this method is essentially multi-word OK.
+	　　Maybe you could make 2N images from a longer prompt and make an AG with N of them that you prefer.
+	　　For example, in the experiment we did in [Stable Diffusion embedded tensor editing], a human mixed cat and kitten to create a vector that didn't correspond to a word.
+	　　　NovelAI has this functionality as a standard feature, the mixing ratio is determined by human hand.
+	　　　Aesthetic Gradient can be said to automatically create "moderately mixed vectors" by learning to select only the ones you like from the images created by CAT and KITTEN.
+	　Another advantage is that images are converted to vectors with CLIP before use, so there is no need for size adjustment.
+	　Since the objective function is that of CLIP, I think that features that are not useful for CLIP's task of determining the similarity between images and sentences are likely to be ignored.
+	　　= Features that don't appear in the text are likely to be ignored (there are only 768 dimensions at most).
+	　　On the other hand, I think what we want to get from vector adjustment is "a preference that cannot be well directed by text," so I don't know...
+	　　I think it's useful for "it's possible to express something in writing, but people don't express it well."
+
+Finally.
+ I think DreamBooth is the real deal.
+ 　It's expensive, so there are a lot of papers out there that are like "I made a simpler method!" but none of them seem to be good enough.
+ The second is Hypernetwork, but this has not been published and detailed information has not been disclosed, and the situation is as follows: "NovelAI used NovelAIDiffusion with it" and "The source code was leaked! The source code has been leaked!
+　　This is another way to tweak the Attention, so only what Stable Diffusion can draw originally, it's just more controllable since it was learned with Danbooru's large number of tags.
+　　[https://gyazo.com/1265c59ef89df55dbbf0517191fd4946]
+　　　This is the kind of image
+　　　The overall expressive capacity (number of black circles) itself has not changed.
+　　　Concentrated black circles in specific painting style areas.
+　　　It increased the density of points in the area.
+　　　　If you focus only on that area, it appears to have increased expressive power.
+　　　　[Cognitive resolution
+　　Hypernetwork is much smaller than the model of LDM itself, and can be turned on and off as a module, so it may be subdivided into "for people" and "for backgrounds" for animated pictures.

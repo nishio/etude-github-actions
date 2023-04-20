@@ -1,0 +1,150 @@
+Hatena2012-05-12
+code:hatena
+ <body>
+ *1336824676* What we want to make: Hatena Diary crawler
+ Masui's <a href='http://www.scribd.com/doc/91645150/%E4%BD%9C%E3%82%8A%E3%81%9F%E3%81%84%E3%82%82%E3%81%AE%E3%83%AA%E3%82%B9%E3%83%88% E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86'>Let's make a list of things we want to make</a>, and I thought, "Surely, just putting things on a 'to do someday' list will not develop, so why not make public those that are safe to make public? I did it.
+ 
+ ** Background
+ I have been keeping a web-based diary for more than 10 years now, and the one I use has changed for various reasons. Just the ones I can recall now are KENT's CGI, PukiWiki, MovableType, Zope, COREBlog, tDiary, Blogger.... I just checked Hatena Diary and found that I have been using it for five years since 2007. It has lasted unusually long.
+ 
+ However, will they continue to use it for the next 5 or 10 years? Considering that the things we use have changed over the years, it is not unlikely that we will eventually switch to another service or our own CMS. And when I quit, I will probably want to convert the content on this Hatena Diary to static HTML. I'd rather not have my content on someone else's server. I don't intend to stop yet, but it would be a good idea to crawl it regularly now and keep it on hand.
+ 
+ ** With wget? No, no, that's not possible.
+ 
+ When you say "crawl content on the Web and save it as static HTML," the method that immediately comes to mind is to use wget -r. However, in the case of Hatena Diary, it is difficult to use this method.
+ 
+ My Hatena Diary is located at d.hatena.ne.jp/nishiohirokazu. Then, what about the images pasted on the articles? Oh, it's Hatena PhotoLife, so it's f.hatena.ne.jp. The domain name is different. I used Gyazo for a while because I thought it was too much trouble to put them on Hatena PhotoLife. I definitely use those two, but I'm not sure if I use anything else. So is it OK to say "I only download images even if they are placed on an external domain"? I'm not sure if it's OK or not.
+ 
+ ** I want to clean it up.
+ 
+ Furthermore, if you simply GET the HTML of Hatena Diary statically, it is dirty in many ways.
+ 
+ - It contains a lot of links to Hatena keywords. I want to remove them.
+ - I've been using syntax highlighting conveniently, but it only specifies the class with this span, so without the corresponding CSS, the color will not be beautiful. However, the CSS is probably Hatena's copyrighted work, and I would not be able to put it on my site without permission.
+ 
+ Well, but should this be isolated as a post-crawl process?
+ 
+ ** What do we need in the end?
+ 
+ - Crawl through the Hatena Diary
+ - Not following any links, but following the "next entry" link to take you from a specified entry to a specified entry.
+ - Record which outward links were posted from which page to where, by A or by IMG, etc.
+ - Look at the tally results and think about what to do with the images and other things. Think about whether there is anything else that needs to be addressed besides the images.
+ 
+ Well, I'd like to clean it up and all that, but I think we should hold off on that and start small.
+ 
+ *1336826780*Alloy Girl: Creating Mystery 1
+ I decided to record and publish the process of thinking "how to make it" regarding the generation of mystery novels using Alloy because it is also rather interesting. It is a "novel of the novel generation process" in which "stories written in natural language" written in blogs and "stories written in code" in the form of commit logs on Github are intertwined.
+ 
+ Alloy-related articles to date include <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334024972'>Alloy summary</a>. In particular, <a href='http://d.hatena.ne.jp/nishiohirokazu/20120420/1334857551'>Language Girls' Club Murder at Alloy</a>, <a href='http://d.hatena.ne.jp/ nishiohirokazu/20120424/1335233091'>Language Girls' Club Murder in Alloy 2</a>, <a href='http://d.hatena.ne.jp/nishiohirokazu/20120425/1335320471'>In Alloy. Generate Logic Puzzles</a>, and <a href='http://d.hatena.ne.jp/nishiohirokazu/20120426/1335407845'>Generate Logic Puzzles of Reasonable Difficulty with Alloy</a>, I wonder if these are relevant.
+ 
+ ** Create a mystery club
+ 
+ Me: I wonder if I could use Mr. Alloy's brain to write a mystery novel.
+ JS: Sounds interesting!
+ Al: Are you asking me that? Then first define what you consider a "mystery novel" to be.
+ Me: Well, first of all, people are killed.
+ JS: And people don't know who killed them.
+ Me: Isn't "we don't all know" wrong? We know who did it.
+ Al: Not necessarily. For example, "Case 1: Mr. A enters an abandoned building with Mr. B, says he's going to the bathroom or something, and gets out; Mr. C independently blows up the abandoned building for demolition." Now A and C kill B as an accomplice as a result, but neither A nor C know about it from each other.
+ Me: It's not a murder case, it's more like an accident...
+ Al: Oh, so clarify the difference between someone dying in an accident and someone dying in a homicide.
+ Me: Hmmm.
+ 
+ ** What is "intention"?
+ 
+ Me: I guess it's "was there intent to kill" or not...
+ Al: What is "intent"?
+ Me: Ummm, in case 1, neither A nor C expected B to die beforehand, right? Me: "Case 2: A knew in advance what time the abandoned building would blow up, and expected that if he let B into the building at that time, B would die." This would say that A killed B. Conversely, "Case 3: C saw A and B enter the building, but he expected that if he blew up the building, B would die because he was the one he hated." In this case, we can say that C killed B. He intended to kill A as well, but failed to do so.
+ Al: So "some person X expects Y to die, and Y actually dies" is the definition of murder, and the culprit is X?
+ Me: Yes.
+ Al: In other words, "Case 4: Someone Y jumped off the roof of a building and X, who witnessed it, expected Y to die, and indeed he did" is a murder case with X as the culprit.
+ Me: Oh, no. Let's see, "Person X expects that person Y will die *because of his/her act*, and Y actually does die.
+ Al: "Case 3: D witnessed A enter the building, but did not tell C that someone had entered because he was just a hateful person. As a result, C blew up the building as planned and A died." is not a murder case.
+ Me: Hmmm. I think "not telling what you know so that things will turn out in your favor" is a frequent pattern in mysteries. How about including "not telling what you know" in the act?
+ Al: OK. So the acts specifically include "blow up" and "leave behind" in addition to "don't tell what you know."
+ Me: Well, there are other ways, like stabbing with a knife or shooting with a gun.
+ 
+ ** What is a "mystery"?
+ 
+ Al: So if there is a murder, is that a mystery?
+ Me: No, I think you are missing a lot of conditions.
+ Al: "Case 5: Mr. X stabbed Mr. Y to death in front of everyone" is a murder case but not a mystery.
+ Me: Well, it's not a mystery at all.
+ Al: What am I missing?
+ Me: Hmmm, a mystery?
+ Al: Then define what a mystery is.
+ Me: Well...
+ JS: "I don't know who killed him."
+ Me: That's it. That's it.
+ Al: "Case 6: Mr. X was murdered. I didn't know who killed him. The end."
+ Me: No, we don't want that. We also need "the culprit appears early in the text" and "the culprit is eventually revealed."
+ 
+ ** Why is the mystery solved?
+ 
+ Al: Why is the culprit revealed?
+ Me: What?
+ Al: What causes the transition from "I don't know the culprit" to "I know the culprit"?
+ Me: That's... new information. Someone testifies, or physical evidence is found, or something.
+ Al: "Case 7: Mr. X was murdered. We didn't know who killed him; Mr. Y confessed, 'I killed him. All mysteries solved!"
+ Me: No, I don't want to settle for a confession...
+ Al: "Case 8: Mr. X was murdered. We didn't know who killed him; Mr. Y was caught on the surveillance camera. All mysteries solved!"
+ Me: Hmmm... we don't want to be solved by a single piece of physical evidence...
+ Al: "Case 8: Mr. X was murdered. We did not know who killed him. Mr. A and Mr. B have no alibi for the time of the crime. The murder weapon is available to Mr. A and Mr. C. The murderer is A!"
+ Me: Ah. Well, I still think it's too easy, but it looks much more like a mystery, doesn't it?
+ Al: I can look for a pattern where the Nth piece of information confirms the culprit, but not until the N-1st piece.
+ 
+ ** Too much strong evidence is not good?
+ 
+ Me: Well, how about a story structure of "introduction of the characters," "discovery of the murder," "information gathering," "the detective declares 'the mystery is all solved,'" and "the mystery is solved.
+ Al: I don't know, I'm not sure.
+ Me: Please give me a stroke with that kind of story.
+ Al: What, you want me to write it down? I can't, I can't, I don't have enough information yet.
+ Me: Not enough?
+ Al: First of all, what does "the culprit is revealed" mean?
+ Me: To know that it is impossible for anyone but that person to commit the crime.
+ Al: What does it mean to "know that the crime is impossible to commit"?
+ Me: Let's see, if we assume that the person is the murderer, it contradicts the other information.
+ Al: And the information has physical evidence, for example, on camera?
+ Me: Yes.
+ Al: "Case 9: There is a culprit among Mr. A, B, and C. Mr. A has an alibi, Mr. B has an alibi, and Mr. C has an alibi. The culprit is C!" This meets the requirements.
+ Me: Hmmm... Certainly the lone evidence does not confirm the culprit.
+ Al: You didn't want the single piece of evidence to establish the culprit because it would make matters too easy, right?
+ Me: Yeah.
+ Al: Then wouldn't it also make matters too easy to determine that a character is not the killer based on a single piece of evidence?
+ Me: Uh, yeah, sure, that's true.
+ 
+ ** Consider the situation setting
+ 
+ Me: Then how about this. There are several "locations" and it takes 1.5 credit hours to travel between them.
+ Al: Hm.
+ Me: So if you were at location X at a given time, you can't be anywhere but X a unit of time later; you could be anywhere two unit of time later; you can't be anywhere but X a unit of time later; you can't be anywhere but X a unit of time later.
+ Al: Go on.
+ Me: And each location is small enough that if you were in that location you can see who else was there.
+ Al: So from the information that X was in P1 at time t1, all we can say is that X is not outside P1 at unit time t2. Sounds weak enough.
+ Me: In addition, the perpetrator may lie in order to conceal his crime.
+ Al: Good, good, good...you're getting loose.
+ Me: And it's not always just one culprit.
+ Al: Oops. That's too loose a restriction. There is a trivial solution: "They are all complicit in a lie.
+ Me: Hmmm, but it's not natural to declare "there is only one culprit"...
+ Al: If you satisfy the constraint that "the last piece of information establishes the culprit group in one way," then you have the solution "the characters' testimonies contradict themselves one after another, and the last testimony is also self-contradictory and they are all culprits. If you write it well, readers won't notice it.
+ Me: Well, but I've already spoiled it here. I wonder if there's any physical evidence or something...
+ Al: It doesn't help. If the physical evidence and the testimony match, it is no help to determine anything, because the murderer may have just been honest. On the other hand, if the physical evidence and testimony contradict each other, it is easily established that the witness is the murderer.
+ Me: Hmmm...
+ 
+ ** On the contrary, why not introduce honesty?
+ Al: If you don't like to specify the constraint "the maximum number of people who may lie is N", why not put a similar constraint in a different expression? For example, "At the village festival, M people dance a dance dedicated to the gods. The villagers who are chosen for this role must never lie for religious reasons during the festival.
+ Me: I see. That might be possible.
+ Al: Wouldn't it be nice to have interaction between villagers if we also ask other villagers who is a dancer?
+ Me: So the villagers can say "X is a dancer" or "X was at location P at time T" in two ways.
+ Al: We should start on a small scale and test how difficult a mystery can be created with three suspects, one of whom is the killer, one of whom might lie to protect the killer, and one of whom is a dancer and only tells the right story.
+ Me: Maybe we could introduce a detective role and say "what he sees and hears is as correct as the physical evidence".
+ Al: Well, we should start with a simple model without including that.
+ Me: Yes, it's easy to dream up all kinds of things to put in. From the information seen and heard by the detective character, the reader knows that the detective is honest and knows the culprit, but to the others in the village, the detective is considered a stranger and a possible liar, and they won't arrest the culprit. So, how about the search for evidence begins?
+ Al: You are good at complicating things. Let's make sure the first half works first.
+ 
+ ** Next notice
+ It's like playing around with mystery.als on Github, trying things out, and then the rest of the natural language is written.
+ </body>
+
+[Hatena Diary 2012-05-12 https://nishiohirokazu.hatenadiary.org/archive/2012/05/12]

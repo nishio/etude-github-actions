@@ -1,0 +1,196 @@
+Hatena2011-05-13
+code:hatena
+ <body>
+ *1305288062*git reset undo method
+ How to undo git reset if you used it by mistake
+ 
+ First, prepare a repository for explanation.
+ >||
+ t$ git init
+ Initialized empty Git repository in /Users/nishio/gittest/pygit2/t/.git/
+ 
+ t$ touch a
+ t$ git add a
+ t$ git commit -m "add a"
+ [master (root-commit) 2b2e9a8] add a
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 a
+ 
+ t$ touch b
+ t$ git add b
+ t$ git commit -m "add b"
+ [master 30955c0] add b
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 b
+ 
+ t$ git log --oneline
+ 30955c0 add b
+ 2b2e9a8 add a
+ ||<
+ 
+ Yes, I will RESET the next time I make a mistake.
+ >||
+ t$ git reset HEAD^
+ t$ git log --oneline
+ 2b2e9a8 add a
+ ||<
+ 
+ Oh dear, the b commit is gone!
+ 
+ If something goes wrong in git and disappears, it's often just invisible. (short version of --walk-reflogs)(note: git log -g --oneline equivalent can be done with git reflog, thanks id:gintenlabo)
+ 
+ >||
+ t$ git log -g --oneline
+ 2b2e9a8 HEAD@{0}: HEAD^: updating HEAD
+ 30955c0 HEAD@{1}: commit: add b
+ ||<
+ 
+ This is a log of how HEAD has changed so far. It shows that commit b is HEAD@{1}. So we can reset it there.
+ 
+ >||
+ t$ git reset HEAD@{1}
+ t$ git log --oneline
+ 30955c0 add b
+ 2b2e9a8 add a
+ t$ git log -g --oneline
+ 30955c0 HEAD@{0}: HEAD@{1}: updating HEAD
+ 2b2e9a8 HEAD@{1}: HEAD^: updating HEAD
+ 30955c0 HEAD@{2}: commit: add b
+ ||<
+ We are happy for you.
+ 
+ 
+ What, you said you did a git reset --hard?
+ >||
+ --hard
+      Matches the working tree and index to that of the tree being switched to. Any changes to tracked files in the
+      working tree since <commit> are lost.
+ ||<
+ It says it's LOST all the way through, so I guess I can't get back the uncommitted fixes that have disappeared.
+ 
+ *1305290792*The phenomenon of HEAD in git going off branch and how to fix it.
+ It's called detached HEAD and <a href="http://www.amazon.co.jp/gp/product/4798023809/ref=as_li_ss_tl?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2 &camp=247&creative=7399&creativeASIN=4798023809">Introductory Git</a>, but I write this because you don't even know it's happening unless you have a mental model that such things can happen.
+ 
+ First, prepare an explanatory repository.
+ >||
+ t$ git init
+ Initialized empty Git repository in /Users/nishio/gittest/pygit2/t/.git/
+ 
+ t$ touch a
+ t$ git add a
+ t$ git commit -m "add a"
+ [master (root-commit) 6f6eb7c] add a
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 a
+ 
+ t$ touch b
+ t$ git add b
+ t$ git commit -m "add b"
+ [master 62e58df] add b
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 b
+ ||<
+ 
+ Now, what is HEAD here? In this normal state, HEAD is a reference to master, which is called a "branch" or something like that, but physically it is a reference to a specific commit object.
+ 
+ >||
+ t$ cat .git/HEAD 
+ ref: refs/heads/master
+ t$ cat .git/refs/heads/master
+ 62e58dfd8d36db9f649a163b097f35cef99b91a3
+ ||<
+ 
+ Now, what happens if we inadvertently checkout a specific commit object instead of a branch?
+ 
+ >||
+ t$ git checkout 62e5
+ Note: checking out '62e5'.
+ 
+ You are in 'detached HEAD' state. You can look around, make experimental
+ changes and commit them, and you can discard any commits you make in this
+ state without impacting any branches by performing another checkout.
+ 
+ If you want to create a new branch to retain commits you create, you may
+ do so (now or later) by using -b with the checkout command again. Example:
+ 
+   git checkout -b new_branch_name
+ 
+ HEAD is now at 62e58df... add b
+ ||<
+ 
+ GIT gets a lot of flack for being hard to understand and understandable, but if you read it carefully, the warning messages are rather polite.
+ 
+ >>
+ I'm in a 'detached HEAD' state. You can look around to see what the file looked like at the time of this commit, make an experimental change, commit it, and then just drop the commit without affecting the rest of the branch. Just check out the other branch.
+ 
+ If you want to create a new branch to keep the changes you made, just check out with -b (while creating the new branch). Example: If you want to create a new branch to keep the changes you have made, you can check out with -b.
+ 
+   git checkout -b new_branch_name
+ 
+ HEAD is now 62e58df... ADD B.
+ <<
+ 
+ So, as it says, if you make a change or commit in this state, the change will not be reflected in any branch. If you are doing it intentionally, it's fine, but if you ignore the above message, you might be working as if you are on master without realizing it.
+ 
+ What HEAD is doing in this state is not pointing to any branch. It points directly to the commit object.
+ >||
+ t$ cat .git/HEAD 
+ 62e58dfd8d36db9f649a163b097f35cef99b91a3
+ ||<
+ 
+ Let's change and commit.
+ >||
+ t$ touch c
+ t$ git add c
+ t$ git commit -m "add c"
+ [detached HEAD b17d3fd] add c
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 c
+ ||<
+ 
+ MASTER has not been changed.
+ >||
+ t$ git log --oneline master
+ 62e58df add b
+ 6f6eb7c add a
+ ||<
+ 
+ Now, how can I get back to master if I did this kind of work when I thought I was on master? There may be many ways, but creating a branch in git is a cheap way to simply put up a reference, so if things get complicated, you can just create a branch anyway.
+ >||
+ t$ git branch tmp1
+ ||<
+ 
+ Then move to master and MERGE
+ >||
+ t$ git checkout master
+ Previous HEAD position was b17d3fd... add c
+ Switched to branch 'master'
+ t$ git merge tmp1
+ Updating 62e58df..b17d3fd
+ Fast-forward
+  0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 c
+ ||<
+ Yes, I was able to bring the c commit from tmp1. Congratulations, we're happy.
+ 
+ Let's delete branches that are no longer needed.
+ >||
+ t$ git branch -d tmp1
+ Deleted branch tmp1 (was b17d3fd).
+ ||<
+ Deleting a branch is like peeling off a sticky note and throwing it away, because a branch is a reference. You can delete it without worrying that important changes will not be discarded.
+ </body>
+ <comments>
+ <comment>
+ <username>gintenlabo</username>
+ <body>two git reflogs</body>.
+ <timestamp>1305291864</timestamp>
+ </comment>
+ <comment>
+ <username>o_show</username>
+ <body>>>git reset --hard<br>Yes, with --hard you can't undo uncommitted fixes in the working tree. <br>This is one of the few "never undo operations" in Git. <br><br>If you do a git stash without thinking before you do a git reset --hard, you'll be safe. </body>
+ <timestamp>1305388606</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-05-13 https://nishiohirokazu.hatenadiary.org/archive/2011/05/13]

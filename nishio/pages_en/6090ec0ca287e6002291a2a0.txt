@@ -1,0 +1,94 @@
+Hatena2013-03-23
+code:hatena
+ <body>
+ *1364011480*Diary of my experiment with e-book creation using ReVIEW.
+ ReVIEW, when I was told about it before, I looked at the slides and thought, "Another weird oleo format was born," and passed it by, but today I was again evangelized about how good ReVIEW is, so I took another look at it properly, and it is quite good!
+ 
+ - Slide: http://kmuto.jp/events/page2012/page2012.pdf
+ - https://github.com/kmuto/review/blob/master/doc/quickstart.rdoc
+ - https://github.com/kmuto/review/blob/master/doc/format.rdoc
+ - https://github.com/kmuto/review-el
+ 
+ The ability to write mathematical expressions in TeX format is important to me, but what burns me personally is the ability to embed the results of command execution.
+ 
+ quickstart.rdoc
+ >#The #@mapfile, #@maprange, and #@mapoutput tags can be used to insert the contents of a given file or the result of a command execution. To insert or update, use the review-preproc command, which serves as a preprocessor.
+ 
+ Right now, my manuscripts can be tested mechanically by creating a system that "executes a piece of code and tests to see if it produces the expected output. In other words, the code and its output are written in machine-readable form, so if I add a command to output it in ReVIEW format, I can automate everything from checking the operation of the code fragment and its output to embedding it in the manuscript. It is wonderful. Now I can be free from the nightmare of having to check and re-check for changes in behavior due to version upgrades during the writing process.
+ 
+ And it can output inao format too, right? If that's the case, why don't we just write in ReVIEW and convert to inao, rather than trying to implement rst2inao or inao2indesign from now on?
+ 
+ ----
+ 
+ I'll try to create a PDF in ReVIEW right away.
+ 
+ First, install TexLive. It says, "To create PDF files, you need pTeXLive2009 or higher environment", so I search for pTeXLive2009, but all I find is subtle information. I found some information that it is installed by trial and error, but it seems that the latest TexLive includes platex.
+ 
+ - http://www.tug.org/texlive/acquire-netinstall.html
+ 
+ Now that the installation is finished, try to create a PDF through the path.
+ 
+ Oops, I'm offended by the lack of style.
+ >||
+ ! LaTeX Error: File `jumoline.sty' not found.
+ ||<
+ 
+ Hmmm? I searched for this and it looks like I need jumoline.sty, which can be found here.
+ 
+ https://github.com/takahashim/review-sample-book/tree/master/src/sty
+ 
+ I placed jumoline.sty and tried again, but it made a PDF with empty body part. I created CHAPS and wrote "sample.re", and the PDF with the contents was created. I was happy and satisfied.
+ 
+ ----
+ 
+ As a test, I'll try to pour in the sample code from the "Differences in Traits Behavior Depending on the Language". The original code fragment can be seen in ReST here.
+ 
+ https://github.com/nishio/learn_language/tree/master/trait
+ 
+ PDF resulting from output and build in ReVIEW
+ 
+ https://dl.dropbox.com/u/370621/review-sample.pdf
+ 
+ In ReST, if you specify the language in the code fragment, it will be syntax highlighted in pygments, but I couldn't figure out how to do it in ReVIEW. Also, it would be nice to know when the code crosses a page break whether there is more to come or not.
+ 
+ ** Postscript (sample.re)
+ 
+ I've been asked to see the ReVIEW file used to output this PDF, so I'm posting it here.
+ 
+ >||
+ = First-time ReVIEW
+ 
+ //lead{
+ ReVIEW is great!"
+ //}
+ 
+ == What is ReVIEW?
+ 
+ Please read this area.
+ 
+  * https://github.com/kmuto/review/blob/master/doc/quickstart.rdoc
+  * https://github.com/kmuto/review/blob/master/doc/format.rdoc
+ 
+ == Embedding test
+ 
+ #@mapoutput(python test.py --format=review)
+ #@end
+ ||<
+ 
+ The sample code that is not in sample.re but is heavily included in the PDF is output by test.py invoked with #@mapoutput(python test.py --format=review).
+ 
+ 
+ ** Addendum (sample.yaml)
+ Q: "Where did the PDF's authorship and stuff come from?"
+ A: I pass it in yaml when creating the PDF. I just brought the sample.yaml from the PDF creation section of https://github.com/kmuto/review/blob/master/doc/quickstart.rdoc and tweaked the name part.
+ 
+ **Addendum (epub)
+ 
+ Instead of creating a PDF, I hit review-epubmaker and easily created an ePub. i dragged and dropped it into iTunes, synced it to my iPhone, opened my iBook, and there it was, my eBook that I had easily created!
+ 
+ [f:id:nishiohirokazu:20130323181801p:image]
+ 
+ On an iPhone screen, it would be about 20 vertical lines and 30 horizontal digits. It is still hard to read the source code.
+ </body>
+
+[Hatena Diary 2013-03-23 https://nishiohirokazu.hatenadiary.org/archive/2013/03/23]

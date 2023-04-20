@@ -1,0 +1,372 @@
+Hatena2008-04-17
+code:hatena
+ <body>
+ *1208407306*GIL (global interpreter lock)
+ Yesterday's survey added the option to "remove the GIL" I thought I'd give you a brief explanation since some of you may not know what a GIL is.
+ 
+ - Matz Nikki (2007-09-13) It isn't Easy to Remove the GIL
+ -- http://www.rubyist.net/~matz/20070913.html#p02
+ 
+ I thought it would be better for you to read the following. I'll use an actual example to illustrate this. →I have two CPUs, so if I do it with two threads, it will be twice as fast. →I'll try it... - Hey, only one of the threads is being used..." This is a common pattern of getting stuck. Since each interpreter is locked, even if you use two threads for heavy calculation, it will not be twice as fast but will be slower due to the cost of switching threads. If you want to do that, you need to launch two interpreters. Of course, if there is a lot of I/O waiting, it is worth using threads so that other threads can compute without blocking while waiting.
+ 
+ *1208418992*TopCoder proxy
+ TopCoder's Arena is JavaWebStart, which is www.topcoder.com:80からソフトウェアをダウンロードした後www.topcoder.com:5001にアクセスをする. So www.topcoder.comは普段は66.37.210.86. So rewrite hosts to www.topcoder.comが127.0.0.1を指すようにした上でローカルで下のようなスクリプトを起動.
+ 
+ (Deleted)
+ 
+ This works up to the point where I can start it with JavaWebStart from the TopCoder site, but when I try to log in, it times out. I wonder why.
+ 
+ The output is
+ (Deleted)
+ So I wonder if the part where you receive the server's response and then close it thinking that you have received all of them because you haven't received a response is actually being too hasty.
+ 
+ -----
+ 
+ Oh, that's right, it's different from HTTP, so it's not over when you send it to the server and the server replies. I guess I shouldn't close it there.
+ 
+ >||
+ got result, len 31
+ sending result
+ sent result
+ getting result
+ timeout('timed out',)
+ ----------
+ getting data
+ got data, len 41
+ sending data
+ sent data
+ getting data
+ ||<
+ 
+ I knew it. But then, when should I close?
+ 
+ -----
+ 
+ In the meantime, you can now download files written by others.
+ 
+ >|python|
+ """
+ topcoder proxy
+ """
+ 
+ import SocketServer
+ 
+ class ProxyHandler(SocketServer.StreamRequestHandler):
+     PORT = 5001
+     def handle(self):
+         print "connect from:", self.client_address
+         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+         print "connecting to TopCoder"
+         s.connect(("66.37.210.86", self.PORT))
+         print "connected to TopCoder"
+         from time import sleep
+         TO_CLOSE = False
+         while not TO_CLOSE:
+             try:
+                 while True:
+                     print "getting data",
+                     data = self.request.recv(8192)
+                     print "got data, len", len(data)
+                     if len(data) == 0:
+                         TO_CLOSE = True
+                         break
+                     print "sending data",
+                     s.send(data)
+                     print "sent data"
+             except Exception, e:
+                 print repr(e)
+                 
+             try:
+                 while True:
+                     print "getting result",
+                     result = s.recv(8192)
+                     print "got result, len", len(result)
+                     if len(result) == 0:
+                         TO_CLOSE = True
+                         break
+                     if "#include" in result:
+                         print "code found!"
+                         start = result.index("#include")
+                         end = result.index("\x00", start)
+                         import time
+                         filename = time.strftime(
+                             r"C:\topcoder\dl\%m%d_%H%M%S.cpp")
+                         file(filename, "w").write(result[start:end])
+                     
+                     print "sending result",
+                     self.request.send(result)
+                     print "sent result"
+             except Exception, e:
+                 print repr(e)
+             print "----------"
+             sleep(1)
+             
+ 
+         s.close()
+         self.request.close()
+ 
+ class ProxyHandler80(ProxyHandler):
+     PORT = 80
+ 
+ import thread
+ import socket
+ socket.setdefaulttimeout(1.0)
+ 
+ server = SocketServer.ThreadingTCPServer(('localhost', 5001), ProxyHandler)
+ print 'listening:', server.socket.getsockname()
+ thread.start_new_thread(server.serve_forever, ())
+ 
+ server = SocketServer.ThreadingTCPServer(('localhost', 80), ProxyHandler80)
+ print 'listening:', server.socket.getsockname()
+ thread.start_new_thread(server.serve_forever, ())
+ ||<
+ 
+ *1208423855*something
+ I think there is a widespread misunderstanding about Cybozu Labs, but it's just that the work schedule is negotiable and flexible, and not all employees work 3 days a week as a system. I mean, my peers will say to me, "Labs work 3 days a week? I don't want to hear that from my peers.
+ 
+ *1208425951*[cpp]C++ today
+ What I learned.
+ 
+ - using namespace std;
+ -- Bumping STL functions into global space, a common practice in TopCoder's view.
+ - There are min and max in algorithm, but only 2 arguments. min_element and so on can be used to get the location of the minimum value in the list, so the equivalent of Python's min(xs) would be xs[min_element(xs.begin(), xs.end())]. The following is an example of the use of min(xs).
+ - &lt;?=
+ -- Minimum operator http://www.asahi-net.or.jp/~WG5K-ICKW/html/online/gcc-2.95.2/gcc_5.html thanks @renha
+ -- It has been removed from the latest gcc and should not be used outside of TopCoder
+ -- for(int i=0;i&lt;xs.size();i++){result&lt;? =f(xs[i])} to realize what Python calls min(f(x) for x in xs).
+ - Read references from the right.
+ -- I wrote gcc -lstdc++ foo.cpp and got an error because the reference was not to the right. gcc foo.cpp -lstdc++ is correct. Or g++ foo.cpp.
+ - There is a semicolon at the end of the template definition.
+ - I wrote template&lt;0> struct Numbers and got angry.
+ -- template&lt;> struct Numbers&lt;0> is correct. Weird.
+ -- the first one is the degree of freedom, the second one is what is stuck where.
+ - template&lt;int N>&lt;int M>
+ -- expected unqualified-id before '<' token
+ -- &lt;int N, int M>.
+ - wrong number of template arguments (1, should be 2)
+ -
+ 
+ *1208431832*[cpp]C++ template to calculate prime numbers
+ I thought it was perverse to use a C++ template to perform calculations, but when I looked at the FizzBuzz code that the wife quickly wrote in about 10 minutes, it was very straightforward and easy to read, so I decided to try something with the template as well.
+ 
+ -Kazuho@Cybozu Labs: FizzBuzz with C++ templates
+ --http://labs.cybozu.co.jp/blog/kazuho/archives/2008/04/fizzbuzz_cpp_template.php
+ 
+ That is how the code to find prime numbers was created. I left the "get all the numbers" and "get multiples of 2" in the middle as comments. isPrime2 and isPrime3 are appropriate names because I can't think of the name of each of the three types that together do the work of isPrime. It seems that the template has default type arguments, so isPrime itself is not necessary.
+ 
+ >|cpp|
+ #include <iostream>
+ 
+ using namespace std;
+ template<int N, int D> struct isPrime2;
+ 
+ template<int N, int D, int R> struct isPrime3{
+   isPrime3(){
+ 	// N % D != 0
+ 	// so we should check if N % (D-1) == 0
+ 	isPrime2<N, D-1>();
+   }
+ };
+ 
+ template<int N, int D> struct isPrime3<N, D, 0>{
+   isPrime3(){
+ 	// N % D == 0
+ 	// so N is not prime
+ 	// cout << N << " is not prime" << endl;
+   }
+ };
+ 
+ 
+ template<int N, int D> struct isPrime2{
+   isPrime2(){
+ 	// if N % D == 0?
+ 	isPrime3<N, D, N%D>();
+   }
+ };
+ 
+ template<int N> struct isPrime2<N, 1>{
+   isPrime2(){
+ 	// cout << N << " is prime!" << endl;
+ 	cout << N << " ";
+   }
+ };
+ 
+ 
+ template<int N> struct isPrime{
+   isPrime(){
+ 	isPrime2<N, N-1>();
+   }
+ };
+ 
+ 
+ 
+ /* ver.2
+ template<int N, int R> struct isDividable_{
+   isDividable_(){
+ 	cout << N << endl;
+   }
+ };
+ 
+ template<int N> struct isDividable_<N, 0>{
+   isDividable_(){}
+ };
+ 
+ template<int N, int M> struct isDividable {
+   isDividable(){
+ 	isDividable_<N, N%M>();
+   }
+ };
+ */
+ 
+ /* ver.1
+ template<int N> struct Print {
+   Print() {
+ 	cout << N << endl;
+   }
+ };
+ */
+ 
+ template<int N> struct Numbers {
+   Numbers(){
+ 	Numbers<N-1>();
+ 	// insert visiter here
+ 	/* ver.1
+ 	   Print<N>();
+ 	*/
+ 	/* ver.2
+ 	   isDividable<N, 2>();
+ 	*/
+ 	isPrime<N>();
+   }
+ };
+ 
+ template<> struct Numbers<1> {
+   Numbers(){} // empty
+ };
+ 
+ int main(){
+   Numbers<100>();
+ }
+ ||<
+ 
+ The one that was renamed and antabified by removing the superfluous ↓.
+ 
+ >|cpp|
+ #include <iostream>
+ 
+ using namespace std;
+ template<int N, int D> struct isPrime;
+ 
+ template<int N, int D, int R> struct isPrime_{
+   isPrime_(){
+     isPrime<N, D-1>();
+   }
+ };
+ 
+ template<int N, int D> struct isPrime_<N, D, 0>{
+   isPrime_(){}
+ };
+ 
+ 
+ template<int N, int D=N-1> struct isPrime{
+   isPrime(){
+     // if N % D == 0?
+     isPrime_<N, D, N%D>();
+   }
+ };
+ 
+ template<int N> struct isPrime<N, 1>{
+   isPrime(){
+     cout << N << " ";
+   }
+ };
+ 
+ 
+ template<int N> struct Primes {
+   Primes(){
+     Primes<N-1>();
+     isPrime<N>();
+   }
+ };
+ 
+ template<> struct Primes<1> {
+   Primes(){} // empty
+ };
+ 
+ int main(){
+   Primes<100>();
+ }
+ ||<
+ 
+ *1208438940*[cpp]
+ The reason for not moving will be considered later.
+ >|cpp|
+ class MinDifference {
+ public:
+   int closestElements(int A0, int X, int Y, int M, int n) {
+ 	int res=10000;
+ 	
+ 	vector<int> a(1,A0);
+ 	for(;a.size()<n;a.push_back(((a.back()*X)+Y)%M));
+ 	sort(a.begin(), a.end());
+ 	vector<int> buf;
+ 	adjacent_difference(a.begin(), a.end(), buf);
+ 	return buf[min_element(buf.begin() + 1, buf.end())];;	
+   }
+ };
+ ||<
+ 
+ The error message is as follows.
+ 
+ >||
+ MinDifference.cpp: In member function `int MinDifference::closestElements(int, i
+ nt, int, int, int)':
+ MinDifference.cpp:113: error: no match for 'operator[]' in 'buf[std::min_element
+  [with _ForwardIterator = __gnu_cxx::__normal_iterator<int*, std::vector<int, st
+ d::allocator<int> > >]((&buf)->std::vector<_Tp, _Alloc>::begin [with _Tp = int,
+ _Alloc = std::allocator<int>](), (&buf)->std::vector<_Tp, _Alloc>::end [with _Tp
+  = int, _Alloc = std::allocator<int>]())]'
+ /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_vector.h:462: note: candi
+ dates are: typename _Alloc::reference std::vector<_Tp, _Alloc>::operator[](size_
+ t) [with _Tp = int, _Alloc = std::allocator<int>]
+ /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_vector.h:476: note:  type
+ name _Alloc::const_reference std::vector<_Tp, _Alloc>::operator[](size_t) const
+ [with _Tp = int, _Alloc = std::allocator<int>]
+ /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_numeric.h: In function `_
+ OutputIterator std::adjacent_difference(_InputIterator, _InputIterator, _OutputI
+ terator) [with _InputIterator = __gnu_cxx::__normal_iterator<int*, std::vector<i
+ nt, std::allocator<int> > >, _OutputIterator = std::vector<int, std::allocator<i
+ nt> >]':
+ MinDifference.cpp:112:   instantiated from here
+ /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_numeric.h:279: error: no
+ match for 'operator*' in '*__result'
+ MinDifference.cpp:112:   instantiated from here
+ /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_numeric.h:283: error: no
+ match for 'operator++' in '++__result'
+ /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_numeric.h:286: error: no
+ match for 'operator++' in '++__result'
+ ||<
+ 
+ *1208441718*I'm tired.
+ 
+ I am very sleepy. It's supposed to rain heavily tomorrow. I don't like it. I'm so sleepy.
+ </body>
+ <comments>
+ <comment>
+ <username>jbking</username>
+ <body>I wonder if it is better to parse the protocol and calculate the packet length or monitor the lower protocol (TCP) transfer. </body>
+ <timestamp>1208423838</timestamp>
+ </comment>
+ <comment>
+ <username>kazuhooku</username>
+ <body>A typical coding pattern would look something like this: if read or write fails close<br><br>while (1) {<br> poll_for_read(client_fd and server_fd);<br> if ( read_is_ready(client_fd)) {<br> write(server_fd, read(client_fd));<br> }<br> if (read_is_ready(server_fd)) {<br> write(client_fd, read( server_fd));<br> }<br>}</body>
+ <timestamp>1208428699</timestamp>
+ </comment>
+ <comment>
+ <username>herumi</username>
+ <body>std::min_element returns an iterator that points to the smallest element, so *std::min_element(xs.begin(), xs.end()) is correct. <br>If you could have done it with xs[], it would have just worked by chance. And if you use [], you will not be happy because you cannot use it with list. <BR><BR>I don't think C++ is a language where you have to tinker around to understand the syntax, unlike LL. <BR><BR>This is because many parts of C++ are not designed to be as natural or easy to use as LL (especially around templates). <br>I think that if you start with the tricky parts, you will end up in unnecessary pitfalls that will cost you a lot of money. <br>And there is no need for a minimum value operator, nor is the code at the top of TopCoder a good example of C++. <br>I'm an old woman, but I recommend that you study the standard books properly here. </body> <br><br>TopCoder is not a good example of C++.
+ <timestamp>1208440567</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-17 https://nishiohirokazu.hatenadiary.org/archive/2008/04/17]

@@ -1,0 +1,31 @@
+Hatena2010-09-16
+code:hatena
+ <body>
+ *1284638475*Let's add a footnote feature to genko.
+ I am writing a manuscript in <a href='http://d.hatena.ne.jp/nishiohirokazu/20100911/1284167528'>a tool for writing magazine manuscripts in HTML</a>. I want to write footnotes in the body of the text, but when I look at it, I want to put (*) or something in the body of the text, and the body of the footnotes should be separate from the body of the text.
+ >||
+ <a class="footnote">(footnote: hoge hoge)<;/a>
+ ||<
+ I thought I would try to make it alert when I clicked on it for the time being.
+ 
+ Here's the code
+ >|javascript|
+     // footnote span.footnote with (*)
+     $(".footnote").each(function(){
+ 	var text = this.innerHTML;
+ 	this.innerHTML = "(*)"
+ 	this.href = "#";
+ 	$(this).click(function(){
+ 	    alert(text);
+ 	});
+     });
+ ||<
+ 
+ But when I click on it, I don't get an ALERT. What's wrong?
+ 
+ <hr>
+ 
+ Ah, ok, I guess I shouldn't have done z-index: -2 on #container and z-index: -1 on hr to put the hr behind the body text. This is relative to the value of the parent element, which would make the hr -3. Also, it doesn't seem to do well with negative values. Maybe this is why the click event was being received by the body or something. I set z-index: 2 on the container and z-index: -1 on the hr and it works as expected.
+ </body>
+
+[Hatena Diary 2010-09-16 https://nishiohirokazu.hatenadiary.org/archive/2010/09/16]

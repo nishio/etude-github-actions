@@ -1,0 +1,79 @@
+Hatena2007-11-24
+code:hatena
+ <body>
+ *1195878573*PEG
+ Ah. PEG is often criticized for not explicitly specifying the space between tokens, but it can also be seen as a way of separating tokens that is not "one of the most major methods.
+ 
+ Because the definition of PEG by PEG that I was just looking at included comments and line breaks as delimiters. It's also very simple and straightforward to write.
+ >||
+ Spacing <- (Space / Comment)*
+ Comment <- ’#’ (!EndOfLine .)* EndOfLine
+ Space <- ’ ’ / ’\t’ / EndOfLine
+ EndOfLine <- ’\r\n’ / ’\n’ / ’\r’
+ ||<
+ 
+ When you are writing an expression and it gets long, you may want to wrap it as needed and add comments to make it easier to read. I'm not familiar with how yacc and the like do it, but expressions like the one below return -3 in Ruby, so I'm sure it's difficult to implement.
+ 
+ >||
+ x = (1 
+   - 2 
+   - 3)
+ ||<
+ 
+ JavaScript, Python and Perl correctly returned -4.
+ 
+ *1195884372*Sukiya
+ 
+ Negitama ton ton ton ton saradasetto with soy sauce!
+ 
+ *1195890910* Relay
+ I wish the lab had facilities to broadcast study sessions, like they did for the Python Developers Camp.
+ 
+ Well, that aside, tomorrow's PEG study session
+ http://www.coins.tsukuba.ac.jp/~i021216/diary/?date=20071121
+ I'm wondering if there is any way to distribute the "Mere Old Man" in a good way.
+ 
+ I wonder if a USB camera + ustream can pick up the voices. I probably won't be able to read the presentation materials.
+ 
+ Well, whether or not to relay the news or not, on the day of the event.
+ http://www.lingr.com/room/parsing
+ I think they are chatting in
+ 
+ *1195895216*Unsent email
+ Probably some kind of note, but what is "December right Tokyo"?
+ 
+ *1195895481* One of the Day
+ Our humidifier. Steam type. The water tank has a large capacity of 2 liters.
+ It can also heat a room at the same time. However, it requires more frequent cleaning than a filter system. You have to clean up the black liquid that accumulates inside several times a day.
+ Consume one packet of commercial tochu-cha per day. I can't go without cleaning the whole place every few days.
+ 
+ *1195929183*PEG in PEG
+ I was able to do it!
+ 
+ >|python|
+ >>> print data
+ 
+     A <- "a" A? "b"
+     B <- "b" B? "c"
+     S <- &(A !"b") "a"+ B !"c"
+ 
+ >>> e.Grammar.match(data)
+ [('A', Sequence(ExactMatcher('a'), Optional(Ref('A')), ExactMatcher('b'))), ('B', Sequence(ExactMatcher('b'), Optional(Ref('B')), ExactMatcher('c'))), ('S', Sequence(AndPredicate(Sequence(Ref('A'), NotPredicate(ExactMatcher('b')))), OneOrMore(ExactMatcher('a')), Ref('B'), NotPredicate(ExactMatcher('c'))))]/58
+ >>> build_env(_.value)
+ A
+ Sequence(ExactMatcher('a'), Optional(Ref('A')), ExactMatcher('b'))
+ B
+ Sequence(ExactMatcher('b'), Optional(Ref('B')), ExactMatcher('c'))
+ S
+ Sequence(AndPredicate(Sequence(Ref('A'), NotPredicate(ExactMatcher('b')))), OneOrMore(ExactMatcher('a')), Ref('B'), NotPredicate(ExactMatcher('c')))
+ <simple_peg_2.Environment object at 0x022165B0>
+ >>> env = _
+ >>> env.S.match("aaabbbccc")
+ 'aaabbbccc'/9
+ ||<
+ 
+ However, there is one namespace in the module that is defined, so that needs to be fixed.
+ If you fix it, you can use this handwritten parser to read the "PEG grammar defined in PEG" and create a parser that will read the "PEG grammar defined in PEG" and use it to...
+ </body>
+
+[Hatena Diary 2007-11-24 https://nishiohirokazu.hatenadiary.org/archive/2007/11/24]

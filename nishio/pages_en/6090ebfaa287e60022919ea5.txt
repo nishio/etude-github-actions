@@ -1,0 +1,69 @@
+Hatena2008-09-04
+code:hatena
+ <body>
+ *1220491239* Hunger
+ 
+ I am not hungry, probably because of the cabbage I had for dinner last night. Eating indigestible food at night may not be a good idea. I should take carbohydrates for energy in the first half of the day. The question is whether you should take it even if you are not hungry.
+ 
+ *1220499478*Lunch
+ f:id:nishiohirokazu:20080904123758j:image
+ This bowl was too big for miso soup.
+ 
+ *1220531593*[TopCoder]Single Round Match 416 Div1 Easy
+ write later
+ 
+ The question is "Answer the smallest integer that is equal to the given integer N and the number of 1's standing in binary notation and is greater than N." First I think vaguely of 1000 or 1111 and think, "I'll have to double the number to 1000, so I'll have to find it while +1 and time out. Next, I think, "Next to 1111, I thought it would be 11110, but it's 10111. It's not easy.
+ 
+ I'll ramble on for a while and it won't clear up, so I'll write it down until I understand the regularity.
+ f:id:nishiohirokazu:20080904213358j:image
+ 
+ Hmmm. In short, I understand that "find the lowest sequence of 01 and change it to 10" and "collect 000111 and 1 in the last digit since the digit below the changed position is greater than N, no matter how it is numbered.
+ 
+ I first calculated how many 1's stood for N, but that wasn't necessary.
+ 
+ >|cpp|
+ class NextNumber {
+ public:
+   vector<int> vecize(int N){
+     vector<int> buf;
+     while(N){
+       buf += N % 2;
+       N /= 2;
+     }
+     return buf;
+   }
+   int getNextNumber(int N) {
+     vector<int> input = vecize(N);
+     size_t KETA = input.size();
+     input += 0;
+     int diff = 0;
+     for(size_t i=0; i<KETA; i++){
+       if(input[i] == 1 && input[i + 1] == 0){
+ 	diff = 1ULL << i;
+ 	break;
+       }
+     }
+     int LOW = N & (diff - 1ULL);
+     vector<int> lower = vecize(LOW);
+     int wlow = accumulate(lower.begin(), lower.end(), 0);
+     return N + diff - LOW + (1ULL << wlow) - 1;
+   }
+ ...
+ ||<
+ 
+ And my rating dropped 7 points...tough. I solved the Easy problem in 22 minutes, but I heard it was too late.
+ </body>
+ <comments>
+ <comment>
+ <username>shou</username>
+ <body>def count(x):<br>   cnt = 0<br>   while x: x &= (x-1); cnt += 1<br>   return cnt<br><br>def nextnum(x):<br>   upper = (x | (x-1))+1<br>   mask  = (upper ^ (upper-1)) >> 1<br>   lower = (1 << (count(mask&x) -1)) -1<br>   return upper | lower</body>
+ <timestamp>1220591969</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>
+ <body>I made a mistake in a rush. <br> mask = (upper ^ (upper-1)) >> 2<br> lower = (1 << (count(mask&x))) -1<br> is true (though the result is the same)</body>
+ <timestamp>1220593602</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-09-04 https://nishiohirokazu.hatenadiary.org/archive/2008/09/04]

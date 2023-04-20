@@ -1,0 +1,70 @@
+Hatena2009-04-13
+code:hatena
+ <body>
+ *1239599142* "What's this?" solution section
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20090411/1239462519'>Answer to today's drawing "What is this?" - Hatena Diary of Yasukazu Nishio</a
+ 
+ The problem is the picture below.
+ - What is a square with a black center?
+ - What is the white square in the center?
+ - What is something like
+ - What is something like +/-?
+ This was the case.
+ 
+ <img src="http://gyazo.com/2069cd0e6b6b3e5d9a90997637a8194e.png">
+ 
+ This is something that anyone who has ever learned Haskell has stumbled upon at least once.
+ - The three lines above are monadic rules
+ -- 1.  (return x) >>= f == f x
+ -- 2. m >>= return == m
+ -- 3. (m >>= f) >>= g == m >>= (\x -> f x >>= g)
+ - The black square in the center is the monad (Monad m) => m a
+ - The white square in the center (with a black circle in the center) is a function that takes some argument and returns a monad (Monad m) => a -> m b
+ -- "unadorned white square" is return :: (Monad m) => a -> m a
+ - > something like (>>=) :: (Monad m) => m a -> (a -> m b) -> m b
+ -- A function that returns a monad (middle black square) is attached to the left and a function that returns a monad (middle white square) is attached to the right
+ - The first square has a black circle and is asymmetric, so it is difficult to understand, but if you remove it, the structure is the same as 1 * x = x, x * 1 = x, (x * y) * z = x * (y * z)
+ - Only on the right side of the third line, the white square in the center comes to the left side of >>=, but this is the "picture that becomes (f x >>= g) when x is inserted" by removing the black circle "x" from the monad (f x >>= g), so \x -> f x >>= g. At first glance it looks like (f >>= g).
+ 
+ - The bottom three lines are the MonadPlus fulfillment rules
+ -- 1. mzero >>= f == mzero
+ -- 2. m >>= (\x -> mzero) == mzero
+ -- 3. mzero `mplus` m == m `mplus` mzero == m
+ - Black square is mzero
+ - + like mplus
+ - The black circle removed from the black square is "the picture that becomes mzero when the black square is inserted", so \x -> mzero
+ - This is also, in essence, the same structure as 0 * x = 0, x * 0 = 0, x + 0 = 0 + x = x if we remove the black circle
+ 
+ *1239626250* Painting of the Day
+ Card game making. I hope it's okay to proceed like this.
+ <img src="http://gyazo.com/c90185d7caaa73c5b4bf8379779c3e30.png">
+ 
+ *1239631409* theo janssen
+ [http://www.youtube.com/watch?v=eqaWUnzHewA:movie]
+ When the wind is blowing, they use their wings to catch the force of the wind and store air in their plastic bottles, and when there is no wind, they walk with the force of the stored air. It is amazing.
+ 
+ 
+ Blueprint of the foot
+ <img src="http://gyazo.com/686943a2b555ea64029c91e2d133fb14.png">
+ 
+ Made with straws and toothpicks.
+ f:id:nishiohirokazu:20090413230427j:image
+ f:id:nishiohirokazu:20090413230520j:image
+ I see, so when the point of rotation approaches the fixed point, the feet fold up, then go forward in the folded state, extend the feet, and kick the ground as they come back in the extended state. That's amazing. It was quite a task just to make this one piece with the proper dimensions, but it would not be a single piece unless we measured it properly, made 14 legs, and then made the body and all the mechanisms to make it rotate. Theo Janssen is amazing.
+ 
+ I'm starting to think my understanding of the blueprint is wrong, the line marked a doesn't actually exist.
+ 
+ 
+ f:id:nishiohirokazu:20090414003423j:image f:id:nishiohirokazu:20090414003508j:image f:id:nishiohirokazu:20090414003600j:image f:id:nishiohirokazu:20090414003658j:image f:id:nishiohirokazu:20090414003752j:image
+ 
+ Yes, this is more correct.
+ </body>
+ <comments>
+ <comment>
+ <username>kuboon</username>
+ <body>Models video madda? </body>
+ <timestamp>1239639965</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-04-13 https://nishiohirokazu.hatenadiary.org/archive/2009/04/13]

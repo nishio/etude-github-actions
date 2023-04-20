@@ -1,0 +1,133 @@
+Hatena2009-06-02
+code:hatena
+ <body>
+ *1243902012* Evil combo
+ - Forget to chill your soda.
+ - The hand slips and drops to the floor.
+ - Open on PC
+ 
+ Fortunately, the PC lid was closed, so I was able to successfully guard it.
+ 
+ *1243912419* I'm not good at math.
+ Sequel to <a href='http://d.hatena.ne.jp/nishiohirokazu/20090531/1243771020'>Animal Shogi</a>. I am approaching the limit of my arithmetic ability. So, I thought it would be wrong for a human to do a task like counting up the number of cases.
+ 
+ >|python|
+ r = Resource(10, "X")
+ Player = Choice(2)
+ Mochigoma = Choice(1)
+ 
+ Kirin = Unordered(
+     And(
+         Or(r.take(), Mochigoma),
+         Player))
+ ||<
+ 
+ if you write
+ 
+ >||
+ Or(
+     Or(
+         Unordered(
+             And(Take(Resource(X)), Choice(2))), 
+         And(
+             And(Take(Resource(X)), Choice(2)), 
+             And(Choice(1), Choice(2)))), 
+     Unordered(And(Choice(1), Choice(2))))
+ ||<
+ 
+ and then the expansion was done (line breaks and indentation were added manually for better readability).
+ 
+ >|python|
+ print Kirin.size({r: r.n}) # -> 223
+ ||<
+ 
+ and easily get the result of the calculation. i hope Kirin.make_cpp() will spit out the C++ code. I haven't made it that far yet.
+ 
+ In,
+ >|python|
+ Zou = Unordered(
+     And(
+         Or(r.take(), Mochigoma),
+         Player))
+ 
+ print And(Kirin, Zou).size({r: r.n}) #-> 34449
+ print 223 * 223 #-> 49729
+ ||<
+ The last time I reached the limit of my raw brain's computing power and calculated with "223 is enough for an elephant as well as a giraffe", I got 49729, but if I calculate it properly, I get 34449. That's a big reduction. The result of the expansion is as follows.
+ 
+ >>
+ Or(Or(Or(Or(And(Unordered(And(Take(Resource(X)), Choice(2))), Unordered(And(Take(Resource(X)), Choice(2)))), And(Unordered(And(Take(Resource(X)), Choice(2))), And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))))), And(Unordered(And(Take(Resource(X)), Choice(2))), Unordered(And(Choice(1), Choice(2))))), Or(Or(And(And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))), Unordered(And(Take(Resource(X)), Choice(2)))), And(And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))), And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))))), And(And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))), Unordered(And(Choice(1), Choice(2)))))), Or(Or(And(Unordered(And(Choice(1), Choice(2))), Unordered(And(Take(Resource(X)), Choice(2)))), And(Unordered(And(Choice(1), Choice(2))), And(And(Take(Resource(X)), Choice(2)), And(Choice(1), Choice(2))))), And(Unordered(And(Choice(1), Choice(2))), Unordered(And(Choice(1), Choice(2))))))
+ <<
+ 
+ Of course, chicks do it too.
+ >|python|
+ IsNiwatoru = Choice(2)
+ Hiyoko = Unordered(
+     And(
+         Or(
+             And(
+                 r.take(), 
+                 IsNiwatoru),
+             Mochigoma),
+         Player))
+ ||<
+ 
+ So, the calculation result including lions is 1,567,925,964, which is a 74% reduction from the previous manual calculation result of 6,095,273,976. However, this does not use the condition that "the chick is not at the far end" and "the overlapping phases can be considered identical by turning over the left and right sides". So it's not impossible to do this framework. I'm treating the uniform 12-square board now as a resource that is consumed in one lump, but I should just make this Or(Resource(9), Resource(3)).
+ 
+ 
+ The symmetry one is trickier, and I haven't thought it through yet, but there are 8 ways to put one piece on a symmetrical board in a 3x4, even though I haven't thought it through properly yet.
+ The way to place two distinguishable pieces is 4 * 7 because the symmetry is not yet lost if the first piece is placed in the center four, 4 * 11 because it is lost otherwise.
+ The way to place 3 pieces is "1st piece is in the center and 2nd piece is not" 4 * 4 * 10, "1st piece is in the center and 2nd piece is also in the center 4 * 3 * 6", "1st piece is not in the center 4 * 11 * 10"...
+ Of course, if there are two giraffes on one player, the order of the two becomes irrelevant... mmm.
+ 
+ 
+ Read Dr. Tanaka's comments again here.
+ >>
+ The number of moves with "the effect of a piece not owned by the player" alone reduces the number of moves to 1,567,925,964, and even with "symmetry" it is only about half of that number.
+ <<
+ The result obtained above is also 1,567,925,964, so the result is the same so far.
+ 
+ >>
+ Since it is not possible to encode only the "phases reachable from the initial phase" using uint32, I decided to encode each phase using uint64 to create a sorted vector that contains all the "phases reachable from the initial phase". Once the vector is created, it uses only 2 GB of memory, but it took about 13 GB to create the vector using hash_set. If I had more memory, I would have thought of doing something more creative, but since I had enough for now, I didn't try that hard.
+ <<
+ 
+ When I first read this, I had no idea why 1,567,925,964 < 2 ** 32 could not be encoded in uint32, but that was because I was planning to run it on a MacBook with 2GB memory, so I implicitly thought of "encode/decode from the phase to the smallest possible range of integers *in the C sense*. Even with the easy-to-implement and scanty encoding of 8 pieces (12 places on the board + 1 piece) * 2 players, 26 ** 8 == 208,827,064, 576, so uint64t is not enough to encode 26 ** 8. So, by sorting the encoded reachable phases into vectors, we can get "a *mathematical function* from a phase to an integer in the smallest possible range". I see.
+ 
+ I have never used hash_set before, so I am not familiar with it, but I imagine from the name that O(1) can be used to check if it is in or not, so I am sure it will create a hash_set for a winning phase and a hash_set for a losing phase.
+ 
+ 
+ I think we should quickly add the ability to output C++ code to this library in order to push the approach of "create a *function* in the C language sense to encode/decode from a phase to an integer in the smallest range possible".
+ 
+ Link to source code in case you need it: http://svn.coderepos.org/share/lang/python/retrograde/mapgenerator.py
+ Something is not giving me the correct values at any time! What are you doing, write a test, yourself!
+ 
+ <hr>
+ I thought it was tricky because Unordered wants to rewrite the name of the child node, but then I thought calmly that I'm passing a context to refer to when rendering, so I can just put the suffix there.
+ 
+ *1243915696*[en]Tsukasa
+ f:id:nishiohirokazu:20090602130805j:image
+ </body>
+ <comments>
+ <comment>
+ <username>shou</username>
+ <body>I thought that was Nishio's girlfriend's name</body>.
+ <timestamp>1243923246</timestamp>
+ </comment>
+ <comment>
+ <username>Tetsuro Tanaka</username>.
+ <body>In my case, I used hash_set only to get a sorted vector of all the (reachable) games, and after getting the sorted vector, I recorded the wins, losses, etc. in a vector of chars the size of the number of all the games. Note that, unlike Shogi, the condition "the chick is not at the end of the game" does not hold true, since the game does not allow for the chick to play without a destination. There are 68 situations in which the only correct answer is "a chick with no destination". </body> </body>
+ <timestamp>1243924370</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>When I send a photo I recently took with my cell phone to Hatena Diary, a phenomenon occurs about once every two times where a blank line is pasted in the diary while the photo is up in Hatena PhotoLife. It is as if a blank string is pasted before the Hatena PhotoLife process is completed and the id is determined. </body>
+ <timestamp>1243938255</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see, for example, with the upper side in katakana and a chick in the holding<br>... La... <br>Kizoki<br>Razohi<br>...... <BR>So, if the bottom chick strike is not allowed, the top loses. It doesn't seem to me that there is any way to get out of it just because it is allowed and you escape immediate death, but if you make such a prediction, then the result you give when it is wrong becomes meaningless. I will be careful. </body>
+ <timestamp>1244053601</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-06-02 https://nishiohirokazu.hatenadiary.org/archive/2009/06/02]

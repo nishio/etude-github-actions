@@ -1,0 +1,144 @@
+Hatena2008-07-14
+code:hatena
+ <body>
+ *1216009071*[Python]generator clone
+ I heard that you want to use "yield" like a continuation, and since you can't go back to a normal generator once you proceed, you need to clone the "generator in progress" to go back to it, just like call/cc to keep the current continuation. So I looked up how to copy the generator and found this.
+ 
+ http://www.fiber-space.de/generator_tools/doc/generator_tools.html
+ 
+ *1216010324*[RTM]Remember The Milk
+ I decided to use Remember The Milk for my management. I have made it so that reminders are sent to my phone. However, it appears that there are only two options for reminders for each task: "Send at the deadline" and "Send minutes before the deadline". Why is there a "Time estimate" field in Tasks, but no option for "Deadline time minus estimated time"?
+ 
+ *1216012735*[RTM] due driven working
+ The problem I had with task management tools in the past was my tendency to let a large number of tasks pile up and not know where to start, so I would end up skimming through the entire task list.
+ 
+ Always set deadlines for tasks so that "tasks that can be done at any time" are not left unattended forever. If circumstances require it, you can postpone the deadline, but if a task is repeatedly postponed, consider whether it is better not to do it in the first place. Every day, I make a list of seven things to do tomorrow and put them in my task list. However, if you are just pressed for deadlines, you will only do things that are urgent and not do things that are not urgent but important. Oh well, make the non-urgent but important tasks urgent tasks by putting deadlines on them as well.
+ 
+ *1216021386*[RTM] How to Create Habits
+ I am not very good at creating habits, and for a while I said, "Let's start with a simple habit as practice for creating habits," and I circled the calendar every day, but around November I suddenly realized that the calendar was still in July. But when I suddenly realized around November, my calendar was still in July.
+ 
+ If you use Remember The Milk, you can "Add Task" and enter "due: tod" (short for today) and "repeat: every month", then finish today's task and complete it, and it will be automatically rescheduled to "August 14" or something like that. I just made it so that I get a notification email on my phone every day, so hopefully this will help me remember to do the monthly task as well.
+ 
+ *1216030089*Find code not used by gcov
+ >||
+ $ g++ -g -ftest-coverage -fprofile-arcs tmp.cpp -I/opt/local/include
+ $ ./a.out
+ $ gcov tmp.cpp
+ File 'tmp.cpp'
+ Lines executed:57.14% of 7
+ tmp.cpp:creating 'tmp.cpp.gcov'
+ ||<
+ I was able to do it.
+ >||
+         -:   49:// comment
+         -:   50:template<class T>
+         -:   51:void foo(T& x){
+         -:   52:  cout << x << endl;
+         -:   53:};
+         -:   54:
+     #####:   55:void foo(){
+         -:   56:  if(0){
+         -:   57:    cout << "foo" << endl;
+         -:   58:  }
+     #####:   59:  cout << "foo" << endl;
+         -:   60:}
+         -:   61:
+         1:   62:int main(){
+         -:   63:  // hoge
+         -:   64:  if(0){
+         -:   65:    cout << "main" << endl;
+         -:   66:  }
+         1:   67:}
+         1:   68:/*EOF*/
+ ||<
+ 
+ I guess if(0) is optimized away. Also, I can't get coverage on closing brace. Is it because there are no instructions? It looks like I can find unused functions by looking at the #### at the beginning of the function, but how do I determine unused templates and such?
+ 
+ >||
+         -:   50:template<class T>
+         1:   51:void bar(const T& x){
+         1:   52:  cout << x << endl;
+         -:   53:};
+ 
+         1:   62:int main(){
+ 
+         1:   67:  bar<int>(1);
+ ||<
+ 
+ If I use it, this is what happens. template is not used when there is no 1 in it, I guess I should judge that it is not used.
+ 
+ *1216043984*[1000speakers] 6th 1000 Speakers Conference to be held in Nagasaki
+ Many people have mistakenly thought that the "1000 Speakers Conference" was over, but the 6th 1000 Speakers Conference will be held on Saturday, August 9, from 1:00 p.m. at the Sasebo Information Industry Plaza, near Huis Ten Bosch!
+ http://ja.doukaku.org/wiki/index.php/1000speakers:6
+ 
+ As usual, participants are requested to register in advance by posting in the chat room, but since this is the first time the event will be held in Kyushu, many of you may not have created an account yet. The detailed flow is written in the URL below, but the first thing you need to do is to create an account on the Wiki.
+ http://ja.doukaku.org/wiki/index.php/1000speakers:howtojoinus
+ 
+ And please write as much as you want in your profile. It is one of the important purposes of this conference to make connections between people. But if you find it too much of a hassle, just a link to your blog or something like that is OK.
+ 
+ The first one to speak in the chat below from the actual start of recruitment (24:00 (Sunday midnight) on July 26 (Saturday) for those who speak and 24:00 (Sunday midnight) on August 2 (Saturday) for those who listen) will win the right to participate in the event.
+ http://www.lingr.com/room/1000speakers (password is 1000speakers)
+ If you have any questions, please feel free to ask in the chat room above or in the comments section of this entry.
+ 
+ I would like to thank everyone at RBC Nagasaki and JavaComm Nagasaki who are managing this event!
+ 
+ -----
+ 
+ -1000speakers@Kyushu will be held!
+ --http://d.hatena.ne.jp/from_kyushu/20080714/1216044390
+ 
+ *1216058020*ICFP Diary 2
+ I'm very happy to have improved the ICFP PC, which is due today at 4:00 pm, and which I neglected to start at all yesterday, so that it will reach the goal without meandering. I took the distance to the goal divided by the current speed as the approximate arrival time, multiplied it by the derivative of the angular velocity (to be precise, the derivative of the angular sin value between the direction vector of the probe and the direction vector of the goal), and switched the steering wheel when it exceeded 0 or not. When I do this, I feel good because the ship falls into the goal smoothly with a big arc.
+ 
+ 
+ I also want to avoid obstacles.
+ 
+ 
+ But to do that, I'd have to do something like, "If I keep going at my current rotational speed, I'll run into the crater after 15 steps, so let's try turning the steering wheel in reverse for a bit. You can't just go straight into a straight line of railing. And if you get to the point where you think, "I'm going to hit the crater at the next turn," and then you panic, it may be impossible to avoid it, so you have to anticipate to a certain extent. No, this is troublesome. I should just do straight raytracing and steer to the opposite side of the first obstacle I see with a strength corresponding to the size of the visual diameter of the first obstacle I hit. That's fine.
+ 
+ 
+ Let's see. For all objects, we take the outer product of the difference vector between the object's position and the probe's position and the probe's direction vector, and if it is less than the radius of the obstacle (multiplied by a safety factor of 1.1www), we determine that a collision will occur. The inner product gives the distance, which is then divided by the radius to get the visual diameter, and the largest object is chosen.
+ 
+ 
+ Now, how much is dangerous if it exceeds 1, which is 45 degrees in degrees, so it's already a no-go. The angular acceleration of a hard turn is, well, it depends on the setting, but it's about 1 degree, so let's divide the visual diameter by the distance-radius divided by the speed (expected collision time), and if it exceeds 1, it's bad. I don't have time and it's too much trouble to take it seriously.
+ 
+ 
+ Oh, that's all there is to it, yet it wiggles and dodges softly. Cute.
+ 
+ 
+ As for the Martians, the ones I received as samples are not very smart or rarely caught without special measures, and it is very troublesome to even take measures for the smart ones, so I'm not going to go through with it.
+ Oh, I can now finish all the goals with the sample spiral.wrld.
+ <img src="http://gyazo.com/71e8a51cfa4eaca48ceb55b7031e1d04.png">
+ 
+ 
+ I'm not sure how many people will submit quality code, but it's pretty lame, and I'm ignoring the Martians. I don't know how many people will submit their code and how good it will be, but it will be impossible because it's a very lazy code, it ignores Martians, and it sometimes hits pebbles in the test world. Well, this time it was a mess from the start. We'll get a team together next year and do it in earnest, I'd love to do a Hackathon.
+ </body>
+ <comments>
+ <comment>
+ <username>nakamura001</username>
+ <BODY>I am so glad to hear that you are still going on. I know it's a lot of work, but keep up the good work. </body>
+ <timestamp>1216046985</timestamp>
+ </comment>
+ <comment>
+ <username>IWAKIRI</username>
+ <body>Wow, congrats on the decision to hold this event! </body>
+ <timestamp>1216080190</timestamp>
+ </comment>
+ <comment>
+ <username>tkuro</username>
+ <body>Test to make a habit of making habits (risk of recursion!) </body>
+ <timestamp>1216096108</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you~! </body>
+ <timestamp>1216096802</timestamp>
+ </comment>
+ <comment>
+ <username>regtan</username>
+ <BODY>Congratulations on your decision to hold the first Kyushu event. <br>I would like to speak at 1000Speakers someday. </body>
+ <timestamp>1216101042</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-07-14 https://nishiohirokazu.hatenadiary.org/archive/2008/07/14]

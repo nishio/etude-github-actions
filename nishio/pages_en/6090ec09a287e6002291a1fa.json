@@ -1,0 +1,77 @@
+Hatena2012-02-22
+code:hatena
+ <body>
+ *1329881717*Story about being told to use w3m instead of telnet.
+ I was trying to check the response header using telnet, which I am not accustomed to, when I said, "Oh, no, it's not there." I was not familiar with telnet and tried to check the response headers.
+ >||
+ $ telnet localhost 8101
+ Trying 127.0.0.1...
+ Connected to localhost.
+ Escape character is '^]'.
+ GET /static/t
+ 
+ <html>
+ <h1>hello</h1>
+ Connection closed by foreign host.
+ ||<
+ 
+ The correct answer was.
+ 
+ >||
+ $ telnet localhost 8101
+ Trying 127.0.0.1...
+ Connected to localhost.
+ Escape character is '^]'.
+ GET /static/t HTTP/1.0
+ 
+ HTTP/1.0 200 OK
+ Content-Type: application/octet-stream
+ Last-Modified: Wed, 22 Feb 2012 02:35:07 GMT
+ Cache-Control: public, max-age=43200
+ Expires: Wed, 22 Feb 2012 15:32:25 GMT
+ ETag: "flask-1329878107.0-21-3285584883"
+ Date: Wed, 22 Feb 2012 03:32:25 GMT
+ Content-Length: 21
+ Server: Werkzeug/0.8.3 Python/2.7.2
+ 
+ <html>
+ <h1>hello</h1>
+ Connection closed by foreign host.
+ ||<
+ 
+ However, I was told "telnet is so tedious, why don't you just use w3m", so I made a note of it.
+ >||
+ $ w3m -dump_both http://localhost:8101/static/t
+ HTTP/1.0 200 OK
+ Content-Type: application/octet-stream
+ Last-Modified: Wed, 22 Feb 2012 02:35:07 GMT
+ Cache-Control: public, max-age=43200
+ Expires: Wed, 22 Feb 2012 15:33:56 GMT
+ ETag: "flask-1329878107.0-21-3285584883"
+ Date: Wed, 22 Feb 2012 03:33:56 GMT
+ Content-Length: 21
+ Server: Werkzeug/0.8.3 Python/2.7.2
+ 
+ <html>
+ <h1>hello</h1>
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>sora_h</username>
+ <body>You can see the response headers in both curl and Chrome Developer Tool! </body>
+ <timestamp>1329916401</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>The young people these days told me to use Chrome! </body>
+ <timestamp>1329916699</timestamp>
+ </comment>
+ <comment>
+ <username>mongrelP</username>
+ <body>By the way, if you are using firefox, you can click on the favicon next to the address bar -> Show details -> General</body>.
+ <timestamp>1332350329</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-02-22 https://nishiohirokazu.hatenadiary.org/archive/2012/02/22]

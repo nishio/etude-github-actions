@@ -1,0 +1,108 @@
+Hatena2010-06-16
+code:hatena
+ <body>
+ *1276693135*That the same name in Haskell does not always return the same value.
+ I was reading <a href='http://dl.dropbox.com/u/7687891/join_to_Monad/join_to_Monad.html'>What the heck is Monad after all? &#8212; join to Monad v0.1.1 documentation</a>, and I thought "Oh sure, this is a point where people from other languages tend to stumble", so I'll just cut that out and elaborate. Let's start by filling in the holes in the code below.
+ 
+ >||
+ $ ghci
+ Prelude> import ******
+ Prelude ******> let f x = *****
+ Prelude ******> (f 0) * 1
+ 2092838931
+ Prelude ******> (f 0) / 1
+ 0.9872770354820595
+ Prelude ******> (f 0) * 1 == (f 0) / 1
+ True
+ ||<
+ 
+ Haskell functions are pure, and passing the same arguments to the same function will always return the same value. But there are still cases where (f x) evaluates to a different value. It depends on the context. Of course, if you use let or where to change the value of f or x, the value of (f x) will also change. That's not what I'm talking about. This doesn't happen in C++ or Java, so I guess this is a stumbling block.
+ 
+ >||
+ Prelude> import Random
+ Prelude Random> let f x = (fst (random (mkStdGen x)))
+ Prelude Random> (f 0) * 1
+ 2092838931
+ Prelude Random> (f 0) / 1
+ 0.9872770354820595
+ Prelude Random> (f 0) * 1 == (f 0) / 1
+ True
+ ||<
+ 
+ In C++ and Java, you can define and overload a number of functions with different argument types. But in Haskell, in addition, you can overload a number of definitions with different "types of the result of evaluating the expression". It does not even have to be a function. The value of x is determined by the result of type inference, which is invisible to the user, and the value of x can be influenced by code at a considerable distance. It is not localized in the code.
+ 
+ >|haskell|
+ class Foo a where
+     x :: a
+ 
+ instance Foo Int where
+     x = 0
+ 
+ instance Foo Integer where
+     x = 1
+ 
+ instance Foo Float where
+     x = 2
+ 
+ instance Foo Double where
+     x = 3
+ 
+ main = do
+   print $ x + 0 + 0 + 0 * (1 :: Int)
+   print $ x + 0 + 0 + 0 * (1 :: Integer)
+   print $ x + 0 + 0 + 0 * (1 :: Float)
+   print $ x + 0 + 0 + 0 * (1 :: Double)
+ ||<
+ 
+ In this example, the type is explicitly declared right next to the "just add zeros of different types," but you can see how the inference affects a number of operators across the board.
+ 
+ As such, we cannot tell from this code alone what (return x) will return, and we need to keep in mind the possibility that changing the definition of f in the code (return x) >>= ... >>= f. We need to keep in mind regarding the possibility that changing the definition of f in the code (return x) might change the value of (return x). It is a stumbling point.
+ 
+ *1276695144*[Kaizen] I bought cleaning supplies.
+ Some months ago, I bought a device that removes dust by rolling a roll of paper with adhesive. I was so impressed with how well it removed the dust that I was excited and said, "It's a civilized device! After a few days, I started to feel frustrated at not being able to clean (!). I ran to the supermarket in a big hurry on my way home from work and bought some.
+ 
+ This time, in addition to the corroborator, I also bought a device with fine bristles that flaps and catches dust with static electricity. Oh wow, the dusty monitor is now clean! It's the wonders of civilization!
+ 
+ Well, I just got the Patapata one, but the Korokoro should really be experienced. I never realized how much hair was on the carpet! I mean, I thought that if I cheated on my wife and she said, "Who's got this long hair!" I thought it was only in dramas and I wouldn't find it in real life, but I changed my opinion after I did the dusting. You can easily find it when you clean up.
+ 
+ But why didn't I ever notice the option of cleaning tools before, even though I love tools? It's so much fun.
+ 
+ **1276704066*"What is Knowledge?" a discussion of Drucker's post-capitalist society.
+ <a href="http://www.amazon.co.jp/gp/product/447800210X?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=7399& creativeASIN=447800210X">Drucker's Famous Books 8: Post-Capitalist Society</a> from Chapter 1
+ >>
+ What is now considered knowledge must be proven by action to be knowledge. What we consider knowledge today is information for action, information focused on results.
+ <<
+ 
+ Knowledge Focused on Outcomes. "What are these 'outcomes'?" Is it money?
+ 
+ Of course, knowledge that yields money will produce more "results" than knowledge that does not yield money. But I think it would be a big mistake to interpret this as "money-focused knowledge".
+ 
+ This is because money is capital. In a "knowledge society," which is a "post-capitalist society," knowledge contributes more to outcomes than capital. Since this is what this book is advocating, "outcomes" here should, of course, be considered as "outcomes in the form of knowledge are greater than outcomes in the form of money.
+ 
+ There are two main ways to achieve results as knowledge.
+ 
+ ** Increase the amount of your knowledge
+ Knowledge that increases the speed at which I acquire knowledge, knowledge that allows me to discover new knowledge, knowledge that allows me to learn knowledge that I cannot learn now, and so on.
+ 
+ Well, for example, knowledge of English makes a big difference in the quality and novelty of documents you can read, so learning English, especially speed-reading English texts, not conversational English, has a big impact on the speed of knowledge acquisition.
+ 
+ ** Increase the amount of knowledge of others
+ Since knowledge is an asset belonging to the individual, copying and sharing the knowledge within oneself with others increases the overall asset. In other words, teaching is the production of assets. Knowledge that is taught efficiently is knowledge that increases the efficiency of production.
+ 
+ <hr>
+ 
+ I was talking to a friend about such things, and he pointed out that the word "knowledge" has several meanings and should be categorized and assigned a different word. That's fair enough.
+ 
+ - Socratic knowledge: knowledge for the purpose of knowing oneself and enlightening oneself p. 61
+ - Protagorean knowledge: knowledge aimed at what to say and how to say it well. Knowledge aimed at improving others' image of you. P.61
+ - Techne (skill): knowledge aimed at what to do and how to do it, which was not considered knowledge in Socrates' time. Like how to break a stone cleanly. It was not taught systematically, but learned by imitation and hands-on experience.
+ - Technology: invented around 1700. Knowledge aimed at "improving worker productivity by giving knowledge to workers," such as encyclopedias. Knowledge was recognized as a resource that could be given to workers. Worker->productive worker p. 36
+ - Mechanical technology: e.g. the steam engine (patented) by Watt in 1776. This created a "worker + machine" system that was much more productive than the worker alone. It was feared that there would be a great disparity between capitalists who owned machines and workers who did not (Marx). If we think of human-powered looms as automatic looms and water wheels as steam pumps, we can say that knowledge aimed at "improving productivity by improving tools". Tools->productive tools p.38
+ - Management techniques: e.g., the Scientific Method of Management by Taylor in 1881, the Ford System by Ford in 1907, etc. Knowledge aimed at "improving productivity by analyzing and improving the work of workers." Work->Productive Work p. 43
+ - Metamanagement: a management concept by Drucker, circa 1950. The story so far has been: "Improve the productivity of X by applying knowledge to X. The story so far has been, "Improve X's productivity by applying knowledge to X." Substitute the knowledge itself for this X to improve productivity. The purpose of knowledge is "to improve the productivity of knowledge by improving the knowledge for productivity improvement." Knowledge->Productivity knowledge.
+ 
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as1&m=amazon&f=ifr&md=1X69VDGQCMF7Z30FM082&asins=447800210X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2010-06-16 https://nishiohirokazu.hatenadiary.org/archive/2010/06/16]

@@ -1,0 +1,403 @@
+Hatena2008-05-02
+code:hatena
+ <body>
+ *1209696486*[Python]arguments.callee
+ I heard that something called arguments.callee is all the rage.
+ -I got stuck trying to do JS arguments.callee-like things in Perl - IT War Diary
+ --http://d.hatena.ne.jp/amachang/20080501/1209623634
+ -First experience with arguments::callee in my first coderepos - TAKESAKO's Hatena Business Travel Site
+ --http://d.hatena.ne.jp/TAKESAKO/20080501/1209637452
+ -You can do it with Devel::Caller - TokuLog Again, shut up and write code, baldie!
+ --http://d.hatena.ne.jp/tokuhirom/20080501/1209625789
+ -404 Blog Not Found:perl - in (Recall()|arguments.callee()|&?BLOCK())
+ --http://blog.livedoor.jp/dankogai/archives/51043469.html
+ 
+ So I made it.
+ >|python|
+ @enable_arguments_callee
+ def foo():
+     print arguments.callee
+ 
+ foo() #=> <function foo at 0x014916F0>
+ 
+ @enable_arguments_callee
+ def facto(n):
+     if n == 1:
+         return 1
+     return n * arguments.callee(n - 1)
+ 
+ print facto(5) #=> 120
+ print repr(arguments.callee) #=> None
+ 
+ ||<
+ Should it behave like this?
+ 
+ The implementation looks like the one below. A decorator is used to add "push" and "pop" the function onto the stack that the arguments object has before and after the function call. A decorator is a function that takes a function as an argument and returns a function. I also put the arguments object in a built-in namespace so that it can be called from anywhere with the name "arguments".
+ 
+ >|python|
+ import __builtin__
+ class Arguments(object):
+     value = [None]
+     def push(self, f):
+         self.value.append(f)
+         self.callee = f
+ 
+     def pop(self):
+         self.value.pop()
+         self.callee = self.value[-1]
+ 
+ __builtin__.arguments = Arguments()
+ del Arguments
+ 
+ def enable_arguments_callee(f):
+     def wrap(*args, **kw):
+         arguments.push(f)
+         result = f(*args, **kw)
+         arguments.pop()
+         return result
+     return wrap
+ ||<
+ 
+ Q: What are the problems with this implementation?
+ 
+ For now, the processing related to the arguments.callee is done in the enable_arguments_callee decorator, so for example, if you call a function B that has not been enabled from an enabled function A and refer to the arguments.callee in that function, the value is function A. Also, it is assumed that the only time a function is included in a function is when it is called, so if you use threads, it will be broken.
+ 
+ *1209701513*[TopCoder]
+ -Number of statements on Twitter
+ --http://twitter.1x1.jp/trend/?keyword=topcoder
+ 
+ Popularity.
+ 
+ 
+ -----
+ 
+ I tried yesterday's idea that if (power < 0) break;" would solve the problem because of overflow. It passed the system test. TopCoder tends to focus on short-coding with macros and checking other people's code to shoot them down, but I think the best way is to understand the patterns that humans tend to make mistakes in and test them properly. I think the best way is to understand the patterns in which humans are prone to make mistakes and test them properly.
+ 
+ -----
+ 
+ Humans are by nature creatures that make mistakes, so in order to avoid making the same mistake twice, we must not allow humans to make the same mistake twice. I'll say.
+ 
+ >|cpp|
+ // pow. in long long.
+ #include<boost/optional.hpp>
+ using namespace boost;
+ typedef long long LL;
+ typedef optional<LL> OLL;
+ OLL llpow(LL n, size_t m){
+   LL result = 1LL, tmp;
+   for(size_t i=0; i<m; i++){
+     tmp = result * n;
+     if(tmp / n != result){
+       // overflow
+       return OLL();
+     }
+     result = tmp;
+   }
+   return OLL(result);
+ }
+ OLL llpow(OLL n, size_t m){
+   if(n) return llpow(*n, m);
+   return n;
+ }
+ 
+ 
+ int main() {
+   for(size_t i=0; i<12; i++){
+     OLL p = llpow(100, i);
+     if(p){
+       cout << *p << endl;
+     }else{
+       cout << "overflow" << endl;
+     }
+   }
+ }
+ ----- output -----
+ 1
+ 100
+ 10000
+ 1000000
+ 100000000
+ 10000000000
+ 1000000000000
+ 100000000000000
+ 10000000000000000
+ 1000000000000000000
+ overflow
+ overflow
+ ||<
+ Use this and you won't make the same mistakes!
+ 
+ *1209705396*[cpp]Overload failure.
+ >|cpp|
+ OLL llpow(LL n, size_t m){
+   return llpow(OLL(n), m);
+ }
+ OLL llpow(OLL n, size_t m){
+   if(m == 0) return OLL(1);
+   if(m == 1) return n;
+   return mul(n, llpow(n, m - 1));
+ }
+ ||<
+ I was having trouble with a compile error. I guess it's not overloaded because only the top llpow is defined at the time of the top llpow. If you change the order, it's OK; if you cross-reference them, you probably need to do some kind of prototype declaration or something.
+ 
+ *1209705601*[cpp]Try using optional
+ Since it is a frequent pattern to get stuck with zero points due to accidental overflow, I thought it would be a good idea to create an integer type like the "Maybe Monad" using optioal. So I thought I could create an integer type like the "maybe monad" using optioal, and I could remember that "multiplication may overflow. The type of the integer must be converted from "an integer that may have overflowed" to "an integer that has not overflowed" after "checking that it has not overflowed.
+ 
+ >|cpp|
+ #include<boost/optional.hpp>
+ using namespace boost;
+ typedef long long LL;
+ typedef optional<LL> OLL;
+ 
+ // multiply by optional<long long
+ OLL mul(OLL x, OLL y){
+   if(!x) return x;
+   if(!y) return y;
+   LL result = (*x) * (*y);
+   if(result / (*x) != (*y)){
+     // overflow
+     return OLL();
+   }
+   return OLL(result);
+ }
+ 
+ // pow. in long long.
+ OLL llpow(OLL n, size_t m){
+   if(m == 0) return OLL(1);
+   if(m == 1) return n;
+   return mul(n, llpow(n, m - 1));
+ }
+ OLL llpow(LL n, size_t m){
+   return llpow(OLL(n), m);
+ }
+ ||<
+ 
+ *1209706958*[cpp]What I learned today.
+ I felt that using concise words and bullet points would help me organize my understanding.
+ 
+ - In STL explanations, the term (*it).first is for illustrative purposes only, and it is usually written as it->first.
+ - If you create a function that does not change references passed to it, such as a homebrew library, you should declare it to receive references in const. You can't pass references received by const in other functions.
+ -- Of course, in situations like TopCoder, writing in the style of "I don't put const on every function I define because it's too much trouble" will not cause any real harm, but you should be aware that you are giving up your right to have the compiler check your work if you write it.
+ - You should learn boost's lexical_cast if you play TopCoder. lexical_cast<long long>(s) or something like that can convert strings to integers.
+ - boost::assign is useful when the question is "return a vector<int> with two elements
+ -- use namespace boost::asign is required
+ -- result += 1, 2 and so on.
+ 
+ *1209708182*[TopCoder]SRM400 DIV2 Level1
+ The streets of a town are arranged in a grid, and I am at (0, 0) and want to take a taxi to the office at (gX, gY). Given the location of the cab, I want to find the route that takes the least amount of time to get there and answer the time it will take me to get there. Problem statement: http://www.topcoder.com/stat?c=problem_statement&pm=8753&rd=12172
+ 
+ The actual code was rewritten because some variables were not used and some variable names were not correct:
+ >|cpp|
+   int minTime(vector <int> tXs, vector <int> tYs, int gX, int gY, int walkTime, int taxiTime) {
+     int minTime = (abs(gX) + abs(gY)) * walkTime;
+     size_t N = tXs.size();
+     for(size_t i=0; i<N; i++){
+       int walk = abs(tXs[i]) + abs(tYs[i]);
+       int taxi = abs(tXs[i] - gX) + abs(tYs[i] - gY);
+       int time = walk * walkTime + taxi * taxiTime;
+       if(time < minTime){
+ 	minTime = time;
+       }
+     }
+     return minTime;
+   }
+ ||<
+ 
+ Simply calculate the time it would take to use each cab stand and take the smallest value.
+ 
+ *1209711874*[cpp]I wanted to create something like an internal representation of the list.
+ I still couldn't do it because I'm not strong enough, I want to solve SRM400 Div2 Level1 in about 2 lines quickly.
+ >|cpp|
+ template<typename IN, typename OUT, typename UnaryFunction>
+ vector<OUT> mapcar(vector<IN> xs, UnaryFunction f){
+   vector<OUT> result(xs.size());
+   transform(xs.begin(), xs.end(), result.begin(), f);
+   return result;
+ };
+ 
+ void print(const int& t){
+   cout << t << endl;
+ };
+ int inc(const int& t){
+   return 1 + t;
+ };
+ 
+ int main() {
+   vector<int> xs, ys;
+   xs += 1,2,3;
+   print_vector(xs);
+   ys.resize(xs.size());
+   // OK:
+   // for_each(xs.begin(), xs.end(), &print);
+   // OK:
+   // transform(xs.begin(), xs.end(), ys.begin(), &inc);
+   // OK:
+   //  transform(xs.begin(), xs.end(), ys.begin(), (_1+1));
+ 
+   // NG:
+   ys = mapcar(xs, (_1+1));
+   print_vector(ys);
+ 
+   //  print_vector(mapcur(xs, _1+1));
+ }
+ ||<
+ 
+ *1209726213*Erlang v.s. StacklessPython
+ http://muharem.wordpress.com/2007/07/31/erlang-vs-stackless-python-a-first-benchmark/
+ 
+ Just a view.
+ 
+ *1209733747*[cpp]continued/optional
+ It went like this. Too much.
+ >|cpp|
+ typedef long long LL;
+ 
+ // Determine if the number is prime
+ bool isPrime(LL n){
+   if(n == 2) return true;
+   if(n % 2 == 0) return false;
+   for(LL i=3; i*i<=n; i+=2){
+     if(n % i == 0) return false;
+   }
+   return true;
+ }
+ 
+ 
+ typedef optional<LL> OLL;
+ // Multiplication
+ OLL operator*(const OLL &x, const OLL &y){
+   if(!x) return x;
+   if(!y) return y;
+   LL result = (*x) * (*y);
+   if(result / (*x) != (*y)){
+     // overflow
+     return OLL();
+   }
+   return OLL(result);
+ }
+ 
+ // Addition
+ OLL operator+(const OLL &x, const OLL &y){
+   if(!x) return x;
+   if(!y) return y;
+   LL result = (*x) + (*y);
+   if(result - (*x) != (*y)){
+     // overflow
+     return OLL();
+   }
+   return OLL(result);
+ }
+ 
+ 
+ // pow. in long long.
+ OLL llpow(OLL n, size_t m){
+   if(m == 0) return OLL(1);
+   if(m == 1) return n;
+   return n * llpow(n, m - 1);
+ }
+ OLL llpow(LL n, size_t m){
+   return llpow(OLL(n), m);
+ }
+ 
+ // invpow in long long
+ // return the first x such that x ** m >= n
+ OLL llinvpow(OLL n, size_t m){
+   OLL d = 1;
+   OLL x = 1;
+   OLL p;
+   while((p = llpow(x, m)) && *p < *n){
+     d = d * 2;
+     x = x + d;
+   }
+   if(d && x){
+     LL d2 = *d, x2 = *x;
+     while(d2){
+       d2 /= 2;
+       x2 -= d2;
+       p = llpow(x2, m);
+       if(p && *p < *n){
+ 	x2 += d2;
+       }
+     }
+     return x2;
+   }
+   return OLL();
+ }
+ OLL llinvpow(LL n, size_t m){
+   return llinvpow(OLL(n), m);
+ }
+ 
+ class StrongPrimePower {
+ public:
+   vector <int> baseAndExponent(string n) {
+     LL v = lexical_cast<LL>(n);
+     for(size_t i=2; i<64; i++){
+       OLL d = llinvpow(v, i);
+       if(!d) continue;
+       if(*d < 2) break;
+       OLL power = llpow(d, i);
+       if(power && *power == v){
+ 	if(isPrime(*d)){
+ 	  vector<int> result;
+ 	  result += *d, i;
+ 	  return result;
+ 	}
+       }
+     }
+     vector<int> result;
+     return result;
+   }
+ }
+ ||<
+ 
+ I wonder what it is. Well, I understand that there is no silver bullet.
+ 
+ On my way home yesterday, I thought to myself, "It would certainly take a tremendous amount of time to search 10*18 in order, but pow is a monotonically increasing function, so we can bisect the search. Besides, if you do a lot of powers, large numbers will overflow quickly, so the answer will be concentrated around 1, and it will be faster than a simple binary search. I tried to implement this idea. I haven't checked if it is actually faster or not.
+ 
+ *1209736206*SHORT PROGRAM
+ 
+ I found a book called "SHORT PROGRAM" at a convenience store in a train station. I picked it up. There was a girl with a lot of exposure on the color pages. The author was Mitsuru Adachi.
+ 
+ *1209741991* "Don't say ternary operator" campaign
+ http://d.hatena.ne.jp/odz/20080412/1208023497
+ 
+ I was reading "C++ Primer" on the train home today.
+ >>
+ Arithmetic if operator
+ The arithmetic if operator is the only ternary operator in C++ (abbreviated)
+ In the Annotated C++ Reference Manual and in ANSI C, this operator is called the "conditional operator".
+ <<
+ It said. It reminded me of the "Don't say ternary operator" campaign.
+ 
+ *1209744054*Languages recommended
+ >>
+ If you recommend a scripting language, you will be disgusted by how easy it is to master. And I can't stand the idea of a programmer who can only use a scripting language. I say to you, master C, which I learned the hard way (but in fact I don't know how to use it at all). Or rather, fail. And realize how great I am. If you learn to use it, then thank me for recommending C language that can do anything.
+ <<
+ http://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1015898635
+ 
+ Yikes.
+ 
+ >>
+ On the other hand, if you are self-taught and cannot understand C, I don't think you can understand Perl, VB, or PHP.
+ <<
+ 
+ Conversely, if you can't calculate prime numbers in PHP, you can't do it in C. If you can't make a simple GUI application in VB, you can't make a GUI in C.
+ 
+ 
+ 
+ I just say what I want to say.
+ 
+ *1209744245* I have a holiday weekend starting tomorrow.
+ I don't have any plans.
+ 
+ At any rate, I'm thinking of doing the housework that's piling up tomorrow and then going to Tokyu Hands, but I still have three days off. I am also thinking of going to a hiking course somewhere where I can wear casual clothes. Basically, I don't really like crowds.
+ </body>
+ <comments>
+ <comment>
+ <username>Kiyoya</username>
+ <body>Seriously</body>.
+ <timestamp>1209743468</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-05-02 https://nishiohirokazu.hatenadiary.org/archive/2008/05/02]

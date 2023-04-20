@@ -1,0 +1,20 @@
+Hatena2013-04-28
+code:hatena
+ <body>
+ *1367142048*A story about studying traits and noticing a discrepancy in class definitions.
+ Based on my article <a href='http://d.hatena.ne.jp/nishiohirokazu/20130306/1362557967'>Is Scala's Trait a mixin? </a>, I read "Traits: A Mechanism for Fine-grained Reuse". Then I realized that the reason why we sometimes disagree on this matter may be due to a discrepancy in the definition of "class" in the first place.
+ 
+ In "Traits: A Mechanism for Fine-grained Reuse", a class is defined as "an empty class nil" or "a set of attributes, a set of methods, and a parent class" ((The authors try to define it in a more mathematically rigorous way. If you are not satisfied with my explanation, please refer to the original book.)
+ 
+ And a trace is defined as "a set of methods" ((strictly speaking, it is also "a mapping from a name to (method entity + ⊥&#8868; to express a conflicted state), but I won't go into details)).
+ 
+ What this means is that classes created from traits, etc., do not have information about what traits were used to construct them. Therefore, super does not have any special behavior for traits. When you super from within a class, you don't think about the trait you are using, and when you use a method from a method of a trace, you point to the parent class of the class that the trace is currently using, regardless of whether the method was originally in the trace or not.
+ 
+ My class mental model was "a set of attributes, a set of methods, and references to multiple parent classes" because I was used to Python, and it was updated to "a set of attributes, a set of methods, a reference to one parent class, and a reference to zero or more traits" when I learned about traits! but that was at odds with the definitions of those who proposed the trait.
+ 
+ I think id:sumim blogged about this area before, but I couldn't find it by searching for "flattening" or something...
+ 
+ PS: There it is: <a href='http://d.hatena.ne.jp/sumim/20130306/p1'>Scala's trace is actually not a trace, just a mix-in - the t in Smalltalk is lower case</a> It was "linearized" and "flattened".
+ </body>
+
+[Hatena Diary 2013-04-28 https://nishiohirokazu.hatenadiary.org/archive/2013/04/28]

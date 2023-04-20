@@ -1,0 +1,145 @@
+Hatena2011-04-13
+code:hatena
+ <body>
+ *1302662414*I made a preprocessor for TeX.
+ I was not convinced about the scope of newcommand and renewcommand in TeX, and I thought it must have already been published somewhere, but I couldn't find it immediately, and it seemed faster to make it, so I made a preprocessor. I thought it must have already been published somewhere, but I couldn't find it right away.
+ 
+ <img src="http://gyazo.com/c8246fa8c2e5af852f5868dda4654ff1.png">
+ (Note: \Gauss and \inv are newcommand)
+ 
+ What I thought when I used it.
+ - If you define \S or something like that, it matches the first half of \Sigma because it is replaced by a string REPLACE.
+ -- →In a programming language, if you use a short variable name because it is chopped into tokens, it will only conflict with "short names that match exactly", so if you limit the scope, there is no real harm in using a single character variable, well. But with string matching, the short name shadows all names that contain that string. It should be properly chopped into tokens and then replaced only with an exact match.
+ 
+ - I need a macro that takes arguments!
+ -- →If you do this with string matching, it is obvious that the nesting of parentheses will ruin it, so you need to parse it properly.
+ 
+ - I'm replacing them now, starting with the root scope, is this appropriate?
+ -- →I designed it this way because I thought it was correct that the nearest rule should be applied last, considering the case where a substitution is further substituted...
+ --- A: I don't think it's a good idea to replace the substituted item with another substituted item, since that would make it difficult to understand. Even variable resolution is done by looking from the inside, and if it is found, that's the end of it. (I'm of the "name resolution" school of thought.)
+ --- B: Considering the use case "\x→\bm x is defined on the outside and phix→\bm \phi(\x) is defined on the inside", the idea is that we should apply them in order from the inside. Otherwise, when we create a rule that reuses the rule defined on the outside, we will have to write \bm x again. (This is the school of thought that since it is the application of a function, it is necessary to apply it sequentially from the near side.)
+ --- !B: That's a school of thought that just applies the rules defined at that time to the body of the rule at the time of the rule definition.
+ --- C: (original idea) We want to define the use case "Ex→\mathbb{E}(x) on the outside, and when x changes to\hat{x} in the inner context, we want to 'inherit & override' with x→\hat{x}" from the outside...
+ --- !C: That is a problem that should be solved by a macro that takes arguments.
+ -- I wonder if B is the right answer.
+ 
+ I could have made this prototype in one pomodoro, but I'm afraid I'm going to cause its demise, especially if I don't think about the "order of resolution" properly. And the parser. It may take a long time to re-design the prototype with that in mind. If there is already a bug-solver for this purpose that has been used by a certain number of users, I think it would be better to throw it away and switch to that one. I wonder if there is. I wonder if there isn't.
+ 
+ <hr>
+ I forgot to paste the key source code.
+ 
+ https://gist.github.com/916838
+ 
+ *1302698997*I wrote a parser for TeX.
+ I implemented a parser by taking a slight detour to take the train home, going in the opposite direction to where I could be sure of a seat, and then coming back.
+ 
+ Unfortunately, I didn't have a network connection, so I couldn't try to add PLY or look up formal definitions of TeX syntax, so I just went with my spirit and feeling. Well, I made it so that all the test cases would pass, but there might be some omissions. I made it so that all the test cases would pass, but there might be some omissions.
+ 
+ >|python|
+ """
+ texparse.py: parse TeX
+ """
+ from string import ascii_letters
+ SPACES = " \t"
+ def spaces(s, i):
+     r"""
+     >>> spaces("  a", 0)
+     ('  ', 2)
+     """
+     start = i
+     while s[i] in SPACES:
+         i += 1
+     return (s[start:i], i)
+ 
+ 
+ def term(s, i):
+     r"""
+     >>> term("aaa", 0)
+     ('aaa', 3)
+     >>> term("aaa  ", 0)
+     ('aaa', 3)
+     >>> term(r"aaa\aaa", 0)
+     ('aaa', 3)
+     >>> term(r"\aaa aaa", 0)
+     ('\\aaa', 4)
+     >>> term(r"\{aaa", 0)
+     ('{', 2)
+     """
+     start = i
+     escaped = False # T when \ appeared
+     while i < len(s):
+         if s[i] in SPACES:
+             break
+         elif s[i] in "{}":
+             if escaped:
+                 return (s[i], i + 1)
+             break
+         elif s[i] == "\\":
+             if i != start:
+                 break
+             escaped = True
+         elif s[i] in ascii_letters:
+             if escaped: escaped = False
+         else:
+             if i != start: break
+             i += 1
+             break
+ 
+         i += 1
+     return (s[start:i], i)
+ 
+ 
+ def brace(s, i):
+     assert s[i] == "{"
+     tokens, i = parse_tokens(s, i + 1)
+     return (tokens, i)
+ 
+ 
+ def parse_tokens(s, i):
+     tokens = []
+     while i < len(s):
+         if s[i] in SPACES:
+             tok, i = spaces(s, i)
+             tokens.append(tok)
+         elif s[i] == "{":
+             tok, i = brace(s, i)
+             tokens.append(tok)
+         elif s[i] == "}":
+             i += 1
+             break
+         else:
+             tok, i = term(s, i)
+             tokens.append(tok)
+             
+     return (tokens, i)
+ 
+ 
+ def parse(s, i=0):
+     r"""
+     >>> parse("hoge")
+     ['hoge']
+     >>> parse(r"\ho\ge")
+     ['\\ho', '\\ge']
+     >>> parse(r"  \hoge")
+     ['  ', '\\hoge']
+     >>> parse(r"a{ho ge}ga")
+     ['a', ['ho', ' ', 'ge'], 'ga']
+     >>> parse(r"\{aaa\}")
+     ['{', 'aaa', '}']
+     >>> parse(r"\frac{x^2}{2} + x")
+     ['\\frac', ['x', '^', '2'], ['2'], ' ', '+', ' ', 'x']
+ 
+     """
+     tokens, i = parse_tokens(s, 0)
+     return tokens
+ 
+ def _test():
+     import doctest
+     doctest.testmod()
+ 
+ if __name__ == "__main__":
+     _test()
+ ||<
+ </body>
+
+[Hatena Diary 2011-04-13 https://nishiohirokazu.hatenadiary.org/archive/2011/04/13]

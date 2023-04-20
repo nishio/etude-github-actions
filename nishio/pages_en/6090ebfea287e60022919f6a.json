@@ -1,0 +1,46 @@
+Hatena2009-04-06
+code:hatena
+ <body>
+ 
+ f:id:nishiohirokazu:20090406054357j:image
+ 
+ *1239010190*[SpaMon] I played a card game "Spaghetti Monster" (tentative).
+ I have been playing with id:TOKOROTEN, id:tgbt in <a href='http://d.hatena.ne.jp/nishiohirokazu/20090405/1238879482'>Programmer's Nightmare style game</a>. From the results, while the rules are very compact, the elimination of weak cards made it easier to create combos and more tense.
+ 
+ - The name of the game could be "Spaghetti Monster" for now.
+ - The worldview has not changed from a programming-based worldview to a dungeon & monster-based worldview. Terms such as "bits."
+ -- In my mind, this is chmod +x.
+ -- Well, the naming change is the easiest refactoring, so it could be done later. I'm thinking of Spaghetti Monster as a boost to the naming, like the bit is a pathetic mage, the card is a magic circle, and the player is the creator, who reduces HP to 0.
+ - After all, this seems to be positioned as "mainly for two players".
+ - The SPAWN was too strong, since the MULTIPLIER in the original game was a useless child, and once the threshold was lowered with DEC, the game was full of bits. Since 17 bits were too subtle, I added "CRACK: 2 damage" as appropriate.
+ - The reason for this change is to avoid the phenomenon of cards like MOVE_CARD being alternately placed on cards where the later hand might have an advantage, but I'm not sure if this change is necessary. I am not sure if this change is necessary or not.
+ - The rule "randomly choose the order of execution with a die" has been removed. After the above change, the first move is no longer always favored. For example, when MOVE_CARD is at the beginning, if the first player placed it, the second player can place it on top of it, so the second player has the right to decide the jump position.
+ - I don't strictly control it, but if my opponent starts thinking too long, I can set the timer to one minute to start. We have not decided what happens when the time is up.
+ - GOTO being "3 or higher" is too strong, so making it 4 or 5 is being considered.
+ 
+ 
+ Also, the previous rules didn't specify it, but it's something that needs to be brought to your attention.
+ - "The copy is executed as if the instruction had been temporarily transcribed to that card."
+ - So a card and bit called [MIMIC (A)][X (B)][Y] would work as if it said [X and do Y (A)][X (B)][Y
+ - So it is not possible to say "only X is triggered and Y is not". Atomic one instruction.
+ - If [MIMIC][REMOVE_CARD][X][Y], there is no such thing as "the second Y from MIMIC is executed" if REMOVE_CARD is deleted on the first REMOVE_CARD
+ 
+ 
+ id:inajob told me that it should have an icon because it's hard to tell at a glance if it's written in letters, so I drew it!
+ <img src="http://gyazo.com/ea26ccb628f5e95eeddbc324d507123c.png">
+ 
+ 
+ Further simplification of the rules. http://coderepos.org/share/changeset/32026
+ Eliminated discussion of GOTO and card deletion timing and removed exceptions in the code.
+ If a card has one or more bits on it, the owner of the first bit can decide whether or not to execute the instruction written on the card. If the instruction is executed and the PC is still on that card, the decision moves to the owner of the next bit. When all bits have been processed without interruption, the PC moves on."
+ Example of interruption: PC is moved by JUMP. If a running card is deleted."
+ </body>
+ <comments>
+ <comment>
+ <username>inajob</username>
+ <body>I wanted to play some more. Let's play again! </body>
+ <timestamp>1239017723</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-04-06 https://nishiohirokazu.hatenadiary.org/archive/2009/04/06]

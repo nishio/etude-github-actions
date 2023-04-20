@@ -1,0 +1,207 @@
+Hatena2008-02-20
+code:hatena
+ <body>
+ *1203474464*RSS
+ I just realized that subscribing to a blog's RSS feed is a growing pile of reading. If you buy a book that looks good and just pile it up at home, the book itself will not increase, but if you find a blog that looks good and pile it up in your LDR, it will increase and increase. The amount of time people spend reading does not increase. I have 4679 unread items in my LDR and 7339 unread items in my GMail.
+ 
+ *1203475172*Bits of life
+ I was thinking on my walk to work this morning that a year is halfway through, like 365 days. But there are about 50 holidays, which would be nice if I counted more of them. If I count Saturday as double the number of weekdays and Sunday as triple the number of weekdays, I get 150 more days, which is roughly 512!
+ 
+ Let us call one unit of activity time 2 hours. Assuming 2 units on weekdays and 5 units on weekends, the total number of activity hours in a year is 1024 units. That's a good number!
+ 
+ And if life's active time is roughly 64 years, life is 16 bits! That's a lot of bits!
+ 
+ *1203477403*Continued BlockSorting(BWT)
+ BlockSorting - Yasukazu Nishio's Hatena Diary http://d.hatena.ne.jp/nishiohirokazu/20080218/1203322931
+ 
+ After reading it properly, I understood it. So the nth "X" leads to the nth "X". I wonder how to write it elegantly...
+ 
+ I wrote the letters as they were written.
+ 
+ >|python|
+ # Restore
+ from collections import defaultdict
+ count = defaultdict(int)
+ def inc(c):
+     count[c] += 1
+     return count[c]
+ 
+ tails = [(c, inc(c)) for c in tails]
+ heads = list(sorted(tails))
+ 
+ cur = start
+ result = []
+ 
+ print start # => 1
+ print tails # => [('b', 1), ('a', 1), ('b', 2), ('a', 2)]
+ print heads # => [('a', 1), ('a', 2), ('b', 1), ('b', 2)]
+ 
+ for i in range(len(tails)):
+     pair = heads[cur]
+     result.append(pair[0])
+     cur = tails.index(pair)
+ 
+ print "".join(result) # => abba
+ ||<
+ 
+ Hmmm... I wonder what the person who came up with this was thinking when he came up with it. It's amazing.
+ 
+ -----
+ 
+ I guess I should call it BlockSorting or maybe BWT since I still sort everything normally.
+ 
+ I did a BWT on this source to try it out and this is what I got. It sure looks like it shrinks easily.
+ 
+ *1203513776* Handwritten
+ [f:id:nishiohirokazu:20080220222157p:image]
+ 
+ Wow. What I wanted to do got done first.
+ 
+ You can't edit it, can you?
+ 
+ *1203522287*[Perl]local is a great case.
+ Write before you forget what you have been taught.
+ 
+ >||
+ C:\>perl -e "$a = {x=>0}; {$a->{x} = 1; print $a->{x};} print $a->{x};"
+ 11
+ 
+ C:\>perl -e "$a = {x=>0}; {my $a->{x} = 1; print $a->{x};} print $a->{x};"
+ Can't use an undefined value as a HASH reference at -e line 1.
+ 
+ C:\>perl -e "$a = {x=>0}; {local $a->{x} = 1; print $a->{x};} print $a->{x};"
+ 10
+ ||<
+ 
+ local $a = ... I can understand if $a reverts to its original value after exiting the scope with "$a = ...", but I don't understand that even what is written in the hash reverts to its original value!
+ 
+ -----
+ 
+ Postscript. Notice that $a->{y} is properly obtained in the block.
+ 
+ >||
+ C:\>perl -e "$a = {x=>0, y=>1}; {local $a->{x}=2; print $a->{y}} print $a->{x};"
+ 10
+ ||<
+ 
+ -----
+ 
+ >>
+ Youchan 2008/02/21 08:33 Isn't it a variable that points to a different area rather than a value being restored?
+ I'm a little uncomfortable with the expression "back to normal.
+ <<
+ 
+ Of course, that's generally why the value of a variable appears to revert back to its original value when it leaves scope, but the emphasis of this entry is "even what appears to be a destructive rewriting of a hash (appears to be) reverting back to its original value!" That's what I'm talking about. If you're talking about why that kind of behavior happens, of course $a is supposed to point to a different region at "local $a->{x} = 1;". But I wonder if it copies the whole thing. Or is it in such a way that it only goes to refer to the original $a when it can't find the key?
+ 
+ *1203524977*[Perl]OOP
+ >|Perl|
+ C:\>perl -e "sub makeCounter { my $class = shift; my $self = {}; bless $self, $c
+ lass; $self->{count} = 0; return $self; } sub push { my $self = shift; $self->{c
+ ount}++; print $self->{count}; return $self; } main->makeCounter()->push()->push
+ ()->push();"
+ 123
+ ||<
+ 
+ I made a counter for now.
+ 
+ >|Perl|
+ sub makeCounter {
+     my $class = shift;
+     my $self = {};
+     bless $self, $class;
+     $self->{count} = 0;
+     return $self;
+ }
+ sub push {
+     my $self = shift;
+     $self->{count}++;
+     print $self->{count};
+     return $self;
+ } 
+ main->makeCounter()->push()->push()->push();
+ ||<
+ 
+ I got stuck in a strange error where I wrote "bress" for "bless", "return $self;" for "return self;", and "there is no package named self".
+ I guess the latter means that return self; was interpreted as a package name because it returned a string in bareword and used -> for a non-blessed string.
+ 
+ *1203525751* Written by.
+ I was depressed, but I had the most fun when I was asking about Perl OOP. I feel like you'd have more fun listening to me talk about Perl for 2 hours than spending 2 hours or something on a game.
+ 
+ *1203526884* nameplate
+ >>
+ Good thing I had my name tag ready.
+ This time, for the first time, I prepared nametags for the study group. If you go to a regular stationery store and buy a set of 50 nameplates, you can get them for only about 3,000 yen, while the price of one proper nameplate is about 200 yen. I bought mine at Tokyu Hands, but I think you can find them at larger stationery stores.
+ <<
+ 
+ Ah.
+ I had thought about making nametags for the next conference when I attended the 1st 1000 Speakers Conference, but I completely forgot about it until now. I can't afford to go out and buy one.
+ 
+ *1203527560*[Python] block comment
+ When you are writing code, there are times when you want to temporarily comment out a block of code without executing it. In Python, which does not have block commenting, you can put the block in triple quotes to make it a string literal or disable it with if 0:~, but while messing around with it, you may lose track of what block it was. I would not recommend this to others.
+ 
+ Today, I suddenly thought of this code and tried it:
+ 
+ >|python|
+ ...
+ if not "generate sample data":
+     ...
+ 
+ ||<
+ 
+ If you think of "not" as "don't," it is easy to understand that you can put "not" when you don't want to do something, and you can take "not" off when you want to do it again. In general, commenting out a block of code strongly implies that the block is a semantically related block, so it may be promoted to a function in the future, as shown below.
+ 
+ >|python|
+ ...
+ def generate_sample_data():
+     ...
+ 
+ ||<
+ 
+ I wonder.
+ 
+ *1203528974*CRF
+ http://hillbig.cocolog-nifty.com/do/2008/02/post_7fbc_1.html
+ 
+ I found out today what CRF is and how it differs from HMM:
+ http://www.geocities.co.jp/Technopolis/5893/publication/NLP2006.pdf
+ 
+ HMM is a generative model, which adjusts some parameters of the model based on the actual observed strings so that the "probability (likelihood) of spitting out the observed strings" is the highest....
+ 
+ No, not when learning, but when using it for identification?
+ 
+ Oh well, I'll read it slowly next time.
+ </body>
+ <comments>
+ <comment>
+ <username>Youchan</username>
+ <body>I think it's a variable that points to a different area rather than a value going back to the original? <BR>I'm a little uncomfortable with the expression undo</BODY>.
+ <timestamp>1203550409</timestamp>
+ </comment>
+ <comment>
+ <username>Kimura(K)</username
+ <body>I'll get back to you as soon as I can. http://finalfusion.tumblr.com/post/26876288</body>
+ <timestamp>1203572899</timestamp>
+ </comment>
+ <comment>
+ <username>Youchan</username>
+ <body>>Kimura(K)<br>Naruhoro~local awesome! <br>perl hash awesome! </body>
+ <timestamp>1203587234</timestamp>
+ </comment>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>http://d.hatena.ne.jp/Hamachiya2/20070805/UI<br>I remember this guy. </body>
+ <timestamp>1203603254</timestamp>
+ </comment>
+ <comment>
+ <username>hillbig</username>
+ <body>HMM and CRF both try to learn the training data sequence that has the highest probability of being output (maximum likelihood estimation),<br>but they have different probability models: HMM has a form P(X,Y) that also generates the input sequence, so that the sum of <br>all possible input sequences at training time Σ_{x,y}P(X,Y) can be computed efficiently. Since the probabilistic model of CRF is P(Y|X), the sums for X do not need to be <br>computed, and only the sums for Y need to be<br>computed efficiently. <br>Therefore, CRF offers much more freedom on the X side<br>than HMM. For example, CRF differs from HMM in that duplicated information in X can be freely included in the model. <br>For example, if Y is a part-of-speech sequence, the word immediately preceding it, the word immediately following it, and the part-of-speech information can <br>be used together to determine the part-of-speech of a part of the sequence (i.e., the feature function can be freely defined). </body>
+ <timestamp>1203612151</timestamp>
+ </comment>
+ <comment>
+ <username>akio0911</username>
+ <body>Thanks for the reference. I'm putting it into practice right away. It's good. </body>
+ <timestamp>1204023559</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-02-20 https://nishiohirokazu.hatenadiary.org/archive/2008/02/20]

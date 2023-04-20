@@ -1,0 +1,38 @@
+Hatena2009-03-20
+code:hatena
+ <body>
+ *1237495312*[GAE]URL exceeds 500 characters, what should I do?
+ Talking about Google App Engine, URLs accept up to 2083 characters even in IE, so there is no way to put them in a StringProperty with a limit of 500 characters.
+ >>
+ class StringProperty(verbose_name=None, multiline=False, ...)
+     A short string property. Takes a Python str or unicode (basestring) value of <strong>500 bytes or less.</strong>
+ <<
+ 
+ If you want to put it in TextProperty, you can't add an index this time, so you can't say, "If the URL has already been added, don't add a new one and use the previous one". (Don't say "use for"!).
+ 
+ >>
+ class TextProperty()
+     A long string.
+     Unlike StringProperty, a TextProperty value can be more than 500 bytes long. However, TextProperty values are <strong>not indexed, and cannot be used in filters or sort orders</strong>.
+ <<
+ 
+ I thought for a while, "I wonder what I should do... I wonder if I should chop the URL..." But then I thought calmly, I only need to know immediately if there is an item in the list with a matching URL, so I put the URL itself in the TextProperty and the hash value in the StringProperty, I decided to put the URL body in the TextProperty and the hash value in the StringProperty.
+ 
+ >|python|
+ class URL(db.model):
+     url = db.TextProperty()
+     hash = db.StringProperty()
+ 
+     def set_value(self, s):
+         self.url = s
+         self.hash = hashlib.sha384(s).hexdigest()
+         self.save()
+         return self
+ ||<
+ 
+ <hr>
+ 
+ Postscript. LinkProperty]
+ </body>
+
+[Hatena Diary 2009-03-20 https://nishiohirokazu.hatenadiary.org/archive/2009/03/20]

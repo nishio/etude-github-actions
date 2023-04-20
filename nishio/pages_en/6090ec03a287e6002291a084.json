@@ -1,0 +1,31 @@
+Hatena2010-03-19
+code:hatena
+ <body>
+ *1268995257*[GAE]AttributeError: 'FooBar' object has no attribute '_entity' 
+ (Note: I have a feeling this entry may contain incorrect content.)
+ 
+ AttributeError: 'FooBar' object has no attribute '_entity'" error when trying to save on Google App Engine:.
+ 
+ Model.
+ >|python|
+ class FooBar(db.Model):
+     short_key = db.StringProperty() # unique key to use in URL
+ 
+     def __init__(self):
+         import utils
+         self.short_key = utils.short_key_gen()
+ ||<
+ I wrote something like this, but it's wrong. I defined the constructor myself, but forgot to call the constructor of the parent class.
+ 
+ >|python|
+     def __init__(self, **kwargs):
+         import utils
+         db.Model.__init__(self, **kwargs) 
+         self.short_key = utils.short_key_gen()
+ ||<
+ This is the correct answer. By the way, if the parent constructor is called after self.short_key = ... If the parent constructor is called later than self.short_key = ..., the constructor will create an empty property and overwrite it, so it is useless. (I know, I know...)
+ 
+ Furthermore, I got a TypeError: __init__() takes exactly 1 non-keyword argument (2 given) in FooBar.all().fetch(1), probably because it contained an object created with such a broken constructor. I turned it off and started over and <del>it worked. </del> Not working!
+ </body>
+
+[Hatena Diary 2010-03-19 https://nishiohirokazu.hatenadiary.org/archive/2010/03/19]

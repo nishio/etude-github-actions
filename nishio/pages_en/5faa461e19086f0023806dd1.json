@@ -1,0 +1,22 @@
+ABC175D
+from [ABC175]
+ABC175D
+[D - Moving Piece https://atcoder.jp/contests/abc175/tasks/abc175_d]
+[https://gyazo.com/d6e26e7f39e5bc1e3744dfaed3a30560]
+	K is 10^9, so O(K) looks tough too.
+ 　I assumed O(log K) with [repeated squaring].
+ 	　The end point and score are given for one step forward from a certain starting point.
+ 　　Given the endpoint and score for n steps, the endpoint and score for 2n steps can be easily obtained
+ 　　If we calculate from 2^1 steps to 2^30 steps about 30 * N times, we can calculate the score by O(log K) for K less than 2^31
+	This question was not "score after K times" but "maximum score under K times".
+	With only a few minutes remaining, I realized, "This is [loop detection]," but I didn't make it in time. 3 minutes passed, and I submitted it, but it was WA and TLE.
+	　[Loop detection instead of doubling]
+	cause
+	　Within a negative loop the maximum score can be negative
+	　　And yet you set the initial value to 0.
+	　One max was inside the loop to calculate the maximum score (TLE).
+	　If the positive loop just goes around at K, the not much is 0, but the score may actually be higher if it does not go around the last full circle
+	　　If you have a negative score, you should avoid that.
+	　　The official explanation below is False
+	 　　>If we decide to try all the "remainder" parts of this cycle, it is optimal to use as much as we can when the sum of the cycle is positive and not use it at all when it is not.
+	[AC https://atcoder.jp/contests/abc175/submissions/16163877]

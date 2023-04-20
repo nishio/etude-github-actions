@@ -1,0 +1,173 @@
+Hatena2012-01-27
+code:hatena
+ <body>
+ *1327637050* 9 points that people who are used to other languages tend to stumble when using Ruby.
+ A sequel to <a href='http://d.hatena.ne.jp/nishiohirokazu/20120125/1327461670'>9 points that people familiar with other languages tend to stumble upon when using Python</a>. Sasada also wrote see: <a href='http://www.atdot.net/~ko1/diary/201201201.html#d26'>Daiary</a>
+ 
+ ** 0 is true, empty string is also true
+ Unlike C and other languages, 0 is not false; unlike Python, JavaScript, and PHP, an empty string is also not false.
+ 
+ >|ruby|
+ >if 0 then print "true!\n" end
+ true!
+ 
+ > if "" then print "true!\n" end
+ (irb):1: warning: string literal in condition
+ true!
+ ||<
+ 
+ ** Function calls with zero arguments occur without parentheses
+ 
+ In Python and JavaScript, a function name appearing in an expression refers to a function. In Ruby, however, the call is made with zero arguments.
+ 
+ >|python|
+ # Python
+ >>> def foo(): print "foo!"
+ ... 
+ >>> foo
+ <function foo at 0x100445f50>
+ ||<
+ 
+ >|ruby|
+ # Ruby
+ > def foo() print "foo!\n" end
+ => nil
+ > foo # method call occurs
+ foo!
+ => nil
+ ||<
+ 
+ ** All variables are references
+ >|ruby|
+ > a = []
+ > b = a
+ > b << 1
+ > a
+ => [1]
+ ||<
+ 
+ ** Source code encoding
+ 
+ In Ruby 1.9, using non-ASCII characters in source code without specifying the encoding of the source code will result in a syntax error.
+ >||
+ $ cat > t.rb
+ p "hoge".
+ $ ruby1.9 t.rb 
+ t.rb:1: invalid multibyte char (US-ASCII)
+ t.rb:1: invalid multibyte char (US-ASCII)
+ ||<
+ 
+ You can specify the encoding of the source code in a manner similar to Python or Scheme. For more information, click here: <a href='http://rurema.clear-code.com/1.9.3/doc/spec=2fm17n.html'>Multilingualization</a>.
+ >|ruby|
+ # -*- coding: utf-8 -*-
+ p "hoge".
+ ||<
+ 
+ If you write the following code in SJIS in 1.8, you will get a syntax error (unterminated string meets end of file) You need to specify -Ks as an option when starting ruby.
+ >||
+ print "function"
+ ||<
+ 
+ It is not yet specified how a processing system compliant with the JIS standard behaves when non-US-ASCII characters are included in the source code.
+ 
+ ** Integer does not overflow
+ 
+ When the range of an integer (Fixnum) is exceeded by an integer addition/division or shift operation, it is converted to a Bignum with no upper limit, instead of discarding the overflowing bits to keep it within the range, as in C, etc. And it is difficult to distinguish between the two when looking at the string display.
+ 
+ >||
+ > x = -4611686018427387904
+ > x.class
+ => Fixnum
+ > x /= -1
+ => 4611686018427387904
+ > x.class
+ => Bignum
+ ||<
+ 
+ If you translate an algorithm written in C verbatim, you will get a bug that is quite hard to notice.
+ 
+ ** If there are class definitions with the same name, they are combined without collision
+ 
+ >|ruby|
+ class Foo
+   def x; 1 end
+ end
+ 
+ class Foo
+   def y; 2 end
+ end
+ 
+ p Foo.new.x #=> 1 is displayed
+ p Foo.new.y #=> 2 is displayed
+ ||<
+ 
+ In some cases, this may be useful. If the reader of the source code does not know that it is intentionally synthesized, it may be confusing.
+ 
+ ** Three more are wanted.
+ 
+ *1327646600*Python converting numeric entity references back to characters for a range of surrogate pairs.
+ How do you convert &#134047; (&amp;#134047;), which is represented by a numeric entity reference, back to Unicode characters in Python? The question is: How do you convert it back to Unicode characters in Python? If I do unichr(134047) normally, the following exception will fly.
+ 
+ >||
+ ValueError: unichr() arg not in range(0x10000) (narrow Python build)
+ ||<
+ 
+ (narrow Python build), this is a behavior that depends on compile-time options, and can be solved by re-building with the following options. Or use Python3.
+ 
+ >||
+ ./configure --enable-unicode=ucs4
+ ||<
+ 
+ However, I didn't want to re-build or change to 3, so I looked for a solution.
+ 
+ >|python|
+ >>> code = 134047
+ >>> "%08x" % code
+ '00020b9f'
+ 
+ >>> ("\U" + "%08x" % code).decode("unicode-escape")
+ u'\U00020b9f'
+ 
+ >>> print _
+ shh! (used to silence someone)
+ ||<
+ 
+ It's done. The reason why the scolding at the end of the code is not &#134047; is because Hatena Diary replaced &#134047; with an entity reference on its own, so I rewrote it to look as close as possible.
+ 
+ ref. <a href='http://stackoverflow.com/questions/7105874/valueerror-unichr-arg-not-in-range0x10000-narrow-python-build-please-hel'>ValueError: unichr() arg not in range(0x10000) (narrow Python build), please help - Stack Overflow</a>
+ see also: <a href='http://www.python.org/dev/peps/pep-0261/'>PEP 261 -- Support for "wide" Unicode characters</a>
+ </body>
+ <comments>
+ <comment>
+ <username>rahaema</username>
+ How about the fact that the <body> variable scope is confusing at first? The following is an error. <br>hi = "Hi"<br>def sayHi<br> puts hi<br>end<br>sayHi</body>
+ <timestamp>1327659323</timestamp>
+ </comment>
+ <comment>
+ <username>o_show</username>
+ <body>>Is the 1.8 base being standardized now? <br>JIS X 3017 (JIS standard for Ruby) specifies only the common parts of 1.8 and 1.9. <br>It also assumes that the program is to consist only of ASCII. <br>We do not know about the one proposed for ISO. <br><br>Security fixes for the Ruby 1.8 series will not be available until June 2013, so <br>those who are just starting out don't have to think much about it, let alone standardizing it. </body>
+ <timestamp>1327661336</timestamp>
+ </comment>
+ <comment>
+ <username>o_show</username>
+ <body>Sorry, I brought the part that mentions encoding in JIS X 3017. <BR><BR>>A program is expressed in program text. The program text is a sequence of <source<br>>characters. <br><br>The source characters are those in the International Reference<br>Version (IRV)<br>of ISO/IEC 646:1991. Whether other character<br>>sets and encodings are supported<br>>is not specified. <br><br>"ISO/IEC 646" refers to ASCII. <br>And I meant "not specified", not "prohibited". <BR><BR>In either case, you can of course include multibyte in your source code when you actually write Ruby. </body>
+ <timestamp>1327688927</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thanks for the information. I will fix it. </body>
+ <timestamp>1327709073</timestamp>
+ </comment>
+ <comment>
+ <username>alh</username>
+ <body>>> All variables are references<br>Isn't this a lie? <br>Arrays are objects, so they are just doing reference type semantics, not being rewritten at the same time because <br>variables are references. </body>
+ <timestamp>1327719824</timestamp>
+ </comment>
+ <comment>
+ <username>toyoshi</username>
+ <body>How about the method return value being the last value evaluated</body>?
+ <timestamp>1328054441</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-01-27 https://nishiohirokazu.hatenadiary.org/archive/2012/01/27]

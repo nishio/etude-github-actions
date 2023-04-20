@@ -1,0 +1,50 @@
+Hatena2011-11-19
+code:hatena
+ <body>
+ *1321633451*Ticket Recommendation
+ At the Python Onsen, we were asked if we could have a system that would pick out the best tickets for us to choose from, since we spend so much time trying to figure out which one to start with when there are so many tickets piled up against each other. So we implemented a concept proofing system.
+ 
+ For now, I experimented with getting some tickets from Ruby's Redmine, and recommend() will give me a recommendation for one ticket.
+ 
+ >||
+ In [2]: recommend()
+ There is a pattern where File.expand_path returns a non-existent path for paths containing Japanese characters in a Windows environment.
+ ||<
+ 
+ I think this is not for me (it is OS dependent) and I would prefer something else, so I answer no(). Then they suggest another ticket.
+ 
+ >||
+ In [3]: no()
+ Please backport r33556 (Bug #5243)
+ ||<
+ 
+ When you ok() a ticket, the next ticket is proposed to you. (It might be better to design it as "recommend()" if you want it to propose the next ticket.)
+ 
+ >||
+ In [5]: ok()
+ Ruby 1.9.3 fails to compile in directories with accent in their names
+ ||<
+ 
+ By the way, here are the scores for each ticket at this time.
+ >||
+ In [6]: debug()
+ 0.94 Ruby 1.9.3 fails to compile in directories with accent in their names
+ 0.94 Ruby can't pass test-all (x86_64-darwin11.2.0 built by Xcode 4.2 's clang)
+ 0.80 Please backport thread-safe autoloading patch
+ 0.60 ruby does not compile on Lion with Xcode 4.2
+ 0.54 ruby-1.9.3-p0 mswin IO#write still slower than 1.9.2
+ 0.28 RSpec 2.7.1 and Ruby 1.9.3
+ -0.15 SEGV if negative value of time_t is given to File.utime on Windows
+ -0.43 on Windows \. Crash when opening a device starting with \.
+ -0.79 There is a pattern where File.expand_path returns a non-existent path for paths containing Japanese characters in a Windows environment.
+ ||<
+ 
+ By suggesting tickets in this way, one at a time, we can take data on whether the user thought "yuck" or not. This allows us to mechanically determine that tickets that are avoided by many people or repeatedly avoided by a single person may be too granular, have vague descriptions, or have a subtle need to be done. It can be judged mechanically as "good" or "bad. This is how we can "judge whether a ticket is good or bad. For example, a bad ticket can be fed back to the person who wrote the ticket by creating a ticket that says, "Consider dividing, clarifying, or discarding the ticket. This is an opportunity to think about "how to write a ticket that motivates.
+ 
+ With this data, for example, when considering who to assign a certain ticket to, it is possible to make recommendations as to who is most likely to be motivated by that ticket. There seems to be a need for this as well.
+ 
+ Source Code: https://gist.github.com/1376945
+ Currently we are concept proofing so we are not taking data directly from Trac or Redmine. We are using only the title string. In reality, it would be better to put all the data we can get into the feature vector. I might be able to adjust the score based on the importance of the ticket and the time remaining until the milestone.
+ </body>
+
+[Hatena Diary 2011-11-19 https://nishiohirokazu.hatenadiary.org/archive/2011/11/19]

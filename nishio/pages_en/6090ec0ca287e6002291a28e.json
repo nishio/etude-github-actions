@@ -1,0 +1,170 @@
+Hatena2013-01-30
+code:hatena
+ <body>
+ *1359530213*Haskell(GHCi) :print is interesting.
+ Haskell has "evaluated" and "not evaluated" states of values bound to variables, which are shared globally from all over the place, so I was having trouble getting an image when it came to discussions like "how much computation is involved". I wish there was a way to check, but I guess there isn't, so I gave up, but it turns out that GHCi can do it to some extent. This is interesting.
+ 
+ First, let's prepare the following source code. This is the code to experiment "whether or not the first half of the list is evaluated when the list is combined. When we had a discussion before, my argument was that "we don't need to evaluate the first half of the list, but we can return 'cons of the first one of xs and the rest of xs and ys combined'. I'm sure that's how it's implemented." But until now, I didn't know how to observe the behavior, so the discussion stopped there.
+ 
+ >|haskell|
+ xs = [1, 2, 3]
+ ys = [4, 5, 6]
+ zs = xs ++ ys
+ ||<
+ 
+ Save this file under the name tmp.hs and execute the following command from GHCi.
+ 
+ >||
+ :load tmp.hs
+ :print xs
+ :print ys
+ :print zs
+ seq zs ()
+ :print zs
+ :print xs
+ seq _t6 ()
+ :print xs
+ :print zs
+ seq _t11 ()
+ :print zs
+ seq _t12 ()
+ :print zs
+ :print xs
+ ||<
+ 
+ Then the following output is obtained.
+ 
+ >||
+ Prelude> :load tmp.hs
+ [1 of 1] Compiling Main             ( tmp.hs, interpreted )
+ Ok, modules loaded: Main.
+ *Main> :print xs
+ xs = (_t1::[Integer])
+ *Main> :print ys
+ ys = (_t2::[Integer])
+ *Main> :print zs
+ zs = (_t3::[Integer])
+ *Main> seq zs ()
+ ()
+ *Main> :print zs
+ zs = (_t4::Integer) : (_t5::[Integer])
+ *Main> :print xs
+ xs = [(_t6::Integer),(_t7::Integer),(_t8::Integer)]
+ *Main> seq _t6 ()
+ ()
+ *Main> :print xs
+ xs = [1,(_t9::Integer),(_t10::Integer)]
+ *Main> :print zs
+ zs = 1 : (_t11::[Integer])
+ *Main> seq _t11 ()
+ ()
+ *Main> :print zs
+ zs = 1 : (_t12::Integer) : (_t13::[Integer])
+ *Main> seq _t12 ()
+ ()
+ *Main> :print zs
+ zs = 1 : 2 : (_t14::[Integer])
+ *Main> :print xs
+ xs = [1,2,(_t15::Integer)]
+ ||<
+ 
+ Let's read them in order. The :print command examines a value without forcing evaluation. At first, there is only the information "a value of type [Integer]".
+ 
+ >||
+ *Main> :print xs
+ xs = (_t1::[Integer])
+ *Main> :print ys
+ ys = (_t2::[Integer])
+ *Main> :print zs
+ zs = (_t3::[Integer])
+ ||<
+ 
+ Let's evaluate to the extent that we can pattern match using seq.
+ 
+ >||
+ *Main> seq zs ()
+ ()
+ *Main> :print zs
+ zs = (_t4::Integer) : (_t5::[Integer])
+ ||<
+ 
+ ZS was found to be cons of _t4 and _t5.
+ 
+ On the other hand, we even know that at this time xs is a 3-element list. I don't know why this is. Is it that short lists are internally held in a form that is not a concatenated list to speed up the process? Tell me, someone in the know!
+ 
+ >||
+ *Main> :print xs
+ xs = [(_t6::Integer),(_t7::Integer),(_t8::Integer)]
+ ||<
+ 
+ Now, if we evaluate its leading _t6, we see that it is 1.
+ 
+ >||
+ *Main> seq _t6 ()
+ ()
+ *Main> :print xs
+ xs = [1,(_t9::Integer),(_t10::Integer)]
+ ||<
+ 
+ What is happening to zs at this time? We know that the leading edge is 1.
+ 
+ >||
+ *Main> :print zs
+ zs = 1 : (_t11::[Integer])
+ ||<
+ 
+ Now let's seq the rest of cons_t11 to break up cons, and seq the second element of the list_t12, which shows that the second element is 2.
+ 
+ >||
+ *Main> seq _t11 ()
+ ()
+ *Main> :print zs
+ zs = 1 : (_t12::Integer) : (_t13::[Integer])
+ *Main> seq _t12 ()
+ ()
+ *Main> :print zs
+ zs = 1 : 2 : (_t14::[Integer])
+ ||<
+ 
+ At this time xs is also known to be 2 for the second number.
+ 
+ >||
+ *Main> :print xs
+ xs = [1,2,(_t15::Integer)]
+ ||<
+ 
+ ** Summary
+ 
+ Haskell's :print is very interesting. The :trace is interesting too, but I'll write about that another time. Also, please tell me how did you know that the length of xs is 3, someone in the know!
+ 
+ References: <a href='http://www.kotha.net/ghcguide_ja/latest/ghci-debugger.html'>2.5. GHCi Debugger</a>
+ 
+ ** Postscript
+ If you do it with [Integer], there's a delay in the evaluation of the built-in process that creates the multiple-length integer data from the numeric representation."
+ I see! Surely an Int would be displayed as is!
+ >||
+ Prelude> let xs = [1, 2, 3] :: [Int]
+ Prelude> :print xs
+ xs = [1,2,3]
+ Prelude> let xs = [1, 2, 3] :: [Integer]
+ Prelude> :print xs
+ xs = [(_t1::Integer),(_t2::Integer),(_t3::Integer)]
+ Prelude> let xs = [1, (1 + 1), 3] :: [Int]
+ Prelude> :print xs
+ xs = [1,(_t4::Int),3]
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>igrep</username>
+ <body>@tanakh told me that there is also ghc-vis. <BR>I tried it in my environment (ubuntu) and it was quite troublesome to resolve dependencies, so be careful when you try it. <br>I don't know what the displayed diagram means yet, so please don't be offended. </body>
+ <timestamp>1359541311</timestamp>
+ </comment>
+ <comment>
+ <username>khibino0</username>
+ <body>[1,2,3] is equivalent to 1 : 2 : 3 : [], and since <br>: and [], like 'a', are values whose expression itself is not further evaluated, the evaluation of <br>[1,2,3] is not delayed. <BR><BR>So xs is determined to be a concatenated list of length 3 when it is compiled in the first place. <BR><BR>Nishio has tried it with [Integer], which makes it difficult to understand, but if you try it with xs :: [Int], you will see more clearly what is happening. <br>In the case of [Integer], you can see in :print that there is a delay in the evaluation of the built-in process of creating multiple-length integer data from the numeric representation. </body>
+ <timestamp>1359708203</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-01-30 https://nishiohirokazu.hatenadiary.org/archive/2013/01/30]

@@ -1,0 +1,63 @@
+Hatena2014-02-12
+code:hatena
+ <body>
+ *1392179496*Paper presentation: "Variable-length n-gram language model based on hierarchical Pitman-Yor process"
+ The paper says that existing methods cannot realistically be used for 8-gram language models, but this method is variable-length, so it is possible to make long grams only where necessary.
+ 
+ Create a tree with a Chinese restaurant process equivalent to the Pitman-Yor process: if sing comes after she will, add a guest corresponding to sing from the root node, following will and then she. Add proxy customers to the upper nodes as well.
+ 
+ With the existing method (HPYLM), the height to add a guest is fixed. However, instead of adding guests at a fixed height, we consider the "probability that a guest will advance from the route and pass through the table" for each node. This probability qi is unknown, how to estimate it?
+ 
+ Assume that the prior distribution of qi is a beta distribution, and place it first. Remove random words wt from it, update the parameters of the beta distribution from the distribution of the remaining customers, and add customers to a new depth by sampling from that beta distribution. This "take and put" process is repeated to converge to the correct distribution (Gibbs sampling).
+ 
+ There are two ways to do this: either the maximum depth is determined at the time of sampling, or it is done until the probability is sufficiently small. In the latter case, the parameter corresponding to n in the n-gram completely disappears, so we can call it an ∞-gram.
+ 
+ The implementation uses a spray tree. Each node has a size of 64 bytes (assuming both int and ptr are 64-bit). 10000K nodes are enough to make a max 8-gram language model, i.e., about 640MB. Realistic size. The existing method requires storage space on the order of the 8th power of 30000 vocabulary words, which is not realistic, but the proposed method uses a long number of grams only where necessary, so it is feasible. In fact, the number of 5-gram contexts is about half of the number of 3-gram contexts, so the existing method, which requires 900 million times more memory than 3-grams for 5-grams, is not reasonable.
+ 
+ The perplexity of 3-gram and 5-gram corpus, which are possible with existing methods, is slightly higher than that of existing methods, but for English corpus, 7-gram and 8-gram corpus are lower than that of 5-gram corpus. The Japanese corpus...is not low. The ∞-gram is also not low. This is a little disappointing, but at any rate, the reduction in the number of nodes is significant! This is the advantage of this method.
+ 
+ Thoughts: Google, please give me a language model made with max 8-grams!
+ 
+ PS: Added a note about what I did not understand when I tried to implement it. I found a field in the node definition that stores "thw is the number of times w is estimated to have been generated from the parent node p(w|h'), not from p(w|h)". Also, only th is stored, but how is thw restored? d and θ are estimated using the sampling formulas for dm and θm that are included as an extra at the end of the original HPYLM paper, even though it didn't say how to estimate them?
+ 
+ ** Implementation
+ 
+ https://github.com/nishio/VPYLM/blob/master/t.py
+ Note: I am ignoring the probability that a new table is created, so it does not work correctly yet. You can run it through, just to get a feel for it.
+ 
+ ** Source.
+ http://chasen.org/~daiti-m/paper/ipsj07vpylm.pdf
+ 
+ next
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ 
+ *1392213182*Paper Introduction "Continuous Space Topic Model Based on Gaussian Processes"
+ The paper says that if you project a word in Deep Learning into a continuous Euclidean space, it is exciting that it expresses meaning, but that you can think of it as a normal distribution and optimize it instead of using a neural net, which is difficult to optimize to do that.
+ 
+ There is no direct reference to word2vec in the paper. Restricted Boltzmann Machines (RBMs) are generally said to surpass Letent Dirichlet Allocation (LDA), and it has been reported that "Deep Learning" with more layers will further improve performance, but optimization is difficult, it is hard to understand what is being learned, and it is difficult to connect to other models. It is difficult to optimize, it is difficult to know what it is learning, and it is difficult to connect to other models. That's why it is only used in research.
+ 
+ In RBM, the weights to the hidden layers encode the meaning, and in LDA, p(k|w) encodes the meaning, and ultimately the concept that "a word corresponds to a d-dimensional continuous vector" is important. So let us assume that there is an unknown function φ that maps a word to a d-dimensional vector, and that this d-dimensional vector φ(w) is φ(w) ~ N(0, I_d).
+ 
+ The probability of occurrence of a word is the default probability (which is obtained by maximum likelihood estimation) multiplied by exp(f(w)). f is a surface that follows a Gaussian process. The meaning of the Gaussian process is not yet well understood. In short, I imagine it is like a normal distribution with no fixed dimension.
+ 
+ Since f is difficult to compute, we introduce u, which follows a d-dimensional normal distribution, and set f = Φu. u corresponds one-to-one to the document. In short, documents are given a position in the same space as words, and information about which words are more likely to appear is expressed as an inner product.
+ 
+ The actual word frequency distribution sometimes looks like a Gaussian distribution, but the hem of the distribution is a little on the high frequency side, so we will use the Polya distribution with a0 as a parameter.
+ 
+ We want to get a good idea of the latent variables φ(w), u, and a0 from the observed word frequencies. Therefore, we use Metropolis Hasting (MH), one of the Markov Chain Monte Carlo (MCMC) methods. In short, we stop all but one variable, Markovianly determine the chosen variable from the original value, and if the new value is accepted by the MH criterion, we use it to update the value, and if not, we return to the original value.
+ 
+ Summary: The proposed CSTM can be regarded as a continuous Gaussian distribution of RBM, and can be easily optimized with MH. The problem occurs when the number of dimensions is too large due to the fact that it is a product model and not a mixture model, so the number of dimensions itself should be done in a Bayesian manner (like CRP?).
+ 
+ Thoughts: I understand that this time, since the model is that there is a u for each document, we can't directly do the same thing as word2vec. I wonder if it would be better to cut the model into windows of "how many words before and after each word" and consider each window to be a document. I haven't read the word2vec paper thoroughly yet, so I'll think about it after reading it. I also noticed that Dr. Masataka Goto is a co-author of the paper, and in the acknowledgements it says OngaCREST project, so I guess they are looking at not only natural language but also music applications. That sounds interesting.
+ 
+ ** Source.
+ Paper: http://chasen.org/~daiti-m/paper/nl213cstm.pdf
+ Explanation of Gaussian processes but I have no idea: http://www.ism.ac.jp/~daichi/paper/svm2009advgp.pdf
+ MCMC and MH Explanation: http://ebsa.ism.ac.jp/ebooks/sp/sites/default/files/ebook/1881/pdf/vol3_ch10.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ </body>
+
+[Hatena Diary 2014-02-12 https://nishiohirokazu.hatenadiary.org/archive/2014/02/12]

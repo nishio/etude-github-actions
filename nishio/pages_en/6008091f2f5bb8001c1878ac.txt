@@ -1,0 +1,24 @@
+400 Bad Request by hitting Flask from JS
+I'm hitting "Content-Type": "application/json", but Flask is receiving request.data and giving me a 400 Bad Request.
+Using request.json
+
+full sample:
+code:ts
+ const data = { user: "test", talk: "test", text: text };
+ fetch("https://keicho.herokuapp.com/api/web/", {
+   mode: "cors",
+   method: "POST",
+   body: JSON.stringify(data),
+   headers: {
+     "Content-Type": "application/json",
+   },
+ }).then((response) => {
+   console.log(response);
+ });
+code:python
+ @app.route('/api/web/', methods=["POST"])
+ def web_api():
+     user = request.json.get("user")
+     talk = request.json.get("talk")
+     text = request.json["text"]
+     return keicho.connect_web(user, talk, text)

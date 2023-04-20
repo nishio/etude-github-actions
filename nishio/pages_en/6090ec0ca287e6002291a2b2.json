@@ -1,0 +1,66 @@
+Hatena2013-06-27
+code:hatena
+ <body>
+ *1372307122* Quiz: Press one switch to turn off all LEDs
+ This past Sunday, I was working on a controller like this that I wanted to connect to FPGA. When I finished wiring the left half (cross button), I decided to check the operation and connected it to the GPIO of DE0 and put the input to LEDs, but for some reason, "when I pressed one switch, all LEDs turned off. The reason was so interesting that I wrote a blog post about it in quiz format.
+ [f:id:nishiohirokazu:20130627122756j:image]
+ 
+ ** Exercises
+ The switches are in between the signal line and GND, and the signal line and Vcc are connected by a pull-up resistor. 4 switches are mounted on the breadboard, and GND and Vcc on the breadboard are connected to GND and 3.3V pins on the DE0 board respectively by They are connected by jumper cables. The signal lines of each switch are similarly connected to the GPIO pins of DE0.
+ 
+ On the FPGA, the values of the GPIO pins are read and output as they are by turning the LEDs on and off. When a switch is pressed, the signal line is connected to GND, so the input value is set to LO and the LED turns off. Of course, we expected that only the LED corresponding to the switch pressed would turn off. But in reality, all LEDs are extinguished.
+ 
+ Q: Why did this happen?
+ 
+ ** Tip 1
+ 
+ There are nine clues in total, including some that are not related to solving the problem.
+ 
+ I used 7.5KΩ resistors because I did not have 4.7KΩ ones on hand. This should not be a problem.
+ 
+ ** Tip 2
+ 
+ I checked the color code thinking that the resistor I think is 7.5K ohms is actually about 75 ohms what I did wrong, and just one switch press causes the Vcc voltage to drop...but it was purple green red gold, so the line that the resistor value is wrong is gone.
+ 
+ ** Tip 3
+ 
+ Even after the switches are pulled out to ensure that they are open, pressing one switch will turn off all LEDs. If the signal wire itself is pulled out, only the corresponding LED will not turn off. So I thought it was a hardware problem, not software...
+ 
+ ** Tip 4
+ 
+ Since the wiring is gnarly to place the four switches in a crisscross pattern, I considered the possibility that something might be wrong there and simply connected two switches X and Y. However, both the X and Y LEDs are still off when X is pressed or Y is pressed.
+ 
+ I gave up and unplugged the jumper cable and put it away.
+ 
+ ** Tip 5
+ 
+ Why don't you measure the voltage on the signal line with a tester?" I connected GND and Vcc again with jumper cables and measured the potential difference between GND and the foot of the resistor. The voltage was 3.3V when the switch was not pressed, 0V when the switch was pressed, and 3.3V on the adjacent switch that was not pressed at that time.
+ 
+ ** Tip 6
+ 
+ However, when the signal line is connected to the GPIO of DE0 with a jumper cable from this state, only LED X turns off when switch X is pressed. Oh well? I can't be satisfied with the conclusion that "nothing I did fixed it"...
+ 
+ ** Tip 7
+ 
+ When switch Y is pressed, nothing turns off. After replacing the jumper cable connecting switch Y with another one, only LED Y turns off when switch Y is pressed, which is the original expected behavior.
+ 
+ ** Tip 8
+ 
+ I restored the original cross switch and now the LED corresponding to that switch turns off only when each of the four buttons is pressed without problems.
+ 
+ ** Tip 9
+ 
+ When I unplugged the jumper cable connecting Vcc from that state as a test, I was able to reproduce the "all 4 LEDs are off no matter which switch is pressed" phenomenon as in the beginning.
+ 
+ ** Answers
+ 
+ The jumper cable used to connect Vcc in the first cross switch circuit I made was actually broken. Therefore, Vcc on the breadboard was not connected anywhere. So when even one switch is pressed, not only is the signal line for that switch connected to GND and goes LO, but all signal lines through the pull-up resistor and "just wires that think they are Vcc" are connected to GND and go LO.
+ 
+ ** Impressions
+ 
+ A major difference between software and hardware: Software components will work as specified in any instance once one instance is confirmed to work as specified. Hardware components are sometimes mixed with instances that do not work according to specifications.
+ 
+ In software, it is impossible to say, "Oh, this assignment operator is disconnected," so we can implement it without incurring the cost of questioning that. We are very fortunate.
+ </body>
+
+[Hatena Diary 2013-06-27 https://nishiohirokazu.hatenadiary.org/archive/2013/06/27]

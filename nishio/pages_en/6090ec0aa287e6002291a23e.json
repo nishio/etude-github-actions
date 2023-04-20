@@ -1,0 +1,35 @@
+Hatena2012-06-09
+code:hatena
+ <body>
+ *1339231552*0.0 / 0.0 what would be?
+ On my Mac OS X 10.7.3, it is nan, but when I tried it on Rackhub (Ubuntu), it is -nan. I wonder why the behavior is different?
+ >|c|
+ #include <stdio.h>
+ int main(){
+   printf("%f\n", 0.0 / 0.0);
+ }
+ ||<
+ 
+ I have found that although the specification says that 0.0 / 0.0 should return NaN, it does not specify the sign of NaN or what to put in the mantissa part, so it is OK to return -nan.
+ 
+ *1339234842*REMOTE HOST IDENTIFICATION HAS CHANGED when told
+ >||
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+ Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+ It is also possible that the RSA host key has just been changed.
+ The fingerprint for the RSA key sent by the remote host is
+ fb:30:59:0a:fd:b2:51:ed:fb:2c:89:0c:34:72:54:07.
+ Please contact your system administrator.
+ Add correct host key in /Users/nishio/.ssh/known_hosts to get rid of this message.
+ Offending key in /Users/nishio/.ssh/known_hosts:33
+ RSA host key for [langcore.rackbox.net]:50149 has changed and you have requested strict checking.
+ Host key verification failed.
+ ||<
+ 
+ This is because I deleted a server I once created on Rackhub and recreated it under the same name, which changed the fingerprint on that server and alerted me to the possibility of a man-in-the-middle attack. I am being warned that I am being attacked by a man-in-the-middle. This time I understand that I created a different server with the same name, so I delete the relevant line from ~/.ssh/known_hosts and I am OK.
+ </body>
+
+[Hatena Diary 2012-06-09 https://nishiohirokazu.hatenadiary.org/archive/2012/06/09]

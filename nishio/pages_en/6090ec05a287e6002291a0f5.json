@@ -1,0 +1,78 @@
+Hatena2010-08-19
+code:hatena
+ <body>
+ *1282200581*Ruby 1.9.2 release and WEBrick vulnerability issue
+ Yes, <a href='http://www.ruby-lang.org/ja/news/2010/08/18/ruby-1-9-2-is-released/'>Ruby 1.9.2 has been released</a>. In this version, the vulnerability described in <a href='http://slashdot.jp/security/article.pl?sid=10/08/13/0133222'>WEBrick Zero-Day Vulnerability - Slashdot Japan</a> is fixed by a patch I wrote. It is rather interesting to know why I fixed the vulnerability in the first place.
+ 
+ - Apple notifies CVE of vulnerability without reporting it to upstream.
+ - Vulnerability is disclosed without upstream being notified.
+ - A patch is put on ruby-dev that appears to have been written by Apple (by someone who is not Apple).
+ - Unable to import the patch because the license of the patch is unknown.
+ - Unknown contact person at Apple to inquire about licenses, so I can't inquire about it.
+ - People who read ruby-dev can't write license-safe patches
+ - It's a vulnerability, and I'd like to keep the conversation private.
+ - yugui will make me, who hasn't read ruby-dev, write it.
+ - Get attack code from yugui and write a patch
+ - Public Domain and Declaration
+ - 1.9.2 released after being incorporated into Ruby
+ 
+ I had never written much code in Ruby, so I wasn't sure if I could do it when I was asked, but when I looked at the attack code, it was obvious that <a href='http://openmya.hacker.jp/hasegawa/public/20061209/momiji.html '>That in Unicode</a> was obviously the same vulnerability that occurred on Google's 404 page in 2005 as described in HACK #1, so I simply ran Tracer.on, attacked it, looked at the output, and fixed the problem.
+ 
+ After all, what's the problem?
+ - If you find a problem, I want you to report it upstream. A problem that bothers you could bother everyone else.
+ - If you intend not to claim copyright, you need to declare that explicitly. No license is stricter than any license that is not explicitly stated.
+ That's what I mean. Please, please, Apple.
+ 
+ <hr>
+ PS
+ <a href='http://d.ma-aya.to/?date=20100819#p02'>Empty your pockets. (2010-08-19)</a>
+ Hmmm.
+ This article contains some obvious mistakes and some gray areas. I had let it pass, thinking that everyone would know that it was wrong and that there was no need to mention it and hunt it down, but now that I have observed examples of people not noticing the mistakes, I have to mention it after all...
+ 
+ First, let's talk about the obvious mistakes.
+ 
+ >>
+ If the license is incompatible with Ruby, then Ruby distributed by Apple incorporating it would be in violation of the license, so it would be appropriate to consider the license to be compatible with Ruby.
+ <<
+ 
+ I thought I was going to blow tea. In general, "X's code may be used by Y" is not equal to "Y's code may be used by X". For example, if person A releases his program to the public domain or NYSL, and person B modifies it and releases the code under a license of his choice, this could be a violation of the license. This could be a violation of the license. It is not that the GPL or the public domain is special. It is not that the GPL or the public domain is special, but that the absurd logic that "if Y can use X, then X can use Y" does not apply in general.
+ 
+ Next, let's look at the gray content.
+ 
+ >>
+ The patch is not copyrightable or not copyrightable. The number of patches is quite small (1 liner) when considered as a percentage of the total code, and when the patches are partial modifications and there are not many other ways to modify them from the viewpoint of others, they cannot be considered as copyrighted works.
+ <<
+ 
+ You are free to "think it is not possible. But your personal "belief" that it cannot be deemed does not mean anything. Think about what happens when the copyright holder claims, "This is a copyrighted work. Will you provide the legal fees and legal work hours to argue in court that "this cannot be considered a copyrighted work"?
+ 
+ There are many who argue that this case cannot be considered copyrightable. Even I think the probability of a court finding a copyright on this one-line patch is very low. It is very gray, very close to white. But that's not the point. I am not discussing those layers. As long as the current Ruby community is not strong enough to deal with lawsuits, we have to avoid gray things, no matter how close to white they may seem.
+ </body>
+ <comments>
+ <comment>
+ <username>nez</username>
+ <body>I wonder if Apple has that kind of corporate culture. <br>They have called up the Bridge and asked them what they wanted to hear about Samba, but they never committed to a patch for Unicode 3.... </body>
+ <timestamp>1282213516</timestamp>
+ </comment>
+ <comment>
+ <username>Satou</username>.
+ <body>I noticed that it was interesting and I wanted to reblog it on Tumblr, but what is the license of this text? <br>I don't know about Hatena's terms and conditions, but I'm wondering if it's Creative Commons like Wikipedia? <br>I think it would be very useful if the Blog side supports this area. </body>
+ <timestamp>1282237652</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <BODY>Please feel free to do so, as long as it is within the bounds of legitimate citation. <br>I don't think there is anything productive in simply copying and pasting personal blogs into your own content, so we don't license it to support that. </body>
+ <timestamp>1282239731</timestamp>
+ </comment>
+ <comment>
+ <username>haraoka</username>
+ <body>Wouldn't it have been better to check directly with jkh@apple or something? I'm not sure. <br>I remember he was in charge of Open Source and Darwin level at Apple. </body>
+ <timestamp>1282245750</timestamp>
+ </comment>
+ <comment>
+ <username>nanashi</username>
+ <body>>For example, let's say Mr. A released his program to the public domain or NYSL. <br>>Mr. B can release his modified code under the license of his choice<br>But the ruby-1.8.7-p174.tar.gz that Apple patched is distributed under the same license as the original ruby, right? <br>Or is Apple's own Copying file added? </body>
+ <timestamp>1282475512</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-08-19 https://nishiohirokazu.hatenadiary.org/archive/2010/08/19]

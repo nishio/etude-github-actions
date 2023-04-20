@@ -1,0 +1,74 @@
+Hatena2013-02-02
+code:hatena
+ <body>
+ *1359774217* Differences in Prolog and Haskell behavior
+ I have a coding pattern in Prolog that says to prepare foo(0) and foo(N), and when N is N, do something and then call foo(N - 1) recursively.
+ 
+ First, let's check the behavior in Haskell.
+ >||
+ foo 0 = do{ print "rule1"; print 0 }
+ foo n = do{ print "rule2"; print n }
+ 
+ main = do
+   foo (1 - 1)
+   foo 1
+   foo 0
+ ||<
+ 
+ >||
+ "rule1"
+ 0
+ "rule2"
+ 1
+ "rule1"
+ 0
+ ||<
+ 
+ We see that the definition of foo 0 is called in foo(1 - 1). We can also see that only the definition of foo 0 is called in foo 0. (What an obvious thing to do, you might think, but I fell for that assumption.)
+ 
+ Let's try to write the same way in Prolog.
+ >||
+ foo(0) :- print('rule1: '), print(0).
+ foo(N) :- print('rule2: '), print(N).
+ ||<
+ 
+ >||
+ ?- foo(1 - 1).
+ rule2: 1-1
+ true.
+ 
+ ?- foo(1).
+ rule2: 1
+ true.
+ 
+ ?- foo(0).
+ rule1: 0
+ true ;
+ rule2: 0
+ true.
+ ||<
+ 
+ In Prolog, first foo(1 - 1) does not match foo(0), so it is rule2; in Haskell, the timing of the pattern match forces a 1-1 evaluation to 0, but not in Prolog. Also, at foo(0), after matching rule1, it also matches rule2.
+ 
+ If you look at examples such as the Fibonacci calculation in Prolog, it is written in a way that avoids this pitfall. I have to go out, so I'll continue later. Hint: cut and is.
+ 
+ *1359814741* I can no longer log in to Twitter.
+ Due to the "<a href='http://www.itmedia.co.jp/news/articles/1302/02/news013.html'>Possible Twitter leak of personal information including 250,000 passwords - ITmedia News</a>", Twitter The passwords to the <a href='_blanket'>Twitter</a> have been reset.
+ 
+ It seems that those who have received an email that the system has been reset should reset from there. But I haven't received it. I thought it might be a mistake, like "wrong email address," "dead mail server," or "in spam," but that doesn't seem to be the case.
+ 
+ First, I put the email address from my memory in the password reset screen and it says "good". If I put in a nonexistent hoge@.... .org, etc., which does not exist, I get "Invalid email address or phone number", so I guess this email address is tied to a valid account.
+ 
+ [f:id:nishiohirokazu:20130202230531p:image]
+ 
+ Next, I sent myself an e-mail to this e-mail address. It was forwarded to GMail without any problem. So the mail server is not dead. However, when I send an email to this email address from this password reset screen, it never arrives.
+ 
+ Finally, I checked to see if it was classified as SPAM, but it is not there either.
+ 
+ 
+ I wonder what other possibilities there are. I'm starting to feel like "Twitter is not essential to my life, so if I can't use it, I'm not going to use it anymore.
+ 
+ PS: In addition, it seems that you can post from Twitter integration from Hatena or from the Twitter application on your iPhone. I'll post this blog entry to Twitter using the Hatena linkage.
+ </body>
+
+[Hatena Diary 2013-02-02 https://nishiohirokazu.hatenadiary.org/archive/2013/02/02]

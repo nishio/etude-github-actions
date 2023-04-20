@@ -1,0 +1,318 @@
+Hatena2011-11-09
+code:hatena
+ <body>
+ *1320801102*Calculate inner and outer products with numpy ndarray
+ I wondered how to do inner product (v^t v) and matrix product with ndarray's dot method, but how to do outer product (v v^t)...there is no such method...but then I found a function called "outer". But then I found a function called "outer".
+ 
+ >||
+ In [833]: array([1, 2, 3])
+ Out[833]: array([1, 2, 3])
+ 
+ In [834]: v = _
+ 
+ In [835]: v.dot(v)
+ Out[835]: 14
+ 
+ In [836]: outer(v, v)
+ Out[836]: 
+ array([[1, 2, 3],
+        [2, 4, 6],
+        [3, 6, 9]])
+ ||<
+ 
+ *1320801173*numpy to make a diagonal matrix
+ If you want to create a diagonal matrix such that a given component is in the diagonal component, you can use diag.
+ 
+ >||
+ In [837]: diag([1, 2, 3])
+ Out[837]: 
+ array([[1, 0, 0],
+        [0, 2, 0],
+        [0, 0, 3]])
+ ||<
+ 
+ *1320801535*NumPy+Matplotlib to color vertices on scatter plots
+ I was worried about specifying "+" for a marker on a scatter plot and thinking, "Hey, even if I specify a color, it is not reflected..." but the color I specified is used for the marker's fill. +I guess I should have specified "edgecolor", but I changed the marker to "o" and it looked pretty cool, so I decided to use this one.
+ 
+ [f:id:nishiohirokazu:20111109101621p:image]
+ 
+ Just specify the color of each vertex in the argument c of scatter. In the code below, resp_for_each_data is a two-element vector that sums to 1, so the colors are made by mixing red and green in that ratio.
+ 
+ >||
+     red = array([1, 0, 0])
+     green = array([0, 1, 0])
+     colors = [red * r[0] + green * r[1] for r in resp_for_each_data]
+     scatter(data[:, 0], data[:, 1], c=colors, alpha=0.5, marker="o")
+ ||<
+ 
+ *1320808028*I implemented k-means method in numpy.
+ [f:id:nishiohirokazu:20111109120733p:image]
+ 
+ NumPy is amazing. The learning part is practically two lines.
+ >|python|
+ # E-step
+ nearest_cluster = array([argmin([norm(x - mu) for mu in mus]) for x in data])
+ 
+ # M-step
+ mus = [average(data[nearest_cluster == k], axis=0) for k in range(K)]
+ ||<
+ 
+ <hr>
+ <a href='http://d.hatena.ne.jp/n_shuyo/20100208/kmeans'>"Pattern Recognition and Machine Learning" (PRML) Reading Group #11 + K-means in R - Mi manca qualche giovedi`? </a>
+ >|r|
+ # 1 step for K-means
+ (mu <- t(sapply(1:K,function(k)colMeans(xx[max.col(-sapply(1:K,function(i)apply(xx,1,function(x)sum((mu[i,]-x)^2))))==k,]))));
+ ||<
+ 
+ hmm
+ 
+ >|python|
+ mu = [average(xx[array([argmin([norm(x - m) for m in mu]) for x in xx]) == k], axis=0) for k in range(K)]
+ ||<
+ 
+ All right. (What)
+ 
+ <hr>
+ I thought that if I increased the number of clusters, they would take one branch at a time, but this happened.
+ 
+ [f:id:nishiohirokazu:20111109124003p:image]
+ 
+ *1320817169*numpy+matplotlib to mark with a cross on a scatter plot
+ When we say "crossed-out", there is often an unspoken requirement specification that has not been verbalized. For example, "Do not make the crosses horizontal because they are influenced by the axis of the graph.
+ 
+ [f:id:nishiohirokazu:20111109144009p:image]
+ 
+ In the previous article "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111107/1320660473'>Displaying Mean and Variance on a Scatter Plot with NumPy+Matplotlib</a>", I put a Circle in However, this time, I want to use a cross to represent only the center of the clusters, and placing a Circle is not what I expected, as it is affected by the axes and becomes horizontal.
+ 
+ [f:id:nishiohirokazu:20111111000335p:image]
+ 
+ After thinking for a while about what to do, I realized that scatter is fine. The data points on the scatterplot aren't scaled. I wrote them boldly in white and then drew a cross in the color of each cluster in it. It was very easy to achieve.
+ 
+ >||
+     clf()
+     colors = color_for_cluster[nearest_cluster]
+     scatter(data[:, 0], data[:, 1], c=colors, alpha=0.5, marker="o")
+     scatter(mus[:, 0], mus[:, 1], s=50, linewidths=3, edgecolor=[1, 1, 1], marker="+")
+     scatter(mus[:, 0], mus[:, 1], s=50, edgecolor=color_for_cluster, marker="+")
+ ||<
+ 
+ *1320829189*EM Algorithm Answer Key
+ I have implemented my code "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111108/1320724692'>I implemented EM algorithm for mixed Gaussian distribution in Numpy</a>" in Mr. Nakatani's "<a href='http ://d.hatena.ne.jp/n_shuyo/20100304/em_algorithm'>EM Algorithm Implementation (for study) - Mi manca qualche giovedi`? </a>" and check the answer against it.
+ 
+ First, let's briefly talk about what an EM algorithm is. A situation where, in addition to the observable random variable X, there is also an unobservable random variable Z. In order to represent this situation, you assume some probability model for yourself. You want to choose the best parameter θ of that probability model based on the observed data X. This is the objective. In other words, you want to find θ that maximizes p(X|θ).
+ 
+ Unfortunately, however, the expression for p(X | θ) cannot be easily maximized (if it could, there would be no need to use the EM algorithm). And fortunately, maximizing the log-likelihood ln p(X, Z | θ) of the complete data is easy.
+ 
+ - p(X | θ) cannot be easily maximized, but by Jensen's inequality we can say that it is greater than some expression L(q(Z), θ)
+ - Stopping θ and maximizing L for q(Z) can be done by setting q to p (E-step), since the remainder is KL(q|||p) if we cull ln p(X|θ), which is unrelated to Z, out of L.
+ - Stopping q(Z) and maximizing L with respect to θ means that if we cobble together a denominator from L that is irrelevant to θ...er...hmmm...what does the Q function mean? It's the log likelihood of the complete data multiplied by p(Z | X, θ^) and summed over z. Since p(Z | X, θ^) is a coefficient unrelated to θ... hmmm?
+ - Note: I don't understand how the argmax_theta of the Q function in the M step of the EM algorithm can mean that the log-likelihood of the complete data is differentiated and zero.
+ 
+ It is not my purpose to explain the EM algorithm, so I'll leave it at that (copy and paste) and move on to the source code comparison.
+ 
+ ** Data Preparation
+ >|python|
+ cls1 = c_[randn(100), randn(100)].dot(array([[10, 0], [0, 1]])).dot(array([[1, -1], [1, 1]]))
+ cls2 = c_[randn(100), randn(100)].dot(array([[10, 0], [0, 1]])).dot(array([[1, 1], [-1, 1]]))
+ data = r_[cls1, cls2]
+ ||<
+ Mr. Nakatani is using Old Faithful data, but I wanted to make sure that data that does not do well with k-means would do well with EM, so I made my own crossed distributions.
+ 
+ ** Initialize parameters
+ >|r|
+ # of classes
+ K <- 2;
+ 
+ # Initial values for mean, covariance and mixing ratio (normal random number)
+ mu <- matrix(rnorm(K*ncol(xx)), nrow=K);
+ mix <- numeric(K)+1/K;
+ sig <- list();
+ for(k in 1:K) sig[[k]] <- diag(ncol(xx));
+ ||<
+ 
+ >|python|
+ # inital parameter
+ K = 2
+ D = 2
+ mus = [array([1, 1]), array([-1, -1])]
+ sigmas = [eye(2), eye(2)]
+ pis = [0.5, 0.5]
+ assert len(mus) == K and all(len(mu) == D for mu in mus)
+ assert len(sigmas) == K and all(s.shape == (D, D) for s in sigmas)
+ assert len(pis) == K
+ ||<
+ Nakatani-san's is properly made so that the parameters can be changed. Mine was hard-coded. I'll take this opportunity to fix it. Actually, when I implemented k-means, I had to support more than 2 clusters.
+ >|python|
+ # inital parameter
+ K = 2
+ D = 2
+ _degrees = array(range(K)) * 2 * pi / K
+ mus = array([array([sin(th), cos(th)]) for th in _degrees])
+ sigmas = [eye(D) for k in range(K)]
+ pis = [1.0 / K] * K
+ assert len(mus) == K and all(len(mu) == D for mu in mus)
+ assert len(sigmas) == K and all(s.shape == (D, D) for s in sigmas)
+ assert len(pis) == K
+ ||<
+ 
+ ** Density function of Gaussian distribution
+ >|r|
+ # Multidimensional normal distribution density function (use package?)
+ dmnorm <- function(x,mu,sig) {
+ 	D <- length(mu);
+ 	1/((2 * pi)^D * sqrt(det(sig))) * exp(- t(x-mu) %*% solve(sig) %*% (x-mu) / 2)[1];
+ }
+ ||<
+ 
+ >|python|
+ def dens_gauss(x, mu, sigma):
+     """
+     calculate gauss distribution's density
+     """
+     Z = sqrt(2 * pi) ** x.size * sqrt(norm(sigma))
+     v = x - mu
+     return exp(-0.5 * v.dot(inv(sigma)).dot(v)) / Z
+ ||<
+ 
+ Well, I was going to say it's the same, but it looks like Nakatani's is not square rooted to 2 * pi.
+ 
+ And I should have used det instead of norm on my part.
+ >||
+ In [1080]: norm(eye(2))
+ Out[1080]: 1.4142135623730951
+ 
+ In [1081]: det(eye(2))
+ Out[1081]: 1.0
+ ||<
+ 
+ ** E-step
+ >|r|
+ # E-step of the EM algorithm
+ Estep <- function(xx, mu, sig, mix) {
+ 	K <- nrow(mu);
+ 	t(apply(xx, 1, function(x){
+ 		numer <- sapply(1:K, function(k) {
+ 			mix[k] * dmnorm(x, mu[k,], sig[[k]])
+ 		});
+ 		numer / sum(numer);
+ 	}))
+ }
+ ||<
+ 
+ >|python|
+ def resp(x, pis, mus, sigmas):
+     """
+     given: vector x, list of mu, list of sigma
+     return: array of responsibility
+     eq.9.13
+     """
+     v = array([p * dens_gauss(x, mu, sigma) 
+                for p, mu, sigma in zip(pis, mus, sigmas)])
+     s = v.sum()
+     return v / s
+ 
+ (...snip...)
+ 
+ # E-step
+ # \gamma(z_nk)
+ # responsibility
+ resp_for_each_data = array([resp(x, mus, sigmas) for x in data])
+ assert len(resp_for_each_data) == N
+ 
+ # eq 9.18, Nk
+ num_for_each_cluster = array([col.sum() for col in resp_for_each_data.transpose()]) 
+ assert len(num_for_each_cluster) == K
+ ||<
+ 
+ Almost the same. So Mr. Nakatani wants Nk in the M step.
+ I guess Numpy has a function to add in column direction. I think Numpy has a function to add in the column direction.
+ >|r|
+ N_k <- colSums(gamma_nk);
+ ||<
+ 
+ ** M Step
+ *** π
+ >|r|
+ new_mix <- N_k / N;
+ ||<
+ 
+ >|pytohn|
+ # eq.9.22 update \pi_k
+ def update_pis(num_for_each_cluster):
+     return num_for_each_cluster / N
+ ||<
+ 
+ Well, there's no other way to write it.
+ 
+ *** μ
+ >|r|
+ new_mu <- (t(gamma_nk) %*% xx) / N_k;
+ ||<
+ 
+ >|python|
+ # update parameters, M-step
+ # eq 9.17, update \mu_k
+ def update_mus(resp_for_each_data, data, num_for_each_cluster):
+     return [
+         resp_for_each_data[:, k].dot(data)
+         / num_for_each_cluster[k]
+         for k in range(K)]
+ ||<
+ 
+ Ah, I see, if you divide by an array of equal lengths, you get element-by-element division. I see. I'll rewrite it.
+ 
+ >||
+ resp_for_each_data.T.dot(data) / num_for_each_cluster
+ ||<
+ 
+ That, the results are different.
+ 
+ >||
+ (resp_for_each_data.T.dot(data).T / num_for_each_cluster).T
+ ||<
+ 
+ This would match, but why?
+ 
+ >||
+ In [1078]: array([[1, 1], [1, 1]]) / array([1.0, 2.0])
+ Out[1078]: 
+ array([[ 1. ,  0.5],
+        [ 1. ,  0.5]])
+ ||<
+ 
+ Oh, I see. So your interpretation of "if the lengths of the first dimension are the same, then it's element-wise" is wrong, and if the SHAPE is different, then it's broadcast. So if you transpose and then divide, and then transpose the result back, it will be the same as the aircraft, and so on. But I don't like that kind of code, so hmmm, I wonder how to do it elegantly. I'm sure there's a better way to write it, but for now, I'll just write it as a simple zip.
+ 
+ >|python|
+ array([v / s for v, s in zip(resp_for_each_data.T.dot(data), num_for_each_cluster)])
+ ||<
+ 
+ *** Σ
+ >||
+ 	new_sig <- list();
+ 	for(k in 1:K) {
+ 		sig <- matrix(numeric(D^2), D);
+ 		for(n in 1:N) {
+ 			x <- xx[n,] - new_mu[k,];
+ 			sig <- sig + gamma_nk[n, k] * (x %*% t(x));
+ 		}
+ 		new_sig[[k]] <- sig / N_k[k]
+ 	}
+ ||<
+ 
+ >|python|
+ # eq. 9.19, update \Sigma_k
+ def update_sigmas(resp_for_each_data, data, mus, num_for_each_cluster):
+     return [
+         array([resp_for_each_data[n, k] 
+                * outer(data[n] - mus[k], data[n] - mus[k])
+                for n in range(N)]).sum(0)
+         / num_for_each_cluster[k] for k in range(K)]
+ ||<
+ 
+ I use sum(0), that is, sum in the direction of the 0th axis, and Nakatani uses "for" to add them together. Instead, I wrote data[n] - mus[k] twice, but Nakatani substitutes x for it, which makes the formula easier to read.
+ 
+ ** Summary
+ It's quite instructive to implement the same content without looking at it and then compare it later. Also, R and Numpy are similar.
+ </body>
+
+[Hatena Diary 2011-11-09 https://nishiohirokazu.hatenadiary.org/archive/2011/11/09]

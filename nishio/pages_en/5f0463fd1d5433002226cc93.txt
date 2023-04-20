@@ -1,0 +1,19 @@
+DP C
+[C - Vacation https://atcoder.jp/contests/dp/tasks/dp_c]
+　I want to take the greatest sum from three sequences of numbers.
+　However, they cannot be taken consecutively from the same sequence of numbers.
+　The definition region is which of the three ways was the immediate previous one, and the value is the sum of the three cases.
+from [Dynamic Programming].
+DP_C
+	PyPy 144 ms
+code:python
+ def solve(N, scores):
+     last_score = scores[0]
+     for i in range(1, N):
+         next_score = [
+             max(last_score[1], last_score[2]) + scores[i][0],
+             max(last_score[2], last_score[0]) + scores[i][1],
+             max(last_score[0], last_score[1]) + scores[i][2],
+         ]
+         last_score = next_score
+     return max(last_score)

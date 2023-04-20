@@ -1,0 +1,130 @@
+Hatena2008-04-23
+code:hatena
+ <body>
+ *1208918808*Upcoming TopCoder(R) Single Round Match 399
+ If you create an account with TopCoder, you will receive an email like the one below.
+ >>
+ TopCoder(R) Single Round Match 399 is scheduled for Wednesday, April 23 at 9:00PM Eastern Daylight Time (UTC/GMT -4 hours).
+ 
+ Please be sure to check here for the start time in your time zone:
+ http://www.topcoder.com/tc?module=MatchDetails&rd=12171
+ <<
+ You didn't have to calculate the time difference by yourself...Tokyo is Thu 10:00 AM, and you need to register between 3 hours and 5 minutes before.
+ 
+ *1208919047* green creepy
+ I forget the name of the movie, but the new poster at Nagatacho station was very creepy. I think it was an alien movie, but the girl was covered with a green tentacle that was sticky with a green, disgusting liquid. It made me sick in the morning. I wonder if there are people in the world who enjoy such things...
+ 
+ *1208924171*[TopCoder]boost and tr1
+ The code using boost can be compiled (with warnings), but if I use tr1, I can't compile it.
+ 
+ *1208926628*[TopCoder]Python is available!
+ With the Marathon Match going on right now, you can participate in Python, right? Marathon Match is a time-consuming competition. This time, the problem is to transport people to the elevator in the shortest possible time.
+ http://www.topcoder.com/longcontest/?module=ViewProblemStatement&compid=7827&rd=12199
+ Unlike a problem where the correct answer is fixed and the correct answer is given, this is a "whoever takes the least amount of time wins" competition. This "least time-consuming" is, of course, not the time it takes to execute the program, but the time it takes to transport the elevator's passengers.
+ 
+ *1208943214*[TopCoder]Today's practice SRM397Div2
+ Solved 250 problems in 25 minutes and received a score of 182. He also passed the system test.
+ I'm not very familiar with working with strings, so I had to look it up. I did a little research and couldn't figure out how to convert an integer to a string or a string to an integer, so I did that myself. I'm sure there is something like that if you look for it.
+ 
+ >|cpp|
+   string decodingEncoding(string code, string message) {
+     char c = message[0];
+     size_t N = message.size();
+     string result = "";
+ 
+     if('0' <= c && c <= '9'){
+       for(size_t i=0; i<N; i+=2){
+         string s = message.substr(i, 2);
+ 	size_t x = (s[0] - '0') * 10 + (s[1] - '0');
+ 	result.push_back(code[x - 1]);
+       }
+ 
+     }else{
+       for(size_t i=0; i<N; i++){
+         char c = message[i];
+ 	size_t pos = code.find(c) + 1;
+ 	result.push_back('0' + pos / 10);
+ 	result.push_back('0' + pos % 10);
+       }
+     }
+     return result;
+   }
+ ||<
+ And I opened the 500 point problem and can't solve it... seriously, do I need to do a width-first search or something?
+ 
+ 
+ -----
+ 
+ Converting a string consisting of two numbers to an integer was easy using istringstream, but converting an integer to a string was a bit of a hassle because I wanted the leading 0's to appear when the number was a single digit. However, the conversion of an integer to a string is a bit of a hassle, because I want the single digit to be prefixed with a zero. boost/format seems to work, but I don't have boost installed in my environment, and when I tried to port install it, it stopped with an error.
+ 
+ -----
+ 
+ Install boost on Mac with port - Digital Lifestyle Hacks by Shingo Sato (akio0911)
+ http://d.hatena.ne.jp/akio0911/20080320/1206015831
+ 
+ Oh!
+ 
+ -----
+ 
+ I was able to do it!
+ >|cpp|
+   string decodingEncoding(string code, string message) {
+     char c = message[0];
+     size_t N = message.size();
+     ostringstream oss;
+     string result = "";
+ 
+     if('0' <= c && c <= '9'){
+       for(size_t i=0; i<N; i+=2){
+         string s = message.substr(i, 2);
+ 	istringstream iss(s);
+ 	size_t x;
+ 	iss >> x;
+ 	oss << code[x - 1];
+       }
+ 
+     }else{
+       for(size_t i=0; i<N; i++){
+         char c = message[i];
+ 	size_t pos = code.find(c) + 1;
+ 	oss << boost::format("%1$02d") % pos;
+       }
+     }
+     return oss.str();
+   }
+ ||<
+ 
+ -----
+ 
+ I was told about lexical_cast on IRC.
+ 
+ >|cpp|
+       for(size_t i=0; i<N; i+=2){
+         string s = message.substr(i, 2);
+ 	size_t x = boost::lexical_cast<size_t>(s);
+ 	oss << code[x - 1];
+       }
+ ||<
+ 
+ Oh, this looks good. It seems to be converted internally using stringstream.
+ 
+ -----
+ 
+ >|cpp|
+       BOOST_FOREACH(char& c, message){
+ 	size_t pos = code.find(c) + 1;
+ 	oss << boost::format("%1$02d") % pos;
+       }
+ ||<
+ 
+ boost amazing!
+ </body>
+ <comments>
+ <comment>
+ <username>akio0911</username>
+ <body>boost is good. </body>
+ <timestamp>1208962549</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-23 https://nishiohirokazu.hatenadiary.org/archive/2008/04/23]

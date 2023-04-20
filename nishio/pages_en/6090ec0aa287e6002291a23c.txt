@@ -1,0 +1,40 @@
+Hatena2012-06-05
+code:hatena
+ <body>
+ *1338891498*Tried Clojure's STM.
+ Today I decided to study Clojure because I had some time waiting to work on it.
+ 
+ If you look at the front of open 11, you can see that if there are two threads rewriting the same variable, they can enter the transaction at the same time. checkpoint 11 opens and proceeds to rewrite in transaction 1. open 21 brings the process back to transaction 2, It starts over again, retrying about 10 times per second. Finally, after transaction 1 terminates with open 12, transaction 2 successfully redoes and exits the transaction without incident.
+ 
+ https://gist.github.com/2874143
+ 
+ >||
+ start transaction 1
+ start transaction 2
+ ----------
+ open 11
+ modified ref rx: 1
+ ----------
+ open 21
+ start transaction 2
+ start transaction 2
+ start transaction 2
+ start transaction 2
+ ----------
+ start transaction 2
+ start transaction 2
+ start transaction 2
+ start transaction 2
+ start transaction 2
+ start transaction 2
+ open 12
+ finish transaction 1
+ start transaction 2
+ modified ref rx: 2
+ ----------
+ open 22
+ finish transaction 2
+ ||<
+ </body>
+
+[Hatena Diary 2012-06-05 https://nishiohirokazu.hatenadiary.org/archive/2012/06/05]

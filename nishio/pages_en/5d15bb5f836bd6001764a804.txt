@@ -1,0 +1,53 @@
+TypeScript typing in pseudo code
+Type verification does not involve execution, so even pseudocode without code to execute can be verified for type consistency
+
+Expressing "For now, there is such a thing as State."
+code:ts
+ type State = "State"
+State is a literal type of "State
+for some reason
+TypeScript is [structurally typed], so if you set an appropriate empty object, etc., it will not cause an error if you make an inappropriate assignment.
+code:ts
+ type State = {};
+ type Other = {};
+	
+  (x: State) => {
+    const y: Other = x; // no error
+  }
+
+Expresses "Mutex has a value of type State
+code:ts
+ type Mutex = {
+   state: State,
+ };
+
+Express "State or null".
+code:ts
+ type Mutex = {
+   state: State | null,
+ };
+
+There is a function updateState that takes a State and returns a State."
+code:ts
+ let updateState: (state: State) => State;
+Here we only declare the function type and do not define the function implementation.
+The let takes advantage of the fact that it does not have to have a value at the time of declaration.
+
+code:ts
+ let foo: (arg: ArgType) => RetType
+The implementation would be rewritten like this
+code:ts
+ const foo = (arg: ArgType): RetType => { ... }
+
+code:ts
+ type Foo = "Foo";
+ const createFoo = (): Foo => {
+   // ...
+   return "Foo";
+ }
+
+
+It's a "T" list, with at least two of them."
+code:ts
+ [T, T, ...T[]]
+

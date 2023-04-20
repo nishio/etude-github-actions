@@ -1,0 +1,47 @@
+Hatena2011-04-07
+code:hatena
+ <body>
+ *1302137414* Visualize headache frequency
+ Compared to abdominal pain
+ <img src="http://gyazo.com/07f6f687c64f9a9f2556c13475460e87.png">
+ Headaches and back pain appear to be worse in the afternoon.
+ <img src="http://gyazo.com/ffcbcb8e788f4bf6d3b57d98a0049b5d.png">
+ <img src="http://gyazo.com/18288cf63a25ab191121c0e925ca090f.png">
+ Interesting.
+ 
+ *1302178558* minimum Lisp
+ If you have a copy of Web-DB Vol. 60 handy, please take a look at the Lisp chapter, which talks about how Lisp code is almost like a parse tree, and what happens when you run that parse tree.
+ As you can see in the code below, there is no comma separating the list in the Lisp code but there is in Python, and the atoms in Lisp are represented as strings in Python, so the quotation marks are attached. That's about the only difference. So, the syntax tree can be executed with this much code.
+ 
+ So, well, this all goes "eval each element and then do the calculation" because there is no special form in the code, but that's not good enough to realize ifs and such, is it? What do you think we should do? I'll write about this another time when I have a chance.
+ 
+ >|python|
+ # -*- encoding: utf-8 -*-
+ 
+ """
+ mini-Lisp
+ Code that takes a Lisp-like syntax tree and executes it for Lisp commentary
+ """
+ 
+ # (equivalent to print (* 3 (+ 1 2)))
+ ast = ("print", ("*", 3, ("+", 1, 2)))
+ 
+ 
+ def eval(ast):
+     if not isinstance(ast, tuple):
+         return ast # already evaled
+     func = ast[0]
+     if func == "*":
+         return eval(ast[1]) * eval(ast[2])
+     elif func == "+":
+         return eval(ast[1]) + eval(ast[2])
+     elif func == "print":
+         print eval(ast[1])
+         return None
+ 
+ 
+ eval(ast)
+ ||<
+ </body>
+
+[Hatena Diary 2011-04-07 https://nishiohirokazu.hatenadiary.org/archive/2011/04/07]

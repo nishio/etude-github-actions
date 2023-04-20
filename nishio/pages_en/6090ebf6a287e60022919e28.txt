@@ -1,0 +1,398 @@
+Hatena2008-04-21
+code:hatena
+ <body>
+ *1208737570* Attention to baths.
+ Beware of drowning in the bath when you're sleepy. I kissed the hot water three times.
+ 
+ *1208760056*[cpp]
+ The next code, above and below, is OK.
+ >|cpp|
+   // OK
+   long tmp[2] = {10L, 20L};
+   plus<long> add;
+   cout << add(tmp[0], tmp[1]) << endl;
+ 
+ ---
+   
+   // OK
+   long tmp[1][2] = {{10L, 20L}};
+   plus<long> add;
+   cout << add(tmp[0][0], tmp[0][1]) << endl;
+ ||<
+ 
+ I wonder why the code below is an error.
+ CountExpressions.cpp:48: error: no match for call to ‘(std::binary_function<long int, long int, long int>) (long int&, long int&)’
+ They'll say. Why is there an ampersand on it?
+ 
+ >|cpp|
+ int calcExpressions(int x_, int y_, int val) {
+   long x = long(x_), y = long(y_);
+   long xs[6][4] = {
+     {x, x, y, y}, {x, y, x, y}, {x, y, y, x}, 
+     {y, y, x, x}, {y, x, y, x}, {y, x, x, y}};
+ 
+   plus<long> add;
+   minus<long> sub;
+   multiplies<long> mul;
+   binary_function<long, long, long> opf[3] = {add, sub, mul};
+   char opc[3] = {'+', '-', '*'};
+   int count = 0;
+ 
+   for(int i=0; i < 6; i++){
+     for(int op1=0; op1 < 3; op1++){
+       long v = opf[op1](xs[i][0], xs[i][1]);
+       for(int op2=0; op2 < 3; op2++){
+ 	v = opf[op2](v, xs[i][2]);
+ 	for(int op3=0; op3 < 3; op3++){
+ 	  v = opf[op3](v, xs[i][3]);
+ 	  if(v == val){
+ 	    cout << xs[i][0] << opc[op1] \
+ 	         << xs[i][1] << opc[op2] \
+ 	         << xs[i][2] << opc[op3] \
+ 	         << xs[i][3] << endl;
+ 	    count++;
+ 	  }
+ 	}
+       }
+     }
+   }
+ 
+   return 0;
+ }
+ ||<
+ 
+ The problem statement can be found at the URL below if you have an account.
+ http://www.topcoder.com/stat?c=problem_statement&pm=8157&rd=12170
+ 
+ -----
+ 
+ I had no choice but to create a separate function to change the contents of the calculation with an if statement, and then I removed the bug caused by the use of v. It passed the system test. I'm starting to understand how to do this. I'm looking forward to Thursday.
+ 
+ *1208764084* FreeBSD on VMWare.
+ I had installed it before, but I inadvertently deleted it due to an operational error, so I'm going to install it again. This entry is just a reminder of what I did and what went wrong. 7.0 on FreeBSD. This time, I made sure to include the Ports Collection and it made installing all kinds of things easier. Make install for everything.
+ 
+ 
+ ** ■ Can't su because I forgot to add myself to wheel
+  I exited and re-entered as root, opened /etc/gruop with vi and added myself to wheel. cf. <a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/086suwheel.html">su To limit the users who can execute commands</a>.
+ 
+ ** ■ Logging in with ssh
+ I don't know how to copy and paste from the VMWare screen. I turned on ssh when I installed VMWare. By the way, VMWare is set to bridge mode.
+ 
+ ** ■ emacs is not included
+ >||
+ # cd /usr/ports/editors/emacs/
+ # make
+ ||<
+ 
+ I should have installed screen instead of Emacs. I should have installed screen instead of Emacs... I should have done something else while I was installing... I decided to use bg and install screen.
+ 
+ >||
+ # cd /sysutils/screen/
+ # make install
+ ||<
+ I learned C-a c and C-a ? I got to the point of installing cairo and was stopped at the inquiry screen. fg and I answered that OpenGL was not necessary. It seems to be a graphics library. <a href="http://ja.wikipedia.org/wiki/Cairo">cairo - Wikipedia</a>
+ 
+ C-a c to make a new screen and C-a C-a to go back to the previous one. At first, Emacs was just made and not installed, so make install.
+ 
+ ** ■ bash is not included
+ 
+ I guess I should forget about bash at this point and put in zsh.
+ 
+ >||
+ # cd /usr/ports/shells/zsh/
+ # make install
+ ||<
+ 
+ rehash which zsh. it was in /usr/local/bin/zsh. Rewrite the shell configuration with chsh.
+ 
+ ** ■ Put in subversion
+ cd /usr/ports/ and do make search name="subversion" | less to make sure Subversion is in /usr/ports/devel/subversion. make install.
+ 
+ ** ■ Put in Django.
+ - Check if python is installed -> 2.5.1 was installed.
+ - Put in subversion
+ 
+ For now, the one in the development environment at hand is rev5728, so I'm going to install that. After confirming that it works, replace it with the new version. To make it easy to replace it, check it out to an appropriate location and install it with a symbolic link.
+ 
+ >||
+ # cd /home/nishio/
+ # mkdir django/rev5726/
+ mkdir: django: No such file or directory
+ # mkdir django
+ # mkdir django/rev5726/
+ # cd django/rev5726/
+ # svn co -r 5726 http://code.djangoproject.com/svn/django/trunk/ trunk
+ (snip)
+ # cd /usr/local/lib/python2.5/site-packages/
+ # ln -s /home/nishio/django/rev5726/trunk/django/ django
+ # ln -s /home/nishio/django/rev5726/trunk/django/bin/django-admin.py /usr/local/bin
+ ||<
+ 
+ Try.
+ >||
+ # rehash
+ # dj[C-d]
+ django-admin.py djpeg
+ # django-admin.py
+ (snip)
+ # django-admin.py startproject hoge
+ # ls
+ hoge
+ # cd hoge/
+ # ./manage.py runserber  # miss(typo)
+ Error: Your action, 'runserber', was invalid.
+ Run "./manage.py --help" for help.
+ # ./manage.py runserver
+ Validating models...
+ 0 errors found.
+ 
+ Django version 0.97-pre, using settings 'hoge.settings'
+ Development server is running at http://127.0.0.1:8000/
+ Quit the server with CONTROL-C.
+ ||<
+ 
+ Well, the server is up and running, so I went to http://10.89.107.52:8000/にアクセスしてみる in my browser. Oh, I can't see it. Oh, I see, it is bound to 127.0.0.1 by default, so I can't see it from outside machines.
+ 
+ >||
+ # ./manage.py runserver 0.0.0.0:80
+ Validating models...
+ 0 errors found.
+ 
+ Django version 0.97-pre, using settings 'hoge.settings'
+ Development server is running at http://0.0.0.0:80/
+ Quit the server with CONTROL-C.
+ ||<
+ Now I can see http://10.89.107.52/にアクセスしてみると and yes, I can see it.
+ 
+ ** □ SQLite
+ >|python|
+ >>> import sqlite3
+ (snip)
+ ImportError: No module named _sqlite3
+ ||<
+ I wonder how this was resolved.
+ 
+ ** ■ easy_install
+ - Put in easy_install
+ -- ■ Put pygments with easy_install Pygments
+ 
+ >||
+ # curl http://peak.telecommunity.com/dist/ez_setup.py
+ curl: Command not found.
+ # wget http://peak.telecommunity.com/dist/ez_setup.py
+ wget: Command not found.
+ ||<
+ Oops.
+ 
+ >||
+ # pushd /usr/ports/
+ /usr/ports /home/nishio/tmp
+ # make search name="curl" | less
+ (snip)
+ # cd /usr/ports/ftp/curl
+ # make install
+ ||<
+ 
+ >||
+ # popd
+ (snip)
+ # curl -O http://peak.telecommunity.com/dist/ez_setup.py
+ (snip)
+ # python ez_setup.py
+ # rehash
+ # easy_install Pygments
+ ||<
+ 
+ ** ■ Insert pysqlite
+ I completely forgot to keep track, so I used the history command to see what commands I had typed in the past.
+ 
+ >||
+ # make search name=pysqlite
+ # cd databases/py-pysqlite23
+ # make install
+ ||<
+ 
+ ** ■ Put memcached, cmemcached
+ This was also unearthed from HISTORY.
+ I wanted to add memcached and cmemcached, but there was no cmemcached, so I added libmemcached for now.
+ 
+ >||
+ cd databases/memcached
+ make install
+ /usr/local/etc/rc.d/memcached
+ /usr/local/etc/rc.d/memcached start
+ cd ../../ 
+ make search name=libmem
+ cd databases/libmemcache/
+ make install
+ ||<
+ 
+ I downloaded cmemcached from the official site and put it in.
+ 
+ >||
+ curl -O http://gijsbert.org/downloads/cmemcache/cmemcache-0.91.tar.bz2
+ tar -xzvf cmemcache-0.91.tar.bz2
+ cd cmemcache-0.91
+ python setup.py install
+ ||<
+ 
+ ** ■ Put MySQL
+ /usr/ports/databases/
+ >||
+ cd mysql51-server
+ make install
+ ||<
+ 
+ I tried to install mysql51-client at the same time with screen, but I got a mysterious error saying that the C compiler could not create an executable file. I installed only server again and it worked fine. client is included in server.
+ 
+ ** ■ Putting in Apache
+ I put apache22 in the ports.
+ >||
+  Failed to enable the 'httpready' Accept Filter
+ ||<
+ I get angry with them.
+ >>
+ Add the following to /boot/loader.conf.
+ accf_http_load="YES"
+ <<
+ http://www.cozmixng.org/~rwiki/?cmd=view;name=Apache
+ 
+ >||
+ # emacs /usr/local/etc/apache22/httpd.conf
+ ||<
+ 
+ Add "apache22_enable="YES" to /etc/rc.conf. Also add "mysql_enable="YES".
+ 
+ It does not work properly. No error message appears, but no process exists either. I tried /usr/local/etc/rc.d/apache22 rcvar to see if it says YES, but it says NO. It says apache2_enable when it should be apache22_enable. Still doesn't work. I read /var/log/httpd-error.log and found the following error.
+ >>
+ [Thu May 01 15:41:17 2008] [alert] (EAI 8)hostname nor servname provided, or not known: mod_unique_id: unable to find IPv4 address of "*******"
+ <<
+ In /etc/hosts, change where it says "127.0.0.1 localhost" to "127.0.0.1 localhost *******". It worked!
+ 
+ I also make installed /usr/ports/www/apache-mode.el.
+ 
+ ** ■ sudo
+ 
+ After putting sudo, visudo and remove the comment at the beginning of the setting "people in the wheel group can start all commands" and save it (delete:x, save and exit:zz).
+ 
+ ** ■ mod_python, mod_fcgi
+ It was mod_fastcgi, note that mod_fcgid is different.
+ 
+ ** ■ flup
+ It seems that flup is required to use mod_fastcgi.
+ http://trac.saddi.com/flup
+ 
+ >||
+ > curl -O http://www.saddi.com/software/flup/dist/flup-1.0.tar.gz
+ > tar -xvzf flup-1.0.tar.gz
+ > cd flup-1.0
+ > sudo python setup.py install
+ ||<
+ 
+ Lightly.
+ 
+ *1208770021* recursive her
+ The Russian has a horizontal stripe down her belly, and when you pull on it, it snaps open and a smaller girlfriend comes out from inside. <a href="http://ja.wikipedia.org/wiki/%E7%94%BB%E5%83%8F:Russian_Leaders_Matriochka.jpg">References</a>.
+ 
+ -----
+ 
+ More sludgy and recursive her.
+ 
+ kanojo(t) = kanojo(t - 1).kareshi(t - 2).kanojo(t - 1)
+ 
+ -----
+ >>
+ [23:10:19] ujihisa23 said: reference transparent girlfriend
+ [23:10:24] ujihisa23 said: no side effects.
+ <<
+ 
+ There is no interaction with the outside world. What a brain she is.
+ 
+ -----
+ >>
+ Python-like girlfriend
+ The length of the silence is important.
+ <<
+ 
+ It's tricky.
+ 
+ -----
+ >>
+ Short-term girlfriend
+ <<
+ 
+ Explanation omitted.
+ 
+ -----
+ >>
+ [23:57:23] Misho says: sisterly girlfriend
+ <<
+ 
+ Ali.
+ 
+ *1208776675*Re: time is not continuous?
+ http://d.hatena.ne.jp/odz/20080420/1208696120
+ 
+ Maybe what I'm trying to say is.
+ 
+ <a href="http://ja.wikipedia.org/wiki/%E3%83%97%E3%83%A9%E3%83%B3%E3%82%AF%E6%99%82%E9%96%93">Planck time - Wikipedia</a>
+ >>
+ The plank time is the time required to pass a distance equal to the plank length at the speed of light in vacuum.
+ 
+ And in relation to the uncertainty principle in quantum mechanics, the prevailing theory has been that the Planck time is the smallest time that can be measured, and therefore this is the smallest unit of physical phenomena, and the Planck time is the smallest time that can be measured as having any physical significance.
+ 
+ Recently, however, Zurek and others have shown that microstructures below Planck's constant can appear in quantum chaotic systems (see the article Planck's constant).
+ <<
+ 
+ I think it is the first half of this. I don't know the details. I didn't know about the part about "recently, Zurek and others have been doing research...".
+ 
+ *1208791065*YU-NO
+ http://ja.wikipedia.org/wiki/%E3%81%93%E3%81%AE%E4%B8%96%E3%81%AE%E6%9E%9C%E3%81%A6%E3%81%A7%E6%81%8B%E3%82%92%E5%94%84%E3%81%86%E5%B0%91%E5%A5%B3YU-NO#.E4.B8.96.E7.95.8C.E8.A6.B3
+ I had only heard of the title, but what is this science fiction? I feel like I need to play it as an educational experience! (Oh!
+ 
+ I don't have a Sega Saturn, though.
+ </body>
+ <comments>
+ <comment>
+ <username>methane</username>
+ <BODY>I have no problem with the ampersand being attached. <BR>Structures such as binary_function cannot do runtime polymorphism, since we are not doing virtual operator() or anything like that. <br>Even if you could, slicing would occur at the point of assignment to an array of type binary_function, so the above code is still not good enough. <BR><BR>If we use function pointers normally, it would look like this. (replace add ~ opf declarations)<br> struct exp{<br> static long plus(long l, long r) { return l + r; }<br> static long minus(long l, long r) { return l - r; }<br> static long multiplies(long l, long r) { return l * r; }<br> };<br><br> long (*opf[3])(long, long) = {&exp::plus, &exp::minus, &exp::multiplies};</body>
+ <timestamp>1208764186</timestamp>
+ </comment>
+ <comment>
+ <username>methane</username>
+ <body>With boost/function.hpp, what Nishio tried to do can be achieved. <br>boost::function2<long, long, long> opf[] = {add, sub, mul};<br>I don't know if you can use boost with TopCoder. </body>
+ <timestamp>1208765647</timestamp>
+ </comment>
+ <comment>
+ <username>methane</username>
+ <body>Oh, it is imported from boost to tr1, so even if boost was not available, if tr1 was available, it could be used. <br>#include <tr1/functional><br>... <br>tr1::function<long (long, long)> opf[] = {add, sub, mul};</body>
+ <timestamp>1208766381</timestamp>
+ </comment>
+ <comment>
+ <username>methane</username>
+ <body>Sorry for repeating myself. I think this is the best I can do in the end. <br> tr1::function<long (long, long)> opf[] = {plus<long>(), minus<long>(), multiplies<long>()};</body>
+ <timestamp>1208766488</timestamp>
+ </comment>
+ <comment>
+ <username>tyoro1210</username>
+ <body>I thought it was a picture of a cute matryoshka, but the series of Soviet former heads of state blew me away. </body>
+ <timestamp>1208833489</timestamp>
+ </comment>
+ <comment>
+ <username>wtnabe</username>
+ <body>Maybe you should add portupgrade and psearch. </body>
+ <timestamp>1209647654</timestamp>
+ </comment>
+ <comment>
+ <username>otsune</username>
+ <body>>cd /sysutils/screen/<br>it cd /usr/ports/sysutils/screen/<br><br>make search name="subversion" | less<br whereis subversion is ok. cd /usr/ports ; make search name="foobar" or make search key="hoge" is more informative. is more informative. </body>
+ <timestamp>1209827855</timestamp>
+ </comment>
+ <comment>
+ <username>epics</username>
+ <BODY>Cultivation. You should do it. <br>There is also a Windows version, but it is hard to get anyway. </body>
+ <timestamp>1209989039</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-21 https://nishiohirokazu.hatenadiary.org/archive/2008/04/21]

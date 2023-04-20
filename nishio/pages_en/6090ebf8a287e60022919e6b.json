@@ -1,0 +1,150 @@
+Hatena2008-07-04
+code:hatena
+ <body>
+ *1215132864*Re: I wonder if Nishio-kun enjoyed doing sensupi?
+ <a href="http://d.hatena.ne.jp/kajuntk/20080621/1214038649">I wonder if Mr. Nishio enjoyed doing Sensepi? - Automatons Hacking Guide</a>.
+ 
+ Yes.
+ 
+ === End ===
+ 
+ 
+ No, stories aside, there seems to be a lot of misunderstanding, so let me correct it.
+ At first, I too was concerned that if people who wanted to speak were allowed to do so unconditionally, a good percentage of uninteresting presentations would also be included. That's like a midterm master's thesis presentation for the campus. But when I actually held it, it was more interesting than I had imagined. Now that I think about it, "people who voluntarily give presentations (neither out of obligation nor out of work)" must have a high "interesting level" to some extent. It was a mistake to compare it with the meetings where "people are presenting because they have to". It was very interesting.
+ 
+ >>
+ It means that the incentive of enjoyment gained was significantly less than the cost Nishio paid to conduct the conference.
+ <<
+ 
+ Yup. The conference was interesting, but it was more than that, it was hard to continue "holding a conference once a month". For example, id:hayamiz's presentation was very "interesting". Unfortunately, I couldn't hear much of it because I was struggling to deal with the trolls who came to IRC and disconnected the line. It's hard to deal with that kind of thing.
+ 
+ >>
+ I think the idea of Sensepi was to "bring potentially interesting people to the surface by allowing anyone to participate," but I think the only interesting people in the world are those who have been brought to the surface. In other words, I don't think there are any potentially interesting people.
+ <<
+ 
+ There is no such thing as an interesting person who is manifested from birth. There are many potentially interesting people in the world. I think that they become apparent for some reason, and because the experience was enjoyable for them, they repeat it, and as a result, they are regarded by many people as "interesting people who have become apparent". At least, I was originally a non-communicative person, and if I had not experienced "I was invited to present at LL Day&Night and it was more popular than I had imagined," all of my subsequent presentations would not have existed. I wouldn't have been active in the community. I am happier now than I was before. I think it is necessary to give back to the ecosystem by taking what you have gained from the ecosystem in order to maintain it. That's what they say at the lodge, "Let's return it cleaner than before we used it," that kind of thing.
+ 
+ -----
+ 
+ Muu, <a href="http://d.hatena.ne.jp/earth2001y/20080622/p1">Sustainability of Event Things - Obinata's Hatena Diary</a> and <a href="http://d.hatena.ne.jp/kajuntk/ 20080623/1214204807">Is it important to hurry up and talk to a thousand people? - I was going to mention the Automatons Hacking Guide</a> but I don't have time anymore. Sent!
+ 
+ *1215184981*[TopCoder]Single Round Match 408 Div2 1000pt
+ I'll try to solve it for practice. The problem is roughly explained as follows: "There is a bag containing an odd number of red and blue balls in total, you take one at random, and the enemy takes one blue ball. If the last ball you take is blue, you win." That's what it's called. The exact problem statement can be found at the link below if you have an account.
+ http://www.topcoder.com/stat?c=problem_statement&pm=9754&rd=12180
+ 
+ Well, at any rate, this is what I came up with when I briefly implemented what the problem statement says.
+ >|cpp|
+   double getProbability(int redCount, int blueCount) {
+     if(redCount == 0) return 1.0;
+     if(blueCount < 2) return 0.0;
+     double p = 1.0 * redCount / (redCount + blueCount);
+     return p * getProbability(redCount - 1, blueCount - 1) \
+            + (1 - p) * getProbability(redCount, blueCount - 2);
+   }
+ ||<
+ 
+ The test on hand passes most of the time, with one failure due to a bug in the TZTester plugin I'm using to determine if the answer returned as a floating point number is equal to the correct answer. If I send it to the server for testing, it passes. submit!
+ 
+ 
+ Then, I selected Run System Test from the Practice Option and fed it more test cases. As I expected, the code was not considering performance, so when {131, 3000} came, it failed due to the 2-second time limit. I rewrote the test cases of the code at hand and tried to run it. Ugh, it doesn't finish even after 60 seconds.
+ 
+ 
+ Well, let's just cache the calculated value since the function will be called with the same value many times in this code, and if we were writing in Python without thinking about performance, we would create a dictionary with tuples as keys, but it would be silly to do pair<int, int>, etc. And since the problem statement clearly states that the upper limit of the argument range is 4000 in this case, this is fine.
+ >|cpp|
+     int key = redCount * 4001 + blueCount;
+ ||<
+ 
+ If there is already a value in the cache, return it, if not, calculate it, put it in the cache, and return it. It is like this.
+ 
+ >|cpp|
+ typedef map<int, double> MID;
+ class MarblesInABag {
+ public:
+   MID cache;
+   double getProbability(int redCount, int blueCount) {
+     int key = redCount * 4001 + blueCount;
+     MID::iterator i = cache.find(key);
+     if(i != cache.end()){
+       return i->second;
+     }
+     if(redCount == 0) return 1.0;
+     if(blueCount < 2) return 0.0;
+     double p = 1.0 * redCount / (redCount + blueCount);
+     double result = p * getProbability(redCount - 1, blueCount - 1)
+                     + (1 - p) * getProbability(redCount, blueCount - 2);
+     pair<int, double> value(key, result);
+     cache.insert(cache.begin(), value);
+     return result;
+   }
+ }
+ ||<
+ 
+ Now, it only takes two or three seconds instead of the 60 seconds or more it used to take. But the time limit is 2 seconds. This is still too slow. Well, this is still slow, which is actually within my expectation. It seems inefficient to call the function many times, so I change it to fill in from the smallest value in a loop.
+ 
+ >|cpp|
+   double getProbability(int redCount, int blueCount) {
+     typedef pair<int, double> PID;
+     const int MAX_PLUS_1 = 4001;
+     int key = redCount * MAX_PLUS_1 + blueCount;
+     // when r = 0
+     for(int b(1); b <= blueCount; b += 2){
+       cache.insert(cache.begin(), PID(b, 1.0));
+     }
+ 
+     for(int r(1); r <= redCount; ++r){
+       int b(1 - (r % 2));
+       cache.insert(cache.begin(), PID(r * MAX_PLUS_1 + b, 0.0));
+       for(b += 2; b <= blueCount; b += 2){
+ 	double p = 1.0 * r / (r + b);
+ 	double result = p * cache.find((r - 1) * MAX_PLUS_1 + b - 1)->second \
+ 	  + (1 - p) * cache.find(r * MAX_PLUS_1 + b - 2)->second;
+ 	cache.insert(cache.begin(), PID(r * MAX_PLUS_1 + b, result));
+       }
+     }
+     return cache.find(key)->second;
+   }
+ ||<
+ 
+ What, this is still over 2 seconds? I thought the function call was the bottleneck, no? Well, what can we cut from here? I guess I made a mistake by putting everything into map. I'll change it to put only the necessary parts into vector.
+ 
+ >|cpp|
+   double getProbability(int redCount, int blueCount) {
+     const int MAX_PLUS_1 = 4001;
+     vector<double> cache(MAX_PLUS_1);
+     vector<double> new_cache(MAX_PLUS_1);
+ 
+     // when r = 0
+     for(int b(1); b <= blueCount; b += 2){
+       cache[b] = 1.0;
+     }
+ 
+     for(int r(1); r <= redCount; ++r){
+       int b(1 - (r % 2));
+       new_cache[b] = 0.0;
+       for(b += 2; b <= blueCount; b += 2){
+ 	double p = 1.0 * r / (r + b);
+ 	new_cache[b] = p * cache[b - 1] + (1 - p) * new_cache[b - 2];
+       }
+       cache.swap(new_cache);
+     }
+     return cache[blueCount];
+   }
+ ||<
+ 
+ Phew. It shrank a lot. The "2 to 3 seconds" I mentioned earlier actually included compile time, so if you exclude that, it shrank from 1.2 seconds to 0.077 seconds. 15x. submit.
+ 
+ 
+ I guess the lesson learned this time is that MAP is not that fast. I thought I could afford a problem of this scale, but it was slower than I imagined. I'm not surprised that it was 15 times faster after switching to vector. It is the same as using an array, and both write and read are O(1). I wouldn't be surprised if it was even faster.
+ 
+ 
+ Now that I solved the problem, I was happy to go home, but the last train had already run out, orz.
+ </body>
+ <comments>
+ <comment>
+ <username>hyoshiok</username>
+ <body>I think the key to a long-lasting event is to keep it loose, because if it takes too much time and effort on the part of the organizer, it won't last. <br>The kernel reading session is broadcast only when the ust team is present, and the video is left on a fixed tripod. <br>They are also very popular with the people who are interested in the project, and they are very interested in the project itself. <br>The only cost is ordering pizza and beer, and the energy-saving nature of the event is eco-friendly. <br>We have already held this event 88 times in a relaxed and easygoing manner. </body> <br><br>The event has been held 88 times already, in an easygoing and relaxed manner.
+ <timestamp>1215656653</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-07-04 https://nishiohirokazu.hatenadiary.org/archive/2008/07/04]

@@ -1,0 +1,26 @@
+First pass jumps bug
+[https://gyazo.com/55537ca9d5975829b1dc159adde930fb]
+Bug where only the first path drawn jumps to the center of the canvas
+
+In fact, stickies appearing in the center of the screen was also affected by this bug, but the addition of stickies did not feel strange because a human did not specify the position of the stickies
+[https://gyazo.com/e4aca30fec3a4ffbc1d5fdba8295193c]
+
+
+cause
+　[Zoom in to see the whole picture when the editor loads].
+　 After loading, the canvas display area is now calculated from the content "so that the entire content fits on the canvas" at the time of the first drawing.
+　If you start with a blank sheet of paper, there is no "drawing after loading", so the drawing after the first path is the first drawing.
+　The coordinate system is set so that the first drawing is in the center.
+	code:ts
+	 export const drawItems = () => {
+	   ...
+    if (global.beforeFirstDraw) {
+      if (!global.isViewportSpecified) {
+        fitToContents();
+      }
+      setGlobal({ beforeFirstDraw: false });
+    }
+	BeforeFirstDraw: false for special pages that do not load data from the server, such as blank
+		`handleSpecialURLParam`
+
+[pRegroup-done]

@@ -1,0 +1,11 @@
+turn magenta
+[https://gyazo.com/dcc56923cb9a65ff936094dcb3ebd6fd]
+This case
+	Phenomenon: I specified a shader from a script and it looked fine on the PC, but on the Oculus Go it turned magenta.
+	cause
+ 	Specify [Unlit/Texture] shader using [Shader.Find] from script
+  But the Unity compiler does not know that it is referenced in Shader.Find
+  So, they decide "it's a shader we're not using" and remove it from the Oculus Go version.
+ cope
+ 	The "dynamic load" is considered to be the target of [Resources] and anything under [Resources] and referred to from it is not deleted.
+  Then, create an appropriate material under Resources and specify Unlit/Texture.

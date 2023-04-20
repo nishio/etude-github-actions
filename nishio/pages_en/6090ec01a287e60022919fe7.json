@@ -1,0 +1,93 @@
+Hatena2009-08-10
+code:hatena
+ <body>
+ *1249875992*EEG Diary
+ <a href='http://www.nicovideo.jp/watch/sm4270607'>EEG brainwave mouse? I played with it - Nico Nico Douga (beta beta)</a>.
+ 
+ I was going to make a stripped-down version of the OpenEEG circuit, but the "thigh electrode" that I removed seems to be essential. If I buy a lot of eneloops to supply 12V power, the cost will not be much different, and I may have to give up on the 12V instrumentation amplifier I have bought and make it according to the OpenEEG schematic.
+ 
+ <hr>
+ 
+ I did not update my shopping list because it was raining heavily when I left home and I did not want to wander around Akihabara, but it was sunny on my way home, so I stopped by Akihabara. But it was sunny on the way back, so I stopped by Akihabara.
+ 
+ I have a bad habit of saving money on things that I normally don't need to save on, but when the fuse blows after a certain amount of use, I go into "just buy it anyway" mode.
+ 
+ - TC74HC595AP @94: Shift register. It is classified as HCMOS-IC by Marz.
+ - NJM386BD @73x4: Audio amp IC, which can be driven by 5V. I chose "audio amp" because I couldn't tell which amp has low noise by looking at the model number in the store, but the datasheet says "audio power amp", so it doesn't seem to have low noise. I mean, is this the same as LM386? Well, it's only 73 yen, and I'll use it when I connect speakers.
+ - ATMEGA168-20PU: @525x2 Classified name in Marz is AVR microcontroller, should have been one but somehow two
+ - CXH49SFB20000HOPES: @178x2 Quartz Crystal 20MHz 2 of these also
+ - LM358: 5-pack @ 200 Low-power dual general-purpose op-amps. I bought it anyway because operational amplifiers seem to be used for various things.
+ - Zener Diode 12V 1W: 20pcs @ 100 for now (oh)
+ - Electrolytic capacitor 4700μF: @100 I thought it would be useful to stock at least one of the big capacitors in case I want to do some experiments (oh) I have no plan what to use it for.
+ - Pin headers and pin sockets @40x6
+ - Transistor 2SC1815: 20 pcs @ 100 NPN type
+ - Transistor 2SA1015: 20 pcs @ 100 PNP type I'm not sure what it's used for, but I think I saw a lot of transistor-like marks on the OpenEEG schematic, and it's 100 yen.
+ 
+ The total cost was less than 3,000 yen. I feel like I bought a lot of stuff, but I only bought one technical book.
+ 
+ I need to start thinking about how to put things away, especially ICs. I've been trying to identify them by model number, but I'm at the end of my rope. 100 yen plastic boxes don't seem to fit my needs. Maybe it would be best to put small items in a bag with a zipper to make it look like it is sold in a store. Put the explanation paper in the bag too.
+ 
+ <hr>
+ View OpenEEG. <a href='http://openeeg.sourceforge.net/doc/modeeg/modeeg.html'>The ModularEEG</a>
+ 
+ The total cost of the parts was $195, says <a href='http://openeeg.sourceforge.net/buildeeg/parts.php'>Building an EEG at home: Acquiring the parts</a>, but apparently I don't think it will cost that much. For example
+ >>
+ 966990			1		CAPACITOR 47UF 35V		$9.04
+ <<
+ <img src="http://gyazo.com/5e932e0df7bc8c85405ce50474724a07.png">
+ This is only 200 yen if I can substitute <a href='http://akizukidenshi.com/catalog/g/gP-02856/'>electrolytic capacitor for power supply 47μF400V</a>.
+ 
+ Ah, to begin with.
+ >>
+ The printed circuit boards (PCB's)
+ Cost: $32.45
+ <<
+ Something about ordering a base and even drilling it out with a drill.
+ 
+ >>
+ 4 P4080  IC Socket 8-Pin DIL/DIP DWLPT           8        $0.55 $4.40
+ <<
+ Hmmm, I wonder if I need an IC socket.
+ 
+ >>
+ 1 R4770  Cap Tag Tantalum 6.3V 47  uF            2        $1.95 $3.90
+ 7 R2070  Cap GREEN 100VDC 5% 0.033 uF            2        $0.50 $1.00
+ 8 R2055  Cap GREEN 100VDC 5% 0.01  uF            2        $0.50 $1.00
+ 9 R3029  Cap MKT  0.22  uF 63 WVDC 5%            8        $0.80 $6.40
+ <<
+ 47uF is good for electrolytic capacitor. 6.3V, so <a href='https://www.marutsu.co.jp/user/shohin.php?p=65128'>[47U/16V]Chip Tantalum Capacitor 16V 47μF (5pcs)</a> is also good. I guess this one is correct because it says "Tantalum".
+ I don't know what GREEN is, I can't find 0.033uF, but if I go to a real store, they might sell it, <a href='https://www.marutsu.co.jp/user/shohin.php?p=62197'>[CC DC50V223] Ceramic capacitor 0.022uF(10pcs)</a> and <a href='https://www.marutsu.co.jp/user/shohin.php?p=62194'>[CC DC50V103] ceramic capacitor 0.01uF(10pcs)</a>. I wonder if I can put them in parallel. 52 yen for both.
+ There was also 0.22uF. <a href='https://www.marutsu.co.jp/user/shohin.php?p=60912'> [CT4-0805Y224M]Ultra small multilayer ceramic capacitor 50V 0.22uF (10pcs)</a> 157 yen. I hope the store sells them in a state that doesn't have them in packs of 10 or something.
+ 
+ >>
+ Metallschichtwiderstand 1,00 K-Ohm
+ <<
+ 
+ I can't read German.... Well, it is a resistor, so I am sure it says "metal film resistor" in German.
+ 
+ >>
+ 4       TLC 277 DIP     IC-SCHALTUNG            1       1,4224  5,69
+ <<
+ This is <a href='http://www.alldatasheet.jp/datasheet-pdf/pdf/28867/TI/TLC277.html'>TLC277 datasheet pdf datenblatt - Texas Instruments - LinCMOSE PRECISION DUAL OPERATIONAL AMPLIFIERS ::: ALLDATASHEET :::</a> would be. I wonder if I can substitute <a href='http://akizukidenshi.com/catalog/g/gI-02355/'>high precision op amp OPA277 1 circuit in</a>? I think I can find out by comparing the datasheets, but I'm holding off.
+ 
+ It says 4 pieces, but the <a href="http://openeeg.sourceforge.net/doc/modeeg/modEEGamp-v1.0.png">circuit diagram</a> has 8 pieces no matter how I look at it... Oh, I see, it's an IC with 2 circuits.
+ 
+ The other thing I need is an INA114AP amplifier for measurement. I couldn't find anything like that at Akizuki, nor anything that could be substituted for it (with my ability).
+ 
+ Maybe I should just buy the amp and transistors I honestly need from Digikey.
+ 
+ *1249900565*Diary
+ I thought about having dinner in Akihabara, but then I remembered that I had komatsuna and other things in my refrigerator that I should consume before camping, so I decided to go home.
+ 
+ I like the new interface, so I have been using the iPhone with flick input, but I have never had to use two hands to type, so I am trying it out. It seems that it will be much faster once I get used to it. It seems that it is better to type alternately without trying to use the closer side of the finger. Well, not so much when the same consonant is followed by the same consonant.
+ 
+ There seem to be various types of AVRs, and I thought there was no need to use ATMEGA168, but I thought it would not work with arduino if it was too small, and even 168 was only 500 yen, so I decided to go for it.
+ 
+ Shift register, the clerk at Marz wasn't sure if it was in stock when I searched, so I found the model number by searching my blog on my iPhone. Maybe I should be able to look up the model numbers for parts I use often.
+ 
+ It's hard to shoot while walking.
+ 
+ Gotta get ready for camp starting tomorrow.
+ </body>
+
+[Hatena Diary 2009-08-10 https://nishiohirokazu.hatenadiary.org/archive/2009/08/10]

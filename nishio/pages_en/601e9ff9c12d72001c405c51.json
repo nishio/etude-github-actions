@@ -1,0 +1,280 @@
+ABC191
+D I'm not good at this...WA won't solve...
+Skip it and solve E quickly with Dijkstra, 30 minutes left.
+I decided to do D or F and decided that I would learn more by considering F. The sample passed with "the number of gcd of some number that is less than or equal to min" but it was still a TLE. 13 minutes left at this point, so I did D the rest of the time, but I didn't solve it until the end, 4 questions.
+
+Ah, I see, D was "let's multiply by 1000 and treat it as an integer...you know, the square root is where you get the solution to the quadratic function..." but that's where you get the bisection search. Mathematically, it can be solved by O(1), so I unintentionally stuck to that, but O(logR) will also get me there in time, I thought.
+
+I was correct in detecting that F is "the number of gcd of some number that is less than or equal to min".
+It would have been nice to come up with an efficient way to seek it out.
+
+[https://gyazo.com/11f20f1d7f862d6ea4fde7731ce46ca4]
+
+I thought it might fall into light blue, but surprisingly it was +3.
+[https://gyazo.com/eb5db44a3f3f5b810b54a1c41e614c55]
+
+[https://gyazo.com/3a4098e5ac9f0a03bf0a1639e4628c98]
+I see, D and F are quite challenging.
+
+[C - Digital Graffiti https://atcoder.jp/contests/abc191/tasks/abc191_c]
+[https://gyazo.com/1a741c4111bc4f5db792ae0c93d2b057]
+
+ Do "add if not there, remove if already there" for the four corners of the square to be painted.
+ [https://gyazo.com/8f0bc7be1602e914181bc557889c5ef7]
+	code:python
+	 def main():
+      H, W = map(int, input().split())
+      world = OneDimensionMap(H, W, 0)
+      for pos in world.allPosition():
+          if world.mapdata[pos] == 35:
+              start = pos
+              break
+      corner = set()
+      visited = set()
+      DIR4 = world.dir4()
+  
+      def visit(pos):
+          visited.add(pos)
+          x, y = divmod(pos, W)
+          for xy in [(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)]:
+              if xy in corner:
+                  corner.remove(xy)
+              else:
+                  corner.add(xy)
+          for dir in DIR4:
+              newpos = pos + dir
+              if world.mapdata[newpos] == 35 and newpos not in visited:
+                  visit(newpos)
+  
+      visit(start)
+      print(len(corner))
+　The official explanation shows that it can be written more simply.
+　　If not, add them, if there are any, take them, which in essence is equivalent to saying, "Is the number of times the process was performed odd?" is equivalent to "Is the number of times the process was done odd?
+　　If that's all you want to know, you don't have to process them in adjacent order because the order of addition is the same if you swap them around.
+　　AC with this
+　　code:python
+　　 def main():
+       H, W = map(int, input().split())
+       world = OneDimensionMap(H, W, 0)
+       from collections import defaultdict
+       cornerCount = defaultdict(int)
+       for pos in world.allPosition():
+           if world.mapdata[pos] == 35:
+               for d in [0, 1, W, 1 + W]:
+                   cornerCount[pos + d] += 1
+   
+       print(sum(v % 2 for v in cornerCount.values()))
+
+
+[E - Come Back Quickly https://atcoder.jp/contests/abc191/tasks/abc191_e]
+[https://gyazo.com/09e4ac9d774ae0eabc238dcfc4bf3380]
+ Note that there is a self-edge and multiple edges.
+ Leave only the shortest of the multiple edges `# (2)`.
+ 　I have it with edge `edges[i][j]`, so I didn't want to bother with multiple edges.
+ Find the distance from each point to the other points by [Dijkstra method] (`dist`) `# (3)`
+ Just find the smallest of `edges[i][i]` and `dist[i][j] + dist[j][i]`[$ (i \neq j)
+ About `# (1)` `.
+ 　Graphs with weighted edges are usually handled by `defaultdict(dict)`.
+ 　But this time, I thought it would be a pain to check whether the value exists or not when accessing with `# (4)`.
+ 　so that the value becomes INF when it does not exist.
+ 　I usually like this.
+	code:python
+	 def main():
+      N, M = map(int, input().split())
+      from collections import defaultdict
+      INF = 9223372036854775807
+      edges = defaultdict(lambda: defaultdict(lambda: INF))  # (1)
+      for _i in range(M):
+          frm, to, cost = map(int, input().split())
+          # -1 for 1-origin vertexes
+          edges[frm-1][to-1] = min(edges[frm-1][to-1], cost)  # (2)
+  
+      dist = []
+      for start in range(N):
+          dist.append(one_to_all(start, N, edges, INF=INF))  # (3)
+  
+      for i in range(N):
+          x = INF
+          for j in range(N):
+              if j == i:
+                  x = min(x, edges[i][i])  # (4)
+              else:
+                  x = min(x, dist[i][j] + dist[j][i])
+          if x == INF:
+              print(-1)
+          else:
+              print(x)
+
+[F - GCD or MIN https://atcoder.jp/contests/abc191/tasks/abc191_f]
+[https://gyazo.com/f96883d47e47026ec6ee1ce02b352d83]
+　Values are considered sorted and do not lose generality.
+	Consider a small example
+	　When there are two values, there is one way if A2 is a multiple of A1, and two ways if it is not.
+　　If you look at the real-time notes, you conclude right from here that "just check the number of gcd(Ai, Aj) smaller than A1", but I don't know why you did that...
+　　Since gcd is independent of the order in which it is taken, the argument can be considered as a set, and when the gcd of a subset of A is smaller than A1, there exists a procedure to make it a solution.
+　The problem is how to calculate this efficiently, which is annoying because naive 2^N is obviously impossible.
+　　4TLE
+　　	code:python
+　　	 def main():
+        from math import gcd
+        N = int(input())
+        AS = list(map(int, input().split()))
+        minA = min(AS)
+        ALL = set(AS)
+        NEW = set(AS)
+        while NEW:
+            next = set()
+            for x in ALL:
+                for y in NEW:
+                    next.add(gcd(x, y))
+            ALL.update(NEW)
+            NEW = next - ALL
+        ret = 1
+        for x in ALL:
+            if x < minA:
+                ret += 1
+    
+        print(ret)
+ Official Explanation
+ 　[$ \exists (S \subset A) x = \gcd(S) \iff \gcd(y[x\text{ divides }y] ) = x ]
+　　If it is true for a set S, then it is true even if we add multiples of x to it.
+　　　So there is no need to take care of all subsets.
+　　　We only need to consider the set that contains all those that are multiples of x.
+　　If x is not the divisor of any number in A, the set is empty and need not be considered
+　　　So, for x that is the divisor of either number, we can take the gcd of the set that corresponds one-to-one with it
+　　　Since the number of divisors is of logarithmic order, it doesn't matter if A is 10^9.
+		Still, 3 TLE.
+   Test cases with a large number of test cases with a large number of test cases with a large number of test cases with a large number of test cases with large number of test cases
+			code:python
+			 def main():
+        from math import gcd
+        from functools import reduce
+        N = int(input())
+        AS = list(map(int, input().split()))
+        minA = min(AS)
+        S = set(AS)
+        divisors = set()
+        for x in S:
+            divisors.update(get_divisors(x))
+        ret = 1
+        for d in sorted(divisors):
+            if d == minA:
+                break
+            targets = [x for x in S if x % d == 0]
+            if reduce(gcd, targets) == d:
+                ret += 1
+        print(ret)
+  AC if we calculate up to gcd at the time of the divisor enumeration.
+  	code:python
+  		def main():
+        from math import gcd
+        from collections import defaultdict
+        N = int(input())
+        AS = list(map(int, input().split()))
+        minA = min(AS)
+        S = set(AS)
+        gcds = defaultdict(int)
+        for x in S:
+            for d in get_divisors(x):
+                gcds[d] = gcd(gcds[d], x)
+    
+        ret = 1
+        for d in sorted(gcds):
+            if d == minA:
+                break
+            if gcds[d] == d:
+                ret += 1
+        print(ret)
+　　I don't think it's obvious that the former is wrong and the latter is OK.
+		gcd
+ 　　former [$ \sum_i \sum_x [x < \min(A)][x \text{ divides } A_i]]
+ 　　latter [$ \sum_i \sum_x [x \text{ divides } A_i]]
+ 　　The former is smaller than the latter...
+　consideration
+　　The number of subsets is 2^2000, whereas the range of values is 10^9
+　　[Function with a narrower value range than its definition range].
+　　In such a case [exchange of value range and definition range].
+　　[https://gyazo.com/fb7188f57e2178ce53cc7aa47100082c]
+　　There can be more than one source with X as its image, but we can choose the one that is easier to construct.
+　　The original, which does not become an image like Z, can be copied onto anything.
+　　　If the original map is f and the inverted map is g, then we know if some original x is contained in the image of f by [$ f(g(x)) = x
+　　This is not an inverse mapping in the usual sense.
+　　　Usually, maps f and g such that [$ f(x) = y \iff g(y) = x ] are called inverse maps of one another and the other, and they exist only when all monojections
+　　　This time, for a given f, [$ g(y) = x \Rightarrow f(x) = y] should hold, [loose inverse mapping].
+　　For this problem, the first step in transforming the problem was to notice that the loose inverse function of [$ x = \gcd(S)] is [$ S = \{y|y\in A, x\text{ divides }y \}
+
+
+
+
+[D - Circle Lattice Points https://atcoder.jp/contests/abc191/tasks/abc191_d]
+[https://gyazo.com/3172c85b33db4ea6fc80c45aafa00a5e]
+　[large and small for real numbers].
+　First, I'll write it down plainly, without thinking about errors.
+　　Solution formulas for quadratic functions
+　　Now all the samples go through.
+ 	code:python
+ 	 def main_simple():
+       from math import floor, ceil, sqrt
+       X, Y, R = map(float, input().split())
+   
+       ret = 0
+       for y in range(floor(Y - R), ceil(Y + R) + 1):
+           xcep = R ** 2 - (y - Y) ** 2
+           a = 1
+           b = -2 * X
+           c = X ** 2 - xcep
+           e = b * b - 4 * a * c
+           if e < 0:
+               continue
+           s = sqrt(e)  # (1)
+           r1 = (-b + s) / (2 * a)
+           r2 = (-b - s) / (2 * a)
+           ret += floor(r1) - ceil(r2) + 1
+   
+       print(ret)
+　Now let's make an integer version of this... but calculating the square root of `# (1)` is tricky!
+　　During the contest, I tried to manage with square roots and it didn't work.
+　After the contest, I realized that this could be obtained by a binary search.
+ Write carefully not to bug them while looking at the [Bicubic Search Checklist].
+ AC
+ 　`# (2)` This must definitely be outside the circle. `# (4)` is the same.
+ 　In some cases, `floor(fX - fR)` will be exactly on the circumference.
+ 　`# (3)` Be careful not to double-count the vertices if the center of the circle is exactly an integer
+ 	code:python
+ 	 def main():
+       from math import floor, ceil, sqrt
+       fX, fY, fR = map(float, input().split())
+       X, Y, R = [round(x * 10000) for x in [fX, fY, fR]]
+       ret = 0
+   
+       def isIn(x, y):
+           ret = (X - x * 10000) ** 2 + (Y - y * 10000) ** 2 <= R ** 2
+           return ret
+   
+       for y in range(floor(fY - fR), ceil(fY + fR) + 1):
+           # find start
+           left = floor(fX - fR - 1)  # (2)
+           init_right = right = floor(fX)
+           if isIn(right, y):
+               while left < right - 1:
+                   x = (left + right) // 2
+                   if isIn(x, y):
+                       right = x
+                   else:
+                       left = x
+               ret += init_right - left
+   
+           # find end
+           init_left = left = init_right + 1  # (3)
+           right = ceil(fX + fR + 1)  # (4)
+           if isIn(left, y):
+               while left < right - 1:
+                   x = (left + right) // 2
+                   if isIn(x, y):
+                       left = x
+                   else:
+                       right = x
+               ret += right - init_left
+   
+       print(ret)
+

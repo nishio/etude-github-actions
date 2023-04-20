@@ -1,0 +1,86 @@
+Hatena2008-05-16
+code:hatena
+ <body>
+ **1210939584*Istretch
+ My eyes are getting tired easily these days, and the time it takes me to focus on a light when I go home at night is not getting any shorter, so I bought some eye drops called "Eye Stretch". Apparently, it contains methylneostigmine sulfate, which relaxes eye muscles.
+ 
+ I also bought 3 bottles of Asparagus Drink SP for 298 yen.
+ 
+ *1210947590*About Python tuples (for the third time)
+ You asked me a question and I answered it.
+ 
+ - references
+ -- First (3 years ago): <a href="http://www.nishiohirokazu.org/archived_coreblog/337">The Significance of Tuples in Python @ NISHIO HIROKAZU # Archived COREBlog</a>.
+ -- Second (2 years ago): <a href="http://www.nishiohirokazu.org/blog/2007/02/python_16.html">Yasukazu Nishio's Blog: The Significance of Tuples in Python Returns</a>.
+ 
+ Q: "I read the first article and thought I get it, but the second article says 'a bad explanation I wrote a long time ago' and I'm not sure which part is not good."
+ 
+ A: In a nutshell, the explanation that "because a hash value cannot be computed because it is modifiable, it cannot be used as a dictionary key" is not strictly true. For example, if you define a hash function that inherits from list, it can be used as a dictionary key while being modifiable, and an instance of a user-defined class can be used as a dictionary key because it inherits the default hash function. It is not "technically impossible" to make Python lists into dictionary keys, but "intentionally prohibited".
+ 
+ -----
+ 
+ Below is the log of the 86 generation chat, edited appropriately to make it easier to read.
+ 
+ >>
+ N: How did you convince them?
+ A: Wow, that's very convenient. I didn't really understand the use of tuples, but now I get it! I see.
+ N: Yes, convenient convenient. It is convenient that a tuple can be a dictionary key. But why can't a list be a dictionary key? Why is it that we have two kinds of tuples and lists, and one of the lists can't be a key to the dictionary?
+ A: python dictionary specifications
+ N: I wonder why they did it that way. Because if a list can be a dictionary key, then there is no need for a tuple.
+ A: Is it a problem because a list is mutable?
+ N: Why bother if it's mutable?
+ A: You can change the contents of the list and use it as a key and it's not intuitive.
+ N: Yeah, that's it. What the heck happens when you key a list into a dictionary and then rewrite that list?
+ N: dict = {}; key = [1, 2]; dict[key] = 1 then key.append(3), can we get dict[key] or not?
+ N: This depends on the implementation of the hash function. If the hash function is implemented in such a way that it can be retrieved, it means "the hash value is determined regardless of what is in it". If that is the case, when you do dict&#91;[1, 2]&#93; for dict = {[1, 2]: 1}, you will not get the value. The reason is that the two lists are "different lists that just happen to have the same value in them.
+ A: Oh, I see.
+ N: Conversely, if a hash function is implemented so that the same value is obtained if the contents of the list are the same, "the hash value is determined by what is in the list," then key.append(3) will change the hash value and dict[key] will not be able to obtain a value. It is incompatible to rewrite the key and to be able to get the value with dict&#91;[1, 2]&#93;.
+ A: I see.
+ N: By the way, Python's solution was to introduce tuples, which are "lists that cannot be changed," while Ruby chose the option of "instead of being able to put a list in a key, the value cannot be taken if the key is rewritten. Which one you choose is just one of the choices in the design of the language. As a matter of fact, I can't think of a situation where I would be happy to rewrite the keys of a hash.
+ U: ruby is a big classist and anything goes, so I guess you can take it as a loose concept like that.
+ N: Personally, I think the introduction of tuples is a mistake.
+ U: Does python have both arrays and tuples?
+ N: There are two: list and tuple. Everyone goes, "What's this, how do I use them differently?" w
+ U: So the list is restricted to the same type of content?
+ N: NON
+ U: uye
+ N: arayw the same type restriction on the inside http://www.python.jp/doc/current/lib/module-array.html
+ U: Oh, so there are lists, arrays, and tuples? If so, I don't know how to use lists and tuples!
+ N: Right?
+ U: haskell or something, it's obviously different, so I don't even need to think about how to use it >list, tuple, array
+ <<
+ </body>
+ <comments>
+ <comment>
+ <username>ujihisa</username>
+ <body>Uwww</body>
+ <timestamp>1210947703</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Because it's too long and obtrusive to write your name every time you write it</body>.
+ <timestamp>1210948190</timestamp>
+ </comment>
+ <comment>
+ <username>anatoo</username>
+ <body>>python dictionary specs<br>This area is terrible for me</body>.
+ <timestamp>1211005691</timestamp>
+ </comment>
+ <comment>
+ <username>hamatsu1974</username>
+ <body>The explanation in Dive Into Python was enough to convince me about the difference between lists and tuples.　The main advantage of tuples is that they are faster to process than lists if they are used as a dataset with constant values. That's what they were saying. <br><br><br><br><strong>As a result, the number one advantage is that tuples are much faster to process than lists. <br><br># I am sure that Mr. Nishio understands this and is making this comment in a joking manner, but I am sorry to be presumptuous, but I made this comment because of the negative impact on people who "think they know better" based only on what these experts say on the Internet. </body>
+ <timestamp>1211006976</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Is this around "You don't need a tuple"? That was certainly an expression that is often misunderstood by "know-it-alls".... <BR><BR>It is not limited to Python that "when there are things that cannot be changed and things that can be changed, the unchangeable is more suitable for non-changeable uses. For example, in Ruby, there are strings that can be changed and strings that cannot be changed (Symbol), and it is sometimes faster to write if(x == :foo) than if(x == "foo"). But when you are using a scripting language, it is much slower than C, so this difference in speed is not so essential. <br><br>So the explanation "tuples are fast lists instead of fixed ones" doesn't explain why lists can't be dictionary keys. </body>
+ <timestamp>1211014823</timestamp>
+ </comment>
+ <comment>
+ <username>hamatsu1974</username>
+ <BODY>Assumed knowledge varies from person to person, and so does the way people perceive it. It is difficult to examine the statements...<br><br># GMail is improving every millisecond day by day, so I think people have their own views on the speed difference argument :-)</body>.
+ <timestamp>1211016631</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-05-16 https://nishiohirokazu.hatenadiary.org/archive/2008/05/16]

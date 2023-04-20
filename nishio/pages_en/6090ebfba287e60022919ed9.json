@@ -1,0 +1,69 @@
+Hatena2008-10-26
+code:hatena
+ <body>
+ **1225041715*Python Hot Springs Summary
+ - A deck system was introduced at the very end.
+ - I checked how long it takes Haskell to read through the last part of the book, and to my surprise, it was about twice as fast as C++!
+ -- Note that this was not benchmarked with the exact same process.
+ -- TODO: I'll see if it's as fast as the C++ version if I strip it down to the same thing, or if the Haskell version is twice as fast because it uses two MacBook cores.
+ - Database design for "Sai-Nakamichi Online 2" (versus) while being corrected by id:Voluntas.
+ - Too full of life, my own batteries turned off just before we broke up.
+ - Wandering around a train station (Atami?) with "5% battery left", id:tasukuchan found him and carried him to Tokyo station while sleeping soundly. He was found by id:tasukuchan and transported to Tokyo station while sleeping soundly.
+ - I changed to the Yamanote Line at Tokyo Station, but I couldn't get my head around which station to get off at, so I went back to sleep soundly.
+ - I got off the train at Tokyo Station and transferred to the Sobu Line to go home.
+ - I've been asleep.
+ 
+ I had to write something on my blog or people might think I was lost.
+ 
+ *1225042664*Haskell and Python
+ Haskell
+ >|haskell|
+ first_turn :: Score  -> [Int] -> [Int] -> [Int]
+ first_turn game_score xs yzs = [
+     sum 
+         [(max_of_list 
+             (second_turn 
+                 game_score
+                 (progress_turn (Play x y z))
+                 (delete x xs)
+                 (delete y (delete z yzs))))
+          | y <- yzs, z <- yzs, y /= z]
+     | x <- xs]
+ ||<
+ 
+ and the Python code that ported it
+ >|python|
+ def first_turn(game_score, xs, yzs):
+     """
+     Final round of exploration, turn 1
+     It takes as arguments the current game score, the cards you can play, and the cards others can play,
+     In the second round, I read what was going to happen and chose the move that would maximize my chances of winning.
+     What is the winning score if you play now in the first turn under the condition that
+     Returns the sum of all possible moves made by others.
+     :: Score -> [Int] -> [Int] -> [Int]
+     """
+     return (
+         sum(
+             max(
+                 second_turn(
+                     game_score,
+                     progress_turn((x, y, z)),
+                     delete(x, xs),
+                     delete(y, delete(z, yzs))))
+             for y in yzs for z in yzs if y != z)
+         for x in xs)
+ ||<
+ 
+ Same thing.
+ And then I got negative campaigning.
+ http://twitter.com/voluntas/status/975205263
+ </body>
+ <comments>
+ <comment>
+ <username>herumi</username>
+ <body>No, that C++ is too slow, it can be 10 times faster, I don't think it's hard to go up to 20 times. </body>
+ <timestamp>1225109434</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-26 https://nishiohirokazu.hatenadiary.org/archive/2008/10/26]

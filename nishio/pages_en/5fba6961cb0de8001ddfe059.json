@@ -1,0 +1,91 @@
+ABC184
+[AtCoder Beginner Contest 184 - AtCoder https://atcoder.jp/contests/abc184]
+As before, all questions were answered correctly this time.
+[https://gyazo.com/bf1396a675ce6f642c2012548f6cf565]
+[https://gyazo.com/4d081c9f106aabb035f1e975591248df]
+
+I fell asleep and woke up to find that it was past 9:00 a.m. I was so upset.
+
+C
+	Maximum of 3 times allowed
+	 0 if they already overlap.
+	 1 if you can move in one step.
+	 If not, move it along the axis of the side that is greatly off and call recursion
+	For some reason, the problem condition "3 or less" was implemented as "4 or less" and 1WA.
+	PS: I AC'd during the contest but WA'd after the contest with the addition of the test case.
+	　For example, if you move sideways twice on an input such as 1,1,1,6, you can reach it, but the parity is different and you can't reach it with two diagonal moves.
+	code:python
+	 def solve(R1, C1, R2, C2, phase=0):
+      if R1 == R2 and C1 == C2:
+          return 0
+      if R1 + C1 == R2 + C2:
+          return 1
+      if R1 - C1 == R2 - C2:
+          return 1
+      if abs(R1 - R2) + abs(C1 - C2) <= 3:
+          return 1
+  
+      d1 = abs(R1 + C1 - R2 - C2)
+      d2 = abs(R1 - C1 - R2 + C2)
+      if d1 > d2:
+          d = R1 + C1 - R2 - C2
+          d //= 2
+          R1 -= d
+          C1 -= d
+          return solve(R1, C1, R2, C2) + 1
+      else:
+          d = R1 - C1 - R2 + C2
+          d //= 2
+          R1 -= d
+          C1 += d
+          return solve(R1, C1, R2, C2) + 1
+
+D
+	[Expected DP] in [memoized recursion].
+	code:python
+	 def solve(A, B, C):
+      cache = {}
+  
+      def f(x):
+          if 100 in x:
+              return 0
+          if x in cache:
+              return cache[x]
+          a, b, c = x
+          ret = 1
+          if a:
+              y = tuple(sorted((a + 1, b, c)))
+              ret += f(y) * a / (a + b + c)
+          if b:
+              y = tuple(sorted((a, b + 1, c)))
+              ret += f(y) * b / (a + b + c)
+          if c:
+              y = tuple(sorted((a, b, c + 1)))
+              ret += f(y) * c / (a + b + c)
+          cache[x] = ret
+          return ret
+      return f((A, B, C))
+
+E
+　The implementation looked complicated, so I skipped it and went ahead with F.
+
+F
+　[half full enumeration].
+　　Even if you enumerate the whole subset of halves, 2^20 is about 10^6, so there's plenty of room.
+　Sum of subsets is library implemented (I used Gray code)
+　Enumerate all the sums of subsets in the first and second halves, respectively, and find the largest number whose sum does not exceed T by a binary search
+	code:python
+	 def solve(N, T, AS):
+      from bisect import bisect_right
+      S1 = sum_for_all_subset_grey(AS[:N//2])
+      S2 = sum_for_all_subset_grey(AS[N // 2:])
+      S2.sort()
+      ret = 0
+      for x in S1:
+          if x > T:
+              continue
+          i = bisect_right(S2, T - x)
+          ret = max(ret, x + S2[i - 1])
+      return ret
+
+[ABC184E]

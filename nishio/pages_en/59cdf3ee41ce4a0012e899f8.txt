@@ -1,0 +1,241 @@
+From if statements to machine learning
+ https://www.slideshare.net/nishio/if-80195170
+	#Machine Learning
+
+[http://nhiro.org/from_if_to_ml/page-01.png]
+From if statements to machine learning2017-09-26 BPStudy#121 Cybozu Labs / BeProud Technical Advisor Doctor of Science / Master of Technology Management Yasukazu Nishio ver.2 2017-09-29 published ver.3 2018-06-22 diagram cleanup
+
+[http://nhiro.org/from_if_to_ml/page-02.png]
+2Do you think machine learning is a world away from the programs you are writing now?
+
+[http://nhiro.org/from_if_to_ml/page-03.png]
+Purpose of this slide3To bridge the gap between if statements and machine learning, which everyone is familiar with, so that we can connect the ground and use machine learning in practice. It will also explain step by step how to proceed with the business implementation of machine learning in 4 steps. if statement machine learning
+
+[http://nhiro.org/from_if_to_ml/page-04.png]
+if statement 4 if(`condition`){ ...}
+
+[http://nhiro.org/from_if_to_ml/page-05.png]
+Mechanism of if statement 5Execute the contents when the condition is True
+
+[http://nhiro.org/from_if_to_ml/page-06.png]
+If there are multiple conditions and you want to execute when either of the 6 conditions x1 or x2 is True, what do you do?
+
+[http://nhiro.org/from_if_to_ml/page-07.png]
+or 7 if(x1 or x2){ …}
+
+[http://nhiro.org/from_if_to_ml/page-08.png]
+If there are multiple conditions and you want to execute when both condition x1 and condition x2 are True, what do you do?
+
+[http://nhiro.org/from_if_to_ml/page-09.png]
+and 9 if(x1 and x2){ …}
+
+[http://nhiro.org/from_if_to_ml/page-10.png]
+If there are multiple conditions and you want to execute when two or more of the 10 conditions x1, x2, x3 are True, what do you do?
+
+[http://nhiro.org/from_if_to_ml/page-11.png]
+Complexity! 11 if((x1 and x2) or (x1 and x3) or (x2 and x3)){ ...}
+
+[http://nhiro.org/from_if_to_ml/page-12.png]
+If there are multiple conditions and you want to execute when 3 or more of the 12 conditions x1, x2, ..., x5 are True, what do you do?
+
+[http://nhiro.org/from_if_to_ml/page-13.png]
+Complexity! 13 if((x1 and x2 and x3) or (x1 and x2 and x4) or (x1 and x2 and x5) or...){ ...}
+
+[http://nhiro.org/from_if_to_ml/page-14.png]
+14 There is a better way!
+
+[http://nhiro.org/from_if_to_ml/page-15.png]
+Converting true values to numbers15 Converting true to 1 and false to 0 changes "more than 3 is true" to "more than 3 when added". if((x1 + x2 + x3 + x4 + x5) >= 3){ ...}
+
+[http://nhiro.org/from_if_to_ml/page-16.png]
+Both and and or can have the same form16 x1 and x2 and x3 and x4 and x5 = all of the conditions x1, x2, ..., x5 are True = if they add up to 5 or more x1 or x2 or x3 or x4 or x5 = any of the conditions x1, x2, ..., x5 are True = 1 or more when added together
+
+[http://nhiro.org/from_if_to_ml/page-17.png]
+17 conditions x1, x2, ..., x5, all of which can have the same form and or True (x1 + x2 + x3 + x4 + x5) >= 5 conditions x1, x2, ..., at least 3 of x5 True (x1 + x2 + x3 + x4 + x5) >= 3 conditions x1, x2 ..., x5, any one of which is True (x1 + x2 + x3 + x4 + x5) >= 1
+
+[http://nhiro.org/from_if_to_ml/page-18.png]
+Aligning the right-hand side18All of the conditions x1, x2, ..., x5 are True (weak) *x1 + ...) >= 1 𝟏𝟓(any of the conditions x1, x2, ..., x5 are True(strong) (1 *x1 + ...) >= 1 True at least 3 of the conditions x1, x2, ..., x5 *x1 + ...) >= 1 𝟏𝟑(
+
+[http://nhiro.org/from_if_to_ml/page-19.png]
+Strength=Weight 19 Something like the "strength" of a condition is expressed in terms of the magnitude of the coefficient (weight).
+
+[http://nhiro.org/from_if_to_ml/page-20.png]
+Q20How can I express True for all of conditions x1, x2, ..., x5, or True for at least 3 of conditions x6, x7, ..., x10, or True for any of conditions x11, x12, ..., x15 ?
+
+[http://nhiro.org/from_if_to_ml/page-21.png]
+Weights may be different for each condition21 1 *x11 + ...>= 1 *x1 + ...+ *x6 + ...+ 𝟏𝟓𝟏𝟑
+
+[http://nhiro.org/from_if_to_ml/page-22.png]
+The weighted sum method22True for True and False for 0, multiplied by the strength of the condition as weights, and added together, can describe complex conditions that would be difficult to describe with and and or combinations. (We omit the fact that negation can be realized with negative weights and that xor cannot be expressed.
+
+[http://nhiro.org/from_if_to_ml/page-23.png]
+How do you adjust the weights? 23 1: Human decides like we just did 2: Machine decides based on large amount of data = machine learning
+
+[http://nhiro.org/from_if_to_ml/page-24.png]
+Specific code24This time, you can use logistic regression to learn from sklearn.linear_model import LogisticRegression and call fit(X, y) to automatically adjust the weights and predict(X) to calculate the weighted sum and make a decision. It calculates the weighted sum and makes a decision. It's easy. If you want to know more about logistic regression, I recommend a series of articles by Hidehiro Nakatani of Cybozu Labs on the Gijutsu Hyoronsha website: http://gihyo.jp/dev/serial/01/machine-learning/0018
+
+[http://nhiro.org/from_if_to_ml/page-25.png]
+Summary 25Complex conditions are hard to write in and/or. Replacing them with weighted sums makes it easier. Weights can be determined by machine learning if there is enough data. The level of detail described in this article can be done in a few lines using scikit-learn.
+
+[http://nhiro.org/from_if_to_ml/page-26.png]
+26Machine Learning Technology from Here to There4 Steps to the Business of Machine Learning
+
+[http://nhiro.org/from_if_to_ml/page-27.png]
+Difference between Academia and Business27Academia - data is publicly available - dead technologies have been investigated long ago - business competes for accuracy by inventing new methods - data is not publicly available Business - data is not publicly available
+
+[http://nhiro.org/from_if_to_ml/page-28.png]
+Business Objectives 28 Customer Value Not Novelty
+
+[http://nhiro.org/from_if_to_ml/page-29.png]
+Sub-question 29 for experiencing customer value: A gemstone, which has a 1/2 chance of containing a gem when broken, sells for 20,000 yen. One rough gemstone costs 9,500 yen. Since gemstones are hard, only 20 pieces can be broken per day.Q1: What is the expected value of the revenue that can be earned per day? Purchase cost1/2 gemstone9500 yen×1/2 sales20,000 yen0 yen
+
+[http://nhiro.org/from_if_to_ml/page-30.png]
+A1Expected value of earnings30 A1: Since there is a 1/2 chance of getting 20000 yen, the expected value of earnings per unit is 10000 yen. 9500 is the purchase price per unit, so earnings per unit is 500 yen. 20 units can be processed per day, so earnings per day is 10000 yen. Cost 9,500 yen sales 10,000 yen profit of 500 yen per unit.
+
+[http://nhiro.org/from_if_to_ml/page-31.png]
+Q2Double Processing Speed Device31 Q2: Suppose you have a machine that can break rough stones at twice the speed of a human. In other words, the number of rough stones that can be broken per day increases from 20 to 40. How much would the expected value of revenue increase?
+
+[http://nhiro.org/from_if_to_ml/page-32.png]
+A2: The profit of 500 yen per rough stone remains the same. 20 more pieces can be processed per day, so the profit will increase by 10,000 yen. Cost 9,500 yen, sales 10,000 yen, profit 500 yen per piece
+
+[http://nhiro.org/from_if_to_ml/page-33.png]
+Q3 60% Discriminator33 Q3: Suppose you can buy a discriminator* that has a 60% chance of hitting a gemstone containing a gem. How much would the expected value of revenue increase? Purchase cost 60% gemstone 9500 yen x 40% sales 20,000 yen 0 yen* Suppose that by using it before buying a gemstone, you can get a "gemstone with a 60% chance of containing a gemstone" for 9500 yen. We do not care this time about the fact that the shopkeeper may not like it. Also, assume that the Q2 machine has not been obtained and that the number of gems that can be broken per day remains at 20.
+
+[http://nhiro.org/from_if_to_ml/page-34.png]
+A3: 60% discriminator34 Since there is a 60% chance of getting 20,000 yen, the expected income per unit is 12,000 yen. the purchase price per unit is 9,500 yen, so the revenue per unit is 2,500 yen. since 20 units can be processed per day, the revenue per day is 50,000 yen. the revenue per unit increases by 40,000 yen. Cost 9,500 yenSales 12,000 yenProfit of 2,500 yen per unit
+
+[http://nhiro.org/from_if_to_ml/page-35.png]
+In other words,35 in this problem setting, "a device that doubles the processing speed" increases the customer's profit by 10,000 yen, and "a discriminator with 60% accuracy" increases the customer's profit by 40,000 yen.
+
+[http://nhiro.org/from_if_to_ml/page-36.png]
+Lesson 36 In this problem set-up, a "discriminator with 60% accuracy" has four times the customer value of a "device that doubles machining speed". How much accuracy and how much customer value can be created depends on business requirements. Accuracy is not necessarily important.
+
+[http://nhiro.org/from_if_to_ml/page-37.png]
+Before thinking about improving the accuracy of business requirements37, it is first necessary to clarify what the customer is looking for and what the constraints are. Even if you implement a method described in the latest paper, if the customer cannot provide the amount of data required by the method, the implementation will have no value to the customer.
+
+[http://nhiro.org/from_if_to_ml/page-38.png]
+Customers are not experts38 In many cases, customers are not experts in machine learning and cannot clearly verbalize the required accuracy or the constraints that must be met. Therefore, it is necessary to learn this at high speed.
+
+[http://nhiro.org/from_if_to_ml/page-39.png]
+Minimum Viable Product 39 A concept advocated in Lean Startup, a methodology for managing IT ventures. Ventures have limited funds and must quickly understand customer needs. Therefore, they must create a simple product at a minimum cost and show it to customers to find out where the customers' needs lie.
+
+[http://nhiro.org/from_if_to_ml/page-40.png]
+Minimal implementation = 40 "concierge MVPs" that do not implement
+
+[http://nhiro.org/from_if_to_ml/page-41.png]
+Step 1 41Assume that a human is going to do it and answer the following questions: (1) What would make the customer happy (2) How would a human do it (is there someone who is already doing it? (Are there people who are already doing it or not?) (1) Customer value (2) How people would do it
+
+[http://nhiro.org/from_if_to_ml/page-42.png]
+(2) How humans do it42 Someone is already doing it, or knows how to do it. But it takes too much time and effort. → Opportunity! Reduction of time and effort by mechanization will be customer value!
+
+[http://nhiro.org/from_if_to_ml/page-43.png]
+(2) How do people do it? 43There are people doing it on the customer side, etc., but I don't know how to do it. →(3)There is a leakage of some important information.
+
+[http://nhiro.org/from_if_to_ml/page-44.png]
+(2) Neither the client nor myself know how 44 humans do it → Possibly delusional in the first place.
+
+[http://nhiro.org/from_if_to_ml/page-45.png]
+Example: spam filter45 Q1What would make customers happyA1Customers have a lot of spam in their mailboxes, and they would be happy if spam was eliminatedQ2How would a human do itA2Look at the body of the email, determine if it is spam or not, and move the spam to another folder Move spam to another folder.
+
+[http://nhiro.org/from_if_to_ml/page-46.png]
+Step 2 Put 46 humans in a box. Only electronic data can be put in and out of this box. (You can think of it as remote work.) (1) Customer value (5) How to get it (6) How to give it (3) Input data (2) People in the box (4) Output data
+
+[http://nhiro.org/from_if_to_ml/page-47.png]
+Step 2 47 (3) What data is put into the box for the human to do (2)? (4) What output data will come out of the box when the human does (2)? (1) Customer value (5) Method of obtaining (6) Method of giving (3) Input data (2) Person in the box (4) Output data
+
+[http://nhiro.org/from_if_to_ml/page-48.png]
+Step 2 48 (5) How do we get the input data (3)? (first step and how to do it continuously) (6) How do we connect output data (4) to customer value (1)? (1) Customer value (5) How to get it (6) How to give it (3) Input data (2) People in a box (4) Output data
+
+[http://nhiro.org/from_if_to_ml/page-49.png]
+The order in which they are answered does not matter49The order in which these four questions are answered does not matter. Example 1: How do I get the data (6) to output (4), and therefore input (3), in order to serve the customer (3)? (5) Example 2: Now that we have the data (5, 3), how do we generate customer value from it? (6) What outputs are needed for this? (4)
+
+[http://nhiro.org/from_if_to_ml/page-50.png]
+Example: spam filter50 >Q2How would a human do that>A2If a human does it, look at the body of the email, determine if it is spam or not, and move the spam to another folderQ3What data do you need to put in for a human to do (2)? A3We need information on the body of the email. If we can get the title and sender, we would like to get them.
+
+[http://nhiro.org/from_if_to_ml/page-51.png]
+Example: spam filter51 Q4What kind of output data will come out of the box when a human does (2)? A4Outputs a "spam or not spam" label for each email
+
+[http://nhiro.org/from_if_to_ml/page-52.png]
+Example: spam filter52 Q5How do I get the input data (3)? A5As a first step, if you can export your mail for now. To do this on an ongoing basis, it may be necessary to create a way to get the data from the mailer, or to modify the mail server side.
+
+[http://nhiro.org/from_if_to_ml/page-53.png]
+Example: spam filter53 Q6How do we connect output data (4) to customer value (1)? A6Sort emails by looking at the label of being/not being spam
+
+[http://nhiro.org/from_if_to_ml/page-54.png]
+Part-time 54 (7) If the person in the box is a part-time worker with no knowledge at all, what manuals do you need to provide? Thinking about this will make the next step easier. (1) Customer value (5) How to get it (6) How to give it Manual part-time job (3) Input data (2) Manual (4) Output data
+
+[http://nhiro.org/from_if_to_ml/page-55.png]
+Step 3 55 Step 1: Human does it Step 2: Human in the box Step 3: Machine in the box Replace the person in the box with a computer. (1) Customer value (5) How to get it (6) How to give it (3) Input data (8) Program (4) Output data
+
+[http://nhiro.org/from_if_to_ml/page-56.png]
+First program56 (8)Write a program for the computer in the box to do (2)It doesn't have to be perfect It doesn't have to be a sophisticated algorithm It doesn't have to be precise It just has to "work" for now
+
+[http://nhiro.org/from_if_to_ml/page-57.png]
+Run it and show it to the customer57 (9) Put actual data into the program (8) and observe the behavior. (How is the accuracy? How fast is it?) (10) Will customers be satisfied with this? (1) Customer value (5) How to obtain (10) How to give (6) How to give (3) Input data (8) Program (4) Output data (9) Try to execute
+
+[http://nhiro.org/from_if_to_ml/page-58.png]
+Afraid to show it to clients? Afraid to show customers when 58 accuracy has not been achieved? But only the customer knows what they value. Even if they tell you it's low quality, it's a chance for you to learn what they value. see "Lean Startup".
+
+[http://nhiro.org/from_if_to_ml/page-59.png]
+If customers are not satisfied59 (11) Collect specific complaints about how they are not satisfied (What kind of output do you want to get for what kind of input? (What kind of output do you want to get for what kind of input?
+
+[http://nhiro.org/from_if_to_ml/page-60.png]
+60 Concrete Complaints Step 4 Finally Machine Learning! (12)Learning with teacher data (11)①Customer value (5) How to get (6) (10) (3) Input data (8) Machine learning (4) Output data (11) Supervisor data (9)
+
+[http://nhiro.org/from_if_to_ml/page-61.png]
+Scientific Methodology 61 When the teacher data is enriched, it becomes possible to quantitatively measure whether the algorithm is good or bad. (Part of the teacher data is used for validation.) Just because it is made into machine learning does not necessarily mean that it will be better, so it should be compared with the program (8) neatly. Rotate the hypothesis-experiment-verification-correction cycle (PDCA cycle/scientific cycle). (PDCA Cycle/Scientific Methodology) Improve by repeating the cycle.
+
+[http://nhiro.org/from_if_to_ml/page-62.png]
+Specific Methods for Improvement 62 "Data that the current algorithm is not able to classify correctly" are extracted and viewed, and what should be done to classify them correctly (e.g., adding features). (Adding features, etc.) If it is an algorithm that returns "confidence in judgment" such as logistic regression, look at the "unconfident results" and add teacher data. (Active learning)
+
+[http://nhiro.org/from_if_to_ml/page-63.png]
+Make no mistake, I'll say it again and again 63 what matters in business is customer value. It is not accuracy. Even if the accuracy is 99%, if 1% error is fatal to the customer, a program with 60% accuracy that does not make that mistake has higher customer value. Specific Complaints (1) Customer Value (5) Method of Obtaining Value (6) (10) (3) Input Data (8) Machine Learning (4) Output Data (11) Supervisory Data (9)
+
+[http://nhiro.org/from_if_to_ml/page-64.png]
+Summary64 -Customer value is important in business - Neither you nor your customers understand exactly what customer value is - Repeat experiments with a minimum number of man-hours to quickly understand (Minimum Viable Prodict) -Experiments will gradually materialize dissatisfaction and customer value -Improvements will be repeated to increase customer value
+
+[http://nhiro.org/from_if_to_ml/page-65.png]
+65 or less Supplement and questions/answers
+
+[http://nhiro.org/from_if_to_ml/page-66.png]
+Supplement 66 This is similar to "software development with unclear customer requirements and no specifications. The difference is that if the customer is dissatisfied, it may be possible to solve the problem by "adding that information to the training data" rather than "reworking the software. However, it is not always possible to solve the problem with data, so it is still important to experiment with minimal implementation.
+
+[http://nhiro.org/from_if_to_ml/page-67.png]
+67 ⑦ Complaints without YukibaSupplement: Bad pattern ⑥ MismatchCustomerNot this one ①Easy way ⑤Crudely bumping ②Textile data ③Superb machine learning ④Highly accurate output dataTo avoid this, it is important to make the experiment in a form that can be repeated.
+
+[http://nhiro.org/from_if_to_ml/page-68.png]
+Q&A Manual Writing 68 Questions about (7) and (8): "If you can write a manual for a part-time job, you should be able to write a program. If the specifications are so vague that you can't write a manual for a part-time job, it's impossible to write a program. How do you write a manual?" This is how we can realize what has not yet been verbalized, and promote the verbalization of the ideas. (See the next page for an example.)
+
+[http://nhiro.org/from_if_to_ml/page-69.png]
+Example:Spam filter69What you want to achieve: >(2) "Look at the body of the email, judge whether it is spam or not, and move spam to another folder. You "For example, if the word XX is included, it is spam. If you can write a program without any problems, you can skip this section.
+
+[http://nhiro.org/from_if_to_ml/page-70.png]
+70 man-hours Q: How many man-hours should I expect it to take? A:It depends on the case. For example, when we put data into a logistic regression, which is a well-developed technique, we may get a quick and accurate result and get an OK from the client, or we may get no result at all. The only way is to "experiment. Since it is difficult to estimate the number of man-hours required, it is dangerous to sign a contract that promises results in a certain amount of time.
+
+[http://nhiro.org/from_if_to_ml/page-71.png]
+Accuracy71 Q: If a customer asks for an accuracy guarantee, A: It is necessary to establish a common understanding with the customer that "we will not know how accurate it will be until we experiment with it. It is better to have a contract in which the customer pays for "trial and error that may result in a good product," rather than a promise of accuracy. It is necessary to conduct experiments in as small a scale as possible and maintain close communication with customers.
+
+[http://nhiro.org/from_if_to_ml/page-72.png]
+Cost and Accuracy of Judgment72An "expert" with knowledge judgesA "part-time worker" without knowledge judgesA machine judgesAccuracy of JudgmentCost of JudgmentHighMediumLowHighMediumLowMachines can work 24 hours a day and not get tired or angry with the labor department. Accuracy is not necessarily high*, but the lower cost creates business value. (*depends on how hard you work)
+
+[http://nhiro.org/from_if_to_ml/page-73.png]
+Deep Learning 73 Q: "Can't Deep Learning do this automatically even if humans can't articulate the conditions?" A: Half right. In the field of image processing, for example, even a 100x100 black-and-white image is a painful condition: there are 10,000 input values. Experts have been devising various conditions for decades to handle such input well. When a special form of neural network that repeats convolution was created and trained on a large amount of data, surprisingly, it showed better accuracy than what the experts had devised and implemented. This is the correct half. The incorrect half is on the next page.
+
+[http://nhiro.org/from_if_to_ml/page-74.png]
+Deep Learning 74This success drew attention to Deep Leaning, taking out the context and distorting the message game by saying, "With Deep Learning, we can create programs that make more accurate decisions than humans. As a result, more and more people think, "Can't Deep Learning handle this too?" for problems with completely different conditions. As the problem conditions change, the effectiveness of methods also changes, so the only basic rule is to "repeat small experiments in the order of the most advanced methods.
+
+[http://nhiro.org/from_if_to_ml/page-75.png]
+Active Learning75 Q: Is it better to use logistic regression for active learning than naive Bayes? A:Since naïve Bayes is also a method that can produce the same confidence level as logistic regression, you should use active learning with naïve Bayes. Supplement: Although I omitted it this time, both logistic regression and naïve Bayes are "probabilistic models" that produce outputs such as "the probability that this input will be class 1 is 0.8. This was described in this presentation as "decision confidence".
+
+[http://nhiro.org/from_if_to_ml/page-76.png]
+Derivative 76 Twitter Comments "No matrix and no derivative" When a machine adjusts the weights, it does so by "slightly changing the weights in the direction where the deviation from the correct answer becomes smaller," which in mathematical terms means, "Differentiate the 'deviation from the correct answer' by the weights to obtain the gradient, and slightly change the weights in the gradient direction. In mathematical terms, this would be: "Let's differentiate the difference from the correct answer by the weights to obtain the gradient.
+
+[http://nhiro.org/from_if_to_ml/page-77.png]
+In matrix 77 logistic regression, for example, if there are 15 conditions, there will be 15 "weights". In mathematical terms, this would be a "vector". A neural net is a collection of multiple logistic regression-like items, so if 10 items are collected, 15x10 values are created. In mathematical terms, this would be a "matrix.
+
+[http://nhiro.org/from_if_to_ml/page-78.png]
+Vague decision 78 "P21 is 17/15 if, for example, x1, x2, x3, x4, and x6 are True, which is True. Mathematically, it is not correct." Yes, that is the important part (I forgot to emphasize), the original formula and the formula for the weighted sum are not equivalent. However, when we try to use machine learning, we don't know what kind of conditional equation will produce customer value in the first place. Therefore, "being equivalent to the original expression" has no customer value. Instead, they use vague and ambiguous conditional expressions, and whether or not they work properly is ensured not by logic, but by testing with real data. This is the basic stance of machine learning.
+
+[http://nhiro.org/from_if_to_ml/page-79.png]
+Supplement (advertisement) 79I forgot to specify and emphasize that "observing data is important". The "first time machine learning" section of PyQ, which I supervised, explains step by step in small steps from observing data and making if statements to logistic regression.Let's learn the basics of machine learning from if statementsFinding thresholdsFinding thresholds by visualizationHandling data for which thresholds cannot be determined Plotting Classification 2D Data from 2D DataClassification Using Linear EquationsMachine Learning for the First Time:Logistic Regression
+

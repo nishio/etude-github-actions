@@ -1,0 +1,36 @@
+Hatena2014-02-11
+code:hatena
+ <body>
+ *1392045080*Paper presentation "Unsupervised Morphological Analysis with Bayesian Hierarchical Language Model"
+ A paper that shows that words can be split into words without morphological analysis, and that even ancient or unknown languages can be used because no teacher data is needed.
+ 
+ I started the "Deep Learning Paper Introduction" project in order to study Deep Learning with output, but since it suddenly became a paper that is not Deep Learning, I removed Deep Learning from the title. The context is still the same, though.
+ 
+ First, an explanation of the Hierarchical Pitman-Yor Language Model (HPYLM).
+ 
+ Pitman-Yor is a stochastic process that generates similar probability distributions based on a certain probability distribution "base measure". Since the distribution of the bi-gram is similar to the unigram and the distribution of the trigram is similar to the bi-gram, we are talking about stacking Pitman-Yor in a hierarchical manner.
+ 
+ The implementation is the Chinese restaurant process (CRP), which consists of a series of Chinese restaurant tables like a Trie tree, with customers being added to the end tables and the tables themselves being created. Customers are replicated and propagated to the nodes above. If customers are only added, they are simply counted, so I think customers can disappear. (PS: I thought that, but they don't disappear? Need to review) (PS: I think the customers don't disappear in the CRP itself, but they are repeatedly erased and added for Gibbs sampling.)
+ 
+ MCMC is used for learning. d and θ estimation is a separate paper.
+ 
+ And so far, we have talked about HPYLM. How do we determine the zerogram frequency at the top of the word HPYLM? Do all words have equal probability? No, no, let's use a letter HPYLM there, which is the Nested PYLM (NPYLM) proposed in this paper.
+ 
+ How to sample word segmentation? So, we use the Blocked Gibbs Sampler, which in essence divides the entire sentence into words at once.
+ 
+ You say you're going to split it all up at once, but what exactly do you do? We create a table of "the probability that k words form a word from the end of a sentence. This is defined recursively, so it can be calculated by DP. Next, the table is used to sample the word segmentation from the end of the sentence.
+ 
+ However, this will reduce the frequency of long words, so we correct the distribution to be Poisson distributed. The probability of a word of length k appearing is determined by Monte Carlo, divided by k, and multiplied by the Poisson distribution. The parameters of the Poisson distribution are determined by the gamma distribution of the conjugate prior distribution and updated in a Bayesian manner.
+ 
+ Result: Alice in Wonderland, which has been introduced in various ways, is amazing because it is almost correctly segmented with the blanks mashed together. The separation of the -ly and the s in the trisyllabic form is a bit off from what humans consider a "word," but it may be more appropriate for a language model. In fact, although it can be trained with supervised and semi-supervised training, unsupervised training seems to be more appropriate as a language model.
+ 
+ Thoughts: First, I'll try to implement the character HPYLM and see if I can find something vague in my understanding. Also, next time I'll probably introduce the "hierarchical Pitman-Yor process-based&#122441;variable-length n-gram language".
+ 
+ ** Source.
+ http://chasen.org/~daiti-m/paper/nl190segment.pdf
+ 
+ ** Finally
+ This article is written by the author, who is interested in Deep Learning, while reading and studying related papers. Therefore, it may contain mistakes. If you have any questions or comments, we would appreciate it if you could point them out to us.
+ </body>
+
+[Hatena Diary 2014-02-11 https://nishiohirokazu.hatenadiary.org/archive/2014/02/11]

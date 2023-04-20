@@ -1,0 +1,31 @@
+DP P
+[P - Independent Set https://atcoder.jp/contests/dp/tasks/dp_p]
+　Paint the given tree in black and white, black vertices must not be adjacent, count up how many ways there are.
+　Just as one could do a DP "from end to end" and "looking only at the immediate front" with linear dependencies, one could do a DP "from leaf to leaf" and "looking only at the root of the tree" with tree-structured dependencies [Tree DP].
+	[https://gyazo.com/10a0e781f27b7b7fc988257afad814b8]
+　We are using recursion where we follow the tree, but since the target is a tree and there is no confluence, there is no need to make it a memoized recursion.
+code:python
+	def solve(N, edges):
+     def visit(parent, self):
+         if parent != 0 and len(edges[self]) == 1:
+             # self is leaf
+             return (1, 2)  # white, total
+ 
+         black = 1
+         white = 1
+         for child in edges[self]:
+             if child == parent:
+                 continue
+             w, t = visit(self, child)
+             black *= w
+             black %= MOD
+             white *= t
+             white %= MOD
+         ret = (white, white + black)
+         return ret
+ 
+     return visit(0, 1)[1] % MOD
+PyPy TLE https://atcoder.jp/contests/dp/submissions/15078877
+
+Cython
+	https://atcoder.jp/contests/dp/submissions/15078970

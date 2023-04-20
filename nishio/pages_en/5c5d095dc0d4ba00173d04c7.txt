@@ -1,0 +1,27 @@
+Go's interface is a pointer with a method table
+[Go interface] is [pointer] with [method table
+The word [interface] confuses me when I think of [Java's interface].
+
+code:go
+ // emptyInterface is the header for an interface{} value.
+ type emptyInterface struct {
+ 	typ  *rtype
+ 	word unsafe.Pointer
+ }
+ 
+ // nonEmptyInterface is the header for an interface value with methods.
+ type nonEmptyInterface struct {
+ 	// see ../runtime/iface.go:/Itab
+ 	itab *struct {
+ 		ityp *rtype // static interface type
+ 		typ  *rtype // dynamic concrete type
+ 		hash uint32 // copy of typ.hash
+ 		_    [4]byte
+ 		fun  [100000]unsafe.Pointer // method table
+ 	}
+ 	word unsafe.Pointer
+ }
+https://github.com/golang/go/blob/7e987b7/src/reflect/value.go#L180-L197
+
+I thought I couldn't find it in my search tied to the C language, but it was in *.go.
+

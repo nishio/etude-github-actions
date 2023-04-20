@@ -1,0 +1,178 @@
+ARC106
+I was almost worried about C, but after my previous experience, I realized that I should read all the questions first, so I read D. D is just an equation transformation and easy for me, so I solved that one first and went back to C. C is able to generate output that looks correct, but only 2 cases were WA and I didn't get them in time. I was not able to solve it in time.
+
+Yay, it's light blue!
+	[https://gyazo.com/f6135300b90474a9c0175d10ef3dfc84]
+I was slammed in the last 10 minutes or so.
+I got through D in less than 40 minutes and had 45 minutes left, but I couldn't get the bug out and C didn't go through. Well, I guess I made progress in that I was able to make the decision to do D first.
+[https://gyazo.com/6dcc9c30c3a947d684e21eeb966422c6]
+
+[A - 106 https://atcoder.jp/contests/arc106/tasks/arc106_a]
+	[https://gyazo.com/aba565e81dd5db9689935f8782ad2c78]
+	Thoughts.
+	　How many possible values of A and B are actually there since they are of logarithmic order?
+	　Counting 3^A less than 10^18 -> 37
+	　Then we can afford to do the whole search.
+　code:python
+	　 def solve(N):
+       P3 = [3, 9, 27, 81, ...]
+       P5 = [5, 25, 125, 625, ...]
+       for i, x in enumerate(P3):
+           for j, y in enumerate(P5):
+               if x + y == N:
+                   print(i + 1, j + 1)
+                   return
+       print(-1)
+	I printed 3^A instead of A. 1WA
+
+[B - Values https://atcoder.jp/contests/arc106/tasks/arc106_b]
+	[https://gyazo.com/931e302096bd35ae11211d9a78108dc6]
+	Thoughts.
+		Can move values through paths
+		OK if the sum of the contents of the connected components are the same.
+		Find the connected components by [UnionFind], and find the sum of A and B for each connected component.
+	code:python
+	 def solve(N, M, AS, BS, CD):
+      init_unionfind(N)
+      for (c, d) in CD:
+          unite(c - 1, d - 1)
+  
+      sumA = defaultdict(int)
+      sumB = defaultdict(int)
+      for v in range(N):
+          root = find_root(v)
+          sumA[root] += AS[v]
+          sumB[root] += BS[v]
+  
+      for k in sumA:
+          if sumA[k] != sumB[k]:
+              return "No"
+      return "Yes"
+
+I looked at C for a while and made concrete examples by hand, but I couldn't see the path, so I decided to read other problems. d seemed easier, so I decided to solve D.
+
+[D - Powers https://atcoder.jp/contests/arc106/tasks/arc106_d]
+	[https://gyazo.com/4e95f3152b0c1452034c7670d5a85f7e]
+	Thoughts.
+　　[half of the matrix]:.
+		[$ \sum_{i=1}^{N-1} \sum_{j=i+1}^N A_{ij} = (\sum_{ij} A_{ij} - \sum_i A_{ii}) / 2]
+　　N is 10^5, which is large, so it cannot be processed to the order of squares, which means that it may be possible [to process one row at a time].
+　　Consider fixing j
+　　[$ \sum_i (S + A_i)^X]
+		[Binomial theorem]:.
+		[$ (x+y)^{n}=\sum _{k=0}^{n}{n \choose k}x^{n-k}y^{k}]
+　　[$ \sum_i (S + A_i)^X = \sum_i \left( S^X + \binom{X}{1} S^{X-1}A_i^1 + \ldots \right) ]
+		[Change order of addition]
+		　If we do the addition of the inside out, it's going to be in the form [$ \sum_i A_i^k].
+		　This can be calculated in linear order, so it's pre-processed to speed up the process.
+　　　The S's are going to be clean too.
+　　Reorganize again
+　　　[$ \sum_{L=1}^{N-1} \sum_{R=L+1}^{N} (A_L+A_R)^X = \left(\sum_L\sum_R (A_L + A_R)^X - \sum_i (2A_i)^X \right) / 2] ... [half of matrix].
+	　[$ \sum_L\sum_R (A_L + A_R)^X = \sum_L\sum_R\sum_i \binom{X}{i} A_L^{X-i}A_R^i ] ... [Binomial Theorem].
+	　[$ = \sum_i \left(\binom{X}{i} \sum_LA_L^{X-i} \sum_R A_R^i \right)]... [Change addition order] [Exchange product and sum].
+	　If we pre-calculate [$ f(k) = \sum_i A_i^k ], we get [$ \sum_i \binom{X}{i} f(X-i) f(i)
+　mounting
+　　I'm going to write it down plainly.
+　　　Where it divides by 2, multiply by [inverse original in mod P
+　　　Combination calculations are [combination in mod P].
+　　　Two TLEs were careless mistakes in the pre-treatment part.
+　　　I was doing a ** x at first, and before I got to the remainder, the digit exploded, 15 TLE.
+　　　Next I tried pow(a, x, MOD), but it was 9 TLE, I had my head in the sand for a while.
+　　　The above is of logarithmic order, and if you use the past results instead of multiplying by a power each time, it will be of constant order.
+　　code:python
+　　 def solve(N, K, AS):
+       MOD = 998_244_353
+       div2 = pow(2, MOD - 2, MOD)
+       sumTable = [N] * (K + 2)
+       ps = AS[:]
+       for x in range(1, K + 1):
+           s = 0
+           for i in range(N):
+               s += ps[i]
+               s %= MOD
+               ps[i] *= AS[i]
+               ps[i] %= MOD
+           sumTable[x] = s
+   
+       c = Comb(K + 1, MOD)
+       for x in range(1, K + 1):
+           ret = 0
+           for i in range(x + 1):
+               ret += c.comb(x, i) * sumTable[x - i] * sumTable[i]
+               ret %= MOD
+           p = pow(2, x, MOD)
+           ret -= sumTable[x] * p
+           ret %= MOD
+           ret *= div2
+           ret %= MOD
+           print(ret)
+
+[C - Solutions https://atcoder.jp/contests/arc106/tasks/arc106_c]
+	[https://gyazo.com/12f24063a7495df28c9c1469f9750843]
+　I'll implement it honestly first, hit the random input and observe.
+		code:python
+		 def aoki(LR):
+       selected = []
+       for lr1 in sorted(LR):
+           if not any(is_p(lr1, lr2) for lr2 in selected):
+               selected.append(lr1)
+       return len(selected)
+   
+   
+   def takahashi(LR):
+       from operator import itemgetter
+       selected = []
+       for lr1 in sorted(LR, key=itemgetter(1)):
+           if not any(is_p(lr1, lr2) for lr2 in selected):
+               selected.append(lr1)
+       return len(selected)
+   
+   
+   def random_test():
+       from random import seed, randint
+       for s in range(1000):
+           seed(s)
+           LR = []
+           for i in range(5):
+               W = 20
+               l = randint(0, W - 1)
+               r = randint(l + 1, W)
+               LR.append((l, r))
+           t = takahashi(LR)
+           a = aoki(LR)
+           if t != a:
+               print(s, LR, t, a)
+ observation
+ 　M is unlikely to be negative.
+ 　Up to [$ \lceil N/2 \rceil]? (not true)
+ 　I'd say the top is up to [$ N - 2]! (PS: it's not)
+ 　I saw something like Figure A in the observations, so I decided to generate something like B. Oh, I see.
+ 　　I forgot how to put in the missing part, so I corrected it to C.
+ 　[https://gyazo.com/6f1e9a3674c93e46adbdfc591ca487f8]
+
+　　We'll call the big one a wrap, the finely wrapped one a child, and the last one in line a tail.
+　　　Sorting by L
+　　　　The wrappings come first, so the wrapped child is eliminated.
+　　　　Tails are also eliminated.
+　　　　→1
+　　 Sorting by R, children are processed first.
+　　 　M number of children
+　　 　The first of the tails will also be added
+　　 　→M+1 throughout
+　　 I thought this would accomplish m
+　　 　I assumed M was up to N - 2.
+　　 　I thought M could be N - 1. I realized that and loosened the constraint, but when N - 1, there is no tail, so "the first of the tails is added and +1" doesn't happen, so this algorithm can't generate the correct data.
+　　 　Contest time ran out here.
+　Official Explanation
+　　M is not N-1.
+　　 except for the case where N=1
+　　My WA was an oversight there too.
+　[https://gyazo.com/cc67ffeb9e3557505cab212c7944375f]
+		I stopped returning -1 when N-1, and as a result N1M0 now passes, but other M=N-1 tests do not pass because the above algorithm produces incorrect results.
+			[https://gyazo.com/6e461c5b6fdb24b8675f88e0136c565a]
+　points worthy of special consideration
+　　I was totally freaking out with about 10 minutes left.
+　　When I looked at the problem conditions, the fact that N was from 1 stuck in my mind for a moment, but I didn't go through with it.
+　　　It was an obvious trap to have only one object present when discussing the intersection of intervals.
+　　　[Boundary value test]
+　The original was [interval scheduling], and if he knew it, he knew that the Takahashi solution was the optimal solution.

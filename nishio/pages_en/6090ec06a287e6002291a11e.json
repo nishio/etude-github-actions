@@ -1,0 +1,37 @@
+Hatena2010-11-26
+code:hatena
+ <body>
+ *1290775353*Diary of Profiling
+ <a href="http://d.hatena.ne.jp/yuyarin/20101124/1290556216">Optimization of max, min functions and cmov instruction for x86 - yuyarin's Diary</a>, Mitsunari said "If we keep it like this, it will become 0 after adding optimization options. I wrote my own code for </a> that works fine even with optimization options, VS2008, WinXP, Core2 @ 2.4GHz. I wondered if the outputs of B and C were loop unrolling. Also read: <a href="http://homepage1.nifty.com/herumi/diary/1011.html#24">melancholic afternoon</a>. To summarize roughly, it's like jmp is about 2 clocks faster than cmov, which is 5 clocks, because branch prediction is easy to hit in use cases such as finding the maximum value of a random array, for example. This code and yuyarin's code make the assumption that the results of the comparison are unpredictable, but is that assumption really true in the first place? Isn't it pointless to consider the fastest max in isolation from the pattern of input?
+ 
+ Source Code: https://gist.github.com/716660
+ 
+ ** A: return a > b ? a : b;
+ 
+ >||
+ [sample] ave: 367.150000 msec, sd: 8.060789 msec, samples: 20
+ without first 5 samples: ave: 366.666667 msec, sd: 8.077010 msec
+ ||<
+ 
+ https://gist.github.com/716654
+ 
+ 
+ ** B: int c=a>b; return c*a+!c*b;
+ 
+ >||
+ [sample] ave: 208.550000 msec, sd: 7.344708 msec, samples: 20
+ without first 5 samples: ave: 208.333333 msec, sd: 7.384024 msec
+ ||<
+ https://gist.github.com/716653
+ 
+ 
+ ** C: return (-(a>b))&a|(~(-(a>b)))&b;
+ 
+ >||
+ [sample] ave: 187.500000 msec, sd: 7.126673 msec, samples: 20
+ without first 5 samples: ave: 187.533333 msec, sd: 5.878127 msec
+ ||<
+ https://gist.github.com/716652
+ </body>
+
+[Hatena Diary 2010-11-26 https://nishiohirokazu.hatenadiary.org/archive/2010/11/26]

@@ -1,0 +1,150 @@
+Hatena2012-06-28
+code:hatena
+ <body>
+ *1340811463*I've been talking about exception handling in java-en
+ It's java-ja until I write a blog, but I'm already sleepy, so I'll just write one line for now and gradually add the rest.
+ 
+ Thank you GREE for providing the venue free of charge!
+ 
+ I thought someone would talk about the inspection exception, so I didn't write about it, and eventually no one mentioned it, even though it's the Java community.
+ 
+ I mean, if there were 100 people in the audience, maybe some of them would have asked, "What's an inspection exception?" I mean, if there were 100 people in the audience, maybe some of them were like, "What's an inspection exception? I wonder if they understood "inspection exception breaks OCP" or "Liskov's substitution principle of Liskov"? At any rate, I felt that the direct sum type was not understood.
+ 
+ I'll reprint my remarks on Twitter.
+ 
+ >>
+ By the way, Zen of Python also says "Don't grip about errors"!
+ <<
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20120317/1331989155'>Zen of Python: 20 Aphorisms</a>
+ 
+ >>
+ I left out the part about "what the exception was for in the first place," but was there a need for something more like that?
+ <<
+ 
+ >>
+ I'm finally catching up on my C# 1.0 usings."
+ <<
+ 
+ >>
+ Guru programmer, "Can this program work if all exception handlers are removed?"
+ <<
+ 
+ >>
+ Over-defense is just not DRY and is less harmful than under-defense. It's just that compilers who can't always remove true conditions are octopuses (wait).
+ <<
+ 
+ >>
+ The exception is thrown when the caller fulfills the terms of the contract, but the called party fails to fulfill the contract.
+ <<
+ 
+ >>
+ Is "the price of the check exception is that it violates the OCP" said in the Clean code?
+ <<
+ 
+ >>
+ UI, network IO, granular inter-system communication and inter-module coupling are hotbeds of bugs that are difficult to pick up in unit tests, so there should be sensitive log management for these areas.
+ <<
+ 
+ -> Specifically, add another axis in addition to the log level namespace. Should we read: <a href='http://d.hatena.ne.jp/taichitaichi/20090220/1235124140'>Should logs be more three-dimensional? - Between design and implementation. </a>
+ 
+ >>
+ tanakh "I don't know if the function returns null or not," Taichi "Just read Javadoc," tanakh "I don't believe in documents written by humans or something."
+ <<
+ 
+ >>
+ Read the documentation" is a good argument, but in reality, there are bugs that are caused by not reading the documentation, and the phenomenon of "some engineers not reading the documentation" is inevitable.
+ <<
+ 
+ >>
+  To explain Either in a very simple way, when a function that returns an integer type can throw an error, it is considered to be a function that returns an 'integer or error' type. I don't think people who don't understand the direct sum type can understand Maybe without explanation, so I'll add, "I was writing ...... for the type 'Just integer or Nothing' and was given a microphone for simultaneous interpretation, that I was given a microphone for simultaneous interpretation.
+ <<
+ 
+ In Java, if there is a function that returns a value of a certain class (let's say Int), the return value may be null. The "You should of course check Javadoc to see if the function can return null, and write an if statement to check for null before using it" is the "The documentation is unreliable, and it is strange that the type Int contains null which cannot be used as Int. If we create a new type called "Just Int or Nothing (like null)" and set the return value of a function to that type, there will be no mistake of using Nothing as Int by mistake.
+ 
+ Incidentally, "If there is a way to make a mistake, someone will always make a mistake; someone will always forget to check for null. Errors need to be notified in a way that cannot be forgotten. Nishio's school of thought is "Most languages currently do not have Maybe, but have exceptions, so it is better to notify by using exceptions.
+ 
+ 
+ In addition, "When retrieving a value from a hash, even though there are methods to check whether the key exists and to retrieve the value by specifying a default value, the programmer has the belief that the key exists when he/she accesses the hash without using those methods. Don't return null, nil, or undefined.
+ 
+ Taichi's argument that "exceptions should not be used" was countered by mine that "exceptions should be used aggressively," but in the end his argument was that "when writing code with a large number of people, it is neither expensive nor necessary to require everyone to know about exceptions in depth and use exceptions in the correct design," so I thought, well, if you put that " I can agree with that if you put the condition "with a large number of people". My argument was, "When I write a challenging code by myself, I should throw an exception as soon as I find an unexpected condition so that I can immediately notice if I make a mistake", so it is a difference in application.
+ 
+ >>
+ Incidentally, the Linux kernel coding standard recommends using goto for resource processing.
+ <<
+ http://linuxjf.sourceforge.jp/JFdocs/kernel-docs-2.6/CodingStyle.html
+ 
+ >>
+ I said "why not just have a GC?" in a flippant tone, but of course "processes that must be paired" are not only memory allocation and deallocation. It is also necessary to consider what should happen when an exception flies between lock and unlock, etc.
+ <<
+ 
+ Using a function that may throw an exception means that you have to consider what happens when you do one of the processes that must be paired, and before you do the other, an exception is thrown and you jump to a different context. One example of such a pair of processes is "allocate memory, then release it," and the GC solves that problem. However, GC does not do anything about "acquiring and then releasing locks. So it is a mistake to say that the GC does not have to think about exception safety; it can be replaced with resource management using RAII, or STM can solve the problem.
+ 
+ The "Google's coding rules prohibit exceptions" is FUD. http://www.textdrop.net/google-styleguide-ja/cppguide.xml#%E4%BE%8B%E5%A4%96 has a Japanese translation, so make sure you read the reason. The Japanese translation can be found at .
+ >>
+ On the surface, the benefits of using exceptions outweigh their costs. Even more so in the case of a new project. However, trying to introduce an exception into existing code affects all code that depends on it...
+ <<
+ 
+ I felt the need to re-read the presentation material later for the story of catching it on the client side.
+ 
+ The claim is that "if it doesn't work the second time, it usually doesn't work anymore," and that we shouldn't be retrying over and over again; we should be processing to isolate the problem.
+ 
+ >>
+ ryopeko: I forgot to give a keynote to @t_wada titled "Home and Exception Handling" #java_en
+ <<
+ 
+ Fail-fast is important. First, I make the supremely plausible assumption that the caller never intentionally offends me. Then, if I am offended, it is because the caller's understanding of my implementation is faulty, and to remedy this, I need to notify the caller of the problem by throwing an exception.
+ 
+ Well, of course, it is important to note that if you don't make sure before throwing an exception that the design is capable of properly handling the exception when thrown, you may have a major escape to your parents' house or even die.
+ 
+ >>
+ #java_en By the way, in haskell, "the caller is notified of the error in the way they want to get it" depends on the property that "only the return value can be overloaded with a different function", so in java, you have to create a class that contains everything and create methods like as_either and as_maybe. I guess you have to make a class that contains everything and create methods like as_either or as_maybe.
+ <<
+ 
+ <a href='http://tanakh.jp/pub/pfi-seminar-2011-12-08.html#1'>Do not write error handling</a>.
+ 
+ In the same way that type declarations are a pain in the ass, we tried to create a language without type declarations, but it was better to have types, so we decided to eliminate the need to write type inferences where they are possible. should be included in the future to make programmers happy.
+ 
+ <a href='http://www.slideshare.net/pfi/ss-9780450'>Can! Parallel and Concurrent Programming</a>
+ 
+ Why can C++ throw integers, etc. as exceptions? Is there a positive reason why it was better to do so, or is there a negative reason why it didn't see the value in limiting the set of things that could be thrown?
+ 
+ I was also impressed by t_wada's talk about "exceptions being the complement of the range described in the specification", I made a note of it because I remembered it.
+ 
+ *1340869798*Diary of a bombed out nested JSDeferred loop.
+ It was sad to write this.
+ >|javascript|
+ Deferred.loop(3, function(i){
+     Deferred.loop(3, function(j){
+         console.log(i + "-" + j);
+     });
+ }).next(function(){
+     console.log("finished");
+ });
+ ||<
+ Output:
+ >||
+ 0-0
+ 0-1
+ 1-0
+ finished
+ 0-2
+ 1-1
+ 2-0
+ 1-2
+ 2-1
+ 2-2
+ ||<
+ 
+ Is the correct answer like this?
+ >|javascript|
+ Deferred.loop(3, function(i){
+     return Deferred.loop(3, function(j){
+         console.log(i + "-" + j);
+     });
+ }).next(function(){
+     console.log("finished");
+ });
+ ||<
+ </body>
+
+[Hatena Diary 2012-06-28 https://nishiohirokazu.hatenadiary.org/archive/2012/06/28]

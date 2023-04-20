@@ -1,0 +1,60 @@
+Hatena2010-12-09
+code:hatena
+ <body>
+ *1291852896*tmp.py Description
+ I put <a href='http://d.hatena.ne.jp/nishiohirokazu/20101207/1291734665'>tmp.py</a> on my blog yesterday because I didn't want to throw it away, but I was told that people were wondering what it was doing, so I'll explain briefly.
+ 
+ First, make n small, then the print statement prints an integer without explanation, which is confusing, so I tweaked it and ran it, and this is what I get
+ 
+ >||
+ n: 2
+ (())
+ ()()
+ 2
+ 
+ n: 3
+ ((())), (()())
+ ()(()), ()()(), (())()
+ 5
+ 
+ n: 4
+ (((()))), ((()())), (()(())), (()()()), ((())())
+ ()((())), ()(()()), ()()(()), ()()()(), ()(())(), (())(()), (())()(), ((()))(), (()())()
+ 14
+ 
+ n: 5
+ ((((())))), (((()()))), ((()(()))), ((()()())), (((())())), (()((()))), (()(()())), (()()(())), (()()()()), (()(())()), ((())(())), ((())()()), (((()))()), ((()())())
+ ()(((()))), ()((()())), ()(()(())), ()(()()()), ()((())()), ()()((())), ()()(()()), ()()()(()), ()()()()(), ()()(())(), ()(())(()), ()(())()(), ()((()))(), ()(()())(), (())((())), (())(()()), (())()(()), (())()()(), (())(())(), ((()))(()), ((()))()(), (()())(()), (()())()(), (((())))(), ((()()))(), (()(()))(), (()()())(), ((())())()
+ 42
+ ||<
+ 
+ This enumerates how many different "corresponding parentheses" there are. () is possible but )( is not because it closes before opening, ((())) is possible but (())(()) is not because it closes before opening, and so on.
+ So, I have memorized the past history in mem. However, if I remember without distinguishing anything, duplicates will appear, such as ()()() and ()()()(), or ()() and ()()()(), and it will be difficult to remove them. Therefore, we separate the "lumped" and "separated" items in the memory. If the left side of the memory is limited to lumped items, duplications will not occur.
+ 
+ *1291885083*How to write to an NTFS drive on a Mac (Snow Leopard)
+ After reinstalling my Windows machine, I couldn't connect to the Internet because I didn't have the drivers for my network card. I had no choice but to use my Macbook and an NTFS external HDD that I had on hand, but I couldn't write to the NTFS drive from my Mac! Geez!
+ 
+ but they can easily change it to write it down.
+ <a href='http://journal.mycom.co.jp/column/osx/342/index.html'>[Column] OS X Hacking! (342) The Unknown Snow Leopard (NTFS Edition) | PC | My Comi Journal</a
+ 
+ >||
+ $ diskutil info /Volumes/XXXXX/
+ (Abbreviation)
+ Volume UUID:              F2DFE56A-BAE1-4153-B9F8-B1B286EXXXXX
+ $ sudo cat >> /etc/fstab
+ UUID=F2DFE56A-BAE1-4153-B9F8-B1B286EXXXXX none ntfs rw
+ ||<
+ 
+ The second argument "none" means that the entry point is not specified. The second argument "none" means that no entry point is specified. I'm going to restart now.
+ 
+ It was easy!
+ </body>
+ <comments>
+ <comment>
+ <username>pm11op</username>
+ <body>Wow thanks! </body>
+ <timestamp>1291862196</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-12-09 https://nishiohirokazu.hatenadiary.org/archive/2010/12/09]

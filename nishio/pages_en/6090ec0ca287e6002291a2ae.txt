@@ -1,0 +1,76 @@
+Hatena2013-05-10
+code:hatena
+ <body>
+ *1368196109*String parsing
+ Programming language processors need to figure out the meaning from the source code given as a string. For example, from the string "int x = 1234;" it is necessary to understand that the "1234" part means an integer.
+ How can we do that?
+ 
+ As a first step, let's consider creating a function that returns "12" when it receives the string "ab12cd".
+ How can I create such a function?
+ 
+ ** Loop one character at a time in a naive way
+ 
+ First, let's verbalize more clearly what we want to do. What we want to do is "I want to look at a string of characters one by one from the beginning and extract the range of characters from 0 to 9.
+ 
+ What if the first letter is not "the letters 0-9"? Then you can look at the next letter without doing anything special.
+ 
+ What if the next letter is not also a "0-9 letter"? Then again, just look at the next letter without doing anything in particular.
+ 
+ What if the next character is the "0-9" character? That's part of the resulting string that should be returned. But do not return yet. Because the next character may be the characters 0 through 9. So, we need to accumulate "what to return as a result later", which we call "result".
+ 
+ What if the next character is also a "0-9 character"? This is also part of the resulting string that should be returned. This should also be accumulated.
+ 
+ What if the next letter after that is not "the letters 0-9"? Here at last we have finished the "range followed by the letters 0-9"! Let's return the result we have accumulated.
+ 
+ But the condition "the letters are not '0-9'" is used both before and after "the range of letters 0-9". The condition "the characters are not '0-9'" alone does not determine what action should be taken. So, we include in the condition whether or not "a range followed by the characters 0-9" has been found or not yet. This is called "is_found.
+ 
+ The Python code created with this kind of thinking is shown below.
+ 
+ >|python|
+ def find_int(string):
+     result = ""
+     is_found = False
+     for char in string:
+         print 'char=%r, result=%r, is_found=%r' % (char, result, is_found)
+         if char in '0123456789':
+             result += char
+             is_found = True
+         elif is_found:
+             return result
+ 
+     return ''
+ 
+ 
+ print find_int("ab12cd")
+ ||<
+ 
+ When executed, it will look like this
+ 
+ >||
+ char='a', result='', is_found=False
+ char='b', result='', is_found=False
+ char='1', result='', is_found=False
+ char='2', result='1', is_found=True
+ char='c', result='12', is_found=True
+ 12
+ ||<
+ 
+ <hr>
+ 
+ I would like to write a supplemental article to the questions I received from readers of my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write a supplementary article like this. Please feel free to ask any questions or comments.
+ 
+ I think it would be appropriate to enter this commentary as a new chapter between chapters 3 and 4 of my book. As for the rest of the story in that chapter.
+ 
+ - If there is only one "is_found", but if it becomes more complicated, I don't know what to do. (Introduction of State Transition Diagrams)
+ - Regular expressions are easy to use
+ - Can nested parentheses be cut out with regular expressions? (regular language, context free language)
+ - How do you do it? (recursive descending parser, yacc)
+ - How would you describe it? (BNF)
+ 
+ I guess.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2013-05-10 https://nishiohirokazu.hatenadiary.org/archive/2013/05/10]

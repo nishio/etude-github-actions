@@ -1,0 +1,41 @@
+Hatena2010-07-12
+code:hatena
+ <body>
+ *1278911670*Lunch today (solution to higher floor function quiz)
+ The problem section is here. If you haven't solved it yet, please look here first. <a href='http://d.hatena.ne.jp/camlspotter/20100710/1278752186'>Higher Floor Functions Quiz - Oh, you `re no (fun _ → more)</a>
+ 
+ To prevent spoilers.
+ 
+ 1
+ 
+ 2
+ 
+ 4
+ 
+ 8
+ 
+ 16
+ 
+ 32
+ 
+ 64
+ 
+ I knew that the function application is left-associative, so I immediately understood that there was no way it could be 2 * n. However, there was another pitfall where I jumped over the pitfall, and I got stuck in it.
+ If we write twice as t and <n> as a function that applies the argument function n times
+ >||
+ t = <2>
+ t t = <2> <2> = <2 ** 2> 
+ -- This is easy to misunderstand because these happen to be the same two-by-two operations.
+ -- and also the trap of interpreting it as <2 * 2>.
+ t t t = (t t) t = <4> <2> = <2 ** 4> = <16>
+ -- Those who thought it was <4 * 2> run into a bump here.
+ -- Assuming this is <4 ** 2> is the second trap
+ t t t t = (t t t) t = <16> <2> = <2 ** 16> = <65536>
+ -- If you think it's <16 ** 2>, you'll answer 256.
+ ||<
+ Yeah, well, I simply answered 256 and fell into the pit.
+ 
+ So the trap is twofold. First, people who have only a vague idea of the order in which the functions are applied will mistake (t t t t t) for (t (t t t t)). In numerical terms, it is a trap that (2 **) looks like (2 *), but is actually (2 **), which is often wrongly associated with the name "TWICE. Moreover, 2 * 1 == 2 ** 1, 2 * 2 = 2 ** 2, so the first two are valid even with that interpretation. If you had looked at the problem statement properly, you would have been able to correct (t t t) where it does not become <8>. The next trap is that (** 2) and (2 **) are equal for 2 and 4. 2 ** 2 = 2 ** 2, 2 *4 == 2 ** 4, so the correct answer is 2 ** 16, but you answered 16 ** 2. If I had looked at the problem statement properly, I would have understood that 2 ** 1 /= 1 ** 2...
+ </body>
+
+[Hatena Diary 2010-07-12 https://nishiohirokazu.hatenadiary.org/archive/2010/07/12]

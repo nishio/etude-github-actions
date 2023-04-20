@@ -1,0 +1,119 @@
+Hatena2012-03-16
+code:hatena
+ <body>
+ *1331906887* Language Girls Club: do we need both undef and null?
+ The Twitter timeline was so interesting that I inadvertently opened a language girls' club in my brain by personifying languages. Please note that there is no one-to-one correspondence between the characters and the real people.
+ 
+ ** Do we need both undefined and null?
+ 
+ At a women's meeting where a certain programming language is gathered:.
+ 
+ Perl: Speaking of which, why does JavaScript-chan have both undefined and null?
+ JavaScript: What, you want to return undefined when accessing an undefined variable?
+ Python: Just throw exceptions and die!
+ Ruby: Throw an exception and die.
+ Python & Ruby: Hey&#9825;
+ Java: No, you should initialize it to null if it's a reference type, or 0 if it's a numeric type.
+ C: This is why young people these days... even initialization costs money! Initializing by default is a waste of money! Only those who need it should be responsible for initializing it!
+ Perl: (Aunt C is scary... Java is also kind of hard to type...) But, let's say you initialize it, you only need one of null or undef, right?
+ Lisp: (oh dear, if you're going to say that, why not just one of nil and an empty list too (I thought, but didn't say it).
+ JavaScript: hmmm, I wonder. Isn't it one thing to not have a boyfriend now, and another to not have had one since birth?
+ 
+ ** What if I pop from an empty list?
+ 
+ JavaScript: For example, when you pop from an empty list, you want to return undefined.
+ Python: Throw exceptions and die, Ruby-chan!
+ Ruby: What?
+ Python: Huh? So how do you distinguish this from popping from a list that had nil in it?
+ C: This is why young kids these days... I have functions that return 0 <= n < 256 on success, even though they are int type just to return -1 on failure! You are totally unthinking and relaxed!
+ Ruby: (Aunt C, what a pain in the ass.) What do you think, Lisp?
+ Lisp: (Oh my gosh, I forgot about that long time ago (and I'll try to start gosh)) (car ()) seems to throw an exception ((by @ser1zw "Common Lisp returns NIL (confirmed by CLISP)" thanks!)
+ 
+ ** Accessing a nonexistent key
+ 
+ JavaScript: I also want to return undefined when an object has no specified key.
+ Python: I wish I could just throw an exception and die. If it were me, I'd make it so you can check with obj.has_key(k) ((Python and Ruby are about access to dictionaries/hash, if you access with obj.foo, Ruby will throw NoMethodError too)) ((by @a_yasui "(has_key is deprecated since 2.6, can't use since 3.0. Let's use in instead.)
+ JavaScript: I can do something like that now, but I don't think I used to be able to...
+ Python: I wish you'd just throw an exception and die, hey, Ruby?
+ Ruby: What's wrong with returning nil? ((by @niku_name "By the way, using hash.fetch, accessing a non-existent key is just like Python proper (throws an exception) http://rurema.clear-code.com/1.9.3/method/Hash/i/ fetch.html" thanks!)
+ Memcached: (I think it returns false, but it's not a language, so I can't join the conversation) ((by @methane "I was talking about the php client when I said Memcached returns false, memcached as middleware is just storing byte strings to begin with. It just stores a string of bytes, so there's no false, zero, or null." thanks!))
+ Python: Hmmm, so what if the original contains nil? (grin)
+ Ruby: (-_-#)
+ Haskell: All you ladies frustrated with undefined and null should use monads!
+ JavaScript: I might use Haskell when it runs in the browser, MAYBE!
+ Python: That possibility is Nothing ((In Haskell, there is a type class called Maybe Monad to construct a type to represent things that may fail, and the type for that failure is Nothing)).
+ Haskell: …(-_-)
+ 
+ ** Summary
+ 
+ Python: But, as C and Haskell say, if the return value is to convey an error, it has to be something other than the value that would be returned on success, otherwise we won't know if it was a success or a failure.
+ Haskell: (very happy to hear you agree, but that emotion is shoved into the IO monad and no expression on his face)
+ Python: In that sense, it's reasonable to distinguish between null, which can be put in a list or attribute, and undefined, which is an invalid value to convey failure.
+ JavaScript: Oh, I forgot to mention that undefined can be put in a list.
+ Python: Huh? I hope you die!
+ 
+ ** Postscript
+ 
+ Perl has been on my mind since Python started disrespecting Ruby... $_=~#(;_;)#;#$@#{$#}...
+ 
+ THANKS to everyone who inspired me to write this SS!!! @__gfx__ @kazuho @__kan @tanakh
+ 
+ For those interested, I recommend the WebDB Press Compilation, which contains 60 PDFs in one volume, including my "Fundamentals of Language Design" book: WebDB Press Compilation.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774148318" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ ** Supplemental
+ There seems to be a misconception that this was my idea, so I'll quote from it. The reason it became a girls' club was because I wanted to make Kore my "boyfriend" instead of my "girlfriend"! https://twitter.com/#! /__kan/status/180580941335502848
+ >>
+ @__kan: you say you don't understand why both null and undefined exist, but there should be a clear distinction between not having a girlfriend now and not having a girlfriend since birth!
+ <<
+ 
+ I was also motivated to write this because I read this and came up with the punchline of Maybe→Nothing lol https://twitter.com/#! /tanakh/status/180593265706414080
+ >>
+ @tanakh: if you're frustrated with null and undefined now, you should use Haskel.
+ <<
+ 
+ ** Reaction Summary
+ 
+ - Assembler Grandma: "It's hard to do a lot of things when you can define variables" (by @raitu thanks!)
+ 
+ - Assembly language grandma: "Undefined? You can't raise my grandfather's flag even if you have that" (by id:yappo thanks!)
+ 
+ - The construction is, in the ES5 specification, 4.3.9 and 4.3.11, "a value when no value is assigned to a variable" and "a value when you want to intentionally express that an object value does not exist" (by @yukoba thanks!).
+ 
+ - Clojure distinguishes between nil and an empty list. In other words, (pop '()) and (pop nil) are different in Clojure. (Empty list raises an exception, but nil pops nil) (by @omasanori thanks!)
+ 
+ - "The most unfortunate thing about undefined in JS is that it's just a global variable." (by @tnacigam thanks!)
+ 
+ - I hate how PHP is being hacked and how it's like a bunch of women in real life (by id:Retro Rocket thanks!)
+ - PHP: (not a language so I can't join the conversation) (by id:koyhoge thanks!)
+ 
+ - When debugging a recent script (in Ruby) of about 20 lines, I had to overwrite [] with alias of fetch because I was too lazy to think seriously about the range of keys. Viva, open class (by @yugui thanks!)
+ 
+ - I guess null means undef in SQL, which is a hotbed of bugs. (car ()) is an error in scheme and nil in clisp? I didn't notice it because cdr is used to determine if it ends up reoccurring or not. (by @Tomokatz thanks!)
+ 
+ - Lua doesn't distinguish between nil and undefined in the language spec. (by @torus thanks!)
+ </body>
+ <comments>
+ <comment>
+ <username>tateisu</username>
+ <body>In Perl, I can distinguish between exists $hash{$key} and defined $hash{$key}. Empty list can also be checked for size in advance. </body>
+ <timestamp>1331932748</timestamp>
+ </comment>
+ <comment>
+ <username>func_hs</username>
+ <body>With yesod and CGI monad, Haskell can also be run in the browser (</body>).
+ <timestamp>1331948758</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>Yesod and CGI monad can be used to run Haskell in a browser...<br><br>It is very Haskell-like when JavaScript says "you can run it in a browser" and you answer that you can do it with CGI monad. ...</body>
+ <timestamp>1332316458</timestamp>
+ </comment>
+ <comment>
+ <username>codd</username>
+ <body>I heard that there was originally talk of classifying nulls in SQL (or rather the relational model) as well. <br>The situation regarding its practicality seems to be a bit different from that of programming languages. <br><br>http://www.geocities.jp/mickindex/database/db_3vl.html</body>
+ <timestamp>1332776939</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-03-16 https://nishiohirokazu.hatenadiary.org/archive/2012/03/16]

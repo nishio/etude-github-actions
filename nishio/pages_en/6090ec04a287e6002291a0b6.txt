@@ -1,0 +1,117 @@
+Hatena2010-05-20
+code:hatena
+ <body>
+ *1274312922*[Haskell] Continued yesterday
+ >>
+ @pi8027 Also, you need to use more fold and such to make it readable. The real Haskeller doesn't use much recursion or lambda expressions!
+ @pi8027 countM a l = sequence l >>= return.length.filter (a==)
+ <<
+ I see, in sequence [IO Int] becomes IO [Int], >>= f passes [Int] to f, filter, length and return.
+ 
+ *1274364170*[Haskell] point free
+ Reprinted from Twitter
+ >>
+ It's hard to write a program without using lambda. How do you use a single value in multiple places without binding it to a name?
+ <<
+ >>
+ There was an S combinator in Control.Applicative.
+ →Some people write that <*> in Control.Applicative is the S combinator, but it looks completely different.
+ -> I've confirmed by the behavior that the <*> in Control.Applicative is an S combinator, but I don't know what it's originally for or why this would make it an S combinator.
+ →<a href='http://practical-scheme.net/chaton/haskell-ja/a/2009/11/02'>haskell-ja > Archives > 2009/11/02</a>
+ <<
+ 
+ >|haskell|
+ square = (*)<*>id -- \x -> x * x
+ ||<
+ 
+ >|haskell|
+ cube = (((*).((*)<*>id))<*>id) -- \x -> x * x * x
+ ||<
+ 
+ >|haskell|
+ import Control.Applicative
+ 
+ if' True  x _ = x
+ if' False _ y = y
+ 
+ fib = (flip(if'.(< 2))1)<*>((+).fib.(-1 +)<*>fib.(-2 +))
+ main = print $ take 10 $ map fib [1..]
+ ||<
+ 
+ *1274365146*[Haskell] continued
+ >|haskell|
+   [count_n (next_turn game)
+    [(step_game game play) >> (while_game_finished select_ai_for_monte) | _ <- [1..100]]
+        | play <- hands]
+ ||<
+ At this point, [IO Int] gives you a list of the number of times you have won as a result of 100 runs until the end of the game after the move for each move option.
+ 
+ Of these, we want to choose the move whose Int value is the largest. The list of moves is [Play].
+ 
+ Consider touching the inside of IO. First, convert to IO [Int] by sequence [m a] -> m [a]. Then, you can bind a function that takes [Int] by >=. This function should take [Int] and return a play such that the Int is maximal.
+ 
+ >|haskell|
+ get_best :: [Int] -> [Play] -> Play
+ --get_best scores hands = snd $ foldl1 ((<*>) ((<*>).((flip.(flip if')))) (flip ((.).((>).fst)) fst)) $ zip scores hands
+ get_best scores hands = snd $ foldl1 (\x y -> (if ((fst x) > (fst y)) then x else y)) $ zip scores hands
+ ||<
+ I tried to remove the lambda, but it turned out to be dirty, so I stopped.
+ 
+ >|haskell|
+ -- Simple Monte Carlo (100 times for each option randomly to the end)
+ -- choose the one with the best performance after playing)
+ monte_choice :: Think
+ monte_choice game hands 
+     = (liftM2 get_best) 
+       (sequence [count_n (next_turn game)
+                  [do_random_playout game play 
+                   | _ <- [1..100]]
+                  | play <- hands]) 
+       (return hands)
+ ||<
+ play
+ >||
+ next turn: x
+ x . .
+ . . .
+ . . .
+ 
+ next turn: o
+ Choice a hand: [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,8)]3
+ x . .
+ . o .
+ . . .
+ 
+ next turn: x
+ x . x
+ . o .
+ . . .
+ 
+ next turn: o
+ Choice a hand: [(0,1),(1,3),(2,5),(3,6),(4,7),(5,8)]0
+ x o x
+ . o .
+ . . .
+ 
+ next turn: x
+ x o x
+ . o .
+ . x .
+ 
+ next turn: o
+ Choice a hand: [(0,3),(1,5),(2,6),(3,8)]
+ ||<
+ 
+ It's only been 100 attempts at a high level, but the game is just a game, and it's playing absolutely dangerously well.
+ 
+ Now, the next step is Monte Carlo tree search. I want to make a tree or a dictionary to store data and change values destructively. What? Destructively and forcefully? (I regret a little that I chose Haskell.)
+ </body>
+ <comments>
+ <comment>
+ <username>pi8027</username>
+ <body>(<*>) :: (Applicative f) => f (a -> b) -> f a -> f b<br>, but <br>instance Applicative ((->) a)<br> is the standard, so if it is applied <br>(<*>) :: (a -> b -> c) -> (a -> b) -> a -> c<br>. </body>
+ <timestamp>1274365974</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-05-20 https://nishiohirokazu.hatenadiary.org/archive/2010/05/20]

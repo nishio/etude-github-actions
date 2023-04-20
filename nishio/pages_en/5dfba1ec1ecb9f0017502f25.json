@@ -1,0 +1,70 @@
+Regroup20191219
+If you follow the advice "[make something] that meets your needs first," I think it's a good idea to first realize this writing method that you are currently doing with the Facebook app with your own app, and then solve your dissatisfaction, so that you can do things that the Facebook app can't do by making it extensible. Then, by making it extendable, things that Facebook apps can't do can be realized rather easily.
+
+Regroup will put the current one in maintenance mode and operate it mainly for bug fixes, etc.
+
+Eliminate front cover from groups" This is not a bug fix.
+
+Need to triage inflated requests.
+
+A large implementation is needed for real-time information sharing.
+
+On the other hand, as for making images and Scrapbox stickies, it would require a big implementation, but I myself would like it very much!
+
+I was wondering if I needed a proxy, and now I feel like cloudfront can solve my problem.
+
+I copy and paste what I have exported to Facebook onto Scrapbox in my browser, and then delete the extra text by hand. Just by smoothing that out, it makes it worth using for me.
+
+And, as an after-the-fact linkage, you can have regroup as well as Scrapbox.
+
+Editing text may be smoother in Scrapbox.
+
+[Interoperation with Scrapbox
+	Make each line a sticky with a Scrapbox URL, maybe want [the ability to tick lines].
+		By importing first and correcting those that are too long, we can accumulate the know-how to automate the ticking process.
+
+I want to keep the Scrapbox URL of the source.
+	Not just Scrapbox, but if I clip from the web, I want the source link to be retained.
+		You could put a Scrapbox icon in the corner of the sticky.
+		Similarly, Wikipedia icon.
+
+Once it's automatically saved on the server, if there's a map open, it should be automatically added.
+ You won't know if it makes you happy until you try it, but it's worth a shot.
+
+I have written up to this point and am now taking a break. It would be nice to be able to activate the "listening tool" based on this content here.
+ It would be good if we could attach an API to the listening tool and "start a session" with a string up to this point, and if the session ID is returned, then the exchange can be done after that.
+ 	But I thought it was a policy to run the bot on the local machine, so you can't access it from the outside.
+ 	WebSocket?
+
+Voice input is another one of those things that may or may not make you happy, but could.
+
+Technical issues for realization of image sticky notes
+
+Need to reproduce experiments with small code on what causes flickering in canvas and how to prevent it, per codepen.
+I think that the image drawn in the canvas is GC when it is erased in Safari, while it is kept in memory in chrome, and as a result, when the same image is displayed again, it throws a request again.
+You can observe the network interaction in Safari to see if this is true.
+You can see it here: https://support.apple.com/ja-jp/guide/safari-developer/dev985c4f0fd/mac
+If this is the cause, just grabbing it so it doesn't get GC'd might help.
+Safari is experiencing network access.
+The next verification is that
+If the same image is found in other Canvas in the same screen, will the request not be made over the network?
+I guess.
+
+Problem of heavy drawing as more paths are added, if you don't need to redraw, don't do it.
+Warning when it gets to a certain point of heaviness.
+Stop off-screen rendering, which will still slow down rendering when zoomed out, but it does no harm if the operation to be performed is moving stickies, etc. The main performance problem occurs with pen input.
+Separate pen input canvas.
+We'll find that out through actual overuse.
+
+Just use the hamburger button or the info button to check the health of the net or the drawing, and warn if necessary.
+
+If "save as" can be easily done, it can be backed up.
+	Map should have snapshots at different times
+ If it's been five minutes or so since the last save, you can save a snapshot, and if a catastrophe happens, you can go back from the backup.
+
+I'll do the illustration on my iPad, my iPad doesn't have a SIM sticking in it, so I'll want to edit this one offline too.
+ If offline edits collide, is adding a path simply a merge, or a move canceled?
+ Just make it so that no matter what kind of bump you get, you won't lose any data, well, that's the hard part of the design.
+ All deletions should be logical deletions.
+
+[pRegroup2020]

@@ -1,0 +1,98 @@
+Mike's Cactus
+Talk about burning cacti because you want a lot of experience speedily.
+　In the Java version, the experience value for roasting a cactus in a kamado is 1
+　　Equivalent to gold ore
+　Cactus is itemized when there is a block next to it.
+　　This can be used to automatically itemize them as they grow.
+　Cactus grows one block in 16 random ticks.
+　　Random ticks are 3 blocks per 16x16x16 section per game tick that are selected and executed
+　　Gametick is 1/20 sec.
+　　3 is a constant determined by gamerule's randomTickSpeed
+　　This means that every game tick has a 3/4096 chance of a random tick, and the cactus grows by 1/16th of a step, so you get 3/65536 cacti per game tick.
+　Refining each kamado takes 10 seconds.
+　　That is, 200 game ticks.
+　　200 game ticks yield 600/65536 or approximately 0.0092 cacti from one cactus.
+　By the way, I built a unit that can automatically harvest 24 cacti on one floor. This can be stacked any number of units.
+　[https://gyazo.com/e4803973c83b18989db4b09eb3601f94]
+　　I started this note to figure out how many tiers to stack this on.
+　　Stacking 5 tiers will provide 1.099 cacti per 200 game ticks, changing the bottleneck to fuel supply instead of cacti
+　About Fuel
+　　Lava bucket lasts 1000 seconds.
+　　　16 minutes 40 seconds
+　　80 seconds for coal and charcoal
+　　　If you stack 64 pieces, 5120 seconds.
+　　　This is 85 minutes
+　　　In other words, it needs to be brought in once an hour.
+　　Coal block is 800 sec.
+　　　9 coal can make it and it lasts 10 times longer, so coal should be blocked and used from the other side.
+　　　If you use this, bring in one every 14 hours.
+　　Human delivery is a bottleneck and we want to automate it.
+　　　54 stacks of charcoal in a large chest will last 76.8 hours.
+　　　This is 3.2 days, so if you have two large chests, you can leave it for a week.
+　Additional considerations to be made
+　　Experience efficiency
+　　　relative time
+　　　　1 EXP in 10 seconds
+　　　　5EXP for zombies, etc.
+　　　　Blaze is 10 EXP.
+　　　It's not as good as the experience trap, indeed.
+　　　But the important difference is that this system accumulates experience as long as the player is within the simulation range, so he can play with building, farming, and so on.
+　　If the desired level is exceeded, it is inefficient.
+　　　The goal is not experience but level
+　　　Up to level 16, 1 level for 17EXP
+　　　20 EXP to reach 17, and the required EXP increases by 3 for each level thereafter.
+　　　After 32, the increment is 7.
+　　　concrete example
+　　　　It takes 62 EXP to go from level 30 to 31, which is 3.6 from level 0.
+　　　　So if the objective level is 30 but you took too much experience to get to 31, that is a loss of 2.6 levels.
+　　　If it is not automatically removed from the kamado, it stops at 64 EXP and can be fine-tuned.
+　　　　But it stops at 640 seconds, so one piece can only be left in place for 10 minutes.
+　　　　If you want to leave it for a day, you need 135 kamado.
+　　　How about putting a hopper underneath?
+　　　　Up to 5 stacks are sucked out, so the entire stack works up to 6 stacks.
+　　　　　This will last about an hour.
+　　　　　I need 23 of these to last me a day...
+　　　　384 EXP, so going from 0 to level 20.
+　　　Place chests to make 28 stacks overall.
+　　　　1792 EXP so going from 0 to level 40.
+　　　　　Hmmm, a little overkill.
+　　　　　Do you want to partially fill the chest?
+　　　　　13 stacks if you're aiming for level 30.
+　　　　This takes about 5 hours to fill.
+　　　　　I guess if you are going to leave it for a day, you must set up multiple kamado.
+　　　　　A device that gets you up to level 30 with 13 stacks would take 2.3 hours to fill.
+　　　　Parallel kamado using pipes was prototyped once, but there was a mismatch of "fuel but no cactus" and "cactus but no fuel", so it needs to be devised
+
+　Cacti can be piped into the kamado from above, but I don't want to do this because the distribution priority in the vertical direction is low.
+　I don't want to pour fuel and cactus down the same pipe.
+　If you have a lot of stoves in a row, you need pipes on both sides...
+　　No? Should I stop lining them up so tightly?
+　　Hard to tell the condition because the front is hidden when the sides are open and lined up.
+　　better to have one placeholder (usu. for small children)
+　Hoppers and chests that are placed underneath need a mechanism to remove their contents.
+　　At least 3 squares below the floor where the kamado is lined need space for maintenance.
+　　What happens to the experience if it is piped off?
+
+　Try operating with only the hopper in place.
+　　First we should name it, we'll call the single kamado that stops at 1 stack V1 and the one that stops at 6 stacks with a hopper V6.
+　　When you take V6 or the top 1 stack, you have to empty the bottom hopper to change it to V1 equivalent.
+　　　This process is quite time-consuming
+　Proposal to switch on the suction pipe and automatically suck it out.
+　　I'm going to forget to stop it.
+　When offered for other players
+　　All controls are too complicated except for V1.
+
+2021-09-23
+　While I've been left wondering what to do with it, they've been using it for convenience, and the fuel line has been augmented.
+　So first, fix the bad pipe.
+　　Fix cactus pipes and fuel pipes facing the other way.
+　　The cactus is brought in from the top, but we'll fix it from the side.
+　　This allows you to pour from one end to the other, so you can determine when the opposite end overflows.
+　　Fold over 8 V1s in a row, bending them down at the edges.
+　　We'll connect this end to V54.
+　　　Unless you leave it very long, this will never be full.
+　　　10 hours in one
+　When cacti accumulate one large chest, we tend to think "that's a lot".
+　　One stack can be baked in just over 10 minutes in one kamado, 10 hours.
+　　If you put 10 kamado in a row, they will be consumed in an hour.
+　　The first thing to do was not what to do with the kamado, but to create a system to accumulate enough

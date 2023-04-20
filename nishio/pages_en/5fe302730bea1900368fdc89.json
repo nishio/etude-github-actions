@@ -1,0 +1,35 @@
+N values are updated, I want to know the minimum value.
+from [heapq]
+There are N values and they are being updated, I want to know the minimum value.
+→ Queue a tuple of which value was updated to what and when. Store the last modified time of the value in an array of size N. Skip information that is not up-to-date when retrieving.
+code:python
+ N = 2
+ values = [None] * N
+ lastUpdate = [0] * N
+ queue = []
+ time = 0
+ 
+ 
+ def update(pos, value):
+     global time
+     time += 1
+     values[pos] = value
+     heappush(queue, (value, pos, time))
+     lastUpdate[pos] = time
+ 
+ 
+ def top():
+     while queue:
+         value, pos, time = queue[0]
+         if time == lastUpdate[pos]:
+             return value
+         heappop(queue)
+     return None
+ 
+ 
+ update(0, 42)
+ print(top())  # => 42
+ update(1, 43)
+ print(top())  # => 42
+ update(0, 44)
+ print(top())  # => 43

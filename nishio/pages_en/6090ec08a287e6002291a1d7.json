@@ -1,0 +1,43 @@
+Hatena2011-11-22
+code:hatena
+ <body>
+ *1321925412* Estimating clusters of mixed Gaussian distribution model with k-means method and EM algorithm and variational Bayes, respectively.
+ We used data with long, thin, intersecting clusters so that the k-means method, which assumes that "the clusters are spherical," would have a hard time. In addition, to confirm the advantage of Variational Bayes' "automatic adjustment of the number of clusters," the number of clusters was 2, 4, and 8. The EM algorithm and Variational Bayes are able to estimate that "the clusters are long and thin," which the k-means method is not able to do. In the EM algorithm, the number of clusters must be given by a human, while in the variational Bayesian algorithm, the number of clusters is automatically adjusted. However, the automatic adjustment may fail quite often, so the approach of "running several times and taking the best one" is probably necessary. The experiment with 8 clusters of variational Bayes was done 10 times and the best one was taken. 6 experiments with 4 clusters were done. Each has a video of the learning process of 20 steps from the initial state.
+ 
+ ** k-means method
+ This is a limitation because the k-means method cannot find elongated clusters
+ [f:id:nishiohirokazu:20111122102925g:image]
+ Example of 4 clusters. Increasing the number of clusters will chop the distribution into multiple clusters when it is really one elongated normal distribution.
+ [f:id:nishiohirokazu:20111122102919g:image]
+ Example of 8 clusters, where one normal distribution has been carved into 4 clusters.
+ [f:id:nishiohirokazu:20111122102908g:image]
+ 
+ ** EM Algorithm
+ At first you take the wrong two arms like a k-means method, but then you realize that the elongated clusters are intersecting.
+ [f:id:nishiohirokazu:20111122103116g:image]
+ Example of 4 clusters. A distribution is divided among three clusters.
+ [f:id:nishiohirokazu:20111122103109g:image]
+ An example of 8 clusters, with 4 clusters taking 4 arms and the remaining 4 clusters hanging around the appropriate outlier with nothing to do. If we continue learning at this rate, we will be forced to fit the outliers and end up with a figure like the one below.
+ [f:id:nishiohirokazu:20111122103102g:image]
+ Example of forced fitting to outliers (but with different parameters from the above experiment)
+ [f:id:nishiohirokazu:20111122111058p:image]
+ 
+ ** Variational Bayes
+ It fails to find that this is an elongated cluster. Since the cluster on the right continues to spread out, we may discover that it is an elongated cluster in a while, like the example of the two clusters in EM.
+ [f:id:nishiohirokazu:20111122105203g:image]
+ Initially, a cluster covers each of the four arms, but the top two clusters are expelled by the lower cluster and contract to two.
+ [f:id:nishiohirokazu:20111122105158g:image]
+ In the first step, eight clusters compete for four arms, and the clusters that were not taken disappear. After that, it is the same as the 4-cluster example above.
+ [f:id:nishiohirokazu:20111122105152g:image]
+ 
+ An example of starting with 8 clusters and only contracting to 3 clusters. The same thing may happen as in the example below, where the number of clusters is reduced to 1 cluster after this.
+ [f:id:nishiohirokazu:20111122105147g:image]
+ 
+ Example of starting with 8 clusters and over-contracting to 1 cluster
+ [f:id:nishiohirokazu:20111122105141g:image]
+ 
+ ** License
+ The images on this page are licensed under CC-BY3.0, so you are free to use them as you like as long as you clearly indicate the name of the author. I would appreciate it if you could write "Yasukazu Nishio of Cybozu Labs" or something like that, since I created this image using my work time.
+ </body>
+
+[Hatena Diary 2011-11-22 https://nishiohirokazu.hatenadiary.org/archive/2011/11/22]

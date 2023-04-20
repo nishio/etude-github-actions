@@ -1,0 +1,55 @@
+Hatena2013-08-24
+code:hatena
+ <body>
+ *1377333960* Liskov's substitution principle
+ In my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Techniques Supporting Coding</a>", p.216 explains Liskov's substitution principle. However, the expression "T that does not satisfy condition q occurs" on p. 217 seems to be difficult to understand, so here is a supplementary explanation in the form of a story
+ 
+ ** Today
+ 
+ First, assume that all values of type T satisfy condition q at this time.
+ 
+ Suppose you want to implement a function f that takes arguments of type T. You would probably write the code assuming that "all values of type T satisfy condition q".
+ 
+ ** 1 month later
+ 
+ You think of making S. Some values of type S do not satisfy condition q, but you are not really aware of this.
+ 
+ You thought, "It would be easier to make S inherit T," so you did.
+ 
+ In Java and other language processing systems, when S inherits T, it is possible to put a value of type S into a variable of type T. In other words, at this point, it is also possible to pass a value of type S to a function f that takes arguments of type T.
+ 
+ ** After another month
+ 
+ The problem occurs in the "function f that takes a value of type T as an argument" that you implemented two months ago.
+ 
+ All values of type T should satisfy condition q, but something is happening that would not happen if condition q were satisfied. You are troubled.
+ 
+ You realize that the cause is that a value of type S is passed as an argument that does not satisfy condition q. So you decide to branch with an if statement and write the process in two different ways.
+ 
+ Is this correct? No, it is not. Other code written in the last two months that deals with values of type T may also have problems if the value does not satisfy condition q. There are already dozens of these kinds of bugs lurking in the shadows by the time you find the first one.
+ 
+ You are bothered by a series of bugs that keep coming up, and you consult with another person. And suppose that someone points out to you, "Why did S inherit T? But in such a situation, it is already impossible to rewrite S.
+ 
+ ** Finally
+ 
+ In this entry, I have tried to explain the problems that occur when the substitution principle is not satisfied, as pointed out by Liskov, in chronological order. The book has paper limitations, but I will try to revise it so that it is somehow easier to understand.
+ 
+ My book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write supplemental articles to the questions and comments I received from readers. Please do not hesitate to send us your questions and comments.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+ <comments>
+ <comment>
+ <username>The person who inquired</username>.
+ <BODY>I inquired about this the other day. <BR><BR>In Fig. 12.5 on p. 217, right side of the figure, the value of type S is out of condition q and the value of type T is not out of condition q. Therefore, I thought that "T not satisfying condition q" in lines 6-7 on p. 217 should be "S not satisfying condition q". I was too quick to think that it was! <BR><BR>I'll try to express it in my own words to try to sort it out. <BR><BR>You are saying that by assigning an object of type S that does not satisfy condition q to a class of type T, "T that does not satisfy condition q" was created, right? <BR><BR>That was not a mistake...I realized where I was mistaken! <BR><BR>Sorry for the trouble><BR>Thank you very much! </body>
+ <timestamp>1377345436</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <BODY>I am glad you found this helpful! <BR>It is helpful to have questions like this so that we can clarify where we are having difficulty explaining things. <br>We look forward to working with you in the future! </body>
+ <timestamp>1377786055</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-08-24 https://nishiohirokazu.hatenadiary.org/archive/2013/08/24]

@@ -1,0 +1,187 @@
+Hatena2008-04-06
+code:hatena
+ <body>
+ *1207449881*86Diary of Day 3 of Development Camp
+ When I was taking a bath around 2:00 a.m. because I wanted to sleep, I realized that the problem was that the child processes were not flushing, and since Rascut was using logger.rb, I thought it would be better to make logger.rb flush. It's inconvenient to give it to someone else to use, but for my own use, I'm fine with it for now.
+ 
+ At about line 505 of logger.rb
+ >|ruby|
+ @dev.write(message)
+ ||<
+ behind the
+ >|ruby|
+ @dev.flush
+ ||<
+ and add This will cause the output to be flushed.
+ 
+ Now we have a working script that plays the sound of Mario dying if the output of the child process contains the string Error. I'll make it grawl instead of sound in the near future.
+ 
+ -----
+ 
+ I had been thinking that it would be a hassle, so I went through the trouble. I had thought it would be too much trouble, but when I looked at the ruby source code, it was only about 30 lines, so I thought it was easy. I found a module called "pty" in the python library reference.
+ 
+ -----
+ 
+ The camp is nearing its end and midway through the 12:00 checkout.
+ 
+ -----
+ 
+ I needed to have my Suica card processed at Narita station, but the line was long, so I left first, got a cup of tea at a convenience store, and when I came back, no one was there. I guess they must have broken up.
+ 
+ -----
+ 
+ Narita seems to be a tourist destination. Since I've come all this way and I'm not in a hurry, let's go there.
+ 
+ 
+ f:id:nishiohirokazu:20080406140839j:image
+ 
+ 
+ f:id:nishiohirokazu:20080406142105j:image
+ 
+ 
+ f:id:nishiohirokazu:20080406142930j:image
+ 
+ 
+ f:id:nishiohirokazu:20080406143217j:image
+ 
+ What do you read?
+ f:id:nishiohirokazu:20080406143506j:image
+ 
+ amazing (e.g. of strength)
+ f:id:nishiohirokazu:20080406144214j:image
+ 
+ 
+ f:id:nishiohirokazu:20080406145925j:image
+ 
+ 
+ f:id:nishiohirokazu:20080406150143j:image
+ 
+ 
+ f:id:nishiohirokazu:20080406150815j:image
+ 
+ Round!
+ f:id:nishiohirokazu:20080406151225j:image
+ 
+ Unfortunately, registration was already closed.
+ f:id:nishiohirokazu:20080406151601j:image
+ 
+ I don't know how to get home.
+ 
+ The garlic crackers sold at the cracker shop are quite tasty.
+ 
+ -----
+ 
+ It was hot while walking but cold when the wind was blowing at the station.
+ 
+ Oh no, wrong train. I'm in Shibayama Chiyoda or something.
+ 
+ -----
+ 
+ >|python|
+ >>> import pty
+ >>> pty.spawn(["sed","s/a/b/g"])
+ aaa
+ bbb
+ abc
+ bbc
+ ||<
+ That's easy!
+ 
+ -----
+ 
+ >|python|
+ >>> def foo(*args, **kw):
+ ...     print args, kw
+ ...     return "hoge"
+ ... 
+ >>> pty.spawn("cat", foo)
+ hoge(7,) {}
+ (Loop below)
+ ||<
+ Oops, I should have raised. I ctrl+c'd in a hurry. I see.
+ 
+ >|python|
+ >>> def foo(fileno):
+ ...     import os
+ ...     data = os.read(fileno, 1)
+ ...     print repr(data)
+ ...     return data
+ ... 
+ >>> pty.spawn("cat", foo)
+ 'a'
+    a'b'
+        b'c'
+            c'^'
+                ^'D'
+                    D'\x08'
+                          '\x08'
+                               'a'
+                                  a'b'
+                                      b'c'
+                                          c'^'
+                                              ^'D'
+                                                  D'\x08'
+                                                        '\x08'
+                                                             ''
+                                                               ''
+                                                                 ''
+                                                                   ''
+ (Loop below)
+ ||<
+ 
+ Mm-hmm.
+ 
+ 
+ >|python|
+ import pty
+ import os
+ import sys
+ 
+ class LineBuffer(object):
+     def __init__(self):
+         self.buf = []
+     def __call__(self, fileno):
+         c = os.read(fileno, 1)
+         if c == "\n":
+             line = "".join(self.buf)
+             if "Error" in line:
+                 c = "!\n"
+             self.buf = []
+         else:
+             self.buf.append(c)
+ 
+         return c
+ 
+ pty.spawn(["sed", "s/l/r/g"], LineBuffer())
+ ||<
+ 
+ >||
+ $ python mytty.py
+ abc
+ abc
+ all
+ arr
+ Ellolaaa
+ !rroraaa
+  aaa
+ aaa
+ ||<
+ 
+ It works a little differently than I expected. I guess that outputting "\n" to the terminal does not behave as if stdout.write("\n") was used. As the name suggests, the display position is controlled by two sets of carriage return and linefeed, and when the linefeed comes, it displays "! ←n" when the linefeed comes in, the carriage return is done first and is written at the beginning of the line. In the example above, 0x08(BS) was sent twice after ^D was displayed, and when I tried it, the cursor returned two characters to the beginning of ^D after ^D was displayed as it should be." So I should see "\x0D"(CR) instead of "\n"。
+ 
+ >||
+ $ python mytty.py
+ abc
+ abc
+ all
+ arr
+ Ellol
+ Error!
+ ||<
+ 
+ Perfect!
+ 
+ I arrived home at 7:00. Sleepy.
+ </body>
+
+[Hatena Diary 2008-04-06 https://nishiohirokazu.hatenadiary.org/archive/2008/04/06]

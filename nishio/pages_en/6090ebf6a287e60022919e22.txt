@@ -1,0 +1,192 @@
+Hatena2008-04-15
+code:hatena
+ <body>
+ *1208219433*maketrans
+ I was in the 86 generation chat yesterday and got a Python question, so I wrote this code. The question was to decipher a cipher by shifting a from a to c, b to d, ... and so on in the given string.
+ 
+ >|python|
+ >>> from string import lowercase
+ >>> key = lowercase
+ >>> value = lowercase[2:] + lowercase[:2]
+ >>> map = dict(zip(key, value))
+ >>> "".join(map.get(c, c) for c in data)
+ ||<
+ 
+ The actual execution process is shown below.
+ 
+ >|python|
+ >>> data = """g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj."""
+ >>> from string import lowercase
+ >>> key = lowercase
+ >>> value = lowercase[2:] + lowercase[:2]
+ >>> value
+ 'cdefghijklmnopqrstuvwxyzab'
+ >>> map = dict(zip(key, value))
+ >>> map
+ {'a': 'c', 'c': 'e', 'b': 'd', 'e': 'g', 'd': 'f', 'g': 'i', 'f': 'h', 'i': 'k', 'h': 'j', 'k': 'm', 'j': 'l', 'm': 'o', 'l': 'n', 'o': 'q', 'n': 'p', 'q': 's', 'p': 'r', 's': 'u', 'r': 't', 'u': 'w', 't': 'v', 'w': 'y', 'v': 'x', 'y': 'a', 'x': 'z', 'z': 'b'}
+ >>> "".join(map.get(c, c) for c in data)
+ "i hope you didnt translate it by hand. thats what computers are for. doing it in by hand is inefficient and that's why this text is so long. using string.maketrans() is recommended. now apply on the url."
+ ||<
+ 
+ The key is a string of characters from a to z, and the value is a string of characters shifted by two, which are paired one by one by zip and made into a dictionary by dict. Then, the character corresponding to the given character is obtained by "get" of the dictionary. At this time, c is specified as the second argument, which means that if the character is not in the dictionary, the character itself is returned.
+ 
+ -----
+ It is recommended to use maketrans, so let's use it.
+ >|python|
+ >>> from string import maketrans, lowercase
+ >>> maketrans(lowercase, lowercase[2:] + lowercase[:2])
+ '\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`cdefghijklmnopqrstuvwxyzab{|}~\x7f\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff'
+ >>> data = """g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj."""
+ >>> data.translate(_)
+ "i hope you didnt translate it by hand. thats what computers are for. doing it in by hand is inefficient and that's why this text is so long. using string.maketrans() is recommended. now apply on the url."
+ ||<
+ Hmmm... I can still do this. this is the first time I've used maketrans or translate. It's not very versatile.
+ 
+ *1208250014*composition of n powers
+ http://blog.koshigoe.jp/archives/2008/04/n2.html
+ 
+ In Python, power is **, so I'll let you replace it.
+ 
+ >|python|
+ >>> 2
+ 2
+ >>> 2 ** 2
+ 4
+ >>> 2 ** 2 ** 2
+ 16
+ >>> (2 ** 2) ** 2
+ 16
+ >>> 2 ** (2 ** 2)
+ 16
+ ||<
+ 
+ So far so good, but starting with the fourth, the result changes depending on the order of the joins.
+ 
+ >||
+ >>> ((2 ** 2) ** 2) ** 2
+ 256
+ >>> 2 ** (2 ** (2 ** 2))
+ 65536
+ ||<
+ 
+ Since powers do not satisfy the <a href="http://ja.wikipedia.org/wiki/%E7%B5%90%E5%90%88%E6%B3%95%E5%89%87">combining rule</a>, we need to clarify which result we are expecting first. I think we need to clarify which result we are expecting first.
+ 
+ By the way, in Python, it is the latter.
+ >|python|
+ >>> 2 ** 2 ** 2 ** 2
+ 65536
+ ||<
+ 
+ I don't know how to write each mathematically concisely, but if you want to write it concisely in Python code, it would be like this.
+ >|python|
+ >>> reduce(lambda x, y: y ** x, [2L] * 4)
+ 65536L
+ ||<
+ 
+ *1208254884*To Mock a Mockingbird
+ <a href="http://d.hatena.ne.jp/nishiohirokazu/20071220/1198125589">For about three months</a>, I've been reading a stack of <a href="http://www.amazon.co.jp/gp/product/ 0192801422?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=1211&creativeASIN=0192801422">To Mock a Mockingbird</a><img src ="http://www.assoc-amazon.jp/e/ir?t=nishiohirokaz-22&l=as2&o=9&a=0192801422" width="1" height="1" border="0" alt="" style="border:none ! important; margin:0px !important;" /> I read chapter 9 of the book. k combinators, m combinators and l combinators are coming up. it looks like chapter 10 will take us to y combinators.
+ 
+ 
+ This book is a puzzle book, and a series of puzzles from Chapter 9, TO MOCK A MOCKINGBIRD (which is also the title of the book), is based on combinatorial logic. The puzzle situation is about a forest and a bird. The bird is like a nine-tailed gull, and when you talk to it, it responds. When you say "seagull" to a crow, it responds "sparrow". When you tell bird A the name of bird B, it responds with the name of bird C. This is expressed as AB = C. When bird A is told the name of bird B, bird B replies with the name "B", which is expressed as "A likes B". In other words, A likes B when AB = B.
+ 
+ >>
+ Suppose there is a mockingbird M in the forest, and when M hears the name of a bird, it imitates the answer that the bird gives when it hears the name, i.e., MA = AA. For any two birds A and B in the forest, assume that AB is also in the forest and that there is a composite bird A*B in the forest that responds "with the name of the bird that would respond by asking B the name of the bird that would respond by asking A the name of the bird that would respond by asking B." In other words, (A*B) = A = AA. That is, (A*B)x = A(Bx).
+ 
+ At this time, show that there is one or more "narcissistic birds (birds you like)" in the forest.
+ <<
+ 
+ It is the kind of book that says.
+ 
+ -----
+ 
+ By the way, if we denote a narcissistic bird by N, then narcissistic means NN = N.
+ 
+ -----
+ 
+ For now, the only birds known to exist in the forest are mimicry birds, so I tried to see if I could find something that looked like a mimicry bird composite.
+ 
+ MM = MM
+ 
+ I can't help this one.
+ 
+ M(MM) = (MM)(MM)
+ 
+ Hmmm, I can't help this either.
+ 
+ M(M*M) = (M*M)(M*M)
+ 
+ I can expand this using (A*B)x = A(Bx).
+ 
+ (M*M)(M*M) = M{M(M*M)}
+ 
+ Then the M(M*M) part becomes (M*M)(M*M) since we are asking the mimic bird to name the bird (M*M). Oh, it's partially the same as before.
+ 
+ M{M(M*M)} = M{(M*M)(M*M)}
+ 
+ If we write (M*M)(M*M) as A, then A = MA. And MA = AA, so A = AA. This is a narcissistic bird!
+ 
+ If N = (M*M)(M*M), then N = (M*M)(M*M) = M{M(M*M)} = M{M(M*M)} = M{(M*M)(M*M)} = MN = NN, so we could show "that there is more than 1 narcissistic bird".
+ 
+ -----
+ 
+ This is the kind of book that I would like to see.
+ 
+ -----
+ 
+ The last problem in chapter 9 was to show that if there is a lark L(lark) in the forest, there is more than one narcissistic bird in the forest. This was very difficult. There are only larks. By the way, a lark (L) is a bird such that (Lx)y = x(yy). You can use the above condition that there is a composite bird, but of course you can't use the condition that there is a mimic bird. By the way, the narcissistic bird is a composite of 12 larks.
+ 
+ -----
+ 
+ I was reading this on the train on my way home, but oh man, this is too funny. I asked bird A if he likes bird B, and if he answered B, then A likes bird B. But it's too much trouble to ask A every time. Is there any well-informed bird who can tell me what bird A likes if I say A? (That is, a bird θ such that θA is A's favorite bird. A(θA) = θA.)" It develops, and it becomes clear that the bird can actually be expressed by a super simple combination of the birds that have been mentioned so far! This is!
+ 
+ -----
+ 
+ If you see someone on the train burning themselves while writing a mysterious alphabetical sequence, it's me ><
+ 
+ -----
+ 
+ And this θ is the immovable point combinator! I mean, "A's favorite bird" is in essence A's immovable point!
+ 
+ -----
+ 
+ In chapter 11, I found Bluebird. I googled it and found that it is used for "function synthesis," which I didn't understand, but in short, Bxyz = x(yz), so X*Y is (X*Y)x = X(Yx), BXY. The (rather unnatural) composite bird above seems to have been a bridge until Bluebird was introduced.
+ 
+ And I wonder if the Y combinator is still available.
+ 
+ *1208257571* Affiliates
+ In preparation for putting my book on the top right corner, I put Tomoamo on there for now.
+ </body>
+ <comments>
+ <comment>
+ <username>amachang</username>
+ <body>Read now</body>.
+ <timestamp>1208233676</timestamp>
+ </comment>
+ <comment>
+ <username>amachang</username>
+ <body>The usefulness of python's list[2:] and so on is extraordinary. I want it in JS too</body>.
+ <timestamp>1208233936</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Ruby is the most unusual (in terms of convenience)<br><br>irb> data = "You shall goooooooooooogle!"<br>=> "You shall goooooooooooogle!"<br>irb> data[/goo+gle/] = "google"<br>=> "google"<br>irb> data<br>=> "You shall google!"</body>
+ <timestamp>1208235139</timestamp>
+ </comment>
+ <comment>
+ <username>Shimizukawa</username>.
+ <body>I saw this code somewhere... but it was this.py of import this. </body>.
+ <timestamp>1208263570</timestamp>
+ </comment>
+ <comment>
+ <username>_</username>
+ <body>I know you can't write it succinctly, but I have a notation. <br>"Knuth's arrow notation or tower notation"<br>http://ja.wikipedia.org/wiki/%E3%82%BF%E3%83%AF%E3%83%BC%E8%A1%A8%E8%A8%98</body>
+ <timestamp>1208342442</timestamp>
+ </comment>
+ <comment>
+ <username>sayakame</username>
+ <body>Nice to meet you, I posted this question in the 86 chat. <BR>I was scared that you might be mad at me for posting the code without mentioning that it was a python challenge question at the time,<BR>but I was surprised that you answered it. <br>Thank you. <br><br>By the way, I googled around and found that <br>>>> import sys, string<br>#Declare to handle strings<br><br>>>> a = string.maketrans('a bcdefghijklmnopqrstuvwxyz', 'cdefghijklmnopqrstuvwxyzab')<br># Variable a can be set using the method .maketrans() to<br Define that it is an alphabetic string shifted by two<br><br>>>> b = """g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj ."""<br>#Define string for variable b<br><br>>>> b.translate(a)<br>#Translate variable b to variable a<br>Solved. <br><br>This is the first time in my life that I am programming, and it is difficult but fun. <br><br>I've completed up to python challenge 2. <br><br>(I was half crying because I couldn't run the code! <br><br>I'm a liberal arts student who ROMs 86 chats but doesn't seem to understand most of them,<br>but I want to work in the web industry,<br>and I want to learn enough to understand what programmers are all about. <br>That is why, even though I am a senior, I am taking courses among first-year students in the Department of Informatics and Computer Science. <br>I will do my best! <br><br>So, thank you very much. </body>
+ <timestamp>1208528009</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-04-15 https://nishiohirokazu.hatenadiary.org/archive/2008/04/15]

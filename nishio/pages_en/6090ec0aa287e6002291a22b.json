@@ -1,0 +1,115 @@
+Hatena2012-05-10
+code:hatena
+ <body>
+ *1336640108*Visualize frequency of use of various options in git
+ Source code here: https://gist.github.com/2651961
+ I have not checked if it works with bash or not.
+ Unfortunately, I had just switched to zsh and had only accumulated 500 lines of history, but it was still rather interesting. I'd like to see the analysis results of people with more history if possible. If you want to see the results of the analysis of people who have more history, it would be nice to edit the line "if count < 2: break".
+ 
+ >||
+ My frequency of use of commands related to git (at least 2 occurrences)
+ 
+ add: 55
+   -p: 14
+   -u: 3
+   js/main.js: 2
+ commit: 45
+   -m: 41
+     "add: 10 ←It looks like you are using commit -m for a simple message like this.
+     "fix: 4
+     "clean: 2
+     "make: 2
+ checkout: 24
+   -b: 11
+   master: 2
+ rebase: 13
+   -i: 8
+     master: 3
+     js_insertion: 2 ← this is feature branch
+   --continue: 3
+ merge: 12
+   --no-ff: 8 ← I recently learned that it is important to add --no-ff
+ reset: 11
+   --hard: 3
+ branch: 10
+   -D: 9 ← When using git branch, almost like when you delete a branch with -D
+ log: 8
+   --oneline: 4
+   --graph: 2 ← recently alias gitlog="git log --graph --oneline" so it is used less frequently
+ cherry-pick: 6
+ status: 4
+ format-patch: 4
+ cherry: 3
+ clone: 3
+   git@github.com:nishio/academy.git: 3
+ clean: 3
+ show: 2
+ diff: 2
+ init: 2
+ blame: 2
+ ||<
+ 
+ *1336653140* zsh for statements are useful.
+ I had about five files that I wanted to enlarge to a little over twice the size, but it was easy.
+ 
+ >||
+ f$ ls *.png
+ iPad_FREE_config.png   iPad_about.png         iPad_config.png        iPhone_FREE_config.png iPhone_about.png       iPhone_config.png
+ 
+ f$ mkdir out
+ 
+ f$ for i in *.png; do; echo $i; done
+ iPad_FREE_config.png
+ iPad_about.png
+ iPad_config.png
+ iPhone_FREE_config.png
+ iPhone_about.png
+ iPhone_config.png
+ 
+ f$ for i in *.png; do; convert -resize 200% $i out/$i; done
+ ||<
+ 
+ *1336654718*Upgrade iPhone app
+ When I thought about it, I always left it created and never upgraded it.
+ 
+ - Add Version
+ - You'll be asked about changes, so think about them.
+ - If you want to add screenshots, be prepared. I thought I made a mistake last time by only adding the clock screen, so I took a picture of each screen. Copy the screen in the simulator and Cmd+N Cmd+S in the preview.
+ - Uploaded screenshot and got pissed off with wrong size, requested twice the size image, looked up how to use for statement and convert in zsh, and converted it.
+ - Archive and Validate....and I'm pissed off that I didn't update the version number in Info.plist. Sorry. Fixed it and tried again.
+ - I'd better work in parallel because there is a waiting period after Archive and for uploading screenshots. So I'll add the free version and screenshots, etc. while waiting for the paid version to Distribute.
+ - Completed Distribute paid version
+ - Free version of Archive.Verification Success.
+ - Note the flow on the blog while waiting for the free version of Archive or waiting for Distribution.
+ 
+ The estimate was 1 pomodoro (1 hour), but it took twice as long due to the unexpectedly long time required for Archive and Distribute, as well as the wrong size of images. It often takes twice or three times as long as estimated. It was my first time working on this project. I will be able to estimate more accurately next time by this measurement.
+ </body>
+ <comments>
+ <comment>
+ <username>yasutomo57jp</username>
+ <body>If you only have one command, you can omit do and done! <br>It's much cleaner. </body>
+ <timestamp>1336712203</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you! </body>
+ <timestamp>1336713834</timestamp>
+ </comment>
+ <comment>
+ <username>shawshank99</username>
+ <body>Couldn't this be done with bash as well? </body>
+ <timestamp>1336733705</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I didn't mean to claim that "bash can't do it" or that "zsh is superior to bash", but I'm sorry if I misled you. </body>
+ <timestamp>1336816058</timestamp>
+ </comment>
+ <comment>
+ <username>f440</username>
+ <body>If you forget to quote filenames in bash, files containing whitespace characters will not be processed, but zsh will do it for you. <br><br>$ touch a.png b.png 'c d.png'<br>$ bash -c 'for i in *; do rm -f $i.png; done' # "c d.png" remains<br><br>$ touch a.png b.png 'c d.png'<br>$ zsh -c 'for i in *; do rm -f $i.png; done' # everything disappears (same behavior as bash with --sh-word-split)</body>
+ <timestamp>1336968457</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-05-10 https://nishiohirokazu.hatenadiary.org/archive/2012/05/10]

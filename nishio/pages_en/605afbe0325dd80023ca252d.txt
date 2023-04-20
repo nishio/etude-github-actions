@@ -1,0 +1,10 @@
+✅A substring that appears but is not selected for keyword extraction is considered a keyword occurrence.
+For example, if "lecture" is extracted as a keyword and then the statement "make lecture materials" is made, if [Keyword Extraction] extracts the range of "lecture materials" as a keyword, this would result in "B" being extracted independently of "A," which is not appropriate. In this case, "lecture" should also be regarded as appearing again.
+
+Added [✅Recurrences of short keywords are not treated as keywords].
+
+code:make_response.py
+ # Consider substrings that are not selected in the keyword extraction but appear as keyword occurrences.
+ for k in env.scored_keyphrases:
+     if k not in keyphrase and k in s:
+         keyphrase[k] = min(100, env.scored_keyphrases[k])

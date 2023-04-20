@@ -1,0 +1,84 @@
+Hatena2013-08-19
+code:hatena
+ <body>
+ *1376891440*Modified NECOMIMI to extract brain wave data.
+ <a href="http://www.amazon.co.jp/gp/product/B007YNBOJM/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=B007 YNBOJM&linkCode=as2&tag=nishiohirokaz-22">necomimi</a>", which moves cat ears with brain waves, was sold at 3000 yen and became a hot topic. I also bought it for 3,150 yen. What a bargain! It's cheaper than buying the brainwave chip inside the product by itself! (<a href='http://www.switch-science.com/catalog/978/'>Switch Science</a> has it for 4980 yen now)
+ 
+ I can't believe it's cheaper than a chip, even though it comes with a set of electrodes to wear on the head! Okay, let's modify this so we can get brainwave readings on a PC!
+ 
+ Regarding the disassembly and modification of NECOMIMI, our predecessors have already made several entries. First, here: <a href='http://hizwarp.net/archives/386'>Disassembling nekomimi</a>. I was told that if you remove the sticker, you will find a screw, which you can easily open by turning it. This was true. It was easy. You have to peel it off carefully so that the glue doesn't remain and become sticky when you peel off the sticker, though.
+ 
+ From the above Switch Science page, you can see a PDF explaining what each pin means, Pin1 is the forehead, Pin2 is the shield wire for that wire (to cancel the cable from getting noise?), Pin5 is the ear, Pin4 is its shield, so where does Pin3 lead to, Pin3 too? I thought it might be connected to the ear electrode, but only Pin5 has continuity with the ear electrode in the tester. The earlobe electrode is sandwiched between two pieces of metal, but only one of them is conducting with Pin5. I wonder if this is OK. I'm a little worried. In the worst case scenario, the wiring of Pin 3 of my necomimi may be disconnected. I only have one at hand, so I would like someone else to check where Pin3 is connected.
+ 
+ Oh, I saw a blog somewhere that referred to the earlobe electrode as a "heart rate sensor," but it is clear that it is not a heart rate sensor, since a heart rate sensor has an LED and a light receiving element facing each other, while this one has both elements made of metal.
+ 
+ Now the next step is to wire the heart rate data to pull it out of NECOMIMI. See here:<a href='http://www.kako.com/neta/2013-019/2013-019.html'>Small stuff</a>. The output of the brainwave chip TGAM1 is "UART (57600 baud, 8 bits, no parity, 1 stop bit)" as described on the Switch Science website, so we will pull out the TX and GND of this UART. I pulled out TX and RX by mistake at first.... I changed it to take TX from the circuit and GND from the battery box as shown in this site, and now I can get the signals properly.
+ 
+ To read the extracted UART signal on the PC via the USB terminal, we will use Akizuki's AE-UM232R (USB to serial conversion board using FT232RL). This time, since the chip was written to use 3.3V, I used my previous entry <a href='http://d.hatena.ne.jp/nishiohirokazu/20130406/1365258081'>How to output 3.3V with AE-UM232R</a> as a reference to set the jumper pins. J1 must be shorted between 1-2.
+ 
+ Close-up of the circuit. The black cable leads to GND on the necomimi, which in turn leads to GND on the AE-UM232R via a blue wire. The white cable leads to TX on the necomimi, which is connected via three wires to RXD on the AE-UM232R, the fifth pin on the opposite side.
+ [f:id:nishiohirokazu:20130819203954j:image]
+ 
+ Now you can read the chip output from /dev/tty.usbserial or something like that. Oops, I forgot to mention that I am running Mac OS X 10.7.5. NeuroSky, the company that makes the chip, has released an SDK for this output, so you may want to refer to that. <a href='http://developer.neurosky.com/docs/doku.php?id=thinkgear_connector_tgc'>thinkgear_connector_tgc [NeuroSky Developer - Wiki]</a >There are Windows and Mac versions of the app available. When you start the app, it reads the serial data and becomes a server and starts listening to port 13854 on TCP. I did not know how to set up the JSON format, and the data was sent in binary format, so I parsed it myself by referring to "<a href="http://www.music.mcgill.ca/~ben/306/binary_socket_protocol.pdf">Binary Socket Packet Format</a>". I parsed it by myself.
+ 
+ When I drew a graph with the "Concentration" and "Meditation" values returned by eSense, I got a sine wave. This was because I had specified the serial device incorrectly when starting the ThinkGear Connector and could not connect properly, so I inadvertently turned on "Demo mode" when I was trying various settings. When I turned off the demo mode, now the binary packet format was correct but the payload was 0...hmmm. I'm not sure, so I'll try to do serial communication by myself without using the Neurosky provided tool.
+ 
+ Oh, by the way, necomimi has been converted to doraemon because of its noisy motor. The motor part is also easy because the screw holes can be removed by peeling off the sticker on the back. The black-and-white signal line is made by widening the hole where the cable of the ear electrode comes out and putting it out from there.
+ 
+ [f:id:nishiohirokazu:20130819145001j:image]
+ 
+ For serial communication you can use pyserial, which has a similar but different format to the binary format that flows through the socket above (see <a href='http://developer.neurosky.com/docs/doku.php?id= thinkgear_communications_protocol'>thinkgear_communications_protocol [NeuroSky Developer - Wiki]</a>), I did a little research and found that someone had already written it.
+ 
+ https://pypi.python.org/pypi/thinkgear/0.2
+ 
+ It's up on PyPI, so just pip install thinkgear and the library will be installed. The reason we are discarding the ThinkGearRawWaveData instead of displaying it is because it is a packet of raw data, and the screen will be flooded with it in no time. If you discard it, the remaining packets are sent to you once a second, which is appropriate for visual observation.
+ 
+ >|python|
+ import thinkgear
+ 
+ PORT = '/dev/tty.usbserial-A9004xwG'
+ for packets in thinkgear.ThinkGearProtocol(PORT).get_packets():
+     for p in packets:
+         if isinstance(p, thinkgear.ThinkGearRawWaveData):
+             continue
+         print p
+ ||<
+ 
+ Here's the output of this script: https://gist.github.com/nishio/6260262
+ 
+ >||
+ POOR SIGNAL: 26
+ ASIC EEG Power: EEGPowerData(delta=1087207, theta=316167, lowalpha=848603, highalpha=153512, lowbeta=225246, highbeta=115827, lowgamma=113654, midgamma=80802)
+ ATTENTION eSense: 0
+ MEDITATION eSense: 0
+ POOR SIGNAL: 51
+ ASIC EEG Power: EEGPowerData(delta=644431, theta=203717, lowalpha=354474, highalpha=333722, lowbeta=141786, highbeta=80020, lowgamma=73025, midgamma=72347)
+ ATTENTION eSense: 0
+ MEDITATION eSense: 0
+ ||<
+ 
+ EEG intensities are shown for each of the 8 categories: delta=644431, theta=203717, lowalpha=354474, highalpha=333722, lowbeta=141786, highbeta=80020, lowgamma=73025,. midgamma=72347....
+ 
+ Oh no...I still see the eSense concentration and meditation values of 0...is it a hardware problem if both don't work with the 2 different software? I think the POOR SIGNAL, which indicates the quality of the signal from the sensor, is 200 when the headset is removed and drops to about 26 when it is put on, which means we are getting a good signal... I don't think this has to be 0 to get an eSense output?
+ 
+ In the meantime, I'm sharing this information because I think it might be useful to someone so far. If anyone has been able to get to the eSense values, I would appreciate it if you could let me know.
+ 
+ Addendum to put the situation in perspective
+ - With the earphones in a normal state before disassembly, the ears were somehow moving in a certain way, but there was no discernible change whether I was meditating with my eyes closed or playing an action game. It is possible that the wire may have already been disconnected at this point, but I am not sure because I have nothing to compare it with.
+ - I am wondering why the brainwave chip Pin3 is not connected to the sensor, but I don't have another device to compare it to so I don't know if it is right or wrong. I would like someone with a device to confirm this.
+ - The phenomenon of the sensor value going to 0 was observed in ThinkGear Connecter before the doraemonization. Also, considering the structure of the circuit in which the motor is driven by the signal from the sensor, it is difficult to imagine that cutting the line of the motor would affect the output from the sensor.
+ - It is unlikely that the circuitry for reading is broken, as it is working fine around reading and parsing from the UART. The probability that the circuit is broken and the output is "correctly following the binary protocol, but only the eSense value is 0" seems low.
+ - I received information that "I am also getting eSense values, POOR SIGNAL is 0". So is it likely that the chip is not producing eSense values because of poor signal quality...and what is the reason for that? I am still concerned about Pin 3, so I may try connecting this to the ear sensor or to GND.
+ - Some people have suggested that the noise from the AC adapter may be flowing into the EEG circuit and degrading the quality of the signal because it is connected to a PC.
+ - There is also a proposal to electrically insulate the UART-USB conversion board by placing a photocoupler between the signal line and the UART-USB conversion board.
+ - We received information that "Pin3 was conducting to one side of the ear electrode." The possibility that the poor signal quality is due to a broken wire between Pin3 and the ear electrode has increased. I will try this repair next.
+ </body>
+ <comments>
+ <comment>
+ <username>Aozakana</username>.
+ <body>I also purchased a necomimi just the other day and ran into the exact same problem. <BR><BR>I think the main cause is that it is connected to a PC<BR>I think the problem is that it is connected to a DC-DC converter inside the USB to serial converter. <br><br>In my case, I used the 3.3V VCC output of the TGAM1 and connected it directly to the Bluetooth Bee and received the data through the serial conversion port of the PC's Bluetooth<br>. <br>(Signal quality is also 0)<br><br>Perhaps it will work with other things such as XBee. </body>
+ <timestamp>1377521874</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-08-19 https://nishiohirokazu.hatenadiary.org/archive/2013/08/19]

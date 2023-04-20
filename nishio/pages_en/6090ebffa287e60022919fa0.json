@@ -1,0 +1,143 @@
+Hatena2009-05-28
+code:hatena
+ <body>
+ *1243471769* Buzzwords and catchphrases
+ For those who have already mastered a concept, it does not make much sense to give that concept a catchy name. They tend to avoid the name as confusing the discussion, especially if the definition of the concept to which the name refers is ambiguous. And it is called a "buzzword.
+ 
+ On the other hand, consider communicating the concept to someone who has not yet mastered it. Of course, the concept should have a name. It should preferably have a catchy name. Don't try to define it rigidly. The first step is to get people interested. Only those who want to know more about the exact definition should delve into it. It is wrong to raise the threshold by imposing a strict definition from the beginning. Instead of talking about specific features or strict definitions, the words should speak of a vague "new" image. And that is called a "catchphrase.
+ 
+ 
+ 
+ There is an impression that buzzwords are bad, but if we view buzzwords as catchphrases, we begin to see their merits. Even if buzzwords are disliked within the engineering community, they should be actively used as catchphrases outside the engineering community.
+ 
+ *1243508099*[Blender]I made a kaleidoscope of Koch curves in Blender.
+ If you write a little Python script, you can automate it. I made a mirror of the Koch curve.
+ It's a good time to be able to create something like this just by downloading a free tool and writing a few dozen lines of code. The longest rendering time I've ever worked with on my laptop is about 5 minutes.
+ 
+ <img src="http://gyazo.com/83c747ffd6ca18ab410a1348f2f29df0.png">
+ 
+ <img src="http://gyazo.com/b292b4bb5ad5129b9cb3ab65ca473e0f.png">
+ 
+ <img src="http://gyazo.com/cd7e04eca10be5c144c97bdb4d9c96b0.png">
+ 
+ <img src="http://gyazo.com/d3de4b73667d416fcaf517165975b690.png">
+ 
+ <img src="http://gyazo.com/48ea5b047770546545ca249165a3cb38.png">
+ 
+ <img src="http://gyazo.com/192e92653c2e0e5ebe730eeaab713206.png">
+ 
+ <img src="http://gyazo.com/52b28438f7572eb48133d47c2f691385.png">
+ 
+ >|python|
+ import BPyAddMesh
+ import Blender
+ from math import cos, sin, pi
+ Vector = Blender.Mathutils.Vector
+ 
+ def turtle():
+     verts = []
+     faces = []
+     context = dict(x=0, y=0, dir = (1, 0))
+     verts.append(Vector(context["x"], context["y"], 0))
+     verts.append(Vector(context["x"], context["y"], 1))
+     
+     def forward(mag):
+         dir = context["dir"]
+         context["x"] += dir[0] * mag 
+         context["y"] += dir[1] * mag 
+ 
+         verts.append(Vector(context["x"], context["y"], 0))
+         verts.append(Vector(context["x"], context["y"], 1))
+         i = len(verts)
+         faces.append((i - 1, i - 2, i - 4, i - 3))
+ 
+     def rot(rad):
+         dir = context["dir"]
+         context["dir"] = (
+             dir[0] * cos(rad) - dir[1] * sin(rad),
+             dir[0] * sin(rad) + dir[1] * cos(rad))
+     
+ 
+     def deg(x):
+         return 2 * pi / 360 * x
+ 
+     def koch(level=1):
+         if level == 0:
+             forward(1)
+         else:
+             koch(level - 1)
+             rot(deg(60))
+             koch(level - 1)
+             rot(deg(-120))
+             koch(level - 1)
+             rot(deg(60))
+             koch(level - 1)
+ 
+     koch(1)
+     rot(deg(-120))
+     koch(1)
+     rot(dega(-120))
+     koch(1)
+ 
+     BPyAddMesh.add_mesh_simple('Turtle', verts, [], faces)
+ 
+ turtle()
+ ||<
+ 
+ *1243512535*[Blender]Kaleidoscope of convex mirror
+ There are kaleidoscopes that use a cylindrical tube, right? And when you look through it, the object is stretched out and not very interesting. If you put an object inside the cylinder, isn't it a concave mirror to the object? I had always thought that a convex mirror would be better, but I didn't have the technical skills to experiment. I learned to use Blender, which can be controlled by Python, so it was easy to make a convex mirror kaleidoscope. I tried it immediately.
+ 
+ <img src="http://gyazo.com/e304be9548ed5d1fc0f04e7924a4a1dc.png">
+ <img src="http://gyazo.com/9a92293d33910d6bf6d8b99cbf826cfb.png">
+ 
+ Well, compared to an actual kaleidoscope, it is a very sneaky "lighting in the field of view" situation. To be honest, I did not expect it to be so beautiful.
+ 
+ <img src="http://gyazo.com/a194b22b5f8d48bed7d1fe41390f85d1.png">
+ 
+ Zoom in with things inside.
+ 
+ <img src="http://gyazo.com/d3254a2224232e4e663a0680d6624485.png">
+ 
+ I added more lighting. Beautiful.
+ 
+ 
+ The code is not what I would call code, just a Curve with a numerical specification. The Curve is then extruded as described in <a href='http://en.wikibooks.org/wiki/Blender_3D:_Noob_to_Pro/Intro_to_Bezier_Curves'>Blender 3D: Noob to Pro/Intro to Bezier Curves</a> and made it into a cylinder by extrude as described in <a href''>Blender 3D: Noob to Pro/Intro to Bezier</a>.
+ 
+ >|python|
+ from Blender import * 
+ cu = Curve.New() 
+ 
+ bt= BezTriple.New(0, 0, 0, 0, -1, 0, 0, 0, 0)
+ bt.handleTypes= (BezTriple.HandleTypes.FREE, BezTriple.HandleTypes.FREE) 
+ cu.appendNurb(bt) # We must add with a point to start with 
+ cu_nurb = cu[0]
+ 
+ 
+ bt= BezTriple.New(0, 0, 0, 1, 0, 0, 0, 0, 0)
+ bt.handleTypes= (BezTriple.HandleTypes.FREE, BezTriple.HandleTypes.FREE) 
+ cu_nurb.append(bt)
+ 
+ bt= BezTriple.New(0, 0, 0, 0, 1, 0, 0, 0, 0)
+ bt.handleTypes= (BezTriple.HandleTypes.FREE, BezTriple.HandleTypes.FREE) 
+ cu_nurb.append(bt)
+ 
+ bt= BezTriple.New(0, 0, 0, -1, 0, 0, 0, 0, 0)
+ bt.handleTypes= (BezTriple.HandleTypes.FREE, BezTriple.HandleTypes.FREE) 
+ cu_nurb.append(bt)
+ 
+ bt= BezTriple.New(0, 0, 0, 0, -1, 0, 0, 0, 0)
+ bt.handleTypes= (BezTriple.HandleTypes.FREE, BezTriple.HandleTypes.FREE) 
+ cu_nurb.append(bt)
+ 
+ scn = Scene.GetCurrent() 
+ ob = scn.objects.new(cu) 
+ ||<
+ 
+ *1243514212*[Blender] Reflection limit is 10 times.
+ <img src="http://gyazo.com/97060be00700cd9b5e433570040189ee.png">
+ What's that?" What's that ball missing?"
+ 
+ I was talking to id:nyaxt about how sad it is that it's limited to 10 times, and he recommended trying another renderer, so I'll check it out.
+ </body>
+
+[Hatena Diary 2009-05-28 https://nishiohirokazu.hatenadiary.org/archive/2009/05/28]

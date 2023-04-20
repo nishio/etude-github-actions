@@ -1,0 +1,149 @@
+Hatena2010-07-21
+code:hatena
+ <body>
+ *1279687613* Simply multiplying n times 7 in Haskell takes O(n ^ 2.6) time.
+ PS: This title is misleading, if you use exact tail recursion, it would be O(n ^ 2).
+ 
+ <hr>
+ 
+ >>
+ k.inaba (abbreviated) For now, why don't we isolate the cause from multiplicity of length and GC?
+ <<
+ http://shinh.skr.jp/m/?date=20100721#c01
+ 
+ So I just did the multiple length calculation for now. (PS: It was pointed out to me that this is not tail recursion and the stack would grow. I added my own tail-recursive version below. I added my own tail-recursive version at the bottom).
+ 
+ >|haskell|
+ import System
+ 
+ pow :: Integer -> Integer
+ pow 0 = 1
+ pow n = (7 *) $! pow (n - 1)
+ 
+ main = do
+   args <- getArgs
+   print $ (0 *) $ pow $ read $ args !! 0
+ ||<
+ 
+ <img src="http://gyazo.com/b05002c23736607043a43d3e6c6f3ea5.png">
+ 
+ where f(x) = (x ** a) * b, g(x) = c * x * x, where the x-axis is n given by the command line arguments and the y-axis is the number of seconds spent processing. The following was created.
+ 
+ >||
+ gnuplot> f(x) = (x ** a) * b
+ gnuplot> fit f(x) "result.txt" via a, b
+ 
+ (..snip..)
+ 
+ Final set of parameters            Asymptotic Standard Error
+ =======================            ==========================
+ 
+ a               = 2.60015          +/- 0.09175      (3.529%)
+ b               = 2.3844e-13       +/- 2.772e-13    (116.3%)
+ 
+ (..snip..)
+ 
+ gnuplot> g(x) = x * x * c
+ gnuplot> fit g(x) "result.txt" via c
+ 
+ (..snip..)
+ 
+ c               = 4.1331e-10       +/- 1.394e-11    (3.373%)
+ 
+ (..snip..)
+ 
+ gnuplot> plot f(x), g(x), "result.txt"
+ ||<
+ 
+ In addition, GHC 6.10.4 was used.
+ 
+ Let's try the GC profile and all that.
+ >||
+ ./a.out 200000 +RTS -s 
+ 0
+    7,493,614,152 bytes allocated in the heap
+          644,664 bytes copied during GC
+        2,084,040 bytes maximum residency (2 sample(s))
+        1,049,272 bytes maximum slop
+                5 MB total memory in use (1 MB lost due to fragmentation)
+ 
+   Generation 0: 13674 collections,     0 parallel,  4.83s,  5.02s elapsed
+   Generation 1:     2 collections,     0 parallel,  0.00s,  0.00s elapsed
+ 
+   INIT  time    0.00s  (  0.00s elapsed)
+   MUT   time    7.14s  (  7.35s elapsed)
+   GC    time    4.83s  (  5.02s elapsed)
+   EXIT  time    0.00s  (  0.00s elapsed)
+   Total time   11.97s  ( 12.37s elapsed)
+ 
+   %GC time      40.4%  (40.6% elapsed)
+ 
+   Alloc rate    1,050,088,044 bytes per MUT second
+ 
+   Productivity  59.6% of total user, 57.7% of total elapsed
+ ||<
+ I understand that the GC eats up 40% of the processing time. I am not sure what else to look at.
+ <hr>
+ Let's rewrite it like this. Although it is a multiple-length operation, the number of digits is not increased by O(n).
+ 
+ >|haskell|
+ pow n = (77777777777777777777 +) $! pow (n - 1)
+ ||<
+ 
+ I have a feeling that the execution time is so short and the initial cost is there enough to be clearly visible on the graph as a fitting, but, well, let's just say it's O(n ^ 2), not O(n ^ 2.6). What, O(n ^ 2)?
+ 
+ <img src="http://gyazo.com/2491f32530d083c58e8b657623d31452.png">
+ >||
+ a               = 1.99989          +/- 0.114        (5.703%)
+ b               = 2.13455e-12      +/- 3.064e-12    (143.5%)
+ c               = 2.13161e-12      +/- 4.891e-14    (2.295%)
+ ||<
+ 
+ There is not much difference in the GC.
+ >||
+ ./a.out 200000 +RTS -s 
+ 0
+       28,422,680 bytes allocated in the heap
+            6,416 bytes copied during GC
+        2,084,040 bytes maximum residency (2 sample(s))
+        1,048,824 bytes maximum slop
+                5 MB total memory in use (1 MB lost due to fragmentation)
+ 
+   Generation 0:    45 collections,     0 parallel,  0.02s,  0.02s elapsed
+   Generation 1:     2 collections,     0 parallel,  0.01s,  0.01s elapsed
+ 
+   INIT  time    0.00s  (  0.00s elapsed)
+   MUT   time    0.05s  (  0.06s elapsed)
+   GC    time    0.03s  (  0.03s elapsed)
+   EXIT  time    0.00s  (  0.00s elapsed)
+   Total time    0.08s  (  0.09s elapsed)
+ 
+   %GC time      35.1%  (33.7% elapsed)
+ 
+   Alloc rate    538,644,986 bytes per MUT second
+ 
+   Productivity  64.0% of total user, 59.0% of total elapsed
+ ||<
+ 
+ Haskell is so difficult. I don't understand it well.
+ 
+ <hr>
+ 
+ It was pointed out to me that the first code wasn't tail recursion, so I rewrote it and it became O(n ^ 2).
+ 
+ >|haskell|
+ import System
+ 
+ pow :: Integer -> Integer -> Integer
+ pow x 0 = x
+ pow x n = pow (7 * x) (n - 1)
+ 
+ main = do
+   args <- getArgs
+   print $ (0 *) $ pow 1 $ read $ args !! 0
+ ||<
+ 
+ <img src="http://gyazo.com/745d7da01d245b3dc211fa965db2ad82.png">
+ </body>
+
+[Hatena Diary 2010-07-21 https://nishiohirokazu.hatenadiary.org/archive/2010/07/21]

@@ -1,0 +1,190 @@
+Hatena2010-10-26
+code:hatena
+ <body>
+ *1288096380*Reviewing object oriented in C++.
+ Note: There is a mistake in this code, which will be corrected later, but I'm putting it up incorrectly to keep track of what I stumbled upon.
+ >|cpp|
+ #include<iostream>
+ 
+ //#define A
+ //#define B
+ 
+ class O{
+ public:
+   int f(){
+     return 0;
+   }
+ };
+ 
+ class A : public O{
+ #ifdef A
+ public:
+   int f(){
+     return 1;
+   }
+ #endif
+ };
+ 
+ class B : public O{
+ #ifdef B
+ public:
+   int f(){
+     return 2;
+   }
+ #endif
+ };
+ 
+ class C : public A, public B{
+ };
+ 
+ int main(){
+   C c;
+   std::cout << c.f() << std::endl;
+ }
+ ||<
+ 
+ First, two O::f collide and become AMBIGUOUS with neither A nor B overriding.
+ >||
+ multi.cpp:36: error: request for member ‘f’ is ambiguous
+ multi.cpp:8: error: candidates are: int O::f()
+ multi.cpp:8: error:                 int O::f()
+ ||<
+ 
+ To have only one instance of O, A and B must each inherit virtual, and when I add virtual, O::f is called and it shows 0. Then, if I add only A...
+ 
+ >||
+ multi.cpp:13: error: an anonymous union cannot have function members
+ multi.cpp:20: error: abstract declarator ‘<anonymous class>’ used as declaration
+ multi.cpp:31: error: expected class-name before ‘,’ token
+ ||<
+ 
+ Mmm. I'm not sure what's going on.
+ 
+ Ha, the macro name conflicts with the class name? Fixed: If you add only A, it becomes 1. If you put only B, it becomes 2. Then, what if I put both?
+ 
+ >||
+ multi.cpp:36: error: request for member ‘f’ is ambiguous
+ multi.cpp:25: error: candidates are: int B::f()
+ multi.cpp:16: error:                 int A::f()
+ ||<
+ 
+ So far, so ambiguous. I can't think of when it would be counter-intuitive...hmmm. If I define f in C, it will be overwritten, of course.
+ 
+ http://ml.tietew.jp/cppll/cppll/article/3588
+ 
+ Hmmm. I thought that top would be called, and it worked as I expected, but when I followed the thread, it said right, and I wondered what was going on. I googled "what is a virtual function," and the explanation on the top page was much more counter-intuitive, so I decided to skip it and go back home to read a proper book.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as1&m=amazon&f=ifr&md=1X69VDGQCMF7Z30FM082&asins=4798109924" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ Well, the expectation from the behavior is that O::f without virtual is embedded in O, and this will be laid out such that B::f is called in B when it is overridden in B, but the entity of O is not rewritten. Because it would be a problem if there are other places that use O. In the case of O::f with virtual, it is in vtable, and the information "refer to vtable when calling f" is conveyed to A. So, if you call c.g() and A::g with type C, f becomes B::f because it goes to refer to vtable in C. Try A a = c; and then a.g(), O::f is called.
+ 
+ I was going to leave after writing this much, but the third virtue of programmers, "arrogance," which does not allow people to point out mistakes, kicked in, and I wrote the code to confirm it:
+ 
+ >|cpp|
+ #include<iostream>
+ using namespace std;
+ //#define VIRTUAL
+ 
+ class O{
+ public:
+ #ifdef VIRTUAL
+   virtual 
+ #endif
+   void f(){
+     cout << "Base" << endl;
+   }
+ };
+ 
+ class A : public virtual O{
+ public:
+   void g(){
+     f();
+   }
+ };
+ 
+ class B : virtual public O{
+ public:
+   void f(){
+     cout << "B" << endl;
+   }
+ };
+ 
+ class C : public A, public B{
+ };
+ 
+ int main(){
+   C c;
+   c.g(); // when VIRTUAL: B otherwise BASE
+   A a = c;
+   a.g(); // BASE
+ }
+ ||<
+ 
+ If it's not virtual inheritance, A and B don't have a reference to a common O in the first place, but A and B each have a copy of their own O, so of course it's BASE.
+ 
+ *1288107456*Reviewing Object Oriented in Python.
+ Well, just confirming that my memory is correct.
+ 
+ >|python|
+ # coding:utf-8
+ """
+ Experiments on the order of method resolution between old-class and new-class
+ """
+ 
+ class Base:
+     x = "base"
+ 
+ class D1(Base):
+     pass
+ 
+ class D2(Base):
+     x = "D2"
+ 
+ class D3(D1, D2):
+     pass
+ 
+ print D3.x #-> base
+ 
+ 
+ 
+ class Base(object):
+     x = "base"
+ 
+ class D1(Base):
+     pass
+ 
+ class D2(Base):
+     x = "D2"
+ 
+ class D3(D1, D2):
+     pass
+ 
+ print D3.x #-> D2
+ 
+ 
+ 
+ 
+ class Base(object):
+     x = "base"
+ 
+ class D1(Base):
+     pass
+ 
+ class D2(object):
+     x = "D2"
+ 
+ class D3(D1, D2):
+     pass
+ 
+ print D3.x #-> base
+ ||<
+ 
+ *1288113212*A discussion of why I can't write manuscripts.
+ I know that both writing that is easy to understand for all people and writing that is valuable to all people are unattainable goals. I know that it is right to write quickly and without worrying, and then show it to others and correct the parts that are difficult to understand, considering the fact that "Learning Python in Two Hours," which I wrote in about five hours with great enthusiasm a long time ago, was well received.
+ 
+ I am always tempted to look up more of this and more of that.
+ 
+ I guess I should finish the draft as soon as possible to increase customer value, and take more time for review. Hmmm.
+ </body>
+
+[Hatena Diary 2010-10-26 https://nishiohirokazu.hatenadiary.org/archive/2010/10/26]

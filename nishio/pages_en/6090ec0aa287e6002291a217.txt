@@ -1,0 +1,87 @@
+Hatena2012-04-17
+code:hatena
+ <body>
+ *1334670584*Alloy Girl 6
+ Here's the story so far: <a href='http://d.hatena.ne.jp/nishiohirokazu/20120410/1334024972'>Alloy</a>
+ 
+ ** Dots are joined
+ Me: Long time no see
+ Alloy: long time no see
+ Me: So, what was the story?
+ Alloy: Have you forgotten already? I was talking about how you confused the dot operator with the JavaScript member access operator.
+ Me: You're all so harsh. Well, that's what we were talking about. Today we're going to learn more about the "dots are joined.
+ Alloy: Well, first let's create a simpler relationship to illustrate
+ >||
+ run {
+ 	some rel: Int -> Int {
+ 		rel = (1 -> 2) + (2 -> 3) + (3 -> 4)
+ 	}
+ }
+ ||<
+ 
+ JS: One more?
+ Me: I see, so you use the Evaluator to access some selected targets by name.
+ Alloy: That's what I meant. Now let's open Evaluator and check it out.
+ Me: JS, try typing $rel in the Evaluator.
+ 
+ [f:id:nishiohirokazu:20120417225023p:image]
+ 
+ JS: $rel, and voila. Yeah, I got something like that.
+ Alloy: Then join that relationship with the dots $rel . Compute $rel .
+ JS: Can there be such a thing as "relationship dot relationship"?
+ Me: The dots are "relation join operations". I actually studied it during my vacation.
+ JS: $rel . I got {1 -> 3, 2 -> 4}. Oh, I got {1 -> 3, 2 -> 4}. Why?
+ Alloy: Wouldn't it be easier to understand if you combined it with (2 -> 7)?
+ JS: Now {1 -> 7}!
+ Alloy: So (1 -> 2) and (2 -> 7) in $rel are combined to (1 -> 7).
+ JS: That's why it's called a join operator*!
+ 
+ ** property access style
+ 
+ JS: I understand the join operator, but what about property access?
+ Alloy: What, you still don't get it? If you do a join operation with a singleton whose arity is a relation of 1, it looks like property access, right?
+ JS: ？？？？
+ Me: 1 . Calculate $rel.
+ JS: {2} came back!
+ Me: In short, just as (1 -> x) and (x -> 7) are combined to form (1 -> 7), (x) and (x -> 2) are combined to form (2).
+ JS: Ah, so that's how you get property access style☆.
+ Alloy: I think the understanding that it's property access might be a bit of a drag. For example, consider this example.
+ >||
+ run {
+ 	some rel: Int -> Int {
+ 		rel = (1 -> 2) + (2 -> 3) + (2 -> 4)
+ 	}
+ }
+ ||<
+ JS: So instead of (3 -> 4) you got (2 -> 4).
+ Alloy: In this condition, 1.$rel, 2.$rel and 3.$rel will be what respectively
+ Me: 3. $rel and it's not in the $rel definition to begin with.
+ Alloy: In the case of a relation, I think it is more common to call it a starting set, not a domain.
+ JS: It's easy at 3!
+ Me: Oh, yeah?
+ JS: It returns undefined, right?
+ Me: Of course not...
+ JS: Eh, but it's not defined where to follow rel from 3?
+ Me: It's not that it's not defined, it just doesn't exist, does it?
+ JS: Oh, okay, so an empty list?
+ Me: Empty set!
+ JS: I see!
+ 
+ ** Not so much an Int type as a set of Int types
+ 
+ Alloy: So what about 2.$rel?
+ JS: (2 -> 3) and (2 -> 4)... I wonder which one it is. I wonder if it overwrites the other one? So 4?
+ Me: This is the set {3, 4}.
+ Alloy: Exactly.
+ JS: Wow, so when it says Int->Int, I should think of it as returning a set of Ints, rather than taking an Int and returning an Int.
+ Alloy: Hmmm, I still feel like I'm stuck with the idea of another language. (1 + 2). Why don't you try $rel or $rel.4?
+ 
+ [f:id:nishiohirokazu:20120417231854p:image]
+ 
+ Me: Okay, so it's just a join, so the left side can be a set instead of a scalar, or you can bring the relation to the left side.
+ Alloy: That's right. What you call a set is a relation with an arity of one, and what you call a scalar is a relation with an arity of one and a rank of one.
+ Me: I see, everything is related.
+ Alloy: That's why relational arithmetic is the basic building block of the language.
+ </body>
+
+[Hatena Diary 2012-04-17 https://nishiohirokazu.hatenadiary.org/archive/2012/04/17]

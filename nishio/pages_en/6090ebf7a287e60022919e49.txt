@@ -1,0 +1,149 @@
+Hatena2008-05-23
+code:hatena
+ <body>
+ *1211520201* Do you want to join Cybozu Labs?
+ Poppopopo (translation: I am interested in researching <a href="http://www.chibutsu.org/iorin/rfc/rfc2549.txt">information sharing systems using pigeons</a>!)
+ f:id:nishiohirokazu:20080523141953j:image f:id:nishiohirokazu:20080523142130j:image
+ 
+ I politely declined, saying that I could not interview them if they jumped in out of the blue, so I asked them to bring their resumes.
+ 
+ **1211530099* 1000 Speakers Conference tomorrow
+ >>
+     * After the meeting, we will go into a chatting mode (reception). (It is scheduled to end at 17:00)
+          ** First, everyone introduces themselves. If I have forgotten to do so, please plug it in.
+     * Pizza will be delivered after a while (actual cost will be charged from those who eat pizza in advance. Students get a little discount)
+     * Drinks are not provided. Please procure your own.
+     * Pizza will be put away from about 19:00.
+     * After cleaning up, all participants in the after-party will go shopping together.
+     * The after-party will continue at ATL.
+     * Hackathon available until morning!
+ <<
+ http://ja.doukaku.org/wiki/index.php/1000speakers:5
+ 
+ I plan to bring Chumby and some appropriate educational toys.
+ 
+ >>
+ # user:henkma Talks about embedded development (DRP).
+ # user:takke I'll talk about some WindowsMobile stuff.
+ # user:Yuhshi "DoCoMo and Twitter and Cookies and
+ # user:tokoroten Second time, sorry. I'm sorry, this is the second time. I'm a Nico Nico Bookmarker, I'm an AntWave".
+ # user:naoya_t PIC electronics work with Gauche, continued
+ <<
+ 
+ Oh, I see there's a lot of talk about "so-called non-PCs" this time. I'm bringing my Chumby too.
+ 
+ >>
+ 17:17 (yoshiori) Oh, I have a soldering iron!
+ <<
+ 
+ It's kind of starting to go off the rails in the direction of the day after tomorrow before it even starts.
+ 
+ -----
+ 
+ As usual, the presentation will be broadcast on Ustream and uploaded to Nico Nico Douga. The after-party this time is not at an izakaya (Japanese style pub), so it may be broadcasted as well.
+ 
+ *1211536524*Re: String pattern created by using all characters once each
+ String patterns that can be made using all characters once each - Tech Notes @ ama-ch http://d.hatena.ne.jp/ama-ch/20080523/1211529804
+ 
+ Original:
+ >|python|
+ def pat(arr, level=0, base=""):
+     num = len(arr)
+     if num == 0:
+         print base
+     for i in range(num + level):
+         if num > i:
+             arrclone = arr.replace(arr[i], "")
+             pat(arrclone, level+1, base+arr[i])
+ ||<
+ 
+ I cut out the parts I didn't want.
+ 
+ >|python|
+ def pat(arr, base=""):
+     num = len(arr)
+     if num == 0:
+         print base
+     for i in range(num):
+         arrclone = arr.replace(arr[i], "")
+         pat(arrclone, base+arr[i])
+ ||<
+ 
+ I also changed the name to my liking.
+ 
+ >|python|
+ >>> def make_permutation(chars, base=""):
+     if not chars:
+ 	print base
+     else:
+         for i in range(len(chars)):
+             new_chars = chars.replace(chars[i], "")
+             make_permutation(new_chars, base + chars[i])
+ 
+             
+ >>> make_permutation("abc")
+ abc
+ acb
+ bac
+ bca
+ cab
+ cba
+ ||<
+ 
+ But I haven't read the original problem spec, but I think the method of using replace for strings causes problems when the same character is contained in more than one string.
+ >|python|
+ >>> make_permutation("aab")
+ ab
+ ab
+ ba
+ ba
+ ||<
+ 
+ Since replace can specify the number of items, if you only replace one item, you will get a result, but you will see both aab where the first a comes first and aab where the second one comes first.
+ 
+ >|diff|
+ -            new_chars = chars.replace(chars[i], "")
+ +            new_chars = chars.replace(chars[i], "", 1)
+ ||<
+ 
+ Oh, I shouldn't have done that. I'll continue another time.
+ </body>
+ <comments>
+ <comment>
+ <username>kurimotokosuke</username>
+ <BODY>I want to enter</BODY>.
+ <timestamp>1211521439</timestamp>
+ </comment>
+ <comment>
+ <username>takano32</username>
+ <body>I'm trying to decide whether to bring clothespins or a coffee maker.
+ <timestamp>1211525959</timestamp>
+ </comment>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>I would like to suggest snail + Blu-ray for high volume communication</body>.
+ <timestamp>1211527065</timestamp>
+ </comment>
+ <comment>
+ <username>Yoshiori</username>
+ <BODY>Additional information<BR>><BR><BODY>Drinks are not provided. Please procure your own. <br>There is a vending machine on the same floor. <br>There is a convenience store on the first floor. </body><br>There is a convenience store on the first floor.
+ <timestamp>1211531528</timestamp>
+ </comment>
+ <comment>
+ <username>ama-ch</username>
+ <body>Thanks for the correction! <BR>Oh, I see, if I use if~else, I can shave variables too. <br><br>>I forgot that the problem occurs when more than one of the same character is included<br>Oh shoot, I forgot><br>Hmmm, how do I determine that...I'll think about it. </body>
+ <timestamp>1211538680</timestamp>
+ </comment>
+ <comment>
+ <username>YUKINOBU</username>.
+ <BODY>I think you've moved on from ping pigeons. <br>http://pingoo.jp/contents/qa/pingbato.html</body>
+ <timestamp>1211548343</timestamp>
+ </comment>
+ <comment>
+ <username>tgbt</username>
+ <BODY>Think about it the other way around. A pigeon came to Cybozu Labs to headhunt! </body>
+ <timestamp>1211982915</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-05-23 https://nishiohirokazu.hatenadiary.org/archive/2008/05/23]

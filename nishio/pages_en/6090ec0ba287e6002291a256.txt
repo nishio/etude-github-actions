@@ -1,0 +1,60 @@
+Hatena2012-07-31
+code:hatena
+ <body>
+ *1343701166*Rename Mac screenshot file
+ I can change the prefix with the defaults command.
+ >||
+ $ defaults write com.apple.screencapture name "SS"
+ $ killall SystemUIServer
+ ||<
+ 
+ Now the file is saved as "SS 2012-07-02 15.50.51.png". To tell the truth, I don't like the spaces in the file, so I wanted to change them, but I couldn't figure out how to do it.
+ 
+ OS is 10.7.4, Reference http://usingmac.com/2009/10/19/tweak-screencapture-behavior
+ 
+ *1343745529*Document your day's work with Mac screenshots and look back with video
+ I ran a script that takes a screenshot every 10 seconds and saves it as a sequentially numbered image to record the day's work, and at the end of the day, I made a video using ffmpeg to look back. It's pretty interesting.
+ 
+ It's fun to see the text grow on the internal bulletin board, in the mailer, or in the editor, but at the end of the day, you can look back and say, "Oh yeah, I was looking this up, but I got interrupted and forgot," "After doing this research, I went through the articles in the sidebar, but I didn't need to," "I should have done this now," "I wasted a lot of time," and so on. I should not have done this work now." "I wasted a lot of time. Reflection.
+ 
+ One picture taken every 10 seconds is made into a video at 10 FPS, so an hour would be 36 seconds. Maybe I could go a little faster, maybe one picture per minute, so an hour would be 6 seconds. I think it's somewhere in between.
+ 
+ The recording script spits out sequentially numbered images for later loading into ffmpeg. screencapture is the Mac screen capture command. ffmpeg is set to -s 720x450, which is half the size of my screen (1440x900). In this experiment, about 3500 screenshots were taken and about 12MB of video was created.
+ 
+ Script for recording (python)
+ >|python|
+ from time import sleep
+ import subprocess
+ import os
+ outdir = 'screencapture'
+ 
+ counter = 1
+ def capture():
+     global counter
+     filename = '%08d.png' % counter
+     outpath = os.path.join(outdir, filename)
+     subprocess.call(['screencapture', outpath])
+     counter += 1
+ 
+ while True:
+     capture()
+     sleep(10)
+ ||<
+ 
+ Script for video creation
+ >|sh|
+ #!/bin/bash
+ 
+ original_images=screencapture
+ ldate=$(date +%Y%m%d)
+ ffmpeg -y -f image2 -r 10 -i "$original_images/%08d.png" -s 720x450 "screencapture$ldate.avi"
+ ||<
+ 
+ PS: I heard that if you have multiple monitors, you can specify multiple file names.
+ 
+ PS: "I think it would be fun to make a video by attaching the image taken with isight to the screenshot storage device. by id:tokuhirom That would certainly be interesting. I've recorded my face while working with a lifelog camera, and it's pretty interesting to see me worrying, fiddling with my eyebrows, and crossing my arms.
+ 
+ PS: If you add -x to the options, you can mute the shutter sound. If you add -C, you can also take a picture of the cursor.
+ </body>
+
+[Hatena Diary 2012-07-31 https://nishiohirokazu.hatenadiary.org/archive/2012/07/31]

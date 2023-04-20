@@ -1,0 +1,55 @@
+Hatena2011-11-11
+code:hatena
+ <body>
+ *1320994184*Suspect that the optional argument fill in matplotlib.patches.Circle is not working
+ Even though fill=False in the code below, the "blue painted circle" is drawn.
+ >||
+ from matplotlib.collections import PatchCollection
+ from pylab import *
+ def draw():
+     clf()
+     circles = [Circle(random(2), radius=random(), fill=False)]
+     gca().add_collection(PatchCollection(circles))
+     matplotlib.pyplot.savefig('test.png')
+ ||<
+ 
+ numpy.__version__　== '1.6.1'
+ matplotlib.__version__ == '1.0.1'
+ 
+ I followed the pdb step by step execution and got into the built-in method draw_path_collection of matplotlib.backends.backend_agg.RendererAgg, so I got into trouble there.
+ 
+ >||
+ (Pdb) print renderer
+ <matplotlib.backends.backend_agg.RendererAgg instance at 0x103fd0290>
+ (Pdb) print renderer.draw_path_collection
+ <built-in method draw_path_collection of tuple object at 0x103ebfb00>
+ ||<
+ 
+ <hr>
+ Postscript:.
+ >>
+ In conclusion, FILL is working.
+ It seems to have been filled in gca().add_collection(PatchCollection(circles)).
+ gca().add_collection(PatchCollection(circles, facecolor='none')) will not fill.
+ <<
+ 
+ Based on this comment, I looked into it and found that PatchCollection overrides the color specified by Circle by default.
+ >||
+ Definition:PatchCollection(self, patches, match_original=False, **kwargs)
+ (snip)    
+     *match_original*
+         If True, use the colors and linewidths of the original
+         patches.  If False, new colors may be assigned by
+         providing the standard collection arguments, facecolor,
+         edgecolor, linewidths, norm or cmap.
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>hoge</username>
+ <body>In conclusion, the fill is working. <br>It appears to have been filled with gca().add_collection(PatchCollection(circles)). <br>It is no longer being filled by gca().add_collection(PatchCollection(circles, facecolor='none')). </body>
+ <timestamp>1321090187</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-11-11 https://nishiohirokazu.hatenadiary.org/archive/2011/11/11]

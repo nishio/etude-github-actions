@@ -1,0 +1,88 @@
+Hatena2009-06-18
+code:hatena
+ <body>
+ **1245324952* The Road to High Definition Virtual Star
+ I made it to pset, rect, circle, and ring on the train to Shibuya, and on the way back I was able to draw each vertex of the regular pentagon without using rotation.
+ 
+ <img src="http://gyazo.com/ac08342ce56940d2a376ff6178903fca.png">
+ 
+ So, next time you want to make a rational number library, you don't have to: <a href='http://www.boost.org/doc/libs/1_39_0/libs/rational/index.html'>Boost Rational Number Library </a>
+ 
+ 
+ I wondered if it would be too slow if I made every single pair or something, but premature optimization is the root of all evil. I'm doing void add(const rat &a0, const rat &b0, const rat &a1, const rat &b1, rat &reta, rat &retb) or something like that, but I should stop.
+ 
+ <hr>
+ 
+ It's wrong, but that's the way it is.
+ <img src="http://gyazo.com/0cf2e97e4017b266dc1028fe2ead9b44.png">
+ 
+ <hr>
+ Even more wrong.
+ <img src="http://gyazo.com/9aef468b88b351fdd3fc9063210e1b8a.png">
+ 
+ <hr>
+ I got it. It took about 3 minutes, though I didn't speed up the process. I output the image at 2000x2000 and let the preview shrink.
+ 
+ <img src="http://gyazo.com/c50d0f5d6f8838bf17e76b4b5719f0c2.png">
+ 
+ <hr>
+ When I tried to rotate, I got buggered! This is as good as it gets.
+ <img src="http://gyazo.com/d539592f0843c0ddd817ff8471c50f1e.png">
+ 
+ <hr>
+ Adjustment of composition.
+ I made one calculation error, and this time I realized that "the head of the pentagon formed around the circle in the second generation is just tangent to the top edge" is cleaner than the design "the head of the circle in the second generation is just tangent to the top edge" (in fact, when I drew it, the head of the pentagon was missing and it was not beautiful), so I reworked the formula (In fact, when I drew it, the head of the pentagon was missing, and it was not beautiful. The lower left corner is aligned with the foot of the pentagon in the limit.
+ 
+ <img src="http://gyazo.com/fb30b8b956d07511be4720233ea89623.png">
+ 
+ Eight recursions of 1/4 size takes 1 second, 9 takes 4 seconds, and 10 takes 2 minutes and 30 seconds. The number of circles drawn increases by a factor of 6, so I guess 10 times is slower due to thrashing. So I've been making it with VECTOR, but I'll change it to SET.
+ 
+ It slowed down so much that it didn't finish after a minute with 8 recursions. I wonder if it would be better to use hash_set or something like that. I wonder if it would be better to use hash_set or something like that here... I guess it's kind of expensive since there are about 400,000 target objects at the stage of 8 times recursion.
+ 
+ I've tried profiling but it's purely calculation heavy, I'll replace Rational with something specialized for this purpose and see if it's 10% faster...
+ 
+ <hr>
+ 
+ I went to bed, woke up, and checked to make sure SET couldn't be that slow.
+ >|cpp|
+     for(set<g2d>::iterator it=cur.begin(), end=cur.end(); it != end; ++i){
+ ||<
+ It was a rave infinite loop. After fixing it, it took 10 recursions to finish in 12 seconds.
+ >||
+ next.size(): 5
+ next.size(): 20
+ next.size(): 70
+ next.size(): 226
+ next.size(): 685
+ next.size(): 1995
+ next.size(): 5625
+ next.size(): 15516
+ next.size(): 42120
+ next.size(): 113070
+ ||<
+ Finally, the most terminal circle would have been reduced from 9765625 to 113070 units.
+ </body>
+ <comments>
+ <comment>
+ <username>reggaepunch</username>
+ <body>I see that you touch your computer on the train. <BR>I should learn from you. <BR>What kind of PC do you use on the train? </body>
+ <timestamp>1245333043</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I somehow find myself immersed in the train because of the moderate noise and the deadline effect. <br>The machine I use is a MacBook. </body>
+ <timestamp>1245372020</timestamp>
+ </comment>
+ <comment>
+ <username>reggaepunch</username>
+ <body>Thanks for your response. <BR>A Macintosh? <BR>I happened to go to Apple Ginza today. <BR>The Air is amazing! <BR>It's too thin. <BR><BR>I think you don't need a Mac for programming. <br>What are the advantages of using a Mac? </body>
+ <timestamp>1245429736</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I don't think so, I was a Thinkpad user until 2 years ago. </body>
+ <timestamp>1245448585</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-06-18 https://nishiohirokazu.hatenadiary.org/archive/2009/06/18]

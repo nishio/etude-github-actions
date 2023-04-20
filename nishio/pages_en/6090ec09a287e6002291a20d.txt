@@ -1,0 +1,116 @@
+Hatena2012-04-05
+code:hatena
+ <body>
+ *1333593776*Alloy: I don't know what all means.
+ I'm not sure what you mean by ALL in Alloy.
+ >||
+ enum X {A, B, C}
+ check {
+   all r: X{
+     one r
+   }
+ }
+ ||<
+ I cannot find a counterexample for this. So "all r: X {foo}" means "foo holds for all <span class="deco" style="font-weight:bold;">elements</span> of the set X".
+ 
+ However, if we replace this X with X -> X, the behavior is different.
+ 
+ >||
+ enum X {A, B, C}
+ check {
+   all r: X -> X{
+     one r
+   }
+ }
+ ||<
+ 
+ You can find many counterexamples to this. In other words, "all r: X -> X {foo}" means "foo holds for <span class="deco" style="font-weight:bold;">subset</span> of all 'sets of maps from X to X'".
+ At first I thought X -> X was a set of sets, but that's not the case, it's just a set containing a relation (a tuple of two elements). So the behavior of ALL changes depending on whether the set contains a relation or just a value?
+ 
+ ** Postscript
+ If the target of all is a scalar set, it is possible to have the same behavior as the mathematical symbol for all (by generating a sequence of and's), but if it is not a scalar set, it is not done because doing so might result in too many clauses.
+ 
+ *1333628554*A story about trying to do combinatorial logic in Alloy and it didn't work.
+ I wanted to let Alloy solve some appropriate puzzle, and the first thing that came to mind was "Make I with the combination of S and K", so I implemented it, but before I could find I, I couldn't find a solution that satisfied fact even without any constraints. Why?
+ >||
+ abstract sig Bird{
+ 	apply: Bird -> Bird
+ }
+ 
+ one sig K extends Bird{}
+ 
+ one sig S extends Bird{}
+ 
+ fact {
+ 	all x, y: Bird | K.apply.x.apply.y = x
+ 	all x, y, z: Bird {
+ 		S.apply.x.apply.y.apply.z =
+ 		x.apply.z.apply.(y.apply.z)
+ 	}
+ }
+ 
+ run {} for 10 Bird
+ ||<
+ 
+ I think what's likely is "if the set of birds is finite, there is no solution". Hmmm. Will there be enough birds to remember the state of each of the partially applied S combinators' previous arguments?
+ 
+ *1333636035*Alloy Diary 2: Changing states over time
+ I was going to make a model in which there are multiple people interacting with each other while their states change chronologically (specifically, I was going to make a model in which a man and a woman get married and divorced while their married/unmarried states change, and at first there were not enough constraints so a bigamy occurred, and I was going to correct it). But it was too difficult to handle the state of the marriage, so I gave up on the idea yesterday.
+ 
+ I copied the chapter 6 case study today while waiting for a haircut and on the train home. I kind of got it figured out, so I'll try to implement it. But there's only one person because it still seems confusing when there's more than one person in the room. And that person has three states. From green, he can transition to green and yellow, yellow can immediately transition to red, and red can transition to green and red.
+ 
+ >||
+ open util/ordering[Time]
+ 
+ sig Time {}
+ one sig Person {
+ 	state: State -> Time
+ }
+ 
+ enum State {Green, Yellow, Red}
+ 
+ pred step (t, t' : Time, s: State){
+ 	Person.state.t in Green => Person.state.t' in Green + Yellow
+ 	Person.state.t in Yellow => Person.state.t' in Red
+ 	Person.state.t in Red => Person.state.t' in Green + Red
+ }
+ 
+ fact {
+ 	all t: Time { // only one state exists at each time point
+ 		one Person.state.t
+ 	}
+ }
+ 
+ fact Traces {
+ 	all t: Time - last {
+ 		let t' = t.next {
+ 			all s: State {
+ 				step [t, t', s]
+ 			}
+ 		}
+ 	}
+ }
+ 
+ run {
+ 	all s: State { // exists once for every state
+ 		some s <: Person.state
+ 	}
+ } for 5 Time
+ ||<
+ 
+ Without the "exists at least once for every state" option, I got something that started out red and stayed red, which was no fun. When I fixed it, I got yellow -> red -> red -> red -> green. I'm happy and satisfied. It's getting fun.
+ </body>
+ <comments>
+ <comment>
+ <username>osiire</username>
+ <body>I don't know the details either, but the following reference, 265p. (and the page numbered in the upper right corner), has a relevant description. <br>http://alloy.mit.edu/alloy/documentation/book-chapters/alloy-language-reference.pdf<br><br>---Quotes---<br>Thus, when X is a set, the quantified constraint<br> all x: X | F<br>has x range over scalar values: that is, the constraint F is evaluated for <br>bindings of x to singleton subsets of X.<br>---quote---<br>It says that x moves scalar (singleton) range if X is a set. From this, the first example seems fine. <br>From the next section, it says that in the case of higher-order constraints, we should drop down to the first floor and solve the problem if we can scolemize it. <BR>So I think there will be a counterexample to one r, because the r in all r:X->X will be any of the subsets (not necessarily singletons) of X->X. <BR><BR>There seems to be a statement near the middle of page 17 of the ↓ paper you referenced earlier. <br>http://sdg.csail.mit.edu/pubs/2002/alloy-journal.pdf<br>---Quotes---<br>All quantifiers are first order. The analysis eliminates scalar The analysis eliminates scalar quantifiers by forming explicit conjunctions and disjunctions over all possible values of the bound variable. The analysis eliminates scalar quantifiers by forming explicit conjunctions and disjunctions over all possible values of the bound variable. <br>Skolemization can eliminate some higher-order quantifiers, but Alloy's design is based on the <br>premise that all specifications should be analyzable.<br>--- Citation ---<br>For your information. </body>
+ <timestamp>1333635575</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thanks! I'm not quite sure about the Scoremization, but I see that when you use quantifiers for a set of scalars, the process of creating a Boolean expression to pass to SAT is a mass of and's and or's. It makes sense that it would be hard to do the same thing for a set of relations, because you need N^2 of them. If I think about it in my procedural language brain, licking a subset would be 2^N, which seems huge, but I'm sure it's more convenient from the SAT perspective. </body>
+ <timestamp>1333637755</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-04-05 https://nishiohirokazu.hatenadiary.org/archive/2012/04/05]

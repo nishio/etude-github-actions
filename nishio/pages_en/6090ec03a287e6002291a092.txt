@@ -1,0 +1,123 @@
+Hatena2010-04-10
+code:hatena
+ <body>
+ *1270887517*Pagination in GAE Part 2
+ I figured out how to do Pagination with <a href='http://d.hatena.ne.jp/nishiohirokazu/20100408/1270751829'>Pagination in GAE</a>, but I don't want to write similar code all over the place. I put it all together: each additional place where a Paginated item is displayed adds two sentences to views.py and one line to the template.
+ 
+ The current implementation assumes that the key used for sorting (the order_by argument) is a single db.DateTimeProperty and no more than one post per second, but more generally, this should accept a list and the serialization and deserialization of bookmarks into strings method needs to be able to be passed. Well, I'll make it when I need it.
+ 
+ The default values of the arguments are set to be convenient when you are attaching such properties. This is because I do.
+ >|python|
+ class Item(polymodel.PolyModel):
+     (omitted)
+     created_on = db.DateTimeProperty(auto_now_add=True)
+ ||<
+ 
+ This is how to use it in the view,
+ >|python|
+ def user_page(request, key):
+   (omitted)
+   bookmark = request.args.get("bookmark")
+   items, next = utils.pagination(
+     Item.all().filter("user =", user), bookmark)
+ 
+   return render_to_response(
+     'core/user_page.html', 
+     dict(
+       items=items,
+       next=next))
+ ||<
+ On the template side, just call the macro below. (Jinja2 functionality)
+ >||
+ {{ macro.paginated_items(items, next) }}
+ ||<
+ 
+ This is how the macro is implemented. In general, the "macro to display items" quote that is called in this macro should be able to be passed as an argument. Well, if it becomes necessary, I will do so.
+ >||
+ {% macro paginated_items(items, next) %}
+ {% for item in items %}
+ {{ quote(item) }}
+ {% endfor %}
+ 
+ {% if next %}
+ <a href="?bookmark={{ next }}">next>></a>
+ {% endif %}
+ {% endmacro %}
+ ||<
+ 
+ Source code below
+ >|python|
+ def pagination(query, bookmark=None, order_by="created_on", desc=True, 
+                page_size=10):
+     if desc:
+         param_for_order_by = "-" + order_by
+         param_for_filter = order_by + " <="
+     else:
+         param_for_order_by = order_by
+         param_for_filter = order_by + " >="
+     
+     if bookmark:
+         import datetime
+         bookmark = datetime.datetime.strptime(bookmark, "%Y%m%d%H%M%S")
+         items = (query.order(param_for_order_by)
+                  .filter(param_for_filter, bookmark)
+                  .fetch(page_size + 1))
+     else:
+         items = (query.order(param_for_order_by)
+                  .fetch(page_size + 1))
+         
+     next = None
+     if len(items) == page_size + 1:
+         next = getattr(items[-1], order_by).strftime("%Y%m%d%H%M%S")
+     
+     items = items[:page_size]
+     return items, next
+ ||<
+ 
+ *1270907826* comments all over the place
+ After intense abstraction, I was able to create a code with a comment ratio at a level that was surprising to me, as I do not write many comments.
+ 
+ PS: When the level is HARD and the renderer is shuffled, the ? is not codom, so I think the way to generate bogus is wrong.
+ >|python|
+     # Choose a unary generator opgen
+     opgen = choice(opgens)
+     # opgen as an argument and chooses the definition region dom of the operation.
+     dom = opgen.get_domain()
+     # Make 3 arguments arg of unary operation from the domain dom of unary operation
+     args = [dom.get_instance() for i in range(3)]
+ 
+     # Create opgen parameter definition region param_dom with opgen and dom as arguments
+     param_dom = opgen.get_param_dom(dom)
+     # Create three unary operation parameters param from param_dom,
+     params = [param_dom.get_instance() for i in range(3)]
+     # Pass param to unary generator opgen to create 3 concrete unary op
+     ops = [opgen.get_instance(p) for p in params]
+     # Pass each unary op with its respective argument arg to create the result of the operation result
+     results = [op(arg) for (op, arg) in zip(ops, args)]
+     correct_answer = results[2]
+ 
+     # Create the resultant domain codom from opgen and argument domain dom (for creating false answers)
+     codom = opgen.get_codom(dom)
+     # Make 5 false answer bogus
+     bogus = []
+     while len(bogus) < 5:
+         v = codom.get_instance()
+         if v != correct_answer:
+             bogus.append(v)
+ 
+     # Give opgen dom, param_dom, codom and make renderer for each
+     dom_ren, pdom_ren, codom_ren = opgen.get_renderer(dom, param_dom, codom)
+     renderers = [lambda cont, i: dom_ren(cont, args[i]),
+                  lambda cont, i: pdom_ren(cont, params[i]),
+                  lambda cont, i: codom_ren(cont, results[i])]
+     if HARD: renderers = shuffled(renderers)
+ ||<
+ 
+ And considering the number of errors we made while debugging this range, there was one bug per line (oh).
+ 
+ Wow, it worked!
+ <img src="http://gyazo.com/6dd4fccabd6359d53ae2a44ec0a41c8a.png">
+ In this example, t -> t -> t is still a t -> t function, so the benefit of this level of abstraction is not yet realized, but now that the framework has been created to allow t1 -> t2 -> t3, I look forward to the concrete implementation in the future.
+ </body>
+
+[Hatena Diary 2010-04-10 https://nishiohirokazu.hatenadiary.org/archive/2010/04/10]

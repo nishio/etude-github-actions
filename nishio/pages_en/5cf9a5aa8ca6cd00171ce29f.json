@@ -1,0 +1,14 @@
+BOT exit messages and their side effects
+In heroku, the server will shut down in 30 minutes if there is no access.
+So I added a function to bots deployed on heroku that sends "sleeping..." when it finishes. at the end of the deployment.
+code:python
+ import atexit
+ @atexit.register
+ def exit():
+     requests.post("<URL>", json=dict(text="(heroku)sleeping..."))
+
+But this message is sent to heroku, and as soon as I go to sleep, it wakes me up.
+[https://gyazo.com/aa0923655535fd9834c40ee92c14edbe]
+
+I was wasting my free slots by repeatedly going to sleep and waking up every 30 minutes throughout the night, so I decided to quit.
+

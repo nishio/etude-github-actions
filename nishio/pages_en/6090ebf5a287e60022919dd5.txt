@@ -1,0 +1,563 @@
+Hatena2008-01-28
+code:hatena
+ <body>
+ Indentation in *1201488453*actionscript-mode.el: Solution
+ I'm using actionscript-mode.el, but I'm having a lot of trouble getting the layout to look like the code below.
+ >|actionscript|
+ 	graphics.moveTo(
+ 					v0.car.x + v0.car.width / 2,
+ 					v0.car.y + v0.car.height / 2
+ 					);
+ ||<
+ I got a trackback from odz, so I tried it. (For some reason, the entry has disappeared.)
+ 
+ GNU Emacs Manual: Changing Indent Style
+ http://www.geocities.co.jp/SiliconValley-Bay/9285/EMACS-JA/emacs_256.html
+ 
+ If you think the indentation is wrong, "M-x c-set-offset" (or C-c C-o) will prompt you for a name that means its syntactic position, like "Syntactic symbol to change: arglist-close". You can just enter here. Next, you will be asked to specify the indentation of the position, like "arglist-close offset (default c-lineup-arglist):". In my case, I set "arglist-intro" (lines 2 and 3) to "+" and "arglist-close" (line 4) to "0".
+ 
+ *1201511605*Geek Set Restaurant
+ Inherit the A set meal and override the miso soup with pork miso soup.
+ 
+ *1201514067*Golden Division Method
+ I made it in Python, which I was familiar with, before implementing it suddenly in ActionScript.
+ 
+ First, find the golden ratio.
+ >|python|
+ >>> from math import sqrt
+ >>> sqrt(5)
+ 2.2360679774997898
+ >>> sqrt(5) / 2 + 0.5
+ 1.6180339887498949
+ >>> GOLD = _
+ ||<
+ 
+ Check that the inverse of the golden ratio and the golden ratio minus 1 coincide (just in case).
+ 
+ >|python|
+ >>> 1 / GOLD
+ 0.61803398874989479
+ >>> GOLD - 1
+ 0.6180339887498949
+ ||<
+ 
+ 1 / GOLD / GOLD to G2.
+ >|python|
+ >>> (GOLD - 1) / GOLD
+ 0.38196601125010515
+ >>> 1 / GOLD / GOLD
+ 0.3819660112501051
+ >>> G2 = _
+ ||<
+ 
+ I made a function that takes a minimum value when a is 0.3, but this is a secret.
+ >|python|
+ >>> def foo(x):
+ 	return (x - a) ** 2
+ 
+ >>> a = 0.3
+ ||<
+ 
+ Create a function to find the minimum value by search.
+ 
+ >|python|
+ >>> def search(start, end):
+ 	diff = end - start
+ 	a = start + G2 * diff
+ 	b = end - G2 * diff
+ 	fa = foo(a)
+ 	fb = foo(b)
+ 	for i in range(10):
+ 		print "f(%f)=%f, f(%f)=%f" % (a, fa, b, fb)
+ 		if fa < fb:
+ 			end = b
+ 			b = a
+ 			fb = fa
+ 			diff = end - start
+ 			a = start + G2 * diff
+ 			fa = foo(a)
+ 		else:
+ 			start = a
+ 			a = b
+ 			fa = fb
+ 			diff = end - start
+ 			b = end - G2 * diff
+ 			fb = foo(b)
+ 
+ 			
+ >>> search(0, 1)
+ f(0.381966)=0.006718, f(0.618034)=0.101146
+ f(0.236068)=0.004087, f(0.381966)=0.006718
+ f(0.145898)=0.023747, f(0.236068)=0.004087
+ f(0.236068)=0.004087, f(0.291796)=0.000067
+ f(0.291796)=0.000067, f(0.326238)=0.000688
+ f(0.270510)=0.000870, f(0.291796)=0.000067
+ f(0.291796)=0.000067, f(0.304952)=0.000025
+ f(0.304952)=0.000025, f(0.313082)=0.000171
+ f(0.299927)=0.000000, f(0.304952)=0.000025
+ f(0.296821)=0.000010, f(0.299927)=0.000000
+ ||<
+ 
+ I was able to get close to 0.299927 just by calling foo 11 times (the secret answer was 0.3, right?!).
+ 
+ -----
+ 
+ I debugged it in Python, which I was familiar with, so porting it to ActionScript was a snap.
+ I made it a function when it should have been a function, so it's not a one-shot deal.
+ 
+ >|actionscript|
+ class GoldenRatioSearch{
+   public static var G2:Number = 0.38196601125010515;
+   public static function search(f:Function):Number{
+ 	var diff:Number = 1.0;
+ 	var start:Number = 0.0;
+ 	var end:Number = 1.0;
+ 	var a:Number = start + G2 * diff;
+ 	var b:Number = end - G2 * diff;
+ 	var fa:Number = f(a);
+ 	var fb:Number = f(b);
+ 	for(var i:int=0; i < 10; i++){
+ 	  if(fa < fb){
+ 		end = b;
+ 		b = a;
+ 		fb = fa;
+ 		diff = end - start;
+ 		a = start + G2 * diff;
+ 		fa = f(a);
+ 	  }else{
+ 		start = a;
+ 		a = b;
+ 		fa = fb;
+ 		diff = end - start;
+ 		b = end - G2 * diff;
+ 		fb = f(b);
+ 	  }
+ 	}
+ 	if(fa < fb){
+ 	  return a;
+ 	}
+ 	return b;
+   }
+ }
+ ||<
+ 
+ -----
+ At any rate, I think I'll take this as a souvenir and <del datetime="2008-01-28T21:19:11+09:00">punch in</del> to the Spark Project and apply to participate.
+ 
+ *1201516524*Good wife
+ When I see dropdb happy to say that they are number one when I google "good wife", I want to see how disappointed they are when their good wife turns out to be someone else (yeah!).
+ Can I just link to someone who seems to have a high page rank with a "good wife"? [<s>Good Wife</s>]
+ 
+ -----
+ Yoshiori and amachang are following right away.
+ 
+ -----
+ dr*pdb is fighting back with hateful comments, but in all likelihood, it's an act of self-destruction.
+ http://b.hatena.ne.jp/entry/http://d.hatena.ne.jp/cactusman/20080128/p1
+ http://b.hatena.ne.jp/entry/http://d.hatena.ne.jp/amachang/20080128/1201521271
+ 
+ -----
+ I can't sit on the last train, so I'm leaving now, but I'll be hatting about all the trackbacked entries when I get home.
+ 
+ -----
+ I'm home.
+ dr*pdb tries to drop me with colorful tricks like "ehn><". I'm going to lose. But I'm not going to lose! (><
+ 
+ >>
+ dr*pdb That's terrible. (If you lose the "good wife" from me, you're just an airhead.......
+ <<
+ 
+ No, it's okay, you know, it's fun!
+ 
+ -----
+ Ugh, shoot, I'm becoming a good wife, not Mr. Bullet. I can't help it, I'll take it sweetly to take the first place away from dr*pdb. Good wife! Good wife! Good wife!
+ 
+ -----
+ I am astonished that goodwife.info is already taken
+ 
+ -----
+ http://d.hatena.ne.jp/r-yam/20080128/1201537308
+ >>
+ I wasn't sure, so I asked Hatena.
+ <<
+ 
+ The results of the Hatena Human Resource Survey overwhelmingly concluded that dankogai is a good wife. w
+ 
+ -----
+ f:id:nishiohirokazu:20080129112237p:image
+ 
+ Yay!
+ Winner.
+ Thank you all for your cooperation!
+ 
+ -----
+ To be honest, if I had realized it a minute later, I would have "popped it" to make my next move.
+ f:id:nishiohirokazu:20080129113017p:image
+ 
+ -----
+ No longer a good wife. - $ dropdb Life
+ http://d.hatena.ne.jp/dropdb/20080129/1201572325#c
+ >>
+ It's okay. It's okay.
+ <<
+ I'm starting to feel sorry for you....
+ 
+ Don't worry, I'm still #1 in the "generally beautiful category"!
+ 
+ -----
+ f:id:nishiohirokazu:20080129145042p:image
+ 
+ My "Why I'm not a good wife anymore" entry is OVERRIDED by my "Why I'm not a good wife" entry.
+ Too much self-destructive behavior.
+ 
+ -----
+ From the oblique side
+ http://d.hatena.ne.jp/asami81/20080129/p1
+ >>
+ Good wife = asami81
+ <<
+ The attack that W
+ 
+ -----
+ f:id:nishiohirokazu:20080129185817p:image
+ 
+ Hey, hey, id:yoshiori has taken the "generally beautiful category" (><)
+ Congratulations to yoshiori for being in the category of generally beautiful women.
+ 
+ -----
+ 
+ I'm getting tired of playing "good wife" by now, so I decided to give it back to you. <a href="http://d.hatena.ne.jp/dropdb/">Good Wife</a>.
+ 
+ -----
+ <a href="http://d.hatena.ne.jp/nishiohirokazu/20080131/1201763374">Return Complete</a>
+ 
+ *1201521857*ActionScript comprehension test solved.
+ -BeInteractive! [ActionScript comprehension test].
+ --http://www.be-interactive.org/?itemid=145
+ 
+ I'm new to ActionScript, but I tried to solve it.
+ I'll start with my scoring results so as not to spoil it for those who haven't solved it yet:
+ 
+ 1:
+ ○
+ ○
+ 2:
+ ○
+ ○
+ 3:
+ ○
+ 4:
+ ○
+ ○
+ 5:
+ ○
+ ○
+ 6:
+ ○
+ ○
+ 7:
+ ○
+ ×
+ 8:
+ ○
+ 9:
+ ○
+ ○
+ 10:
+ ○
+ ○
+ 11:
+ ×
+ 12:
+ ×
+ 13:
+ ×
+ ○
+ 14:
+ ○
+ ○
+ ○
+ ×
+ ×
+ 15:
+ ○
+ 16:
+ ○
+ 17:
+ ×
+ 18:
+ ○
+ 19:
+ ×
+ 20:
+ ×
+ 
+ No partial points (0 points if not completely correct), 12 correct answers out of 20 questions, 60 points.
+ It turns out that Python knowledge is somewhat useful for ActionScript, too. w
+ 
+ 
+ Below are the impressions I wrote while solving and grading the puzzles.
+ 
+ 1
+ C knowledge that postfix increment returns the value before the increment.
+ [Correct answer]
+ 
+ 2
+ The case that substitution is not copying. Fundamentals.
+ [Correct answer]
+ 
+ 3
+ Mm? As a Pythonista, I can honestly think that f = o.f will put the method object already bound to the instance into f, but you're assigning it to a Function type in ActionScript.... I wonder if the information of the bound instance is lost.
+ [Correct answer]
+ 
+ 4
+ Short-circuit operators; C language basics.
+ [Correct answer]
+ 
+ 5
+ This is also a short circuit operator. b = f2() is not evaluated.
+ [Correct answer]
+ 
+ 6
+ This is either pass-by-reference or pass-by-value, or if you like the confusing terminology, "pass-by-value of reference," or something like that.
+ [Correct answer]
+ 
+ 7
+ Talking about whether the block makes scope or not. Don't know.
+ But if the scope is not created, I think I get a compile error due to duplicate variable definitions.
+ [Incorrect]
+ >>
+ ECMAScript blocks do not have the ability to generate new scopes.
+ <<
+ I see. I tried it and found that if the type of variable I declare inside and outside the block is different, I get a compile error, but not if they are the same. I see.
+ 
+ 8
+ The question is whether the assignment to the attributes of the instance is written to the prototype or not. It cannot be written.
+ [Correct answer]
+ 
+ 9
+ I'm talking about whether the way variable names are resolved is lexical or what. I think it is lexical. If it is lexical, then b is 1.
+ [Correct answer]
+ 
+ 10
+ Whether to pollute the global space when not declaring a var. It does pollute, so be careful, I learned it in JavaScript.
+ [Correct answer]
+ 
+ 11
+ Nothing is too difficult.
+ [incorrect orz].
+ >>
+ ECMAScript does not allow functions to be defined within blocks. Therefore, functions are treated as if they do not exist.
+ <<
+ Mmm. I see.
+ 
+ 12
+ Nothing difficult. Oh, it's for people who are not used to making functions in such a place.
+ [Incorrect (vomiting blood)
+ >>
+ Unnamed functions cannot be called on the fly.
+ <<
+ http://f-site.org/articles/2004/08/23074843.html
+ >>
+ In JavaScript, it seems to work fine.
+ <<
+ Mmm.
+ 
+ 13
+ Hmmm. This is where a = 4, 5, 6 would be interpreted as a tuple a = (4, 5, 6) in Python, but I don't think EcmaScript has a tuple. I think this is just a meaningless parenthesis that is actually passed to TRACE as a variable length argument.
+ [Incorrect]
+ It seems to be a comma operator. I thought it would display "456", but it only displayed "6".
+ 
+ 14
+ This is indeed not clear. I think String(undefined) is going to be undefined at the end.
+ I just found out that there is a null string, so I wonder if String(null) is "null". Does it become an empty string?
+ To begin with, if the last String(undefined) is undefined, does "undefined" == undefined become false or undefined?
+ I thought so when I saw #15.
+ [Incorrect]
+ Only the last two are not true, which was true, but null exists, and the comparison operation with undefined is not undefined.
+ 
+ 15
+ Isn't this normally false, with True being undefined?
+ [Correct answer]
+ 
+ 16
+ Let's see... Is it -1?
+ [Correct answer]
+ Subtle; I didn't know in the first place whether EcmaScript had long integers or not.
+ 
+ 17
+ Wow. If you put this in the question, that means it's uniquely determined. I'm a very naive person, so I don't consider the possibility that "the constructor's assignment to b is a grand fishing expedition, and the correct answer is abc order. If that is the case, the last assignment will come first.
+ No. Maybe the last referenced one also comes before? Mm?
+ [Incorrect]
+ Well, the question was asking whether the instance or the prototype has it....
+ 
+ 18
+ The question is whether class members are initialized at the time of class definition or at the time of instantiation. I think so, but I am suspicious that you are making this an issue all the way through.
+ [Correct answer]
+ Be careful.
+ 
+ 19
+ What's that? What's this?
+ It's straightforward when you think about it....
+ The fact that this is a problem is due to a special method around start,
+ Like it will be called on its own after the instance is created?
+ [Incorrect]
+ 
+ 20
+ If you think about it honestly, it's the same problem as the first one.
+ [Incorrect]
+ 
+ *1201534814* eplus registration in progress
+ You make me enter my credit card number, but your password is limited to alphanumeric characters and 4 to 11 characters, what are you thinking?
+ Why do they only accept full-width addresses?
+ You're cutting corners in that area, so why are you implementing something that makes no sense, like the mouse cursor changing to something that is not an I-beam on the input field?
+ Why does it scroll to the top of the page when I fill out the form and hit the confirm button?
+ If it wasn't to get a ticket to Rahmens, I would have left on the way.
+ 
+ *1201539815*Reuse Haskell show
+ http://d.hatena.ne.jp/hoge1e3/20080128
+ >>
+     * Normally, use the default show
+     * I want to customize the show for some classes.
+ <<
+ 
+ I tried to make it a show instead of a toString.
+ 
+ >|haskell|
+ data Pair = Pair {car::Pair, cdr::Pair} | Null | Value Int
+ 
+ instance Show Pair where
+     show (Pair x y) = "(" ++ show x ++ " . " ++ show y ++ ")"
+     show Null = "()"
+     show (Value x) = show x
+ 
+ 
+ main = putStrLn $ show $ (Pair (Value 1) (Pair (Value 2) Null))
+ ||<
+ 
+ I was a Java user myself, so I kind of understand,
+ data Foo ..... deriving Show.
+ class Foo extends Show
+ It's a mistake to think like that, and the equivalent is more like.
+ instance Show Foo where ...
+ I think it is.
+ </body>
+ <comments>
+ <comment>
+ <username>amachang</username>
+ <body>The override fee will be 50 yen</body>.
+ <timestamp>1201511726</timestamp>
+ </comment>
+ <comment>
+ <username>earth2001y</username>
+ <body>Virtual function "soup thing"</body>.
+ <timestamp>1201511999</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>"Can we have salad instead of miso soup?" <body>"Type incompatibility.
+ <timestamp>1201513654</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <BODY>It's terrible! It's terrible! <Body>Wait a minute! You're in second place now!
+ <timestamp>1201523144</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <body> and the second place was Nishio-san! I was so surprised! <BR><BR><BR>What's going to happen when Nishio-san comes in second?
+ <timestamp>1201523208</timestamp>
+ </comment>
+ <comment>
+ <username>yossy44</username>
+ <body>Wow, another thing I missed. This is from AS2, so there are many things that have been fixed or changed in AS3 that require further attention. <br>Bugs #12 and #19 have been fixed, and #18 has also been fixed so that it is initialized at instantiation. <br>No. 7 has a warning about duplicate declarations. 8, __proto__, is gone. Number 8, __proto__, is gone; rather, doing things with prototypes is now deprecated. <br>No.11 can now be declared. No.14 now gives a "there is no method for null or undefined" error. <br>17 has been changed so that only properties added later to a class with a dynamic declaration are enumerated. </body>
+ <timestamp>1201523868</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I didn't expect myself to be a good wife</body>.
+ <timestamp>1201532830</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>But, well, I wouldn't mind being a good wife myself if I could kick it down to second place</body>.
+ <timestamp>1201533383</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>I'm quite surprised that 12 was once not possible, JSDeferred is full of 12. </body>
+ <timestamp>1201538284</timestamp>
+ </comment>
+ <comment>
+ <username>hirose31</username>
+ <body>If it smells like miso soup and drinks like miso soup, then it is miso soup. </body>
+ <timestamp>1201566641</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <body>>>The results of the survey showed that dankogai is overwhelmingly a good wife<br>This is... the moment when a true good wife is born... </body>.
+ <timestamp>1201568433</timestamp>
+ </comment>
+ <comment>
+ <username>TOKOROTEN</username>
+ <body>Orders are stacked<br>and processed from those who ordered later</body>.
+ <timestamp>1201572211</timestamp>
+ </comment>
+ <comment>
+ <username>amachang</username>
+ <body>Won! </body>
+ <timestamp>1201578185</timestamp>
+ </comment>
+ <comment>
+ <username>Youchan</username>
+ <body>Nishio said<br><br>"Even if Google and Hatena don't approve, <br><br>I think dropdb is a good woman for me and <br><br>I think she would make a good wife." <br><br>I think you should tell her! </body>
+ <timestamp>1201581543</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>I think you should tell him! <BR><BR>Yeah</BODY>.
+ <timestamp>1201585596</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <body>Hidosuwww ↑<br><br>Asami is a good wife? It's frustrating because she's a real wife. I'm so frustrated because she's a real wife! </body>
+ <timestamp>1201587923</timestamp>
+ </comment>
+ <comment>
+ <username>asami81</username>
+ <body><body>Wow, it's not an attack, it's a coincidence...<br><br><br>At any rate, Memo: Yasukazu Nishio is also a Dosi</body>.
+ <timestamp>1201588660</timestamp>
+ </comment>
+ <comment>
+ <username>Yoshiori</username>
+ <body>Wow. I'm not aiming for beauty in general.
+ <timestamp>1201600951</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <body>Oh, forget it... I'll just give up on the "2chan-savvy wife" thing! </body>
+ <timestamp>1201601611</timestamp>
+ </comment>
+ <comment>
+ <username>cactusman</username>
+ <body>Yoshiori Hidos</body>.
+ <timestamp>1201601613</timestamp>
+ </comment>
+ <comment>
+ <username>hoge1e3</username>
+ <body>Thank you. <br>I thought "instance" referred to an object, but it is more correct to think of it as an inheritance <br>class Foo extends Show <br>or <br>class Foo implements Show <br>. </body> <br><br>Class Foo extends Show <br>or <br>class Foo implements Show <br>. </body>
+ <timestamp>1201611707</timestamp>
+ </comment>
+ <comment>
+ <username>dropdb</username>
+ <body>>>I got tired of playing with him, so he played with me and dumped me.
+ <timestamp>1201616366</timestamp>
+ </comment>
+ <comment>
+ <username>hirose31</username>
+ <body>We're not done yet<br>http://www.baidu.jp/s?wd=%E3%81%84%E3%81%84%E5%AB%81&ie=utf-8</body>
+ <timestamp>1201632507</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-01-28 https://nishiohirokazu.hatenadiary.org/archive/2008/01/28]

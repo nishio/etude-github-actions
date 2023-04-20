@@ -1,0 +1,89 @@
+Hatena2009-04-11
+code:hatena
+ <body>
+ *1239413624*Good navigation
+ 
+ f:id:nishiohirokazu:20090411103344j:image
+ 
+ Unfortunately, I was unaware of this navigation system and walked from one end of the platform to the other, walked up the stairs, and said, "Hey, there's only a ticket gate.
+ 
+ *1239429564*[GAE] I made a template creation script for myself.
+ It is a waste to use only 10 application slots of Google App Engine to create a small web app. /manage.py startapp foo, you can run several applications in one application framework, and it's easy to make independent apps. But the default . /manage.py startapp doesn't create the URL dispatch file used by app-engine-patch. So I wrote a script to automate the tedious work. Well, I made it for my own convenience, so it's very personalized. /startapp.py and put in the project name and title, then create urls.py, urlsauto.py and templates/index.html, add a view in views.py that just displays index.html, and write the app in settings.py. Add
+ 
+ >|python|
+ #!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+ """
+ startapp with my template
+ """
+ 
+ import os
+ appname = raw_input("appname> ")
+ title = raw_input("title> ")
+ 
+ os.system("python manage.py startapp %s" % appname)
+ 
+ file(os.path.join(appname, "urlsauto.py"), "w").write("""\
+ # -*- coding: utf-8 -*-
+ from django.conf.urls.defaults import *
+ 
+ urlpatterns = patterns('',
+     (r'^%(appname)s/', include('%(appname)s.urls')),
+ )
+ """ % globals())
+ 
+ file(os.path.join(appname, "urls.py"), "w").write("""\
+ # -*- coding: utf-8 -*-
+ from django.conf.urls.defaults import *
+ 
+ urlpatterns = patterns('%(appname)s.views',
+     (r'^$', 'index'),
+ )
+ """ % globals())
+ 
+ file(os.path.join(appname, "views.py"), "a").write("""
+ def index(request):
+     return render_to_response(
+         request, 
+         '%(appname)s/index.html',
+         dict())
+ """ % globals())
+ 
+ file(os.path.join(appname, "templates", "index.html"), "w").write(("""\
+ {@ extends '_base.html' @}
+ {@ block title @}%(title)s{@ endblock @}
+ 
+ {@ block content @}
+ <a href="{@ url %(appname)s.views.index @}"><h1>%(title)s</h1></a>
+ {@ endblock @}
+ """ % globals()).replace("@", "%"))
+ 
+ data = file("settings.py").read().replace(
+     "# add my application here",
+     "'%(appname)s',\n    # add my application here" % globals()
+ )
+ 
+ file("settings.py", "w").write(data)
+ ||<
+ 
+ *1239462519*Drawing of the Day "What's this?"
+ <img src="http://gyazo.com/366be043d99aff93a2763ea8f561b37c.png">
+ 
+ Maybe I should leave all the white circles as black circles to make the second one from the bottom natural... Well, whether the circles are black or white is not essential.
+ 
+ 
+ I'll nominate a respondent without weighing myself > id:moriyoshi id:jbking id:takano32
+ 
+ Oh, the long horizontal line is not about division or symmetry between the top and bottom, it's just that the top three are the more important and famous ones, and since I drew them, I also drew the accessory ones and drew a line in between.
+ 
+ 
+ <img src="http://gyazo.com/2069cd0e6b6b3e5d9a90997637a8194e.png">
+ I also made a black version. I still think this one is better.
+ - What is the black square in the center?
+ - What is the white square in the center?
+ - > something like that.
+ - Something like +.
+ And the question becomes simple. In the first picture, you have to say "a square with things inside".
+ </body>
+
+[Hatena Diary 2009-04-11 https://nishiohirokazu.hatenadiary.org/archive/2009/04/11]

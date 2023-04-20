@@ -1,0 +1,41 @@
+Hatena2013-04-14
+code:hatena
+ <body>
+ *1365926344*Digging into Verilog HDL
+ Here is the Verilog HDL code that says "Each time a switch is pressed, the value of a 4-bit register is increased by 1, which is then displayed by an LED.
+ >||
+ module Tiny(switch, led);
+   input switch;
+ 	output [3:0] led;
+ 	reg [3:0] x;
+  
+ 	always @(posedge switch) begin
+ 		x = x + 1;
+ 	end
+ 	assign led[3:0] = x;
+ endmodule
+ ||<
+ 
+ This is what it looks like when displayed in RTL Viewer. The level of abstraction does not change much at the time of this diagram.
+ 
+ [f:id:nishiohirokazu:20130414165726p:image]
+ 
+ When this is displayed in Technology Map Viewer, the figure is quite different in level of abstraction.
+ [f:id:nishiohirokazu:20130414165857p:image]
+ 
+ A portion of the box is enlarged to show some of the contents of the box, which are initially hidden. This box (and the flip-flop following it) corresponds to one physical logic element.
+ [f:id:nishiohirokazu:20130414165855p:image]
+ 
+ If you select a box, you can see a Karnaugh diagram, for example. In the previous diagram, the table was represented as a combination of AND and XOR, but in reality it is a table of boolean values, which is represented as a logic circuit or as a Karnaugh diagram. The physical logic element contains a LUT (Look Up Table) that reads the table of true/false values written to RAM and returns the result.
+ [f:id:nishiohirokazu:20130414170537p:image]
+ 
+ If you view this box in the Resource Property Editor with it selected, you can drill down further into the logic elements. The trapezoidal symbol is "<a href='http://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%AB%E3%83%81%E3%83%97%E3%83%AC%E3%82%AF%E3%82%B5'>multiplexer</a>. What you see here is not only the area circled by the red line in the previous figure, but also a set of flip-flops that were connected afterwards.
+ 
+ [f:id:nishiohirokazu:20130414170536p:image]
+ 
+ When I first saw XOR and AND, I made a quick assumption that it was a half adder, and that didn't explain the wiring. The output was a much smarter circuit than I thought. In short, you don't need to make an adder to achieve "add 1"; for the least significant bit, "invert the least significant bit" will add 1; for the second bit, "invert if the least significant bit is 1" will do; for the third bit, "invert if the least significant bit and the second bit are 1" will do. That's why we have AND and XOR.
+ 
+ In this experiment, the width of the register happened to be 4 bits, so even the topmost bit could be represented by a 4-input logic circuit. If the width is increased, one logic element should not be enough to express "all bits below me are 1". It would be interesting to investigate what kind of circuit would be output at that time.
+ </body>
+
+[Hatena Diary 2013-04-14 https://nishiohirokazu.hatenadiary.org/archive/2013/04/14]

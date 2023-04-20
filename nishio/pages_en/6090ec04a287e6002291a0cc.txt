@@ -1,0 +1,276 @@
+Hatena2010-06-22
+code:hatena
+ <body>
+ *1277208908*Haskell's "fib = 1:1:zipWith (+) fib (tail fib)" is very slow
+ Here is a brief summary of what we talked about over lunch with Mr. Mitsunari and Ms. Nakatani at the lab.
+ It all started, I think, when Mitsunari-san, who has been studying Haskell recently, made a terrible mistake about Haskell's cool sieve being actually very slow (<a href='http://d.hatena.ne.jp/camlspotter/20100128/1264678903'>I'm a Haskell sieve I guess I had a terrible misconception about... </a>), and I think the story was that he looked up the speed of the following Fibonacci sequence definition, which is similarly cool but slow, and found it to be on the order of 2.5 powers or so.
+ 
+ >|haskell|
+ fib = 1:1:zipWith (+) fib (tail fib)
+ ||<
+ 
+ I also wrote a code to find the Nth Fibonacci number in the Fibonacci sequence, given N as a command line argument, to confirm.
+ 
+ >|haskell|
+ import System
+ 
+ fib = 1:1:zipWith (+) fib (tail fib)
+ 
+ main = do
+   args <- getArgs
+   print $ (0 *) $ (fib !!) $ read $ args !! 0
+ ||<
+ 
+ The (0 *) is added to display a large string of numbers on the console, because if it takes too long to measure what you want to measure, you will not be able to measure what you want to measure. The Haskell processor does not know this, so it calculates the fib properly and then multiplies it by 0 to display the resulting 0. Compile this with ghc -O3. If you run it as it is, it will die with the error "Stack space overflow", so run it with +RTS -K200M.
+ 
+ >||
+ $ time ./a.out 100000 +RTS -K200M
+ 0
+ 
+ real	0m1.080s
+ user	0m1.045s
+ sys	0m0.029s
+ 
+ $ time ./a.out 200000 +RTS -K200M
+ 0
+ 
+ real	0m6.420s
+ user	0m6.313s
+ sys	0m0.072s
+ 
+ $ time ./a.out 300000 +RTS -K200M
+ 0
+ 
+ real	0m18.477s
+ user	0m18.264s
+ sys	0m0.145s
+ ||<
+ 
+ This is roughly on the order of O(N ** 2.6). Incidentally, fib(1000000) was interrupted because it did not finish after 5 minutes.
+ 
+ >|python|
+ >> log(6.42 / 1.08) / log(2)
+ 2.5715419849588343
+ 
+ >> log(18.477 / 6.42) / log(1.5)
+ 2.6071505945442417
+ ||<
+ 
+ At this point, I knew that Wikipedia's statement that "the following definition generates a list of Fibonacci sequences in linear time" was untrue. I could have ended there, but I still had some lunch left, so the topic turned to "how long has this incorrect statement been around?
+ 
+ That can be found by looking at the history, and this is what I found. <a href="http://ja.wikipedia.org/w/index.php?title=Haskell&diff=6496514&oldid=6110644">Updated July 5, 2006</a>. And the comments on this update show that it was translated from the English version. If you look at the English version at the time, it does indeed say linear. And <a href="http://en.wikipedia.org/w/index.php?title=Haskell_%28programming_language%29&diff=342998324&oldid=342993329">in February 2010. <a href="">Modified in February 2010</a>." From "linear time" to "efficient implementation"...efficient compared to what?
+ 
+ By the way, let's write a simple looping code in Python.
+ 
+ >|python|
+ import sys
+ 
+ def fib(n):
+     if n == 0 or n == 1: return 1
+     x = y = 1
+     while n > 1:
+         x, y = y, x + y
+         n -= 1
+     return y
+         
+         
+ print 0 * fib(int(sys.argv[1]))
+ ||<
+ 
+ The results of this run are shown below. Surprisingly, it is slightly faster than Haskell at N = 100000 and more than twice as fast at N = 300000. In fact, the Haskell code is so slow that it loses to the interpreter Python, even though it has been compiled.
+ 
+ >||
+ $ time python fib.py 100000
+ 0
+ 
+ real	0m0.968s
+ user	0m0.937s
+ sys	0m0.013s
+ 
+ $ time python fib.py 200000
+ 0
+ 
+ real	0m3.687s
+ user	0m3.658s
+ sys	0m0.016s
+ 
+ $ time python fib.py 300000
+ 0
+ 
+ real	0m8.205s
+ user	0m8.169s
+ sys	0m0.020s
+ 
+ $ time python fib.py 1000000
+ 0
+ 
+ real	1m31.549s
+ user	1m29.910s
+ sys	0m0.148s
+ ||<
+ 
+ This is on the order of about O(N ** 2).
+ 
+ >|python|
+ >> log(3.687 / 0.968) / log(2)
+ 1.9293684638192232
+ 
+ >> log(8.205 / 3.687) / log(1.5)
+ 1.9728716214877173
+ 
+ >> log(91.549 / 8.205) / log(10 / 3.0)
+ 2.0034760044903011
+ ||<
+ 
+ The reason why it is on the order of squares instead of O(N) is because the Fibonacci number increases on the order of O(1.618 ** N), so the number of digits of that number increases on the order of O(N), and the time required for each addition increases on the order of O(N). Therefore, the method of sequential addition can only be done up to the order of squared numbers. But where did the 0.6 in Haskell's 2.6 power come from?
+ 
+ I wrote an EFFICIENT code in Haskell. I did my own tail recursion in Haskell.
+ 
+ >|haskell|
+ import System
+ 
+ fib 0 = 1
+ fib 1 = 1
+ fib n = fib' n 1 1
+ 
+ fib' 1 _ y = y
+ fib' n x y = fib' (n - 1) y (x + y)
+ 
+ main = do
+   args <- getArgs
+   print $ (0 *) $ fib $ read $ args !! 0
+ ||<
+ 
+ This is 10 times faster than the rustic Python code, and it's properly on the order of squared.
+ 
+ >||
+ $ time ./a.out 100000
+ 0
+ 
+ real	0m0.088s
+ user	0m0.075s
+ sys	0m0.006s
+ etude$ time ./a.out 200000
+ 0
+ 
+ real	0m0.346s
+ user	0m0.329s
+ sys	0m0.011s
+ etude$ time ./a.out 300000
+ 0
+ 
+ real	0m0.814s
+ user	0m0.789s
+ sys	0m0.019s
+ ||<
+ 
+ >|python|
+ >> log(0.346 / 0.088) / log(2)
+ 1.9751966089994275
+ 
+ >> log(0.814 / 0.346) / log(1.5)
+ 2.1099758618849926
+ ||<
+ 
+ ** Summary
+ - Haskell's famous definition of the Fibonacci sequence "fib = 1:1:zipWith (+) fib (tail fib)" is described as "linear time" in Wikipedia, which is not true
+ - The English version says "An efficient implementation", but it is slower than Python, an interpreted language, at N = 100000, O(N ** 2.6).
+ - 10 times faster than this definition, and easy to implement such that it is O(N ** 2)
+ 
+ Therefore, it is correct to recognize that "fib = 1:1:zipWith (+) fib (tail fib)" is "a tricky code that shows off Haskell-like features, but it is slow.
+ 
+ ** Summary added
+ - <a href='http://d.hatena.ne.jp/mkotha/20100623/1277286946'>fib = 1 : 1 : zipWith (+) fib (tail fib) is slow or not depends on usage - www.kotha.netの裏</a>
+ -- I'm told that using fib in order from the beginning (e.g. sum (take 300000 fib)) is much faster than fib ! 300000 is much faster than fib !
+ -- I'm told that the earlier version of fib I wrote has a compiler inference (not explicitly stated in the code) of positive identity.
+ - <a href='http://homepage1.nifty.com/herumi/diary/1006.html#23'>melancholic afternoon</a>
+ -- The time and memory consumption for retrieving just one element from a huge list is completely different from that for retrieving two or more elements from the same list.
+ - <a href='http://d.hatena.ne.jp/kazu-yamamoto/20100624/1277348961'>Myths of Haskell - An Unadulterated Story</a>
+ -- such as "just create a 'zipWith' that evaluates to a positive rating.
+ 
+ *1277215680*47 kg dumped.
+ 47.0 kg of books were discarded.
+ 
+ And I checked how many kilos I threw away last time and it looks like it was exactly 47.0 kilos last time too. <a href='http://d.hatena.ne.jp/nishiohirokazu/20100302/1267547582'>Visualization and quantification of the results of the book dumping activity</a>
+ 
+ I would like to go over 100 kilos. When I quantify my weight, I am motivated to exceed a certain number.
+ </body>
+ <comments>
+ <comment>
+ <username>kazu-yamamoto</username>
+ <body>! instead of head . drop n<br>What if we use the following zipWith' instead of zipWith? <br><br>{-# LANGUAGE BangPatterns #-}<br>zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]<br>zipWith' f (a:as) (b:bs) = let !x = f a b<br> in x : zipWith' f as bs<br br>zipWith' _ _ _ = []</body>
+ <timestamp>1277270213</timestamp>
+ </comment>
+ <comment>
+ <username>kazu-yamamoto</username>
+ <body>! is not a problem, as is !!! should be left as it is; use only 'zipWith'. </body>
+ <timestamp>1277273731</timestamp>
+ </comment>
+ <comment>
+ <username>nuc</username>
+ <body>This is a slowdown caused by the memory hierarchy, not the number of calls, right? <BR>I don't think you would use a notation like O(n**2.6) or so in that case. </body>
+ <timestamp>1277359050</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Is it your opinion that the use of "about O(n ** 2.6) execution time" is incorrect and that the O notation is used for the number of calls? <br>I've never heard of such an opinion before, but I would appreciate it if you could provide me with some sources. </body>
+ <timestamp>1277370005</timestamp>
+ </comment>
+ <comment>
+ <username>nuc</username>
+ <body>I meant to say "number of calls" or, a bit more generally, "algorithm computation time". <BR>It doesn't matter whether you use it for the number of calls or the execution time. <br>In other words, Landau's symbol O(f(n)) is an expression about what function can be held at infinity for n, right? <br>So when we are discussing execution time, the act of fitting around a small value of n, like 10^6, should only be an auxiliary means of guessing the order of execution time. <BR>In this case, it is inferred that this is due to the fact that it only happens once at a time where n is small, where the secondary cache or memory overflows and the lower level is used, so fitting around that (evaluated in the limit) to find the order of execution time is like "the dollar depreciated by 1 yen in 3 days, so in 1 year it will be 0 yen It will be" kind of thing. <br><br>Snarky, I think you are correct that on today's standard machines and compilers, around N=10^5, the Haskell example code is much slower than the python code written above. </body>
+ <timestamp>1277385698</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>Landau's symbol O(f(n)) is supposed to be just an aid to guessing the order of execution time, an expression about what functions can be held at infinity for n<br>. <br><br>I understand so far, but I am not sure what you are trying to say from there. <BR><BR>I think you are correct that around N=10^5, the example code in Haskell is much slower than the python code above. <BR><BR>I disagree with this. I don't know where you got that from, but judging from the observed facts in this entry, you would conclude that Haskell is faster around N=10^5, right? </body>
+ <timestamp>1277390687</timestamp>
+ </comment>
+ <comment>
+ <username>nuc</username>
+ <body>>>Auxiliary means of estimation<br>If you have understood me so far, first of all, "the execution time is about O(n ** 2.6)" is only an estimation from a small value. Moreover, you only checked at three points. <BR><BR>It depends on the environment there, but if you do the same experiment around n=10**4 to n=10**5 and fit it, you can guess O(n**2). So, is this one inaccurate because the value of n is smaller than the other one? The reason is the memory hierarchy. <br><br>Forget the rest. </body>
+ <timestamp>1277397674</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I read this as an assertion that experiments around n = 10 ** 5 are more accurate than experiments around n = 10 ** 6. What is your basis for this assertion? It seems to me to be an arbitrary selection of experimental data. </body>
+ <timestamp>1277425996</timestamp>
+ </comment>
+ <comment>
+ <username>nuc</username>
+ <body>That's right, the fit from 10**4 to 10**5 is considered more accurate. At least, taking 3 points from 10***5 to 3*10***5 is just arbitrary discarding. <BR><BR>That is because the memory hierarchy is expected to be singular around n={1,2,3}*10**5 for a reason. <br>In short, it is probably running out of memory and starting to swap hard disks. And where n is much larger, it would still be O(n**2), since the calculation is done primarily at hard disk speed. <br><br>For example, <br>n<10**5>, t=1*(n**2)<br>n>10**7>, t=10*(n**2)<br>, the connection between the two is smooth, and the behavior is like that. </body>
+ <timestamp>1277482174</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>In short, I think you are running out of memory and starting a hard disk swap. <br>In short, that is your imagination without any basis. <BR>You should check the code and verification method before writing something wrong since they are both publicly available. <BR><BR>You wrote that you added -K200M as a runtime option, but you did not write how much memory is on the experimental machine. Well, it is not a machine with only 150MB of memory nowadays, it usually has 2GB of memory. I think it is not consuming more than 200MB of memory, because n = 300000 is completed without any problem even after changing to -M200M. </body>
+ <timestamp>1277518285</timestamp>
+ </comment>
+ <comment>
+ <username>nuc</username>
+ <body>No, of course I experimented. If you want my data and the script for generating it, I will give it to you. <br>I have experimented more extensively than id:nishiohirokazu, and I think the experimental discussion in the above article is not good. <br><br>I think the above article is not good. <BR><BR>I don't know the environment of your machine, so it was a guess and an example that it was swap (everyone knows swap as an example of memory hierarchy), but it could have been cache (paging or GC). <br>There could be any number of reasons for a memory hierarchy of some sort. Excuse me, but do you know what a memory hierarchy is? <br><br><br>Let's go from the beginning again. <br><br>0. id:nishiohirokazu guessed that the zipWith code has an execution time order of O(n**2.6) from 3 points. (Description below. By the way, my data is 2.38 by the same analysis method.)<br><br>The English version says "An efficient implementation", but it is slower than Python, an interpreted language, with N = 100000, which is O(N ** 2.6). <br><br>1. The zipWith code can be experimentally estimated to be O(n**2.0) when examined in the range where n is a bit smaller. <br><br>2. First, the experiment in 0. is an arbitrary cutoff of the range, and zipWith's code cannot be said to be O(n ** 2.6). <br><br>3. On the other hand, the number of times the zipWith code is computed theoretically could be O(n**2). ("The method of adding in order can only be done up to the order of squares." So you are admitting this here as well. What you are doing internally is creating a pointer to the thunk, so it is the same with delayed evaluation.) <br><br>4. Given that, it is natural to assume that the reason why n={1,2,3}*10**5 is slower than O(n**2) is because the memory hierarchy had an effect. If the memory hierarchy was the cause, it would not affect the order. <br><br>For now, I think it is sufficient if you understand up to 2. </body>
+ <timestamp>1277543888</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Hmmm, if you have experimental data, why don't you first publish it on your blog or something? <BR><BR><BR>I'm not sure if you are making assertions based on interpretation without any experiments or based on data. <br><br>I apologize for the rudeness of my comment, as I mistakenly thought that you were making an assertion based on an assumption without conducting any experiments. </body>
+ <timestamp>1277550866</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oops, I forgot to write that. I had understood the memory hierarchy to mean that accessing data in the cache, for example, is faster than accessing memory, and accessing memory is faster than accessing the disk. I have never heard of this before. This is new to me, so I would appreciate it if you could clearly define what you mean by memory hierarchy. </body
+ <timestamp>1277551154</timestamp>
+ </comment>
+ <comment>
+ <username>nuc</username>
+ <BODY>Sorry, I am late. <BR><BR>For my part, I think just interpreting the code is enough, but I also experimented. I think that is why it was written in a confusing way. <BR><BR>The memory hierarchy is what you say, but I wrote it a bit more broadly as a kind of memory hierarchy, considering it to be representative of a phenomenon in which spatial computations affect the coefficient of time computations at some threshold value. <BR><BR>I understand. I'll post my results on my blog in a bit. <BR><BR>Thank you for your continued support. </body>
+ <timestamp>1278263876</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <BODY>Hey, it looks like the discussion is coming to a close, so I made a summary article. <BR><BR>Summary of Haskell's "fib = 1:1:zipWith (+) fib (tail fib)" being very slow<BR>http://d.hatena.ne.jp/nishiohirokazu/20100724/1279982968<BR><BR>After all, So it was an environment-dependent phenomenon, O(n^2) in GHC 6.10.1 or earlier, O(n^2.6) in 6.10.2 or later. <br><br><br>In fact, at the time of my first comment, I had already confirmed that the O(n^2.6) was O(n^2) by experimenting with 10000 increments from 10000 to 300000, which led me to assume that you were involved without having done much experimentation, and that's why I responded as I did above. If you had disclosed the experimental data without any trouble, we would have found out that the difference in versions was the cause much more quickly. My apologies. </body>
+ <timestamp>1279984108</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-06-22 https://nishiohirokazu.hatenadiary.org/archive/2010/06/22]

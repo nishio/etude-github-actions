@@ -1,0 +1,123 @@
+Hatena2008-07-16
+code:hatena
+ <body>
+ *1216166326*ICFP Diary 4
+ I wonder if there will be any announcement on what rounds are being tested right now and who is left and who is dropping out or something like that. Mooo.
+ 
+ *1216215120*Diary of Google Code Jam
+ It is hot. It is hot.
+ 
+ I have already registered for the Google Code Jam, but why is it on a weekday?
+ I blurted out something like, "Well, I'll try to participate to the extent that it's not too hard.
+ 
+ http://code.google.com/codejam/contest
+ 
+ >>
+ Contest starts in
+ 9hr 26min
+ <<
+ 
+ Hasn't started yet, I see. orz
+ Registration will be open until 33 hours after this contest closes for those interested.
+ 
+ 
+ Rule explanation: Any language that can be obtained for free is acceptable, and the development environment is also free. Multiple languages are allowed.
+ There are 3-6 questions per contest. Read the question text, create a program, download the input data, solve it and return it. There are two types of input data: small data and large data. The small data can be downloaded and attempted as many times as necessary. The time limit for answering is 4 minutes. Results are given immediately. For large data, you have only one chance. The time limit is 8 minutes. You will be told the result later.
+ The time limit is tight, isn't it? Mainly in the sense of fear of operational errors.
+ 
+ You must submit the source code at the same time you submit your response. Obfuscated code is invalid. Submitted code will be published after the contest. If you solved the problem by hand, a text file describing the method is required. Well, it is allowed, but it will be very difficult if human work is involved in the time limit.
+ 
+ The accuracy of the required floating point number is 1e-6. the score is determined by the problem regardless of time, but in case of a tie, the winner is determined by time.
+ http://code.google.com/codejam/rules.html
+ 
+ 
+ Oh, if you do "Add Friend", you can get a list of friends in order of score.
+ <img src="http://gyazo.com/975baf5bef481fbb1c9faa5197166302.png">
+ Will we know if this is ADDED? They don't know. I also don't know if the add in PRACTICE will carry over into the production. I don't think there is a link to go back when you go to the scoreboard!
+ 
+ 
+ >>
+ You are not allowed to collaborate with other participants or with anyone else, for that matter, during a contest. This includes discussing, sharing, or posting the problem statements or solutions.
+ <<
+ Too bad. It is against the rules to explain or post codes in Japanese here during the contest period.
+ 
+ -----
+ 
+ I solved the first question of the Practice for now. The download link for the question data is JS, so it is not possible to save the data as a name, which is a lot of trouble.
+ 
+ >>
+ Judge's response for last submission: Correct.
+ <<
+ 
+ It takes me a long time to do anything with the saved file, or to select the output file from the browser dialog.
+ 
+ *1216223240*Google Code Jam Practice 1
+ The decimal system used by human beings is "0123456789", which is a 10-character number, but aliens may use, for example, "ABCDE", which is a 5-character number, or "123456789*+-=", which is a 13-character number. The question is to convert the number in the given alien notation to the number in another alien notation.
+ 
+ And the code looks like this. Is it easy because it's a practice problem? It was a little out of tune.
+ >|python|
+ def toDigit(nums, value):
+     """ alian to digit
+     >>> toDigit("ABC", "A")
+     0
+     >>> toDigit("ABC", "C")
+     2
+     >>> toDigit("ABC", "BA")
+     3
+     """
+     N = len(nums)
+     map = dict(zip(nums, range(N)))
+     result = 0
+     for c in value:
+         result *= N
+         result += map[c]
+     return result
+ 
+ def fromDigit(nums, value):
+     """ digit to alian
+     >>> fromDigit("ABC", 0)
+     'A'
+     >>> fromDigit("ABC", 2)
+     'C'
+     >>> fromDigit("ABC", 3)
+     'BA'
+     """
+     if value == 0:
+         return nums[0]
+     N = len(nums)
+     result = ""
+     while value > 0:
+         result = nums[value % N] + result
+         value /= N
+     return result
+ 
+ fi = file("data")
+ fo = file("result", "w")
+ num_test = int(fi.readline())
+ for i in range(num_test):
+     line = fi.readline()
+     value, frm, to = line.split()
+     result = fromDigit(to, toDigit(frm, value))
+     fo.write("Case #%d: %s\n" % (i + 1, result))
+ 
+ fi.close()
+ fo.close()
+ ||<
+ 
+ Okay, I'll just set the output file to /Users/nishio/result, and I don't want to open any dialogs. I'll also hardcode the input file name before downloading. Now you can send the file without any confusion by typing in the name of the file to submit, downloading, pressing Enter on the console, watching the process complete, and pressing the submit button!
+ 
+ 
+ By the way, in this system, where the winner is determined by the time from the completion of downloading, you can use a method that makes it look like the download is taking a long time due to a narrow line, but actually downloads the data via a proxy made by yourself and calculates the data first when it arrives. I don't do it, though.
+ 
+ -----
+ 
+ When I looked at Exercise D, it was a traveling supermarket problem, like a traveling salesman problem. Moreover, it said that if I buy milk, I have to go home immediately because it will hurt, or that the prices they are hitting are different in different stores. Hmmm. I guess I need to use C++ for this kind of problem.
+ 
+ 
+ Exercise C asks if you can drop an egg from a building and determine which times or more it can be broken. The number of eggs and the number of eggs that can be broken are fixed.
+ 
+ *1216227947*Sleep yourself
+ Google Code Jam problems are interesting, but once I start thinking about them, I don't have time to sleep. as I mentioned on Twitter, if I see a problem at 8am, I'll never get to my day job, so I won't look at it until I get home! I'll endure!
+ </body>
+
+[Hatena Diary 2008-07-16 https://nishiohirokazu.hatenadiary.org/archive/2008/07/16]

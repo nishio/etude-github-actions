@@ -1,0 +1,104 @@
+2021-07-01
+Today's Picture of the Day
+[https://gyazo.com/1c0fb6f6155aec8b129ed0644a20ffa7]
+---
+
+[https://gyazo.com/7875bb1e2264ad9b16d408a2267a167d]
+I haven't actually wrapped the group div in a sticky div yet.
+
+In the normal DOM, the position of the content is determined first, and then the size of the parent element is determined to wrap the content, so it was necessary to calculate the bounding box by oneself.
+　At any rate, I've confirmed that that bounding box calculation worked.
+
+I set the center of the group to 0, thinking that the calculation of the displacement caused by DOM inclusions could be done later, but when I thought about it, the starting point of the position was the upper left corner of the parent element.
+[https://gyazo.com/ea95bfc5ad6e0795ab345213690d9f07]
+
+Once the bounding box of the parent element is determined, we know the position of the starting point, so I guess we can propagate that to the child elements.
+
+2021-07-02
+I tested the chitin coordinates.
+[https://gyazo.com/50795f057f8b7395ee8dd5ae469cc6b8]
+The group has not yet encompassed stickies.
+code:Group.tsx
+ <>
+   <GroupDiv style={style} key={value.id} data-testid={value.id}></GroupDiv>
+   {idsToDom(value.items, offset)}
+ </>
+
+Inclusion will naturally lead to misalignment.
+[https://gyazo.com/b7b5074d0c72df6a187f052734536aa3]
+code:Group.tsx
+ <GroupDiv style={style} key={value.id} data-testid={value.id}>
+   {idsToDom(value.items, offset)}
+ </GroupDiv>
+
+If I change the offset to propagate here... hey, it looks right, but the test is rubbish, it's off by 5px.
+[https://gyazo.com/5ea19eff6f0db85cc69c0e2fbc94a8c1]
+
+I see, so it's only the thickness of the border that's displaced.
+[https://gyazo.com/c8cfdb5438b8bccdcdf3715a0bca0e84]
+
+safely restored to normal
+[https://gyazo.com/216e21b5809daea2ff17da63d6e17228]
+
+----
+
+Import stiff complex groups from Regroup
+[https://gyazo.com/0d1187d7fe01b6a4de30333c80c1948e]
+[https://gyazo.com/9b8c7dda1fc8f68814f6cabe3d71e662]
+The drawing position of the contents is misaligned.
+This is due to, well, the difference in the way Regroup and Movidea have their coordinates.
+Regroup also has absolute coordinates for branch stickies, but Movidea's coordinates are relative to the parent.
+I have to fix it only when importing from Regroup.
+
+With the relative coordinate style, the coordinates of the child elements need to be rewritten when grouping. This is not necessary when dragging a group.
+
+[https://gyazo.com/979e4781205108a6f269bd8d566689a5]
+Oh, and the sticky's magnification feature was not yet implemented in the first place.
+Oh, and "group within a group" sounds odd.
+Let's try something simpler to see if the import is wrong or the drawing is wrong.
+
+scaled
+[https://gyazo.com/b5c14b31074d874d9c9c6b27f836844c]
+It's done.
+
+nested
+[https://gyazo.com/dffb7c53b6164bbd3f456647cefa3c56]
+This is a crazy offset for a group within a group.
+[https://gyazo.com/1c0fb6f6155aec8b129ed0644a20ffa7]
+Cured.
+
+I'll check again.
+[https://gyazo.com/3f275de44a217a88c770713ce838d9ae]
+Visibility in Regroup
+[https://gyazo.com/0d1187d7fe01b6a4de30333c80c1948e]
+It's much better. Hey, isn't this because the aspect ratio of the stickies and the margins of the groups are different in the first place?
+
+Fixed.
+[https://gyazo.com/4ed0dc5b0845d7b93edd9850306b247a]
+Hmmm, this isn't the same bounding box of stickies that expanded unrelated to the group's nesting.
+
+Minimized.
+[https://gyazo.com/d7d65a158c85aed51f547d1aa09907eb]
+[https://gyazo.com/cb5676fc427a211dc846f98759e80d8d]
+Ah, I see, the height and width are reversed in the bounding box calculation.
+
+[https://gyazo.com/03423309156ec7ab41e4a202f5f98a30]
+Hmmm, still a little funny.
+This is a compounding problem, so I think I'll put aside importing from Regroup for now.
+This is going to be resolved in a simpler way while using this stand-alone function.
+
+What to do next
+　Update with immer
+　　Moving and adding stickies
+　　[updated by immer and tested by Cypress].
+　After that, such operations are exposed as JS API
+
+--- this week
+done
+・Cypress and ReactN can be combined for testing.
+Parallel translation and scaling with touchpad
+Group drawing (basic)
+Import from Regroup JSON
+doing
+When importing from JSON of Regroup, the position of stickies in a group is not correct.
+The function to display enlarged stickies was not yet available.

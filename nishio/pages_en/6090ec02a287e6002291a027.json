@@ -1,0 +1,89 @@
+Hatena2009-10-23
+code:hatena
+ <body>
+ *1256247551*Lid for keg wine
+ Designed to be reusable.
+ 
+ f:id:nishiohirokazu:20091022195211j:image
+ 
+ *1256260175*[iPhone][ObjC] error: synthesized property 'foobar' must either be named the same as a compatible ivar or must explicitly name an ivar
+ I'm working on an app that requires an actual device to test important functions, and I thought I could use the simulator to create other functions, so I switched to the SDK and now I get this error.
+ 
+ >>
+ error: synthesized property 'foobar' must either be named the same as a compatible ivar or must explicitly name an ivar
+ <<
+ 
+ put simply
+ >|objc|
+ @interface BazQuux {
+ }
+ @property (nonatomic, retain) FooBarType *foobar;
+ ||<
+ The SDK for the iPhone can be built with the SDK for the actual device, but the SDK for the simulator cannot.
+ >|objc|
+ @interface BazQuux {
+     FooBarType *foobar;
+ }
+ @property (nonatomic, retain) FooBarType *foobar;
+ ||<
+ I was puzzled by the error message under @synthesize foobar;. I was perplexed by the error message under @synthesize foobar;.
+ 
+ >>
+ error: synthesized property 'foobar' must either be named the same as a compatible ivar or must explicitly name an ivar
+ <<
+ 
+ The property 'foobar' to be @synthesized must be named the same as the assignment-compatible ivar or must be explicitly marked with ivar.
+ 
+ <hr>
+ In addition, the page below claims that the first code should work according to the specification, and that this is a bug in the SDK for the simulator.
+ <a href='http://stackoverflow.com/questions/1155267/iphone-simulator-build-errors-when-using-synthesized-instance-variables'>iPhone Simulator: build errors when using synthesized instance variables - Stack Overflow</a>
+ 
+ **1256263760*List of things to bring to PySpa
+ Note that I almost went without cash in my wallet.
+ 
+ What you need to have
+ - cash
+ - iPhone Cable
+ - MacBook AC Adapter
+ - eye mask
+ - change of clothes
+ 
+ Should I have it? Things
+ - headphone
+ - stationery
+ - mug
+ - Sun visor?
+ - NDS? (for flat she-receiving)
+ - It's about to get cold, so jerseys?
+ 
+ *1256282664* Went to see my work at ASIAGRAPH 2009
+ f:id:nishiohirokazu:20091023123910j:image f:id:nishiohirokazu:20091023123924j:image
+ 
+ *1256287521*[ObjC]Animation to flip
+ I got stuck because I mistakenly put the unit of [UIView setAnimationDuration:1] as 1000, thinking it was milliseconds, which made it look like the animation was not set properly (in fact, it was super slow).
+ >|ObjC|
+ 	[UIView beginAnimations:nil context:NULL];
+ 	[UIView setAnimationDuration:1];
+ 	[UIView setAnimationTransition:([self.optionView superview] ?
+ 	UIViewAnimationTransitionFlipFromLeft : UIViewAnimationTransitionFlipFromRight)
+ 	forView:self.view cache:YES];
+ 	if ([self.optionView superview]){
+ 		[self.optionView removeFromSuperview];
+ 		[self.view addSubview:self.mainView];
+ 	}else{
+ 		[self.mainView removeFromSuperview];
+ 		[self.view addSubview:self.optionView];
+ 	}
+ 	
+ 	[UIView commitAnimations];	
+ ||<
+ </body>
+ <comments>
+ <comment>
+ <username>Samerfylde</username>.
+ <body><br>I'm pasting this because it probably sounds intriguing. <br>Diatom Cafe 11/23<br>http://www.takeda-foundation.jp/cafew/index.html</body>
+ <timestamp>1256278495</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-10-23 https://nishiohirokazu.hatenadiary.org/archive/2009/10/23]

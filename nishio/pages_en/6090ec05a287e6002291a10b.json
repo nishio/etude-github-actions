@@ -1,0 +1,34 @@
+Hatena2010-10-01
+code:hatena
+ <body>
+ *1285928719*continued
+ Some people don't seem to understand it when I explain it in code, so I'll explain it in Japanese. The following code has two appendices.
+ 
+ >|python|
+ ['='.join((k, v)) for k, v in sorted(d.items(), key = lambda x: x[0])]
+ ||<
+ 
+ First, the comparison of large and small between tuples is done lexicographically using the comparison results of each corresponding element. Therefore, this part is meaningless.
+ 
+ >|python|
+ ['='.join((k, v)) for k, v in sorted(d.items(), key = lambda x: x[0])]
+                                               ^^^^^^^^^^^^^^^^^^^^^^
+ ||<
+ 
+ Second, it is pointless to disassemble something that can be obtained as a tuple and then tuple it again.
+ 
+ >|python|
+ ['='.join((k, v)) for k, v in sorted(d.items())]
+           ^^^^^^      ^^^^
+ ||<
+ 
+ The removal of these two appendices would
+ 
+ >|python|
+ ['='.join(p) for p in sorted(d.items())]
+ ||<
+ 
+ The answer is "yes". Personally, I don't like to join two elements that are fixed to be two elements, so there are four ways to write it by combining "whether to replace it with a string formatting operation" and "whether to use sorted(d.items()) or sorted(d)", but in the last article, I forgot to include the above writing style that is closest to the original. In the last article, I forgot to include the above writing style that is closest to the original code.
+ </body>
+
+[Hatena Diary 2010-10-01 https://nishiohirokazu.hatenadiary.org/archive/2010/10/01]

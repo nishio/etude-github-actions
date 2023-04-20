@@ -1,0 +1,62 @@
+2021-06-29
+Test of scale adjustment in [ReactN exposed and used from Cypress]. one test consisting of 8 assertions is done in 0.44 seconds, so you may not see it well, but it checks the position of two stickies with the default scale and a scaled down version.
+[https://gyazo.com/4b751f9c0c4ca4947f72924eb501a72e]
+
+[✅Smooth scaling parallelism in DOM]
+First, I'm testing by getting the element with the id specification and rewriting the style directly.
+code:test.js
+ cy.get("#center").then(x => {
+   x.css("transform", "scale(0.5)")
+ })
+ cy.contains("+").should((x) => {
+   expect(x[0].getBoundingClientRect().x).equal(215.5);
+   expect(x[0].getBoundingClientRect().y).equal(225.5);
+ })
+
+After making it testable, I changed the style to [styled-components], which was applied by specifying the id in the raw CSS, and after confirming that the behavior did not change, I wrapped it in a React function component and hooked it into ReactN.
+This is what the final test scale change looked like. It could be a custom command.
+code:test.js
+ cy.window().its('movidea').then(movidea => {
+   setTimeout(() => {
+     movidea.setGlobal({ scale: 0.5 });        
+   })
+ });
+
+For scaling, there is a div of size 0 that contains all the stickies, and the browser's native code does the calculation in its transform.
+code:App.tsx
+ <div id="canvas">
+   <Center>
+     {fusens.map((fusen) => (
+       <Fusen value={fusen} />
+     ))}
+   </Center>
+ </div>
+
+code:Center.tsx
+ const CenterDiv = styled.div`
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   width: 0px;
+   height: 0px;
+   overflow: visible;
+ `;
+ 
+ export const Center: React.FC<{}> = ({ children }) => {
+   const [g] = useGlobal();
+   const style = {
+     transform: `scale(${g.scale}) translate(${g.trans_x}px, ${g.trans_y}px)`,
+   };
+   return (
+     <CenterDiv style={style} id="center">
+       {children}
+     </CenterDiv>
+   );
+ };
+
+What we learned
+	transform [transform - CSS: Cascading Style Sheets | MDN https://developer.mozilla.org/en-US/docs/Web/CSS/transform]
+	[viewport | Cypress Documentation https://docs.cypress.io/api/commands/viewport]
+		>Control the size and orientation of the screen for your application.
+	getBoundingClientRect [Element.getBoundingClientRect() - Web APIs | MDN https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect]
+		[javascript - Retrieve the position (X,Y) of an HTML element relative to the browser window - Stack Overflow https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element-relative-to-the-browser-window]

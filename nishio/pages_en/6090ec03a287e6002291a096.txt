@@ -1,0 +1,44 @@
+Hatena2010-04-15
+code:hatena
+ <body>
+ *1271305655*Re: 10 things you probably don't know about Google App Engine.
+ I found this while researching what the behavior would be if I changed the version.
+ 
+ <a href='http://d.hatena.ne.jp/hidemon/20090606/1244250759'>10 Things You Probably Didn't Know About Google App Engine. - Diary of hidemon</a>.
+ 
+ >>
+ The App Engine allows multiple versions of an application to run concurrently. All versions share the same data store and memcache, but run on different instances and have different URLs.
+ <<
+ 
+ Hoho. I guess I can use this to replace existing apps by utilizing their data. Convenient, convenient.
+ 
+ *1271340913* I'm trying to replace a service I built with Django+GAE a long time ago with Kay.
+ If you change the version in app.yaml to the same application name as the existing app, you should be able to deploy another app that can access the Datastore while keeping the existing service running.
+ 
+ First, Kay mangles Kind, so even if you create a model named Item, Kind will be named something like core_item, and existing data will not be readable. ADD_APP_PREFIX_TO_KIND = False in settings.py.
+ 
+ It works on my local development server, so I tried deploying it, and it doesn't work. It says something like "TemplateNotFound: core/index.html". I've never had this problem when I created and deployed Kay by itself, so I'm wondering if there is some configuration left over from when I created it with Django?
+ 
+ 
+ You can't explicitly specify this in TEMPLATE_DIRS.
+ >|python|
+ TEMPLATE_DIRS = (
+     "core/templates/",
+ )
+ ||<
+ I'm sure Jinja2 or Kay is messing around with it, but I wonder what's going on.
+ 
+ <hr>
+ Resolved! As tmatsuo pointed out, the cause was still that the template was not preparse.
+ 
+ Kay (who uses Jinja2) pre-parses the templates and converts them to Python code, which is called preparse, and although you can do the preparse process in manage.py preparse_apps, it usually does it automatically when you manage.py appcfg update, it automatically does it for me. This problem was caused by me doing appcfg.py update directly without using manage.py, and it worked easily after I updated via manage.py!
+ </body>
+ <comments>
+ <comment>
+ <username>tmatsuo</username>
+ <body>The reason why I get TemplateNotFound on the server when it works locally is that I can't pre parse the template (and python code), but I guess I should check this<br><br>Is there a ' core' in INSTALLED_APPS? <br><br>If not, it would not have been included in pre parse. ......<br><br>If you don't want it to be mounted without your permission<br>APP_MOUNT_POINTS = {<br> 'core': None<br>}<br><br>If you don't want to mount it without your permission, you can use the following command. None<br>}<br>This will prevent it from mounting without permission. <br><br>I'm sorry if I'm wrong, I'm just imagining. </body>
+ <timestamp>1271348630</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-04-15 https://nishiohirokazu.hatenadiary.org/archive/2010/04/15]

@@ -1,0 +1,82 @@
+Hatena2012-01-07
+code:hatena
+ <body>
+ *1325892973*Order of Python class method name resolution
+ Yesterday in yesterday's Prosin, I talked about "how method names are resolved when there is a prototype chain with branches" and "in Python, serialize with C3 serialization and search from the end", but whether a class with Python's C3 serialization can rewrite its parent class. I wasn't sure, so I couldn't say for sure on the spot, so I checked and saw.
+ 
+ I guess you can call it a prototype chain, since Python classes have their parent class as a mere pointer, and the parent class can be changed after definition. So, let's create a diamond inheritance with it. Class A is inherited by B and C, and then D inherits B and C in that order. You can see that the Method Resolution Order is stored in the attribute __mro__.
+ 
+ >||
+ >>> class A(object): pass
+ >>> class B(A): pass
+ >>> class C(A): pass
+ >>> class D(B, C): pass
+ >>> D.__mro__
+ (__main__.D, __main__.B, __main__.C, __main__.A, object)
+ ||<
+ 
+ The information about what the parent class of class D is is stored in the __bases__ attribute. So we rewrite this so that D inherits from C and B in that order, so that C comes before B in MRO.
+ >||
+ >>> D.__bases__
+ >>> (__main__.B, __main__.C)
+ >>> D.__bases__ = (C, B)
+ >>> D.__mro__
+ (__main__.D, __main__.C, __main__.B, __main__.A, object)
+ ||<
+ 
+ To confirm that this C3 serialization is not just width-first, let's add class E and make it inherit from it as well. If it were a breadth-first search, we would search in the order C, B, E, A, but in Python, we see that the order is C, B, A, E.
+ >||
+ >>> class E(object): pass
+ >>> D.__bases__ = (C, B, E)
+ >>> D.__mro__
+ (__main__.D, __main__.C, __main__.B, __main__.A, __main__.E, object)
+ ||<
+ 
+ The __mro__ is recomputed at the time the value is set to __bases__. mro_internal and mro_subclasses are called from type_set_bases in typeobject.c, and from mro_internal mro_ implementation is called from mro_internal and mro_implementation is re-calculated here. So, if you change the parent class of a class, the MRO for that class and all its subclasses is updated.
+ 
+ ** Reference: PyTypeObject definition
+ >||
+ typedef struct _typeobject {
+     (Abbreviation)
+     PyObject *tp_bases;
+     PyObject *tp_mro; /* method resolution order */
+     PyObject *tp_cache;
+     PyObject *tp_subclasses;
+     (Abbreviation)
+ } PyTypeObject;
+ ||<
+ 
+ *1325898759*Code Reading Observation Diary
+ I was once asked how to do code reading and I said, "I can't read at all," but that interpretation aside, the objective fact is that in 30 minutes of free time I was able to look up something like "<a href='http://d.hatena.ne.jp/nishiohirokazu/20120107/ 1325892973'>Order of method name resolution in Python classes</a>", so I'll keep a diary of my observations before I forget how the process went.
+ 
+ ** Observation Diary
+ - (I don't think the Python reference manual says what I want to look up.)
+ - Run it interactively with the Python processor to see how it behaves. Think, "It should update __mro__ when __bases__ is rewritten."
+ - The source code has already been downloaded (I was going to read the source in ~/src/ but left the source code in there).
+ - Open Objects/classobject.c. Search for __bases__ and find the function set_bases. Read it. Contrary to my expectation, __mro__ is not updated. That's strange.
+ - . /configure --with-pydebug to create a binary with debugging information, set a breakpoint on set_bases, and run it. Contrary to expectations, it is not called.
+ - ack set_bases in the source root. typeobject.c has type_set_bases! So the new style class is typeobject.c.
+ - ack type_set_bases. read type_set_bases. read only where the word "mro" appears.
+ - r = mro_subclasses(type, temp); is found.
+ - I expected mro_subclasses to rewrite itself and the subclass mro, but contrary to my expectations, it only calls mro_internal in mro_subclasses, following the subclass.
+ - I wondered if mro_internal was the process of rewriting mro, so I re-read type_set_bases and found that I had missed reading mro_internal.
+ - Now that I think about it, you should search for mro and highlight yourself.
+ - I read mro_internal and found that it reads mro_implementation. mro_implementation seems to be what I was looking for. My research is finished.
+ - Thinking about writing a PyTypeObject definition, I tried to open Include/type. .h but there is no file with that name. ack PyTypeObject. Too many. I do ack PyTypeObject Include/*.h. There it is, in object.h. I open PyTypeObject/*.h, and there it is.
+ 
+ ** Tools used
+ - gdb
+ -- I only use b(reakepoint) and r(un).
+ - ack
+ - emacs
+ -- I don't know how to use tag jumps...
+ -- with incremental search (Ctrl-s or Ctrl-r) and line number jumps (I bind to Ctrl-l).
+ -- Oh, I forgot to use M-x pdb in Emacs even though I was taught to use it the other day. I was using gdb raw.
+ 
+ ** Summary
+ I still hardly read it. less than 100 lines.
+ 
+ I would like to read more observational journals from more skilled people!
+ </body>
+
+[Hatena Diary 2012-01-07 https://nishiohirokazu.hatenadiary.org/archive/2012/01/07]

@@ -1,0 +1,28 @@
+Dictionary-like usage of Pandas
+You want to read a CSV with columns Name and Value in Pandas, and you want to know the Value when Name is a specific value. Assuming that Name is unique.
+code:python
+ import pandas as pd
+ data = pd.read_csv("t.csv")
+ v = data[data.Name=="1299c1b7a9e0c2bf41af69c449464a49"]
+
+It works as one would expect, as follows
+code:output
+                                   Name  Value
+ 9979  1299c1b7a9e0c2bf41af69c449464a49   9979 
+
+It takes about 64 msec to select one CSV from 1 million rows.
+code:output
+ %timeit data[data.Name=="1299c1b7a9e0c2bf41af69c449464a49"]
+ 10 loops, best of 3: 64.1 ms per loop
+
+If you specify index_col in such a case, you can access the following
+code:python
+ data = pd.read_csv("t.csv", index_col="Name")
+ v = data.Value["1299c1b7a9e0c2bf41af69c449464a49"]
+
+It is more than 1,000 times faster.
+code:output
+ %timeit data.Value[key]
+ 1 loop, best of 3: 17.9 µs per loop 
+
+Note that even if index_col is not specified when opening, it can be `data.set_index('Name')` later.

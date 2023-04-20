@@ -1,0 +1,40 @@
+2020-01-21
+[pKakidashi]
+Post 8 with Wifi off.
+[https://gyazo.com/f5cfee5cbf5ba5f1df286690462e009d]
+Wifi On
+[https://gyazo.com/b3b1633e4edab4d48542c9746ccab3df]
+	It's automatically stored in the cloud.
+	The (local save ok) flag is gone at that time.
+	code:ts
+  setGlobal({ items: [...global.items, item] });
+  local_db.items.add(item).then(() => {
+    const new_item = { ...item, saved_local: true }
+    setGlobal({ items: [...global.items, new_item] });
+  })
+  addItemToFirestore(item).then(() => {
+    const new_item = { ...item, saved_cloud: true }
+    setGlobal({ items: [...global.items, new_item] });
+  })
+	code:ts
+    const updateItem = (index: number, diff: { [key: string]: any }) => {
+      const global = getGlobal();
+      const new_item = { ...global.items[index], ...diff }
+      const new_items = [...global.items]
+      new_items[index] = new_item;
+      setGlobal({ items: new_items });
+    }
+  
+    const index = global.items.length;
+    setGlobal({ items: [...global.items, item] });
+    local_db.items.add(item).then(() => {
+      updateItem(index, { saved_local: true })
+    })
+    addItemToFirestore(item).then(() => {
+      updateItem(index, { saved_cloud: true })
+      local_db.items.update(item.created, { saved_cloud: true })
+    })
+
+	Reloaded without cloud save will not be retried.
+		Immediately retry anything restored from local on reload
+		under

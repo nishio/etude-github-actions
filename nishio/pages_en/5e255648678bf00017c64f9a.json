@@ -1,0 +1,28 @@
+Sentry
+[Sentry Memo]	
+
+
+[CRASH REPORT]
+[Application Monitoring and Error Tracking Software | Sentry https://sentry.io/welcome/]
+
+Getting Started - Docs
+https://docs.sentry.io/error-reporting/quickstart/?platform=browsernpm
+
+code:ts
+ Sentry.init({
+   dsn:
+     "https://....ingest.sentry.io/...",
+ });
+ Sentry.captureMessage("Something went wrong"); 
+
+code:js
+ Sentry.configureScope(function(scope) {
+   scope.setExtra("character_name", "Mighty Fighter");
+ });
+
+>Be aware of maximum payload size - There are times, when you may want to send the whole application state as extra data. This is not recommended as application state can be very large and easily exceed the 200kB maximum that Sentry has on individual event payloads. When this happens, you’ll get an HTTP Error 413 Payload Too Large message as the server response or (when keepalive: true is set as fetch parameter), the request will stay in the pending state forever (eg. in Chrome).
+
+[https://gyazo.com/f3d11ea932fa3d84bca24195fd619bd9]
+The mouse move is sending a lot of errors due to an embargo in the mouse down process. I wonder if it's possible to stop sending so many in a short period of time...
+
+[Breadcrumbs - Docs https://docs.sentry.io/enriching-error-data/breadcrumbs/?platform=browsernpm]

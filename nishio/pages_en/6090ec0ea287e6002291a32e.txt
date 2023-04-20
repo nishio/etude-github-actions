@@ -1,0 +1,14 @@
+Hatena2015-06-28
+code:hatena
+ <body>
+ *1435471207*Chainer「NameError: global name 'drv' is not defined」
+ When I was implementing a program using Chainer and got an error "NameError: global name 'drv' is not defined", I couldn't understand it even though I read the surrounding source code and wondered if it was something around CUDA. The code to reproduce this error is
+ >||
+ Variable(1) + 1
+ ||<
+ This happens when the Variable argument is not numpy.ndarray or pycuda.gpuarray.GPUArray. I inadvertently put in the value as it is when it should be 1-of-K, which was the cause of failure in my case.
+ 
+ I know "happens when Variable's argument is not ~." I don't know "why this error occurs when the argument of Variable is not ~" from a cursory look at the code. However, in terms of "preventing this error from occurring when Variable's argument is not ~," Variable is supposed to accept only ~, so if something different comes in at __init__, we can just make it an assertion error. So I've decided not to go too deep into the "why".
+ </body>
+
+[Hatena Diary 2015-06-28 https://nishiohirokazu.hatenadiary.org/archive/2015/06/28]

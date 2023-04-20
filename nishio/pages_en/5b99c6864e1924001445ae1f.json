@@ -1,0 +1,68 @@
+Orientalists are logistic regression and Westerners are decision trees.
+[https://gyazo.com/65041f75b35b16a9903a8525291966c5]
+[Westerners looking at the trees, Easterners looking at the forest. p.161
+Should the target in the figure be in group 1 or group 2?
+Orientals tend to choose Group 1 and Westerners Group 2.
+
+The problem of [familial similarity] is the similarity between a 4-dimensional vector and two sets of vectors see [vector similarity].
+Since each set is labeled and given a priori [supervised learning].
+Represent petal, inflorescence, leaf, and stem features as (1, 1, 1, 1) targets
+Group 1
+	(1, 1, 1, 0)
+ (1, 0, 1, 0)
+ (1, 1, 0, 0)
+ (0, 1, 1, 0)
+Group 2
+	(0, 0, 1, 1)
+ (0, 0, 0, 1)
+ (0, 1, 0, 1)
+ (1, 0, 0, 1)
+Let us call the axes (a, b, c, d), respectively
+Western identification discards information other than the d-axis to identify
+Oriental-type identification uses all axes.
+
+[logistic regression] would determine "group 1 with probability 55%".
+code:python
+ import numpy as np
+ from sklearn.linear_model import LogisticRegression
+ 
+ X = np.array([
+ 
+  (1, 1, 1, 0),
+  (1, 0, 1, 0),
+  (1, 1, 0, 0),
+  (0, 1, 1, 0),
+ 
+  (0, 0, 1, 1),
+  (0, 0, 0, 1),
+  (0, 1, 0, 1),
+  (1, 0, 0, 1)])
+ 
+ Y = np.array([0, 0, 0, 0, 1, 1,	1, 1])
+ 
+ m = LogisticRegression()
+ m.fit(X, Y)
+
+code::
+	In [3]: m.coef_
+ Out[3]: array([[-0.47815958, -0.47815958, -0.47815958,  1.16980067]])
+ 
+ In [4]: m.intercept_
+ Out[4]: array([0.08158937])
+ 
+ In [5]: m.predict_proba([(1, 1, 1, 1)])
+ Out[5]: array([[0.54564474, 0.45435526]])
+
+coef_ shows -0.48 (weakly suggesting group 1) with respect to the a, b, and c axes, and +1.17 (strongly suggesting group 2) with respect to the d axis.
+Logistic regression adds them together, so the decision on the axes a, b, and c wins and makes the decision that the group is group 1 by a narrow margin.
+
+[Decision tree] would determine 100% as group 2.
+code:python
+ from sklearn.tree import DecisionTreeClassifier
+ m = DecisionTreeClassifier()
+ m.fit(X, Y)
+
+code::
+	In [7]: m.predict_proba([(1, 1, 1, 1)])
+	Out[7]: array([[0., 1.]])
+The reason is simple: the learning process looks for "which of the axes is the most neatly divisible" and naturally leads to the conclusion that "d is the best way to make a decision". In the identification phase, no axis other than d is looked at.

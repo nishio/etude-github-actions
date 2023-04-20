@@ -1,0 +1,98 @@
+Type memo
+It's not enough to have a mold.
+code:ts
+ const makeV = (f: boolean) => {
+   if (f) {
+     return { x: 1, y: 1 };
+   } else {
+     return {};
+   }
+ };
+ 
+ const v = makeV(true);
+ const x = v.x; // x: number | undefined
+
+Because it was received as any, an unnamed, half-formed object is being passed through (the variable name "x" is also a bit of a mess).
+code:ts
+ type FIXME = {
+   nameplate: number | null;
+   isOpen: boolean;
+ };
+ 
+ export const createNewGroupStateItem = (
+   position: paper.Point,
+   items: number[] | StateItem[],
+   x: FIXME,
+ ): GroupStateItem => {
+   return createGroupStateItem(position, items, x, createUniqueID());
+ };
+ 
+ export const createGroupStateItem = (
+   position: paper.Point,
+   items: number[] | StateItem[],
+   x: FIXME,
+   id: ItemID,
+ ): GroupStateItem => { ... 
+
+
+code:ts
+ import { ToolEvent } from "paper";
+ export const isTwoFingerGesture = (event: ToolEvent) => {
+   const e: any = (event as any).event;
+
+
+code:ts
+ export const convertStateItemToFirestore = (x: StateItem) => {
+   const ret: any;
+   ret.type = x.type;
+   ret.id = x.id;
+   ret.position = [x.position.x, x.position.y]
+   if (isPieceStateItem(x)) {
+     ret.text = x.text;
+		...	
+   } else if (isPathStateItem(x)) {
+     ret.opacity = x.opacity ?? 1.0;
+ 	...
+	  }
+	  return ret;
+
+code:ts
+ export const createBlankFirestore = (): FIRESTORE_DOC => {
+   const ret: any = {
+     version: 2,
+   };
+   ret.itemStore = {};
+   ret.drawOrder = [];
+   return ret;
+ };
+code:ts
+ export const createBlankFirestore = (): FIRESTORE_DOC => {
+   const version = 2;
+   const itemStore = {};
+   const drawOrder: ItemID[] = [];
+   return { version, itemStore, drawOrder };
+ };
+
+code:ts
+ export const onOverlayCanvas = (f: (...args: any[]) => unknown) => {
+   return (...args: unknown[]) => {
+     paper.projects[1].activate();
+     const ret = f(...args);
+     paper.projects[0].activate();
+     return ret;
+   };
+ };
+code:ts
+ import { ToolEvent } from "paper";
+ 
+ export const onOverlayCanvas = <T extends [ToolEvent] | []>(
+   f: (...args: T) => unknown,
+ ) => {
+   return (...args: T) => {
+     paper.projects[1].activate();
+     const ret = f(...args);
+     paper.projects[0].activate();
+     return ret;
+   };
+ };
+

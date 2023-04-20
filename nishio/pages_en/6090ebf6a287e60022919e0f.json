@@ -1,0 +1,131 @@
+Hatena2008-03-27
+code:hatena
+ <body>
+ *1206577791*Contribute to yasnippet
+ Yesterday, I gave some feedback on the snippet I wrote for EmacsLisp's reference grinding, and it has been corrected and will be included in the next release.
+ 
+ Correction Points
+ - Using mapconcat
+ - (current-column) to see the current indentation.
+ 
+ Study.
+ 
+ -----
+ 
+ I mean, if you read the yasnippet page carefully, there are several references to CodeRepos.
+ 
+ *1206595672*color of actionscript-mode
+ Isn't it awful?
+ 
+ *1206596092*umauma
+ I don't want to search for nishiohirokazu and come up in 3rd place or something.
+ 
+ *1206603898*make yasnippets work in actionscript-mode too
+ Ugh, the snippet I put in the python-mode directory is triggered, but the one in the actionscript-mode directory is not. Why is that?
+ 
+ -----
+ 
+ I don't see yas/expand being called when I press TAB. Why doesn't actionscript-mode work? Why doesn't actionscript-mode work?
+ 
+ -----
+ 
+ The actionscript-mode is
+ (setq actionscript-mode-map (c-make-inherited-keymap))
+ I was initializing it in the
+ The python-mode is
+ (setq py-mode-map (make-sparse-keymap))
+ Initialized with
+ 
+ I tried changing the initialization of actionscript-mode for the sake of it, but it doesn't work.
+ 
+ -----
+ 
+ >||
+ (mapcar 'car minor-mode-map-alist)
+ ;=> (yas/minor-mode hs-minor-mode encoded-kbd-mode view-mode)
+ ||<
+ 
+ I have yas/minor-mode in minor-mode.
+ 
+ -----
+ 
+ Noticed.
+ (Lisp Interaction yas) ok
+ (Fundamental) ng
+ (Python yas) ok
+ (ActionScript hs) ng
+ 
+ tmp.as: yas/minor-mode ;=> nil
+ tmp.py: yas/minor-mode ;=> t
+ 
+ Minor-mode is turned off.
+ 
+ -----
+ 
+ as-config.el
+ >||
+ ;; Automatically use hideshow with actionscript files.
+ (add-hook 'actionscript-mode-hook 'hs-minor-mode)
+ ||<
+ Very suspicious. I'll try commenting it out. (ActionScript hs) is replaced by (ActionScript) and yas is still nil.
+ 
+ -----
+ 
+ Forcing yas to read hs in a way that was not obviously the correct solution but was forcing hs to read yas.
+ >||
+ ;; Automatically use hideshow with actionscript files.
+ ;;(add-hook 'actionscript-mode-hook 'hs-minor-mode)
+ (add-hook 'actionscript-mode-hook 'yas/minor-mode)
+ ||<
+ 
+ Oh, yay, I got yas working, I don't know what hs does but I uncommented it out.
+ 
+ -----
+ 
+ I got it to work as a coping mechanism for now, but it's weird to work on major-mode and then minor-mode. How is the right way to do it?
+ 
+ *1206618154* Yamanote Line
+ 
+ It's empty. Surprising.
+ 
+ *1206633764*Py went to a yakiniku
+ I was told that how writing org still uses SQLite and that it will be lighter if I use MySQL and mod_fcgi.
+ 
+ TODO: Break into id:voluntas' company and play with Erlang on a 128-core machine.
+ 
+ The reason why Erlang didn't seem interesting to me is because it is a very rich language with only one core, which is useless for poor people. If I had 128 cores, I would use Erlang.
+ 
+ I also heard that if you use ActionScript, knowing Progression and not knowing Progression makes a lot of difference. I'll look into it later. http://progression.libspark.org/
+ 
+ Also, search prezivon's blog in Silverlight.
+ 
+ Oh, that's right. I was going to install Ubuntu on the lab machine, and rumor has it that even if Windows is already installed, it will install just like installing a regular program, without the need to repartition it.
+ 
+ -----
+ 
+ 2008-03-22 - Skotoprigonievsk News Agency
+ http://d.hatena.ne.jp/perezvon/20080322
+ Perezvon? French? Difficult.
+ 
+ -----
+ 
+ <a href="http://www.geocities.jp/honnomado/dosuto_4.html">Dosto work character "The Brothers Karamazov, dual personalities"</a>.
+ >>
+ Juchka: Ilyusha's dog. Kolya kept him and named him Perezvon.
+ <<
+ It was in Russian.
+ </body>
+ <comments>
+ <comment>
+ <username>coji</username>
+ <body>Should I have made the title a walking moe factor</body>?
+ <timestamp>1206604395</timestamp>
+ </comment>
+ <comment>
+ <username>elim</username>
+ <body>It is better to add (add-hook 'actionscript-mode-hook 'yas/minor-mode) to the Emacs initialization file (~/.emacs, ~/.emacs.d/init.el, etc) <br><br>Additionally, you can add the following to the <br><br>By the way, add-hook adds (not overwrites) the function to be executed during run-hooks, so there is no need to comment out the addition of hs-minor-mode :)<br><br>By the way, hs-minor-mode is this http ://www.bookshelf.jp/pukiwiki/pukiwiki.php?cmd=read&page=Elisp%2Fhideshow.el [A mode that hides the source part of various sources while leaving comments and function names.] </body>
+ <timestamp>1206686357</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-27 https://nishiohirokazu.hatenadiary.org/archive/2008/03/27]

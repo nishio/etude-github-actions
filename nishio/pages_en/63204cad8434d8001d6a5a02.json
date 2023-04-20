@@ -1,0 +1,21 @@
+RuntimeError: CUDA error: no kernel image is available for execution on the device
+
+It happened when I was trying diffuser, I checked to see if it was a different version of CUDA and it was.
+
+code:python
+ >>> import torch
+ >>> torch.__version__
+ '1.12.1+cu102'
+ >>> torch.version.cuda
+ '10.2'
+
+code:Dockerfile
+ FROM nvcr.io/nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04
+
+[https://gyazo.com/e732b22fc4c5681f219de25254bde4bf]
+https://pytorch.org/get-started/locally/
+$ pip install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+
+code:python
+ >>> torch.version.cuda
+ '11.3'

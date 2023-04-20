@@ -1,0 +1,40 @@
+Hatena2011-05-27
+code:hatena
+ <body>
+ **1306490384* Improve productivity with keyboard macros and keybindings.
+ I want to "add from the cursor to the end of the line to the beginning of the line two lines down."
+ >||
+ aaaaaaaa
+ bbb*bbbbb
+ ccccccc
+ ddddddd
+ ||<
+ If you press any key at the starred area of this, you get one shot.
+ >||
+ aaaaaaaa
+ bbb
+ ccccccc
+ *bbbbbddddddd
+ ||<
+ I would like to see it changed to The editor is Emacs.
+ 
+ First, start recording a keyboard macro by pressing "Ctrl-x (", do the operation you want to do, and then end the recording by pressing "Ctrl-x )". Next, name the operation with "Meta-x name-last-kbd-macro", which I named send-next. Next, try to insert the macro into the current buffer with "Meta-x insert-kbd-macro".
+ 
+ >||
+ (fset 'send-next
+    [?\C-k right down ?\C-y up up ?\C-e])
+ ||<
+ 
+ This seems to be what I just did. I'm going to trigger this when I press Shift-Return, and use local-set-key to set local key bindings (this seems to be a major mode unit scope, so you might have trouble overwriting keys you normally use).
+ 
+ >||
+ (local-set-key [S-return] 'send-next)
+ ||<
+ At the end of the code, press Ctrl-x Ctrl-e or something to execute the Lisp code.
+ 
+ I'll give it a try. I was able to use Shift-Return to "add from the cursor to the end of the line to the beginning of the line two lines down". That's great.
+ 
+ By the way, when I undo this operation, the first time I undo the pasting, the second time I undo the cutting. It would be nice to be able to undo them all at once. Not that it is really necessary, but it would be nice.
+ </body>
+
+[Hatena Diary 2011-05-27 https://nishiohirokazu.hatenadiary.org/archive/2011/05/27]

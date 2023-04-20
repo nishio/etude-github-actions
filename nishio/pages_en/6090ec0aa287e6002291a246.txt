@@ -1,0 +1,66 @@
+Hatena2012-06-23
+code:hatena
+ <body>
+ *1340459728*Diary of reading BCPL code
+ I don't know how EDSAC's InS instruction behaves, so I read the implementation at BCPL. http://www.cl.cam.ac.uk/users/mr/Edsac/edsac.tgz
+ I don't know anything about BCPL grammar, but it's interesting to read it using analogy.
+ 
+ First of all, this is where one instruction is executed. mem!scr is mem[scr] in the modern way. scr stands for sequence_control. Shift and bitwise operations are modern, if is TEST is interesting, and THEN and ELSE are BASIC. And, well, there is a switch statement-like thing, and at the crucial InS part, sts(addr, rd()) is done.
+ 
+ >||
+ AND interpret() = VALOF
+ ...
+ { // Instruction execution loop
+   LET instr = mem!scr
+   LET addr  = instr>>1 & #x3FF
+ 
+   TEST (instr&1)=0 THEN ldrs(addr)
+                    ELSE ldrl(addr&#x3FE)
+ 
+   scr := scr+1
+   SWITCHON instr & #b11111_0_0000000000_1 INTO
+   { DEFAULT:                     RESULTIS 3
+ 
+ ...
+     CASE #b00111_0_0000000000_0: stas(addr);          ENDCASE // U n S
+     CASE #b00111_0_0000000000_1: stal(addr&#x3FC);    ENDCASE // U n L
+ 
+     CASE #b01000_0_0000000000_0: sts(addr, rd());     ENDCASE // I n S
+ ||<
+ 
+ The definition of sts looks like this
+ 
+ >||
+ AND sts(a, x) BE mem!a := x & #x1FFFF
+ ||<
+ 
+  *t' and '*n' asterisks are probably backslashes in the modern sense...
+ 
+ >||
+ 
+ AND rd() = VALOF
+ { LET ch = ?
+ 
+   UNLESS tape DO
+   { writef("*nNo input tape selected*n")
+     abort(999)
+   }
+ 
+   ch := rdch()
+ 
+   SWITCHON ch INTO
+   { DEFAULT:  code := asc2ed(ch)
+               IF code>=0 RESULTIS code
+               writef("Bad ch %n '%c'*n", ch, ch)
+               abort(999)
+               RESULTIS 0
+              
+     CASE '*t':
+     CASE '*s': 
+     CASE '*n': LOOP
+   }
+ } REPEAT
+ ||<
+ </body>
+
+[Hatena Diary 2012-06-23 https://nishiohirokazu.hatenadiary.org/archive/2012/06/23]

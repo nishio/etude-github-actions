@@ -1,0 +1,276 @@
+Hatena2013-02-06
+code:hatena
+ <body>
+ *1360080780*Nibbling on Squeak Part 2
+ I put Squeak 4.3 on my Mac. <a href='http://d.hatena.ne.jp/nishiohirokazu/20101105/1288954444'>Last time</a> I put it in was 3.9, I think.
+ 
+ It's been a little over two years since the last time, so let's review first. Clicking or right-clicking on the wallpaper brings up a menu.
+ 
+ Immediately after startup
+ 
+ [f:id:nishiohirokazu:20130206011032p:image]
+ 
+ Close all of them. Click on "Browser," "Workspace," and "Transcript" at the top of the menu, and activate all of them. Place them as you see fit.
+ 
+ [f:id:nishiohirokazu:20130206011107p:image]
+ 
+ I remember last time I had trouble with the font in Workspace being too small or not monospaced, but this version has a right-click "set font" menu, so I decided to set it. I searched for a font I knew, but couldn't find one, and decided that BitstreamVeraSansMono was a sans-serif monospace font, judging from the name.
+ 
+ If I write code in Workspace, select it and Cmd+D (Do it), it will be executed. If nothing is selected, it executes the line with the cursor?
+ If you want to see the value, the easiest way is to use Cmd+P (Print it), and the result will be written to Workspace. All these shortcuts are in the right-click menu.
+ Another way is to write to Transcript: Transcript show: 'hello!' will write to the Transcript window. There are no line breaks. Previously, I had to run Transcript show: 'hello!'; cr. and so on to break lines.
+ 
+ Here is a summary of the last issue. In the last issue, I got as far as calculating prime numbers. After that, I thought, "Okay, let's define classes and methods," and tried to find the syntax for class definitions and write them in Workspace, but it didn't work as expected and I lost heart. That's where I went from there this time.
+ 
+ Not trying to learn how to use the Browser was the source of my previous failure.
+ When someone says, "Use Transcript show to output. The line breaks are cr" and I don't feel like, "Yes, I see. What else is there? I mean, isn't there a method like Java's System.out.println that outputs with a newline? How do you check that?" I think, "How do I check that?
+ I found a TranscriptStream '', which is an instance of the TranscriptStream class. Then I right-clicked on the TransriptStream and found "browse full(b)" in the menu. Pressing this button brings up the details of the class in the Browser! (I just noticed that it also comes up suddenly with Cmd+b without exploring! Why isn't it in the right-click menu!)
+ 
+ [f:id:nishiohirokazu:20130206011137p:image]
+ 
+ And again, I didn't know how to see this class browser at first, because I had avoided creating classes in the class browser. When I clicked on the first and third items from the left in the list of four, what I saw in the space below was a "template for defining a new class/method". I'm still not sure what it's used for. I'm not sure what they are used for yet, but it looks like they can be categorized.
+ 
+ Then, looking at the list of TranscriptStream methods, I find a method called showowln. And then, I find a method called "showowln".
+ 
+ By the way, when I look at the definition of showln, it says something like self nextPutAll:. Where is this defined? It is not defined in TranscriptStream. I thought it would appear when I selected it and pressed the Implementers button, but unexpectedly a lot of them appear. How can I find out where the definitions called here are? Well, I thought it would be in WriteStream on a hunch, and I found it there. Then I looked at the definition of TranscriptStream afterwards and confirmed that it is a subclass of WriteStream.
+ 
+ Let's create an appropriate class using the class browser. First, I created a category named "MyCategory" by "add item" in the left list. Click on it, and a template for class definition will appear in the lower column. In this template, "#NameOfSubclass" is the name of the class, and "Object" is the parent class.
+ 
+ >|smalltalk|
+ Object subclass: #NameOfSubclass
+ 	instanceVariableNames: ''
+ 	classVariableNames: ''
+ 	poolDictionaries: ''
+ 	category: 'MyCategory'
+ ||<
+ 
+ If I rewrite the name to #MyFirstClass and save it, I get that class in the second list and "no messages" in the third list. Ah, well, I called this a list of method categories earlier, but in Smalltalk terms, you want me to call it "messages". If you click on this list, you get a template like this.
+ 
+ >||
+ messageSelectorAndArgumentNames
+ 	"comment stating purpose of message"
+ 
+ 	| temporary variable names |
+ 	statements
+ ||<
+ 
+ Now that we finally have some idea, let's try "<a href='http://d.hatena.ne.jp/sumim/20071105/p1'>Play with RubyTraits-0.2 - the t in Smalltalk is lower case</a>".
+ 
+ >||
+ Trait named: #T
+ ||<
+ 
+ I immediately get an error message MessageNotUnderstood. This is where I lost heart last time. But now I know: I should browse the Trait, press the class button and look at the class method (or class method, as Smalltalk might not call it), because this time I didn't do a new one. There it is.
+ 
+ >||
+ named: aSymbol uses: aTraitCompositionOrCollection category: aString
+ 	"Dispatch through ClassDescription for alternative implementations"
+ 	^ClassDescription newTraitNamed: aSymbol uses: aTraitCompositionOrCollection category: aString
+ ||<
+ 
+ In other words, the usage is like this. T is successfully created in MyCategory.
+ 
+ >||
+ Trait named: #T
+ 	uses: {}
+ 	category: #MyCategory
+ ||<
+ 
+ Well, here's the next one. I don't see a method named >> anywhere.
+ >||
+ T >> hoge
+     ^'T#hoge'
+ ||<
+ 
+ View 'Smalltalk by Example'. Found:.
+ >>
+ A typographic convention. Smalltalkers frequently use the notation “>>” to identify the class to which a method belongs, so, for example, the cellsPerSide method in class SBEGame would be referred to as SBEGame >>cellsPerSide. To indicate that this is not Smalltalk syntax, we will use the special symbol &#187; instead, so this method will appear in the text as SBEGame&#187;cellsPerSide
+ <<
+ 
+ I see that the '>>' notation does not mean to write so in the code. So, I define a method in the class browser. In the future, I want to test the behavior without GUI, so I need a way to add a method in code. But I can't seem to get it to call as a method even if I put a block here.
+ 
+ It's already 1:00 in the evening, so I'll continue later.
+ 
+ *1360148225*Tried the furball brush.
+ My sweater is full of furballs, so I brushed it with a furball brush I bought the other day. My wife describes it as "grooming.
+ 
+ [f:id:nishiohirokazu:20130206193232j:image]
+ 
+ Wow, there are hairballs all over!
+ 
+ The product is probably this ↓.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishioyome-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B0036D2X62" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1360153589*Nibbling on Squeak Part 3
+ Continued from <a href='http://d.hatena.ne.jp/nishiohirokazu/20130206/1360080780'>Nibbling on Squeak, Part 2</a>.
+ 
+ ** Code to try out the Trait
+ 
+ Thanks to sumim's advice, I finally "expressed everything in code".
+ 
+ >||
+ Trait named: #MyTrait
+     uses: {}
+     category: #MyCategory.
+ 
+ MyTrait compile: '
+ hoge
+     ^''T#hoge''
+ '.
+ 
+ Object subclass: #MyClass
+     uses: T
+     instanceVariableNames: ''
+     classVariableNames: ''
+     poolDictionaries: ''
+     category: 'MyCategory'.
+ 
+ MyClass new hoge  "=> 'T#hoge'".
+ ||<
+ 
+ But to try this, I would still need an explanation such as "Select each of the first three sentences and Do-it, then Print-it the last sentence.
+ 
+ 
+ ** To Automation
+ We want to reduce human intervention in the testing process as much as possible, so how can we do this with Squeak?
+ 
+ This time, for various reasons, we want to control it from other processes. So, first of all, we want the output to be sent to standard output instead of Transcript. Download <a href='http://wiki.squeak.org/squeak/708'>OSProcess</a> sar and insert it by drag-drop. Then you can write hello world on the standard output with the following code.
+ 
+ >||
+ OSProcess thisOSProcess stdOut
+     nextPutAll: 'hello world';
+     nextPut: Character lf;
+     flush.
+ ||<
+ 
+ ** Start Squeak from the command line
+ 
+ This time I installed with Squeak-4.3-All-in-One, so I am not sure where to find the executable binary. I looked around and found
+ /Applications/Squeak-4.3-All-in-One.app/Contents/MacOS/Squeak\ VM\ Opt seems to be it.
+ 
+ Next time I run this, it tells me there is no image file.
+ 
+ >||
+ $ /Applications/Squeak-4.3-All-in-One.app/Contents/MacOS/Squeak\ VM\ Opt
+ This interpreter (vers. 6502) cannot read image file (vers. 1702195571).
+ Press CR to quit...
+ ||<
+ 
+ I saved the image of the OSProcess installed earlier with an appropriate name: WithOSProcess. Again, I wasn't sure where it was saved and had to search for it. I found it in /Applications/Squeak-4.3-All-in-One.app/Contents/Resources/WithOSProcess.image.
+ 
+ When Squeak starts, if you pass the full path to a file as a command line argument, it will be executed. I had initially added "-headless" to Squeak because I heard that it executes the file without invoking the GUI, but I could not see the error message when an error occurs if I did that. So, for the time being, I will leave it off.
+ 
+ I created a Python script named run_squeak.py because it was a hassle to write absolute paths to each and every file.
+ 
+ >|python|
+ #!/usr/bin/env python
+ import subprocess
+ import sys
+ import os
+ scriptname = sys.argv[1]
+ subprocess.call(["/Applications/Squeak-4.3-All-in-One.app/Contents/MacOS/Squeak VM Opt",
+                  "/Applications/Squeak-4.3-All-in-One.app/Contents/Resources/WithOSProcess.image",
+                  os.path.abspath(scriptname)])
+ ||<
+ 
+ Now I get hello world. However, it did not exit after outputting. I couldn't figure out how to exit, so I decided to throw a SIGKILL on myself.
+ 
+ >||
+ squeak := OSProcess thisOSProcess.
+ 
+ squeak stdOut
+     nextPutAll: 'hello world';
+     nextPut: Character lf;
+     flush.
+ 
+ squeak sigkill: squeak.
+ ||<
+ 
+ The program now exits with a "hello world" output without incident.
+ 
+ >||
+ $ ./run_squeak.py helloworld.st
+ hello world
+ $
+ ||<
+ 
+ ** Summary
+ 
+ So, by writing this kind of code, we can now check the behavior of the trait without human intervention. Congratulations, we are happy.
+ 
+ https://github.com/nishio/learn_language/blob/master/squeak/test_trait.st
+ 
+ >||
+ $ ./run_squeak.py test_trait.st
+ T#hoge
+ ||<
+ 
+ 
+ With a little more work, you should be able to see behavior like this with other languages: https://github.com/nishio/learn_language/blob/master/coderunner/test/zero_ division.py
+ 
+ Oh, no, currently when I do a 1/0 in Squeak, I get an error dialog in the GUI. I'll have to intercept it and send it to stdout first... I put self halt. in Exception >> signal, and now it's in an endless loop.
+ 
+ ** Postscript
+ Instead of getting into Signal, should we just catch the exceptions that make it to the top without being trapped?
+ >||
+ [ 
+   1 / 0
+ ] 
+   on: Exception 
+   do: [:x| Transcript show: x; showln: x messageText.] 
+ ||<
+ 
+ Done and done: https://github.com/nishio/learn_language/blob/master/squeak/test_zerodivide.st
+ 
+ *1360158371* Image of my wife Squeak
+ Wife: "What are you writing now?"
+ I "Squeak".
+ Wife: "Are you ticking?"
+ I said, "I'm not ticklish."
+ Wife: "Well, why don't you just tic-tac-toe?"
+ I said, "I want to handle it from the console without tic-tac-toe."
+ My wife said, "Squeak is good for tickling."
+ I said, "What?"
+ 
+ 
+ 
+ I said, "Well, but that's a good argument..."
+ My wife said, "That's right! Squeak without tic-tac-toe is like Unix without a console, and I feel like I'm being forced to startx when I don't want to!"
+ 
+ The analogy is too exquisite.
+ </body>
+ <comments>
+ <comment>
+ <username>sumim</username>
+ <body>As I added in the entry you referenced, if you want to add a method as code, you can send a message to the class or trace that you want to define the method for, giving the source of the method as a string argument compile: 'messagePattern #codeBoty ', giving the source of the method as a string argument. <br><br>Another way is to make a text file of all the source code, including the class and trace definitions, and file it in (e.g., "(FileStream fileNamed: 'example.st') fileIn" as do it). In this case, the file example.st must be written in chunk format for fileIn (only CR is used for line breaks, just to be safe). However, writing chunked files by hand is tedious, especially since direct editing of existing chunked files is prohibited in principle (since they may contain byte-level information needed to manage source code in the environment). It is recommended that you use the class browser to define and check the operation of the class, trace, and its methods, and then fileOut (select the class category or class/trait alone, and then right-click to fileOut) to generate the file. </body>.
+ <timestamp>1360101970</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>>Why isn't it on the right-click menu? <BR><BR>Unfortunately, it is not on the right-click menu, but you can select browse it from a second menu that appears by selecting more... You can choose browse it from a second menu that appears by selecting more... from there. This menu is the shift-yellow button menu (yellow button means right-click in the classic Smalltalk environment, just to be clear. Just in case. It is called #shiftedYellowButtonMenuItems (the contents are defined in a <br> method called #shiftedYellowButtonMenuItems) and, as the name implies, can be called directly (i.e., without going through the Yellow Button Menu → more...) by pressing the shfit key and right clicking. ) by right-clicking while holding down the shfit key, as the name implies. </body>
+ <timestamp>1360108654</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Thank you! Behavior >> compile: is exactly what I was looking for! I couldn't find it in senders and implementers like CompiledMethod >> newMethod...</body >
+ <timestamp>1360118055</timestamp>
+ </comment>
+ <comment>
+ <username>sumim</username>
+ <body>I looked at it, but it may be a little difficult to get to #compile: by attacking from CompiledMethod. <br><br>I'm not sure if I can find it in CompiledMethodTest's #testSelector or not, though. <br><br>If you know that the word compile is likely to be used in the method name, you can select it as text and use the shift-yellow button menu to find selectors containing it (cmd + shift + w). <BR><BR>It is possible to use senders and impementors to statically follow a method, but it is easier to get lost if you are not familiar with the design and architectural patterns used in the system, so it is better to follow dynamically. It is better to follow them dynamically. <BR><BR>For example, in this case, we know that the method is compiled in the class browser, so we start by looking for #compileMessage:notifying: in the Browser, which is probably the entity (this method happens to have a name like that). (This method happens to have a name that looks like that, so you should be able to find it relatively easily from the list of methods, but even if that is not possible, there are several ways to interrupt it, such as by manipulating the menu.) <BR><BR>Next, you can modify the #compileMessage:notifying: code (e.g., insert self halt. immediately after the temporary variable declaration to accept it, and then revert from the versions to revert back to the original code). <br><br>Next, we will try to accept (i.e., compile) the appropriate code in the browser code frame. <br><br>Then the aforementioned self halt will emit a notifier, from which you can click on the execution context of #compileMessage:notifying: to start the debugger → dive in using Through and Into as appropriate, and then # defineMessageFrom:notifying: to #compile:classified:notifying:. <br><br>#compile: is a convenience method that omits the arguments of #compile:, so in theory you should be able to find it by using senders, but #compile:notifying: and #compile:classified:notifying: have a cushion, so it's hard to find it without making certain assumptions like "there must be a simpler convenience method available. <br><br><br>This is a very long and complicated process. <br><br>I am sorry if this is of no interest to you. </body><br><br>I am sorry if this is of no interest to you.
+ <timestamp>1360134418</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I haven't chewed it all up yet, but I think "how to find what you want from a huge pile of information" is a very useful know-how. Thank you! </body>
+ <timestamp>1360137791</timestamp>
+ </comment>
+ <comment>
+ <username>umejava</username>
+ <body>You can also try the Japanese version if you like. http://sourceforge.jp/projects/squeak-ja/<br>And the English version is 4.4 is the latest (although the main site is still updated with 4.3). http://news.squeak .org/2013/01/05/squeak-4-4-released/</body>
+ <timestamp>1360139381</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-02-06 https://nishiohirokazu.hatenadiary.org/archive/2013/02/06]

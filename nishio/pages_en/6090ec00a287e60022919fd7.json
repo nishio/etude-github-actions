@@ -1,0 +1,189 @@
+Hatena2009-07-23
+code:hatena
+ <body>
+ *1248330993*Diary
+ The question is whether to make it quickly with the existing library or to make it after solidifying the footing with boost::gil. I'm going to make it with my existing libraries. (Oh!
+ 
+ <hr>
+ 
+ I stepped on the catsuit part of the sun visor and broke it and it keeps slipping off my head. Maybe I should buy a new one. The problem is that I can't wear a sun visor and muffled headphones at the same time, so I might as well combine the sun visor and headphones!
+ 
+ And where are those muffled headphones?
+ 
+ <hr>
+ 
+ I bought my first paid app for my iPhone, Spore Origin, and got stuck on stage 8 with lots of spiky stuff. After dying many times, I put on the scales and eyeballs and played carefully. I thought I couldn't erase the parts once I put them on, but it seems I can erase and put them back on as many times as I want.
+ 
+ f:id:nishiohirokazu:20090724030338j:image
+ 
+ *1248337194* How to make coffee cola
+ trick
+ - 1: The ratio of cola to coffee should be more cola than coffee, otherwise the cola will be overwhelmed by the coffee and the taste will be very subtle.
+ - 2: To reduce the amount of liquid in the coffee, make the coffee super thick. It's like pouring an inch of hot water over the normal amount of instant coffee.
+ - 3: If you pour cola directly into very strong coffee, a lot of fine bubbles will form and it will be chaotic, so pour it into another container before pouring it in.
+ 
+ 
+ The <a href="http://www.woopie.jp/video/watch/c2fcb187a34283be">commercial</a> clearly looks like they are heating the cola, but I think cola tastes worse when heated.
+ 
+ *1248352552*Painting of the Day
+ What's this shift?
+ <img src="http://gyazo.com/ecb537ce45537587d6cdd1c8eaeb1253.png">
+ 
+ It's shifting more and more as I get closer. Is this a distance-dependent bug?
+ <img src="http://gyazo.com/bcb2236af6889aaad926462243d72e8a.png">
+ 
+ Just to be sure, look at it 10 times further away with the angle unchanged to isolate whether it depends on the distance or the elevation angle.
+ <img src="http://gyazo.com/f4abdc7032452320f712e8a23b66172c.png">
+ 
+ Much more double.
+ <img src="http://gyazo.com/d653cbf12d3080146a84d2f3278a54c4.png">
+ 
+ It's not distance, this is not distance. It's a bug where the angle of elevation is so steep that the illumination is outward from the actual situation.
+ 
+ Try to make the angle steeper.
+ <img src="http://gyazo.com/8611fa9708ac4d7af5c83d4585ddc9ab.png">
+ The steeper the angle of elevation, the more the lighting shrinks w
+ No, I had a sneaking suspicion it was strange because when I looked up from below, it was smaller when it should have been larger (fix it then!).
+ 
+ 
+ Wow, the camera matrix is not normalized. The larger the elevation angle, the smaller the matrix. I thought I normalized it correctly.
+ 
+ Ai, okay.
+ >|cpp|
+   camera_dir /= mag(camera_dir);
+   camera_left = cross_prod(camera_dir, camera_up); 
+   camera_up = -cross_prod(camera_dir, camera_left); 
+ ||<
+ 
+ The correct answer is.
+ >|cpp|
+   camera_dir /= mag(camera_dir);
+   camera_left = cross_prod(camera_dir, camera_up); 
+   camera_left /= mag(camera_left);
+   camera_up = -cross_prod(camera_dir, camera_left); 
+ ||<
+ 
+ Why do you think you have normalized only one of the three axes and think you have normalized all three axes?
+ 
+ Result. Oh, that's what happens. Each was off in the opposite direction? Well, that's right. It is strange that only one of the two matrices, ray tracing and projection, is shifted, even though they use the same matrix. I guess it means that the light direction is opposite, so they are shifted in the opposite direction.
+ <img src="http://gyazo.com/d5b1ff550c4d53c7937bb93fa58777ba.png">
+ 
+ Zoom in. Ooh, that's moody.
+ <img src="http://gyazo.com/f075078b911bcf37aaa4b9522b40c4d3.png">
+ 
+ I thought that rendering with hundreds of lights is called Global Illumination, but I was wrong. Global Illumination is a type of illumination in which the reflected light from a diffuse or specular reflective surface illuminates other objects. Mine is called DI (Direct Illumination).
+ 
+ *1248365438*[TopCoder]Single Round Match 445 Div2
+ It's been a very long time. I seem to have recovered a lot, probably because I've been playing with renderers and touching C++ for a while now. I have about 10 minutes left to respond, but I've submitted everything, so there's nothing to do (or prepare for a shoot down, which is what I would normally do).
+ 
+ I think I'll go to bed quickly, hoping I don't fail the test.
+ <img src="http://gyazo.com/54819a7ed4eacc3e3696d39645bcebc4.png">
+ 
+ And while I'm at it, the coding phase is over. Let's write the code and explanation.
+ 
+ First is the 300-point problem. This is a question where you are given a string of letters a-z in the alphabet and asked to return the earliest of the conversion ciphers for it in lexicographic order. Just go through the given string from the beginning, and if there is a time when it has not yet been converted, replace it with the youngest letter.
+ 
+ I was angry because I reversed the argument of string result(N, '*');.
+ >|cpp|
+   string encrypt(string message) {
+     size_t N = message.size();
+     string result(N, '*');
+     char to = 'a';
+     for(size_t i=0; i<N; i++){
+       if(result[i] == '*'){
+ 	char frm = message[i];
+ 	for(size_t j=i; j<N; j++){
+ 	  if(message[j] == frm){
+ 	    result[j] = to;
+ 	  }
+ 	}
+ 	to++;
+       }
+     }
+     return result;
+   }
+ ||<
+ 
+ 500 point problem. Given some coordinates, the question is to answer how many points are there such that there is a point in the given coordinates to true north, true south, true west, and true east.
+ 
+ Since the coordinates are integers of -100..100, 200 * 200, you can try them all and still have 40000. You can try them all; it's still no big deal to check at most 50 given vertices every time for every 40000 points, but I came up with the flagging one first, so that's what I wrote.
+ 
+ I had initially used += instead of |=, so it did not pass the test.
+ >|cpp|
+   int count(vector <int> xs, vector <int> ys) {
+     vector<int> map(40000);
+     size_t N = xs.size();
+     for(size_t i=0; i<N; i++){
+       size_t x = xs[i] + 100, y = ys[i] + 100; // map to 0..200
+       for(size_t j = 0; j < x; j++){
+         map[j + y * 200] |= 1;
+       }
+       for(size_t j = x + 1; j <= 200; j++){
+         map[j + y * 200] |= 2;
+       }
+       for(size_t j = 0; j < y; j++){
+         map[x + j * 200] |= 4;
+       }
+       for(size_t j = y + 1; j <= 200; j++){
+         map[x + j * 200] |= 8;
+       }
+     }
+     return std::count(map.begin(), map.end(), 15);
+   }
+ ||<
+ 
+ A 1000 point problem, starting with an n-digit 0 and repeating until you either change some 0s to 1s or some 1s to 0s. You must not repeat the same number, and if there are multiple choices, you must choose the one with the smallest value. What is the kth digit?
+ 
+ I wrote down on paper when it was 3 and 4 digits and decided (wrongly) that it was only one digit that always changes, and when I implemented it, only the last one in the test case didn't pass. Oh, no.
+ 
+ After worrying about it for about 10 minutes, he realizes, "When you change back from 1 to 0, it is not necessarily one. If a lot of them can be made smaller by putting them all together and making them 0, that is the one that will be chosen. So, when reducing the number of 1's, it is necessary to search for all the patterns to choose which of the already standing 1's to make 0. That's a lot of code.
+ 
+ Then I realize, "So, the maximum number of digits is 10, which means that even if the maximum number of bits are standing, it should be 1024 streets. There is a lot of waste, but I decided not to worry about it.
+ 
+ >|cpp|
+   string password(int n, int k) {
+     int key = 0;
+     vector<int> used;
+     used.push_back(key);
+     for(int days=1; days < k; days++){
+       int minnext = 1024; 
+       for(int i=0; i<n; i++){
+ 	int newkey = key ^ (1 << i);
+ 	if(newkey < minnext){
+ 	  if(find(used.begin(), used.end(), newkey) == used.end()){
+ 	    minnext = newkey;
+ 	  }
+ 	}
+       }
+       for(size_t i=0; i<1024; i++){
+ 	int newkey = key & i;
+ 	if(newkey < minnext){
+ 	  if(find(used.begin(), used.end(), newkey) == used.end()){
+ 	    minnext = newkey;
+ 	  }
+ 	}
+       }
+       key = minnext;
+       used.push_back(key);
+     }
+     // int to string
+     return int2str(key, n);
+   }
+ ||<
+ 
+ This passed the test for all three questions for now, so I SUBMIT, and since I no longer had the energy to work hard, I just hung out in the chat room and chatted with people. The challenge phase ended when I wrote this entry so far. So far, I haven't been shot down. I hope it passes the system test.
+ 
+ <hr>
+ 
+ Oops...failed 500 points. Mwah, haha, -100...if it was 100, it would be 201, not 200!
+ <img src="http://gyazo.com/0ee75bb8cfc956779df8a84c2d145cfb.png">
+ </body>
+ <comments>
+ <comment>
+ <username>Kazuaki Natsuhara</username>.
+ <body>I followed you from mixi. <br>Happy Birthday! <br>I'm sorry</body>.
+ <timestamp>1248345599</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-07-23 https://nishiohirokazu.hatenadiary.org/archive/2009/07/23]

@@ -1,0 +1,145 @@
+Hatena2007-12-05
+code:hatena
+ <body>
+ *1196829484*bot-to-bot communication
+ >>
+ 13:35 (nishio_) regexp /(.) っ(.) \1\2/ => mikkoku
+ 13:35 (__81kun) ok.
+ 13:35 (OppaiSan) oregexp Mikkoku (.) (.)
+ 13:35 (OtohaChan) Registered!
+ <<
+ 
+ Wait, when I educate __81kun, OppaiSan automatically educates OtohaChan.
+ And the way you educate them is wrong.
+ 
+ ---
+ 
+ __81kun brain management screen:
+ 
+ <img src="http://www.nishiohirokazu.org/files/81kun1.png">
+ 
+ Someone is deliberately aiming for howling (infinite loop between bots).
+ 
+ ---
+ 
+ >>
+ 16:19 (nishio_) terrible, someone registered to show dankogai9 in d
+ 16:20 (nishio_) And there are about 20 cases with the same rule in them.
+ <<
+ 
+ *1196855355*CSS
+ >|python|
+ >>> class Foo(object):
+ 	x = 1
+ 	def __getitem__(self, v):
+ 		if v.startswith("px2per_"):
+ 			return "%.3f%%" % (float(v[7:]) / 13 * 100)
+ 
+ >>> Template("""
+ h1 { font-size: $px2per_25 }
+ """)
+ <string.Template object at 0x01967C90>
+ >>> f = Foo()
+ >>> _.substitute(f)
+ '\nh1 { font-size: 192.308% }\n'
+ ||<
+ 
+ *1196856910*CSS2
+ We have not yet tested it properly.
+ 
+ >|python|
+ class RGB(object):
+     def __init__(self, rgb):
+         self.rgb = map(float, rgb)
+ 
+     @staticmethod
+     def s(s):
+         "build from #ffffff form"
+         if s[0] == "#": s = s[1:]
+         v = int(s, 16)
+         r = (v & 0xFF0000) >> 16
+         g = (v & 0xFF00) >> 8
+         b = v & 0xFF
+         return RGB([r, g, b])
+ 
+     def hsv(self):
+         rgb = self.rgb
+         r, g, b = rgb
+         MAX = max(rgb)
+         MIN = min(rgb)
+         DIFF = MAX - MIN
+         h = {
+             r: 60 * (g - b) / DIFF,
+             g: 60 * (b - r) / DIFF + 120,
+             b: 60 * (r - g) / DIFF + 240,
+         }[max(rgb)]
+         s = DIFF / MAX
+         v = MAX
+         return HSV([h, s, v])
+ 
+     def __str__(self):
+         "round to web color"
+         return "#%s" % ("".join(
+             "0123456789ABCDEF"[i] * 2
+             for i in [int(round(x / 17))
+                       for x in self.rgb]))
+                         
+ class HSV(object):
+     def __init__(self, hsv):
+         self.hsv = map(float, hsv)
+ 
+     def rotate(self, h):
+         self.hsv[0] = (self.hsv[0] + h) % 360
+ 
+     def darken(self, k):
+         from math import log, exp
+         v = self.hsv[2]
+         v = min(log(exp(v) * k), 255)
+         self.hsv[2] = v
+         
+ 
+     def rgb(self):
+         h, s, v = self.hsv
+         hi, f = divmod(h, 60)
+         f /= 60
+         p = v * (1 - s)
+         q = v * (1 - s * f)
+         t = v * (1 - s * (1 - f))
+         return RGB([
+             [v, t, p],
+             [q, v, p],
+             [p, v, t],
+             [p, q, v],
+             [t, p, v],
+             [v, p ,q],
+         ][int(hi)])
+ 
+ 
+ print RGB.s("#008833").hsv().rgb() #=> #008833
+ ||<
+ 
+ I'll try to generate a clean color chart tomorrow for testing.
+ 
+ *1196875413*Weight
+ http://d.hatena.ne.jp/higayasuo/20071204#1196745687
+ >>
+ Weight increased by 1.2 kg to 44 kg
+ <<
+ 
+ There are about 1.5 times more... orz
+ 
+ *1196878060*#bot.59
+ Write #bot.59 and read "bot heaven".
+ A bot's heaven. A bot's battlefield.
+ 
+ I heard that it is possible to prevent people from speaking unless they are granted the right to speak, so I thought it would be a good idea to have an operator bot that grants the right to speak to anyone who comes in and then suspends the right to speak if there is a violation of the rules.
+ </body>
+ <comments>
+ <comment>
+ <username>Gamer</username>
+ <BODY>Auxiliary devices for convenient use in games! Did you know<br>that you can enjoy games more peacefully and protect the health of the user due to overworked games. <br>. MACRO : Record repetitive (keyboard/mouse) movements in games and then play them back. <br>. graphic2 : Recognize the game screen and perform actions (attack/skill/water potion/picking up) specified by the user. <br>. m-key : Register and use repetitive keyboard actions in the game on different keys. <br>If you would like more information, please visit and look at the following address. <br>( automouse.jp )</body>
+ <timestamp>1196998736</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2007-12-05 https://nishiohirokazu.hatenadiary.org/archive/2007/12/05]

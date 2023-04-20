@@ -1,0 +1,128 @@
+Hatena2008-10-10
+code:hatena
+ <body>
+ **1223623985* A scene from today's lab
+ >>
+ Me: amachang service is now open to the public! I'll make something on Saturday and Sunday too.
+ AM: By the way, do you know it's a three-day weekend?
+ Me: Oh, okay! Thanks!
+ <<
+ 
+ *1223649343*[mid-term limit] Maybe I'll make a server over the weekend.
+ It is important to create and publish the work, so don't procrastinate, cut down what you have to do so that you can complete it this weekend alone.
+ 
+ - Create a server that allows humans to play with the GUI.
+ - I was thinking of using Twisted to abstract the connection method so that the same logic can be used whether accessing by leaving the socket connected or by HTTP with a human browser, but I won't do that this time.
+ - I'm not going to do it this weekend because of the hassle of securing a server, etc. I'll do it with Google App Engine.
+ - I would prefer not to support secure user management this time, but I would still like to play under my own name, so I will do it if possible.
+ - The goal is for humans to be able to enjoy at least a minimum and a maximum amount of play, and for logs to be kept for future research and for humans to be able to view them since they have been collected.
+ - Prepare an API to make it easy for third parties to create bots (AI) with HTTP access.
+ - The source code is placed in CodeRepos.
+ - Unknown if it is possible to run AI written in C++ on Google App Engine server in the future (expected not to be possible), to be investigated.
+ - Investigate whether the process can stay alive for a reasonable amount of time and maintain someone's AI and socket.
+ - Model design: There is no need for the schema to be easy to search since we do not search by board information.
+ --Game Information
+ --- game ID (auto increment)
+ --- Player Information (FK * 3)
+ --- board information (PICKLED)
+ --Player Information
+ --- player id (auto increment)
+ --- Name
+ --- Number of times played
+ --- Total points
+ I guess.
+ 
+ - The AI will be the random one we have now and a slightly modified one, but we will not be able to tell which AI it is when we play (because humans learn quickly that "this one is weak against ________").
+ - I'll do hello, world for now, and next I'll make a random card to display. The next step is to make a random card display.
+ - Once that's done, what's next?
+ - It would be interesting to have a versus game or some kind of chat during the game.
+ - You need to have a STATE. If you want to expand it to versus in the future, there are 8 ways, depending on whether or not each of the 3 people have put it out. 1,2,4
+ - 3 turns x 5 rounds x 8 ways during the game
+ - I need to know what state you're in before the game starts and what state you're in at the end of the game.
+ - Maybe there could be an assist mode that shows what cards are face down and which cards are left. Although you can't see other people's cards, there is no need to hide them because once the information is revealed, you can just make a note of it.
+ 
+ If I think of others, I will gradually add them.
+ 
+ *1223657486*gosh-rl
+ <a href='http://www.netlab.cs.tsukuba.ac.jp/~yokota/izumi/gauche/'>Readline module for Gauche</a>
+ 
+ I was taught.
+ id:nyaxt++
+ 
+ >||
+ $ gosh-rl
+ gosh: "error": Compile Error: failed to link "readline" dynamically: dlopen(/usr/local/lib/gauche/site/0.8.13/i686-apple-darwin9.4.0/readline.so, 10): Symbol not found: _rl_completion_matches
+   Referenced from: /usr/local/lib/gauche/site/0.8.13/i686-apple-darwin9.4.0/readline.so
+   Expected in: flat namespace
+ 
+ "/usr/local/bin/gosh-rl":8:(use readline)
+ ||<
+ 
+ Dismayed.
+ 
+ *1223665912*[Midterm] Google App Engine Diary
+ At any rate, I read <a href='http://builder.japan.zdnet.com/sp/google-app-engine/story/0,3800086196,20371257,00.htm'>Google App Engine in Detail: Hello World in a Nutshell - builder by ZDNet Japan</a>. I read <a href=''>Google App Engine in detail - builder by ZDNet Japan</a>.
+ 
+ <a href='http://www.everes.net/2008/apr/09/django-on-google-app-engine/'>Django with Google App Engine | Spam and stuff</a> and <a href='http:// sayhelloworld.blog113.fc2.com/blog-entry-97.html'>Django[HW]</a> on Google App Engine via <a href='http://thomas.broxrost.com/2008/04/08/ django-on-google-app-engine/'>Django on Google App Engine in 13 simple steps</a> and read.
+ 
+ Download 1.0 at <a href='http://www.djangoproject.com/download/'>Django | Download</a>.
+ >||
+ $ sudo python setup.py install
+ ...
+ copying build/scripts-2.5/django-admin.py -> /usr/local/bin
+ error: /usr/local/bin/django-admin.py: No such file or directory
+ ||<
+ 
+ Hmm?
+ 
+ >||
+ $ ls -l /usr/local/bin/django-admin.py 
+ lrwxr-xr-x  1 root  wheel  65  5 27 23:25 /usr/local/bin/django-admin.py -> /usr/local/lib/python2.5/site-packages/django/bin/django-admin.py
+ ||<
+ 
+ There is no /usr/local/lib/python2.5/site-packages/django/bin/django-admin.py. Environment is MacBook
+ 
+ >||
+ $ sudo cp -r django/ /usr/local/lib/python2.5/site-packages/django
+ ||<
+ 
+ Now that django-admin.py is available, do STEP 5, 6. Run the Google App Engine development server and go to http://localhost:8080/にアクセスしたら and the default Django screen comes up.
+ 
+ At first, I made Hello, world.
+ 
+ When I tried to publish it, I had to authenticate with my cell phone. However, I can't send it because my mobile email address is against RFC or something. Hmmm, should I change my number?
+ 
+ I thought about it for a while and decided that since my parents would not be using GAE, it would be easiest to send it to their e-mail address and have it forwarded to me.
+ 
+ http://coderepos.org/share/browser/lang/python/saichugen/gae
+ For now, I made it to the point where the cards are displayed side by side in a 7-aligned fashion and committed.
+ </body>
+ <comments>
+ <comment>
+ <username>elim</username>
+ <body>You were about to go to work again :)</body>
+ <timestamp>1223641306</timestamp>
+ </comment>
+ <comment>
+ <username>hiroyukiegami</username>
+ <body>Good for you! </body>
+ <timestamp>1223641613</timestamp>
+ </comment>
+ <comment>
+ <username>showyou</username>
+ <body>I thought you meant that you can make 1.5 times higher quality service! <body>I thought you meant that until I saw your comment.
+ <timestamp>1223680196</timestamp>
+ </comment>
+ <comment>
+ <username>hogelog</username>
+ <body>For now, gosh -i from rlwrap or ledit. >readline</body>
+ <timestamp>1223699789</timestamp>
+ </comment>
+ <comment>
+ <username>jbking</username>
+ <body>That's deja vu...<br>http://d.hatena.ne.jp/jbking/20071222/readline_on_leopard</body>
+ <timestamp>1223770491</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-10-10 https://nishiohirokazu.hatenadiary.org/archive/2008/10/10]

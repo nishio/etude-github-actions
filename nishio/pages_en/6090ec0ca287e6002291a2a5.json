@@ -1,0 +1,74 @@
+Hatena2013-04-06
+code:hatena
+ <body>
+ *1365225370* Rules of the game of doubles
+ I wondered what kind of party game, if any, would be called "The Game of Doubles."
+ 
+ - old-meets-new type game
+ - Parents say the numbers.
+ - The left neighbor is the number that doubles that value.
+ - Those who could not say it in rhythm were eliminated.
+ - The next person to drop out is the next parent.
+ 
+ 3!" "6!" "12!" "24!" "48!" "96!" "Eh, eh!" "Yes, out!" The game.
+ 
+ Add a further rule that the number must not be said once it appears in the game. This would change the number that the parent declares each time. The parent may start with the next odd number in order, but it can also skip it and start with a random value.
+ 
+ 
+ Magical banana-like "Bai Bai Gem, the first number is 3!", "Two times 3 is 6!", "Two times 6 is 12!", "Two times 12 is 24!" might be a better rhythm.
+ 
+ 
+ If X makes a mistake such as "Two times 96 is 198!" the next person, Y, shouts "Doubt! the next person, Y, will shout, "Doubling of 198 is..." and the next person, Y, will shout, "Doubling of 96 is 198! It is quite thrilling.
+ 
+ 
+ Now you, too, can be irresistible by proposing a game of doubles at a party. （I can't do it.
+ 
+ *1365243566*Verilog HDL.
+ Recently, I have been working with various languages for writing, and I have come to feel that all the languages that run on CPUs are not much different from each other, since the CPU is ultimately executing a sequence of machine words. I was wondering if there was a language that would give me a fundamentally new experience.
+ 
+ Oh yeah, FPGA! (cf. <a href='http://d.hatena.ne.jp/nowokay/20130123'>VGA output by FPGA with DE0 - Kishida no Hatena</a>)
+ 
+ So I immediately imitated Kishida-san and bought the same reference book as DE0. No, I should have bought it. I bought DE0-nano just because it was a bit cheaper. Thanks to that, the FPGAs on it and which pins LEDs and switches are connected to are all different! Well, that's OK because I can figure it out with a little research, but the fact that it has no 7-segment LED, no VGA output, and no serial port is a pain. What I wanted to do was to play with FPGA, not to build my own interface. So, for those who are just starting out, I would recommend not to buy nano unless you have a clear reason why nano is better.
+ 
+ <a href='http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=593&PartNo=2#section'>Terasic - DE Main Boards - Cyclone - DE0-Nano Development and Education Board</a>, <a href='http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English &No=593&PartNo=4'>Manual</a>, ADC (Analog-to-Digital Conversion) and accelerometer and small size are advantages?
+ 
+ Well, it was the long-awaited weekend, and since heavy rain was forecasted to keep us from going outside, I decided to spend the day playing with FPGA and started downloading the latest version of Quartus II Web Edition from Altera's website. It took me 4 hours to finish downloading and setting up the development environment. I should have done it last night.
+ 
+ There are unfamiliar processes such as pin assignments, so I foolishly do the first assignment in the reference book first. It worked fine. I was happy and satisfied.
+ 
+ [f:id:nishiohirokazu:20130406191759p:image]
+ What does this diagram that appears during pin assignment represent... it looks kind of interesting...
+ 
+ <a href='http://ja.wikipedia.org/wiki/%E3%83%95%E3%83%AA%E3%83%83%E3%83%97%E3%83%95%E3%83%AD%E3%83%83%E3%83%97'>Flip-flop - Wikipedia </a> and decided to look at implementing it (without using reg or anything else).
+ 
+ https://gist.github.com/anonymous/5325489
+ 
+ I wanted to cut out the RS flip-flop part of this code into a separate module anyway, but I couldn't figure out how to create a function that can be called from multiple modules, so I ended up defining NAND in two places. Hmmm, should I have defined NAND as a module as well?
+ 
+ https://gist.github.com/anonymous/5325564
+ 
+ I have an FT232RL USB serial converter board for Arduino-compatible boards, but I wonder what I should do. I have a FT232RL USB serial conversion board for Arduino compatible board at hand, but I wonder if I should change the jumper switch of this board to output 3.3V and connect it to an appropriate general-purpose IO pin of DE0-nano and exchange data with it...
+ 
+ *1365258081*How to provide 3.3V output with AE-UM232R
+ I wanted to connect AE-UM232R (USB to serial converter board using Akizuki's FT232RL) to GPIO of FPGA (Cyclone IV) evaluation board DE0-nano, but the manual of DE0-nano says it is 3.3V. I checked the manual of DE0-nano and found out that it would be bad if I connected it with 5V for Arduino.
+ 
+ However, the AE-UM232R manual ((http://akizukidenshi.com/download/kairo/%E3%83%87%E3%83%BC%E3%82%BF/RS232%E3%83%BBUSB%E9%96%A2%E4%BF%82/L023_ FT232RL%20USB%E3%82%B7%E3%83%AA%E3%82%A2%E3%83%AB.pdf)) is not understandable in Japanese...
+ [f:id:nishiohirokazu:20130406232050p:image]
+ 
+ Glancing at the schematic at the end of the AE-UM232R manual... it seems that J1 is in essence whether to connect the VCCIO of the FT232RL to VCC or 3V3OUT. So should "J1 sets power supply to VCC" read "J1 sets power supply to VCCIO"?
+ 
+ On the other hand, J2 seems to be a "whether or not to connect VCC to USB VBUS". In other words, if this is shorted, the power supply is taken from 5V of USB, otherwise, another power supply should be connected separately. ((The schematic shows VBAS, but <a href='http://en.wikipedia.org/wiki/Universal_Serial_Bus'>Universal Serial Bus - Wikipedia, the free encyclopedia </a>, it is VBUS))
+ 
+ According to the FT232RL manual ((http://www.ftdichip.com/Support/Documents/DataSheets/ICs/DS_FT232R.pdf)), 3V3OUT is a pin that makes 3.3V voltage with LDO regulator and outputs it. 3V3OUT is a pin that makes and outputs 3.3V voltage by LDO regulator. ((Difference between LDO and DC-DC converter http://toragi.cqpub.co.jp/Portals/0/backnumber/2008/06/p134-135.pdf)). Therefore, it is not necessary to prepare a separate 3.3V power supply or a cable to share the power supply between the It seems that there is no need to prepare a separate 3.3V power supply or a cable to share the power supply with a 3.3V powered connection.
+ 
+ By the way, there are a number of pages that say "just connect TX and RX", but of course GND needs to be connected as well, right?
+ </body>
+ <comments>
+ <comment>
+ <username>nowokay</username>
+ <body>I wish I could have published this entry sooner...<br>http://d.hatena.ne.jp/nowokay/20130407#1365278424</body>
+ <timestamp>1365278573</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2013-04-06 https://nishiohirokazu.hatenadiary.org/archive/2013/04/06]

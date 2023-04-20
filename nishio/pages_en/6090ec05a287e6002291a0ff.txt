@@ -1,0 +1,57 @@
+Hatena2010-09-02
+code:hatena
+ <body>
+ *1283433244*LL lightweight
+ >>
+ @shnsk Q. Where is Python more suitable for prototyping than Java #spro2010
+ <<
+ 
+ for example
+ 
+ >>
+ [10/09/02 21:26:21] Y: I solved this in Scala at an internal study session.
+ [10/09/02 21:26:22] Y: http://recruit.drecom.co.jp/event2010
+ [10/09/02 21:28:58] N: heavy
+ [10/09/02 21:29:04] N: Plain and simple.
+ [10/09/02 21:29:27] N: Hmm, I read the issue
+ [10/09/02 21:29:54] Y: In the Fibonacci sequence including 7110,
+ Give the smallest combination of initial values.
+ *Limited to natural numbers
+ [10/09/02 21:30:02] Y: Plain and simple
+ [10/09/02 21:32:25] N: solved
+ [10/09/02 21:33:44] N: http://gist.github.com/561961
+ [10/09/02 21:33:45] N: Answer
+ <<
+ 
+ Three minutes is all it takes to start Eclipse!
+ 
+ *1283437962*Pretty Print 7
+ I was satisfied that it was working properly and I was losing interest in it, so I thought, based on my experience, "If I leave it alone, I won't know what it was like after a while! So I decided to release the repository and add it to the Python Package Index at once.
+ 
+ <a href='http://pypi.python.org/pypi?:action=display&name=prettier&version=0.92'>Python Package Index : prettier 0.92</a>
+ <a href='https://bitbucket.org/nishio/prettierprint/src'>nishio / prettierprint / source &#8212; bitbucket.org</a>
+ 
+ ** Review of the story so far.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20100825/1282701893'>Python Tinkering 2</a>
+ -- I've been trying to get Python to display the syntax tree of the code I enter during interactive execution, but when the syntax tree is long, it's hard to see unless you break the lines appropriately. I checked and found that Ruby implements prettyprint.rb based on a certain paper. The sample code is about 2 pages in Haskell, why don't we just port this?
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20100826/1282828185'>PrettyPrint 1</a>
+ -- In the meantime, I translated verbatim the sample code written in Haskell in a spirited manner.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20100827/1282875637'>Pretty Print 2</a>
+ -- Test
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20100827/1282915401'>Pretty Print 3</a>
+ -- 100% test coverage. I also discovered a very slow phenomenon, which was due to the fact that it was no longer lazy evaluation.
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20100829/1283096041'>Pretty Print 4</a>
+ -- The original code included a function called "spread" that arranges a list of documents horizontally, but when I used it expecting it to be a single line, it didn't work. I think it is appropriate for the API design to make it a single line. I also found that two utility functions were implemented, one for connecting a line with a space character and the other for connecting a line with a newline character, but they should be able to be passed as arguments like Python's ", ".join(xs).
+ -- Well, here's the feature I originally wanted: support is complete!
+ - <a href='http://d.hatena.ne.jp/nishiohirokazu/20100829/1283096543'>Pretty Print 6</a>
+ -- Tuning. Finished implementing approximately the optimizations I had in mind when I first translated verbatim.
+ 
+ ** Future
+ First of all, the fact that the separator and indent width are fixed should be changeable, and in Haskell terms, each function should be able to take an env as an argument, and in Python terms, "a group of functions where something is passed each time" is in essence "methods of a class". In Python, "a group of functions to which something is passed every time" is in essence "a group of methods of a class. Therefore, it would be better to create a class called PrettyPrinter and move them into it.
+ 
+ The API needs some reorganization. I implemented it as it was written in the paper, but there is no need for fillwords and so on. The core part is a direct translation of what was written under the assumption of Haskell, so I think it might be easier to see if it were written from scratch under the assumption of Python.
+ 
+ I hope that the performance and functionality will eventually replace pprint in the standard library.
+ </body>
+
+[Hatena Diary 2010-09-02 https://nishiohirokazu.hatenadiary.org/archive/2010/09/02]

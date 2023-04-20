@@ -1,0 +1,176 @@
+Hatena2013-01-15
+code:hatena
+ <body>
+ *1358238311* Generate prime numbers with jigsaw puzzle
+ The "Functional Programming with Jigsaw Puzzles" presented by Dr. Nakano at the 54th Winter Programming Symposium was very interesting. In his presentation, he showed that by placing jigsaw puzzles, "computation" can be done by converting numbers in ternary notation to binary notation, n-decimal representation to gray code, and so on. (TODO: link to the paper when it is published)
+ 
+ Here is a quick implementation of the "conversion from ternary to binary" in the lecture. https://github.com/nishio/jigsaw_model/blob/master/ex1.py
+ 
+ The horizontal information flow has been changed to "left to right," so the binary notation of the results is in reverse order from the paper.
+ 
+ >||
+ start:
+ ['2', '0', '1']
+ ['0', '0', '0', '0', '0']
+ finished:
+ ['0', '0', '0']
+ ['1', '1', '0', '0', '1']
+ ||<
+ 
+ So I was listening to the lecture, and I thought, "Wouldn't this be a 1D cellular automaton if I tilt it by 45 degrees?" I was thinking about it on the train on the way back home, and the conclusion was that N**3 + N**2 + 4*N pieces are enough to simulate the transition rule of a 1D cellular automaton in N states. Also, if the length of the initial state is M, M * (M + 1) / 2 pieces are enough to set up an arbitrary initial state. So, with 2 states and an initial state length of 1 <a href='http://ja.wikipedia.org/wiki/%E3%82%BB%E3%83%AB%E3%83%BB%E3%82%AA%E3%83%BC%E3%83%88%E3%83%9E%E3%83%88% E3%83%B3#.E3.83.AB.E3.83.BC.E3.83.AB90'>Rule 90</a> behavior can be simulated with 21 different pieces.
+ 
+ Here is one that was executed and one piece is one letter, with some pieces represented by * and others by spaces. The casket pattern is emerging. The top and left edges are straight, and if you arrange the pieces so that they are connected, the pattern will emerge, and so on. The jigsaw puzzle look is getting better.
+ 
+ 
+ >||
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                                                                
+ *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *  
+                                                                
+ * *     * *     * *     * *     * *     * *     * *     * *    
+                                                                
+ *       *       *       *       *       *       *       *      
+                                                                
+ * * * *         * * * *         * * * *         * * * *        
+                                                                
+ *   *           *   *           *   *           *   *          
+                                                                
+ * *             * *             * *             * *            
+                                                                
+ *               *               *               *              
+                                                                
+ * * * * * * * *                 * * * * * * * *                
+                                                                
+ *   *   *   *                   *   *   *   *                  
+                                                                
+ * *     * *                     * *     * *                    
+                                                                
+ *       *                       *       *                      
+                                                                
+ * * * *                         * * * *                        
+                                                                
+ *   *                           *   *                          
+                                                                
+ * *                             * *                            
+                                                                
+ *                               *                              
+                                                                
+ * * * * * * * * * * * * * * * *                                
+                                                                
+ *   *   *   *   *   *   *   *                                  
+                                                                
+ * *     * *     * *     * *                                    
+                                                                
+ *       *       *       *                                      
+                                                                
+ * * * *         * * * *                                        
+                                                                
+ *   *           *   *                                          
+                                                                
+ * *             * *                                            
+                                                                
+ *               *                                              
+                                                                
+ * * * * * * * *                                                
+                                                                
+ *   *   *   *                                                  
+                                                                
+ * *     * *                                                    
+                                                                
+ *       *                                                      
+                                                                
+ * * * *                                                        
+                                                                
+ *   *                                                          
+                                                                
+ * *                                                            
+                                                                
+ *                                                              
+ ||<
+ 
+ Now, if we can realize a cellular automaton, then we can calculate prime numbers (see <a href='http://d.hatena.ne.jp/nishiohirokazu/20121002/1349154963'>I implemented an automaton to calculate prime numbers</a>), Since we're at this point, let's implement that much.
+ https://github.com/nishio/jigsaw_model/blob/master/ex4.py
+ 
+ The output will look like this
+ 
+ >||
+        . . . . . . . . . . . . . . . . . . . . . . . . . . .
+           . . . . . . . . . . . . . . . . . . . . . . . . . 
+  .         . . . . . . . . . . . . . . . . . . . . . . . . .
+   .           . . . . . . . . . . . . . . . . . . . . . . . 
+        . .     . . . . . . . . . . . . . . . . . . . . . . .
+ |       . .     . . . . . . . . . . . . . . . . . . . . . . 
+  .                 . . . . . . . . . . . . . . . . . . . . .
+ | .       . .       . . . . . . . . . . . . . . . . . . . . 
+  . |         .       . . . . . . . . . . . . . . . . . . . .
+ | . .   |               . . . . . . . . . . . . . . . . . . 
+  . | |       . .         . . . . . . . . . . . . . . . . . .
+ | . . .         .           . . . . . . . . . . . . . . . . 
+  . | | |                     . . . . . . . . . . . . . . . .
+ | . . . |   .   . .             . . . . . . . . . . . . . . 
+  . | | | |         .   . . .     . . . . . . . . . . . . . .
+ | . . . | .   |         . . .     . . . . . . . . . . . . . 
+  . | | | | |       . .               . . . . . . . . . . . .
+ | . . . | . .         .   . . .       . . . . . . . . . . . 
+  . | | | | | |             .   .       . . . . . . . . . . .
+ | . . . | . . |   .   . |   . . .       . . . . . . . . . . 
+  . | | | | | | |         .     . .       . . . . . . . . . .
+ | . . . | . . | .   |                       . . . . . . . . 
+  . | | | | | | | |       . .   . . .         . . . . . . . .
+ | . . . | . . | . .         .   .   .           . . . . . . 
+  . | | | | | | | | |             . . .           . . . . . .
+ | . . . | . . | . . |   |   . .     . .             . . . . 
+  . | | | | | | | | | |         .                     . . . .
+ | . . . | . . | . . | .   |         . . .               . . 
+  . | | | | | | | | | | |       . .   .   .   . . . .     . .
+ | . . . | . . | . . | . |         |   . . .   . . . .     . 
+  . | | | | | | | | | | | |               . .   . . . .     .
+ | . . . | . . | . . | . | |   .   | .           . . . .     
+  . | | | | | | | | | | | | |         .   . . .              
+ | . . . | . . | . . | . | | .   |         .   .   . . . .   
+  . | | | | | | | | | | | | | |       . |   . . .   . .   .  
+ | . . . | . . | . . | . | | . .   |     .     . |   . . . . 
+  . | | | | | | | | | | | | | | |                     .   . .
+ | . . . | . . | . . | . | | . . |       . .   . | .   . . . 
+  . | | | | | | | | | | | | | | | |         .   .   .     . .
+ | . . . | . . | . . | . | | . . | |   |         | . .       
+  . | | | | | | | | | | | | | | | | |       . .     . .   . .
+ | . . . | . . | . . | . | | . . | | .         .           . 
+  . | | | | | | | | | | | | | | | | | |             . . |   .
+ | . . . | . . | . . | . | | . . | | . |   .   . |   .   .   
+  . | | | | | | | | | | | | | | | | | | |         |   . | .  
+ | . . . | . . | . . | . | | . . | | . | .   |           . . 
+  . | | | | | | | | | | | | | | | | | | | |       | .        
+ | . . . | . . | . . | . | | . . | | . | . .         .   . . 
+  . | | | | | | | | | | | | | | | | | | | | |             .  
+ | . . . | . . | . . | . | | . . | | . | . . |   |   . |   . 
+  . | | | | | | | | | | | | | | | | | | | | | |         |    
+ | . . . | . . | . . | . | | . . | | . | . . | .   |         
+  . | | | | | | | | | | | | | | | | | | | | | | |       | .  
+ | . . . | . . | . . | . | | . . | | . | . . | . |         . 
+  . | | | | | | | | | | | | | | | | | | | | | | | |          
+ | . . . | . . | . . | . | | . . | | . | . . | . | |   |   . 
+  . | | | | | | | | | | | | | | | | | | | | | | | | |        
+ | . . . | . . | . . | . | | . . | | . | . . | . | | .   |   
+  . | | | | | | | | | | | | | | | | | | | | | | | | | |      
+ | . . . | . . | . . | . | | . . | | . | . . | . | | . |     
+ ||<
+ 
+ It may be difficult to read the pattern, so I'll explain the two lines below.
+ >||
+  . | | | | | | | | | | | | | | | | | | | | | | | | | |      
+ | . . . | . . | . . | . | | . . | | . | . . | . | | . |     
+ ||<
+ The "." in ". is a prime number sequence by counting the number of letters from the left.
+ >||
+  2 | | | | | | | | | | | | | | | | | | | | | | | | | |      
+ | 3 5 7 |1113 |1719 |23 | |2931 | |37 |4143 |47 | |53 |     
+ ||<
+ 
+ If you arrange the pieces of a jigsaw puzzle on a large table so that they are neatly connected, a striped pattern of prime numbers will appear.
+ 
+ For information on the piece: https://github.com/nishio/jigsaw_model/blob/master/prime_pieces.csv
+ Since the automaton that calculates these primes has 16 states and the length of the initial state is 4, we know from the previous formula that 4426 different pieces are sufficient.
+ </body>
+
+[Hatena Diary 2013-01-15 https://nishiohirokazu.hatenadiary.org/archive/2013/01/15]

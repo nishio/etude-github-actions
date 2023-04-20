@@ -1,0 +1,273 @@
+Hatena2012-04-24
+code:hatena
+ <body>
+ *1335233091*Language Girls' Club Murder at Alloy 2
+ 
+ Another PHP was killed.
+ 
+ ** Rules
+ The six characters are readers, Python, PHP, Ruby, Perl, and JS.
+ PHP, the reader is not the murderer. There was only one chance to kill him. The murderer was with PHP at the time of the crime. The murderer committed the crime because he thought that everyone but him would not think that he was the murderer.
+ The characters told someone other than themselves in advance where they intended to go.
+ Some people changed their minds and made changes along the way, but all but the culprit acted as they declared at the end.
+ 
+ ** Reader's (Me) point of view
+ 
+ -7:00 Me, Perl, JS "Going to the Riverbed" Listeners = Me, Perl, Python, Ruby, JS
+ -11:00 PHP, Ruby "Going to the Backwoods" Listeners = Me, PHP, Perl, Python, Ruby
+ 
+ ** PHP murder is discovered
+ 
+ Me: "Ruby must have gone to the backwoods with PHP. Doubtful. And I can't find any footing for Python. Doubtful."
+ 
+ ** Ruby Perspectives
+ 
+ Ruby: "I'm not the culprit. The culprit is Python!"
+ 
+ -7:00 Me, Perl, JS "Going to the Riverbed" Listeners = Me, Perl, Python, Ruby, JS
+ -8:00 PHP "Going to the Park" Listeners = PHP, Ruby, JS
+ -11:00 PHP, Ruby "Going to the Backwoods" Listeners = Me, PHP, Perl, Python, Ruby
+ 
+ Ruby: "I did talk about going to the backwoods with PHP. But PHP never showed up; I don't know where Python was going, so Python is the culprit."
+ Me (...doesn't seem to have an alibi...)
+ 
+ ** Python Perspectives
+ 
+ Python: "I'm not the culprit. The culprit is Ruby!"
+ 
+ -7:00 Me, Perl, JS "Going to the Riverbed" Listeners = Me, Perl, Python, Ruby, JS
+ -9:00 Python "Going to the Backwoods" Listeners = PHP, Python
+ -10:00 Perl, Python, JS "Going to the coast" who listened = PHP, Perl, Python, JS
+ -11:00 PHP, Ruby "Going to the Backwoods" Listeners = Me, PHP, Perl, Python, Ruby
+ 
+ Python: "I did tell PHP once that I was going to the backwoods. Ask Perl. Ask Perl. He'll confirm my alibi. Ruby is the one who was supposed to go with PHP in the first place and has no alibi, right?"
+ 
+ ** All opinions taken as a whole
+ 
+ -7:00 Me, Perl, JS "Going to the Riverbed" Listeners = Me, Perl, Python, Ruby, JS
+ -8:00 PHP "Going to the Park" Listeners = PHP, Ruby, JS
+ -9:00 Python "Going to the Backwoods" Listeners = PHP, Python
+ -10:00 Perl, Python, JS "Going to the coast" who listened = PHP, Perl, Python, JS
+ -11:00 PHP, Ruby "Going to the Backwoods" Listeners = Me, PHP, Perl, Python, Ruby
+ 
+ Me: "...can't you solve it?"
+ Ruby: "You can't solve it..."
+ Python: "I didn't make it clear earlier, but I know that 'Perl came to the backwoods, but JS didn't,' so I can narrow it down to JS being the culprit..."
+ Me: "But I thought you said you could solve it if you combined the opinions of the three of us without adding those conditions?"
+ Ruby: "Hey, come out here and be in charge!"
+ 
+ ** Can't solve it?
+ Alloy: "What? You can't solve it?"
+ Me: "I can't solve it."
+ Alloy: "That can't be... let's just see what the three of us decide at the final time after we've compiled our opinions."
+ 
+ [f:id:nishiohirokazu:20120424110809p:image]
+ 
+ Alloy: "See, the conclusion that only JS, the proper culprit, did not know where he was going... what? That's strange. It's odd that someone could be present in more than one place in the first place... ah."
+ Me「！」
+ Alloy: "Sorry, I forgot to write the last kill time constraint in the "synthesize three viewpoints" code I added this time!
+ Me: "What, you mean bugs?"
+ Alloy: "Yes!"
+ Me "This is terrible."
+ Python: "This is terrible."
+ Ruby "This is terrible."
+ 
+ ** Summary
+ PHP: "What's terrible is that I'm the one getting killed again..."
+ Python (through)
+ Ruby (through)
+ Alloy: "This time, I tried to create a 'mystery that can be solved as a puzzle' by including the reader's point of view in the model, and one thing became clear."
+ JS: "What what?"
+ Alloy: "To put it crudely, I modeled a mystery as a process in which 'given some knowledge, we arrive at conclusion X as a result of reasoning based on that knowledge, and then an unspoken fact is revealed, which reveals that conclusion X is wrong, and we arrive at conclusion Y.' '"
+ JS: "Yeah, yeah."
+ Alloy: "I don't think the solution can be uniquely determined as a puzzle because we cannot deny the possibility that another fact may come to light and overturn conclusion Y after we have reached that conclusion Y."
+ Python: "Why not just use objective physical evidence to uniquely determine the culprit?"
+ Alloy: "If the inference is really based on objective evidence, then the initial conclusion X cannot be overturned. If you accept that, you can't deny that the reversal will happen in the future.
+ Python "I see..."
+ JS: "Oh, but I've read novels where the possibilities are narrowed down logically and then there is no one left who is capable of committing the crime."
+ Alloy: "What? How does that work?"
+ JS: "The main character is psychotic, and the whole story is a delusion.
+ Alloy "Yes."
+ JS: "So the value of a mystery isn't just determined by whether it's logically correct."
+ Alloy: "Well, maybe so... but that would leave me out..."
+ JS: "Well, why don't you just go on logically until the middle and end up with 'it was a bug'?
+ Alloy: "Gnunu..."
+ 
+ ** Source code
+ 
+ >|javascript|
+ open util/ordering[Time]
+ 
+ // Characters
+ abstract sig Person {
+   belief: Person -> Person -> Place -> Time,
+   // Where did it finally go?
+   real_place: Place -> Time,
+   is_killer: lone Person // as bool
+ }{
+   all t: Time | lone real_place.t
+ }
+ 
+ one sig Me extends Person{} // reader
+ one sig PHP extends Person{} // killed role
+ one sig Perl extends Person{}
+ one sig Python extends Person{}
+ one sig Ruby extends Person{}
+ one sig JS extends Person{}
+ 
+ abstract sig Time {}
+ sig BeforeMardar extends Time {
+   // At each time someone tells someone else where they are going
+   who: some Person,
+   targets: some Person,
+   where: Place
+ }{
+   // The speaker is included in the listener
+   who in targets
+   // The listener must not be identical to the speaker.
+   some targets - who
+ }
+ one sig Mardar extends Time {}
+ 
+ sig Place {}
+ 
+ fact {
+   // Never believe the same person exists in more than one place.
+   all p1, p2, p3: Person, t: Time{
+     lone (p1.belief)[p2, p3].t
+   }
+ }
+ 
+ pred init(t: Time){
+   all p: Person {
+     no p.belief.t
+   }
+   all p: Person {
+     no p.real_place.t
+   }
+ }
+ 
+ pred no_change(t: Time, changable: univ -> Time){
+   changable.t = changable.(t.prev)
+ }
+ 
+ pred step(t2, t: Time){
+   all p: Person {
+     (p in t.targets) => {
+       // Overrides the beliefs of the person p who hears it.
+       // Override the beliefs of those who were listening with you (including yourself)
+       all p2: Person {
+         (p2 in t.targets) => {
+           p.belief[p2].t = p.belief[p2].t2 ++ (t.who -> t.where)
+         }else{
+           // otherwise unchanged.
+           p.belief[p2].t = p.belief[p2].t2
+         }
+       }
+     }else{
+       // Beliefs do not change except for the listener
+       p.belief.t = p.belief.t2
+     }
+     (p in t.who) => {
+       // Go where you say you're going (not lie) except to the culprit.
+       (no p.is_killer) => p.real_place.t = t.where
+     }else{
+       p.real_place.t = p.real_place.t2
+     }
+   }
+ }
+ 
+ pred on_mardar(t2, t: Time){
+   all p: Person {
+     let go = real_place.t2,
+         place = p.go, 
+         meets = go.place {
+       // They all went somewhere.
+       one place
+       p.real_place.t = place // was there at the time of the crime
+       // People who went to the same location at the time of the crime will have their beliefs updated.
+       p.belief[p].t = p.belief[p].t2 ++ (meets -> place)
+     }
+   }
+   // Only the killer and the murdered were in the same place at the time of the crime.
+   PHP.real_place.t.~(real_place.t) = PHP + (is_killer.univ)
+ }
+ 
+ fact {
+   BeforeMardar = Mardar.prevs
+   init[first]
+   all t: BeforeMardar - first{
+     step[t.prev, t]
+   }
+   on_mardar[Mardar.prev, Mardar]
+ }
+ 
+ // who could have been in the same place as who?
+ fun same_place(self: Person, who: Person): Person{
+   let where = (self.belief)[self].last {
+     who.where.~where + {p: Person | no p.where} - who
+   }
+ }
+ 
+ 
+ run {
+   one is_killer // there is only one killer
+   // Ruby, Python, reader asked where PHP is going
+   all p: Ruby + Python + Me {
+     some t: Time {
+       PHP in t.who and p in t.targets
+     }
+   }
+   // Ruby, Python, PHP, Reader is not the culprit
+   no (Ruby + Python + Me + PHP).is_killer
+   // The murderer believes that everyone but himself does not think he is the murderer.
+   let killer = is_killer.univ {
+     all other: Person - killer - PHP{
+       let where = (killer.belief)[other].last {
+         killer not in PHP.where.~where
+       }
+     }
+   }
+   // Readers initially think Python or Ruby is the culprit
+   same_place[Me, PHP] = Python + Ruby
+   // Ruby thinks Python is the culprit, Python thinks Ruby is the culprit.
+   same_place[Ruby, PHP] = Python
+   same_place[Python, PHP] = Ruby
+   // After the reader hears about Python and Ruby, can correctly guess the culprit
+   // Consider the beliefs of an imaginary person whose opinion is heard for three people.
+   some belief: Person -> Place -> Time {
+     no belief.first
+     all t: BeforeMardar - first{
+       let t2 = t.prev{
+         (some (Me + Python + Ruby) & t.targets) => {
+           // beliefs are overridden if any of the three are listening.
+           belief.t = belief.t2 ++ (t.who -> t.where)
+         }else{
+           // Beliefs do not change
+           belief.t = belief.t2
+         }
+       }
+     }
+     // Bug: needed to write a constraint here about updating beliefs at the last time
+     // Can correctly guess the culprit after summarizing the opinions of three people.
+     let who = PHP, where = belief.last {
+       (who.where.~where + {p: Person | no p.where} - who)
+       = is_killer.univ
+     }
+   }
+ } for 6 Time, 4 Place
+ ||<
+ 
+ *1335276581*What I want to do next with Alloy
+ The generation of the mystery story is now including chronological changes, but I don't think that is very important. I think we should make more of a distinction between "objective evidence" such as "where were you" and "subjective testimony" that could be false or misleading.
+ 
+ First you hear A's testimony, and assuming A is not lying, the culprit is B. Then you hear B's testimony, and assuming B is not lying based on that testimony alone, A is the culprit, and when both are considered together, C is the culprit... and so on. Then there are intentional lies and misinformation based on misunderstandings and ambiguous representations (if A claims to have been at location X and B says he met A at that time, even if B is honest, it does not mean he was at X. A could be lying).
+ 
+ I think we need to think of the generation of a puzzle whose solution is unique in something simpler than mystery's. If there are three people, only one of whom lies, and X says "Z is a liar" and Y says "Z is a liar," the liar is settled on Z. If X says "Z is a liar" and Y says "Z is a liar," then the liar is settled on Z. What is happening in this reasoning process?
+ 
+ I wonder if Alloy itself needs to be modeled in Alloy.
+ 
+ Out-of-order execution is more of an issue in the real-world modeling route. We think it would be a good idea to have a queue of instructions and assign queuing instructions to steps at one time. The contents of the queue are executed randomly. I'm not sure I would call that a queue. I think it would be possible to describe R→R constraints in terms of whether or not the order can be queued or not. The "Read→Read order is preserved" becomes "Do not add a Read when there is a Read in the queue."
+ </body>
+
+[Hatena Diary 2012-04-24 https://nishiohirokazu.hatenadiary.org/archive/2012/04/24]

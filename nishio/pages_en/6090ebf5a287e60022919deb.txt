@@ -1,0 +1,307 @@
+Hatena2008-02-19
+code:hatena
+ <body>
+ *1203387809*I have a tummy ache (T/O)
+ 
+ *1203397334*HARIBO
+ id:hayamiz I bought some HARIBO, a favorite of my seniors, to try at the convenience store down the street from the lab. It's a crunchy gummy. I wonder if this is one step closer to the senpai I admire so much.
+ 
+ -----
+ 
+ I measured the time it takes to consume one HARIBO and it was 17 minutes.
+ 
+ There is a word for this.
+ There are two types of hackers: thin and fat. The former is the type who forgets to eat or sleep when they get into coding. The latter is the type who forgets to eat or sleep when they get into coding, but always has something in their mouth."
+ I'm the latter, so I have to take measures against metabolic syndrome, but HARIBO might be good for me because it has small calories per unit time. I used to be a frisker, but as I said, after eating two boxes of frisks a day, I was afraid that my body odor seemed to have changed.
+ 
+ *1203399380*Re: Don't put things together once they've been split, even if they're duplicates!
+ >>
+ At the beginning, when you write the pseudo code, you immediately know that there can be no other pattern than these five. Then, we think of a solution for each of them. But if you get greedy while doing so and think, "Can't I just put them all in one place?" If you get greedy, you will fail. If it is too difficult and you split it, don't put it together!
+ <<
+ http://d.hatena.ne.jp/yukoba/20080218
+ 
+ This doesn't mean "don't put them together even if they are duplicates *forever*," does it? I was a little worried that people might misunderstand this kind of catchphrase, since it tends to walk alone, away from its background.
+ 
+ Originally, the idea that "duplicated code should be combined into one" was based on the problem that "if the same process is duplicated here and there, when the specification is changed, the parts to be corrected are scattered here and there, so the cost of correction is high and the risk of inadvertently forgetting to correct is high". In a case like yukoba's, "you shouldn't think, 'Can't we put all the duplicates together? I agree with yukoba's case that "we shouldn't think about 'can't we put all the duplicates together' during the implementation". But if there is a possibility that the common part of "h == zoneMax" and "else" will be changed in the future, it would be better to consider combining them into one even after finishing the implementation and confirming that it works well, right?
+ 
+ 
+ In other words, "if you try to implement and refactor at the same time, you will fail," and the doctrine that "duplicated parts should be combined" also has preconditions, so "if you don't meet the preconditions, it's OK to ignore it.
+ 
+ *1203400566*[Java]where does this come from?
+ What do you see when you run the code below in Java?
+ 
+ >|java|
+ public class ScopeOfThis {
+     public int a = 100;
+     public ScopeOfThis() {
+         System.out.println("first:" + a);
+         class Foo {
+             public int a = this.a++; 
+             public Foo(){
+                 int a = this.a++;
+                 System.out.println("inside(a):" + a);
+                 System.out.println("inside(this.a):" +this.a);
+             }
+         }
+         new Foo();
+         System.out.println("last:" + a);        
+     }
+     public static void main(String[] args) {
+         new ScopeOfThis();
+     }
+ }
+ ||<
+ 
+ If it's an answer out of the blue, it takes away the chance to think, so instead of a spoiler
+ I wrote something similar in Python.
+ Writing as below:
+ 
+ >|python|
+ class ScopeOfThis(object):
+     a = 100
+     def __init__(self):
+         print "first:", self.a
+         class Foo(object):
+             a = self.a
+             self.a += 1
+             def __init__(self):
+                 a = self.a
+                 self.a += 1
+                 print "inside(a):", a
+                 print "inside(self.a)", self.a
+ 
+         Foo()
+         print "last:", self.a
+ 
+ 
+ ScopeOfThis()
+ ||<
+ 
+ It will appear like this:
+ >||
+ first: 100
+ inside(a): 100
+ inside(self.a) 101
+ last: 101
+ ||<
+ 
+ -----
+ 
+ Solution Arc:
+ 
+ If you run the above code in Java, you will see the following
+ 
+ >||
+ first:100
+ inside(a):0
+ inside(this.a):1
+ last:100
+ ||<
+ 
+ So at the time of initializing the Foo field, this already points to an instance of Foo~.
+ 
+ doubt
+ - If public int a = this.a++; is changed to public int a = a++;, a compile error will occur.
+ 
+ *1203412430* Difference between Java and Python field initialization timing
+ >>
+ You've kept what the inner class THIS refers to.
+ <<
+ 
+ Hmmm... I thought about what makes this difference in sensation.
+ 
+ >|java|
+ public class TimingOfInitialize {
+     public static Foo x = new Foo("outer/static");
+     public Foo y = new Foo("outer");
+     
+     public TimingOfInitialize() {
+         System.out.println("init TimingOfInitialize");
+         class Bar {
+             //error:
+             //public static Foo x = new Foo("outer/static");
+             public Foo y = new Foo("inner");
+         }
+         new Bar();
+         new Bar();
+     }
+     public static void main(String[] args) {
+         new TimingOfInitialize();
+         new TimingOfInitialize();
+     }
+ }
+ 
+ class Foo{
+     public Foo(String s){
+         System.out.println("initialized!" + s);
+     }
+ }
+ ||<
+ 
+ output (result)
+ >||
+ initialized!outer/static
+ initialized!outer
+ init TimingOfInitialize
+ initialized!inner
+ initialized!inner
+ initialized!outer
+ init TimingOfInitialize
+ initialized!inner
+ initialized!inner
+ ||<
+ 
+ Thus, the "definition" of a non-static field in Java is not evaluated at the time of class definition. It is evaluated after an instance of the class is created, so it is possible to have a reference to the class itself in "this".
+ 
+ Python on the other hand
+ >|python|
+ >>> class Foo(object):
+     def __init__(self, s):
+         print s, "initialized"
+ 
+         
+ >>> class Bar(object):
+     x = Foo()
+ 
+ outer initialized
+ ||<
+ 
+ In Python, "much like a Java field definition" written in the class definition statement is immediately evaluated. This x is a static field in Java, accessed as Bar.x. The idea is that since we are talking about a class, x belongs to the class object, and it would be strange to use a reference self to an instance here.
+ 
+ Conversely, the initialization of non-static fields in Java should be written in the __init__ method in Python, so it is natural that references to instances can be used there.
+ 
+ I felt that this was due to the differences in the respective languages of the two.
+ 
+ *1203435874*[Perl] square brackets to be a copy of the array.
+ I saw the syntax [@a] and asked amachang what this is, and he said it is a copy of array.
+ 
+ $b = [@a]; to copy @a and put a reference to it in $b. If you write @$b and dereference it, you can see that the arrays have the same contents.
+ >||
+ C:\>perl -e "@a = (1,2,3); $b = [@a]; print $b"
+ ARRAY(0x1001345c)
+ C:\>perl -e "@a = (1,2,3); $b = [@a]; print @$b"
+ 123
+ ||<
+ 
+ On the other hand, if $b = \@a;, then it is a copy of the reference, so rewriting a will also change b. Oh, it hasn't changed...
+ 
+ >||
+ C:\>perl -e "@a = (1,2,3); $b = \@a; $a->[1] = 5; print @$b"
+ 123
+ ||<
+ 
+ -----
+ 
+ answer volume
+ 
+ Since @a is not a reference but an array entity, it must be $a[1]=5;, not $a->[1]=5;. $a and @a are different even though they have the same name "a". The execution of $a->[1]=5; creates a new array and its reference is in $a. It can be observed in the code below that @$a and @a, which dereferenced $a, contain different things.
+ 
+ >||
+ C:\>perl -e "@a = (1,2,3); $b = \@a; $a->[1] = 5; print @$a;"
+ 5
+ C:\>perl -e "@a = (1,2,3); $b = \@a; $a->[1] = 5; print @a;"
+ 123
+ ||<
+ 
+ If I write $a[1]=5; again properly, I can see that $b = \@a is just a reference to @a in $b, but [@a] is copied.
+ 
+ >||
+ C:\>perl -e "@a = (1,2,3); $b = \@a; $a[1]=5; print @$b;"
+ 153
+ C:\>perl -e "@a = (1,2,3); $b = [@a]; $a[1]=5; print @$b;"
+ 123
+ ||<
+ 
+ By the way, $b is a reference, so you have to do $b->[5]. If you write $b[5], on the contrary to the above, a new array @b will be created, which is different from the array $b points to.
+ 
+ >||
+ C:\>perl -e "@a = (1,2,3); $b = \@a; $b->[1]=5; print @a;"
+ 153
+ C:\>perl -e "@a = (1,2,3); $b = \@a; $b[1]=5; print @a;"
+ 123
+ C:\>perl -e "@a = (1,2,3); $b = \@a; @$b[1]=5; print @a;"
+ 153
+ ||<
+ 
+ In summary, the first instructions a Perl beginner should learn when learning Perl are use strict and use warnings.
+ 
+ >||
+ C:\>perl -e "use strict; use warnings; my @a = (1,2,3); $b = \@a; $a->[1] = 5; print @$b;"
+ Name "main::a" used only once: possible typo at -e line 1.
+ 123
+ ||<
+ 
+ *1203437857*SEO
+ Ok, thanks to the link with h3 tags from Hatena Diary, which has strong SEO power.
+ http://www.nishiohirokazu.org/
+ is now ranked first when searching for "nishio hirokazu".
+ Rather, the first page of search results are all taken up by me.
+ 
+ Unfortunately, however, "hirokazu nishio" is in 9th place. But I'm the one who made all of them. But I guess Google is affected by the order even if the quotes are not enclosed in quotation marks. I didn't expect such a change in search results.
+ 
+ If I add a note on my home page saying "I may write 'Hirokazu Nishio' in some situations," would "hirokazu nishio" be at the top of the list?
+ </body>
+ <comments>
+ <comment>
+ <username>yukoba</username>
+ <body>>It tends to walk alone<br><br>Well, if it's my blog with few readers, I don't think it will walk alone...<br><br>"Duplicates should not be put together *forever*."<br><br>Accurately, duplicates should be put together as a function well. I think. <BR><BR>The issue is how to make if statements. <BR><BR>I mean that even if it is correct, if you write an <BR>if statement that makes it impossible to know what you are doing, <BR>and that you have covered all the cases, you will end up in the ditch. <BR><BR>It is easy to get messed up when, after putting it all together, you realize that you need to separate it, <BR>and start separating it. <BR><BR>More to add, it is limited to <BR>"complex problems that cannot be understood without dividing them by the divide and conquer method"<BR>. <BR>The argument is that if statements should be constructed according to the way they are divided by the divide and conquer method. <BR><BR>If it is a simple problem, you can get by even if you just make it up as you go along. <BR><BR>I didn't go into detail in that blog, but I think the same goes for class separation. </body>
+ <timestamp>1203403432</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>What this means in the inner class is still the same. <BR><BR>I'm surprised that <BR>int a = a++;<BR>that would cause a compile error. <BR><BR>I don't see anything specific in http://www.y-adagio.com/public/standards/tr_javalang/8.doc.htm#38013<BR>. (But it should be in the spec somewhere.)<br><br>int i = this.j + 1;<br>int j = i + 1;<br>can be executed successfully, so <br>1. perform initialization that does not include this, super<br>2. assign 0 to anything not initialized<br>3. Initialize the object that contains this and super<br>4. <br>4. Execute the constructor<br>It's in that order. <br><br>Even though <br> i = j + 1<br> j = i + 1<br> in Haskell is an infinite loop! (LOL)</body>
+ <timestamp>1203404908</timestamp>
+ </comment>
+ <comment>
+ <username>emo</username>
+ <body>public int a = this.a++;<br>and I was impatient because 0 is assigned and then a is incremented, but <br>a is still 0. </body>
+ <timestamp>1203413471</timestamp>
+ </comment>
+ <comment>
+ <username>yukoba</username>
+ <body>I see! Indeed. It's no longer a simple assignment, is it? <br>On the contrary, for what purpose can we use this and super...<br>Why not limit their use to constructors only and prohibit their use in variable declarations? </body>
+ <timestamp>1203416871</timestamp>
+ </comment>
+ <comment>
+ <username>hayamiz</username>
+ <body>I think you made a mistake with one bag instead of one. </body>
+ <timestamp>1203417738</timestamp>
+ </comment>
+ <comment>
+ <username>suztomo</username>
+ <body>17 minutes to lick through HARIBO is amazing! </body>
+ <timestamp>1203420885</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>>Then I got impatient when a was incremented but a was still 0. <BR><BR>True, I hadn't noticed, but that's weird too</BODY>.
+ <timestamp>1203434991</timestamp>
+ </comment>
+ <comment>
+ <username>ZIGOROu</username>
+ <body>use warnings. The body is wrong! </body>
+ <timestamp>1203436036</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I fixed it! </body>
+ <timestamp>1203437069</timestamp>
+ </comment>
+ <comment>
+ <username>SiroKuro</username>
+ <body>http://www.y-adagio.com/public/standards/tr_javalang/15.doc.htm#39438<br>I think to myself that it is reasonable to interpret <body>http://www.y-adagio.com/public/standards/tr_javalang/15.doc.htm#39438<br> as inc being done at the time of the post-substitution++. <br>I think it is inc before the assignment, not inc after the assignment. </body>
+ <timestamp>1203437553</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>In other words, at the time of initialization of this.a<br>- this.a is initialized with 0<br>- this.a++ is executed and this.a becomes 1. This expression returns 0. <br>- this,a = 0 is executed and this.a returns 0<br>. </body>
+ <timestamp>1203473423</timestamp>
+ </comment>
+ <comment>
+ <username>emo</username>
+ <body>I see<br>The question is, how many situations<br>are there where you would want to do this kind of coding? <br>I wonder if there are. <br>I can't think of any. </body>
+ <timestamp>1203477852</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-02-19 https://nishiohirokazu.hatenadiary.org/archive/2008/02/19]

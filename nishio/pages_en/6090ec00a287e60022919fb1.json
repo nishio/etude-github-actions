@@ -1,0 +1,105 @@
+Hatena2009-06-16
+code:hatena
+ <body>
+ **1245104751* Bézier Curved Bounding Box
+ <a href='http://en.wikipedia.org/wiki/B%C3%A9zier_curve'>B&#233;zier curve - Wikipedia, the free encyclopedia</a>
+ 
+ B(t) = (1-t)^3 * P0 + 3 * (1-t)^2 * t * P1 + 3 * (1-t) * t^2 * P2 + t^3 * P3
+ therefore
+ B'(t) = -3 * P0 * (1 - t)^2 + 3 * P1 * (1 - t)^2 - 6 * P1 * (1 - t) * t + 6 * P2 * (1 - t) * t - 3 * P2 * t^2 + 3 * P3 * t^2
+ When t falls within 0~1 of the solution t = ((-6 P0+12 P1-6 P2)+-sqrt((6 P0-12 P1+6 P2)^2-4 (3 P1-3 P0) (-3 P0+9 P1-9 P2+3 P3)))/(2 (-3 P0+9 P1-9 P2+3 P3))(-3 P0+9 P1-9 P2+3 P3!=0) I should just calculate the value of B(t) in B(t) and find the minimum and maximum values along with B(0) = P0 and B(1) = P3. Maybe. I'll implement it later.
+ 
+ <hr>
+ <img src="http://gyazo.com/8bcfcd4004e6c3623b7672106d73f1f5.png">
+  It seems to be.
+ 
+ (I removed the code that was here because it was not there at all.)
+ 
+ <hr>
+ <img src="http://gyazo.com/ecfc85c7242dd5c63db932f8e322f57c.png">
+ This time it seems to be there.
+ 
+ <hr>
+ <img src="http://gyazo.com/0b5c95504bea37524a8bc7dd63752d3e.png">
+ Hee-hee.
+ <img src="http://gyazo.com/072d0b494cd3ec393019367f0f30f817.png">
+ Since it is distributed over a 5-dimensional space, it changes in various ways when the cutting plane is changed.
+ 
+ <hr>
+ I've been running it for a while and haven't found any glaring problems, so I'm releasing it to the public.
+ >|python|
+     def calc_box(start, curves):
+         P0 = start
+         bounds = [[P0[0]], [P0[1]]]
+ 
+         for c in curves:
+             P1, P2, P3 = (
+                 (c[0], c[1]), 
+                 (c[2], c[3]), 
+                 (c[4], c[5]))
+ 
+             bounds[0].append(P3[0])
+             bounds[1].append(P3[1])
+ 
+             for i in [0, 1]:
+                 f = lambda t: (
+                     (1-t)**3 * P0[i] 
+                     + 3 * (1-t)**2 * t * P1[i] 
+                     + 3 * (1-t) * t**2 * P2[i]
+                     + t**3 * P3[i])
+ 
+                 b = float(6 * P0[i] - 12 * P1[i] + 6 * P2[i])
+                 a = float(-3 * P0[i] + 9 * P1[i] - 9 * P2[i] + 3 * P3[i])
+                 c = float(3 * P1[i] - 3 * P0[i])
+ 
+                 if a == 0:
+                     if b == 0:
+                         continue
+                     t = -c / b
+                     if 0 < t < 1: 
+                         bounds[i].append(f(t))
+                     continue
+ 
+                 b2ac = b ** 2 - 4 * c * a
+                 if b2ac < 0: 
+                     continue
+                 t1 = (-b + sqrt(b2ac))/(2 * a)
+                 if 0 < t1 < 1: bounds[i].append(f(t1))
+                 t2 = (-b - sqrt(b2ac))/(2 * a)
+                 if 0 < t2 < 1: bounds[i].append(f(t2))
+ 
+             P0 = P3
+ 
+         x = min(bounds[0])
+         w = max(bounds[0]) - x
+         y = min(bounds[1])
+         h = max(bounds[1]) - y
+         return (x, y, w, h)
+ ||<
+ 
+ *1245150051*[SVG]Light
+ <img src="http://gyazo.com/a6f785aae3919b100d04a6dbe3e63f28.png">
+ I wonder if the only way to make it look additive is to keep it in a very low alpha state, since it will only mix with the alpha and not be additive composition.
+ 
+ 
+ When I looked at it again after I left for a while... it's still too much to say that this is light, isn't it? The texture. It looks like milk was spilled on a black paper, or water was dropped on it and the color was lost.
+ </body>
+ <comments>
+ <comment>
+ <username>pashango_p</username>
+ <body>I trackbacked you, the equation can be more optimized. <br>Sorry if you knew this long ago, but it's easier if you use wxMaxima. </body>
+ <timestamp>1245130124</timestamp>
+ </comment>
+ <comment>
+ <username>pashango_p</username>
+ <body>Thanks for pointing out the code here, there are a lot of unexpected pitfalls. <br>Also, in this example, "calc_box([12,0], [[4,0, 6,0, 18,0]])" would return slightly wrong values. <br>"t = -c / b" => "t = float(-c) / float(b)" <br>I mean, this is a pitfall of python...(Actually, I got stuck too)<br>It's ok if you have python3 or later :-)</body>.
+ <timestamp>1245159918</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I see what you mean, I didn't notice it in the test code because it was a float before entering this function. </body>
+ <timestamp>1245161189</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-06-16 https://nishiohirokazu.hatenadiary.org/archive/2009/06/16]

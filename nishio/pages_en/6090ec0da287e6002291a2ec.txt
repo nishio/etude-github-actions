@@ -1,0 +1,238 @@
+Hatena2014-05-09
+code:hatena
+ <body>
+ *1399627411* Supplement to "Technology Supporting Coding," p. 196 - p. 198.
+ In my book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">The Technology Behind Coding</a>", in chapter 11, I try to understand object orientation by approaching it step by step using a language in which object orientation is not required.
+ 
+ However, I think you were relieved when the most difficult part was over, and the explanation of the last step, p.196 to p.198, became a mess. p.196 to p.198 have three steps, compared to a staircase. However, my book skips one step and explains only two. This is a stumbling block, so here is an additional explanation
+ 
+ ** 1st row
+ 
+ On p. 196 we arrived at the following code. This is the first step of the staircase. Let's rewrite this code without changing the behavior.
+ 
+ >|perl|
+ # Perl
+ {
+     package Counter;
+     sub new{
+         return {"value" => 0};
+     }
+     sub push{
+         my $values = shift;
+         $values->{count}++;
+         print "$values->{count}匹\n";
+     }
+ }
+ 
+ {
+     # Initialization process put in package
+     my $counter = Counter::new;
+     my $c2 = Counter::new;
+ 
+     # Pass hash as argument
+     Counter::push($counter); #-> 1 animal
+     Counter::push($counter); #-> 2 animals
+     Counter::push($c2); #-> 1 fish
+     Counter::push($counter); #-> 3 animals
+     Counter::push($c2); #-> 2 animals
+ }
+ ||<
+ 
+ ** 2nd step
+ 
+ On p.197, we explained that by using "bless", we can save the trouble of writing "Counter::" for each push.
+ Next, the code for this initialization process using bless was introduced on p. 198, with the initialization process inside new.
+ However, we are skipping one step here. So, let's go ahead and take one step first.
+ 
+ >|perl|
+ # Perl
+ # Sample code not in this book, equivalent to between p.196 and p.198.
+ {
+     package Counter;
+     sub new{
+         my $values = {count => 0};
+         bless $values, "Counter";
+     }
+     sub push{
+         my $values = shift;
+         $values->{count}++;
+         print "$values->{count}匹\n";
+     }
+ }
+ 
+ {
+     # Initialization process put in package
+     my $counter = Counter::new;
+     my $c2 = Counter::new;
+ 
+     # Pass hash as argument
+     $counter->push; #-> 1 animal
+     $counter->push; #-> 2 animals
+     $c2->push; #-> 1 animal
+     $counter->push; #-> 3 animals
+     $c2->push; #-> 2 animals
+ }
+ ||<
+ 
+ The difference from the code in the first step is these two places.
+ >|diff|
+ 5c6,7
+ <         return {"value" => 0};
+ ---
+ >         my $values = {count => 0};
+ >         bless $values, "Counter";
+ 20,24c22,26
+ < Counter::push($counter); #-> 1 animal
+ < Counter::push($counter); #-> 2 animals
+ < Counter::push($c2); #-> 1 animal
+ < Counter::push($counter); #-> 3 animals
+ < Counter::push($c2); #-> 2 animals
+ ---
+ > $counter->push; #-> 1 fish
+ > $counter->push; #-> 2 animals
+ > $c2->push; #-> 1 fish
+ > $counter->push; #-> 3 animals
+ > $c2->push; #-> 2 animals
+ ||<
+ 
+ What was written as Counter::push($counter); in the previous code can now be written as $counter->push;.
+ 
+ However, my $counter = Counter::new; still uses "::". This is not a big problem, but let's say I don't want to use "::" and "->" differently. Could this also be changed to "->"?
+ 
+ You can do it. That would be the third step of the staircase.
+ 
+ ** 3rd row
+ 
+ The code on p.198 only listed the inside of new. The whole thing looks like this
+ 
+ >|perl|
+ # Perl
+ {
+     package Counter;
+     sub new{
+         my $class = shift;
+         my $values = {count => 0};
+         bless $values, $class;
+     }
+     sub push{
+         my $values = shift;
+         $values->{count}++;
+         print "$values->{count}匹\n";
+     }
+ }
+ 
+ {
+     # Initialization process put in package
+     my $counter = Counter->new;
+     my $c2 = Counter->new;
+ 
+     # Pass hash as argument
+     $counter->push; #-> 1 animal
+     $counter->push; #-> 2 animals
+     $c2->push; #-> 1 animal
+     $counter->push; #-> 3 animals
+     $c2->push; #-> 2 animals
+ }
+ ||<
+ 
+ There are three differences from the code in the second column.
+ >|diff|
+ 5a5
+ >         my $class = shift;
+ 7c7
+ <         bless $values, "Counter";
+ ---
+ >         bless $values, $class;
+ 18,19c18,19
+ <     my $counter = Counter::new;
+ <     my $c2 = Counter::new;
+ ---
+ >     my $counter = Counter->new;
+ >     my $c2 = Counter->new;
+ ||<
+ 
+ First of all, we call Counter->new instead of Counter::new. Then Counter is passed as the first argument of new. Then, we use shift to take it out and use it in bless.
+ 
+ ** Is the third step necessary?
+ 
+ You might ask, "Is this third stage necessary, and shouldn't new and push be called differently?" You may ask, "Is this third step necessary? That's right, the calling methods do not have to be the same. You could have designed the methods that are tied to an object to be different from those that are not, and therefore have different calling methods. In fact, that is how it is done in C++. In the following sample, my_instance_method, which is tied to the object, is called x.my_instance_method, while my_static_method, which is not tied, is called MyClass::my_static_method. MyClass::my_static_method.
+ 
+ >|cpp|
+ #include<iostream>
+ 
+ class MyClass {
+ public:
+   static void my_static_method(){
+     std::cout << "I'm static method!" << std::endl;
+   }
+   void my_instance_method(){
+     std::cout << "I'm instance method!" << std::endl;
+   }
+ };
+ 
+ int main(){
+   MyClass::my_static_method();
+   // -> I'm static method!
+ 
+   MyClass x;
+   x.my_instance_method();
+   // -> I'm instance method!
+ }
+ ||<
+ 
+ In Java and Python, on the other hand, both are called by periods.
+ 
+ >|java|
+ // Java
+ class MyClass {
+     static void my_static_method(){
+         System.out.println("I'm static method!");
+     }
+     void my_instance_method(){
+         System.out.println("I'm instance method!");
+     }
+ 
+     public static void main(String[] args){
+         MyClass.my_static_method();
+         // -> I'm static method!
+ 
+         MyClass x = new MyClass();
+         x.my_instance_method();
+         // -> I'm instance method!
+     }
+ };
+ ||<
+ 
+ >|python|
+ # Python
+ class MyClass(object):
+     @staticmethod
+     def my_static_method():
+         print "I'm static method!";
+ 
+     def my_instance_method(self):
+         print "I'm instance method!";
+ 
+ MyClass.my_static_method()
+ # -> I'm static method!
+ 
+ x = MyClass()
+ x.my_instance_method()
+ # -> I'm instance method!
+ ||<
+ 
+ Each designer of a programming language designs the rules as he or she sees fit. So how to call methods varies from language to language.
+ 
+ In Perl, the latter "call the same way" is conventionally chosen. Reference: http://perldoc.perl.org/perlobj.html
+ 
+ ** Finally
+ 
+ This entry explains the contents of p.196 to p.198.
+ 
+ My book "<a href="http://www.amazon.co.jp/gp/product/477415654X/ref=as_li_ss_tl?ie=UTF8&camp=247&creative=7399&creativeASIN=477415654X& linkCode=as2&tag=nishiohirokaz-22">Technologies Supporting Coding</a>", I would like to write supplemental articles to the questions and comments I received from readers. Please do not hesitate to send us your questions and comments.
+ 
+ Other entries about my book can be followed from the <a href='http://nhiro.org/langbook/'>"The Technology Behind Coding" author's official page</a>.
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=477415654X" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ </body>
+
+[Hatena Diary 2014-05-09 https://nishiohirokazu.hatenadiary.org/archive/2014/05/09]

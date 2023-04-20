@@ -1,0 +1,123 @@
+Hatena2008-08-02
+code:hatena
+ <body>
+ *1217652017* Cybozu 11th anniversary
+ I went to the anniversary party and came back laughing hysterically at the banquet entertainment of the newcomers and the banquet entertainment of the board members. I didn't expect to see the president in his white-washed chonmage.
+ 
+ 
+ By the way, I don't know the original story of the song "Shame - Shame", so I read Wikipedia to learn it, etc.
+ 
+ *1217652404*[GoogleCodeJam] Round 1A-C-Large
+ <a href="http://code.google.com/codejam/contest/dashboard?c=agdjb2RlamFtchALEghjb250ZXN0cxiE2QUM">Google Code Jam Round 1A</a> of C-Large I was <a href="http://t33f.tumblr.com/post/43587848/gcj-2008-round1a-problem-c">taught</a> how to solve the problem "Find the integer part of 3 + sqrt(5) to the power of 2 billion divided by 1000" (sqrt is a square root). I was <a href="">taught</a> this, so I'll try to write an explanation, just to check my understanding of it. Also, it seems that many people are not comfortable with the use of mathematical symbols, so I'll try to stick to programming language expressions.
+ -----
+ 
+ First, some background knowledge
+ 
+ >||
+ Equation 1: a[0] == A0
+ Equation 2: a[1] == A1
+ Equation 3: a[i + 2] == s * a[i + 1] + t * a[i]
+ ||<
+ 
+ This section explains how to find the general term of the number sequence a for which the condition "a[10000]" is true. In other words, the value of a[10000] can be obtained by looping 9998 times as shown below, but we will explain how to obtain it without doing so.
+ 
+ >|python|
+ a[0] = A0
+ a[1] = A1
+ for i in range(9998):
+     a[i + 2] = s * a[i + 1] + t * a[i]
+ ||<
+ 
+ If Equation 3: a[i + 2] == s * a[i + 1] + t * a[i] with two constants p, q
+ Equation 4: a[i + 2] - p * a[i + 1] == q * (a[i + 1] - p * a[i])
+ Assume that it can be expressed as
+ 
+ And so on,
+ a[2] - p * a[1] == q * (a[1] - p * a[0])
+ a[3] - p * a[2] == q * (a[2] - p * a[1]) == q * q * (a[1] - p * a[0]) 
+ ... and can be reduced to a repetition of multiplication, using powers of **.
+ Equation 5: a[n + 1] - p * a[n] == (q ** n) * (a[1] - p * a[0])
+ It can be expressed as
+ 
+ Also, if we remove the parentheses on the right side of Equation 4: a[i + 2] - p * a[i + 1] == q * (a[i + 1] - p * a[i])
+ a[i + 2] - p * a[i + 1] == q * a[i + 1] - q * p * a[i]
+ and moving the second term on the left side to the right side yields
+ a[i + 2] == (p + q) * a[i + 1] - q * p * a[i]
+ becomes. We can imagine that this equation is symmetric with respect to p and q (it holds even if p and q are interchanged), but the equation of equation 4 with p and q interchanged
+ Equation 6: a[n + 1] - q * a[n] == (p ** n) * (a[1] - q * a[0])
+ is also shown to hold by once again transforming the equation that was done to derive Equation 5.
+ 
+ Now assume that p ! = q. Assuming that q !
+ Equation 5: a[n + 1] - p * a[n] == (q ** n) * (a[1] - p * a[0])
+ Equation 6: a[n + 1] - q * a[n] == (p ** n) * (a[1] - q * a[0])
+ Take the difference on both sides of these two equations.
+ (q - p) * a[n] == (q ** n) * (a[1] - p * a[0]) - (p ** n) * (a[1] - q * a[0])
+ That is, the value of a[n] is Equation 7::
+ >||
+ a[n] == ((q ** n) * (a[1] - p * a[0]) - (p ** n) * (a[1] - q * a[0])) / (q - p)
+ ||<
+ The first is the "A" in the "A" column.
+ 
+ Once summarized.
+ If a given asymptotic expression a[i + 2] == s * a[i + 1] + t * a[i] can be expressed as a[i + 2] - p * a[i + 1] == q * (a[i + 1] - p * a[i]) using two different constants p, q, then any term in a can be found using Equation 7.
+ 
+ -----
+ 
+ Well, I finally finished explaining the background knowledge, but I can't seem to solve the problem of finding (3 + sqrt(5)) ** n at all. This is where the magic begins.
+ Consider the expression 8: (3 + sqrt(5)) ** n + small ** n using a certain small number less than 1. Since small ** n < 1, if Equation 8 is an integer, the integer part of (3 + sqrt(5)) ** n is 1, which is the result of Equation 8.
+ 
+ I can only come up with small = 3 - sqrt(5), though. I want the sum to be an integer after each n-square, so I wanted to eliminate the term that sart(5) appears only once, and when I say "disappears when summed", the only way is to reverse the sign. As luck would have it, 3 - sqrt(5) is less than 1 (a race!).
+ 
+ So, we have finally come down to the problem of finding (3 + sqrt(5)) ** n + (3 - sqrt(5)) ** n. And since we know that this expression is an integer, we should be able to use it to improve efficiency in the future!
+ 
+ Now, equation 7:.
+ >|python|
+ a[n] == ((q ** n) * (a[1] - p * a[0]) - (p ** n) * (a[1] - q * a[0])) / (q - p)
+ ||<
+ Let us recall the
+ If we have a[0], a[1] such that the two equations below hold, we are happy with the form a[n] = q ** n + p ** n.
+ >|python|
+ q - p == a[1] - p * a[0]
+ q - p == -(a[1] - q * a[0])
+ ||<
+ 
+ Let's add both sides of the two equations, substituting p = 3 - sqrt(5) and q = 3 + sqrt(5).
+ 4 * sqrt(5) == 2 * sqrt(5) * a[0]. Therefore a[0] == 2.
+ Substituting a[0], we get 2 * sqrt(5) == a[1] - (3 - sqrt(5)) * 2.
+ Now we also substitute s == p + q, t == - p * q, s == 6, t == -4.
+ 
+ Summary so far:.
+ a[0] == 2, a[1] == 6, a[n + 2] = 6 * a[n + 1] - 4 * a[n]
+ The answer can be found by finding a[n] such that
+ 
+ -----
+ 
+ Since there are only 1000 "remainders divided by 1000," the process of finding the next pair a[n + 1], a[n + 2] using the values a[n] and a[n + 1] will always return to the original number within 1000 * 1000 cycles. If you calculate and examine the loops in order, expecting them to be as short as possible, you will find that after a[103], the loop repeats from a[3] onward; even a value such as a[2000000000], which would take a very long time to calculate seriously, turns out to match a[100], so you do not have to calculate it seriously. Once you have calculated the values up to a[102], you can answer any other value in an instant.
+ 
+ -----
+ 
+ Thoughts. I thought you would use the method of finding the general term of an asymptotic expression to speed up the calculation, but you use it in reverse, dropping the calculation of powers into an asymptotic expression and then using the fact that the asymptotic expression loops to speed up the calculation.
+ 
+ As a side note, Hatena treats "parentheses" as a special notation, so it's hard to write. The code in the lines is not very easy to read. I think the best way to write this kind of explanation is to write it in TeX and publish it in PDF format.
+ 
+ *1217654340*TODO
+ ■ Sign up for the Young Scientists in Information Science http://wakate.aitea.net/2008/
+ ■ Eat a meal
+ Clean up trash in the room
+ □Clean up the books scattered on the floor of the room.
+ Read a stack of books
+ </body>
+ <comments>
+ <comment>
+ <username>earth2001y</username>
+ <body>Oh, you're participating this year</body>.
+ <timestamp>1217691537</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I didn't forget this year</body>.
+ <timestamp>1217765850</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-08-02 https://nishiohirokazu.hatenadiary.org/archive/2008/08/02]

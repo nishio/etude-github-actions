@@ -1,0 +1,138 @@
+Hatena2009-05-19
+code:hatena
+ <body>
+ *1242704467*Context Free Art
+ Read previous article here: <a href='http://d.hatena.ne.jp/nishiohirokazu/20090403/1238707279'>Context Free Art - Yasukazu Nishio's Hatena Diary</a>
+ 
+ Something fishy was created.
+ <img src="http://gyazo.com/9c0ccdccd46a51863adfc1c590372a43.png">
+ 
+ 
+ The little guy.
+ <img src="http://gyazo.com/afc4d624ab020765e231f3019d811f17.png">
+ 
+ 
+ spoiler image
+ <img src="http://gyazo.com/814ab3ffac2cd9ed033034143278db9f.png">
+ 
+ 
+ Images born from mistakes
+ <img src="http://gyazo.com/c0a76ca7405f51621c4f0661187c05a5.png">
+ 
+ 
+ I tried to make a manuscript for printing and pasted it into InkScape and it hung.
+ 
+ 
+ Writing Python scripts to output Context Free Art code, etc.
+ >|python|
+ code = """
+ rule LEVEL_%d {
+   END {}
+   5 * {r 72} LEVEL_%s {x 1.618 s 0.618}
+ }
+ """
+ 
+ N = 5
+ for i in range(N):
+     print code % (i, i + 1)
+ ||<
+ 
+ Let's output in SVG and see what's inside.
+ 
+ >|xml|
+   <circle r="0.5"
+           stroke="none" fill="#000000" fill-rule="nonzero"
+           transform="matrix( 103.45669          0          0 -103.45669  290.95685        338)"/>
+   <circle r="0.5"
+           stroke="none" fill="#ffffff" fill-rule="nonzero"
+           transform="matrix( 63.936234          0          0 -63.936234  290.95685        338)"/>
+ ||<
+ Hmmm... I thought it was hierarchical, but it spits out a matrix with only 6 matrix elements, but it seems that the bottom 0, 0, 1 were removed. <a href='http://www.w3.org/TR/SVG11/coords.html'>Coordinate Systems, Transformations and Units - SVG 1.1 - 20030114</a>
+ 
+ I mean, if I had knowledge of chiral matrices and could use print statements, I could write my own program and output this level of data. I guess Context Free Art is for drafts where you can just look at it and tweak it as you see fit.
+ 
+ 
+ I thought there must be some overlapping circles, so I multiplied the matrix part by uniq, but the number did not change. So, if the overlapping circles are not circles, then the rotation angles are different. I need to take out only the translation and scaling information from the matrix and uniq it. How do I do that? Well, we know that there is no skew in this case, so if we put in (0, 0), we should get a translation, and if we put in (1, 0) and look at the difference, we should get a scaling. Coordinates are multiplied from the right, so transforming (0, 0) yields (c, f). Transforming (1, 0) gives (a + c, d + f). So the translation is (c, f) and the scale is sqrt(a^2 + d^2).
+ 
+ *1242719787*Context Free Art
+ <img src="http://gyazo.com/167f4fc837c1fe4ebb401c575673781c.png">
+ Hmmm, I guess if I want to print this, I have to specify a color profile or something. I am not sure.
+ 
+ 
+ Oh, that was a mistake earlier. This one is right:.
+ <img src="http://gyazo.com/934b7a5aaa80f8f840f9e7d5946fbaec.png">
+ 
+ 
+ Recurrence on a closed ring
+ <img src="http://gyazo.com/ba66c26994ee3cece418fe8d2090f34d.png">
+ 
+ 
+ Hmmm. I'll adjust the slight misalignment later. It's a draft. I think the maximum number of recursive calls that a human being can understand in real life is five.
+ <img src="http://gyazo.com/541a384c5f08dee6f0f8d9cc56819241.png
+ ">
+ 
+ This is what happens when you make more recurrences. Personally, I don't mind this at all, but if you go this far, it becomes difficult for people to notice the "repetitive structure". In other words, it's like composing a canon and then being told, "That's a nice chord," and I don't like that.
+ <img src="http://gyazo.com/7bc41b4a9007b9c652ef00a644a21a7f.png">
+ 
+ 
+ Oh, now all I might have to do is add a border of the same thickness.
+ <img src="http://gyazo.com/4a1cc2aa3a5efaeade0490629d396d93.png">
+ 
+ *1242734908*What I think of Context Free Art
+ Recurrence calls can create a tremendous amount of objects in a matter of seconds if not used carefully. So, even though we want to limit the number of recurrences or prune branches under certain conditions, such things are not supported. I've tried to use a Python script to generate the recursive rules, and then use | pbcopy to output them to the clipboard and Command + A, C, R to render them, but that doesn't solve the "too many objects" problem. I had a hard time editing it in Inkscape.
+ 
+ With a picture like this one, it would have been better to output the SVG directly.
+ 
+ *1242735201*Eye strain
+ Ah.
+ 
+ My eyes are getting tired from all the black-and-white, high-contrast images I have to deal with. It's time to start thinking of a fluffy picture.
+ 
+ *1242736634* The intense contrast makes my eyes tired.
+ <img src="http://gyazo.com/24d80f06d23c8d9d1392fef64ae8a1c5.png">
+ 
+ No, not much has changed.
+ 
+ 
+ 
+ HONWA. s 0.5 at 60 deg.
+ <img src="http://gyazo.com/a4f971b04e1b98c5956ff114fa915d43.png">
+ 
+ 
+ s0.5 at 72 degrees
+ <img src="http://gyazo.com/eb04a79f0b9fa90ef228adb78ccf440f.png">
+ >||
+ 
+ startshape RULE0
+ 
+ rule END {
+   CIRCLE {alpha -0.8}
+ }
+ 
+ 
+ rule RULE0 {
+   END {}
+   5 * {r 72} RULE0 {r 36 x 1 s 0.5}
+ }
+ ||<
+ 
+ <img src="http://gyazo.com/7a604b23ff4a7c8c2134455611028b05.png">
+ 
+ This is interesting, but it would be a lot of work to output in SVG since there are hundreds of thousands of objects... I wonder if I could render it in Cairo or something and make a raster image of the appropriate size.
+ 
+ Yeah, Context Free Art itself has an option to specify the size of the image.
+ 
+ *1242759626*Cases where the sum of prime numbers is a square number
+ >||
+ 23 100 10
+ 22073 25633969 5063
+ 67187 212372329 14573
+ 79427 292341604 17098
+ ||<
+ 
+ The first one is surprisingly soon, but the next one is a long way off.
+ 
+ <img src="http://gyazo.com/54e5744648a84a08adeb0b9a77e8a78e.png">
+ </body>
+
+[Hatena Diary 2009-05-19 https://nishiohirokazu.hatenadiary.org/archive/2009/05/19]

@@ -1,0 +1,214 @@
+Hatena2008-02-01
+code:hatena
+ <body>
+ *1201826786* Did the diary editing mechanism change?
+ I couldn't find the "+" button and had to reload several times.
+ 
+ *1201830972* I changed the settings.
+ A "new entry" link appeared.
+ 
+ I also turned on "When sending images from mail, the first image is registered in PhotoLife".
+ 
+ *1201831295*Solder found
+ It was in the company.
+ Why did I bring only solder to the company when I had a soldering iron at home?
+ 
+ *1201831801* methamidophos
+ Come to think of it, I bought the Nikkei yesterday to find out more about the methamidophos case, but I completely forgot to blog about it.
+ It seems like there are a lot of incidents related to food from China because of the large amount of food imported from China, but the probability of being caught in quarantine is higher for food from the U.S., and Chinese food is not particularly bad,
+ They don't quarantine processed foods because it is technically difficult to do so,
+ According to the stories of people who became addicted, they felt the bitterness but ate a dozen or so as they were and then became addicted, or something like that.
+ Maybe it's important not to force yourself to eat if you feel uncomfortable...
+ 
+ *1201833552*50 English
+ <a href="http://www.amazon.co.jp/gp/product/4478980551?ie=UTF8&tag=nishiohirokaz-22&linkCode=as2&camp=247&creative=1211& creativeASIN=4478980551">50 English</a><img src="http://www.assoc-amazon.jp/e/ir?t=nishiohirokaz-22&l=as2&o=9&a=4478980551" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />, I finally learned all 50 example sentences. Now that I can say the example sentences without looking at anything, I can make good use of my time when I have to take a crowded train, for example.
+ 
+ I downloaded the audio file from http://kouyakenji.cocolog-nifty.com/top/2007/12/mp3_file_50_eng_6437.html so I can listen to the native pronunciation.
+ 
+ I'll edit it in Audicity since it's mixed with Korean.
+ 
+ *1201852961*(= arc (+ lisp python))
+ Dan says Arc is Lisp+Perl, amachang says Arc is Lisp+JS, I say Lisp+Python.
+ >|python|
+ >>> from operator import add
+ >>> map(add, [1, 2, 3], [100, 200, 300])
+ [101, 202, 303]
+ ||<
+ 
+ >|arc|
+ arc> (map + '(1 2 3 4) '(100 200 300))
+ (101 202 303)
+ ||<
+ 
+ Voila!
+ 
+ *1201856677* fish!
+ http://news.goo.ne.jp/article/asahi/nation/K2008013003940.html
+ I was surprised to see the link from goo news.
+ 
+ **1201860391*[Haskell] Make a list.
+ amachang and
+ >>
+ a> Both "[]" and ":" are type constructors!
+ n> Hey, what's this?
+ <<
+ I was going to trackback to amchang's entry, but amachang went out to eat dinner without finishing it.
+ 
+ All of the codes below return the same result.
+ >|haskell|
+ -- main = print [1, 2, 3]
+ -- main = print $ 1:2:3:[]
+ -- main = print $ (:) 1 ((:) 2 ((:) 3 []))
+ ||<
+ 
+ The code below outputs 1:2:3:[].
+ >|haskell|
+ data MyList = Cons{car::Int, cdr::MyList} | Empty
+ 
+ instance Show MyList where 
+     show Empty = "[]"
+     show (Cons x y) = show x ++ ":" ++ show y
+ 
+ main = print $ Cons 1 (Cons 2 (Cons 3 Empty)) 
+ -- 1:2:3:[]
+ ||<
+ 
+ I see. I see. But since we're going to go through the trouble, I'd like to make the same output.
+ 
+ >|haskell|
+ ata MyList = Cons{car::Int, cdr::MyList} | Empty
+ 
+ instance Show MyList where 
+     show Empty = "[]"
+     show (Cons x y) = "[" ++ show_ (Cons x y)
+ 
+ show_ (Cons x Empty) = show x ++ "]"
+ show_ (Cons x y) = show x ++ "," ++ show_ y
+ 
+ main = print $ Cons 1 (Cons 2 (Cons 3 Empty)) 
+ -- [1,2,3]
+ ||<
+ 
+ I was able to do it!
+ 
+ So, I decided to make it so that it can contain various things just like a real list, so I wrote the following and got an error
+ >|haskell|
+ data MyList a = Cons{car::a, cdr::(MyList a)} | Empty
+ ||<
+ 
+ >||
+     `MyList' is not applied to enough type arguments
+     Expected kind `*', but `MyList' has kind `* -> *'
+     In the instance declaration for `Show MyList'
+ ||<
+ 
+ It says "In the instance declaration for `Show MyList'" so I changed "instance Show MyList" to "instance Show MyList a". Error again.
+ 
+ >||
+     Kind error: `Show' is applied to too many type arguments
+     In the instance declaration for `Show MyList a'
+ ||<
+ 
+ It said "too many type arguments" so I tried "instance Show (MyList a)". Error again.
+ 
+ >||
+     Could not deduce (Show a) from the context (Show (MyList a))
+       arising from use of `show_' at tmp.hs:5:29-44
+     Possible fix: add (Show a) to the class or instance method `show'
+     In the second argument of `(++)', namely `show_ (Cons x y)'
+     In the expression: "[" ++ (show_ (Cons x y))
+     In the definition of `show':
+ 	show (Cons x y) = "[" ++ (show_ (Cons x y))
+ ||<
+ 
+ Hmmm. I don't know, I'll ask Dr. Google.
+ <a href="http://itpro.nikkeibp.co.jp/article/COLUMN/20071204/288630/">15th Debugging Tips and Tricks in Haskell: ITpro</a>.
+ >>
+ Note that when defining an instance of the Show class of VarList, we need to constrain the type variable a to the context Show a. Since we are using the show method for the first argument x of the VarList constructor, the instance of the Show class must also have the type variable a must also be an instance of the Show class. If this restriction is missing from the definition, an error will be displayed.
+ <<
+ Oh, I made the changes as written and was able to do it!
+ 
+ >|haskell|
+ data MyList a = Cons{car::a, cdr::(MyList a)} | Empty
+ 
+ instance (Show a) => Show (MyList a) where 
+     show Empty = "[]"
+     show (Cons x y) = "[" ++ show_ (Cons x y)
+ 
+ show_ (Cons x Empty) = show x ++ "]"
+ show_ (Cons x y) = show x ++ "," ++ show_ y
+ 
+ main = print $ Cons 'a' (Cons 'b' (Cons 'c' Empty)) 
+ -- ['a','b','c']
+ ||<
+ 
+ data (Show a) => MyList a = ... It is not clear why this is not possible.
+ 
+ *1201869023*Diary
+ With information from Mr. Takezako.
+ - News Search Results <a href="http://news.google.co.jp/news?lr=lang_ja&oe=utf-8&rls=org.mozilla%3Aja%3Aofficial&client=firefox-a&um=1&tab=wn&hl =en&q=%E8%A5%BF%E5%B0%BE%E6%B3%B0%E5%92%8C&btnG=%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E6%A4%9C%E7%B4%A2">Google Search: Yasukazu Nishio</a>
+ >>
+ -Mashup with Yasukazu Nishio ITmedia - January 14, 2008
+ -amachang-melancholic Shibuya-style Javascript hacker (1/3) ITmedia - January 20, 2008
+ -I came face to face with my brother who is no longer alive ITmedia - January 17, 2008
+ <<
+ ｍｊｄ！
+ 
+ -----
+ I saw the Asahi news and was curious about it, so I searched for it and found that the interpretation was so bad that I wrote "this is terrible" on the back of a flyer as it was, and was surprised to find it on goo news and hatena bookmark's hot entries in the opposite direction.
+ 
+ And the title "This is terrible" makes it sound like I'm terrible.
+ 
+ -----
+ Very cold today.
+ It was so cold that I thought "I took off my sweater and left it at work and went out to eat dinner" and that was my mistake. I had to go back out into that cold and go home again.... But the more time goes by, the colder it gets!
+ 
+ >>
+ Tokyo 4.3°C
+ <<
+ It's cold! It's chilly!
+ ｓｍｓｍ！
+ 
+ -----
+ I don't have any weekends at all these days, but tomorrow is a writing camp. I'm not ready. I'm bringing muffled headphones. I'm also bringing back solder...and a Wii remote control. I'm going to make an infrared LED pen with twice the batteries and more power... will I have time?
+ 
+ -----
+ I was able to MP3 just the English portion of 50 English. When I listened to it, I thought I should put it in my portable player and shadow it. I'm sure I have it somewhere.
+ 
+ -----
+ I have too many toys that I bought with the promise of opening them when I'm done writing the Jython book, including LaQ, which I never intended to open, and the projection kaleidoscope that's sitting in the lab, and the Geomag that's stacked under my desk at home...etc...etc...etc... Plus, when I'm done writing, I want to buy a MIDI instrument, a Lego=Mindstorm, a Gainer...etc, etc....
+ 
+ -----
+ <a href="http://www.studio-petz.com/search/video.php?q=%E8%A5%BF%E5%B0%BE%E5%A4%A7%E4%BB%8B">Daisuke Nishio - Pet Video Links - : 2(1-) Pet, Dog, Cat Affection Memorial</ a>
+ No, not at all. It has a different name, and it's not a pet video, although if you can call it a pet even if it's written in Python, it might be a bit pet-like!
+ 
+ -----
+ It's 10 o'clock while I'm moping around! Idiot! ＞Myself.
+ 
+ read afterwards
+ http://www.valuedlessons.com/2008/01/monads-in-python-with-nice-syntax.html
+ I think.
+ 
+ -----
+ I called the source, but I'm not convinced that Arc is a new language.
+ If it were a language that converted S-expressions to S-expressions and eval'd them, you could use Python to convert if(m=expression):.... is replaced by m=expression;if(m):... in Python is also a language?
+ </body>
+ <comments>
+ <comment>
+ <username>Mizushima</username>.
+ <body>> a> Both "[]" and ":" are type constructors! <br> n> Nah, what the heck! <br><br>I think you may be mistaken about data constructors, not type constructors. <br><br># "Nah, what the heck!" was intended to be that way,<br># sorry for the wild tsukkomi. </body>
+ <timestamp>1201872068</timestamp>
+ </comment>
+ <comment>
+ <username>amachang</username>
+ <body>Oh, so it's a data constructor. I thought it was a type constructor.
+ <timestamp>1201873264</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Oh, so <br>data Foo = Bar Int | Baz<br>Foo was the type constructor and Bar and Baz were data constructors</body>.
+ <timestamp>1201910375</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-02-01 https://nishiohirokazu.hatenadiary.org/archive/2008/02/01]

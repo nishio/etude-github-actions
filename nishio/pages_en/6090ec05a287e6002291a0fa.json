@@ -1,0 +1,43 @@
+Hatena2010-08-25
+code:hatena
+ <body>
+ *1282701893*Python Tinkering 2
+ I was able to make it this far on the commuter train this morning.
+ >||
+ >>> pprintast.build(_mod)
+ ===== AST =====
+ <_ast.Interactive object at 0x100606690>
+ ===== END AST =====
+ (Interactive (Expr (Call (Attribute (Name (Load)) (Load)) (Name (Load)))))
+ ||<
+ The alternative is to create a module on the Python side that displays the _ast in an easy to read manner.
+ 
+ However, it still does not show specific values for Name and other things. I will make it later.
+ 
+ <hr>
+ 
+ >|c|
+ PyRun_SimpleString("import pprintast;reload(pprintast); print pprintast.build(_mod)");
+ ||<
+ so you can test it interactively while rewriting the display module written in Python.
+ >|python|
+ >>> a = 1
+ ===== AST =====
+ (Interactive (Assign (Name['a'] (Store)) (Num[1])))
+ ===== END AST =====
+ ||<
+ Looks pretty good. A larger example.
+ >|python|
+ >>> def build(node):
+ ...     return Node(node.__class__.__name__,
+ ...                 [build(c) for c in ast.iter_child_nodes(node)],
+ ...                 node)
+ ... 
+ ===== AST =====
+ (Interactive (FunctionDef (arguments[] (Name['node'] (Param))) (Return[] (Call (Name['Node'] (Load)) (Attribute['__name__'] (Attribute['__class__'] (Name['node'] (Load)) (Load)) (Load)) (ListComp[] (Call (Name['build'] (Load)) (Name['c'] (Load))) (comprehension[] (Name['c'] (Store)) (Call (Attribute['iter_child_nodes'] (Name['ast'] (Load)) (Load)) (Name['node'] (Load))))) (Name['node'] (Load))))))
+ ||<
+ 
+ I think someone has already made a library that breaks and indents S-expressions (which is not yet fully formed, but will be eventually) neatly.
+ </body>
+
+[Hatena Diary 2010-08-25 https://nishiohirokazu.hatenadiary.org/archive/2010/08/25]

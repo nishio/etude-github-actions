@@ -1,0 +1,247 @@
+Hatena2009-03-09
+code:hatena
+ <body>
+ *1236568587* Continued: how to process about once a day on Google App Engine without cron.
+ <a href='http://d.hatena.ne.jp/mopemope/20090309/p2#c'>GAE cron - def __mopemope__(self, *args, **kwargs):</a>
+ 
+ >>
+ Well, as it stands, the only way is to use urlfetch.
+ <<
+ 
+ >||
+ Nakai 11:49
+ http://d.hatena.ne.jp/mopemope/20090309/p2
+ 
+ nishio 11:56
+ urlfetch is blocking, so you're going around in circles.
+ I think they're going to cut me off due to the time limit per request...
+ I wrote.
+ 
+ Nakai 11:58
+ One interesting feature of urlfetch is the
+ Timeout is up to about 30 seconds.
+ The process would take about 5 seconds to put on.
+ Only urlfetch waits until about 30 seconds.
+ The purpose of this loophole is to use a loophole called
+ 
+ nishio 11:59
+ Not counted as processing time during urlfetch?
+ 
+ Nakai 11:59
+ correct
+ 
+ nishio 11:59
+ But don't time out one day.
+ 
+ Nakai 12:00
+ I thought it was redirected so it would be okay.
+ 
+ nishio 12:00
+ Assuming 0.01 seconds per loop.
+ Even if urlfetch earns you 10 seconds.
+ After 100000 seconds, the first request that kicks in dies.
+ 27 hours later.
+ 
+ Nakai 12:01
+ I see
+ 
+ nishio 12:01
+ Do you want to post this exchange on your blog and track back?
+ 
+ Nakai 12:01
+ I'm curious about that.
+ 
+ nishio 12:01
+ It's quite a difficult question.
+ ||<
+ 
+ 
+ Of course, if cron were included, all would be well.
+ 
+ <hr>
+ PS
+ >||
+ nishio 12:11
+ Access to /crond/ times out
+ get_url in def task hits sleep and
+ The get_url in sleep would hit the task,
+ Since urlfetch is blocking
+ During this alternating call, the first request to hit /crond/ is never completed.
+ Although the X-Day depends on how much time is eaten up in each function.
+ If it's 0.01 seconds, he'll be dead in a little over a day.
+ 
+ The question is.
+ When the first request that kicked in died.
+ I'm not sure if the request being hit by urlfetch from there will be interrupted.
+ when the thread is externally terminated.
+ Does urlfetch wait for a response to come back before exiting?
+ I'm not sure if it's instantly terminated and that's communicated to the server side.
+ After all, when there is a view to process after sleep(10)
+ If you close your browser in 5 seconds.
+ Whether the process goes all the way to the end.
+ If you're going to the end, can you run around forever from the timeouts that are chasing you?
+ ||<
+ 
+ I feel like I can get away with it.
+ 
+ >||
+ nishio 12:29
+ I'm getting the feeling that the mopemope idea will work just fine.
+ The line that you can run around forever.
+ I think the design is such that even if the socket is cut off from the client side, processing will continue.
+ 
+ nishio 12:30
+ Whether or not to kill it when the socket runs out.
+ 
+ Nakai 12:31
+ You're not going to roll it, are you?
+ You must have specified a timeout.
+ 
+ nishio 12:31
+ You don't kill them because you can't be bothered to monitor them to see if they've snapped.
+ That's what I mean.
+ Then you can get away with it.
+ ||<
+ 
+ Therefore, we concluded that the mopemope proposal would work well.
+ 
+ 
+ I'm hungry.
+ 
+ <hr>
+ 
+ >||
+ nishio 12:40
+ I can use this to create a pseudo-thread on the GAE.
+ There was a worker thread that kept calling itself.
+ You load a task in the queue and it will take care of it.
+ 
+ nishio 12:41
+ Because the quota is 657,000 calls/day 3,000 calls/minute
+ I have no problem at all calling myself in 0.1 seconds.
+ Very roomy.
+ ||<
+ 
+ With this, you can stop doing it in GAE for the reason that you can't use threads, and you can go online in the middle of the day without any problems.
+ 
+ *1236574570*Add project to task management
+ The method I used to manage tasks when I moved (<a href='http://d.hatena.ne.jp/nishiohirokazu/20090224/1235428666'>Housework Diary</a>) is similar to <a href='http://www. hogbaysoftware.com/products/taskpaper'>TaskPaper</a>. I've introduced the concept of projects and tags. there is no need for it to be TaskPaper compatible format for me at all, so @done is still using ■ as before, and only the ones with □ at the beginning are ToDo. i'd like to make it work as one page in howm.
+ 
+ -Inbox:
+ 
+ -Live On:.
+ -- ■ Eating rice
+ 
+ -Maximum
+ -- □ Implement reading out at the end of the round for the most limited AI
+ 
+ Task management system: - Task management system: - Task management system: - Task management system
+ -- Branch taskpaper.el on CodeRepos to create your own?
+ --- rf. <a href='http://d.hatena.ne.jp/antipop/20080218/1203354639'>Document of making a Taskpaper imitation and leaving it - antipop</a>, <a href='http://d.hatena.ne. jp/CortYuming/20090306/p1'>I improved taskpaper.el to my liking. - Tile Language Memorandum</a>.
+ 
+ *1236587271*Nakau
+ I found six Nakau coupons in my bag pocket!
+ If you collect 3 cards, you get 2 free bowls of oyakodon mini...but it expires on 3/10.
+ At any rate, I'll check to see if there is a Nakau near me.
+ 
+ *1236592283*branched taskpaper.el
+ I'm a newbie to Emacs, having never created major-mode or minor-mode at all, so I decided to learn by reading other people's code and modifying it, so I branched out for the time being. For more details, see: <a href='http://d.hatena.ne.jp/antipop/20080218/1203354639'>Documentation of the start and abandonment of a Taskpaper-like project - antipop</a>.
+ 
+ >||
+ $ cd .emacs.d/
+ $ svn co http://svn.coderepos.org/share/lang/elisp/taskpaper
+ A    taskpaper/trunk
+ A    taskpaper/trunk/taskpaper.el
+ A    taskpaper/branches
+ A    taskpaper/tags
+ Checked out revision 30975.
+ $ cd taskpaper/
+ $ svn copy trunk/ branches/nishio/
+ A         branches/nishio
+ $ svn st
+ A  +   branches/nishio
+ $ svn ci -m "/lang/elisp/taskpaper new branch for me"
+ Adding         branches/nishio
+ ||<
+ 
+ I'll be careful to commit with fine granularity for now, but it's unknown if I'll do anything that can be fed back to trunk.
+ 
+ 
+ At any rate, I understood that the license is GPL and that there are about 100 lines if you look at the comments.
+ M-x eval-buffer. howm-mode seemed to be in minor-mode, and it was written as (Text howm ...). M-x taskpaper-mode and M-x howm-mode.
+ 
+ What we want to do
+ - Tweak the look a bit.
+ - @done make invisible
+ - Mode to hide anything with @private
+ 
+ I hope id:yappo will issue the commit rights soon because what I want to do is pretty much the same as http://d.hatena.ne.jp/CortYuming/20090306
+ 
+ >|elisp|
+ (defun taskpaper-electric-mark (arg)
+   "Inserts a list mark"
+   (interactive "*p")
+   (if (zerop (current-column))
+     (progn
+       (self-insert-command arg)
+       (insert " "))
+     (self-insert-command arg)))
+ ||<
+ 
+ Hmmm...F1 f to check self-insert-command. I see. In short, pressing + or - at the beginning of a line adds a space.
+ 
+ <hr>
+ 
+ Anyway, I changed the color and M-x eval-buffer, but it's still in the old settings. I've been trying to figure out the difference between setq and defvar, and I'm not sure what to do.
+ 
+ >>
+ defvar is a special form in `C source code'.
+ (defvar symbol &optional initvalue docstring)
+ initvalue is evaluated, and used to set symbol, only if symbol's value is void.
+ <<
+ 
+ Oh.
+ 
+ >|elisp|
+ >>> (defvar foobarbaz 1)
+ foobarbaz
+ >>> foobarbaz
+ 1
+ >>> (defvar foobarbaz 2)
+ foobarbaz
+ >>> foobarbaz
+ 1
+ ||<
+ 
+ Oh, I see, defvar does nothing when the value is already set.
+ 
+ <hr>
+ 
+ Description of eval-defun
+ >||
+ If the current defun is actually a call to `defvar' or `defcustom',
+ evaluating it this way resets the variable using its initial value
+ expression even if the variable already has some other value.
+ (Normally `defvar' and `defcustom' do not alter the value if there
+ already is one.)  In an analogous way, evaluating a `defface'
+ overrides any customizations of the face, so that it becomes
+ defined exactly as the `defface' expression says.
+ ||<
+ So, it seems that if you rewrite defver or something else, you can just do eval-defun.
+ 
+ <hr>
+ 
+ At least we made it this far.
+ <img src="http://gyazo.com/9dc1aa5f77a61a54e0fcdf5509f0c20e.png">
+ Although it is named "taskpaper," no one seems to be trying to conform to the taskpaper format.
+ I think everyone should create their own taskpaper implementations and take advantage of each other's good points.
+ </body>
+ <comments>
+ <comment>
+ <username>mopemope</username>
+ <body>As long as a GET is sent, the process is called. <br>Another timeout will definitely occur, so you have to except it. </body>
+ <timestamp>1236569879</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-03-09 https://nishiohirokazu.hatenadiary.org/archive/2009/03/09]

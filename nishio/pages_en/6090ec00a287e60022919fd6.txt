@@ -1,0 +1,85 @@
+Hatena2009-07-22
+code:hatena
+ <body>
+ *1248243668* Halo in 3D
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20090623/1245779090'>Perspective Projection</a>, <a href='http://d.hatena.ne.jp/nishiohirokazu/20090624/ 1245839434'>Colorization</a>, continued.
+ 
+ In the previous process, the camera was fixed and only the projection transformation was used, and the objects were placed appropriately within the range of the camera. Let's use a matrix to make the camera move while the objects are fixed.
+ 
+ Use boost::numeric::ublas. I didn't know there were not only matrices but also vectors. I could have used this inner_product for _dot_product that I implemented yesterday. Well, it's not too much trouble to implement it by myself. I don't want to implement matrix multiplication by myself.
+ 
+ <hr>
+ 
+ I was able to do it.
+ <img src="http://gyazo.com/90765e8e482533b5d81a57b2fff07fd3.png">
+ Sample with spirals on the x, y plane and lines in the z direction.
+ 
+ Stumbling Points:
+ - Since ublas' outer_prod is an outer product in vectors of general dimensions, the return value is a matrix. I ended up defining the outer product of vectors in 3 dimensions by myself.
+ - After all, with a single camera matrix, there is no need to make it a 4-dimensional chiral matrix at all, so only the outer and inner products of vectors are used.
+ Well, this is not the end of what I want to do, I want to do <large area lighting using halo as a light source. Well, let's do it little by little. (PS: According to id:nyaxt, only one diffuse reflection is not called global illumination)
+ 
+ <hr>
+ It takes about 19 seconds. It's a little off.
+ <img src="http://gyazo.com/f8bbca73404acaa38c3671aea47ad22f.png">
+ I wonder if the side closer to the origin is shifted to the near side and the far side is shifted to the far side, which means it is distorted by a convex-like nonlinear function downwards. I wonder.
+ 
+ <hr>
+ I placed parallel objects on the X and Y axes.
+ Mmm, this!
+ <img src="http://gyazo.com/68e8c715caa25037cc1f02334e624e5c.png">
+ Ah, I knew it. Only the light source is projected parallel. Correction correction.
+ 
+ <img src="http://gyazo.com/762cdebcf27ef35f0f3aad1b39e4e415.png">
+ 
+ This takes about 40 seconds. That's tough because it's on the order of O(nm) for n number of light sources and m number of pixels. There are 400 light sources, and it takes 1 hour to produce a 6000x4200 size image with that many light sources.
+ 
+ *1248244939*Compilation error
+ >>
+ matrix.cpp:109: error: no match for ‘operator=’ in ‘camera_left = boost::numeric::ublas::outer_prod(const boost::numeric::ublas::vector_expression<E>&, const boost::numeric::ublas::vector_expression<E2>&) [with E1 = boost::numeric::ublas::vector<double, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > >, E2 = boost::numeric::ublas::vector<double, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > >](((const boost::numeric::ublas::vector_expression<boost::numeric::ublas::vector<double, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > >&)((const boost::numeric::ublas::vector_expression<boost::numeric::ublas::vector<double, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > >*)((boost::numeric::ublas::vector_expression<boost::numeric::ublas::vector<double, boost::numeric::ublas::unbounded_array<double, std::allocator<double> > > >*)(& camera_up)))))’
+ /opt/local/include/boost/numeric/ublas/vector.hpp:159: note: candidates are: boost::numeric::ublas::vector<T, A>& boost::numeric::ublas::vector<T, A>::operator=(const boost::numeric::ublas::vector<T, A>&) [with T = double, A = boost::numeric::ublas::unbounded_array<double, std::allocator<double> >]
+ <<
+ There's something like a pretty repetitive structure, so if you map this to sound, you can make a melody! (Yes!)
+ 
+ *1248274085* Painting of the Day
+ Perhaps because white is an expansion color and black is a contraction color, just by inverting the image, the impression changes considerably. Well, it is not just a simple inversion, but I heard that it is difficult to see that the inside of the ring has been removed, so I made the inside of the ring alpha.
+ 
+ <img src="http://gyazo.com/265f33b31e4afb55102296dc4d48b28f.png">
+ 
+ Uploads on e-mobile are slow. I think I'll go to McDonald's tomorrow and try bbmobile.
+ 
+ <hr>
+ 
+ I am making data for A4 printing. I usually just implement an idea, confirm that it works as expected, and post it on my blog called gyazo, so I have no data for printing. I don't even have enough data to print an A4 photo, so I'm going to make it. I'm not sure if I can get it to print now in time for Tuesday morning. I'm planning to bring it to the lunch meeting on Tuesday.
+ 
+ <img src="http://gyazo.com/da272e9c173b420d145adb3368948045.png">
+ 
+ <hr>
+ 
+ It's all grayscale!
+ <img src="http://gyazo.com/161d4d73031cf22d08ffdb3577c630d9.png">
+ 
+ *1248279889*Use GIL
+ Giant Interpreter Lock is used for (wrong)
+ 
+ I'm thinking of reorganizing my own canvas library since it's getting a bit messed up. I was just saying that, when id:nyaxt said to me, "Why don't you just use boost::gil? I didn't know that! I didn't know there was such a thing! I didn't have to do the libpng thing myself!
+ 
+ So references: <a href='http://www.kmonos.net/alang/boost/classes/gil.html'>letsboost::gil</a>, <a href='http://sssm.sakura.ne.jp/dev/gil .html'>Using the Adobe Generic Image Library (GIL)</a> <a href='http://sites.google.com/site/twinkleofsilence/japanese-translation-of-gil- tutorial'>Generic Image Library Tutorial Japanese translation &#8206;(Twinkle of Silence)&#8206;</a>
+ 
+ You will see similarities between view and image, but image is a container for pixels; creating an image allocates memory, and copying an image consumes more memory. The various algorithms basically deal with views, which are not containers but references to groups of pixels. Copying is not heavy.
+ 
+ Wow. There is something like an iterator for pixels? It's not only horizontal, but also vertical scanning is available.
+ 
+ Library tutorial www. where the words "memory access pattern" and "cache friendly" are used.
+ 
+ >planar-type pixels have channels that are arranged discontinuously in memory. The reference is a proxy class that uses a color base with color elements as channel iterators.
+ 
+ I see!
+ 
+ *1248284792*Diary
+ Yeah, I don't feel sleepy in any way, but I'm not motivated to get any work done, look at Twitter, etc. I must be sleepy. I thought I made the global lighting renderer yesterday, but it's today.
+ 
+ I also want to organize my library, but before I do that, I have a couple of images that need to be created quickly. I have a lot of work to do. Motivation is the problem.
+ </body>
+
+[Hatena Diary 2009-07-22 https://nishiohirokazu.hatenadiary.org/archive/2009/07/22]

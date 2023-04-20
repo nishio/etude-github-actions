@@ -1,0 +1,60 @@
+Hatena2013-03-19
+code:hatena
+ <body>
+ *1363672267*How to generate OutOfMemoryError with extra heap space in Java.
+ I saw this question the other day, but I didn't know the answer because I am not very familiar with Java GC.
+ >>
+ OutOfMemoryError occurred. (omitted) Heap memory seems to be sufficient. What could be the cause?
+ <<
+ http://d.hatena.ne.jp/iad_otomamay/20130318/1363596244
+ 
+ When I wondered why, id:moriyoshi said, "Maybe the Permanent area is overflowing. I searched for "Permanent area" and found out that it is.
+ 
+ So I wrote some code to reproduce it. You can see that most of the heap is empty, but only the Permanent area is at 99%.
+ 
+ >||
+ Exception in thread "main" [Full GC [Tenured: 515K->515K(56896K), 0.0106600 secs] 972K->515K(82560K), [Perm : 4095K->4026K(4096K)], 0.0107050 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+ java.lang.OutOfMemoryError: PermGen space
+ 	at java.lang.ClassLoader.defineClass1(Native Method)
+ 	at java.lang.ClassLoader.defineClass(ClassLoader.java:791)
+ 	at java.lang.ClassLoader.defineClass(ClassLoader.java:634)
+ 	at Test.loadNext(Test.java:135)
+ 	at Test.main(Test.java:142)
+ Heap
+  def new generation   total 25664K, used 914K [0x00000007bfc00000, 0x00000007c17d0000, 0x00000007d5150000)
+   eden space 22848K,   4% used [0x00000007bfc00000, 0x00000007bfce4878, 0x00000007c1250000)
+   from space 2816K,   0% used [0x00000007c1250000, 0x00000007c1250000, 0x00000007c1510000)
+   to   space 2816K,   0% used [0x00000007c1510000, 0x00000007c1510000, 0x00000007c17d0000)
+  tenured generation   total 56896K, used 515K [0x00000007d5150000, 0x00000007d88e0000, 0x00000007ffc00000)
+    the space 56896K,   0% used [0x00000007d5150000, 0x00000007d51d0e30, 0x00000007d51d1000, 0x00000007d88e0000)
+  compacting perm gen  total 4096K, used 4058K [0x00000007ffc00000, 0x0000000800000000, 0x0000000800000000)
+    the space 4096K,  99% used [0x00000007ffc00000, 0x00000007ffff6bd8, 0x00000007ffff6c00, 0x0000000800000000)
+ No shared spaces configured.
+ ||<
+ 
+ The code looks like this, excerpting only the important parts.
+ >|java|
+ public class Test extends ClassLoader{
+     static int count = 0;
+     Class loadNext() throws ClassNotFoundException {
+         (omitted)
+         return defineClass(name, b, 0, b.length);
+     }
+ 
+     public static void main(String args[]) throws ClassNotFoundException{
+         Test me = new Test();
+         while(true){
+             me.loadNext();
+             count++;
+         }
+     }
+ }
+ ||<
+ 
+ In other words, the code continues to dynamically generate classes. In the console output example above, I specified "-XX:PermSize=4m -XX:MaxPermSize=4m" to make the permanent area small so that the program would drop when a little more than 800 classes were defined. Without this setting, the program crashes when 80,000 classes are defined in my environment.
+ 
+ The source code is here. Note that there are a lot of comments in the source code because I didn't want to copy and paste without understanding the bytecode, so I investigated until I understood it, but that's not really important in this story, so you can ignore it.
+ https://github.com/nishio/learn_language/blob/master/oome/Test.java
+ </body>
+
+[Hatena Diary 2013-03-19 https://nishiohirokazu.hatenadiary.org/archive/2013/03/19]

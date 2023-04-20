@@ -1,0 +1,26 @@
+Hatena2012-06-17
+code:hatena
+ <body>
+ *1339903582* We will exhibit in a group show at Setagaya Monozukuri School this weekend!
+ >>
+ Group Exhibition:
+ Date: Friday, June 22, 3:00 p.m. - Sunday, June 24, 4:00 p.m.
+ 
+ Location: Setagaya Monozukuri School, 2-4-5 Ikejiri, Setagaya-ku, Tokyo
+ 1st floor multiple space
+ <<
+ <a href='http://www.tagboat.com/ngs/award/7th/exhibition.html'>7th Tugboat Award Winners Group Exhibition 2012.06.22-24</a>
+ 
+ *1339929494*A story about a file that I don't remember tinkering with in git pull that got conflcted.
+ There are so many possible options for git that I don't know if my solution is the right way. I've been able to solve problems when they occur, but I'm not sure if I'm doing it right, so I'm going to write about it here.
+ 
+ Mr. A has cloned my master and is doing some heavy lifting on github. I wanted to incorporate the changes, but I thought I might have trouble later if I just had them all lined up in a row, so I created a feature branch with git flow, and when the changes for milestone 1 were done, I git pulled and git flow feature finished, and when the changes for milestone 2 were done, I git pulled and git flow feature finished, and so on. When the changes for milestone 2 were finished, I git pull and git flow feature finish, and so on.
+ 
+ However, the automatic merge failed at milestone 3 pull. If only the README.rst I edited at hand conflicts, but even files I did not change are causing a lot of conflicts. Why is this?
+ 
+ Since there is no reason for a human to fix this conflict by hand, I reset it and pretended it never happened, and then checked out FETCH_HEAD. I heard that this is not a branch, so I did checkout -b tmp to create a branch. And rebase develop.
+ 
+ As expected, rebase stops due to conflicts in README.rst. This is a matter of course, so I fix the conflicts by hand. I git add and git rebase --continue. It was rebased to the end without any problems. I check out the feature branch for milestone 3 again, and git merge tmp there. It went smoothly this time.
+ </body>
+
+[Hatena Diary 2012-06-17 https://nishiohirokazu.hatenadiary.org/archive/2012/06/17]

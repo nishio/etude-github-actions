@@ -1,0 +1,78 @@
+Hatena2012-07-18
+code:hatena
+ <body>
+ *1342594795*man's story about "don't use cp -r".
+ I was reading the Mac man because I was having trouble with cp -r copying even symbolic links as entities, but cp -r is not in the list of options to begin with. I was reading the Mac man because I was having trouble copying even symbolic links as entities with cp -r. I was reading the rest of the man and found that in the compatibility chapter, it says "strongly discouraged".
+ 
+ >>
+ COMPATIBILITY 
+      Historic versions of the cp utility had a -r option.  This implementation supports that option; however, its use is strongly discouraged, 
+      as it does not correctly copy special files, symbolic links, or fifo's.
+ <<
+ 
+ They should use -R instead. In that case, you can optionally specify how to treat symbolic links, and the default is no symbolic links are followed.
+ 
+ >>
+  -P    If the -R option is specified, no symbolic links are followed.  This is the default.
+ <<
+ 
+ This behavior is said to be POSIX.2 compliant.
+ >>
+ STANDARDS
+      The cp command is expected to be IEEE Std 1003.2 (``POSIX.2'') compatible.
+ <<
+ 
+ ** Postscript (Sasada-san taught me a lot)
+ 
+ POSIX description (SUSv4)
+ >>
+  Earlier versions of this standard included support for the -r option to copy file hierarchies. The -r option is historical practice on BSD and BSD-derived systems. This option is no longer specified by POSIX.1-2008 but may be present in some implementations. The -R option was added as a close synonym to the -r option, selected for consistency with all other options in this volume of POSIX.1-2008 that do recursive directory descent.
+ <<
+ 
+ 
+ POSIX.2 is no longer available.
+ >>
+ Q10. What is IEEE POSIX 1003.2 Shell and Utilities?
+ 
+ This standard defines a standard source level interface to the shell and utility functionality required by application programs, including shell scripts. This standard has been incorporated into the latest revision of POSIX 1003.1 and thus a POSIX.2 standard no longer exists.
+ <<
+ 
+ http://www.opengroup.org/austin/papers/posix_faq.html/
+ 
+ ** Addendum (other methods, etc.)
+ 
+ - The "cp -a" group
+ -- but whether or not this is implemented depends on the environment (hiby: there are some UNIX OSes that do not implement the -a option...)
+ 
+ - The "tar cf | tar xf" school
+ -- tmatsuu: I often use tar cf - hoge | tar xf - also tar xpf is ok
+ -- terazzo: tar -C src -cf - . |tar -C dst -xvf - and
+ -- dekaino: french (cd [srcdir]; tar cf - .) | (cd [destdir]; tar xf -)
+ 
+ - The "rsync" group
+ -- y-kawaz: I use cp -a for files and directories to begin with. Or -ap if I want to save a timestamp or something. I also use rsync -av for local copies.
+ 
+ - alias and you're good to go.
+ -- dankogai: alias cp "cp -ipRH" # -a is equivalent to -pPR
+ 
+ And I ended up using rsync because "I want to specify what not to copy by --exclude or something, but I can't find such an option in cp.
+ </body>
+ <comments>
+ <comment>
+ <username>Namae</username>.
+ <body>http://linuxjm.sourceforge.jp/html/gnumaniak/man1/cp.1.html<br>The -r POSIX option recursively copies directories, but does not specify what to do with files or directories that are not general files or directories. It does not specify what to do for <br>those that are neither general files nor directories. <br>So isn't it up to the implementation to decide whether to pull the destination of the symbolic link or not? </body>
+ <timestamp>1342610124</timestamp>
+ </comment>
+ <comment>
+ <username>banxban</username>
+ <body>It would be safer to check with find and then copy using a pipe...<br>It would be possible to check later what was copied</body>.
+ <timestamp>1342671194</timestamp>
+ </comment>
+ <comment>
+ <username>Merita</username>.
+ <body>find and cpio. There. </body>
+ <timestamp>1342878300</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-07-18 https://nishiohirokazu.hatenadiary.org/archive/2012/07/18]

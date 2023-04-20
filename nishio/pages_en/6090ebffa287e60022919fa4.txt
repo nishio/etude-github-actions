@@ -1,0 +1,132 @@
+Hatena2009-06-01
+code:hatena
+ <body>
+ *1243809728*[Python]Enumeration of tuples of length N such that only one is 1 and the rest are 0.
+ >|python|
+ N = 3
+ print [
+     tuple(int(i == j) for i in range(N))
+     for j in range(N)]
+ 
+ # -> [(1, 0, 0), (0, 1, 0), (0, 0, 1)]
+ ||<
+ 
+ *1243851081* Belt found!
+ A belt (cf. <a href='http://d.hatena.ne.jp/nishiohirokazu/20090513/1242235560'>Dear Dwarf</a>) that had been missing and in trouble for over a month was found!
+ It was in a food cupboard that I don't usually open! Along with flour and other things!
+ 
+ *1243860840* Hexaphone recession analysis
+ To understand the backward analysis, I thought I'd try to solve it on a problem where memory is not severe. So, for now, hexapawn. Hexapawn is a game played on a 3x3 board with 3 chess pawns each, and you win if you penetrate to the farthest end. 20,000 states at 3 ** 9 would be enough to fit. It should be smaller considering the symmetry and the maximum number of pieces is 3, but I discarded that as "memory saving tuning".
+ 
+ The source is less than 300 lines including test cases. http://svn.coderepos.org/share/lang/python/retrograde/retrograde.py
+ 
+ Only four retreats were needed to get the result. The initial state is "a draw if both players make their best moves". Execution Result:.
+ >||
+ -----
+ .vv
+ v..
+ ^^^
+ DRAW
+ -----
+   v.v
+   ^v.
+   .^^
+   DRAW
+ -----
+   v.v
+   v..
+   .^^
+   DRAW
+ -----
+   vv.
+   ^.v
+   .^^
+   WIN
+ -----
+ v.v
+ .v.
+ ^^^
+ DRAW
+ -----
+   .vv
+   v^.
+   ^.^
+   WIN
+ -----
+   .vv
+   .v.
+   ^.^
+   DRAW
+ -----
+   vv.
+   .^v
+   ^.^
+   WIN
+ -----
+   vv.
+   .v.
+   ^.^
+   DRAW
+ -----
+ vv.
+ ..v
+ ^^^
+ DRAW
+ -----
+   .vv
+   v.^
+   ^^.
+   WIN
+ -----
+   v.v
+   .v^
+   ^^.
+   DRAW
+ -----
+   v.v
+   ..v
+   ^^.
+   DRAW
+ ||<
+ 
+ Does it mean that if the back hand makes a mistake, such as taking the opposite end step when you take the end step, or not taking the middle step when you take the middle step, you win the game? It seems to be working correctly.
+ >||
+   vv.
+   ^.v
+   .^^
+   WIN
+ -----
+   vv.
+   .^v
+   ^.^
+   WIN
+ ||<
+ 
+ Now, it was easy in this case where the problem was small enough to get on memory without tuning, but in reality, you want to save as much memory as possible. For example, in this case, 3 ** 9 = a huge space, but using the fact that the maximum number of pieces is 3, 6540 is enough, and if you work hard, you can shrink it even more. I guess we need to use the characteristics of the game to fold it into a smaller space in other games as well.
+ 
+ Well, I don't think that has much to do with the main idea of the regression analysis. The encode and decode parts of the above code need to be complicated, and get_children and get_parent need to return normalized versions. I'll try to write it in Python for now and use it for C++ testing.
+ </body>
+ <comments>
+ <comment>
+ <username>Kurohata</username>
+ <body>>It was in the food cupboard<br> <br> Is it the belt? ......, orz<br> <br> I couldn't find my cell phone, so I made a call and was shocked to hear a noise coming from the fridge. </body>
+ <timestamp>1243853149</timestamp>
+ </comment>
+ <comment>
+ <username>bgnori</username>
+ <body>Simple and silly question: do you receive calls in the refrigerator? </body>
+ <timestamp>1243863211</timestamp>
+ </comment>
+ <comment>
+ <username>bgnori</username>
+ <body>Why don't you make it 3x4 and check if the one with the first move and the longest back wins? </body>
+ <timestamp>1243866096</timestamp>
+ </comment>
+ <comment>
+ <username>Kuro-hata</username>
+ <body>No, it was done by Hannah Montana <refrigerator And in the egg cart</body>.
+ <timestamp>1243905566</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-06-01 https://nishiohirokazu.hatenadiary.org/archive/2009/06/01]

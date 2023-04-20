@@ -1,0 +1,29 @@
+Is a Japanese language model necessary?
+Talk about "another small model" being futile, but "a tokenizer plus an extra layer suitable for Japanese" is necessary.
+
+from [unexplored conference 2023].
+Is a Japanese language model necessary?
+https://twitter.com/nishio/status/1634236182136762368
+	Do we need a language model for [human.icon]Japanese?
+	[nishio.icon]The scale of the giant language model is directly related to its capability, so it is futile to create a unique Japanese model that is halfway small. However, if the efficiency of communication with the giant language model in Japanese is lower than that in English, it is a loss for Japanese speakers, so there is no need to do anything.
+	[human.icon]Are you suggesting that we increase the amount of Japanese language training data?
+	[nishio.icon]No, different language speakers have conflicting interests because tokenizer token splits follow the frequency of words in the language. One model with more data is not good enough.
+	I'm sure it won't matter once [human.icon] machine translation evolves.
+	[nishio.icon]If it is an English word sequence and then it is converted into a Japanese word sequence, the resolution of the world by English will be lower to match English in a lower domain than Japanese, so it can only be an inferior language to English.
+
+@kuboon
+I think I heard something about recent machine translation being converted once into an intermediate language that is not any language, like LLVM for natural languages.
+@nishio
+What humans imagine by the term "intermediate language" is a sequence of "discrete symbols" called words, but in the first place, in LLM, what corresponds to a single word is a vector with a float of 1000 dimensions or so, and its expressive power is an order of magnitude higher. Therefore, it is necessary to "directly convert it into Japanese" rather than "convert it into English and then into Japanese.
+@kuboon
+I was envisioning machine translation directly from a float 1000 dimensional word sequence into natural language, without output from LLM into English.
+@nishio
+If it is necessary and the accuracy there is inferior for a certain natural language, only the speakers of that language will suffer a loss. This is not a problem that can be solved by leaving it to the multilinguals, since there are conflicting interests among the speakers of each language, similar to the way Unicode's handling of Kanji makes it inconvenient for the Japanese.
+@kuboon
+Would it be good if there was a mechanism to standardize the tokenizer API so that native speakers of each language could commit to it?
+@nishio
+The tokenizer alone is too thin. It's just a discrete token ID of a sequence of bytes. I think we need an opening that can I/O information around that token ID becoming a vector, and then going a little further inward, where the superficial differences in language disappear and it becomes a vector of meaning.
+
+relevance
+	[Do differences in Japanese Tokenizer affect downstream task performance?]
+		Morphological analysis improves performance.

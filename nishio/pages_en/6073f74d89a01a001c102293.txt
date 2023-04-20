@@ -1,0 +1,25 @@
+Prohibit list acquisition in Firestore
+The security rules for [Firestore] initially look like this
+code::
+ match /{document=**} {
+   allow read, write;
+ }
+
+This read permission can be divided into get and list. By restricting this list privilege, it is possible to prohibit the acquisition of a list.
+code::
+ match /{document=**} {
+   allow get;
+   allow list: if false;
+   allow write;
+ }
+
+The following code was successful before narrowing down the security, but after narrowing it down, the error occurs as expected
+code::
+ firebase.firestore().collection("collection_foo").get().then((qs) => {
+   qs.forEach((d) => console.log(d.id));
+ });
+ // Uncaught (in promise) FirebaseError: Missing or insufficient permissions.
+
+doc https://firebase.google.com/docs/firestore/security/rules-structure
+
+[Capability URL]

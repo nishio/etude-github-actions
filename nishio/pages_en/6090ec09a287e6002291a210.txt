@@ -1,0 +1,159 @@
+Hatena2012-04-09
+code:hatena
+ <body>
+ *1333928800*Alloy Girl 1
+ Me: I usually describe Mr. Alloy, but he doesn't respond very well.
+ Alloy: Your definition of "normal" is vague.
+ Me: ...so I thought why not make it conversational anyway!
+ Alloy: That's a leap of logic. I have no idea what you're talking about.
+ Me: Well, trust my (human) feeling there!
+ Alloy: …。
+ Me: So, Milk...or Alloy and I alone, I think the restrictions are too strict and there will be no solution. So I brought along JavaScript-chan to teach us.
+ JS: Hi, I'm Laura, oh, no, I made a mistake, it's "Jasubuskritto"☆ (voice: Laura)
+ Alloy: .........(sigh)
+ 
+ ** Modeling state transition diagrams
+ 
+ Me: Well, anyway, let's try modeling a state transition diagram that I implemented with JavaScript the other day. First, there's a StateManager that manages the states, and it has States.
+ 
+ >||
+ sig StateManager {
+ 	state: State
+ }
+ 
+ sig State {}
+ ||<
+ 
+ JS: I'll try to execute it. Oh, I got an error message "There are no commands to execute.
+ Me: You didn't write a command to execute, Alloy has a run command to look for examples and a check command to look for precedents.
+ JS: I see. When I look for examples, I write "run {}". What is this {}?
+ Alloy: It's an unnamed predicate.
+ JS: (pause)
+ I: Well, instead of "just search," you can specify "search for something with these conditions," and the "conditions" are called predicates. In other words, it is an expression that returns true or false.
+ Alloy: Not that I'm saying that, it's just common usage.
+ Me: No, I don't think computer science jargon is common...
+ 
+ ** Let's run it.
+ Me: So, run {} specifies an empty predicate, which always returns true.
+ JS: Whatever, I'll do it! Yay* Wow, something came out again!
+ 
+ >||
+ Executing "Run run$1"
+    Solver=minisatprover(jni) Bitwidth=4 MaxSeq=4 SkolemDepth=1 Symmetry=20
+    115 vars. 15 primary vars. 152 clauses. 3ms.
+    . found. Predicate is consistent. 1ms.
+ ||<
+ 
+ Me: No, it says, "I was successful. I ordered them to find an example, and they replied that they had found one, in about 4ms. It took about 4 ms.
+ JS: Hmmm, what fun.
+ Me: No, that's right. Now if I click on Show Latest Instance in the GUI menu
+ JS: Instances show!
+ Me: No, "instance" written in katakana sounds like something you can create when you new a Java class, doesn't it? I think it would be better to translate it as "instance" in its original English meaning.
+ JS: Anything! Yes☆!
+ 
+ ** Display
+ [f:id:nishiohirokazu:20120409084137p:image]
+ 
+ JS: Something came up!
+ Me: Yes, I see examples that seem to satisfy the "StateManager has State" condition.
+ JS: But isn't it common sense to have two StateManagers?
+ Alloy: ...You never said anything about StateManager being "one" in the first place.
+ Me: Well, well, well, well, the code didn't say there was only one StateManager. So let's add it and try again, I'd say, but I have to go to work.
+ Alloy: Oh, it's against the restrictions for a character in a school story to come to work.
+ Me: Uh, yeah, I've been called into the infirmary. We'll continue later!
+ 
+ *1333979323*Alloy Girl 2
+ Continued from <a href='http://d.hatena.ne.jp/nishiohirokazu/20120409/1333928800'>Alloy Girl 1</a>.
+ 
+ Me: I'm home!
+ Alloy: Oh, you were in the infirmary for so long. What have you been doing?
+ Me: It's all about JavaScript and flirting and...what can I say?
+ Alloy: I'm kidding.
+ Me: ...
+ JS: Hey, hey, let's solve the problem of two StateManagers!
+ Me: Yes, yes, yes.
+ 
+ ** There is one StateManager.
+ 
+ Me: Okay, so that's why I'm going to declare that there is one StateManager.
+ JS: Eh, you make the constructor private.
+ Me: No, that's Java.
+ JS: What, do I have to declare "object"?
+ Me: Is that Scala?
+ Alloy: You said "one" last time. Didn't you hear me?
+ JS: Where do you write "one"?
+ Alloy: I'm here.
+ 
+ >||
+ one sig StateManager {
+ 	state: State
+ }
+ 
+ sig State {}
+ 
+ run {}
+ ||<
+ 
+ JS: I thought you were supposed to write it in the run {}.
+ Alloy: If you want to write there, you can do it like this
+ 
+ >||
+ sig StateManager {
+ 	state: State
+ }
+ 
+ sig State {}
+ 
+ run {
+ 	one StateManager
+ }
+ ||<
+ 
+ JS: How is it different?
+ Alloy: Equivalent, but what?
+ Me: Well, for example, when I write multiple runs, I can choose which one to execute from the menu, so if I want to use different search with different options, I can write it in the predicate of run?
+ JS: Hmmm, such a pain in the ass!
+ Me: Hmmm...
+ JS: Well, no matter, what is written in run {} is temporary, not always used, something like that!
+ Me: Yeah, well, that's fine.
+ 
+ ** State is 0 or more
+ 
+ Alloy: By the way, I wonder if the relationship between StateManager and State can be one-to-one.
+ JS: What?
+ Alloy: Since there are no modifiers attached to the state declaration, this is a one-to-one relationship by default.
+ 
+ >||
+ sig StateManager {
+ 	state: State
+ }
+ ||<
+ 
+ JS: I don't like that!
+ Alloy: 0 or more means set, 1 or more means some, and 0 or 1 means lone.
+ JS: Where do you write?
+ Alloy: high
+ 
+ >||
+ sig StateManager {
+ 	state: set State
+ }
+ ||<
+ 
+ JS: Let's run it! Yay*!
+ 
+ [f:id:nishiohirokazu:20120409224911p:image]
+ 
+ JS: Wow, I got something like that!
+ Me: By the way, if you Show Metamodel
+ JS: So the meta-model shows!
+ Me: That doesn't explain anything...
+ 
+ ** Next notice
+ 
+ Me: What's next?
+ JS: You see, each State has a member function "enter" and "exit" with no arguments, and a function "trigger" to find and dispatch an appropriate event handler based on the object type and event type! Oh, and StateManager has current_state!
+ Me: I feel like I'm saying something very un-Alloy-like, but...whatever. I'll try to express it in Alloy next time.
+ </body>
+
+[Hatena Diary 2012-04-09 https://nishiohirokazu.hatenadiary.org/archive/2012/04/09]

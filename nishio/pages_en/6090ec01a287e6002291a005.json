@@ -1,0 +1,88 @@
+Hatena2009-09-13
+code:hatena
+ <body>
+ **1252813676* How to save images in a photo album on iPhone
+ >||
+ void UIImageWriteToSavedPhotosAlbum (
+    UIImage  *image,
+    id       completionTarget,
+    SEL      completionSelector,
+    void     *contextInfo
+ );
+ ||<
+ http://developer.apple.com/iphone/library/documentation/UIKit/Reference/UIKitFunctionReference/Reference/reference.html#//apple_ref/c/func/UIImageWriteToSavedPhotosAlbum
+ 
+ The second and subsequent arguments are for callbacks after the image has been saved, so you can set them all to nil if you do not need them.
+ 
+ 
+ I've been screenshotting and getting borders due to the lack of a save function, but now I can save properly and cleanly.
+ f:id:nishiohirokazu:20090913125809j:image
+ 
+ **1252821508*PRML (Pattern Recognition and Machine Learning) Hackathon Jump in Diary
+ Now jumping into <a href='http://atnd.org/events/1422'>PRML (Pattern Recognition and Machine Learning) Hackathon #1 : ATND</a> (14:58)
+ 
+ I was thinking of creating a program to classify iPhone accelerometer values using unsupervised learning, but <a href="http://www.amazon.co.jp/gp/product/4270000600?ie=UTF8&tag=nishiohirokaz-22& linkCode=as2&camp=247&creative=7399&creativeASIN=4270000600">Thinking Brain Thinking Computer</a><img src="http://www.assoc-amazon.jp/e/ir?t= nishiohirokaz-22&l=as2&o=9&a=4270000600" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> I would prefer to implement this.
+ 
+ <hr>
+ 
+ You feel like you've made a great discovery, then you cool down, and then what? (Here and now)
+ 
+ <hr>
+ 
+ I still couldn't talk about it in 5 minutes, so here it is.
+ 
+ First of all, what we wanted to do was to make <a href='http://pr.ice.uec.ac.jp/~terada/reallife/'>Real Life</a> interesting, and since it is a newly developed game, we haven't found many interesting patterns yet, so let's search for them. →Let's look for them.
+ 
+ So, I simply ran the cancer from a random initial placement, chopped it up into 5x5s or so, and fed it into a self-organizing map (SOM), which would extract the most frequently occurring patterns. I think that's enough for the problem I wanted to solve at this point, but this is where the tension and overkill starts. That kind of chopping and learning style is like the blinkers in <a href='http://ja.wikipedia.org/wiki/%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B2%E3%83%BC%E3%83%A0'>The Game of Life</a>. When a periodic pattern is entered, it is recognized as a separate pattern A and pattern B, and you can't notice the connection between them.
+ 
+ Then I thought, what can I do, and that's a Boltzmann machine (or <a href='http://ja.wikipedia.org/wiki/%E3%83%9B%E3%83%83%E3%83%97%E3%83%95 %E3%82%A3%E3%83%BC%E3%83 %AB%E3%83%89%E3%83%BB%E3%83%8D%E3%83%83%83%E3%83%88 %E3%83%AF%E3%83%BC%E3%82%AF'>Hopfield network</a>). The idea was that if we put the neurons that fire in pattern A and the neurons that fire in pattern B into a hopfield network, the wire between them will be thicker and we can train them as time-series patterns.
+ 
+ This allows this neural network to predict "Pattern B is likely to come" after receiving an input that looks like Pattern A. When the input that is not classified anywhere as noise comes after Pattern A, the Boltzmann machine fires Pattern B with the "Next comes B" signal, and the neural net behaves in a very human-like manner: "It was actually noise, but B is recognized as having come". Then, when the stimulus from the input is removed, the state of the neural network is updated only by the "what comes next" information from the Boltzmann machine, and it becomes like "dreaming".
+ 
+ Now, we can "predict what input is likely to come next when a certain input comes in. However, this does not help us understand that "there exists a pattern X that transitions between A and B" even though we can predict "next B" when we see A and "next A" when we see B. If we run associations for a while from appropriate random firings while dreaming, we will settle on the alternating transitions between A and B. If we blur the chronological sequence a little and recognize it, it will change into a spatial pattern called "a pattern of A neurons and B neurons shining". A time-series pattern changes into a spatial pattern. The important point is that the time-series pattern has been transformed into a spatial pattern, which can then be fed back into the SOM to symbolize the pattern. Once the symbolization of a pattern has been created, the transitions between the symbols can be used to create higher level abstractions.
+ 
+ <hr>
+ I had thought about this before the hackathon, but after arriving at the hackathon venue, I thought, "If I start working on tasks that won't be completed in time, I'll have too many tasks piled up that I won't be able to complete in time," and decided to work on the design side rather than writing code right off the bat. The first thing I did was to look at <a href='http://gaya.jp/research/hippocampus.htm'>Basic Knowledge of the Hippocampus</a> and copy the wiring diagram in the hippocampus, but the hippocampus is small no matter how you look at it. It's more natural to think that the neural network as I wrote above would be in the cortex, not the hippocampus, since you need a lot of layers with SOM and BM with almost the same content. call for people familiar with the wiring in the cortex on Twitter and learn that @kenji4569 at the venue is familiar with it. I don't know why he's in the same venue, but he's on Twitter. For some reason, we are in the same venue and we talk on Twitter.
+ 
+ While confirming my understanding of the cerebral cortex, I got the impression that there are many different types of cells in many different places, so I do not have to stick to only the wiring that is currently known. I drew a diagram of the cerebral cortex. When input comes into layer 4 (x[4]), x[2] and x[3] are stimulated, and the signal reaches layer 4 (y[4]) in the upper layer. In the process, y[5] is also stimulated. On the other hand, there is a flow in the opposite direction. y[5] sends signals to the lower layers via y[6]. The signal is sent through x[1], where many axons are gathered, to x[2], x[3], and x[5], and from x[2] and x[3] to x[5] and x[6].
+ 
+ (I'll include a diagram later.)
+ 
+ I've been looking at it, but it doesn't look like it could form a recurrent network if you only look at one layer of the cortex. Hmmm.
+ 
+ <img src="http://gyazo.com/41d7c83217c911b1505c662aabf4db84.png">
+ 
+ We consider the process in which corticocortical connections (corticocortical connections, OK?) are the functional units. When input comes into layer 4 (x[4]), x[2] and x[3] are excited, and the excitement of x[2], for example, is transmitted to layer 4 (y[4]), which is higher up, through y[5] and y[6] and down through the many axons in x[1], to provide inhibitory stimulation. This is where the many axons are clustered. The fact that there are many axons clustered together means that signals can be transmitted over a wide area there, so it looks like we can do the self-organization map "the neuron firing the strongest inhibits the activity of the other neurons." Done. Now we just need to see if something Boltzmann machine-like will fit in the remaining space.
+ 
+ <img src="http://gyazo.com/c031bdec20704ea63c9730c85f3fbb77.png">
+ 
+ 
+ Oh, right, that's what I meant when I wondered why there are two layers when I'm not sure how to use the second and third layers. One is a self-organizing map and one is a Boltzmann machine. This Twitter statement is not appropriate and I will correct it,
+ 
+ When input comes into layer 4 (hereafter x[4]), x[2] and x[3] are excited, and the excitement of x[2], in the process of being transmitted to the upper layer 4 (hereafter y[4]), can travel down through y[5] and y[6] to where many axons of x[1] are gathered and give inhibitory signals to x[3] It can do this. In this case, instead of inhibiting itself, it inhibits the surrounding neurons (lateral inhibition), "I can think of A, B, or C as possibilities, but the strongest one is A, so let's say A." x[3] is "better matched" than x[2] with the input from x[4] and the inhibitory signal. The firing of x[3] also comes down in the process of being sent to y[4] and leads to x[2]. This is weakly excitatory. This signal alone is not enough to determine the outcome. Then, as it learns, it is narrowed down to "C or D based on the input, but since it was A earlier, I think B or C is next," and when it goes to x[3], it says, "B, D, or C are possible, but C is the strongest.
+ 
+ I tried to explain myself in 5 minutes, but it was impossible.
+ 
+ Also, I haven't verified it yet, but this method can only classify 5x5 squares, so it can't recognize patterns beyond that size, but the human eye only sees a much smaller area than what we think we actually see, and we recognize a larger area by vibrating our eyeballs faster (30-70Hz) than we can recognize (<a href="" target="_blank">Saccade</a>). The human eye sees a much smaller area than what it actually thinks it sees, and perceives a larger area by vibrating the eyeballs at an unrecognizably faster rate (30-70 Hz) (<a href='http://en.wikipedia.org/wiki/Saccade'>Saccade</a>). Similarly, if one step in a life game lasts one second, it is not surprising that about 50 locations are sampled, so that a wider range of patterns than can be seen in a single sampling can be recognized in the form of "when I see a certain characteristic pattern, I move my gaze around it and see another characteristic pattern. We can recognize patterns. And then, from the motor cortex, it seems that as soon as you send out a signal to move your body, it goes to the thalamus, and from there it comes back to the same cortex, so I think it feeds back how you moved your eyes to the Boltzmann machine's input. So it learns, "Well, the last time I moved my eyes up in this state, this is the pattern I tend to get." But it's the primary motor cortex...it would be smarter in design to have the signal to move the eyes come directly from the visual cortex, I wonder if that's what's happening.
+ 
+ I was also just thinking about the response time of cells in the visual cortex. If it is 25msec, it seems small in terms of numbers, but in terms of Hz, it is only 40Hz, so if the eyeballs are moving at 50Hz in saccade, it would be motion blur all the time.
+ 
+ **1252850497*noguchi
+ f:id:nishiohirokazu:20090913230124j:image
+ 
+ Noguchi is watching!
+ 
+ f:id:nishiohirokazu:20090913230207j:image
+ 
+ The fox's eye, the mouth of the
+ 
+ f:id:nishiohirokazu:20090913230302j:image
+ 
+ What a pain in the ass!
+ 
+ f:id:nishiohirokazu:20090913230336j:image
+ 
+ Goooogling that makes you look stupid when you're a multiple of 3.
+ </body>
+
+[Hatena Diary 2009-09-13 https://nishiohirokazu.hatenadiary.org/archive/2009/09/13]

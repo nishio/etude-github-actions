@@ -1,0 +1,32 @@
+Hatena2011-07-21
+code:hatena
+ <body>
+ *1311215412*How to merge back together a broken up sound on a Mac.
+ >>
+ What's the easiest way to undo (NFC) a Mac that's been broken up (NFD) like "shi&#12441;aha&#12442;n"? I've found a way to undo it and use it when I paste it into a terminal, but it's not the easiest way to do it.
+ <<
+ I'm talking about pasting it into the terminal, selecting the combined view and copying it again. I wanted to do something about it because it's a pain in the ass to do the selection and such.
+ 
+ I didn't get any replies, so I had no choice but to write this one myself.
+ >|python|
+ import unicodedata
+ import subprocess
+ 
+ while True:
+     d = unicode(raw_input(">>> "),  "utf-8")
+     print repr(d), d
+     d = unicodedata.normalize("NFC", d)
+     print repr(d), d
+     p = subprocess.Popen("pbcopy", stdin=subprocess.PIPE)
+     p.communicate(d.encode("utf-8"))
+ ||<
+ 
+ >||
+ >>> Japan
+ u'\u30b7\u3099\u30e3\u30cf\u309a\u30f3' Japan
+ u'\u30b8\u30e3\u30d1\u30f3}Japan
+ ||<
+ and that it was returned correctly. I really thought it would be nice to be able to monitor the clipboard and convert automatically or something, but oh well.
+ </body>
+
+[Hatena Diary 2011-07-21 https://nishiohirokazu.hatenadiary.org/archive/2011/07/21]

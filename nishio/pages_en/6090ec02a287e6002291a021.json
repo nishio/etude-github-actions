@@ -1,0 +1,148 @@
+Hatena2009-10-16
+code:hatena
+ <body>
+ *1255647268*Python shaping up after a long time.
+ http://blog.bestinclass.dk/index.php/2009/10/python-vs-clojure-evolving/
+ 
+ I was told that Python is so much more lines of code than the code I wrote in Clojure, and it's so ugly.
+ 
+ >|python|
+ from itertools import ifilter
+ import operator
+ 
+ def mul(nums):
+     return reduce(operator.mul, nums)
+ 
+ def icross(*sequences):
+     if sequences:
+         for x in sequences[0]:
+             for y in icross(*sequences[1:]):
+                 yield (x,)+y
+     else: yield ()
+ 
+ def digits_from_num(num, base=10):
+     def recursive(num, base):
+         if num < base:
+             return [num]
+         return [num%base] + recursive(num/base, base)
+     return list(reversed(recursive(num, base)))
+ 
+ def is_palindrome(num, base=10):
+     digitslst = digits_from_num(num, base)
+     return (digitslst == list(reversed(digitslst)))
+ 
+ def euler4(lstlst):
+     canditates = (mul(ns) for ns in icross(*lstlst))
+     return max(ifilter(is_palindrome, canditates))
+ 
+ print euler4(2*[range(111, 1000)])
+ ||<
+ 
+ First of all, why are we suddenly defining a direct product?
+ >|python|
+ def icross(*sequences):
+     if sequences:
+         for x in sequences[0]:
+             for y in icross(*sequences[1:]):
+                 yield (x,)+y
+     else: yield ()
+ ||<
+ 
+ In clojure.
+ >||
+             (for [x (range 100 1000)
+                   y (range 100 1000)]
+               (* x y))))
+ ||<
+ In python, why not just write "for x in range(100, 1000) for y in range(100, 1000)"? Delete it all.
+ 
+ Next is a function that turns numbers over in string notation.
+ >|python|
+ def digits_from_num(num, base=10):
+     def recursive(num, base):
+         if num < base:
+             return [num]
+         return [num%base] + recursive(num/base, base)
+     return list(reversed(recursive(num, base)))
+ ||<
+ 
+ No, no, no, no, no, no, no, no, no, no, no, no, no. What are you doing, and recursive calls...since Clojure does (= (seq s) (reverse s)), why not list(a) == list(reversed(a)) in Python too? Delete all.
+ 
+ Next, mul, a function that takes a list and multiplies all of its contents.
+ >|python|
+ def mul(nums):
+     return reduce(operator.mul, nums)
+ ||<
+ This in itself is fine. But the Clojure side is (* x y). If the number of arguments is fixed at 2, why do we have to define this? Remove all of them.
+ 
+ Interim report so far
+ >|python|
+ from itertools import ifilter
+ 
+ def is_palindrome(num):
+     digitslst = str(num)
+     return (list(digitslst) == list(reversed(digitslst)))
+ 
+ def euler4(xs, ys):
+     canditates = (x * y for x in xs for y in ys)
+     return max(ifilter(is_palindrome, canditates))
+ 
+ print euler4(range(111, 1000), range(111, 1000))
+ ||<
+ It shrunk to less than half, though.
+ 
+ But Clojure doesn't define functions with names, and just puts them all in one place. It's not fair, so let's do the same in Python. Let's make it look as much like this as possible:.
+ >||
+ (reduce max
+     (filter #(let [s (str %)]
+                (= (seq s) (reverse s)))
+             (for [x (range 100 1000)
+                   y (range 100 1000)]
+               (* x y))))
+ ||<
+ 
+ like this
+ >|python|
+ print max(v for v in (x * y 
+                       for x in range(100, 1000) 
+                       for y in range(100, 1000))
+           if list(str(v)) == list(reversed(str(v))))
+ ||<
+ Hey, Python is shorter, right?
+ 
+ <hr>
+ 
+ I wrote it in English, too, because it's no use writing it in Japanese.
+ http://blog.hackers-cafe.net/2009/10/re-python-vs-clojure.html
+ 
+ <hr>
+ 
+ I didn't check it because I only shrunk the number of lines and it became too much of a hassle in terms of speed, but according to Matatou, Python was faster due to this improvement. PS: I was mistaken that Python is faster than Python (see comments).
+ 
+ >>
+ So this is what it means: p [*100..1000].product([*100..1000]).map{|x,y| x*y}.select{|s|s=s.to_s; s==s.reverse}.max
+ <<
+ >>
+ Speed comparison showed 12.2 sec for the original Python version (2.6), 4.9 sec for Nishio, 2.8 sec for Ruby (1.8.7), and 0.9 sec for 1.9 trunk. Python seems to be just a bit faster with 3.1.
+ <<
+ >>
+ The original article said "(original) Python is 300% slower than Clojure", which means that 1.9 is 4 times faster than Clojure. In short, a trivial comparison.
+ <<
+ http://twitter.com/yukihiro_matz/status/4901341641
+ http://twitter.com/yukihiro_matz/status/4901791131
+ http://twitter.com/yukihiro_matz/status/4901849726
+ </body>
+ <comments>
+ <comment>
+ <username>Matsumoto</username>.
+ <body>"Python is 300% slower" is either "3x slower" or "4x slower (if you look at the difference)", so the Nishio version is not faster than Clojure, probably. </body>
+ <timestamp>1255793919</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>Yeah, it is indeed 12.2 to 4.9, so it is not tripling. I was mistaken. </body>
+ <timestamp>1255797571</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-10-16 https://nishiohirokazu.hatenadiary.org/archive/2009/10/16]

@@ -1,0 +1,104 @@
+ARC107
+It was two questions.
+[https://gyazo.com/270a4eee1e8f883aac8d104b633c0db1]
+
+I was prepared to fall back to green since I only solved 2 questions, but surprisingly it was only -8, so I'm still in light blue.
+[https://gyazo.com/e5bb4b1f756a2c4a123ebe89dda9f5ae]
+
+A
+	[product and sum exchange].
+	[$ \sum_{i,j} a_i \times b_j = (\sum_i a_i) \times (\sum_j b_j)]
+	The sum part is [triangular number
+	[$ T_n = \sum_{i=1}^n i = n(n + 1) / 2]
+	code:python
+	 def solve(A, B, C):
+      MOD = 998_244_353
+      a = A * (A + 1) // 2
+      a %= MOD
+      b = B * (B + 1) // 2
+      b %= MOD
+      c = C * (C + 1) // 2
+      c %= MOD
+      return (a * b) % MOD * c % MOD
+
+B
+ Given two numbers a and b, the number of pairs satisfying [$ 1 \leq a,b \leq N] can be found in constant order
+ So we can find the number of the above pairs by finding "c+d" for all possible values of "a+b
+	code:python
+	 def solve(N, K):
+      def f(x):
+          if x < 2:
+              return 0
+          if x > 2 * N:
+              return 0
+          return N - abs(x - (N + 1))
+  
+      ret = 0
+      for ab in range(2, 2 * N + 1):
+          cd = ab - K
+          ret += f(ab) * f(cd)
+  
+      return ret
+
+C
+　Thoughts.
+　　Seems important that each value is different from each other
+　　Looks dangerous when N=1.
+　　N=50 and small
+ 	"Choose x, y satisfying ~ for all i and swap the x, y columns of the matrix."
+ 		"(Choose (x, y) satisfying ~ for all i and swap the x, y columns of the matrix)" but I was confused because I misread it as "(for all i, choose x, y satisfying ~ and swap the x, y columns of the matrix))". which I misread and got confused.
+	　Skip to D.
+	　They came back with 50 minutes to go.
+　　I noticed a misreading.
+　　Swap in columns does not affect row conditions, so they can be treated as independent problems [split into X and Y].
+　　Multiply to find the number of cases for each
+　　First, I factorized for the number of interchangeable pairs, which is incorrect because there are six pairs when four can be interchanged with each other.
+　　UnionFind was used to find the connected components.
+　　3WA
+　　 I was implementing dividing it, thinking, "Well, when you have columns with exactly the same contents, you can replace them and the number of types won't increase," but the problem condition says all the numbers are different, so that was a useless worry.
+　　The cause of the WA was that I assumed that there was only one connected component that had a size greater than 2. In fact, there is more than one.
+　　　Example: https://twitter.com/cs_c_r_5/status/1322537172088446982?s=21
+　　post-AC
+　　code:python
+　　 def solve(N, K, AS):
+       from collections import Counter
+       from collections import defaultdict
+       MOD = 998_244_353
+       init_unionfind(N)
+       for i in range(N):
+           for j in range(i + 1, N):
+               if all(AS[i][k] + AS[j][k] <= K for k in range(N)):
+                   unite(i, j)
+       ok1 = Counter(find_root(x) for x in range(N)).values()
+   
+       init_unionfind(N)
+       for i in range(N):
+           for j in range(N):
+               if all(AS[k][i] + AS[k][j] <= K for k in range(N)):
+                   unite(i, j)
+       ok2 = Counter(find_root(x) for x in range(N)).values()
+   
+       ret = 1
+       for n in ok1:
+           for x in range(1, n + 1):
+               ret *= x
+               ret %= MOD
+       for n in ok2:
+           for x in range(1, n + 1):
+               ret *= x
+               ret %= MOD
+   
+       return ret
+
+
+D
+ If we use x 1's from n, k states, we have n - x remaining.
+　　Since k - x is expressed as a number less than or equal to 1/2, the problem becomes 2(k - x) expressed as a number less than or equal to 1 if both sides are doubled
+　K,N is less than 10^7 when multiplied since the maximum is 3000
+　So I implemented it in DP, but it TLE'd in the sample, so I had to get my head out of my ass.
+　Give up and go back to C.
+　After the contest, I saw a post on Twitter that said it was on the order of 3 squared and couldn't proceed from there. I guess it's the same for me since I'm also looped on how many 1's to use for each transition.
+　But like the official explanation, you can't solve the problem by eliminating the loop by using one or the other of the two options. 14TLE
+　　Is it wrong that I'm not confident about the fill order and I'm using memoized recursion, or is it more inherently wrong?
+　https://maspypy.com/atcoder-参加感想-2020-10-31arc107
+　　Cumulative sum from solutions of the order of powers of three

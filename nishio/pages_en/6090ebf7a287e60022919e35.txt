@@ -1,0 +1,231 @@
+Hatena2008-05-01
+code:hatena
+ <body>
+ *1209600169*[Python] On the Other Side of the Earth
+ >>
+ > Both Van Rossum (Python) and Yukihiro Matsumoto (Python) got beards.
+ 
+ Yup, they both invented Python at the exact same time on nearly opposite sides of the earth.
+ <<
+ http://blogs.microsoft.co.il/blogs/tamir/archive/2008/04/28/computer-languages-and-facial-hair-take-two.aspx#83570
+ 
+ This is a terrible w tea blowout.
+ 
+ I guess the sentence is a mischaracterization of the fact that Matsumoto-san created Python, but "We created Python at the same time on almost opposite sides of the globe." w
+ 
+ *1209622385*I installed apache but it didn't work.
+ 1: Put apache in FreeBSD ports.
+ 2: Write "apache2_enable="YES" in /etc/rc.conf
+ 3: Can't start apache for some reason
+ 4: Cry to twitter
+ 5:
+ >>
+ Maybe you should look at /usr/local/etc/rc.d/apache22 rcvar or something? by taraijpn
+ <<
+ 
+ 6:
+ >||
+ # /usr/local/etc/rc.d/apache22 rcvar
+ # apache22
+ apache22_enable=NO
+ ||<
+ 
+ 7: Replace with "apache22_enable="YES".
+ 
+ >||
+ # /usr/local/etc/rc.d/apache22 rcvar
+ # apache22
+ apache22_enable=YES
+ ||<
+ 
+ 8: Try "/usr/local/etc/rc.d/apache22 start". → I tried "ps -x", but there is no httpd or apache.
+ 9: http://www.mail-archive.com/freebsd-users-jp@jp.freebsd.org/msg01982.html
+ 10: Also try rewriting httpd.conf.
+ 
+ >||
+ # /usr/local/etc/rc.d/apache22 start
+ Performing sanity check on apache22 configuration:
+ Syntax OK
+ Starting apache22.
+ # ps -awx | grep "httpd"
+ 86314  p2  T      0:02.00 emacs /usr/local/etc/apache22/httpd.conf
+ # ps -awx | grep "apache"
+ 86314  p2  T      0:02.00 emacs /usr/local/etc/apache22/httpd.conf
+ # ps -awx | grep "www"
+ ||<
+ 
+ It doesn't give any error message and there is no process.
+ 
+ 11: I thought there were no www users, but there were.
+ >||
+ # ls /home/www
+ ls: /home/www: No such file or directory
+ (/home/www does not exist)
+ 
+ # su www
+ This account is currently not available.
+ # su wwwwww
+ su: unknown login: wwwwww
+ (The user "www" itself seems to exist.)
+ ||<
+ 
+ PS: "cat /etc/passwd" is fine. cf. http://twitter.com/cent/statuses/800984873
+ 
+ 12: I don't know how to do it, so I try make deinstall and make reinstall.
+ 
+ 13: windows brain trying to reboot for now.
+ 
+ 14:
+ >>
+  You should read the error log under /var/log/apache22/ by wtanabe
+ <<
+ 
+ >||
+ > cd /var/log/
+ > tail httpd-error.log
+ [Thu May 01 15:41:17 2008] [warn] Init: Session Cache is not configured [hint: SSLSessionCache]
+ [Thu May 01 15:41:17 2008] [alert] (EAI 8)hostname nor servname provided, or not known: mod_unique_id: unable to find IPv4 address of "*******"
+ Configuration Failed
+ ||<
+ 
+ Search for.
+ 
+ >>
+ Check the error log,
+     (EAI 8)host/servname not known: mod_unique_id: unable to find IPv4 address of "hostname"
+ So it was like,
+ Add to /etc/hosts
+ <<
+ http://www.manami.st/clog/2006-11-17-2.html
+ 
+ Oh, it works! Thanks everyone!
+ 
+ -----
+ I added it to http://d.hatena.ne.jp/nishiohirokazu/20080421/1208764084.
+ 
+ *1209643558*[TopCoder] Full of Japanese
+ <img src="http://gyazo.com/86b58323938f383e8605a523e10a46b9.png">
+ 
+ 
+ I heard that the maximum number of participants exceeded 1,500 and some people were not able to attend.
+ 
+ 
+ I tested the 500 point question several times for mistakes and added test cases, but the given test case is not a corner case. I guess I should have submitted it quickly. And I don't have the ability to write width-first search code in C++ with 10 minutes left. I'll leave that for a future project.
+ 
+ 
+ <img src="http://gyazo.com/53052a360112151d4fc8f97e56df2913.png">
+ 
+ After this, only one person solved 1000 points. I'm in 4th place, so I intercept him with no luck.
+ 
+ I tried to paste the test case I had prepared to intercept it, but it turned out that I couldn't copy and paste it. I was making a test case with a GUI I'm not familiar with, and someone shot me down before I could do it.
+ 
+ Something 2nd place. Let's attack the 1st place for practice.
+ <img src="http://gyazo.com/126409335c7e50155d1dd24137d887d7.png">
+ I'm not sure what I'm doing. I feel like I made a mistake. It looks like I got a penalty for failing the challenge, which reversed me to 3rd place.
+ 
+ 
+ System test results:
+ <img src="http://gyazo.com/9a8f2524cdb4419485d541e5c2792e16.png">
+ Sir, my class is wiped out on 500 questions >.
+ 
+ 
+ <img src="http://gyazo.com/678570c80a8b07f8f86097a37759175b.png">
+ 
+ Well, I can almost guess why. Hmmm. I wonder what kind of strategy was the right one.
+ 
+ 
+ -----
+ 
+ Explanation of the 500-point problem. Given a number, the question is to determine whether the number is "the nth power of a prime number". n must be at least 2. The value returned is an empty vector if the number is not a prime to the nth power, or {p, n} if the number is p to the nth power. If the range of the number given is narrow enough, it's still OK, but the scary thing is that "the number given must be greater than or equal to 2 and less than or equal to 10^18. I thought it wouldn't fit in a long long because the argument is given as a string, but it does.
+ 
+ >|python|
+ >>> 2 ** 63
+ 9223372036854775808L
+ >>> 10 ** 18
+ 1000000000000000000L
+ ||<
+ 
+ The space to look for is so large that if we look for them in order, we will not be able to find them in time at all. So I did pow(x, 1.0/3.0), etc. To check if x is some integer to the nth power, I truncated the value of pow(x, 1.0 / n) and multiplied it by n in the range of plus or minus 1 to see if it matches x.
+ 
+ >|cpp|
+   vector <int> baseAndExponent(string n) {
+     LL v = lexical_cast<LL>(n);
+     for(size_t i=2; i<10000; i++){
+       double d = pow(v, 1.0/i);
+       if(d < 2.0) break;
+       cout << d << endl;
+       LL start(d - 1);
+       LL end(d + 2);
+       for(size_t j=start; j<end; j++){
+ 	LL power = 1;
+         for(size_t k=0; k<i; k++){
+ 	  power *= j;
+ 	}
+ 	if(power == v){
+ 	  // is prime?
+ 	  bool isPrime = true;
+ 	  LL ubound(sqrt(j)+1);
+ 	  for(size_t x=2; x<ubound; x++){
+ 	    if(j % x == 0){
+ 	      isPrime = false;
+ 	      break;
+ 	    }
+ 	  }
+ 	  if(j < 4) isPrime = true;
+ 	  if(isPrime){
+ 	    vector<int> result;
+ 	    result.push_back(j);
+ 	    result.push_back(i);
+ 	    return result;
+ 	  }
+ 	}
+       }
+     }
+     vector<int> result;
+     return result;
+   }
+ ||<
+ 
+ I don't know how to truncate floating point numbers, so I ignored the warning and forced it to be an integer. This is the reason why I failed the system test.
+ >|cpp|
+ 	LL power = 1;
+         for(size_t k=0; k<i; k++){
+ 	  power *= j;
+ 	}
+ 	if(power == v){
+ ||<
+ I meant to say "j to the kth power, if it matches v", but this is the trap that when the input is 639558602475808609, it is 2.07952 to the 56th power, plus 1 to the 56th power of 3. After repeated overflows, it somehow matches the input.
+ >||
+ 3
+ 9
+ 27
+ 81
+ 243
+ 729
+ 2187
+ (snip)
+ 6048575297968530377
+ -301018179803960485
+ -903054539411881455
+ -2709163618235644365
+ -8127490854706933095
+ -5935728490411247669
+ 639558602475808609
+ ||<
+ Ugh. I guess I need to go be more sensitive to the possibility of overflow.
+ If I'd have realized it, I could have been in first place with one word: "if(power < 0) break;". We still have a long way to go.
+ 
+ -----
+ Next Target
+ □ Take the 500 point question.
+ □ Suspect overflow when you see multiplication or addition.
+ </body>
+ <comments>
+ <comment>
+ <username>jj1bdx</username>
+ <body>If you don't have a clear image of fixed-length integers, you're stuck. If you want to do integer calculations correctly, you often need 64-bit long long long as well as 32-bit long. </body>
+ <timestamp>1209686546</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-05-01 https://nishiohirokazu.hatenadiary.org/archive/2008/05/01]

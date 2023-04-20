@@ -1,0 +1,49 @@
+Hatena2011-11-07
+code:hatena
+ <body>
+ *1320660473*NumPy+Matplotlib to display mean and variance on a scatter plot.
+ <img src="http://gyazo.com/283242a33f687d1392b780d2fdbc1dda.png">
+ 
+ The other day in "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111102/1320221317'>Drawing a scatterplot in NumPy</a>" we worked up to drawing a scatterplot using scatter. Today, we want to add an ellipse showing the variance and mean on top of this.
+ 
+ The sample PatchCollection shows that pylab.figure creates matplotlib.figure.Figure, fig.add_subplot creates matplotlib.axes.AxesSubplot, and then PatchCollection is added_collection. ref: <a href='http://matplotlib.sourceforge.net/examples/api/patch_collection.html'>api example code: patch_collection.py &#8212; Matplotlib v1.1.0 documentation</a>.
+ 
+ However, what I want to do now is to add a scatter plot on top of the scatter plot created by scatter, and pylab.figure() will create a new plot, so it is no good. If I do pylab.figure() from the beginning and draw scatter on it, it may be possible, but I want to do something afterwards because people always forget to prepare in advance. So we use gca.
+ 
+ >||
+ ax = gca()
+ ||<
+ 
+ Return the current axis instance. So after drawing the scatterplot, get the axis instance, create an instance of the ellipse you want to draw, transform it to the appropriate position, add_collection, then savefig, and you're done. ref. <a href='http://matplotlib. sourceforge.net/devel/transformations.html'>Working with transformations &#8212; Matplotlib v1.1.0 documentation</a>
+ 
+ >||
+ def draw():
+     clf()
+     scatter(data[:, 0], data[:, 1], alpha=0.5, marker="+")
+     ax = gca()
+     circles = [
+         Circle(
+             (0, 0), radius=3, 
+             transform=to_transform(mu, sigma)) for mu, sigma in zip(mus, sigmas)]
+     ax.add_collection(
+         PatchCollection(circles, alpha=0.2))
+     matplotlib.pyplot.savefig('test.png')
+ ||<
+ 
+ I have summarized the process of creating the transforms in a function called to_transform, which I created myself. If the covariance matrix is used as it is, the radius of the circle will be proportional to the variance, so to make it proportional to the standard deviation, the eigenvalues are decomposed once and then the square root of the eigenvalues is taken. This and the above Circle argument radius=3 are used to realize "draw a contour line passing through a point with 3 standard deviations in each axis".
+ 
+ >||
+ def to_transform(mu, sigma):
+     val, vec = eigh(sigma)
+     trans = diag(sqrt(val)).dot(vec)
+     return Affine2D.from_values(*trans.flatten(), e=mu[0], f=mu[1])
+ ||<
+ 
+ <img src="http://gyazo.com/383ff0ac9e42073d40c6c39ec7f0859f.png">
+ 
+ By the way, the document says that alpha=0.5 and fill=False can be specified as Circle arguments, but I wonder why they are not reflected even if they are specified. I really want to make something like PRML fig 9.8.
+ 
+ PS: I found out that if you don't set match_original to True in PatchCollection, the color will be overwritten http://d.hatena.ne.jp/nishiohirokazu/20111111/1320994184
+ </body>
+
+[Hatena Diary 2011-11-07 https://nishiohirokazu.hatenadiary.org/archive/2011/11/07]

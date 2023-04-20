@@ -1,0 +1,38 @@
+ABC174F
+[F - Range Set Query https://atcoder.jp/contests/abc174/tasks/abc174_f]
+[https://gyazo.com/d1e4ee6d9ee7b595405a406cf1c6fbe7]
+
+ Thoughts.
+ 　If it can be determined in logarithmic order whether or not color ci exists within the range, it can be done in time.
+ 　dichotomous search
+	mounting
+	　7 minutes to implement, submit, TLE
+  Oh, not at all, even if we can determine if each color is in range in logarithmic order for every N cases, it's O(QNlogN).
+　Consideration again
+　　[query look-ahead] and [make one of the two dimensions the time axis] or
+　　　Still the worst O(QN).
+　　Make a set of ball colors every 2^n blocks.
+　　　The total number of sets is 2N-1
+　　　A set of colors for the requested interval can be created by merging logN times.
+　　　　But if you do it normally, the merge is heavy and you end up with O(QN).
+　　　　Use [binary heap] with light merging?
+　Official Explanation
+　　Interval queries are segment trees, but merging is heavy
+　　[query look-ahead] and [make one of the two dimensions the time axis].
+　　　Maintain the "rightmost sphere location" of each color at each point in time.
+　　　If this is greater than L, then the color is in the range, constant order
+　　　But this is still O(QN)
+　　　Put the "rightmost ball location" of each color into the [phoenix tree].
+　　　　Counting the number of pieces is logarithmic order in the range sum
+　　　　I see, so this is the point.
+　　　　[compare large and small with many things -> phoenix tree].
+
+	3TLE
+
+[Lots of queries matter.]
+from [ABC174]
+ARC174F
+ https://hama-du-competitive.hatenablog.com/entry/2016/10/01/001418
+　https://twitter.com/maspy_stars/status/1290139299011129344?s=21
+　https://twitter.com/tktk_snsn/status/1290222202843889665?s=21
+	[Mo's algorithm]

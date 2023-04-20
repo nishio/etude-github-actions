@@ -1,0 +1,87 @@
+ABC190
+It was 5 questions. (The top two are after the contest)
+[https://gyazo.com/9030631995d9ff9f43f12c962337334d]
+
+[C - Bowls and Dishes https://atcoder.jp/contests/abc190/tasks/abc190_c]
+	[https://gyazo.com/058a608463f896cfd24f8e7fcce52025]
+ It's a seemingly tricky problem, but since K is at most 16, it's not a problem to search 2^K times.
+	code:python
+	 def main():
+      N, M = map(int, input().split())
+      AB = []
+      for _i in range(M):
+          A, B = map(int, input().split())
+          AB.append((A - 1, B - 1))
+      K = int(input())
+      CD = []
+      for _i in range(K):
+          C, D = map(int, input().split())
+          CD.append((C - 1, D - 1))
+  
+      ret = 0
+      for i in range(2 ** K):
+          xs = [0] * N
+          for j in range(K):
+              cd = CD[j]
+              if i & 1:
+                  xs[cd[0]] = 1
+              else:
+                  xs[cd[1]] = 1
+              i >>= 1
+          r = 0
+          for j in range(M):
+              if xs[AB[j][0]] == xs[AB[j][1]] == 1:
+                  r += 1
+          ret = max(ret, r)
+      print(ret)
+
+[D - Staircase Sequences https://atcoder.jp/contests/abc190/tasks/abc190_d]
+	[https://gyazo.com/ee1aa2792d7488de3ae51627cb8e6a45]
+ Interesting question
+ The sum of a sequence of length i is [$ a, 2a+1,3a+3, 4a+6, 5a+10, 6a+16, 7a+21, \ldots] if the first number in the sequence is a
+	That is, we can count the number of integers i,a such that [$ N = (i + 1) a + i (i + 1) / 2
+	[$ 2N = 2a(i+1) + i(i+1) = (i + 1)(i + 2a)]
+	If we write i+1 as k [$ 2N = k (k + (2a-1))]
+	We only need to determine if [$ 2N / k - k + 1] is even for k, the divisor of 2N
+ code:python
+  def solve(N):
+      ret = 0
+      for x in get_divisors(2 * N):
+          if (2 * N // x - x + 1) % 2 == 0:
+              ret += 1
+      return ret
+
+E
+	K as small as 17
+	Searching for a tree? Not necessarily a tree.
+	Depth-first tracing is not optimal.
+	Minimum number of moves to follow the graph?
+	DP？
+	Once you see F first
+
+[F - Shift and Inversions https://atcoder.jp/contests/abc190/tasks/abc190_f]
+	[https://gyazo.com/62384af9136737b3adf36fccca4e1237]
+ I tried to update the difference with a phoenix tree, but when I thought about the update part carefully, I didn't need the phoenix tree operation.
+ 　Only use it where you seek it first.
+ Removing the leading x reduces the number of falls by the number of those less than x
+ 　Since it is sorted from 0 to N-1, it is x
+ Adding x at the end increases the number of tumbles by the number of things larger than x
+ 　N-1-x
+ code:python
+  def main():
+      N = int(input())
+      AS = list(map(int, input().split()))
+      ft = FenwickTree(size=N)
+  
+      tento = 0
+      for i in range(N):
+          tento += ft.sum(N) - ft.sum(AS[i])
+          ft.add(AS[i], 1)
+  
+      for i in range(N):
+          print(tento)
+          x = AS[i]
+          tento -= x
+          tento += (N - 1 - x)
+
+[ABC190E]

@@ -1,0 +1,132 @@
+Hatena2013-02-07
+code:hatena
+ <body>
+ *1360238194*Simple question for my wife.
+ My wife's simple question.
+ 
+ ** Exercise
+ 
+ Last night, in my bedroom.
+ 
+ Wife: "You know how you measure the height of a building by measuring the distance to it and the angle?"
+ I said, "Yes.
+ My wife said, "I don't understand that. The earth is round, so isn't the ground straight?"
+ I said, "Uh, sure."
+ Wife: "Also, it could be affected by eye height."
+ I said, "I think that's a negligible difference, though."
+ Wife: "I don't quite understand what and why I should ignore it."
+ I said, "I see. I guess I should calculate it exactly once and confirm that there is not much difference from my rough estimate. By the way, if you look at something one kilometer away and see an angle of 45 degrees, it would be at most two to three thousandths longer.
+ 
+ [f:id:nishiohirokazu:20130207213719p:image]
+ Difference between the belief that the earth is flat and the reality of a round earth
+ 
+ ** Calculation
+ 
+ I usually estimate based on "the earth is 4000 km around", but I don't think you will be satisfied with my estimate, so I first check the radius of the earth, which according to Wikipedia is 6356752 meters for the polar radius. I'll use this.
+ 
+ >|python|
+ >>> hankei = 6356752
+ ||<
+ 
+ First, let's find the length of one revolution of the earth. The formula for the exercise is 2 * pi * hankei. This is 39940650 meters.
+ 
+ >|python|
+ >>> 2 * pi * hankei
+ 39940650.76778445
+ >>> enshuu = _
+ ||<
+ 
+ The next step is to find out how far away 1000 meters is in terms of angle, which is 0.009 degrees. Incidentally, it is more convenient to use radians as the unit of measurement, so we will use radians.
+ 
+ >||
+ >>> 360 * 1000 / enshuu 
+ 0.009013373419803435
+ >>> 2 * pi * 1000 / enshuu 
+ 0.00015731304288731102
+ >>> theta = _
+ ||<
+ 
+ Now, let's find the length of x in the figure. (x + shintyou + hankei) * tan(theta) = x, so transforming the equation, x = (shintyou + hankei) / (1 / tan(theta) - 1). So we know that x is 1000.158 meters.
+ 
+ >||
+ >>> (shintyou + hankei) / (1 / tan(theta) - 1)
+ 1000.1575033836971
+ >>> x = _
+ ||<
+ 
+ Now, let's find the height of the building (takasa). The length of the hypotenuse of a large triangle is x / sin(theta), which is hankei + takasa. So the height is 1001.236 meters. The difference from 1001 meters when we assume the earth is not curved is 23.6 centimeters. In percentage, this would be 2 to 3 parts per thousand.
+ 
+ >||
+ >>> x / sin(theta)
+ 6357753.236172293
+ >>> _ - hankei
+ 1001.2361722933128
+ >>> takasa = _
+ ||<
+ 
+ By the way, the height at 2 meters tall is 1002.236 meters. It can be seen that the effect of eye height is almost negligible.
+ >||
+ >>> (2 + hankei) / (1 / tan(theta) - 1)
+ 1000.1576607214926
+ >>> x = _
+ >>> x / sin(theta)
+ 6357754.236329644
+ >>> _ - hankei
+ 1002.2363296439871
+ ||<
+ 
+ ** Approximate
+ 
+ By the way, my rough estimate is
+ - The circumference of the earth is 4000 km.
+ - The radius is divided by 2 * pi (about 6), which is, well, about 6,000 km.
+ - theta is 1/40000 multiplied by 2 * pi (about 6), so 1.5/10,000.
+ - When theta is small, both sin(theta) and tan(theta) are approximately theta
+ - When theta is small, cos(theta) is approximately 1 - theta ^ 2
+ - Incidentally, for small values of v, 1 / (1 - v) is approximately 1 + v
+ - The distance that the ground sinks due to the roundness of the earth (y in the figure) is hankei / cos(theta) - hankei, which means hankei / (1 - theta ^ 2) - hankei, where theta ^ 2 is small, so hankei * (1 + theta ^ 2) - hankei, Since theta * theta is approximately two hundred millionths of theta, multiplying by 6,000 kilograms gives us about 12 centimeters.
+ - How does one meter at eye level increase? Ignore this value because it is also small because it is one meter multiplied by two hundred millionths of a meter.
+ - How much does x increase from 1 km due to the slant of the building? It's too much trouble to calculate seriously. I think it's about 1 km multiplied by tan(theta) in order.
+ - In total (I think it's 27 cm, but I haven't calculated it that precisely), I'd say it's roughly 20-30 cm...
+ 
+ Let's compare this to the value we calculated earlier.
+ 
+ - The radius of the earth is 40000000 meters -> 39940650.76778445, almost the same.
+ - About 6,000 km radius -> 6356752, actually about 5% larger than that.
+ - theta is 1.5 parts per million → 0.00015731304288731102, which is also actually about 5% larger.
+ - When theta is small, both sin(theta) and tan(theta) are approximately theta → correct.
+ >||
+ >>> theta
+ 0.00015731304288731102
+ >>> sin(theta)
+ 0.00015731304223846304
+ >>> tan(theta)
+ 0.00015731304418500693
+ ||<
+ - hankei / cos(theta) - hankei is approximately hankei * theta * theta -> oops, wrong 2x. Oh, I see, cos(theta) is approximately 1 - theta ^ 2 / 2. / I forgot about the 2.
+ >||
+ >>> hankei / cos(theta) - hankei
+ 0.0786565225571394
+ >>> hankei * theta * theta
+ 0.15731304288731104
+ ||<
+ 
+ - y is about 12 cm -> correct answer is about 8 cm
+ - The increase in x from 1 kg is about 15 cm -> 1000.1576, actually about 5% larger.
+ -Total is 27 cm → correct answer is 23 cm
+ 
+ And well, it goes like this.
+ 
+ Maybe later, when my wife reads this, she'll say no, that it's hard to understand...
+ 
+ ** Summary of Postscript
+ 
+ Okay, it's hard to tell because there is no summary. Summary.
+ 
+ Q: "You can't get an exact value because the earth is crooked, right?"
+ A "Yes, that's right. Even if you assume it is straight, the calculation will not be accurate. But the curvature of the earth is about 8 centimeters down for every kilometer it travels; when you measure something 1 kilometer away and about 1,000 meters high, the effect of the curvature is about 23 centimeters. Whether or not to ignore this is your call, if necessary."
+ 
+ Next time: "If you put a perfectly spherical ball on a perfectly spherical earth, does it stop?"
+ </body>
+
+[Hatena Diary 2013-02-07 https://nishiohirokazu.hatenadiary.org/archive/2013/02/07]

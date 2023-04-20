@@ -1,0 +1,67 @@
+Hatena2012-09-27
+code:hatena
+ <body>
+ *1348675384*SamurAI Coding game rules explained on its own.
+ SamurAI Coding is an international programming contest sponsored by the Information Processing Society of Japan (IPSJ), with the Singapore preliminary round on September 28, the Silicon Valley preliminary round on October 11, and the Japan preliminary round on October 24. Official website: https://samuraicoding.org/
+ 
+ [f:id:nishiohirokazu:20120927021251p:image]
+ 
+ To put it simply, the game is "a game in which you move a samurai and a dog around and play a game of battle," and the algorithm for moving them is implemented in Gunbai Script, a language specially designed for this game, and submitted to the competition. Therefore, there is no advantage or disadvantage in terms of "whether or not you can use a familiar language or library," but rather the ability to "understand and create a good program" can be competed from the same starting line.
+ 
+ By the way, October 22 is the deadline for submitting source code; don't make the mistake of thinking the 24th is the day the competition takes place.
+ 
+ 
+ ** Game Rules
+ 
+ Here is a brief overview of the rules. Please refer to the official PDF for details.
+ 
+ This is a game in which you control a samurai and a dog and walk around the map and take positions. The squares that the samurai pass through are marked with footprints of their own color and become their own territory. When you make an enclosure with these footprints, the inside of the enclosure also becomes your territory. Basically, the winner is the one who has the largest area after a certain number of rounds.
+ 
+ However, since that is not enough to make it interesting to think about, detailed rules have been added.
+ 
+ - When the positions are connected from one end of the map to the other, you win immediately!
+ - Samurai are afraid of dogs and cannot enter squares adjacent to dogs.
+ - Enter the torii gate at the edge of the map to go to warp.
+ - Once the four characters are aligned, the places are exchanged (syzygy).
+ - If someone else's position surrounds your position, the "inside of the enclosure also becomes a position" effect will take your position (SIEGE).
+ 
+ The official PDF has a good explanation with screenshots and diagrams. I don't write detailed activation conditions here, so please refer to the official.
+ 
+ 
+ ** I'll give it a try.
+ 
+ You can log in and try it from "Trial Games". To my surprise, it runs in JavaScript + Canvas in the browser! I was expecting to be forced to install a program written in Java or something like that.
+ 
+ [f:id:nishiohirokazu:20120927010215p:image]
+ 
+ It is great that the processing system is open. You can hold in-house programming contests and the like on your own.
+ 
+ I took a quick look at the code, and I was a bit concerned about the fact that the random instruction normally hits Math.random(). This would cause "I wrote a program, ran it, it behaved unexpectedly, I fixed the bug, ran it again, the same phase did not reappear because the random number sequence was different, and I don't know if the bug was fixed or not! I don't know if the bug is fixed or not! I would also like to skip updating the UI for faster execution, break when a certain condition is met and step execution from there, and resume execution from there with the information of the phase poured in. It seems that some modifications are necessary for efficient development.
+ 
+ 
+ ** Gunbai Script
+ 
+ Gunbai Script is a dynamically typed scripting language with move instructions to move characters and functions to retrieve various information.
+ 
+ There are a number of sample codes at the bottom of this page, so it may be easier to grasp if you take a quick look at them. https://samuraicoding.org/rules/
+ 
+ If, while, and break are normally supported, functions can be created, and addition, subtraction, multiplication, division, and their precedence seem to be normal, so there seems to be no particular difficulty in learning them.
+ 
+ The built-in data type is "Array", which represents a mapping from numeric to any type including Array. Conversely, this is the only one available, so it may be a question of how to be creative with it.
+ 
+ An interesting point is that the "cost" of each instruction is fixed. Recent CPUs are equipped with branch prediction and caches in order to increase speed, so that the time required to execute the same instruction varies depending on the situation. Because of this, it is no longer possible to say, "This program should finish within 2000msec. Gunbai scripts have a fixed cost per instruction, and the limit is set at 2000. When the time limit of 2000 is reached, the program execution is terminated and the last move instruction is adopted. That's why you can do crunchy tuning that uses up the last minute of time.
+ 
+ However, some may think, "It sounds like a lot of work to think about, like the cost of each instruction is fixed. Don't worry, the types of instructions are so few to begin with that they can fit on half a PDF page, and the types of costing are even fewer.
+ 
+ Here's a rough description:
+ 
+ - 0 steps: alert (debug output), return, declaration of local variables, most information-acquisition APIs
+ - 1 step: numerical literals, Array generation, most statements, operations
+ - 2 Steps: Random Numbers
+ - Function call is the number of arguments x 2
+ - 4 steps: get_hexel_owner, get_agent_status
+ 
+ If we take into account that numerical literals, addition, subtraction, and division take one step, Array is one step, which is extremely inexpensive. Random numbers are also cheap. On the other hand, get_hexel_owner takes 4 steps, so it's hard to take a "collect all the information first" approach. If the map is 20x30, it takes 2400 steps just to check the map status. We need to be smart about which information to check.
+ </body>
+
+[Hatena Diary 2012-09-27 https://nishiohirokazu.hatenadiary.org/archive/2012/09/27]

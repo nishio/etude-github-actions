@@ -1,0 +1,78 @@
+Hatena2008-06-11
+code:hatena
+ <body>
+ *1213193104*First video I've seen in 10 years.
+ <a href="http://jp.youtube.com/watch?v=2euIir_2big">YouTube - Mobile Battleship Nadesico: I want to be your best</a>.
+ 
+ >>
+ Mobile Battleship Nadesico is a science fiction and romantic comedy anime that aired on the TV Tokyo network from October 1, 1996 to March 25, 1997. --- <a href="http://ja.wikipedia.org/wiki/%E6%A9%9F%E5%8B%95%E6%88%A6%E8%89%A6%E3% 83%8A%E3%83%87%E3%82%B7%E3%82%B3">Mobile Battleship Nadesico - Wikipedia</a>
+ <<
+ 
+ It's been more than 10 years since I saw you on TV. I mean, did I have such a low voice? I don't remember her face being like this! Also, when I showed it to someone who has never seen it before, they said my clothes were sexy... orz It's the lyrics, the lyrics! Listen to the lyrics! ＞＜I'm not sure if it's the lyrics or not.
+ 
+ Lyrics -> <a href="http://www.jtw.zaq.ne.jp/animesong/ki/nadesiko/anata.html">I want to be your first</a>.
+ 
+ *1213194290*Derivation of function to find immovable point
+ I keep thinking about the question that occurred to me when we talked about GRASS on Monday, on the train to and from work.
+ 
+ In this entry, I will try to use the notation that I think is easiest to understand, instead of the notation that is commonly used. In other words, "function I that returns the argument as is" is (\x -> x), "function K that takes argument x and returns 'a function that always returns x no matter what argument it is called with'" is (\x -> (\y -> x)), and "calling function f with argument x (or applying function f to x?)" shall be denoted as f(x). Equal means "the same thing", not assignment.
+ 
+ Consider a function f. For some x, we say that "x is an immovable point of f" when f(x) = x, i.e., when applying the function f to x does not change it. Any is an immovable point of I. x is an immovable point of K(x). what is an immovable point of K?
+ 
+ Given a function f, I want to find its immovable point. Given some "function Y for an immovable point," I want Y(f) to be the immovable point of f. That is, Y(f) = f(Y(f)) = f(f(Y(f))) = ...
+ 
+ What function would satisfy this condition?
+ 
+ First, what if I = (\x -> x)? I(f) = f This is not enough. I(f) = f(I(f)), which is not enough.
+ 
+ So what if M = (\x -> x(x))? M(f) = f(f) We're getting a little closer: you want M(f) = f(M(f)). You want the contents to be M(f).
+ 
+ Then how about N = (\x -> x(M(x)))? N(f) = f(M(f)) We are much closer to the goal. But I don't think we can reach the goal even if we keep repeating this. We need to take a leap forward. I am not expressive enough.
+ 
+ I'll add one more argument.
+ (\x, y -> ...) Consider a function of the form For example, if F = (\x, y -> x(y)), then F(f) = (\y -> f(y)).
+ 
+ I wanted F(f) = f(F(f)); if I pass F(f) another argument of some kind, now I have F(f)(y) = f(y). If y is a function of x, then (\x -> F(x)(y)) is the Y we are looking for.
+ 
+ F = (\x, y -> x(y)) doesn't really expand the story, so let's expand y as we did with the first argument. L = (\x, y -> x(y(y)))
+ 
+ L(x)(y) = x(y(y))
+ 
+ I wanted L(x)(y) = x(L(x)(y)). Oh, the goal is in sight. Comparing with the above equation, it looks like y = L(x) would be a good choice.
+ 
+ If y = L(x), then L(x)(y) = L(x)(L(x)), and L(x)(y) = x(y(y)) = x(L(x)(L(x))) Compare the two: if Y = (\x -> L(x)(L(x))) then Y(x) = x(Y(x))! Done!
+ 
+ Let's expand: L = (\x, y -> x(y(y))), so L(x) = (\y -> x(y(y))).
+ Y = (\x -> L(x)(L(x))) = (\x -> (\y -> x(y(y)))((\y -> x(y(y)))))
+ 
+ I should have a Y combinator, but I don't see how this leads to a recursive call. I've seen many cases where a function (\f, n -> ...) whose first argument is a function and whose second argument is an integer is called recursively by inserting it into the Y combinator. I've seen a lot of examples of putting a function with a function first argument and an integer second argument (\f, n -> ...) into a Y combinator and doing a recursive call, but that would result in an error at y(y) because the integer is not callable. I'm still missing a few pieces. I'll think about it tomorrow on the train.
+ 
+ -----
+ 
+ Python resorted to Python in times of trouble, with Y being the definition above, and Y2 being the code that often appears in the context that Y combinators can be used for recursive calls, and M combinators that are simply written using the M combinators that appeared above.
+ 
+ >|python|
+ >>> Y = (lambda x: (lambda y: x(y(y)))(lambda y: x(y(y))))
+ 
+ >>> Y2 = (lambda f:((lambda g: f(lambda x: g(g)(x)))
+ 	          (lambda g: f(lambda x: g(g)(x)))))
+ >>> Y2(lambda f: lambda n: n and n * f(n - 1) or 1)
+ <function <lambda> at 0x00DBEAB0>
+ >>> _(5)
+ 120
+ 
+ >>> M = lambda x: x(x)
+ >>> Y2 = (lambda f: M(lambda g: f(lambda x: g(g)(x))))
+ <function <lambda> at 0x00DBEAF0>
+ >>> _(5)
+ 120
+ ||<
+ 
+ There is a lambda x in between. I will consider the significance of this on the train tomorrow.
+ >||
+ >>> Y =  (lambda x: M(lambda y: x(          y(y)   )))
+ >>> Y2 = (lambda f: M(lambda g: f(lambda x: g(g)(x))))
+ ||<
+ </body>
+
+[Hatena Diary 2008-06-11 https://nishiohirokazu.hatenadiary.org/archive/2008/06/11]

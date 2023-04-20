@@ -1,0 +1,37 @@
+Fast Factorization
+ Algorithm to allow [prime factorization] without trial division by slightly modifying [Sieve of Eratosthenes].
+ Instead of having a true/false table of whether a number x is prime or not, make a table of the smallest prime number that divides x
+ code:python
+  def precompute(AS)
+      maxAS = max(AS)
+      eratree = [0] * (maxAS + 10)
+      for p in range(2, maxAS + 1):
+          if eratree[p]:
+              continue
+          # p is prime
+          eratree[p] = p
+          x = p * p
+          while x <= maxAS:
+              if not eratree[x]:
+                  eratree[x] = p
+              x += p
+      return eratree
+ O(N log log N)
+  see https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
+ `x = p * p`
+　　Anything smaller than this, if it is a composite number, has an irreducible number smaller than p.
+　When we actually do the prime factorization, we can just table subtract and divide until we get to 1.
+　　High speed since this is log N
+　　sqrt Faster than dividing by prime numbers less than or equal to N, but requires preprocessing, so it is suitable for many prime factorizations.
+	code:python
+  for a in AS:
+      factors = []
+      while a > 1:
+          d = eratree[a]
+          factors.append(d)
+          a //= d
+      ...
+
+ By the way, to make it a "table of the smallest prime number that divides x", the loop is run up to N. If you want to make it "the smallest prime number or 0, and x is prime when 0", the loop can be run up to sqrt N.
+ 　Somewhat faster.
+ 　The prime factorization is where the case needs to be divided.

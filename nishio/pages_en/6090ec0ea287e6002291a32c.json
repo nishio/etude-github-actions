@@ -1,0 +1,72 @@
+Hatena2015-06-19
+code:hatena
+ <body>
+ *1434706295*Tinkering with Scheme macros.
+ In a chat during lunch break today, we talked about what language to learn next, and among various suggestions such as Julia and Elixir, "Lisp" came up, I thought that would be a good subject to try to implement with macros, so I implemented it.
+ 
+ I don't know how to check for $ occurrences in the code in Gauche, so I decided to use the string "$".
+ >|scheme|
+ gosh> (eq? $ $)
+ #t
+ gosh> (eq? (car `($ 1)) $)
+ #f
+ gosh> (eqv? (car `($ 1)) $)
+ #f
+ gosh> (equal? (car `($ 1)) $)
+ #f
+ ||<
+ 
+ So, if I write code like this (1 "$" inc "$" print), I get output as 2.
+ 
+ >|scheme|
+ (define (strip form)
+   (if (= (length form) 1) (car form) form))
+ 
+ (define (f form ret)
+   (cond
+    ((null? form) (reverse ret))
+    ((equal? (car form) "$") `( ,(strip (reverse ret)) ,(strip (f (cdr form) ()))))
+    (else (f (cdr form) (append ret `( ,(car form) ) )))))
+ 
+ (define (g form)
+    (f (reverse form) ()))
+ 
+ (define-macro (haskell form) (g form))
+ 
+ (define (inc x) (+ x 1))
+ 
+ (haskell (1 "$" inc "$" print))
+ ; -> 2
+ 
+ (haskell (inc 1 "$" print))
+ ; -> 2
+ ||<
+ 
+ Functions that take more than one argument or nested lists are not supported.
+ 
+ To play with the case where lists are nested, I also created a macro that converts an expression written in neuter notation to preterite notation and then evaluates it. ( (1 + 2) * (3 + 4)) becomes 21.
+ 
+ >|scheme|
+ (define (f2 form)
+   (cond ((not (list? form)) form)
+         ((= (length form) 3)
+          `(,(cadr form) ,(f2 (car form)) ,(f2 (caddr form))))
+         (else form)))
+ 
+ (define-macro (fortran form) (f2 form))
+ 
+ (fortran ((1 + 2) * (3 + 4)))
+ ; -> 21
+ ||<
+ 
+ However, what I think is that if you don't do anything complicated and just say "~ is out of the scope of support," you can do interesting things with simple code, but if you try to use it realistically, it becomes a hassle because the "realistically possible input syntax tree" is complicated and requires complicated conditional branching. But if you try to use it in a realistic way, it becomes a pain in the ass.
+ </body>
+ <comments>
+ <comment>
+ <username>shiro</username>
+ <body>$There is a macro http://practical-scheme.net/gauche/man/?p=$ <br>I was about to write it, but then I realized that the one in this article has the opposite direction of the chain, so Clojure's -> macro is close. Well, both Gauche's $ and Clojure's -> need one symbol right after the first opening parenthesis, but it doesn't seem to make any difference if you enclose the whole thing in a macro call anyway. </body>
+ <timestamp>1434726086</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2015-06-19 https://nishiohirokazu.hatenadiary.org/archive/2015/06/19]

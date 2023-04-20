@@ -1,0 +1,123 @@
+Hatena2007-12-27
+code:hatena
+ <body>
+ *1198713227*Tester
+ I got the tester from the midget, but he seemed to be busy, so I did not get the solder. Oh, shoot, I should have asked for the solder instead of the tester if only one side of the solder would be produced.
+ 
+ *1198717507* Poorly equipped
+ Alligator clips rusted and not conducting orz
+ 
+ *1198724174*Drawn in Wii!
+ I bought a Wii (remote control). - /tmp http://d.hatena.ne.jp/takabow/20071216
+ 
+ At first, I thought I should test whether each module is working properly before creating my own tool, so I downloaded WiimoteWhiteboard introduced in the above link.
+ 
+ Tested using the infrared pen on the sensor bar, even though the infrared pen is not yet ready. Oh, I can draw, I can draw.
+ 
+ However, if I attach the Wii itself to the sensor bar, it seems to try to communicate with the Wii remote control (of course) and it seems to interfere with it. Also, I can't click with the sensor bar.
+ 
+ *1198724793* Powering a sensor server from USB.
+ http://pocketnews.cocolog-nifty.com/pkns/2006/12/wii_0ae8.html
+ >>
+ When using the Wii Remote on a PC, it will be placed on the PC display, so power will be taken from the USB port on the display.
+ <<
+ Smart!
+ 
+ *1198726433* Light pen ready!
+ 
+ f:id:nishiohirokazu:20071227123032j:image
+ 
+ The quality is not even close to that of Mr. Wakuwaku!
+ 
+ f:id:nishiohirokazu:20071227123257j:image
+ 
+ Tera Aerial Wiring
+ 
+ 
+ Hey, it was on earlier, but it stopped working again while I was putting a switch between them.... I wonder if it's a bad contact. I'll have to solder it back on....
+ I think I shouldn't have peeled off the silver paper from Tyrol Chocolate because I didn't have even aluminum foil, let alone radio pliers.
+ 
+ *1198738544* How to write org.
+ Maybe we should have the ability to send messages to users. I wonder.
+ In the meantime, I changed xsd's "Topic that I wanted to make a subject but chose to publish immediately" to a waiting list. I am now the fourth person in the queue.
+ 
+ 
+ Ah, well, I'm the administrator, so I can see your email address.
+ 
+ *1198746597*Get values from Wii remote with IronPython (how to use WiimoteLib.dll)
+ Save the preparation script below under the name setup_wii.py.
+ >|Python|
+ import clr
+ clr.AddReferenceToFile("wiimotelib.dll")
+ 
+ from WiimoteLib import *
+ 
+ wii = Wiimote()
+ def get_value(sender, args):
+     global a
+     a = args 
+ 
+ wii.WiimoteChanged += WiimoteChangedEventHandler(get_value)
+ 
+ wii.Connect()
+ wii.SetReportType(wii.InputReport.IRAccel, True) 
+ ||<
+ 
+ Download wiimotelib.dll from <a href="http://www.codeplex.com/WiimoteLib/Release/ProjectReleases.aspx?ReleaseId=7880">Managed Library for Nintendo's Wiimote - Release: WiimoteLib v1.2</a> and place it in an appropriate location.
+ 
+ Try it in IronPython's interactive console.
+ 
+ >|python|
+ >>> import setup_wii
+ >>> setup_wii.a
+ <WiimoteChangedEventArgs object at 0x000000000000002B>
+ >>> setup_wii.a.WiimoteState
+ <WiimoteState object at 0x000000000000002C>
+ >>> setup_wii.a.WiimoteState.IRState
+ <WiimoteLib.IRState object at 0x000000000000002D [WiimoteLib.IRState]>
+ >>> setup_wii.a.WiimoteState.IRState.X1
+ 0.379091
+ ||<
+ 
+ I was able to get the coordinates of the light spot captured by the infrared camera. Easy!
+ 
+ References
+ - <a href="http://blogs.msdn.com/coding4fun/archive/2007/03/14/1879033.aspx">Coding4Fun : Managed Library for Nintendo's Wiimote</a>
+ - <a href="http://d.hatena.ne.jp/Wacky/20070325/1174810604">Unit testing a DLL assembly module built in C# with IronPython - Funyarun</a>.
+ 
+ *1198749238*I wonder how to do SendKeys from IronPython (T/O).
+ 
+ *1198751761*Throwing key events from IronPython
+ I made a patch for WinAPI for ctypes for IronPython - Funyarun http://d.hatena.ne.jp/Wacky/20061203/1165142621
+ 
+ ctypes.
+ 
+ >|python|
+ >>> import ctypes
+ >>> usr = ctypes.WDLL("user32.dll")
+ >>> WM_KEYDOWN = 0x100
+ >>> HWND_BROADCAST = 0xFFFF
+ >>> usr.PostMessage(HWND_BROADCAST, WM_KEYDOWN, ord('a'), 0)
+ ||<
+ 
+ It's done, it's done, it's done.
+ 
+ Postscript:
+ >|python|
+ def post(key):
+     hWnd = usr.GetForegroundWindow()
+     usr.PostMessage(hWnd, WM_KEYDOWN, key, 0)
+     usr.PostMessage(hWnd, WM_KEYUP, key, 0)
+ ||<
+ 
+ *1198756276*Wii remote control is interesting.
+ There are two axes just for the position of the center of gravity, and two more if you don't consider accuracy and the ability of humans to operate independently. Forward/backward and rotation.
+ And right now I have the remote control fixed to the side of the sensor bar, but if I use the side of the remote control, I can get the information from the buttons. And it can provide feedback through vibration. It should be able to make sounds too.
+ 
+ *1198770520*In-house Twitter
+ Cybozu Developer Network: Internal Twitter --- http://cydn.cybozu.co.jp/2007/12/intra_twitter.html
+ 
+ I wonder if this can be accessed from Cybozu Labs. I'd like to participate if I can.
+ </body>
+
+[Hatena Diary 2007-12-27 https://nishiohirokazu.hatenadiary.org/archive/2007/12/27]

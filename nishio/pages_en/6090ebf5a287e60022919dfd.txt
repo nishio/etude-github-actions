@@ -1,0 +1,219 @@
+Hatena2008-03-08
+code:hatena
+ <body>
+ *1204942180*PythonDeveloperCamp2008 Winter, Day 2
+ When I woke up, two of my roommates were already up and working, so I panicked, thinking I had overslept, but it was 7:30 in the morning.
+ 
+ I fell asleep twice and woke up at 10:00.
+ 
+ *1204942622*doctest useful
+ I used doctest to automatically test that the Jython code in the manuscript worked properly!
+ 7 Failures...
+ 
+ 
+ Oh, you are picking up the &lt;/pre> at the end of the code. I replaced it and deleted it, and now I have one failure. And this is a test case that I intentionally put in myself that fails. Blessed, it works with Jython 2.2 without as much trouble as I thought it would. I'm really glad I'm using Python for compatibility.
+ 
+ The Japanese language turnaround is indeed not going to pass the previous code.
+ 
+ *1204949715*Cholo
+ f:id:nishiohirokazu:20080308131508j:image
+ 
+ *1204949954* New and Maintenance and
+ Writing new things is more fun. Maintenance is not fun. But maintenance is important. I need to finish the 2.2 support for the Jython book at this camp.
+ 
+ *1204951902*NodeBox
+ f:id:nishiohirokazu:20080308134932p:image
+ 
+ I was able to do this in about 10 minutes on an unfamiliar Mac.
+ 
+ source code
+ >|python|
+ SIZE = 600
+ size(SIZE, SIZE)
+ z = 1+1j
+ colormode(RGB, 1)
+ for i in range(30):
+     fill(color(0.5, 0.3 + 0.02 * i, 0.5, 0.1))
+     rotate(i * -0.47)
+     rect(5 * i, 5 * i, 100 + 10 * i, 100 + 10 * i)
+ ||<
+ 
+ If you Cmd+drag on a numeric literal, you can change the value like a slider. I was able to get a good twist on -0.47 and so on. This is quite interesting.
+ 
+ *1204952714*NodeBox 2
+ f:id:nishiohirokazu:20080308140416p:image
+ 
+ enjoyable
+ 
+ >|python|
+ from math import sin, cos
+ 
+ SIZE = 600
+ size(SIZE, SIZE)
+ x = 19
+ y = 324
+ th = 1
+ dth = 0.5
+ ddth = 0.1
+ s = 30
+ 
+ colormode(RGB, 1)
+ beginpath()
+ moveto(x, y)
+ 
+ for i in range(300):
+     x += sin(th) * s
+     y += cos(th) * s
+     th += dth
+     dth += ddth
+     lineto(x, y)
+     print x, y
+ 
+ endpath()
+ ||<
+ 
+ *1204954375* If the internet goes out while writing.
+ When I am writing a diary on Hatena and the connection is lost and the diary gets stuck in writing, I used to use Firebug to disable the submit button and send it again, but Firebug is not yet installed on this machine, and a reboot is required to install it. Now, what to do...
+ 
+ -----
+ 
+ Failed and disappeared orz.
+ 
+ *1204955802*NodeBox 3
+ f:id:nishiohirokazu:20080308145530p:image
+ 
+ >|python|
+ from math import sin, cos
+ 
+ SIZE = 431
+ size(SIZE, SIZE)
+ x = 19
+ y = 324
+ th = 1
+ dth = 0.5
+ ddth = 0.1
+ s = 30
+ 
+ colormode(RGB, 1)
+ stroke(color(0.5, 1, 0.5, 0.3))
+ strokewidth(2)
+ fill(color(0.5, 1, 0.5, 0.7))
+ beginpath()
+ moveto(x, y)
+ 
+ for i in range(313):
+     x += sin(th) * s 
+     y += cos(th) * s
+     th += dth
+     dth += ddth
+     lineto(x, y)
+     print x, y
+ 
+ endpath()
+ ||<
+ 
+ *1204955878* anyway
+ I have to do what I have to do, not what I enjoy doing or what I enjoy writing. It's a pain in the ass to go around Japanese.
+ 
+ *1204961568*Jython2.2 and limping along.
+ >|python|
+ >>> unicode("A")
+ u'\u3042'
+ >>> "%sA" % unicode("A")
+ u'\x82\xA0\x82\xA0'
+ ||<
+ Hmmm. I guess it will be a unicode string as it is a byte sequence.
+ 
+ >|python|
+ >>> unicode("%sA" % unicode("A"))
+ u'\x82\xA0\x82\xA0'
+ >>> print _
+ ????
+ ||<
+ So, even if you enclose it in unicode, it is still a sequence of bytes, and print will not display it properly.
+ 
+ >|python|
+ >>> unicode("%sA") % unicode("A")
+ u'BB'
+ ||<
+ 
+ Geez.
+ 
+ -----
+ 
+ Anyway, I captured it and sent it to Charlie.
+ 
+ *1204963315* walk
+ f:id:nishiohirokazu:20080308170145j:image
+ 
+ *1204965214*Matsumoto Castle
+ f:id:nishiohirokazu:20080308173335j:image
+ 
+ 
+ f:id:nishiohirokazu:20080308173551j:image
+ 
+ *1204967019* Mm.
+ Jython2.1
+ >||
+ >>> type(1)
+ <jclass org.python.core.PyInteger at 7635991>
+ ||<
+ 
+ Jython2.2
+ >||
+ >>> type(1)
+ <type 'int'>
+ ||<
+ 
+ Well, it looks more like Python, but on the other hand, it exposes less of its contents. I'm not sure how to explain this...
+ 
+ -----
+ 
+ What I'm fixing now is fine because it's a Python explanation, but when I'm in an object-oriented explanation where I see that 1 or something is an instance of a class defined in Java, I might have a very difficult time explaining it if I can't get the class name in Java. Scary. I wonder if it will be ok.
+ 
+ -----
+ 
+ >||
+ >>> 2 ** 50
+ Traceback (innermost last):
+   File "<console>", line 1, in ?
+ OverflowError: integer pow()
+ ||<
+ 
+ This 2.2 is now promoted without error.
+ 
+ *1204979033*NodeBox 4
+ f:id:nishiohirokazu:20080308212134p:image
+ 
+ *1204983296* Shocking.
+ The MacBook only opens to 135 degrees. Can you do something about this?
+ 
+ *1204983963* Today's Diary
+ Very dry eyes
+ 
+ I've gotten to the point where I don't need to wear a Thinkpad if I just want to write in my journal, I can just use a MacBook.
+ 
+ Kanji conversion is sometimes sutra. <= to such kanji.
+ 
+ The last time I was at some kind of camp, I had to ask the front desk to send a receipt for one person in the name of the company, because I had not received a receipt and had to have it faxed back. I remembered this just now. (just in time)
+ 
+ I guess I should be able to get out of my room quickly tomorrow since I check out at 10:00. I'm told that the conference room itself is rented for the whole day, so I'll work as much as I can and leave.
+ 
+ There was a famous shrine nearby, so I drew a omikuji (omikuji) and got a boost for a project I've been working on recently and feel like I'm moving forward. I will do my best.
+ 
+ No good, my dry eyes are pretty bad. Should I put some eye drops on and go to bed? My mouth ulcers are getting worse. My intestinal environment is also getting worse.
+ </body>
+ <comments>
+ <comment>
+ <username>jbking</username>
+ <body>Cool! </body>
+ <timestamp>1204966069</timestamp>
+ </comment>
+ <comment>
+ <username>akio0911</username>
+ <body>I made NodeJythox 0.0.1<br>http://d.hatena.ne.jp/akio0911/20080308</body>
+ <timestamp>1204990559</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-08 https://nishiohirokazu.hatenadiary.org/archive/2008/03/08]

@@ -1,0 +1,140 @@
+ABC182
+I was wondering what was wrong with the sample 4, while F passed all the test cases I could think of, and my time was up.
+
+[B - Almost GCD https://atcoder.jp/contests/abc182/tasks/abc182_b]
+	Simply loop it and write it naively because you can make it in time.
+	code:python
+	 def solve(N, AS):
+      m = max(AS)
+      count = 0
+      ret = None
+      for k in range(2, m + 1):
+          v = sum(1 for a in AS if a % k == 0)
+          if v > count:
+              ret = k
+              count = v
+      return ret
+
+[C - To 3 https://atcoder.jp/contests/abc182/tasks/abc182_c]
+	distinction of the case
+	　When the number of digits is one.
+	　　0 characters can be erased.
+	　　0 when already a multiple of 3
+	　　Otherwise unattainable -1
+	　If the number of digits is two or more
+	　　I can delete one character.
+	　　1 if there exists a digit with the same degree as the whole degree.
+	　　 If not, -1
+	　When the number of digits is 3 or more
+	　　Can erase more than 2 characters
+	　　We know you can't erase a single letter.
+	　　If there are two or more 1's or two or more 2's, you can make it 0's.
+ I'm a little unsure, but I'll throw it.
+ 　I made a careless mistake and got 2WAs.
+	code:python
+	 def solve(N):
+      total = sum(N) % 3
+      if total == 0:
+          return 0
+  
+      if len(N) == 1:
+          return -1
+  
+      from collections import Counter
+      xs = Counter(x % 3 for x in N)
+      if xs[total]:
+          return 1
+  
+      if len(N) == 2:
+          return -1
+  
+      if xs[1] > 1 or xs[2] > 1:
+          return 2
+      return -1
+	As for me, when I look at the problem, I see this kind of diagram in my mind and I can see that I only need to do it twice at most, so I'm inclined to write it down as a case rather than a search.
+	 [https://gyazo.com/59b1f42b3b38715d1065044309920acf]
+
+　Official Explanation
+　　If you erase two cards, and the whole remainder is 1, you know there is no 1 because it is not processed by "erasing one card", and there is definitely more than two cards because one 2 is not much of a 1.
+[D - Wandering https://atcoder.jp/contests/abc182/tasks/abc182_d]
+	Just stack two [cumulative sums], and start implementing them.
+ I notice that the sample does not pass through that the temporary increase in size during the move is also included in the update of the maximum value.
+ We decided to have separately how much the largest amount would be during the move.
+	code:python
+	 def solve(N, AS):
+      pos = 0
+      dpos = 0
+      maxdpos = 0
+      ret = 0
+      for a in AS:
+          dpos += a
+          if dpos > maxdpos:
+              maxdpos = dpos
+          if pos + maxdpos > ret:
+              ret = pos + maxdpos
+          pos += dpos
+  
+      return ret
+
+[E - Akari https://atcoder.jp/contests/abc182/tasks/abc182_e]
+　Thoughts.
+  Lamp is 5 x 10^5
+  The map is 2.25 million.
+  Straightforward to apply in 4 directions.
+  　O(HW), but not in time? I'm sure I'll make it in time.
+  　PS: How far the "rightward light" paints is OK as long as you know if the "rightward light" is coming to the left square for each square, so you can do it with O(WH) and just do it 4 times.
+ I'll try to implement it honestly.
+　 RE
+  I expanded the map a bit and RE decreased and WA increased, seems like a bug in that area.
+  When writing the lamp position in the array, the vertical and horizontal positions were put in opposite directions -> corrected.
+ code:python
+  def solve(H, W, mapdata):
+      maph = mapdata[:]
+      for y in range(H):
+          ypos = y * W
+          for x in range(1, W):
+              pos = ypos + x
+              if maph[pos] == 0 and maph[pos - 1] == 1:
+                  maph[pos] = 1
+  
+          for x in range(W - 2, -1, -1):
+              pos = ypos + x
+              if maph[pos] == 0 and maph[pos + 1] == 1:
+                  maph[pos] = 1
+  
+      mapv = mapdata[:]
+      for x in range(W):
+          for y in range(1, H):
+              pos = y * W + x
+              if mapv[pos] == 0 and mapv[pos - W] == 1:
+                  mapv[pos] = 1
+  
+          for y in range(H - 2, -1, -1):
+              pos = y * W + x
+              if mapv[pos] == 0 and mapv[pos + W] == 1:
+                  mapv[pos] = 1
+  
+      ret = 0
+      for i in range(W * H):
+          if maph[i] == 1 or mapv[i] == 1:
+              ret += 1
+      return ret
+　Official Explanation
+　　I was unconscious, but this was the [divide into X and Y] pattern.
+
+[F - Valid payments https://atcoder.jp/contests/abc182/tasks/abc182_f]
+　Thoughts.
+ 　PS: The idea of this paragraph is to finally get the WA
+ 	　First seek the optimal way to pay
+ 	　I'll also calculate how many of each coin will be carried forward.
+ 	　From top to bottom: "If you add one more card and it doesn't move up, add one more card."
+ 	　　When it is carried forward, it is indistinguishable from the incremental digit above it, so it doesn't count.
+ 	　　If a digit is increased by 1, the digits after it can become 0.
+ 	　　　Count up, noting that zeros are not enclaves and that those that are already zero do not increase the number of cases
+　What went wrong.
+　　For example, in the case of 1,2,4,8 paying 5, this algorithm returns 4 but 8 and 2 and receives 4 and 1 is VALID
+　　[https://gyazo.com/b2d2dc7954343540013a4a8a4fb212c7]
+		I myself thought it was the right thing to do.
+			Case that pays 101 for 1 10 100 1000 10000, I wrote 7 in the test case, but it is really 9.
+			[https://gyazo.com/a755e453e718c0c751880b6279a40b45]
+

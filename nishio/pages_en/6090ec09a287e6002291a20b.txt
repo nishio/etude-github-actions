@@ -1,0 +1,319 @@
+Hatena2012-04-03
+code:hatena
+ <body>
+ *1333439932*Diary of studying Alloy (1)
+ At any rate, I received the textbook and skimmed it.
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4274068587" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ I wonder how I will learn from here. For now, should I try modeling software that already exists and see where I can get to and where I stumble? Hmmm...I'll model Git then.
+ 
+ At any rate, you have a commit object. A commit object has one tree object, a tree object has zero or more blob objects, and so on.
+ 
+ For now, we'll reserve the "how many you have" constraint and create only three types of objects. Also, write "run" which is an instruction to "show what satisfies the constraint". Pred show in textbook p7 is a terrible name.
+ 
+ >||
+ module nhiro/etude1
+ 
+ sig CommitObj {
+   tree: TreeObj
+ }
+ 
+ sig TreeObj {
+   blobs: BlobObj
+ }
+ 
+ sig BlobObj {
+ }
+ 
+ pred always_success {}
+ run always_success
+ ||<
+ 
+ So, I'll just SHOW and look at it.
+ 
+ [f:id:nishiohirokazu:20120403171111p:image]
+ [f:id:nishiohirokazu:20120403171110p:image]
+ 
+ Hmmm. Sounds like it.
+ I wondered for a while why the upper right enclosure shows tree: 2, blobs: 3 when there are 2 blobs and 3 trees, but I guess this is the number of "relations". I understood.
+ 
+ Next we'll write some pending number constraints and so on. These are called "multiplicity constraints," apparently. p.72. A commit object has one tree object, and a tree object has one or more blob objects. (Note that this is an Alloy study, so there is no guarantee that Git actually does this.)
+ 
+ >||
+ sig CommitObj {
+   tree: one TreeObj
+ }
+ 
+ sig TreeObj {
+   blobs: some BlobObj
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403172007p:image]
+ 
+ It's done, it's done, it's done.
+ 
+ ** parent commit
+ So let's implement "a commit object has one or more parent commits" next. (Well, smart people may have already realized that this specification is stupid, but test-driven is still a matter of trying to fail.)
+ 
+ >||
+ sig CommitObj {
+   tree: one TreeObj,
+   parent: one CommitObj
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403172359p:image]
+ 
+ The WW failed in a different way than the planned scenario.
+ 
+ First, a syntax error by forgetting the comma after "TreeObj". I fixed that. The result obtained in the image above. Hmmm, the parent commit can't be itself. Well, how do I write that?
+ 
+ I'm not sure where to put this (in the parent: line, rewrite pred always_success, or create a fact), but well, I added a fact.
+ 
+ >||
+ fact {
+   all x: CommitObj | x.parent != x
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403173315p:image]
+ 
+ Ahhh, yes, yes. You can't be your own parent and their parents can't be you. Let's see, I can make a set that repeatedly applies the PARENT relation to myself X and say that I'm not in it.
+ 
+ Transitive closure is used in such cases. ^r = r + r.r + r.r.r + ... (p.60)
+ 
+ >||
+ fact {
+   all x: CommitObj | x not in x.^parent
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403173927p:image]
+ 
+ Ah, indeed. There's a thing called "no commit object". That's not the scenario I had planned. w
+ 
+ (As an aside, I made the mistake of saying "x.^parent = x" and "x.^parent in x" when implementing this.)
+ 
+ ** Constraints on the number of objects
+ How do I write that the commit object is more than how much?
+ 
+ I wrote "#CommitObj > 5" in fact and it said it couldn't find the instance. run can specify how many instances to experiment on with for, but the default value for that is 5 or more CommitObj, TreeObj for each, BlobObj, and so on. At any rate, I commented out Tree and Blob, and tried to specify for in run.
+ >||
+ module nhiro/etude1
+ 
+ sig CommitObj {
+   parent: one CommitObj
+ }
+ 
+ fact {
+ //  all x: CommitObj | x not in x.^parent
+ }
+ 
+ fact {
+   #CommitObj > 5
+ }
+ 
+ pred always_success {}
+ run always_success for 10
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403174900p:image]
+ 
+ I can now see the oodles and oodles. Now, I'll try to restore the commented out facts.
+ 
+ >||
+ Executing "Run always_success for 10"
+    Solver=sat4j Bitwidth=0 MaxSeq=0 SkolemDepth=1 Symmetry=20
+    5743 vars. 110 primary vars. 8718 clauses. 119ms.
+    No instance found. Predicate may be inconsistent. 57ms.
+ ||<
+ 
+ Something like "I tried my best but couldn't find a viable example". I finally got to the intended failure.... It's a little hard to tell if the code I wrote expresses the specification as intended and there is a bug in the specification, or if there is a bug in my description. Well, I guess I'll get used to it.
+ 
+ Now why would this fail? There is a common boundary value bug. The very first commit object has no parent. How do we represent that, let's see.
+ 
+ ** classify commit objects
+ There are "first commit objects" and "other commit objects," and only the latter have more than one parent. And there is no commit object other than both of them. That's why it's abstract. ref. p.16 Introducing Hierarchy.
+ 
+ >||
+ abstract sig CommitObj {}
+ 
+ sig FirstCommitObj extends CommitObj {
+ }
+ 
+ sig OtherCommitObj extends CommitObj{
+   parent: one CommitObj
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403180051p:image]
+ 
+ Uh, yeah, FirstCommitObj can only have 0 or 1 parent. Also, I just realized that I meant to say "with more than one parent," but since it says "one," it's "with exactly one parent. I guess "more than one" should be "some".
+ 
+ >||
+ abstract sig CommitObj {}
+ 
+ sig FirstCommitObj extends CommitObj {
+ }
+ 
+ sig OtherCommitObj extends CommitObj{
+   parent: some CommitObj
+ }
+ 
+ fact {
+   all x: CommitObj | x not in x.^parent
+ }
+ 
+ fact {
+   #CommitObj > 5
+ }
+ 
+ fact {
+   #FirstCommitObj < 2
+ }
+ ||<
+ 
+ [f:id:nishiohirokazu:20120403180438p:image]
+ 
+ Wow, well, you're not wrong, but in a real Git repository, there is "one parent for most commit objects". But that's just "for the most part", so it's not a constraint. I wonder how to express that.
+ 
+ For now, let's constrain the number of parents to no more than two.
+ [f:id:nishiohirokazu:20120403180807p:image]
+ 
+ It's a lot better, but it's still not enough. But if I constrain the number of commits to less than one, the merge will be lost. Oh, I see, I should constrain the number of commits that have two parents. How do you do that? Well, given a set and a predicate, should we be able to extract only those commits from the set that satisfy the predicate?
+ 
+ (I'm looking at the chapter on operators but can't find it)
+ 
+ (I'm rereading the book from the beginning. It's taking me quite a while.)
+ 
+ Ah, so you use comprehension notation. ref. p.273. "the set of commit objects with one or more parents" is {x: CommitObj | #x.parent > 1}. So I'll put the constraint "only one commit with more than one parent".
+ 
+ >||
+ fact {
+   #{x: CommitObj | #x.parent > 1} = 1
+ }
+ ||<
+ 
+ 
+ [f:id:nishiohirokazu:20120403182726p:image]
+ 
+ It's done, it's done, it's done.
+ 
+ When I was struggling with this, I thought that I could solve the problem by creating an abstract OtherCommitObj and creating a "commit object with one parent" and a "commit object with two or more parents" in the same way that I created FirstCommitObj, but I wanted to avoid doing that because it would be full of signatures and would be creepy and would be further and further removed from the actual implementation. But I wanted to avoid that, because it would be grossly overloaded with signatures, and it would be far away from the actual implementation. If this constraint can be realized in comprehensions, then the hack to create FirstCommitObj should be solved in the same way. Okay, let's give it a try.
+ 
+ >||
+ module nhiro/etude1
+ 
+ sig CommitObj {
+   parent: set CommitObj
+ }
+ 
+ fact { // I don't have myself in my ancestors
+   all x: CommitObj | x not in x.^parent
+ }
+ 
+ fact { // no more than 2 parents
+   all x: CommitObj | #x.parent =< 2
+ }
+ 
+ fact {
+   #CommitObj > 5
+ }
+ 
+ fact { // only one committed object with multiple parents
+   #{x: CommitObj | #x.parent > 1} = 1
+ }
+ 
+ fact { // there can be at most one committed object with no parent
+   #{x: CommitObj | #x.parent = 0} =< 1
+ }
+ 
+ pred always_success {}
+ run always_success for 10
+ ||<
+ 
+ It's done, it's done. We are happy, we are happy.
+ 
+ ** Summary
+ It would be easier to understand Chapter 2 of the textbook if you just look at the operations without reading the code, look at some Alloy code to get a feel for it, and then read Chapter 3: Logical Systems and Appendix B: Alloy Language Reference.... Even now that I've made it this far, I still can't grasp the meaning of notations like #n.(b.addr) and #Name.(b.addr) in Chapter 2 at a quick glance. Would a second chapter make it easier for someone doing this kind of research to understand the differences from other methods?
+ 
+ What I didn't do this time: use check instead of run to look for "cases where assert fails". I need to narrow it down from both sides, otherwise it's one-sided. I have no idea about the relationship between arity 3 and above. How to use it. Will this be converted to a binary relation connected by a function when it is compiled into the Alloy kernel? I would like to see the converted Alloy kernel code, but how do you do that? I don't use none, univ, iden. I wonder when I will need them. I didn't use the set operator either. Oh, I only used in. Of the nine relational operators, I used join and transitive closure. I understand transposition. I don't have a clear idea of what the definition range restriction, value range restriction, and override can be used for, so I'd like to think of examples of their use. I've only used the logical operator "not". Well, that's OK.
+ 
+ As for the "only one commit with multiple parents" constraint, I thought I should make a distinction in the code since it is not a Git specification but an ad hoc condition to bring the search range to the range that I want the user to focus on when searching for examples. Hmmm... I guess that's why I use pred.
+ 
+ At least it looks like this. It's time for dinner!
+ 
+ *1333456316*Alloy Book 4.2.2
+ The notation in chapter 4.2.2 is not wrong, of course, but I had quite a bit of trouble understanding it.
+ >||
+ sig A {f: e}
+ ||<
+ When written like this, you would think that f and e are of a similar kind, wouldn't you? In,
+ >||
+ f in A -> e
+ ||<
+ It goes on to say that it is the same as the constraint that is in the FACT, and furthermore, it is the same as the constraint that is in the
+ >||
+ all this: A | this.f in e
+ ||<
+ This is in bold, which means that it has the same special meaning as "all" or something like that.
+ 
+ I would write something like this.
+ >||
+ sig A {f: E}
+ ||<
+ e is indeed an expression, not necessarily a signature in general. However,
+ >||
+ sig Man {
+   wife: Woman
+ }
+ ||<
+ The expression "A=Man, f=wife, E=Woman" in the code "A=Man, f=wife, E=Woman" is misleading because it makes e and f look closer than A and e.
+ 
+ The following f in A -> e is also confusing. I'm sure it's not a lie, but it's absurd to assume that the reader knows the order of precedence of in and -> correctly. f in (A -> e) should at least be mentioned in a footnote.
+ 
+ And this at the end, since "this" is written in bold, one would think it has a special meaning, wouldn't one? When I saw this, I wondered why "all x: A | x.f in e" was not good enough. I wondered why not "all x: A | x.f in e"? After all, if you continue reading, you will find that in the "Discussion" section on p. 94, it says, "In fact, this is a keyword, so you can't write it this way, but all x: A | x.f in e is OK. This is terrible. Why not just write that from the beginning?
+ 
+ I'm talking about this E being an expression, but you can do something like address: Name -> Addr, to take an example from p.73. It looks like Haskell's type constructor (->), but -> is just a direct product operator, which is amazing. It is amazing.
+ 
+ Let's think of an example of something that says, "I can do this, wow.
+ 
+ Hmmm. Surprisingly, I can't think of anything. I thought it was like declaring the type of a field, so I thought, "Wow, I didn't realize how much you can modify the type! But it is a language that allows you to add as many facts as you like, and to modify the range of possible values as much as you like.
+ 
+ *1333461886*Alloy: Properties of binary relations
+ In solving the problem on p.220, I thought that I would like to name the sets shown as "univ0" and "univ1" in an easy-to-understand way, like "enum".
+ 
+ And after trying, it didn't matter much if the boxes were named because what mattered this time was the shape of the arrows.
+ 
+ >||
+ fact {
+  #univ = 4
+ }
+ sig A {}
+ sig B {}
+ sig C {}
+ sig D {}
+ fact {
+   #A = 1 && #B = 1 && #C = 1 && #D = 1
+ }
+ 
+ run {
+    some r: univ -> univ {
+     some r
+     r.r in r
+     no iden & r
+     ~r in r
+     ~r.r in iden
+     r.~r in iden
+    univ in r.univ
+    univ in univ.r
+   }
+ } for 4
+ ||<
+ 
+ I see...when the relationship is symmetrical, the transitive law is necessarily reflexive. I think I studied this a long time ago, but it is very impressive to see it in action.
+ </body>
+
+[Hatena Diary 2012-04-03 https://nishiohirokazu.hatenadiary.org/archive/2012/04/03]

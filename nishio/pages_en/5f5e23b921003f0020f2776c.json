@@ -1,0 +1,71 @@
+ABC178
+[AtCoder Beginner Contest 178 - AtCoder https://atcoder.jp/contests/abc178]
+This time I was able to solve it in a much shorter time until E.
+[https://gyazo.com/57c09e21b8a9b3e3c0b6bc0f73545c95]
+[https://gyazo.com/45df0047d1abaafd8b01e9f272eb7b0c]
+
+B
+	code:python
+	 A, B, C, D = map(int, input().split())
+  print(max(x * y for x in [A, B] for y in [C, D]))
+
+C
+	Drawing and calculating state transition diagrams
+	I realized after implementation that the two values for PN/NP are the same, but I figured, well, it won't time out, so I submitted it as is.
+	[https://gyazo.com/20f29cbcecb773b285054c7c6b69a665]
+ code:python
+  def solve(N):
+      nn, pn, np, pp = [8, 1, 1, 0]
+      for i in range(N - 1):
+          pp = (pp * 10 + np + pn) % MOD
+          pn = (pn * 9 + nn) % MOD
+          np = (np * 9 + nn) % MOD
+          nn = (nn * 8) % MOD
+  
+      return pp
+　[Collect DP]
+　Official Explanation
+　　I'm trying to find the general equation and then do the math.
+　　If N were about 10^10 larger, my code or the official code would be O(N), so it wouldn't work.
+　　In that case, I guess I'd have to find the general formula and then use the [repeated squares method] to calculate it.
+
+D
+　At first, because of the C problem, I assumed that each term was 3-9, and I had trouble matching the answers when it came to large numbers.
+　I realized it was an arbitrary number since you only said it was a sequence of numbers, so I changed the sum from `range(3, 10)` to `range(3, i + 1)`.
+　　I wondered if it would be a bad idea since the addition would be increased by an order of S. I wondered if I would need to use the cumulative sum. I thought so, but it went through as it was.
+　When S is 0, 1, or 2, there are 1, 0, and 0 ways, respectively; when S is 3 or more, the remainder is obtained by adding up the values calculated so far: f(S-3) if the first term is 3, f(S-4) if 4, and so on.
+　It's up to 2000, but it's the watchmen who are securing it at 2020.
+　　In the first, mistaken meaning of the subject, we see 9 in front, so we left enough room at the end to make it 0 when it is negative.
+ code:python
+  def solve(S):
+      table = [0] * 2020
+      table[0] = 1
+      # [1], [2] = 0
+      for i in range(3, S + 1):
+          table[i] = sum(table[i - d] for d in range(3, i + 1))
+      return table[S] % MOD
+	[Collect DP]
+　Official Explanation
+　　I'm converting the above transition equation to a constant length by transforming the equation.
+　　[https://gyazo.com/8b97a305a09a3177bcf64ae72f20056a]
+
+E
+　The furthest pair of points is the furthest pair in either when projected onto a diagonal line in two different ways
+　The furthest pair on a one-dimensional line is the maximum and minimum
+　　The code uses argmin/argmax, but you don't have to specify "which specific pair", just the distance, so min/max is fine.
+ code:python
+  def solve(N, XY):
+      S = XY.sum(axis=1)
+      p1 = np.argmax(S)
+      p2 = np.argmin(S)
+      D = XY[:, 0] - XY[:, 1]
+      p3 = np.argmax(D)
+      p4 = np.argmin(D)
+      return max(S[p1] - S[p2], D[p3] - D[p4])
+	[AC https://atcoder.jp/contests/abc178/submissions/16704180] 188ms
+		[https://gyazo.com/ebc4a71fdf7ba663577c52f71c7f4570]
+　I've been using PyPy a lot lately, but I did this in Numpy because I thought it was the best fit for Numpy!
+　　The only reason these two are antithetical is that AtCoder has not included Numpy in the PyPy environment, so if they do, we won't have to worry about it.
+　Official Explanation
+　　I figured it out on my own, but I was told that this solution is a pattern often used in problems using [Manhattan distance], also called "[45-degree rotation]".
+[ABC178F]

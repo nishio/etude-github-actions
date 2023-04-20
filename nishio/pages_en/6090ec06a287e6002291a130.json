@@ -1,0 +1,80 @@
+Hatena2011-01-07
+code:hatena
+ <body>
+ How to call body-side functions from **1294371878*dll or so
+ [Note: This article is intended to jot down what I've figured out before I forget, and is written by someone who doesn't quite understand the difference between so and dylib, or ELF and Mach-O, so please be careful!]
+ 
+ This is a case in which a plugin is trying to call a function (API) provided by the main body. For example, in the example below, a plugin is trying to call the "add" function defined in the main body. However, simply bringing in the prototype declaration of the function on the main body side will result in an error message stating that the symbol cannot be found.
+ 
+ >|cpp|
+ #include <stdio.h>
+ int add(int, int);
+ 
+ extern "C" {
+ void foo(int x){
+   printf("%d\n", add(x, 42));
+ }
+ }
+ ||<
+ 
+ >||
+ $ g++ -shared -o so.so so.cpp
+ Undefined symbols:
+   "add(int, int)", referenced from:
+       _foo in ccyB73dJ.o
+ ld: symbol(s) not found
+ collect2: ld returned 1 exit status
+ ||<
+ 
+ The compiler option "-Wl,-undefined,dynamic_lookup" will make it ignore missing symbols and do a dynamic lookup at runtime. so.so has been built, now let's write the code to call it. And of course, define add.
+ 
+ >|cpp|
+ // base.cpp
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <dlfcn.h>
+ 
+ int add(int x, int y){
+   return x + y;
+ }
+ 
+ int main(){
+   void* handle = dlopen("so.so", RTLD_LAZY); /* open so */
+   char *error;
+   if (!handle) {
+     fprintf (stderr, "%s\n", dlerror());
+     exit(1);
+   }
+   dlerror();    /* Clear any existing error */
+ 
+   typedef void (*Foo)(int); /* (1) */
+   Foo foo = (Foo)dlsym(handle, "foo"); /* (2) */
+   if ((error = dlerror()) != NULL)  {
+     fprintf (stderr, "%s\n", error);
+     exit(1);
+   }
+ 
+   foo(42); /* (3) */
+   dlclose(handle);
+ }
+ ||<
+ 
+ In (1), we create a function pointer type Foo that takes an int and returns void. Then, in (2), we get a pointer to a function named "foo," cast it to Foo, and put it in a variable named "foo. Then, as shown in (3), it can be called like a normal function. (see http://www.kouno.jp/home/c_faq/c4.html#12)
+ 
+ When this is executed, the expected result of add being called is returned, so it turns out that "it is easy to call functions on the body side". I don't know which is more appropriate: "It is easy on POSIX," "It is easy on ELF," or "It is easy on gcc," though it seems to be ELF. (According to Dr. Moriyoshi)
+ 
+ Now, here is the main question, what should I do if I want to do the same thing on Windows. After some research, I found out that I can ignore undefined symbols and build without error by adding a certain option (I forgot it).
+ 
+ However, this is a trap, and they do not do dynamic lookups at runtime!
+ 
+ I don't notice it and I get an exception 0xC0000005 or something like that, or I check it out and find out this is an access violation, or I go, "Oh, I'm doing a debug build and I can't see the source to see where the access violation is happening," or I get an access violation. I tried to minimize the code and found that the first API call was dead, so I put a breakpoint on that function, and it was called many times before the test was executed, and the arguments and so on when it was called just before the error didn't look particularly funny, and the process after it was called just before the error, step If I was executing the test, there were many threads and they were going back and forth and it was unintelligible, and I took a big detour to ........., but in short, it is not dead after calling the API or before calling the API, but it is dead before calling the API. It was not dead after calling the API or before calling the API, but dead at the moment of calling the API because the function pointer of the API was an invalid value. The timing of the death could be different because it died at the timing when the call was called in the plugin after the thread was switched.
+ 
+ So, traps and detours aside, what should we do on Windows? There seem to be two ways: one is to put the function pointer into a structure and pass it to the DLL side as an argument (thanks Mitsunari-san), the other is to add __declspec(dllexport) to the function you want to expose on the main body side and add <a href='http://msdn. microsoft.com/en-us/library/ms683200(v=vs.85).aspx'>GetModuleHandleEx</a> to get the handle of the body exe (thanks id:moriyoshi)
+ >>
+ If this parameter is NULL, the function returns a handle to the file used to create the calling process (.exe file).
+ <<
+ 
+ So, I made a sample of the former and got a sample of the latter from Dr. MORIYOSHI, but I will continue later because the programming symposium is about to start.
+ </body>
+
+[Hatena Diary 2011-01-07 https://nishiohirokazu.hatenadiary.org/archive/2011/01/07]

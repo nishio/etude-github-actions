@@ -1,0 +1,25 @@
+Save all in one place
+	question (e.g. on a test)
+		When viewing what you have written on the iPad on a PC, if you select multiple paths and move them around, they will be moved and redrawn one at a time.
+	cause
+		The useEffect triggered a change in state.items to saveToServer.
+	cope
+		setTimeout if not flagged by useEffect, flag it
+  If it's flagged, do nothing and go through with it.
+  saveToServer at the timing when setTimeout fires.
+
+code:ts
+ let toSave = false;
+ useEffect(() => {
+   if (toSave) {
+     // do nothing
+   } else {
+     toSave = true;
+     setTimeout(() => {
+       toSave = false;
+       saveToServer(isReadOnly, state, mapname)
+     }, 100)
+   }
+ }, [state.items]); 
+
+[pRegroup-done-2019]

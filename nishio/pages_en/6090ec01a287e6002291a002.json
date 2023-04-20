@@ -1,0 +1,76 @@
+Hatena2009-09-10
+code:hatena
+ <body>
+ *1252558275*[GAE]ReferenceProperty failed to be resolved
+ When I access the admin screen of app-engine-patch, I get this error
+ >||
+   File "/.../admin/templatetags/admin_list.py", line 179, in items_for_result
+     field_val = getattr(result, f.attname)
+   File "/base/python_lib/versions/1/google/appengine/ext/db/__init__.py", line 2759, in __get__
+     raise Error('ReferenceProperty failed to be resolved')
+ Error: ReferenceProperty failed to be resolved
+ ||<
+ 
+ I rewrote admin.py like this and now it shows up without error.
+ >|python|
+ class PlayerAdmin(admin.ModelAdmin):
+ #    list_display = (
+ #        'user_pref', 'name', 'desc', 
+ #        'type', 'api_key', 'entrypoint')
+     list_display = ('name', )
+ ||<
+ 
+ I'm sure there are items that are not in the proper reference state due to manual deletion or something, and the only one that is a ReferenceProperty is user_pref, so that must be in the incorrect state. I looked at them in Data Viewer and they all had keys in them, so I guess it's like, "I tried to get the value with that key, but it was already gone!" I guess that's what it means.
+ 
+ 
+ I've tweaked it so that I can tell if user_pref is None.
+ >|python|
+ class Player(db.Model):
+     def __unicode__(self):
+         prefix = u"DEBUG" + unicode(self.user_pref) + u":"
+         (Abbreviation)
+ ||<
+ 
+ Ah, I can't refer to self.user_pref in the first place, regardless of the admin screen. Oh, well, that's right.
+ 
+ >||
+   File "/base/data/home/apps/nishiotools/1.336230617341987572/saichugen/models.py", line 146, in __unicode__
+     prefix = u"DEBUG" + unicode(self.user_pref) + u":"
+   File "/base/python_lib/versions/1/google/appengine/ext/db/__init__.py", line 2759, in __get__
+     raise Error('ReferenceProperty failed to be resolved')
+ ||<
+ 
+ Then let's have it display key().name() when it can't be referenced.
+ >|python|
+     def __unicode__(self):
+         try:
+             prefix = u"DEBUG" + unicode(self.user_pref) + u":"
+         except:
+             return u"RESOLVE_ERROR:" + self.key().name()
+ ||<
+ 
+ Results.
+ >||
+ DEBUG NISHIO:Desc@NISHIO
+ RESOLVE_ERROR:player_1d3ab0f82dbaa65af3b6146316da7da9 
+ DEBUG NISHIO:Active@NISHIO
+ RESOLVE_ERROR:player_7e8dc6ac2aff15513637896105ca7cb1 
+ DEBUG NISHIO:Sanpuru@NISHIO
+ ||<
+ Hmmm. I looked at the relevant item and it is empty in both name and desc. I should have made it record the date and time it was created. Maybe it was left over from when I was messing with it in the early days, but I have no way to determine that. Oh well, I'll just delete it.
+ 
+ *1252582562*Diary
+ It's no wonder I'm in such a hurry. The reason I feel like I can't get the housework done is because it seems like I can't get it done, no matter how much I put away. I can only think of it as training and move forward one step at a time.
+ 
+ - I opened a package from my parents' house that I received on Tuesday.
+ - I opened the sealed envelope and stuff that was inside.
+ - I threw away the envelope.
+ - I noticed a receipt on the floor and threw it away.
+ - A missing vocabulary book was found (on his desk).
+ - I remembered my iPod, which I had completely forgotten existed, and charged it.
+ - The missing fast playback music was found on an external hard drive that had fallen off.
+ - I was thinking of keeping the 2005 credit card statement in the parcel from my parents' house for a while, but on second thought, I discarded it because I didn't need it.
+ - When I cleaned up the flyers that had fallen on the floor, I found a polling place admission ticket between them. I'm not sure if they'll find it now.
+ </body>
+
+[Hatena Diary 2009-09-10 https://nishiohirokazu.hatenadiary.org/archive/2009/09/10]

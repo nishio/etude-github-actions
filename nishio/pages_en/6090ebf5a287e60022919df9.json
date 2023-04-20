@@ -1,0 +1,257 @@
+Hatena2008-03-04
+code:hatena
+ <body>
+ *1204602761* Oh!
+ The 3rd 1000 Speakers Conference on 3/22 was supposed to be held at Cybozu Labs, but we inadvertently forgot to put it in our internal schedule, so the lab is no longer available.
+ 
+ *1204604699*Multiple dispatches
+ I read about multiple dispatches and made an example.
+ http://d.hatena.ne.jp/hayamiz/20080303/1204567501
+ 
+ In Java, x.method(y, z,...) is treated specially, and the runtime type of x determines which method is called. However, the runtime types of arguments such as y and z are not used to select methods. The method is chosen based on the type declared at compile time.
+ 
+ In the code below, a call to the method a.say will choose Cat#say or Dog#say depending on the type of a at runtime. However, when z.enter(a) is passed as an argument, it does not choose between Zoo#enter(Cat) and Zoo#enter(Dog).
+ 
+ >|java|
+ import java.util.ArrayList;
+ 
+ public class TestMultiDispatch {
+     public static void main(String[] args) {
+         Zoo z = new Zoo();
+         for(Animal a: new Animal[]{new Cat(), new Dog(), new Cat()}){
+             //z.enter(a); // compilation error
+             a.say();
+         }
+     }
+ }
+ class Zoo{
+     ArrayList<Dog> dogs = new ArrayList<Dog>();
+     ArrayList<Cat> cats = new ArrayList<Cat>();
+     public void enter(Cat cat){
+         cats.add(cat);
+     }
+     public void enter(Dog dog){
+         dogs.add(dog);
+     }
+ }
+ abstract class Animal{
+     abstract public void say();
+ }
+ class Cat extends Animal{
+     public void say(){
+         System.out.println("nya~");
+     }
+ }
+ class Dog extends Animal{
+     public void say(){
+         System.out.println("Wan!") ;
+     }    
+ }
+ ||<
+ 
+ You can solve this problem by adding an "enter" method to Animal.
+ 
+ >||java|
+ abstract class Animal{
+     abstract public void say();
+     abstract public void enter(Zoo z);
+ }
+ class Cat extends Animal{
+     public void say(){
+         System.out.println("nya~");
+     }
+     public void enter(Zoo z){
+         z.enter(this);
+     }
+ }
+ class Dog extends Animal{
+     public void say(){
+         System.out.println("Wan!") ;
+     }    
+     public void enter(Zoo z){
+         z.enter(this);
+     }
+ }
+ ||<
+ 
+ Or you can solve this by creating a Zoo#enter(Animal) and doing your own type testing and casting in it.
+ 
+ >|java|
+     public void enter(Animal a){
+         if(a instanceof Dog){
+             dogs.add((Dog) a);
+         }else{
+             cats.add((Cat) a);
+         }
+     }
+ ||<
+ 
+ Well, maybe both are not very elegant, indeed. The former has a kind of "tangled" feeling, and the latter is full of branches.
+ 
+ *1204618476*amachang x python
+ amachang's first Python script is full of lambda, yield, and parentheses
+ 
+ We agreed that LAMBDA is too hard to use. w
+ 
+ *1204618942*[Python]staticmethod was not a method.
+ >>
+ I'll tell it like it is now!
+ staticmethod was not a method.
+ I don't think you know what I'm talking about.
+ I didn't know what was going on either...
+ <<
+ 
+ all joking aside
+ 
+ >|python|
+ >>> class Foo(object):
+ 	def method(self, i):
+ 		print i
+ 
+ 		
+ >>> Foo.method
+ <unbound method Foo.method>
+ 
+ >>> class Foo(object):
+ 	@staticmethod
+ 	def method(self, i):
+ 		print i
+ 
+ 		
+ >>> Foo.method
+ <function method at 0x014BE1B0>
+ ||<
+ 
+ staticmethod was not a method but just a function. This is surprising.
+ 
+ *1204634146*Re: Writing procedurally in Python lambda
+ http://d.hatena.ne.jp/amachang/20080304/1204633733
+ >|python|
+ (lambda: (
+   Expression,.
+   equation
+ ,)[-1])
+ ||<
+ 
+ Hoho, I see. So you need a comma at the end because there may be only one expression. But wouldn't it be cleaner to put a comma at the end of each expression?
+ 
+ >|python|
+ (lambda: (
+   Expression,.
+   Expression,.
+ )[-1])
+ ||<
+ 
+ -----
+ 
+ I took the liberty of correcting it.
+ 
+ >|python|
+ class Scope(object):
+     def __init__(self, parent = None):
+         self.parent = parent
+         self.hash = {}
+ 
+     def var(self, key, value = None):
+         self.hash[key] = value
+         return value
+ 
+     def set(self, key, value):
+         if key in self.hash or not(self.parent):
+             self.hash[key] = value
+         else:
+             self.parent.set(key, value)
+         return value
+ 
+     def get(self, key):
+         if key in self.hash or not(self.parent):
+             return self.hash[key]
+         else:
+             return self.parent.get(key)
+         
+     def __setattribute__(self, key, value):
+         return self.set(key, value)
+ 
+     def __getattr__(self, key):
+         return self.get(key)
+ ||<
+ 
+ Original script (comments are mine)
+ 
+ >|python|
+ class Scope:
+     # (object) is "old class" without (object). Deprecated
+     hash = {}
+     # This will be a class variable, should be written in __init__.
+     parent = None
+     # This is shadowed from making self.parent in __init__. Nonsense.
+     def __init__(self, parent = None):
+         self.parent = parent
+     def var(self, key, value = None):
+         self.hash.__setitem__(key, value)
+         # why not just use self.hash[key] = value?
+         return value
+     def set(self, key, value): 
+         self.hash.__setitem__(key, value) if (key in self.hash or not(self.parent)) else self.parent.set(key, value)
+         # I hate long lines.
+         return value
+     def get(self, key):
+         return self.hash.__getitem__(key) if (key in self.hash or not(self.parent)) else self.parent.get(key)
+         # hash.__getitem__(key) should be hash[key].
+     def __setattr__(self, key, value): return self.set(key, value)
+     # __setattribute__ or else it's an infinite loop.
+     def __getattr__(self, key): return self.get(key)
+ ||<
+ 
+ I guess.
+ 
+ *1204635942*skk = i
+ ``skk
+ = \x -> ``kx`kx
+ = \x -> `(\y -> x)`kx
+ = \x -> x
+ = i
+ 
+ Oh, I see. I wonder if I can make a puzzle out of this.
+ 
+ *1204638120*test
+ 
+ *1204639422*Motivation
+ 
+ It's motivating to see the finished product, isn't it?
+ f:id:nishiohirokazu:20080304230323j:image
+ </body>
+ <comments>
+ <comment>
+ <username>earth2001y</username>
+ <body>As expected, a walking moe factor. So what are you going to do? </body>
+ <timestamp>1204603456</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>I just asked id:TOKOROTEN if I could use the Nasic Hall and he said that it would be impossible because it is Monday through Friday. I'll consult with amachang when he comes to the office...</body>.
+ <timestamp>1204611556</timestamp>
+ </comment>
+ <comment>
+ <username>shou</username>.
+ <body>Even with a Visitor, in the end there are more classes and the branching is just split into methods? </body>
+ <timestamp>1204611605</timestamp>
+ </comment>
+ <comment>
+ <username>Yoshiori</username>
+ <BODY>I would have done my best to help if our schedules had not conflicted.
+ <timestamp>1204640989</timestamp>
+ </comment>
+ <comment>
+ <username>Ponsuke</username>
+ <body>We look forward to it. </body>
+ <timestamp>1204644631</timestamp>
+ </comment>
+ <comment>
+ <username>t_yano</username>
+ <body>I see that's true in python as well, and it seems clear that in python you can take it as a function object. <br>In Java, which I like, static methods are just functions defined in the class namespace (as a matter of fact). It is not inherited. </body>
+ <timestamp>1204656111</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2008-03-04 https://nishiohirokazu.hatenadiary.org/archive/2008/03/04]

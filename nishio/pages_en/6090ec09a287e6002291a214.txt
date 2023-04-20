@@ -1,0 +1,147 @@
+Hatena2012-04-14
+code:hatena
+ <body>
+ *1334366252*Diary of a troubled refactoring of Alloy.
+ When there is a relation cell : Col -> Row -> Color
+ >||
+ all c: SomeColSet : some_pred[cell [c, r]]
+ all r: SomeRowSet : some_pred[cell [c, r]]
+ ||<
+ It is difficult to find a way to put this together, because a set such that the first tuple of a cell is c is a c.cell, so this can be done.
+ >||
+ all c: SomeColSet : some_pred[cell [c, r]]
+ all r: SomeRowSet : some_pred[c.cell [r]]
+ ||<
+ c: I'd like the SomeColSet to have the same foo [c] form, but how do you narrow it down in the middle of a 3-element tuple or something...
+ 
+ Because the comprehension notation can only be used for Unary Sets.
+ >||
+ {x: cell | univ.x.univ = r}
+ ||<
+ 
+ is no good. It would be good if we could join ourselves
+ 
+ >||
+ r.((univ.(cell.univ))->(cell.univ.univ)->(univ.(univ.cell)))
+ ||<
+ 
+ I tried (->), but (->) is a direct product, so it's not "join itself". Hmmm...
+ 
+ If I do this, I get angry because the declaration is a function even though the content is a predicate. How do we express that it returns r such that it satisfies the predicate?
+ 
+ >||
+ fun filter_middle(rs: Int->Int->Int, key: Int): Int->Int{
+ 	some r: Int->Int{
+ 		all x: Int {
+ 			x.rs[key] = r[x]
+ 		}
+ 	}
+ }
+ ||<
+ 
+ ** Postscript
+ I thought it could be done with a limited value range, but even a limited value range can only take Unary.
+ 
+ I came up with an oblique solution: cell: Col->Color->Row, but... mmm...
+ 
+ *1334395379*Read the KodKod file output by Alloy.
+ >||
+ sig X{}
+ run{
+ 	#X = 2
+ }
+ ||<
+ 
+ I tried to read the CNF, but the format ((<a href='http://www.satcompetition.org/2009/format-benchmarks2009.html'>benchmarks submission guidelines</a>)) was too hard to read. Even if I was told about the format ((< href >benchmarks submission guidelines</a>), it was still a bit like looking at a compiled binary in hexdump in C, so I decided to look at the KodKod file.
+ 
+ >|java|
+ import java.util.Arrays;
+ import java.util.List;
+ import kodkod.ast.*;
+ import kodkod.ast.operator.*;
+ import kodkod.instance.*;
+ import kodkod.engine.*;
+ import kodkod.engine.satlab.SATFactory;
+ import kodkod.engine.config.Options;
+ 
+ /* 
+   ==================================================
+     kodkod formula: 
+   ==================================================
+     #(this/X) = 2 && 
+     Int/next = Int/next && 
+     seq/Int = seq/Int && 
+     String = String && 
+     this/X = this/X
+   ==================================================
+ */
+ public final class Test {
+ 
+ public static void main(String[] args) throws Exception {
+ 
+ Relation x0 = Relation.nary("Int/next", 2);
+ Relation x1 = Relation.unary("seq/Int");
+ Relation x2 = Relation.unary("String");
+ Relation x3 = Relation.unary("this/X");
+ 
+ List<String> atomlist = Arrays.asList(
+  "X$0", "X$1", "X$2"
+ );
+ 
+ Universe universe = new Universe(atomlist);
+ TupleFactory factory = universe.factory();
+ Bounds bounds = new Bounds(universe);
+ 
+ TupleSet x0_upper = factory.noneOf(2);
+ bounds.boundExactly(x0, x0_upper);
+ 
+ TupleSet x1_upper = factory.noneOf(1);
+ bounds.boundExactly(x1, x1_upper);
+ 
+ TupleSet x2_upper = factory.noneOf(1);
+ bounds.boundExactly(x2, x2_upper);
+ 
+ TupleSet x3_upper = factory.noneOf(1);
+ x3_upper.add(factory.tuple("X$0"));
+ x3_upper.add(factory.tuple("X$1"));
+ x3_upper.add(factory.tuple("X$2"));
+ bounds.bound(x3, x3_upper);
+ 
+ 
+ IntExpression x6=x3.count();
+ IntExpression x7=IntConstant.constant(2);
+ Formula x5=x6.eq(x7);
+ Formula x8=x0.eq(x0);
+ Formula x9=x1.eq(x1);
+ Formula x10=x2.eq(x2);
+ Formula x11=x3.eq(x3);
+ Formula x4=Formula.compose(FormulaOperator.AND, x5, x8, x9, x10, x11);
+ 
+ Solver solver = new Solver();
+ solver.options().setSolver(SATFactory.DefaultSAT4J);
+ solver.options().setBitwidth(0);
+ solver.options().setFlatten(false);
+ solver.options().setIntEncoding(Options.IntEncoding.TWOSCOMPLEMENT);
+ solver.options().setSymmetryBreaking(20);
+ solver.options().setSkolemDepth(0);
+ System.out.println("Solving...");
+ System.out.flush();
+ Solution sol = solver.solve(x4,bounds);
+ System.out.println(sol.toString());
+ }}
+ ||<
+ 
+ I see. You output a Java file like this, compile it, and run it?
+ 
+ 
+ That said, it is very annoying to have to use the mouse to select and copy and paste from the output to the UI because it spits out the file as a temporary file even though it explicitly outputs it. I need to set up my environment so that I can build Alloy from source soon.
+ 
+ 
+ Unresolved issues:.
+ - (Unresolved) How do I tweak the Alloy source and rebuild it?
+ -- Evaluator output is a pain in the ass because I can't copy and paste and I want to do something about it.
+ -- I want to output the results of Visualize as sequentially numbered images because it's a pain to take screenshots of each one.
+ -- I want to stop KodKod files from being output as temporary files.
+ </body>
+
+[Hatena Diary 2012-04-14 https://nishiohirokazu.hatenadiary.org/archive/2012/04/14]

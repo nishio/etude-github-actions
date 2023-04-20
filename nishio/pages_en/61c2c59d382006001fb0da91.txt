@@ -1,0 +1,63 @@
+Kozaneba Development Diary 2021-12-22
+I used Kozaneba for various demands for a while.
+	[Keichobot presentation prepared Dec 2021].
+		I want to put [Kozaneba:Keichobot in context].
+	[Kozaneba: Experiential Processes and the Creation of Meaning]
+	Based on these two presentations, it was decided that a good first step to try using Kozaneba would be to use it as a "tool to assist in understanding difficult-to-understand books. It was decided that
+	So I tried to use it for that purpose.
+		[Kozaneba: On the phenomenology of language]
+		[Kozaneba:dwell-think]
+		[Kozaneba: The Formation of Chinese Hua Yan through the Fusion of the Hua Yan Sutra and the Zhuangzi].
+
+
+Problem of heavier weight in larger quantities.
+　In the first place, it is beyond human capacity to add more in that state, so we should move on to the phase of output in our own words.
+　[Scrapbox-like recall effect on Kozaneba].
+
+[Kozaneba Development Diary 2021-11-26]
+[Kozaneba Development Diary 2021-12-10]
+
+Group disappearance problem under high load
+　When dragging a group from a selected state, the first cause is that the deselection redraw runs after the start of the drag.
+　This bug breaks the "What is being dragged is not a drop target" and causes "X is dropped on X at the top level, so X is removed from the top level drawing list and X is added to X's children", which causes it to disappear from the screen.
+
+release notes
+　Fixed a bug that caused a group to be hidden when dragging on a group outside of the selection while there is a selection
+　Dragging outside of a selection with a selection now simply deselects the selection.
+　Selection is now automatically deselected if there is nothing to select in the selected area.
+
+Make long binary relationships translucent
+
+[https://gyazo.com/332d57d2df82a9b54635aec15209cc32]
+
+[https://gyazo.com/5d6b761b9da4518ff40c5f51ce4262f3]
+[https://gyazo.com/3d188c2e0df12805a388e79ea83e53e1]
+[https://gyazo.com/e45792a1cccb534549a0386a44a8f7df]
+[https://gyazo.com/496f0f14cb1678b80d148f3be5fc36c7][https://gyazo.com/9cefcf1c5d31a7486b3e055cd58b1d6e]
+[https://gyazo.com/4245a9bdefacdd730a79773f2bf52283]
+[https://gyazo.com/ee21d37883a766abeb4ef519ee9f5984]
+[https://gyazo.com/5383a098af350bf3ec1727fa19190b8f]
+
+Ah, I see.
+
+And I found a way to break it even harder.
+	[https://gyazo.com/1019c8972558303dcb03d5ded37af1a4]
+
+The first part of the problem is that the thickness of the border itself and the height of the header are not taken into account when calculating the intersection of the line and the border.
+As for the latter part, when the position of a kozane in a nested group is updated, some value of the parent's parent's group is not updated.
+I've been thinking that Kozane's jumps occur when structuring complex sentences this time, but perhaps this update omission is the cause.
+
+Fix the latter first because the scope of impact and problems are greater.
+As for the former, it's strange that the line drawing code needs to know the height of the group's header in the first place, so why not get the boundary box and calculate from there?
+
+[2021-12-23]
+[reverse time line arrangement]
+	I hadn't yet deployed the functionality to make the lines translucent that I put in on Wednesday.
+ 	I've found this to be very beneficial.
+ 	You won't have to think, "I can't read this line because it's over the one below me, so I'll move it."
+	All connected, this still retains the relationship "in proximity in the original sentence" = [existing structure].
+ 	Now that we have this situation backed up, we can "reach the new structure without painful jumps" if we do "not need to keep the original structure" = "move away from it, destroying the original structure so that the arrows connecting it are in close proximity".
+ 	I wonder if this could be mechanically assisted... i.e. if the proximity is a weak spring, the arrow is a strong spring, and the physics is applied so that the arrow is the right length...
+ I want "Rotate Selection 90 Degrees."
+
+next [Kozaneba Development Diary 2021-12-27].

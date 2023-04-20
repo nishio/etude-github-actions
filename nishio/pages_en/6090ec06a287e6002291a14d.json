@@ -1,0 +1,82 @@
+Hatena2011-02-23
+code:hatena
+ <body>
+ *1298422815* e-Tax Diary (Preparation)
+ Walk to the ward office, which is about 10 minutes from the station. Since it is the time of year, I tell the lady at the reception desk, "eTax! eTax! I mistakenly said, "Pentax! PENTAX! PENTAX!" by mistake. Fill out an application form for a new resident registration card and an electronic certificate. You will be given a number tag and wait. You will need to provide proof of your identity! Yes, I have it! I brought it!
+ 
+ - seal
+ - Driver's license (Mada, as I intend to go to change my address after this is done)
+ - Certificate of residence (had to change address on driver's license)
+ - Seal registration card
+ 
+ Boo hoo, I'm sorry to hear that. I was told that a seal was not required, that a driver's license with no change of address was invalid, that a certificate of residence was not acceptable, and that just one more was not enough, so I presented my insurance card as well.
+ 
+ Well, I was told no, so I walked from there to the police station and changed my address. The police station is a short walk across the street. I successfully completed the authentication with my driver's license and insurance card. A lady staff member was confused at the operation of the machine to make a copy of my driver's license, and went to call someone... After about 3 minutes, the copy was finally made. At this point, it has been 19 minutes since I arrived at the ward office.
+ 
+ Please wait over there for about 15 minutes so we can issue you a residence card.
+ 
+ What?
+ 
+ I waited about 9 minutes and the resident card came. From here, it is the password setting phase. Insert the card into the machine and enter the password twice, similar to the way you enter a credit card password. The one for the Juki card is 4-digit numbers. For the digital certificate, I was told that I can enter a number of alphanumeric characters. I thought I was told the fee was 5,000 yen, so I paid 10,000 yen and got 9,000 yen back. Whew.
+ 
+ After all, the first mission was completed in 40 minutes after reaching the ward office. I bought a card reader, so I guess I can do the rest at home...
+ 
+ <iframe src="http://rcm-jp.amazon.co.jp/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=AAFFAA&fc1=000000&lc1=0000FF&t=nishiohirokaz-22&o=9&p=8&l=as4&m=amazon&f=ifr&asins=B00117VJ7O" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+ 
+ *1298465187*Mind Map Diary 6 (on the development of distributed repositories)
+ Today's story is about how distributed repositories have developed. It's not right to call it a mind map since there is no center image or branches, but well, it's a continuation of the git mind map from the other day.
+ 
+ There used to be only one repository, and you would commit to it. The yellow cylinder is the repository, the face is the person, and the one near it is the work tree. You chekout/commit/update between the repository and the work tree.
+ 
+ f:id:nishiohirokazu:20110223191238j:image
+ 
+ In this era, "commit" was a combination of two actions. It was a combination of two actions: "record changes" and "publish changes". In the case of a shared repository with multiple users, the commit was immediately made public. If you don't want to do that, you don't need to put the repository on the server and use it by yourself.
+ 
+ It is better to commit in as small a unit as possible for "change logging". That way, the meaning of each changeset becomes clearer. However, for "publishing changes," it is not good if the build does not go through to the person who checked out the changes after the commit. When committing, the changes must be in some large chunk, "a change to a working state". These two objectives conflict.
+ 
+ Why not have two repositories here, one "repository at hand" and one "repository for public use"? The idea is born. Data exchange (clone/push/pull) between repository and repository is born.
+ 
+ f:id:nishiohirokazu:20110223191259j:image
+ 
+ An exchange between repositories and repositories was created. When this happens, you realize that there is no reason why there has to be only one repository for publishing in the first place. When there is only one repository, you need to have commit permission to the central repository to publish your changes. However, if each individual has his/her own public repository, anyone can publish his/her changes without commit privileges. If a committer wants to import the changes into the official repository, he/she can just pull from the official repository.
+ 
+ f:id:nishiohirokazu:20110223191307j:image
+ 
+ So far, this is the so-called development of distributed repositories. However, git has a characteristic from a different point of view. This is very different from other distributed repositories, and I think this is the reason for the confusion.
+ 
+ The "Track Changes" and "Publish Changes" have been decoupled. And "Change History Record" is better to be in small units. Then, even if I have inadvertently made various changes on the work tree, I want to organize them into semantic groups before committing them. In order to organize, we need a place to organize. A temporary place to organize "what to commit next. That is the index. In the figure, I drew an image of a document stand that holds documents in process. checkout is a green arrow, but I drew it in red by mistake.
+ 
+ f:id:nishiohirokazu:20110223191315j:image
+ 
+ I was confused because I was trying to map git commands to those of mercurial and subversion, but the "commit" process itself is split in the first place. The reason I was confused was that I didn't realize that.
+ 
+ *1298468618*git diary
+ There are four types of objects in git. Blobs, trees, commits, and tags.
+ 
+ There are a few things that are not objects. The most commonly used ones are indexes and references.
+ 
+ References include tags, branch tops, remote branch tops, and HEAD.
+ 
+ When you add a file, a blob object is created with the contents of that file. When you add a directory, a tree object is not created; it is created when you commit.
+ 
+ If you create a file with the same contents, the blob object is reused. This is because a blob object does not contain a file name, etc., and if the file contents are the same, the object will have the same name.
+ 
+ The mysterious binary part in the tree object was just the SHA-1 hash value of the reference without being encoded in hex.
+ 
+ Tag objects are created only when they are annotated with tag -a or something similar. Simple tags are only created with a reference.
+ 
+ Commands used to find out what's going on in this area
+ 
+ tree -D .git
+ 
+ cat .git/objects/71/abd6219437123ec763a034f2ed6296fe613d08 | python -c "import sys, zlib; print repr(zlib.decompress(sys.stdin.read()))"
+ </body>
+ <comments>
+ <comment>
+ <username>mjt</username>
+ <body>I think a quick way to find out what's in git is to look at small git implementations like Dulwich or libgit2. <br>https://github.com/jelmer/dulwich/blob/master/dulwich/objects.py#L1111<br>Here are 4 types (Commit, Tree, Tag, Blob)</body>
+ <timestamp>1298469518</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2011-02-23 https://nishiohirokazu.hatenadiary.org/archive/2011/02/23]

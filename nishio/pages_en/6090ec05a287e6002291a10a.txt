@@ -1,0 +1,122 @@
+Hatena2010-09-29
+code:hatena
+ <body>
+ *1285762532*Blogging from time to time.
+ <a href='http://d.hatena.ne.jp/Yoshiori/20100929/1285727199'>Learning OAuth on Twitter with Yaroo and Python - Yoshiori's Blog</a>
+ 
+ Good summary!
+ 
+ <hr>
+ 
+ Taken from a comment on the Hatebukes
+ 
+ >>
+ id:agricola Python, thatge There's no beauty in the use of list comprehensions. ...... If you take the keys and values of a dictionary, sorted by key, and concatenate them with =, then
+ >||
+ ['='.join((k, v)) for k, v in sorted(d.items(), key = lambda x: x[0])]
+ ||<
+ I think I'm going to write something like that.
+ <<
+ 
+ I'll take that kind of bait and I'll be the one caught!
+ 
+ >|python|
+ >>> ['='.join((k, v)) for k, v in sorted(d.items(), key = lambda x: x[0])]
+ ['a=k', 'b=j', 'c=i', 'd=h', 'e=g', 'f=f', 'g=e', 'h=d', 'i=c', 'j=b']
+ ||<
+ 
+ Hmmm. What is this code with all these gobbledygook and unnecessary things attached to it?
+ 
+ >|python|
+ >>> ['='.join((k, d[k])) for k in sorted(d)]
+ ['a=k', 'b=j', 'c=i', 'd=h', 'e=g', 'f=f', 'g=e', 'h=d', 'i=c', 'j=b']
+ 
+ >>> ['%s=%s' % (k, d[k]) for k in sorted(d)]
+ ['a=k', 'b=j', 'c=i', 'd=h', 'e=g', 'f=f', 'g=e', 'h=d', 'i=c', 'j=b']
+ 
+ >>> ['%s=%s' % p for p in sorted(d.items())]
+ ['a=k', 'b=j', 'c=i', 'd=h', 'e=g', 'f=f', 'g=e', 'h=d', 'i=c', 'j=b']
+ ||<
+ 
+ I would use the second one. The behavior is not 100% equal: "%s=%s" does not give an error even if the dictionary value is not a str.
+ 
+ 
+ But, well, how to write a single line of code is not worth a thousandth of the value that explaining OAuth with code has given to everyone. In other words, Yoshiori GJ!
+ 
+ P.S. I just looked at the code in the comments section and noticed after I stuck with it, but where in OAuth do you see "dictionaries you want to sort and then merge"?
+ 
+ <hr>
+ >>
+ id:showyou When sending OAuth-related parameters (such as oauth_signature_method and oauth_nonce), you need to send them with the parameters sorted.
+ <<
+ 
+ I see, because if the order changes, the hash value will change.
+ 
+ <hr>
+ 
+ >>
+ id:agricola Python, et al. You miss the point of saying that using % is OK for non-strings when urllib.quote() concatenates quoted strings with =. I don't deny the significance of the original code, but the lack of beauty in the list comprehensions is not good enough for me, even though it reduces the readability of the code and is a technicality.
+ <<
+ 
+ 
+ 
+ I just wrote that the behavior is not 100% equal and they said I was missing the point. Hmmm. I didn't know which code was equivalent to the code written in the original article, so I just wrote it so that any input that could be accepted by the code written in the original article could be accepted by the code written in Hatena. I'm not sure about your Japanese, but "I reduced the readability with list comprehensions and went for technicalities, but there's no beauty in it," of course you don't mean me, do you? A self-deprecating comment, huh?
+ 
+ <hr>
+ 
+ Reprinted from a certain chat room (with line breaks, typos, and words)
+ 
+ tokibito: By the way, the corresponding code in the original article of the inclusive notation is
+ <pre>
+ # Sort parameters into URI-encoded key=value form and join them with &.
+ params_str = '&'.join(['%s=%s' % (urllib.quote(key, ''),urllib.quote(params[key], ''))
+                        for key in sorted(params)])
+ </pre>
+ This?
+ Yasukazu Nishio: Really? Then isn't it almost the same as the code I wrote? I corrected it (without quotes, etc.) and it turned out to be like that in the comments on the Hatena...? I think that's because you removed the quotes...
+ tokibito: it seemed like urlencode was fine to begin with
+ Yasukazu Nishio: I forgot urlencode, but I thought something like this might already be in the standard library. urlencode?
+ tokibito: urllib.urlencode
+ Yasukazu Nishio: >Convert a mapping object or a sequence of two-element tuples to a "percent-encoded" string
+ Yasukazu Nishio: That's good, isn't it?
+ tokibito: You can pass sorted tuples or use a dictionary with guaranteed ordering. That's what I would do if I were serious about writing.
+ Yasukazu Nishio:.
+ <pre>
+ >>> urllib.urlencode([(k, d[k]) for k in sorted(d)])
+ 'a=k&b=j&c=i&d=h&e=g&f=f&g=e&h=d&i=c&j=b'
+ </pre>
+ Is this what you wanted to do?
+ tokibito: I think so, but I don't know. I don't know. I think the point about inclusions is a bit of a red herring.
+ Yasukazu Nishio: I didn't read which of the original codes you were pointing out, but you mean that you corrected the original code in a strange way and I corrected it without looking at the original code, and it came back almost the same as the original code?
+ tokibito: I have a feeling about that.
+ 
+ <hr>
+ 
+ continued chat
+ 
+ yoshiori: urllib.urlencode is no good. It converts spaces to +. Also, I found out that you can't escape "~" either.
+ yoshiori: http://tools.ietf.org/html/rfc5849#section-3.6
+ yoshiori: 
+ <pre>
+ >>> urllib.urlencode({'foo':'bar hoge'})
+ 'foo=bar+hoge'
+ >>> urllib.quote('bar hoge','~')
+ 'bar%20hoge'
+ </pre>
+ 
+ And also in the comments on the hatchet:.
+ >>
+ id:mattn I think urlencode uses quote_plus internally, so the result of %20 is different and authentication fails. Also, if you want to do it right with quote, maybe urllib.quote(s, safe='~')
+ <<
+ 
+ thanks!
+ </body>
+ <comments>
+ <comment>
+ <username>suztomo</username>
+ <body>> I think it's the "Signing Requests" part of the dictionary<br>http://dev.twitter.com/pages/auth that you want to sort and then merge</body>.
+ <timestamp>1285774380</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2010-09-29 https://nishiohirokazu.hatenadiary.org/archive/2010/09/29]

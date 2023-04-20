@@ -1,0 +1,201 @@
+Hatena2012-06-04
+code:hatena
+ <body>
+ *1338794219*Diary of a stumbling block in installing KoshiNuke
+ Installing Oracle JDK7 on <a href='http://d.hatena.ne.jp/Kazuhira/20120429/1335684623'>Ubuntu 12.04 LTS on a Ubuntu 12.04 64-bit server</a>,
+ 
+ https://github.com/koshinuke/koshinuke.java/blob/master/README.md
+ 
+ I downloaded the jar as described in the "java -jar koshinuke.... After doing the .jar, the server started and I was able to log in with the default user and password, then I saw two tabs, Init Repository and Clone Repository, and nothing happened when I pressed the Home, Status, and Sandbox menus... I did an init repos with the name test/test and there was no response...
+ 
+ The console log looks like this, nothing special. https://gist.github.com/2866880 I don't see any errors in the JS console. What's going on?
+ 
+ <hr>
+ I thought about installing GitLab, but <a href='http://blog.compunet.co.za/gitlab-installation-on-ubuntu-server-12-04/'>GitLab Installation on Ubuntu Server 12.04 | Compunet Blog</a> What a hassle!
+ 
+ *1338810836*Tried heXe (using jQuery css and click)
+ I heard that haXe is a statically typed language that can be compiled to produce JavaScript (and various other languages). haXe is another statically typed language that produces JavaScript when compiled" when I was messing around with JSX, so I'll try this one too. The goal is to use jQuery, which doesn't think about types at all, to add handlers for clicks and change colors, which I did with JSX.
+ 
+ ** Install
+ 
+ <a href='http://haxe.org/download'>Download - Haxe</a>
+ 
+ Download and launch the installer. Installation is completed without any problems.
+ 
+ >||
+ ~$ haxe
+ haXe Compiler 2.09 - (c)2005-2012 Motion-Twin
+  Usage : haxe -main <class> [-swf|-js|-neko|-php|-cpp|-as3] <output> [options]
+  Options : ...
+ ||<
+ 
+ ** IDE
+ 
+ <a href='http://haxe.org/com/ide'>Haxe IDE and Editors - Haxe</a>
+ 
+ Hmmm...then I tried to use haxe-mode.el for Emacs....geez, 404. I have no choice but to use jsx-mode.
+ 
+ ** Hello!
+ 
+ >||
+ $ cat Hello.hx
+ class Hello {
+       static function main() {
+              trace("Hello!");
+       }
+ }
+ $ haxe -js hello.js -main Hello Hello.hx
+ $ wc hello.js
+      309    1142    8140 hello.js
+ ||<
+ 
+ Compilation succeeded, and the JS file is output.
+ 
+ >|javascript|
+ var Hello = $hxClasses["Hello"] = function() { }
+ Hello.__name__ = ["Hello"];
+ Hello.main = function() {
+         haxe.Log.trace("Hello!",{ fileName : "Hello.hx", lineNumber : 3, className : "Hello", methodName : "main"});
+ }
+ Hello.prototype = {
+         __class__: Hello
+ }
+ ||<
+ 
+ When I called hello.js from HTML with the script tag, the file name, line number and Hello were successfully output to the console.
+ 
+ ** Installed Location
+ 
+ On a Mac, it looks like it's in /usr/lib/haxe/ if you don't set anything up. Libraries are in std/... ... of it.
+ Although jQuery is supported and /usr/lib/haxe/std/js/JQuery.hx is available, I think that simply using it will cause problems when using other third-party libraries, so I will try to call jQuery without using it this time.
+ 
+ First, read JQuery.hx.
+ 
+ >|javascript|
+ typedef JqEvent = {
+ 	var target : Dom.HtmlDom;
+ 	var currentTarget : Dom.HtmlDom;
+ 	var relatedTarget : Dom.HtmlDom;
+ ...
+ 	var which : Int;
+ 
+ 	// propagation
+ 	function isDefaultPrevented() : Bool;
+ ...
+ }
+ ||<
+ Hmmm...so I can give a mapping type with complex members a simple name with a typedef.
+ 
+ >|javascript|
+ extern class JQuery implements ArrayAccess<Dom.HtmlDom> {
+ ||<
+ 
+ I like the "implements ArrayAccess<Dom.HtmlDom>", that's how you express that a jQuery object is an Array-like object.
+ 
+ >|javascript|
+ 	@:overload(function(j:js.JQuery):Void{})
+ 	@:overload(function(j:js.Dom.Window):Void{})
+ 	@:overload(function(j:js.Dom.HtmlDom):Void{})
+ 	function new( html : String ) : Void;
+ ||<
+ 
+ The constructor can be both a string and a function, which is expressed by overloading. I see, even in JSX, a function that can take multiple types should be overloaded with the number of types of that type.
+ 
+ >|javascript|
+ 	function removeClass( ?className : String ) : JQuery;
+ ||<
+ 
+ Is this how you express variables that can be omitted?
+ 
+ >|javascript|
+ 	private static function __init__() : Void untyped {
+ 		#if !noEmbedJS
+ 		haxe.macro.Tools.includeFile("js/jquery-latest.min.js");
+ 		#end
+ 		var q : Dynamic = window.jQuery;
+ 		js.JQuery = q;
+                 ...
+         }
+ ||<
+ Hmmm.
+ 
+ ** Display jQuery object for now
+ 
+ Then I wrote the code below to get the jQuery object and display it.
+ 
+ >|javascript|
+ class Main {
+     static function main() {
+         haxe.macro.Tools.includeFile("js/jquery-latest.min.js");
+ 	var q : Dynamic = window.jQuery;
+ 	trace(q);
+     }
+ }
+ ||<
+ 
+ I don't know any window, and I'm pissed.
+ 
+ >||
+ $ haxe -js main.js -main Main Main.hx
+ Main.hx:4: characters 19-32 : Unknown identifier : window
+ ||<
+ 
+ Hey, where does JQuery.hx get the window from?
+ 
+ >||
+ std$ grep window **/*.hx
+ ...
+ js/Lib.hx:	public static var window : Window;
+ js/Lib.hx:		if( untyped __js__("typeof window") != "undefined" ) {
+ js/Lib.hx:			window = untyped __js__("window");
+ ||<
+ 
+ I see, I see, I understand. To simplify the situation, let's load jQuery on the HTML side this time, just like JSX. haxe.macro.Tools.includeFile("...") I'll look into the use of
+ 
+ Then I was able to successfully display the jQuery object just as I did with JSX. I was happy and satisfied.
+ 
+ >|javascript|
+ class Main {
+     static function main() {
+         trace(untyped __js__("window"));
+         // -> Main.hx:9: [object Window] main.js:85
+         trace(untyped __js__("window.jQuery"));
+         // -> Main.hx:10: <function>
+         untyped { window.console.log(jQuery); }
+         // -> function (a,b){return new e.fn.init(a,b,h)}
+     }
+ }
+ ||<
+ 
+ ** Call .css and .click
+ 
+ Then let's call .css or .click next.
+ 
+ The last time I tried this with JSX, I had quite a bit of trouble, so I was prepared for it, but it was so easy that it was a bit of a letdown. I thought Dynamic was like a variant of JSX, so at first I thought I needed to enclose the jQuery("p").... part in an untyped string, but then I realized that jQuery doesn't need to be dynamic. I thought Dynamic was like a variant of JSX, so I thought I needed to enclose the "jQuery("p")..." part in untyped, but it seems that it is not necessary if jQuery is Dynamic.
+ 
+ >|javascript|
+ class Main {
+     static function run() {
+         var jQuery : Dynamic = untyped __js__("window.jQuery");
+         jQuery("p").css("background", "#afa");
+         jQuery("p").click(function(e){
+             e.target.innerHTML += "hoge";
+         });
+     }
+     ...
+ }
+ ||<
+ 
+ In other words, it seems that with haXe, if you declare a variable as Dynamic for a moment, all the expressions related to it will fall to JavaScript-level type safety. This is called "Loss of type safety! Tragedy!" or "We can move right along without having to write all those type declarations! Yay! or "We don't have to write type declarations all over again, we can migrate right away! I think it would be unrealistically expensive to make existing JS code fully type-safe, so heXe's seemingly low migration cost looks appealing.
+ 
+ The source code for this issue is here: https://github.com/nishio/learning_haxe/tree/42efd58c7c84f1f497e76dac7a91ade664c2d3f1/use_jquery
+ </body>
+ <comments>
+ <comment>
+ <username>kmaebashi</username>
+ <body>I wonder why no one else has butted in. It's "HaXe," right? </body>
+ <timestamp>1378231442</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2012-06-04 https://nishiohirokazu.hatenadiary.org/archive/2012/06/04]

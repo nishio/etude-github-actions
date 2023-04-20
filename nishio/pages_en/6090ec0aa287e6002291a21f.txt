@@ -1,0 +1,136 @@
+Hatena2012-04-26
+code:hatena
+ <body>
+ *1335407845*Alloy generates logic puzzles of reasonable difficulty.
+ Puzzles generated using Alloy
+ 
+ ** Q1
+ 
+ E: A and B are liars.
+ B: Eh, A is a liar, but I'm not.
+ A: I'm not a liar either.
+ D: A is a liar. And E is also a liar.
+ C: I am not a liar!
+ 
+ 
+ There are two liars in this group. Liars lie and tell the truth. A non-liar does not lie.
+ 
+ 
+ The correct answer is after the code.
+ 
+ ** Code
+ 
+ >|javascript|
+ enum Person {A, B, C, D, E}
+ enum Bool {T, F}
+ 
+ // Restrictions
+ abstract sig Constrain{}
+ // "X said 'Y is a liar'" constraint.
+ sig is_liar extends Constrain {
+ 	by: one Person,
+ 	who: one Person
+ }{
+ 	by not in who
+ }
+ 
+ 
+ // returns whether a given pair of boolean values x, y, z satisfies the constraint
+ // Must be nested in a predicate in order to try different arguments
+ pred satisfy(cs: Constrain, a, b, c, d, e: Bool){
+ 	let p2b = (A -> a) + (B -> b) + (C -> c) +
+ 		(D -> d) + (E -> e)
+ 		{
+ 		// Specify the number of liars
+ 		#{p2b.F} = 3
+ 		// All constraints are satisfied if the speaker is honest
+ 		// Now there is only "WHO is a liar"
+ 		all c: cs{
+ 			(c.by.p2b = T) => (c.who.p2b = F)
+ 		}
+ 	}
+ }
+ 
+ 
+ 
+ run {
+ 	let answers = {
+ 		a, b, c, d, e: Bool | 
+ 		satisfy[Constrain, a, b, c, d, e]}
+ 		{
+ 
+ 		// There is only one solution.
+ 		one answers
+ 
+ 		// removing any constraint will result in more than one solution.
+ 		all x: Constrain {
+ 			not one {
+ 				a, b, c, d, e: Bool | 
+ 				satisfy[Constrain - x, a, b, c, d, e]
+ 			}
+ 		}
+ 	}
+ } for 10
+ ||<
+ 
+ ** Q1 answer section
+ A and E are liars. Let's look at the problem again.
+ 
+ 
+ E: A and B are liars.
+ B: Eh, A is a liar, but I'm not.
+ A: I'm not a liar either.
+ D: A is a liar. And E is also a liar.
+ C: I am not a liar!
+ 
+ 
+ If A is honest, then E, B, and D, who are calling A a liar, are all liars, which contradicts the "two liars" condition; if E is honest, then A and B are liars, but since D is calling E a liar, D is also a liar. The condition that A and E are liars does not contradict the condition that A and E are liars.
+ 
+ ** Q2
+ C: A is a liar.
+ A: No, it's D.
+ D: C is a liar anyway. And B and E, too.
+ B: Eh, it's A and C who are liars.
+ E: Yeah, I agree. It's A and C who are the liars.
+ 
+ There are three liars.
+ 
+ ** Q3
+ In Q2, B and E said the same thing, so I banned that. I also banned it because if one person called three or more people liars, they would be GUESSED that he/she is probably a liar. On the other hand, I could have had the person calling three people liars look for examples of people being honest, but if I gave the code first, they would know the answer.
+ 
+ >|javascript|
+ fact {
+ 	// Different people say different things.
+ 	all disj p1, p2: Person {
+ 		by.p1 != by.p2
+ 	}
+ 	// One person does not call more than three people liars.
+ 	all p: Person {
+ 		#{by.p} < 3
+ 	}
+ }
+ ||<
+ 
+ B: A is a liar.
+ A: No, I'm not; D is the liar.
+ D: B is a liar to begin with. And also C.
+ C: No, no, no, A and B are both liars.
+ A: By the way, E is also a liar.
+ E: Eh, no, C and D are liars.
+ 
+ There are three liars.
+ 
+ ** Summary
+ 
+ If you write about 61 lines in Alloy and run it for about 0.6 seconds, you can generate a puzzle with this level of difficulty.
+ >||
+ Generating the solution...
+    3537 vars. 110 primary vars. 6552 clauses. 343ms.
+    ... is consistent. 353ms.
+ ||<
+ 
+ ** Elegant solution
+ If x is honest, then anyone who says x is a liar and anyone who says x is a liar are both determined to be liars, so in fact, as an undirected graph, no vertex with a rank greater than 4 can be honest.
+ </body>
+
+[Hatena Diary 2012-04-26 https://nishiohirokazu.hatenadiary.org/archive/2012/04/26]

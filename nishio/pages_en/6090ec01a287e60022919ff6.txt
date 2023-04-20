@@ -1,0 +1,229 @@
+Hatena2009-08-26
+code:hatena
+ <body>
+ *1251243519*Disconnection
+ I tried to connect to the internet with e-mobile and it said "no such device"... yeah, is it broken at this time? Rebooting doesn't fix it...
+ 
+ 
+ I replaced the cable and it worked.
+ 
+ <hr>
+ <a href='http://d.hatena.ne.jp/nishiohirokazu/20090211/1234367644'>Goose Cable for e-mobile - Yasukazu Nishio's Hatena Diary</a>.
+ 
+ >>
+ Some people may not like the fact that it tends to be bulky in a bag because it is a rather thick and small cable that is hard to put together. I am not so much concerned about the bulkiness of the cable, as I am a bulky person. id:akio0911 was very interested in it and said "I will buy it if it is not broken in a few months", so I made a public note to let him know when I bought it.
+ <<
+ 
+ So it lasted a little over 6 months. However, at the end, I thought, "It is bulky and not stable when I carry it around, so if it breaks, I'll change it to a form that attaches to the machine with a suction cup.
+ 
+ *1251251013*500 Internal Server Error
+ Deployed, but it does not work. The screen goes blank. Ugh.
+ >||
+ $ wget http://nishiotools.appspot.com/saichugen
+ --2009-08-26 10:27:23--  http://nishiotools.appspot.com/saichugen
+ You are querying nishiotools.appspot.com in DNS... 74.125.153.141
+ You are connected to nishiotools.appspot.com|74.125.153.141|:80... Connected to...
+ Connection request sent by HTTP, waiting for response... 500 Internal Server Error
+ 2009-08-26 10:27:24 Error 500: Internal Server Error.
+ ||<
+ Hmmm.
+ >||
+ <type 'exceptions.ImportError'>: No module named entrypoint
+ ||<
+ Hmmm.
+ Why http://nishiotools.appspot.com/entrypointが動かなくなっているのかわからないけど追いかけている暇がないなぁ. Anyway, I removed entrypoint from settings.py.
+ 
+ *1251271074*Python cgi module cannot take values containing only semicolons -> "cannot take values starting with a semicolon" is correct.
+ SOLUTION: I heard that semicolons are also used as delimiters. I didn't know that. And cgi.FieldStorage ignores empty fields in its default configuration, so that's why this happened.
+ 
+ <img src="http://gyazo.com/413517a5c08f96e8508b7f70cb7b5cc8.png">
+ 
+ <hr>
+ 
+ If you pass the query "?query=play&hands=1,2,3,4&played=;;&seat_id=hoge" to a CGI like the one below, you will get an error saying "There is no such field as played.
+ In print query, it correctly shows "query=play&hands=1,2,3,4&played=;;&seat_id=hoge", so it seems something is wrong in the cgi module, but I don't have time to follow it, so I'll just write it down. I don't have time to follow up, so I'll just write it down. or "__", it doesn't happen if ";" is "1;2;3", "..." or "__", so it seems to be a phenomenon specific to "values consisting only of semicolons", but it is a mystery. For now, I'm going to use a period instead of a semicolon as the delimiter to avoid this problem.
+ 
+ >|python|
+ import cgi
+ import cgitb
+ cgitb.enable()
+ print "Content-Type: text/html"
+ print
+ import os
+ query = os.environ["QUERY_STRING"]
+ print query
+ 
+ form = cgi.FieldStorage()
+ (omitted)
+ form["played"]
+ ||<
+ 
+ <img src="http://gyazo.com/94f1f90cdead2447e4944a827609fd8b.png">
+ 
+ *1251277355*Diary of Midterm 2.0 Development
+ How do I do "show this only at the beginning of the loop" in a Django template...I want the first item in select to be selected. I looked into it.
+ >>
+ forloop.first True if it is the first loop
+ <<
+ http://djangoproject.jp/doc/ja/1.0/ref/templates/builtins.html#ttag-for
+ 
+ <hr>
+ I came to Saizeriya. If you order a lunch set, you can have all the coffee you want for 600 yen, which also includes a drink bar.
+ But when I sat by the window to try to get a better signal, it was bright and I had to turn the backlight to maximum and it wasn't very cool. It was a mistake.
+ 
+ I added a link to test invoke. I'll test it later by connecting to the net.
+ <hr>
+ I used to set the type of AI invoked via http to "http", but there are some AIs that actively invoke the API via http themselves, so I'd like to separate them into active and passive.
+ 
+ <hr>
+ 
+ What, what, you have a window seat in Tokyo and you can't find a carrier group? What's that?
+ 
+ <hr>
+ 
+ Tested hitting an AI running on another server, worked fine.
+ 
+ - □ Set default account to type=active
+ 
+ Something about keeping the queen of clubs out...
+ I stopped reducing the face-down card from my hand when I turned it over, so I should instead reduce it from my hand when I turn it face-down, or cancel it if it is not in my hand.
+ 
+ <hr>
+ 
+ http://www.nishiohirokazu.org/cgi-bin/saichugen_cgi.pyに置いた大きい順に出すAIがちゃんと動くようになった.
+ 
+ <hr>
+ 
+ Phew. There are a lot of things you don't know until you actually try it. I didn't know that you can't use a semicolon as a delimiter when deciding on a protocol. So, I guess I've accomplished two of my goals if I can just get the documentation in order.
+ 
+ - Goal: Allow humans to fight third parties or third-party registered AIs
+ -- ■ Test if you can beat a random AI running on a different server (nishiotools.appspot.com)
+ -- ■ Use CGI to create an appropriate (put out in order of size?) Create an AI and go to www.nishiohirokazu.orgに置いて and make sure it works against it.
+ --- This sample will be placed in the documentation.
+ 
+ - Goal: A person without administrative privileges can register an AI.
+ -- ■ Fixed that type is set to None because passive cannot be selected on the add user form.
+ -- □ Documentation and samples of written procedures
+ 
+ By the way, the sample CGI is just to show the cards in the hand in order of size.
+ >|python|
+ #!/usr/bin/env python
+ 
+ import cgi
+ import cgitb
+ cgitb.enable()
+ print "Content-Type: text/html"
+ print
+ form = cgi.FieldStorage()
+ query = form["query"].value
+ if query == "available":
+     print "OK"
+ elif query == "play":
+     hand = [
+         int(item) 
+         for item in form["hand"].value.split(",")]
+     played = form["played"].value.split(".")
+     if played[0] == "":
+         played_cards = [[], [], []]
+     else:
+         played_cards = [
+             [int(item) for item in packed_cards.split(",")]
+             for packed_cards in played]
+     seat_id = form["seat_id"].value
+     hand.sort()
+     print hand[-1] # return largest item
+     print played_cards
+ else:
+     print "Saichugen Sample AI"
+ ||<
+ 
+ Let's take a short walk to mark the end of the day for now.
+ 
+ And here's the code for a bot written in Django that randomly selects and returns a hand of cards:.
+ >|python|
+ def handler_random(request):
+     "Sample of a PASSIVE bot that plays randomly."
+     from django.http import HttpResponse
+     from random import choice
+     GET = request.GET
+     query = GET["query"]
+     if query == "avaliable":
+         return HttpResponse("OK")
+ 
+     hand = GET["hand"].split(",")
+     return HttpResponse(choice(hand))
+ ||<
+ <hr>
+ 
+ Putting aside the subject of why the design is the way it is, our priority is to try out the flow of logging in to the 2.0 server to play against other players or AI on an external server, and to register our own AI and check if there are any stumbling blocks. I also need to think about whether to publish on nishiotools or saichugen-online.
+ 
+ <hr>
+ 
+ I'm getting sleepy after eating dinner and catching my breath. I must do what I have to do.
+ 
+ <hr>
+ - ■Make sure you can't sit anywhere but yourself.
+ - I'll have to get someone else who taught me to log in if they weren't logged in. I will fix it tomorrow.
+ - ■ I'd better get a history of the cards that have been given out so far, I'll make one tomorrow.
+ 
+ All right.
+ 
+ Tomorrow's Tasks:.
+ - □ Writing documentation
+ - □ When it becomes Finished, display the score, winners and losers, etc.
+ - □ Put up a list of finished games somewhere.
+ - □ Display for spectators of finished games
+ - □ Log in with an unlogged account -> I don't know what to do after that, right? Need to set up a name
+ - □ Not implemented to turn over the cards to someone other than the middle person at the end of a round.
+ - □ Display public information of games in progress
+ 
+ *1251298769*Mid-term limit 2.0 document draft
+ What is written in (parentheses) is what the user does not need to know.
+ - Sign in with your Google account
+ - See [your home
+ -- (attempts to read UserPref -> does not exist)
+ -- (one UserPref and one default Player are generated)
+ - You can change your name. If you do not change it, your mail address is exposed and we recommend that you change it.
+ - One Google account corresponds to one User and one Player (optional). This is to satisfy needs such as "I have changed my strategy and want to collect score statistics separately" or "I have created a bot and want to separate it from my live self for statistics.
+ -- Whether operated by a human or by a computer through an API, the type is "active" if the operation is active (see below for details).
+ -- passive is used to create a passive type AI, which will be explained later.
+ - Pressing "start game" brings you to the game start screen. This is the "created room" state that is often seen in online games where you can play against other players. This URL is a permalink, so you can tell others about it.
+ -- □I guess I'll have to ask you to log in if someone else who taught me didn't log in. I will fix it tomorrow.
+ - Join yourself or others, or add a passive AI to get 3 players.
+ - Press the link "SEAT" next to your name to be seated.
+ -- □ Make sure you can't sit anywhere but yourself.
+ - Click on a card in your hand to play it.
+ -- If the AI is buggy and doesn't make a move properly, you can invoke below to request another move.
+ -- □ No implementation of turning over the cards by anyone other than the middle player at the end of the round.
+ -- □ I'd better get a history of the cards that have been given out so far, I'll make one tomorrow.
+ - After 15 cards have been played, the display will change to "Finished Game" and no more cards can be played.
+ -- □ Show who won and so on.
+ -- □ Put a list of finished games somewhere.
+ -- □ Display public information of games in progress
+ 
+ When I went to the admin page to delete my UserPref and try it out, id:amachang was already logged in. Quick.
+ 
+ ** passive AI
+ - When a request for ?query=available comes in, return "OK" if available.
+ - Returns a number between 0 and 51 when a request for ?query=play comes in.
+ -- hand=1,2,3, where the information on the hand is passed on, the lower the number, the weaker the hand. 0 is the 1 of clubs.
+ -- The information on "cards played so far" is passed in the form played=4,5,6.7,8,9.10,11,12. The cards are separated by periods to make a comma-separated list of three cards, with the 0th card being you.
+ -- seat_id is a unique ID for each seat; for example, if the same AI is participating in the same game, the seat_id will be different. If you have information you want to share across requests, you can use this as a key.
+ - illustration
+ -- Random@nishio: http://nishiotools.appspot.com/saichugen/ai/random
+ -- Desc@nishio http://www.nishiohirokazu.org/cgi-bin/saichugen_cgi.py
+ - Return the string "OK" or "15".
+ -- after removing the preceding and following white space newline characters, it is split by a white space newline character and takes the 0th element, so you can do debugging output with a line break in between, etc.
+ 
+ ** active AI
+ There are various APIs to play through. I will write tomorrow.
+ </body>
+ <comments>
+ <comment>
+ <username>hagaeru3sei</username>
+ <body>[rfc 2396] might have something to do with it? <br>2.2. Reserved Characters<br>http://www.7key.jp/rfc/2396/rfc2396_2.html#li14<br><br>We used to have such a phenomenon in another language, so we have addressed it by encoding the values (,|;|+) etc. in BASE64 before passing them in the request. <br>As a result, we now use BASE64 encoding before passing values such as (,|;|+) in requests</body>.
+ <timestamp>1251272608</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-08-26 https://nishiohirokazu.hatenadiary.org/archive/2009/08/26]

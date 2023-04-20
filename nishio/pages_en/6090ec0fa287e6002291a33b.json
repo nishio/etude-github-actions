@@ -1,0 +1,27 @@
+Hatena2015-10-21
+code:hatena
+ <body>
+ *1445413738*Story about UnicodeDecodeError in Paho-MQTT -> use bytearray
+ >||
+  File "/usr/local/lib/python2.7/dist-packages/paho/mqtt/client.py", line 1693, in _send_publish
+   upayload = payload.encode('utf-8')
+ 
+ UnicodeDecodeError: 'ascii' codec can't decode byte 0xaf in position 0: ordinal not in range(128)
+ ||<
+ 
+ For some reason, it assumes the payload is ASCII and tries to convert it to UTF-8, so I fell into the trap of "runtime exception only when it is unlucky enough to be a non-ASCII character" in a case where the integer value is binary in struct.pack.
+ 
+ ---
+ 
+ <blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">If you want to use binary because paho-mqtt python client only handles strings, use bytearray or something. The story is here&#10;<a href="https://t.co/zmK4raDlJA">https://t.co/zmK4raDlJA</a></p>&mdash; shirou - Shirou (@r_rudi) <a href="https://twitter.com/r_ rudi/status/656760543815073792">2015, October 21</a></blockquote>
+ <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+ 
+ >||
+ # single('\xfe')  # NG
+ single(bytearray('\xfe'))  # OK
+ ||<
+ 
+ I see, it was OK if I set it to bytearray.
+ </body>
+
+[Hatena Diary 2015-10-21 https://nishiohirokazu.hatenadiary.org/archive/2015/10/21]

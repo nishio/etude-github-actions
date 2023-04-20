@@ -1,0 +1,79 @@
+Hatena2009-09-25
+code:hatena
+ <body>
+ **1253865013*[ObjC]NSInvocation out of bound error (NSInvalidArgumentException) using NSTimer.
+ As it turns out, NSTimer has nothing to do with it, and it seems that this kind of error can occur when the method signature of something is different from what is expected.
+ 
+ When I rewrote the code using NSThread to use NSTimer, an error occurred in the part I did not rewrite, so I thought it might be related to NSTimer, but I was wrong. I guess something that happened to be there became misaligned when the NSTimer was not used. Well, it seems that if you get an NSInvocation error, you should first suspect the method signature.
+ 
+ <hr>
+ I got this error when I used NSTimer:.
+ >>
+ 2009-09-25 15:49:22.628 Camera[11838:20b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[NSInvocation setArgument:atIndex:]: index (2) out of bounds [-1, 1]'
+ <<
+ 
+ A quick google search said, "Maybe the handler's method signature is wrong?" but the handler (convert) signature is not wrong.
+ >|objc|
+ - (void)convert:(NSTimer*)timer;
+ ||<
+ I had no idea what was going on, but I couldn't do anything about it, so I tried if(0)ing all the contents of convert and it started working properly. I thought that the contents of convert was bad, so I changed the comment out range and tried to find out what was wrong...
+ 
+ >||
+ UIImageWriteToSavedPhotosAlbum(outputImage, self, @selector(finish_save_image), nil);
+ ||<
+ 
+ It turns out that commenting out this one line eliminated the error. And the method signature for finish_save_image was incorrect.
+ The documentation required (http://developer.apple.com/iPhone/library/documentation/UIKit/Reference/UIKitFunctionReference/Reference/reference. html#//apple_ref/c/func/UIimageWriteToSavedPhotosAlbum). Resolved.
+ 
+ *1253870660* code by number
+ >|python|
+ {
+ "": [4, 7],
+ "7": [4, 7, 10],
+ "m": [3, 7],
+ "m7": [3, 7, 10],
+ "M7": [4, 7, 11],
+ "mM7": [3, 7, 11],
+ "sus4": [5, 7],
+ "7sus4": [5, 7, 10],
+ "dim": [3, 6, 9],
+ "m7-5": [3, 6, 10],
+ "aug": [4, 8],
+ "add9": [2, 7],
+ "6": [4, 7, 9],
+ "m6": [3, 7, 9]
+ }
+ ||<
+ 
+ *1253871552* mmm
+ CGSConvertARGB8888toRGBA8888
+ 
+ *1253901870*When the Higurashi Cries: Cotton Flushing
+ Read.
+ 
+ scary!
+ 
+ *1253902690* Howitzer of the Day
+ I heard that the score increases by multiples for each chain, so I tried to chain a little more. 50895 points in 4 minutes and 44 seconds of play, Level 20, Max Combo 12. I was thinking too much to set up a chain, and my recovery was not up to par.
+ 
+ Previously here: http://d.hatena.ne.jp/nishiohirokazu/20090924/1253809028
+ </body>
+ <comments>
+ <comment>
+ <username>inajob</username>
+ <body>I have an almost identical one on hand w</body>.
+ <timestamp>1253883895</timestamp>
+ </comment>
+ <comment>
+ <username>nishiohirokazu</username>
+ <body>w</body>
+ <timestamp>1253929807</timestamp>
+ </comment>
+ <comment>
+ <username>Sedat</username>
+ <body>I don't understand any japanese, <br>but as Aral Balkan said:<br>"Code is universal"</body>
+ <timestamp>1311088433</timestamp>
+ </comment>
+ </comments>
+
+[Hatena Diary 2009-09-25 https://nishiohirokazu.hatenadiary.org/archive/2009/09/25]

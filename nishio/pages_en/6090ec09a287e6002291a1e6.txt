@@ -1,0 +1,100 @@
+Hatena2011-12-27
+code:hatena
+ <body>
+ *1324988047* Created Neurony, a language based on the cranial nervous system.
+ ...but my time was up when I showed that supervised and unsupervised learning can be realized with the same structure of neural network. This was supposed to be a story to put over yesterday's "<a href='http://d.hatena.ne.jp/nishiohirokazu/20111226/1324887163'>Genomy, a language based on gene motifs, was created</a>"... .......................
+ 
+ There are various types of machine learning, of which the major categories are "supervised learning" and "unsupervised learning. To put it simply, the purpose of supervised learning is "to be able to classify data by learning data and the correct answers to how the data should be classified," while the purpose of unsupervised learning is "to produce a classification from a large amount of data given without correct answers, by grouping together somewhat similar data. Unsupervised learning is to "create a classification by combining somewhat similar data given a lot of data without correct answers.
+ 
+ and for the same form of network, three basic operations (propagation of excitation through synapses <a href='http://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%8A%E3%83%97%E3%82%B9'>[Wikipedia]</a>, long-term potentiation<a href='http://ja.wikipedia.org/wiki/%E9%95%B7%E6%9C%9F%E5%A2%97%E5%BC%B7'>[Wikipedia]</a>, lateral inhibition<a href='http://en.wikipedia.org/ wiki/Lateral_inhibition'>[Wikipedia]</a>) can be combined in different ways to produce both supervised and unsupervised learning. I confirmed this by actually writing the code this time.
+ 
+ Comparing the source code for supervised and unsupervised learning, we can see that the "set the correct value to the output neuron" in supervised learning is simply replaced by "propagate excitement from the input neuron to the output neuron (propagate) and apply lateral inhibition to the output neuron (winner_takes_all)" in unsupervised learning. winner_takes_all)" in unsupervised learning.
+ 
+ >|diff|
+ --- supervised	2011-12-27 19:27:36.000000000 +0900
+ +++ unsupervised	2011-12-27 19:26:56.000000000 +0900
+ @@ -1,16 +1,16 @@
+ -def supervised():
+ +def unsupervised():
+      input = Neurons(mapper=LEDMapper())
+      output = Neurons(mapper=CharMapper("01"))
+      net = Network(input, output)
+ -    answer = "010101"
+      for i in range(100):
+ -        for d, ans in zip(DATA, answer):
+ +        for d in DATA:
+              input.set(d)
+ -            output.set(ans)
+ +            net.propagate()
+ +            output.winner_takes_all()
+              net.learn()
+  
+      for d in DATA:
+          input.set(d)
+          net.propagate()
+          print d, output.get()
+          print
+ ||<
+ 
+ If you actually run this, you will see that it works properly in both supervised and unsupervised learning.
+ 
+ Below is an example of supervised learning identification:.
+ >||
+ ++++.
+ +..+.
+ +..+.
+ +..+.
+ ++++. 0
+ 
+ ..+..
+ .++..
+ ..+..
+ ..+..
+ ..+.. 1
+ 
+ .++++
+ .+..+
+ .+..+
+ .+..+
+ .++++ 0
+ 
+ ..+..
+ .++..
+ ..+..
+ ..+..
+ .+++. 1
+ ||<
+ 
+ Below is an example of unsupervised learning classification (unsupervised learning does not teach that an input in the form of 0 is 0, so in this example, 1 is classified as cluster 0 and 0 as cluster 1):.
+ >||
+ ++++.
+ +..+.
+ +..+.
+ +..+.
+ ++++. 1
+ 
+ ..+..
+ .++..
+ ..+..
+ ..+..
+ ..+.. 0
+ 
+ .++++
+ .+..+
+ .+..+
+ .+..+
+ .++++ 1
+ 
+ ..+..
+ .++..
+ ..+..
+ ..+..
+ .+++. 0
+ ||<
+ 
+ Then, after creating the model part, we create a language in which the neurons and the network between them are primitives, and say, "Well, let's make an adder. First, make training data for addition and train it about 1,000 times. I was going to say something like "Yes, a network equivalent to the add function has been created," but I ran out of time, so that's all for this time.
+ 
+ Source code here: https://github.com/nishio/neurony/blob/master/main.py
+ </body>
+
+[Hatena Diary 2011-12-27 https://nishiohirokazu.hatenadiary.org/archive/2011/12/27]
