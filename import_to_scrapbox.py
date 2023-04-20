@@ -11,6 +11,7 @@ import os
 import dotenv
 dotenv.load_dotenv()
 SID = os.getenv("SID")
+CSRF = os.getenv("CSRF")
 PROJECT_NAME = os.getenv("DESTINATION_PROJECT_NAME")
 
 
@@ -30,9 +31,10 @@ async def import_pages(project: str, data: Dict[str, Any], init: Dict[str, Any])
         return "No pages to import."
 
     sid = init["sid"]
-    csrf = init.get("csrf")
-    if not csrf:
-        csrf = await get_csrf_token(sid)
+    csrf = init.get("csrf", CSRF)
+    # if not csrf:
+    #     csrf = await get_csrf_token(sid)
+    #     print("crsf", csrf)
 
     headers = {
         "Accept": "application/json, text/plain, */*",
