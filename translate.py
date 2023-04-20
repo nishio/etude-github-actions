@@ -98,6 +98,14 @@ def call_deepl(ja):
 
 #     print("translate:", perf_counter() - start_time)
 
+def generate_line(text):
+    return {
+        "text": text,
+        "created": 946652400,  # 2000-01-01 00:00:00
+        "updated": 946652400,
+        "userId": "582e63d27c56960011aff09e"  # nishio
+    }
+
 
 def translate_from_json_to_json():
     start_time = perf_counter()
@@ -131,16 +139,22 @@ def translate_from_json_to_json():
 
     for page in tqdm(data["pages"]):
         is_updated = False
-        page["title"] = to_english(page["title"])
+        ja_title = page["title"]
+        page["title"] = to_english(ja_title)
         for line in page["lines"]:
             en_text = to_english(line["text"])
             line["text"] = en_text
 
+        page["lines"].extend([
+            generate_line(""),
+            generate_line(
+                f"This page is auto-translated from [/nishio/{ja_title}]"),
+        ])
         # output cache to file
         if is_updated:
             with open(cache_data, "w") as file:
                 json.dump(cache, file, ensure_ascii=False, indent=2)
-            print(f"{perf_counter() - start_time:.1f}", "sec: update cache")
+            # print(f"{perf_counter() - start_time:.1f}", "sec: update cache")
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
     json.dump(data, open("./data_en.json", "w"), ensure_ascii=False, indent=2)
     print("translate:", perf_counter() - start_time)
