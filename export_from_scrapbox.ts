@@ -2,10 +2,9 @@
 import { exportPages, assertString } from "./deps.ts";
 
 const sid = Deno.env.get("SID");
-const exportingProjectName = Deno.env.get("SOURCE_PROJECT_NAME"); //インポート元(本来はprivateプロジェクト)
+const exportingProjectName = "nishio";
 
 assertString(sid);
-assertString(exportingProjectName);
 
 console.log(`Exporting a json file from "/${exportingProjectName}"...`);
 const result = await exportPages(exportingProjectName, {

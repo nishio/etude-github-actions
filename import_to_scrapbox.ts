@@ -2,10 +2,9 @@
 import { importPages, assertString } from "./deps.ts";
 
 const sid = Deno.env.get("SID");
-const importingProjectName = Deno.env.get("DESTINATION_PROJECT_NAME");
+const importingProjectName = "nishio-en";
 
 assertString(sid);
-assertString(importingProjectName);
 
 const jsonString = await Deno.readTextFile("data_en_diff.json");
 const data = JSON.parse(jsonString);
