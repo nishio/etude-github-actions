@@ -1,10 +1,20 @@
 import json
+
+
+def correct(bad, good=None):
+    # if good is None, just print
+
+    if bad in cache[key]:
+        print(key, cache[key])
+        if good is not None:
+            # replace
+            cache[key] = cache[key].replace(bad, good)
+
+
 cache = json.load(open("cache.json", "r"))
 for key in cache:
-    if "Yasukazu Nishio" in cache[key]:
-        print(key, cache[key])
-        # replace
-        cache[key] = cache[key].replace("Yasukazu Nishio", "NISHIO Hirokazu")
+    correct("Yasukazu Nishio", "NISHIO Hirokazu")
+    correct("reader is you", "reader is myself")
 
 # write back
 json.dump(cache, open("cache.json", "w"), ensure_ascii=False, indent=2)
