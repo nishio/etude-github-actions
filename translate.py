@@ -119,6 +119,13 @@ def translate_from_json_to_json():
     cache = json.load(open(cache_data, "r"))
     print("cache length:", len(cache))
 
+    def translate_links(text):
+        keywords = re.findall("\[(.*?)\]", text)
+        for k in keywords:
+            en = cache.get(k)
+            if en:  # translation exists
+                text = text.replace(k, en)
+
     def to_english(text):
         nonlocal is_updated, total, no_cache
         indent, body = split_indent(text)
@@ -160,8 +167,47 @@ def translate_from_json_to_json():
     print("translate:", perf_counter() - start_time)
 
 
+def translate_keywords():
+    start_time = perf_counter()
+    cache_data = "./cache.json"
+    in_file = "./keywords.json"
+    data = json.load(open(in_file, "r"))
+    cache = json.load(open(cache_data, "r"))
+    total = 0
+    no_cache = 0
+
+    def to_english(text):
+        nonlocal total, no_cache
+        indent, body = split_indent(text)
+        if not body:
+            return text
+        total += len(bytes(body, "utf-8"))
+
+        if body not in cache:
+            if not contains_japanese_characters(body):
+                return text
+
+            no_cache += len(bytes(body, "utf-8"))
+            en = call_deepl(body)
+            cache[body] = en
+
+        return indent + cache[body]
+
+    print(len(data))
+    for kw in tqdm(data):
+        # print(kw, to_english(kw))
+        to_english(kw)
+
+    with open(cache_data, "w") as file:
+        json.dump(cache, file, ensure_ascii=False, indent=2)
+
+    print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
+    print("translate:", perf_counter() - start_time)
+
+
 def main():
-    translate_from_json_to_json()
+    # translate_from_json_to_json()
+    translate_keywords()
 
 
 if __name__ == "__main__":
