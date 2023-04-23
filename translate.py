@@ -120,11 +120,15 @@ def translate_from_json_to_json():
     print("cache length:", len(cache))
 
     def translate_links(text):
+        # print(text)
         keywords = re.findall("\[(.*?)\]", text)
+        # print(keywords)
         for k in keywords:
             en = cache.get(k)
             if en:  # translation exists
-                text = text.replace(k, en)
+                text = text.replace(f"[{k}]", f" [{en}] ")
+        # print(text)
+        return text
 
     def to_english(text):
         nonlocal is_updated, total, no_cache
@@ -144,13 +148,20 @@ def translate_from_json_to_json():
 
         return indent + cache[body]
 
-    for page in tqdm(data["pages"]):
+    # sort page by its updated time
+    pages = list(sorted(
+        data["pages"],
+        key=lambda x: x["updated"], reverse=True))
+
+    for page in tqdm(pages):
         is_updated = False
         ja_title = page["title"]
         page["title"] = to_english(ja_title)
         for line in page["lines"]:
-            en_text = to_english(line["text"])
+            tl_text = translate_links(line["text"])
+            en_text = to_english(tl_text)
             line["text"] = en_text
+            # print(en_text)
 
         page["lines"].extend([
             generate_line(""),
@@ -206,8 +217,8 @@ def translate_keywords():
 
 
 def main():
-    # translate_from_json_to_json()
-    translate_keywords()
+    translate_from_json_to_json()
+    # translate_keywords()
 
 
 if __name__ == "__main__":
