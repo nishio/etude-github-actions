@@ -16,6 +16,10 @@ def contains_japanese_characters(s):
     True
     >>> contains_japanese_characters("漢字")
     True
+    >>> contains_japanese_characters("A: 🟩🟩🟩🟥🟥🟥⬜⬜⬜ v.s. B: 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥")
+    False
+    >>> contains_japanese_characters("🤔")
+    False
     """
     if japanese.search(s):
         return True
