@@ -28,9 +28,23 @@ def contains_japanese_characters(s):
 
 
 def get_body_of_line(line):
-    indent, tail = re.match("^([ \t]*)(.*)", line).groups()
+    """
+    >>> get_body_of_line("  text ")
+    ('  ', 'text', '')
+    >>> get_body_of_line("  Q&A[gpt-4.icon][nishio.icon]")
+    ('  ', 'Q&A', '[gpt-4.icon][nishio.icon]')
+    >>> get_body_of_line("[nishio.icon][gpt-4.icon]Explain shortly")
+    ('[nishio.icon][gpt-4.icon]', 'Explain shortly', '')
+    >>> get_body_of_line("　　[GPT-4.icon]AとBの意見の違い")
+    """
+    indent, tail = re.match("^([ \t\u3000]*)(.*)", line).groups()
     tail = tail.rstrip()  # remove trailing spaces
-    return indent, tail
+    # remove icons from tail
+    # regexp matches [nishio.icon] and [gpt-4.icon]
+    ICON = r"\[.*?\.icon\]"
+    prefix, body, postfix = re.match(
+        f"^((?:{ICON})*)(.*?)((?:{ICON})*)$", tail).groups()
+    return (indent + prefix, body, postfix)
 
 
 if __name__ == "__main__":
