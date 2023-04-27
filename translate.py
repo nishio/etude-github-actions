@@ -165,7 +165,7 @@ def main():
     translate_from_json_to_json()
 
 
-def local_trial():
+def local_trial_10pages():
     print("running local trial")
     in_file = "./data.json"
     data = json.load(open(in_file, "r"))
@@ -188,5 +188,6 @@ if __name__ == "__main__":
         main()
     else:
         print('Not running within a GitHub Actions environment')
-        local_trial()
+        main()
+        # local_trial_10pages()
         # translate_keywords()
