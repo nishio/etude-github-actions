@@ -82,6 +82,32 @@ def to_english(text):
     return prefix + cache[body] + postfix
 
 
+def translate_one_page(page):
+    is_updated = False
+    ja_title = page["title"]
+    page["title"] = to_english(ja_title)
+
+    def translate_line(line):
+        tl_text = translate_links(line["text"])
+        en_text = to_english(tl_text)
+        return {"text": en_text}
+
+    # 各行に対して翻訳リクエストを送信
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        translated_lines = list(executor.map(translate_line, page["lines"]))
+
+    # 翻訳された行を元のリストに戻す
+    for i, translated_line in enumerate(translated_lines):
+        page["lines"][i].update(translated_line)
+
+    page["lines"].extend([
+        generate_line("---"),
+        generate_line(FOOTER.format(ja_title=ja_title)),
+    ])
+
+    return is_updated
+
+
 def translate_pages(pages):
     global total, no_cache, cache
     total = 0
@@ -92,24 +118,13 @@ def translate_pages(pages):
     print("cache length:", len(cache))
 
     for page in tqdm(pages):
-        is_updated = False
-        ja_title = page["title"]
-        page["title"] = to_english(ja_title)
-        for line in page["lines"]:
-            tl_text = translate_links(line["text"])
-            en_text = to_english(tl_text)
-            line["text"] = en_text
-            # print(en_text)
-
-        page["lines"].extend([
-            generate_line("---"),
-            generate_line(FOOTER.format(ja_title=ja_title)),
-        ])
-        # output cache to file
+        is_updated = translate_one_page(page)  # update destructively
+        # output cache to file if updated
         if is_updated:
             with open(cache_data, "w") as file:
                 json.dump(cache, file, ensure_ascii=False, indent=2)
             # print(f"{perf_counter() - start_time:.1f}", "sec: update cache")
+
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
 
 
