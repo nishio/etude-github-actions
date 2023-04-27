@@ -1,3 +1,4 @@
+import concurrent.futures
 from utils import contains_japanese_characters, get_body_of_line
 import requests
 import json
@@ -49,42 +50,46 @@ def generate_line(text):
     }
 
 
+def translate_links(text):
+    global cache
+    # print(text)
+    keywords = re.findall("\[(.*?)\]", text)
+    # print(keywords)
+    for k in keywords:
+        en = cache.get(k)
+        if en:  # translation exists
+            text = text.replace(f"[{k}]", f" [{en}] ")
+    # print(text)
+    return text
+
+
+def to_english(text):
+    global is_updated, total, no_cache
+    prefix, body, postfix = get_body_of_line(text)
+    if not body:
+        return text
+    total += len(bytes(body, "utf-8"))
+
+    if body not in cache:
+        if not contains_japanese_characters(body):
+            return text
+
+        no_cache += len(bytes(body, "utf-8"))
+        en = call_deepl(body)
+        cache[body] = en
+        is_updated = True
+
+    return prefix + cache[body] + postfix
+
+
 def translate_pages(pages):
+    global total, no_cache, cache
     total = 0
     no_cache = 0
     # load cache from file
     cache_data = "./cache.json"
     cache = json.load(open(cache_data, "r"))
     print("cache length:", len(cache))
-
-    def translate_links(text):
-        # print(text)
-        keywords = re.findall("\[(.*?)\]", text)
-        # print(keywords)
-        for k in keywords:
-            en = cache.get(k)
-            if en:  # translation exists
-                text = text.replace(f"[{k}]", f" [{en}] ")
-        # print(text)
-        return text
-
-    def to_english(text):
-        nonlocal is_updated, total, no_cache
-        prefix, body, postfix = get_body_of_line(text)
-        if not body:
-            return text
-        total += len(bytes(body, "utf-8"))
-
-        if body not in cache:
-            if not contains_japanese_characters(body):
-                return text
-
-            no_cache += len(bytes(body, "utf-8"))
-            en = call_deepl(body)
-            cache[body] = en
-            is_updated = True
-
-        return prefix + cache[body] + postfix
 
     for page in tqdm(pages):
         is_updated = False
