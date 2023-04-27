@@ -1,10 +1,6 @@
-from is_japanese import contains_japanese_characters
+from utils import contains_japanese_characters, get_body_of_line
 import requests
-import asyncio
 import json
-from urllib.parse import quote
-import aiohttp
-from collections import namedtuple
 import os
 import re
 from tqdm import tqdm
@@ -18,12 +14,6 @@ This page is auto-translated from [/nishio/{ja_title}].
  feel free to let me know at @nishio_en https://twitter.com/nishio_en.
  I'm very happy to spread my thought to non-Japanese readers.
 """.replace("\n", "")
-
-
-def split_indent(line):
-    indent, tail = re.match("^([ \t]*)(.*)", line).groups()
-    tail = tail.rstrip()  # remove trailing spaces
-    return indent, tail
 
 
 def call_deepl(ja):
@@ -172,8 +162,28 @@ def translate_keywords():
 
 def main():
     translate_from_json_to_json()
-    # translate_keywords()
+
+
+def local_trial():
+    print("running local trial")
+    in_file = "./data.json"
+    data = json.load(open(in_file, "r"))
+
+    # sort page by its updated time
+    pages = list(sorted(
+        data["pages"],
+        key=lambda x: x["updated"], reverse=True))[:10]
+
+    translate_pages(pages)  # update pages(and data) destructively
+    json.dump(data,
+              open("./data_en_local.json", "w"),
+              ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
-    main()
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        main()
+    else:
+        print('Not running within a GitHub Actions environment')
+        local_trial()
+        # translate_keywords()

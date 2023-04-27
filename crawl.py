@@ -1,4 +1,4 @@
-from is_japanese import contains_japanese_characters
+from utils import contains_japanese_characters
 import requests
 import asyncio
 import json

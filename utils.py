@@ -27,5 +27,11 @@ def contains_japanese_characters(s):
         return False
 
 
+def get_body_of_line(line):
+    indent, tail = re.match("^([ \t]*)(.*)", line).groups()
+    tail = tail.rstrip()  # remove trailing spaces
+    return indent, tail
+
+
 if __name__ == "__main__":
     doctest.testmod()
