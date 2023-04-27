@@ -15,6 +15,9 @@ cache = json.load(open("cache.json", "r"))
 for key in cache:
     correct("Yasukazu Nishio", "NISHIO Hirokazu")
     correct("reader is you", "reader is myself")
-
+    correct(
+        "Polis Experience Report: Do you want to investigate the causes of terrorism?",
+        "Polis Experience Report: Should we investigate the causes of terrorism?")
+    correct("deliberative", "deliberation")
 # write back
 json.dump(cache, open("cache.json", "w"), ensure_ascii=False, indent=2)
