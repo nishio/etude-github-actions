@@ -12,6 +12,12 @@ from time import sleep, perf_counter
 import dotenv
 dotenv.load_dotenv()
 DEEPL_KEY = os.getenv("DEEPL_KEY")
+FOOTER = """
+This page is auto-translated from [/nishio/{ja_title}].
+ If you looks something interesting but the auto-translated English is not good enough to understand it,
+ feel free to let me know at @nishio_en https://twitter.com/nishio_en.
+ I'm very happy to spread my thought to non-Japanese readers.
+""".replace("\n", "")
 
 
 def split_indent(line):
@@ -109,9 +115,8 @@ def translate_from_json_to_json():
             # print(en_text)
 
         page["lines"].extend([
-            generate_line(""),
-            generate_line(
-                f"This page is auto-translated from [/nishio/{ja_title}]"),
+            generate_line("---"),
+            generate_line(FOOTER.format(ja_title=ja_title)),
         ])
         # output cache to file
         if is_updated:
