@@ -129,30 +129,15 @@ def translate_from_json_to_json():
 
 
 def translate_keywords():
+    global total, no_cache, cache
     start_time = perf_counter()
     cache_data = "./cache.json"
-    in_file = "./keywords.json"
-    data = json.load(open(in_file, "r"))
     cache = json.load(open(cache_data, "r"))
     total = 0
     no_cache = 0
 
-    def to_english(text):
-        nonlocal total, no_cache
-        prefix, body, postfix = get_body_of_line(text)
-        if not body:
-            return text
-        total += len(bytes(body, "utf-8"))
-
-        if body not in cache:
-            if not contains_japanese_characters(body):
-                return text
-
-            no_cache += len(bytes(body, "utf-8"))
-            en = call_deepl(body)
-            cache[body] = en
-
-        return prefix + cache[body] + postfix
+    in_file = "./keywords.json"
+    data = json.load(open(in_file, "r"))
 
     print(len(data))
     for kw in tqdm(data):
