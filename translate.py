@@ -30,7 +30,8 @@ def call_deepl(ja):
             response = requests.post(url, headers=headers, data=data)
             response.raise_for_status()
             break
-        except:
+        except Exception as e:
+            print(e)
             sleep(60)
             continue
 
@@ -69,7 +70,7 @@ def translate_pages(pages):
 
     def to_english(text):
         nonlocal is_updated, total, no_cache
-        indent, body = split_indent(text)
+        prefix, body, postfix = get_body_of_line(text)
         if not body:
             return text
         total += len(bytes(body, "utf-8"))
@@ -83,7 +84,7 @@ def translate_pages(pages):
             cache[body] = en
             is_updated = True
 
-        return indent + cache[body]
+        return prefix + cache[body] + postfix
 
     for page in tqdm(pages):
         is_updated = False
@@ -133,7 +134,7 @@ def translate_keywords():
 
     def to_english(text):
         nonlocal total, no_cache
-        indent, body = split_indent(text)
+        prefix, body, postfix = get_body_of_line(text)
         if not body:
             return text
         total += len(bytes(body, "utf-8"))
@@ -146,7 +147,7 @@ def translate_keywords():
             en = call_deepl(body)
             cache[body] = en
 
-        return indent + cache[body]
+        return prefix + cache[body] + postfix
 
     print(len(data))
     for kw in tqdm(data):
@@ -173,6 +174,7 @@ def local_trial():
     pages = list(sorted(
         data["pages"],
         key=lambda x: x["updated"], reverse=True))[:10]
+    data["pages"] = pages  # to omit other pages
 
     translate_pages(pages)  # update pages(and data) destructively
     json.dump(data,
@@ -181,6 +183,7 @@ def local_trial():
 
 
 if __name__ == "__main__":
+    # to avoid trials on local environment break CI on GitHub Actions
     if os.environ.get('GITHUB_ACTIONS') == 'true':
         main()
     else:
