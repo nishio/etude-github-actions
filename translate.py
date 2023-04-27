@@ -58,15 +58,11 @@ def generate_line(text):
     }
 
 
-def translate_from_json_to_json():
-    start_time = perf_counter()
-    cache_data = "./cache.json"
-    in_file = "./data.json"
-    data = json.load(open(in_file, "r"))
-
+def translate_pages(pages):
     total = 0
     no_cache = 0
     # load cache from file
+    cache_data = "./cache.json"
     cache = json.load(open(cache_data, "r"))
     print("cache length:", len(cache))
 
@@ -99,11 +95,6 @@ def translate_from_json_to_json():
 
         return indent + cache[body]
 
-    # sort page by its updated time
-    pages = list(sorted(
-        data["pages"],
-        key=lambda x: x["updated"], reverse=True))
-
     for page in tqdm(pages):
         is_updated = False
         ja_title = page["title"]
@@ -124,6 +115,19 @@ def translate_from_json_to_json():
                 json.dump(cache, file, ensure_ascii=False, indent=2)
             # print(f"{perf_counter() - start_time:.1f}", "sec: update cache")
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
+
+
+def translate_from_json_to_json():
+    start_time = perf_counter()
+    in_file = "./data.json"
+    data = json.load(open(in_file, "r"))
+
+    # sort page by its updated time
+    pages = list(sorted(
+        data["pages"],
+        key=lambda x: x["updated"], reverse=True))
+
+    translate_pages(pages)  # update pages(and data) destructively
     json.dump(data, open("./data_en.json", "w"), ensure_ascii=False, indent=2)
     print("translate:", perf_counter() - start_time)
 
