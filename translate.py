@@ -111,7 +111,7 @@ def translate_one_page(page):
         generate_line(FOOTER.format(ja_title=ja_title)),
     ])
 
-    return is_updated
+    return is_updated  # currently it is always False
 
 
 def translate_pages(pages):
@@ -126,10 +126,14 @@ def translate_pages(pages):
     for page in tqdm(pages):
         is_updated = translate_one_page(page)  # update destructively
         # output cache to file if updated
-        if is_updated:
+        if is_updated:  # currently it is always False
             with open(cache_data, "w") as file:
                 json.dump(cache, file, ensure_ascii=False, indent=2)
             # print(f"{perf_counter() - start_time:.1f}", "sec: update cache")
+
+    # force output cache to file
+    with open(cache_data, "w") as file:
+        json.dump(cache, file, ensure_ascii=False, indent=2)
 
     print("total", total, "no_cache", no_cache, "ratio", no_cache / total)
 
