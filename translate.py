@@ -92,9 +92,15 @@ def translate_one_page(page):
         en_text = to_english(tl_text)
         return {"text": en_text}
 
+    target_lines = []
+    for line in page["lines"]:
+        if "[enjabelow.icon]" in line["text"]:
+            break
+        target_lines.append(line)
+
     # 各行に対して翻訳リクエストを送信
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        translated_lines = list(executor.map(translate_line, page["lines"]))
+        translated_lines = list(executor.map(translate_line, target_lines))
 
     # 翻訳された行を元のリストに戻す
     for i, translated_line in enumerate(translated_lines):
