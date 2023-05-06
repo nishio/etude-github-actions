@@ -45,16 +45,16 @@ jobs:
       - name: Make diff (data_en.json and nishio/data_en_prev.json to data_en_diff.json)
         run: python diff_json.py
 
-      - name: Import to Scrapbox(data_en_diff.json to /nishio-en)
-        run: ./import_to_scrapbox.sh
-
       - name: store previous data
         run: |
           mv data.json nishio
-          mv data_en.json nishio/data_en_prev.json
+          cp data_en.json nishio/data_en_prev.json
 
       - name: Commit files
         run: ./commit.sh
+
+      - name: Import to Scrapbox(data_en_diff.json to /nishio-en)
+        run: ./import_to_scrapbox.sh
 
       # - name: Set Date
       #   env:
