@@ -30,6 +30,18 @@ jobs:
       - run: pip install -r requirements.txt
 
       - uses: denoland/setup-deno@v1
+        with:
+          deno-version: '1.40.x'
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.deno
+            ~/.cache/deno
+          key: ${{ runner.os }}-deno-${{ hashFiles('**/deps.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-deno-
 
       # - name: Remove old pages
       #   run: |
