@@ -13,11 +13,14 @@ for page in curr["pages"]:
     if prev_page["lines"] != page["lines"]:
         updated_pages.append(page)
 
+print(f"Total pages in current data: {len(curr['pages'])}")
+print(f"Total pages in previous data: {len(prev['pages'])}")
 print(f"Total updated pages: {len(updated_pages)}")
 
-# Take only first 10 pages for testing
-test_pages = updated_pages[:10]
-print(f"Using first {len(test_pages)} pages for test")
+# Take first 100 pages for testing
+test_pages = updated_pages[:100]
+print(f"Using first {len(test_pages)} pages for import")
+print(f"Pages to be imported: {[page['title'] for page in test_pages]}")
 
 # write diff to file
 curr["pages"] = test_pages
