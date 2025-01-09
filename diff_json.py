@@ -13,9 +13,13 @@ for page in curr["pages"]:
     if prev_page["lines"] != page["lines"]:
         updated_pages.append(page)
 
-print(len(updated_pages))
+print(f"Total updated pages: {len(updated_pages)}")
+
+# Take only first 10 pages for testing
+test_pages = updated_pages[:10]
+print(f"Using first {len(test_pages)} pages for test")
 
 # write diff to file
-curr["pages"] = updated_pages
+curr["pages"] = test_pages
 with open("data_en_diff.json", "w") as file:
     json.dump(curr, file, ensure_ascii=False, indent=2)
