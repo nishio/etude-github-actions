@@ -7,6 +7,7 @@ import re
 from tqdm import tqdm
 from time import sleep, perf_counter
 import dotenv
+
 dotenv.load_dotenv()
 DEEPL_KEY = os.getenv("DEEPL_KEY")
 FOOTER = """
@@ -14,7 +15,9 @@ This page is auto-translated from [/nishio/{ja_title}] using DeepL.
  If you looks something interesting but the auto-translated English is not good enough to understand it,
  feel free to let me know at [@nishio_en https://twitter.com/nishio_en].
  I'm very happy to spread my thought to non-Japanese readers.
-""".replace("\n", "")
+""".replace(
+    "\n", ""
+)
 
 
 def call_deepl(ja):
@@ -46,7 +49,7 @@ def generate_line(text):
         "text": text,
         "created": 946652400,  # 2000-01-01 00:00:00
         "updated": 946652400,
-        "userId": "582e63d27c56960011aff09e"  # nishio
+        "userId": "582e63d27c56960011aff09e",  # nishio
     }
 
 
@@ -85,7 +88,7 @@ def to_english(text):
 def translate_one_page(page):
     is_updated = False
     ja_title = page["title"]
-    page["title"] = to_english(ja_title)
+    en_title = to_english(ja_title)
 
     def translate_line(line):
         tl_text = translate_links(line["text"])
@@ -96,6 +99,7 @@ def translate_one_page(page):
     for line in page["lines"]:
         if "[enjabelow.icon]" in line["text"]:
             break
+
         target_lines.append(line)
 
     # 各行に対して翻訳リクエストを送信
@@ -106,10 +110,13 @@ def translate_one_page(page):
     for i, translated_line in enumerate(translated_lines):
         page["lines"][i].update(translated_line)
 
-    page["lines"].extend([
-        generate_line("---"),
-        generate_line(FOOTER.format(ja_title=ja_title)),
-    ])
+    page["title"] = en_title
+    page["lines"].extend(
+        [
+            generate_line("---"),
+            generate_line(FOOTER.format(ja_title=ja_title)),
+        ]
+    )
 
     return is_updated  # currently it is always False
 
@@ -144,9 +151,7 @@ def translate_from_json_to_json():
     data = json.load(open(in_file, "r"))
 
     # sort page by its updated time
-    pages = list(sorted(
-        data["pages"],
-        key=lambda x: x["updated"], reverse=True))
+    pages = list(sorted(data["pages"], key=lambda x: x["updated"], reverse=True))
 
     translate_pages(pages)  # update pages(and data) destructively
     json.dump(data, open("./data_en.json", "w"), ensure_ascii=False, indent=2)
@@ -186,23 +191,19 @@ def local_trial_10pages():
     data = json.load(open(in_file, "r"))
 
     # sort page by its updated time
-    pages = list(sorted(
-        data["pages"],
-        key=lambda x: x["updated"], reverse=True))[:10]
+    pages = list(sorted(data["pages"], key=lambda x: x["updated"], reverse=True))[:10]
     data["pages"] = pages  # to omit other pages
 
     translate_pages(pages)  # update pages(and data) destructively
-    json.dump(data,
-              open("./data_en_local.json", "w"),
-              ensure_ascii=False, indent=2)
+    json.dump(data, open("./data_en_local.json", "w"), ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
     # to avoid trials on local environment break CI on GitHub Actions
-    if os.environ.get('GITHUB_ACTIONS') == 'true':
+    if os.environ.get("GITHUB_ACTIONS") == "true":
         main()
     else:
-        print('Not running within a GitHub Actions environment')
+        print("Not running within a GitHub Actions environment")
         main()
         # local_trial_10pages()
         # translate_keywords()
