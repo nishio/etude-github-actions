@@ -1,0 +1,45 @@
+name: Auto-translate /nishio (Commit)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * *'  # JST 6:00
+
+env:
+  SID: ${{ secrets.SID }}
+  DEEPL_KEY: ${{ secrets.DEEPL_KEY }}
+
+jobs:
+  build:
+    permissions:
+      contents: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.4'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install -r requirements.txt
+
+      - uses: denoland/setup-deno@v1
+
+      - name: Export from Scrapbox(/nishio to data.json)
+        run: ./export_from_scrapbox.sh
+
+      - name: Translate (data.json to data_en.json)
+        run: python translate.py
+
+      - name: Make diff (data_en.json and nishio/data_en_prev.json to data_en_diff.json)
+        run: python diff_json.py
+
+      - name: store previous data
+        run: |
+          mv data.json nishio
+          cp data_en.json nishio/data_en_prev.json
+
+      - name: Commit files
+        run: ./commit.sh

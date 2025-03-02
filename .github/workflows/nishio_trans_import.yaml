@@ -1,0 +1,38 @@
+name: Auto-translate /nishio (Import)
+
+on:
+  workflow_run:
+    workflows: ["Auto-translate /nishio (Commit)"]
+    types:
+      - completed
+
+env:
+  SID: ${{ secrets.SID }}
+  DEEPL_KEY: ${{ secrets.DEEPL_KEY }}
+
+jobs:
+  import:
+    # このジョブは、参照されたワークフローが成功した場合にのみ実行されます
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: 'read'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.4'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install -r requirements.txt
+
+      - uses: denoland/setup-deno@v1
+
+      # 最新のコミットを取得
+      - name: Fetch latest changes
+        run: git pull
+
+      - name: Import to Scrapbox(data_en_diff.json to /nishio-en)
+        run: ./import_to_scrapbox.sh
