@@ -56,7 +56,7 @@ def generate_line(text):
 def translate_links(text):
     global cache
     # print(text)
-    keywords = re.findall("\[(.*?)\]", text)
+    keywords = re.findall(r"\[(.*?)\]", text)
     # print(keywords)
     for k in keywords:
         en = cache.get(k)
@@ -86,6 +86,12 @@ def to_english(text):
 
 
 def translate_one_page(page):
+    # Check if the page has [en.icon] tag
+    for line in page["lines"]:
+        if "[en.icon]" in line["text"]:
+            # Skip translation for this page
+            return False
+            
     is_updated = False
     ja_title = page["title"]
     en_title = to_english(ja_title)
