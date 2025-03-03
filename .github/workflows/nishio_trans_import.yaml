@@ -1,6 +1,7 @@
 name: Auto-translate /nishio (Import)
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Auto-translate /nishio (Commit)"]
     types:
@@ -30,9 +31,11 @@ jobs:
 
       - uses: denoland/setup-deno@v1
 
-      # 最新のコミットを取得
-      - name: Fetch latest changes
-        run: git pull
+      # auto-updateブランチから最新の変更を取得
+      - name: Fetch latest changes from auto-update branch
+        run: |
+          git fetch origin auto-update
+          git checkout auto-update
 
       - name: Import to Scrapbox(data_en_diff.json to /nishio-en)
         run: ./import_to_scrapbox.sh
