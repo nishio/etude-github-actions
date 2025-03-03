@@ -19,7 +19,7 @@ else
 fi
 
 # 変更をコミット
-git add -f nishio cache.json
+git add -f nishio cache.json data_en_diff.json
 git commit -m "Update pages"
 
 # プッシュ（強制プッシュなし）
