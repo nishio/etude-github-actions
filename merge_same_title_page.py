@@ -2,13 +2,13 @@ import json
 import copy
 from collections import Counter
 
-# data_en_diff.jsonを読む
-with open("data_en_diff.json", "r", encoding="utf-8") as f:
-    data_en_diff = json.load(f)
+# data_en.jsonを読む
+with open("data_en.json", "r", encoding="utf-8") as f:
+    data_en = json.load(f)
 
-# data_en_diff.pages.titleを取得して何件あるか確認
-titles = [page["title"] for page in data_en_diff["pages"]]
-print(f"data_en_diff.jsonのタイトル数: {len(titles)}")
+# data_en.pages.titleを取得して何件あるか確認
+titles = [page["title"] for page in data_en["pages"]]
+print(f"data_en.jsonのタイトル数: {len(titles)}")
 
 # タイトルの重複をチェックし、タイトルごとにページのインデックスを保存
 # 大文字小文字を区別せずにチェック
@@ -16,7 +16,7 @@ title_indices = {}
 duplicates = []
 title_case_map = {}  # 小文字のタイトルから元のタイトルへのマッピング
 
-for i, page in enumerate(data_en_diff["pages"]):
+for i, page in enumerate(data_en["pages"]):
     title = page["title"]
     title_lower = title.lower()  # タイトルを小文字に変換
 
@@ -37,7 +37,7 @@ print(f"\n重複タイトル数（大文字小文字を区別しない）: {len(
 new_pages = []
 
 # 重複していないタイトルのページをそのまま追加
-for page in data_en_diff["pages"]:
+for page in data_en["pages"]:
     title = page["title"]
     title_lower = title.lower()
     if title_lower not in duplicates:
@@ -49,7 +49,7 @@ for title_lower in duplicates:
     indices = title_indices[title_lower]
 
     # updatedの値でソート（新しい順）
-    pages_to_merge = [data_en_diff["pages"][idx] for idx in indices]
+    pages_to_merge = [data_en["pages"][idx] for idx in indices]
     pages_to_merge.sort(key=lambda x: x.get("updated", 0), reverse=True)
 
     # マージされたページを作成
@@ -65,7 +65,7 @@ for title_lower in duplicates:
     new_pages.append(merged_page)
 
 # マージ結果の報告
-print(f"\n元のページ数: {len(data_en_diff['pages'])}")
+print(f"\n元のページ数: {len(data_en['pages'])}")
 print(f"マージ後のページ数: {len(new_pages)}")
 
 # マージ後のタイトルの重複をチェック（大文字小文字を区別しない）
@@ -95,16 +95,16 @@ for i, title_lower in enumerate(duplicates[:5]):
             print(f"  {line[:100]}..." if len(line) > 100 else f"  {line}")
 
 # マージされたデータを元のJSONファイルに保存
-data_en_diff["pages"] = new_pages
+data_en["pages"] = new_pages
 
-with open("data_en_diff.json", "w", encoding="utf-8") as f:
-    json.dump(data_en_diff, f, ensure_ascii=False, indent=2)
+with open("data_en.json", "w", encoding="utf-8") as f:
+    json.dump(data_en, f, ensure_ascii=False, indent=2)
 
-print("\nマージされたデータを data_en_diff.json に保存しました。")
+print("\nマージされたデータを data_en.json に保存しました。")
 
 # マージされたデータを読み込んで重複がないか詳細に確認（大文字小文字を区別しない）
 print("\n=== マージされたデータの詳細確認（大文字小文字を区別しない） ===")
-with open("data_en_diff.json", "r", encoding="utf-8") as f:
+with open("data_en.json", "r", encoding="utf-8") as f:
     merged_data = json.load(f)
 
 # タイトルの重複を詳細にチェック（大文字小文字を区別しない）
