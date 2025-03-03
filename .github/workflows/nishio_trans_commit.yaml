@@ -33,6 +33,16 @@ jobs:
       - name: Translate (data.json to data_en.json)
         run: python translate.py
 
+      # 新しいステップを追加: 同一タイトルのページをマージ
+      - name: Merge pages with same title
+        run: |
+          # マージ前のデータをバックアップ
+          cp data_en.json data_en_backup.json
+          # 同一タイトルのページをマージ
+          python merge_same_title_page.py
+          # マージ結果を確認
+          echo "Merged duplicate titles in data_en.json"
+
       - name: Make diff (data_en.json and nishio/data_en_prev.json to data_en_diff.json)
         run: python diff_json.py
 
