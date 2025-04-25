@@ -1,31 +1,151 @@
 # etude-github-actions
 
-このリポジトリはScrapboxページを日本語から英語に自動翻訳するためのGitHub Actionsワークフローです。詳細は[Scrapboxページ](https://scrapbox.io/nishio/etude-github-actions)を参照してください。
+This repository contains GitHub Actions workflows for automatic translation and backup of Scrapbox pages. The primary function is to export pages from a Japanese Scrapbox project, translate them to English using DeepL API, and import them to an English Scrapbox project. For more details, see [my Scrapbox](https://scrapbox.io/nishio/etude-github-actions).
 
-## リポジトリの概要
+## Repository Overview
 
-このプロジェクトは以下の機能を提供します：
+This project provides the following features:
 
-1. **自動翻訳ワークフロー**：
-   - Scrapboxプロジェクト「/nishio」から日本語ページをエクスポート
-   - DeepL APIを使用して英語に翻訳
-   - 翻訳されたコンテンツをScrapboxプロジェクト「/nishio-en」にインポート
+1. **Automated Translation Workflow**:
+   - Export Japanese pages from the Scrapbox project "/nishio"
+   - Translate content to English using DeepL API
+   - Import translated content to the Scrapbox project "/nishio-en"
 
-2. **主要コンポーネント**：
-   - Scrapboxページのエクスポート（Deno/TypeScript）
-   - 日本語から英語への翻訳（Python/DeepL API）
-   - 更新されたページの差分検出（Python）
-   - 翻訳されたページのScrapboxへのインポート（Deno/TypeScript）
+2. **Key Components**:
+   - Scrapbox page export (Deno/TypeScript)
+   - Japanese to English translation (Python/DeepL API)
+   - Updated page difference detection (Python)
+   - Translated page import to Scrapbox (Deno/TypeScript)
 
-3. **自動化スケジュール**：
-   - 毎日JST 6:00（UTC 21:00）に自動実行
-   - 手動実行も可能（GitHub Actionsのワークフロー画面から）
+3. **Automation Schedule**:
+   - Automatically runs daily at 6:00 JST (21:00 UTC)
+   - Can also be manually triggered from the GitHub Actions workflow interface
+
+## Requirements
+
+- GitHub account with repository access
+- Scrapbox account with projects to export from and import to
+- DeepL API key for translation
+- Scrapbox session ID (SID) for authentication
+
+## Repository Structure
+
+- `.github/workflows/`: Contains GitHub Actions workflow configurations
+- `scripts/`: Contains utility scripts for the translation process
+- `nishio/`: Directory for storing exported and translated data
+
+## GitHub Actions Workflows
+
+This project uses GitHub Actions to automate the translation process:
+
+### Workflow: Auto-translate /nishio (Commit)
+
+File: `.github/workflows/nishio_trans_commit.yaml`
+
+#### Execution Timing
+- Automatically runs daily at 6:00 JST (21:00 UTC)
+- Can be manually triggered (workflow_dispatch)
+
+#### Process Flow
+1. **Export Data from Scrapbox**
+   - Retrieves page data from the `/nishio` project
+   - Saves as `data.json`
+   - Script: `export_from_scrapbox.sh` → `export_from_scrapbox.ts`
+
+2. **Translate from Japanese to English**
+   - Uses DeepL API to translate content in `data.json` to English
+   - Saves as `data_en.json`
+   - Caches translation results in `cache.json` to prevent re-translating the same text
+   - Script: `translate.py`
+
+3. **Merge Pages with Same Title**
+   - Identifies and merges pages with identical titles
+   - Script: `merge_same_title_page.py`
+
+4. **Extract Differences**
+   - Compares the previous translation (`nishio/data_en_prev.json`) with the current one (`data_en.json`)
+   - Extracts only new or updated pages
+   - Saves as `data_en_diff.json`
+   - Script: `diff_json.py`
+
+5. **Save Data**
+   - Stores current data in the `nishio` directory
+   - Saves translation results for future comparison
+
+6. **Commit Changes**
+   - Commits modified files to the GitHub repository
+   - Script: `commit.sh`
+
+### Workflow: Auto-translate /nishio (Import)
+
+File: `.github/workflows/nishio_trans_import.yaml`
+
+#### Execution Timing
+- Automatically runs after the Commit workflow succeeds
+- Can be manually triggered (workflow_dispatch)
+
+#### Process Flow
+1. **Import to Scrapbox**
+   - Imports the difference data (`data_en_diff.json`) to the `/nishio-en` project
+   - Script: `import_to_scrapbox.sh` → `import_to_scrapbox.ts`
+
+## Environment Variables
+
+This workflow uses the following environment variables:
+
+### Local Environment Setup
+
+For testing locally, create a `.env` file in the root directory with the following variables:
+
+- `SID`: Scrapbox session ID (required for export and import)
+- `DEEPL_KEY`: DeepL API access key (required for translation)
+
+### GitHub Actions Setup
+
+For running in GitHub Actions, set the following secrets in the repository's "Settings" > "Secrets and variables" > "Actions":
+
+- `SID`: Scrapbox session ID
+- `DEEPL_KEY`: DeepL API key
+
+These secrets are referenced in the workflow YAML files as `${{ secrets.SID }}` and `${{ secrets.DEEPL_KEY }}`.
+
+## Manual Execution
+
+GitHub Actions workflows can be manually executed with the following steps:
+
+### Commit Workflow
+
+1. Go to the Actions tab of the repository
+2. Select the "Auto-translate /nishio (Commit)" workflow
+3. Click the "Run workflow" button
+
+### Import Workflow
+
+1. Go to the Actions tab of the repository
+2. Select the "Auto-translate /nishio (Import)" workflow
+3. Click the "Run workflow" button
+
+## Documentation
+
+Detailed documentation is available in the following files:
+
+- [Setup Guide](./docs/SETUP.md) - Environment setup and testing procedures
+- [Workflow Details](./docs/WORKFLOW.md) - Workflow overview and process flow
+- [Script Details](./docs/SCRIPTS.md) - Purpose and usage of each script
+- [Structure Improvement Proposal](./docs/STRUCTURE.md) - Repository structure improvement proposal
 
 ## Special Thanks
 
-derived from following projects.
+Derived from the following projects:
 
-- https://github.com/meganii/sandbox-github-actions-scheduler/blob/main/.github/workflows/scheduled-build.yml
+- [sandbox-github-actions-scheduler](https://github.com/meganii/sandbox-github-actions-scheduler/blob/main/.github/workflows/scheduled-build.yml)
+  - Idea that use Github Action to backup Scrapbox pages.
+
+- [Scrapbox-Duplicator](https://github.com/blu3mo/Scrapbox-Duplicator/blob/master/index.ts)
+  - Idea that automatically import and export Scrapbox pages.
+
+- [scrapbox-userscript-std](https://github.com/takker99/scrapbox-userscript-std/)
+  - Useful libraries to handle Scrapbox.
 
 # Japanese
 
